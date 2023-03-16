@@ -4,6 +4,7 @@ import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, A
 import { group } from '@angular/animations';
 import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
 import { ChatListComponent } from '../chat-list/chat-list.component';
+import { ChatBoxComponent } from '../chat-box/chat-box.component';
 
 @Component({
   selector: 'codx-chat',
@@ -23,8 +24,9 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   grdViewSetUp: any = null;
   moreFC: any = null;
   autoClose=true;
+  lstBoxChat:any[] = [];
+  @ViewChild("boxChat") boxChat:TemplateRef<any>;
 
-  @ViewChild("chatBox") chatBox:TemplateRef<any>;
   @ViewChild('listChat') listChat: ChatListComponent;
   constructor(
     private injector:Injector,
@@ -101,7 +103,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         if(!isOpenBoxChat){
           this.addBoxChat(res.groupID);
         }
-        
       }
     });
   }
@@ -123,8 +124,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // check box chat
   checkBoxChat(groupID:string):boolean {
-    let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
-    let _arrBoxChat = Array.from(_eleChatBoxs);
+    let _eleboxChats = document.getElementsByTagName("codx-chat-box");
+    let _arrBoxChat = Array.from(_eleboxChats);
     if(Array.isArray(_arrBoxChat)){
       return _arrBoxChat.some(e => e.id === groupID);
     }
@@ -132,7 +133,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // add box chat
   addBoxChat(groupID:any){
-    let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
+    let viewRef = this.boxChat.createEmbeddedView({ $implicit: groupID });
     this.applicationRef.attachView(viewRef);
     viewRef.detectChanges();
     let html = viewRef.rootNodes[0];
@@ -140,17 +141,17 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     if(elementContainer){
       let length = elementContainer.children.length;
       // add box chat
-      if(length < 3){ 
+      if(length < 2){ 
         html.setAttribute('style',`
-        position: fixed!important;
-        bottom: 0px;
-        right: ${(length*320 + 100)}px;
-        margin-top: -500px;
+        margin-right: 10px;
         background-color: white;`);
         html.setAttribute('id',groupID);
         elementContainer.append(html);
       }
-      else{
+      else
+      {
+        debugger
+        let boxChats = document.getElementsByTagName("codx-chat-box");
         
       }
     }
@@ -195,7 +196,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   //select goup chat
   selectItem(group: any){
-    debugger
     group.isRead = true;
     this.totalMessage -= group.messageMissed;
     group.messageMissed = 0;
@@ -210,8 +210,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       this.signalRSV.sendData(item,"GetGroupSearch");
     }
   }
-
-
 
   clear(event){
     debugger

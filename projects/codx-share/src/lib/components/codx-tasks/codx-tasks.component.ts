@@ -201,13 +201,6 @@ export class CodxTasksComponent
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
-    // this.requestSchedule = new ResourceModel();
-    // this.requestSchedule.service = 'TM';
-    // this.requestSchedule.assemblyName = 'TM';
-    // this.requestSchedule.className = 'TaskBusiness';
-    // this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    // this.requestSchedule.idField = 'taskID';
-
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
     this.requestTree.assemblyName = 'TM';
@@ -1732,6 +1725,9 @@ export class CodxTasksComponent
       case 'dbClick':
         this.viewTask(e?.data);
         break;
+      case 'doubleClick':
+        this.viewTask(e?.data);
+        break;
       case 'pined-filter':
         var index = this.view.views.findIndex((x) => x.active == true);
         if (index != 1) {
@@ -1892,4 +1888,22 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+
+  getDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            return res.length;
+          }
+        });
+    }
+  }
 }

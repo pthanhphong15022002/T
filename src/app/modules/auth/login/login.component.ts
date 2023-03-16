@@ -109,8 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               // }
             }
           });
-      }
-      if (params.id && params.id == 'changePass') {
+      } else if (params.id && params.id == 'changePass') {
         this.mode = params.id;
         this.user = this.auth.get();
         this.email = this.user.email;
@@ -217,7 +216,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ]),
       ],
-      captCha: ['', Validators.compose([Validators.required])],
+      //captCha: ['', Validators.compose([Validators.required])],
     });
 
     this.changePassForm = this.fb.group(
@@ -254,7 +253,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
-        captCha: ['', Validators.compose([Validators.required])],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
@@ -284,7 +283,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
-        captCha: ['', Validators.compose([Validators.required])],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );

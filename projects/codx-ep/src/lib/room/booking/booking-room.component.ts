@@ -52,7 +52,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-
+  @ViewChild('gridResourceName') gridResourceName: TemplateRef<any>;
+  @ViewChild('gridHost') gridHost: TemplateRef<any>;
+  @ViewChild('gridMF') gridMF: TemplateRef<any>;
+  @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
+  @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
+  @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
   showToolBar = 'true';
@@ -95,9 +100,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   selectBookingAttendees = '';
   queryParams: any;
   navigated = false;
-  columnGrids=[];
-  isAdmin=false;
+  columnGrids = [];
+  isAdmin = false;
   grView: any;
+  isAfterRender = false;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -119,28 +125,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
-    
   }
 
   onInit(): void {
     //Kiểm tra quyền admin
-    this.codxEpService.roleCheck().subscribe(res=>{
-      if(res==true){
-        this.isAdmin=true;
-      }
-      else{        
-        this.isAdmin=false;
+    this.codxEpService.roleCheck().subscribe((res) => {
+      if (res == true) {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
       }
     });
-    
-    this.cache
-      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-      .subscribe((grv) => {
-        if (grv) {
-          this.grView = Util.camelizekeyObj(grv);
-        }
-      });
-    
+
     //lấy list booking để vẽ schedule
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
@@ -162,7 +158,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.method = 'GetResourceAsync';
     this.modelResource.predicate = 'ResourceType=@0 ';
     this.modelResource.dataValue = '1';
-    
 
     this.fields = {
       id: 'recID',
@@ -183,15 +178,80 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
     this.buttons = {
       id: 'btnAdd',
-    };    
+    };
   }
-
+  onLoading(evt: any) {
+    if (this.formModel) {
+      this.cache
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .subscribe((grv) => {
+          if (grv) {
+            this.grView = Util.camelizekeyObj(grv);
+            this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: 40,
+                template: this.gridMF,
+                textAlign: 'center',
+              },
+              {
+                field: 'bookingOn',
+                template: this.gridBookingOn,
+                headerText: this.grView?.bookingOn?.headerText,
+              },
+              {
+                field: 'resourceID',
+                template: this.gridResourceName,
+                headerText: this.grView?.resourceID?.headerText,
+              },
+              {
+                field: 'title',
+                headerText: this.grView?.title?.headerText,
+              },
+              {
+                field: 'title',
+                template: this.gridHost,
+                headerText: 'Người chủ trì',
+              },
+              {
+                field: 'startDate',
+                template: this.gridStartDate,
+                headerText: this.grView?.startDate?.headerText,
+              },
+              {
+                field: 'endDate',
+                template: this.gridEndDate,
+                headerText: this.grView?.endDate?.headerText,
+              },
+              {
+                field: 'requester',
+                headerText: this.grView?.requester?.headerText,
+              },
+            ];
+            this.views.push({
+              sameData: true,
+              type: ViewType.grid,
+              active: false,
+              model: {
+                resources: this.columnGrids,
+              },
+            });
+          }
+        });
+    }
+  }
   ngAfterViewInit(): void {
-    this.view.dataService.methodDelete = 'DeleteBookingAsync';
     this.columnGrids = [
-      
-      
-    ]
+      {
+        field: '',
+        headerText: '',
+        width: 40,
+        template: this.gridMF,
+        textAlign: 'center',
+      },
+    ];
+
     this.views = [
       {
         sameData: false,
@@ -224,14 +284,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      {
-        sameData: true,
-      type: ViewType.grid,
-      active: true,
-      model: {
-        resources: this.columnGrids,
-      },
-    }
     ];
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.codxEpService
@@ -261,7 +313,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  
+
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -308,10 +360,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (
-            //Ẩn: dời - mời - hủy 
+            //Ẩn: dời - mời - hủy
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
             func.functionID == 'EP4T1101' /*MF xóa*/ ||
-            func.functionID == 'EP4T1104' /*MF hủy*/ 
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -320,17 +372,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Mời - dời - Chép 
+            // Hiện: Mời - dời - Chép
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -339,16 +392,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       } else if (data.approveStatus == '3') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: dời - mời - chép - hủy
-          func.functionID == 'EP4T1102' /*MF mời*/ ||
-          func.functionID == 'EP4T1101' /*MF dời*/ ||
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'EP4T1104' /*MF hủy*/
+          if (
+            //Hiện: dời - mời - chép - hủy
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt
-            
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/
@@ -356,39 +411,41 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.disabled = true;
           }
         });
-      }
-      else if (data.approveStatus == '4') {
+      } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (
+            //Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
-      }
-      else  {
+      } else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'SYS02' /*MF sửa*/ ||
-          func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (
+            //Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
@@ -403,6 +460,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     if (event.type == 'add' && event.data?.resourceId != null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
+    }
+    if (event.type == 'doubleClick' || event.type == 'edit') {
+      this.edit(event.data);
     }
   }
   clickMF(event, data) {
@@ -469,51 +529,35 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   cancel(data: any) {
-    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
+    if (
+      !this.codxEpService.checkRole(
+        this.authService.userValue,
+        data?.owner,
+        this.isAdmin
+      )
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    // this.notificationsService.alertCode('ES015').subscribe((x) => {
-    //   if (x.event?.status == 'Y') {
-    //     if (data.approveStatus == '1') {
-    //       this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-    //         if (res) {
-    //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-    //           data.approveStatus = '0';
-    //           this.view.dataService.update(data).subscribe();
-    //         } else {
-    //           this.notificationsService.notifyCode(res?.msgCodeError);
-    //         }
-    //       });
-    //     }
-    //     else{
-    //       this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-    //         if (res != null) {
-    //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-    //           data.approveStatus = '1';
-    //           this.view.dataService.update(data).subscribe();
-    //         } else {
-    //           this.notificationsService.notifyCode(res?.msgCodeError);
-    //         }
-    //       });
-    //     }
-    //   }
-    // })
-    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      if (res && res?.msgCodeError==null) {
-        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-        data.approveStatus = '0';
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
-    
+    this.codxEpService
+      .cancel(data?.recID, '', this.formModel.entityName)
+      .subscribe((res: any) => {
+        if (res && res?.msgCodeError == null) {
+          this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+          data.approveStatus = '0';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
   reschedule(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
+      !this.codxEpService.checkRole(
+        this.authService.userValue,
+        data?.owner,
+        this.isAdmin
+      )
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -543,7 +587,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   invite(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
+      !this.codxEpService.checkRole(
+        this.authService.userValue,
+        data?.owner,
+        this.isAdmin
+      )
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -610,7 +658,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
+      if (
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          evt?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -678,11 +731,16 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(evt?) {
+    this.view.dataService.methodDelete = 'DeleteBookingAsync';
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
       if (
-        !this.codxEpService.checkRole(this.authService.userValue,deleteItem?.owner,this.isAdmin)
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          deleteItem?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -716,7 +774,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         meetingStartDate,
         meetingStartTime
       )
-      .then((url) => {
+      .subscribe((url) => {
         if (url) {
           window.open(url, '_blank');
         }

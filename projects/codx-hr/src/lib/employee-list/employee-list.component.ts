@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { triggerFocus } from '@syncfusion/ej2-angular-inputs';
 import {
   ApiHttpService,
   ButtonModel,
@@ -130,7 +131,7 @@ export class EmployeeListComponent extends UIComponent {
       //   },
       // },
     ];
-    this.view.dataService.methodUpdate = 'UpdateAsync';
+    this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();
   }
 
@@ -179,7 +180,10 @@ export class EmployeeListComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddNewHRComponent,
-        this.view.dataService.dataSelected,
+        {
+          actionType: 'add',
+          itemSelected: this.view.dataService.dataSelected,
+        },
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -199,6 +203,9 @@ export class EmployeeListComponent extends UIComponent {
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      var oldEmployeeID = data.employeeID;
+      console.log('oldIDddddddddddddddddd', oldEmployeeID);
+      
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -209,26 +216,33 @@ export class EmployeeListComponent extends UIComponent {
         option.Width = '800px';
         var dialog = this.callfc.openSide(
           PopupAddNewHRComponent,
-          'edit',
+          {
+            oldEmployeeID: oldEmployeeID,
+            actionType: 'edit',
+            itemSelected: this.view.dataService.dataSelected,
+          },
           option
         );
-        dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            this.view.dataService
-              .update(e.event.update.InfoPersonal)
-              .subscribe();
-            // this.view.dataService.update(e.event.update.Employees).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.detectorRef.detectChanges();
-          }
+        console.log('old id assign', oldEmployeeID);
+        dialog.closed.subscribe((res) => {
+          console.log('dataaaaaaaaaaaa', res);
+
+          this.detectorRef.detectChanges();
         });
+        // dialog.closed.subscribe();(e) => {
+        //   if (e?.event == null)
+        //     this.view.dataService.delete(
+        //       [this.view.dataService.dataSelected],
+        //       false
+        //     );
+        //   if (e?.event && e?.event != null) {
+        //     this.view.dataService
+        //       .update(e.event.update.InfoPersonal)
+        //       .subscribe();
+
+        //     this.detectorRef.detectChanges();
+        //   }
+        // });
       });
     // this.detectorRef.detectChanges();
   }
@@ -246,7 +260,10 @@ export class EmployeeListComponent extends UIComponent {
         option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddNewHRComponent,
-          'copy',
+          {
+            actionType: 'copy',
+            dataSelected: this.view.dataService.dataSelected,
+          },
           option
         );
       });
@@ -324,6 +341,7 @@ export class EmployeeListComponent extends UIComponent {
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
+    opt.assemblyName = 'ERM.Business.HR';
     opt.methodName = 'DeleteAsync';
     opt.className = 'EmployeesBusiness';
     opt.data = itemSelected.employeeID;

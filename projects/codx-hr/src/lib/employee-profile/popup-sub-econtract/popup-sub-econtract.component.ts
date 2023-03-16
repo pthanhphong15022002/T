@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { DialogData, DialogRef, FormModel, NotificationsFCMService, NotificationsService } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxHrService } from '../../codx-hr.service';
 
@@ -22,7 +22,7 @@ export class PopupSubEContractComponent implements OnInit {
   constructor(
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
-
+    private notify: NotificationsService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -87,13 +87,26 @@ export class PopupSubEContractComponent implements OnInit {
     }
   }
 
-  onSaveForm(isCloseForm: boolean) {
-    this.oSubContract.contractTypeID = '1';
-    this.hrService.addEContract(this.oSubContract).subscribe((res) => {
-      if (res) {
-        this.dialog && this.dialog.close(res);
-      }
-    });
+  onSaveForm() {
+    if(this.actionType == 'add' || this.actionType == 'copy'){
+      this.oSubContract.contractTypeID = '1';
+      this.hrService.addEContract(this.oSubContract).subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(res);
+        }
+      });
+    }
+    else if(this.actionType == 'edit'){
+      this.oSubContract.contractTypeID = '1';
+      this.hrService.editEContract(this.oSubContract).subscribe((res) => {
+        if(res){
+          this.notify.notifyCode('SYS007');
+          debugger
+          this.dialog && this.dialog.close(res);
+        }
+      })
+    }
   }
 
   valueChange(event) {

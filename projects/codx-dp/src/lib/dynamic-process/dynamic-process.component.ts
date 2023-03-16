@@ -40,6 +40,7 @@ import {
 } from '@syncfusion/ej2-angular-navigations';
 import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 import { closest } from '@syncfusion/ej2-base';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -103,6 +104,7 @@ export class DynamicProcessComponent
   popupEditName: DialogRef;
   processRename: DP_Processes;
   processName = '';
+  processNameBefore = '';
   user;
   isCopy: boolean = false;
   dataCopy: any;
@@ -708,6 +710,7 @@ export class DynamicProcessComponent
   renameProcess(process) {
     this.processRename = process;
     this.processName = process['processName'];
+    this.processNameBefore = process['processName'];
     this.popupEditName = this.callfc.openForm(
       this.editNameProcess,
       '',
@@ -720,12 +723,21 @@ export class DynamicProcessComponent
     this.processName = event?.data;
   }
 
-  editName() {
+  async editName() {
     if (!this.processName?.trim()) {
       this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
       return;
     }
-    this.dpService
+    if(this.processName.trim() === this.processNameBefore.trim()){
+      this.popupEditName.close();
+      this.notificationsService.notifyCode('SYS007');
+      return;
+    }
+    let check = await this.checkExitsProcessName(this.processName, this.processRename['recID']);
+    if(check){
+      this.notificationsService.notifyCode('DP021');
+    }else{
+      this.dpService
       .renameProcess([this.processName, this.processRename['recID']])
       .subscribe((res) => {
         if (res) {
@@ -739,9 +751,21 @@ export class DynamicProcessComponent
           this.notificationsService.notifyCode('SYS008');
         }
       });
+    }  
   }
-  restoreProcess(data) {
+
+  async checkExitsProcessName(processName, processID){
+    let check =await firstValueFrom(this.dpService.checkExitsName([processName, processID]));
+    return check;
+  }
+
+  async restoreProcess(data) {
     console.log(data);
+    let check = await this.checkExitsProcessName(data['processName'], data['recID']);
+    if(check){
+      this.notificationsService.notifyCode('DP021');
+      return;
+    }
     this.dpService.restoreBinById(data.recID).subscribe((res) => {
       if (res) {
         this.view.dataService.remove(data).subscribe();

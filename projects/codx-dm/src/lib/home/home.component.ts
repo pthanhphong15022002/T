@@ -37,6 +37,7 @@ import {
   AnimationSettingsModel,
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
+import { E } from '@angular/cdk/keycodes';
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
@@ -93,6 +94,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   isScrollSearch = true;
   maxHeightScroll = 500;
   pageSearch = 1;
+  hideMF = false;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -349,8 +351,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         this.refeshData();
         this.getDataFolder(this.dmSV.folderID);
+        if(this.fileService.options.favoriteID == "3") this.hideMF = true;
+        else this.hideMF = false;
       }
     })
+    this.getParaSetting();
     // this.dmSV.isNodeSelect.subscribe((res) => {
     //   if (res) {
     //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -507,6 +512,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     // });
   }
 
+  getParaSetting()
+  {
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByFDAsync",['DMParameters',null,"1"]).subscribe((item : any)=>{
+      if(item) this.dmSV.paraSetting = JSON.parse(item);
+    })
+  }
   ngAfterViewInit(): void {
     this.cache.valueList('SYS025').subscribe((item) => {
       if (item) {
@@ -529,6 +540,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         type: ViewType.tree_card,
         active: true,
         sameData: true,
+        hide: false,
         /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
@@ -555,6 +567,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         id: '1',
         icon: '',
         text: 'smallcard',
+        hide: false,
         type: ViewType.tree_smallcard,
         active: false,
         sameData: true,
@@ -569,6 +582,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         id: '1',
         icon: this.sys025?.datas[0].icon,
         text: 'list',
+        hide: false,
         type: ViewType.tree_list,
         sameData: true,
         active: false,
@@ -594,6 +608,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
    
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
+        this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
         this.dmSV.idMenuActive =  this.funcID;
@@ -602,6 +617,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
         this.view.dataService.dataSelected = null;
+        this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
         this.getDataByFuncID(this.funcID);
@@ -610,8 +626,16 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.fileService.options.favoriteID = "1";
           this.folderService.options.favoriteID = "1";
         };
-        if(this.funcID == "DMT03" || this.funcID == "DMT02") this.viewActive.model.panelLeftHide = false;
-        this.view.viewChange(this.viewActive);
+        if(this.funcID == "DMT03" || this.funcID == "DMT02") {
+          this.viewActive.model.panelLeftHide = false;
+          this.view.viewChange(this.viewActive);
+        }
+        else if(this.funcID == "DMT06" || this.funcID == "DMT07" || this.funcID == "DMT08")
+        {
+          this.views[2].model.panelLeftHide = true;
+          this.view.viewChange(this.views[2]);
+        }
+        else this.view.viewChange(this.viewActive);
       }
     });
     //event.view.model.template2
@@ -940,7 +964,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
-    debugger
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1000,7 +1023,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
-        //this.dmSV.getRight(item);
+        this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.getDataFolder(id);

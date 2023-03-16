@@ -5,7 +5,7 @@
   <span>{{ stepName }}</span>
 </ng-template>
 <ng-template #body>
-  <div class="title-step pb-18"></div>
+  <div class="title-step pb-12"></div>
   <div class="content-step">
     <ng-container [ngTemplateOutlet]="test"></ng-container>
     <div class="form-group">
@@ -42,34 +42,180 @@
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Công việc chưa hoàn tất">
-        </codx-label>
-        <ul class="tree">
-          <li>Animals
-           <ul>
-            <li>Birds</li>
-            <li>Mammals
-             <ul>
-              <li>Elephant</li>
-              <li>Mouse</li>
-             </ul>
-            </li>
-            <li>Reptiles</li>
-           </ul>
-          </li>
-          <li>Plants
-           <ul>
-            <li>Flowers
-             <ul>
-              <li>Rose</li>
-              <li>Tulip</li>
-             </ul>
-            </li>
-            <li>Trees</li>
-           </ul>
-          </li>
-         </ul>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Công việc chưa hoàn tất">
+          </codx-label>
+          </div>
+          <div>
+            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Hoàn thành tất cả">
+          </codx-label>
+          </div>
+          <div class="ps-2">
+            <!-- <codx-input type="checkbox"  class="rounded-circle" [checked]="true"
+            (valueChange)="checkAllValue($event)">
+
+          </codx-input> -->
+            <input
+            class="form-check-input rounded-circle"
+            type="checkbox"
+            [checked]="isCheckAll"
+            (change)="checkAllValue($event,'all','custom')"
+
+            />
+          </div>
+        </div>
+        <div class="pt-5">
+          <div class="accordion" id="accordion1">
+            <ng-container *ngFor="let item of listTree; let i = index">
+              <div *ngIf="item.taskGroupID === null; else taskGroup">
+                <ol class="list-unstyled" >
+                  <li>
+                    <div class="d-flex justify-content-start pb-1">
+
+                      <div
+                      class="icon-container"
+                      [ngStyle]="getColor(item)"
+                    >
+                      <span
+                        class="icon-18 text-primary-600 py-2"
+                        [ngClass]="getIconTask(item)"
+                      ></span>
+                    </div>
+                      <div class="ps-5 mt-3">
+                        {{item.taskName}}
+                        <span style="color: red;" *ngIf="item.requireCompleted" >*</span>
+                      </div>
+                      <div class="ms-auto">
+                        <div class="d-flex justify-content-end">
+                          <div>
+                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                            </codx-imgs>
+                          </div>
+                          <div class="notify">
+                            <span class="me-3">
+                              <codx-attachment-temp [objectID]="item.refID"></codx-attachment-temp>
+                            </span>
+                          </div>
+                          <div class="notify">
+                            <span class="me-3">
+                              <codx-comment-temp [objectID]="item.recID"></codx-comment-temp>
+                            </span>
+                          </div>
+                          <div>
+                            <input
+                            class="form-check-input rounded-circle"
+                            type="checkbox"
+                            [checked]="isCheckAll"
+                            (change)="checkAllValue($event,item,'task')"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+              <ng-template #taskGroup>
+                <ol class="list-unstyled" >
+                  <li>
+                    <div class="d-flex justify-content-start pb-1">
+                      <button class="btn btn-outline-secondary btnCustom" style="cursor: pointer;"
+                      id="open"
+                      type="button"
+                      (click)="myFunction($event,i)"
+                      ><i [id]="'parent'+i" [class]="item.children.length > 0 ?'icon-remove':'icon-add' " style="padding: 0.35rem;"></i> </button>
+                      <div class="ps-5 mt-1">
+                        {{item.taskGroupName}}
+
+                      </div>
+                      <div class="ms-auto">
+                        <div class="d-flex justify-content-end">
+                          <div>
+                           <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                            </codx-imgs>
+                          </div>
+                          <div class="notify">
+                            <span class="me-3">
+                              <codx-attachment-temp [objectID]="item.refID"></codx-attachment-temp>
+                            </span>
+                          </div>
+                          <div class="notify">
+                            <span class="me-3">
+                              <codx-comment-temp [objectID]="item.recID"></codx-comment-temp>
+                            </span>
+                          </div>
+                          <div>
+                            <input
+                            class="form-check-input rounded-circle"
+                            type="checkbox"
+                            [checked]="isCheckAll"
+                            (change)="checkAllValue($event,item,'taskGroup')"
+
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <ul class="tree ms-3 show" [id]="'children'+i" >
+                        <ng-container *ngFor="let task of item.children">
+                          <li >
+                            <div class="d-inline-block" style="width: 96%;">
+                                <div class="d-flex justify-content-start">
+                                  <div
+                                  class="icon-container"
+                                  [ngStyle]="getColor(task)"
+                                >
+                                  <span
+                                    class="icon-18 text-primary-600 py-2"
+                                    [ngClass]="getIconTask(task)"
+                                  ></span>
+                                </div>
+                                  <div class="ps-5 mt-1"> {{task.taskName}}
+                                    <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
+                                  </div>
+                                  <div class="ms-auto">
+                                    <div class="d-flex justify-content-end">
+                                      <div>
+                                        <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                                        </codx-imgs>
+                                      </div>
+                                      <div class="notify">
+                                        <span class="me-3">
+                                          <codx-attachment-temp [objectID]="task.refID"></codx-attachment-temp>
+                                        </span>
+                                      </div>
+                                      <div class="notify">
+                                        <span class="me-3">
+                                          <codx-comment-temp [objectID]="task.recID"></codx-comment-temp>
+                                        </span>
+                                      </div>
+                                      <div>
+                                        <input
+                                        class="form-check-input rounded-circle"
+                                        type="checkbox"
+                                        [checked]="isCheckAll"
+                                        (change)="checkAllValue($event,task,'task')"
+
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                          </li>
+                        </ng-container>
+                      </ul>
+                  </li>
+                </ol>
+
+
+              </ng-template>
+             </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </div>

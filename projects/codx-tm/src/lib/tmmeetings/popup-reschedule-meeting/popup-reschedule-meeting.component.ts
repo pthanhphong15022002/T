@@ -80,7 +80,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     this.tmSv
       .getResourcesTrackEvent(
         this.meeting.meetingID,
-        this.meeting.resources,
+        this.meeting.permissions,
         this.meeting.startDate.toUTCString(),
         this.meeting.endDate.toUTCString()
       )
@@ -276,13 +276,10 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   valueChangeCheckFullDay(e) {
-    this.isFullDay = e.data;
-    if (this.isFullDay) {
+    if (e?.data) {
       this.startTime = this.startTimeWork;
       this.endTime = this.endTimeWork;
-    } else {
-      this.endTime = null;
-      this.startTime = null;
+      this.changDetec.detectChanges();
     }
     this.setDate();
   }
@@ -372,12 +369,12 @@ export class PopupRescheduleMeetingComponent implements OnInit {
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
             if (day.shiftType == '1') {
-              this.startTimeWork = day.startTime;
-              endShiftType1 = day.endTime;
+              this.startTimeWork = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
+              endShiftType1 = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
             }
             if (day.shiftType == '2') {
-              this.endTimeWork = day.endTime;
-              starrShiftType2 = day.startTime;
+              this.endTimeWork = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              starrShiftType2 = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
             }
           }
 

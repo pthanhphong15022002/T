@@ -428,21 +428,6 @@ export class PopupAddItemComponent
 
   //#region Method
   save(): void {
-    console.log(this.item);
-    // console.log(this.itemsPurchase);
-    // console.log(this.itemsSales);
-    // console.log(this.itemsProduction);
-
-    if (
-      !this.itemsService.validateFormData(
-        this.item,
-        this.gridViewSetup,
-        this.requiredFields
-      )
-    ) {
-      return;
-    }
-
     this.dialogRef.dataService
       .save((req: RequestOption) => {
         req.methodName =
@@ -506,17 +491,37 @@ export class PopupAddItemComponent
             itemID: this.item.itemID,
           }));
 
-          if (this.itemImage?.imageUpload?.item) {
-            this.itemImage
-              .updateFileDirectReload(this.item.itemID)
-              .subscribe((res) => {
-                console.log({ res });
-              });
-          }
-
           this.dialogRef.close(true);
         }
       });
+  }
+
+  handleClickSave(): void {
+    console.log(this.item);
+    // console.log(this.itemsPurchase);
+    // console.log(this.itemsSales);
+    // console.log(this.itemsProduction);
+
+    if (
+      !this.itemsService.validateFormData(
+        this.item,
+        this.gridViewSetup,
+        this.requiredFields
+      )
+    ) {
+      return;
+    }
+
+    if (this.itemImage?.imageUpload?.item) {
+      this.itemImage
+        .updateFileDirectReload(this.item.itemID)
+        .subscribe((res) => {
+          console.log(res);
+          this.save();
+        });
+    } else {
+      this.save();
+    }
   }
 
   openFormAddItemSize(sizeType: number, itemSize?: ItemSize) {
