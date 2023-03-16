@@ -310,6 +310,8 @@ export class InstanceDetailComponent implements OnInit {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
+          console.table(this.ganttDsClone);
+          
         }
       });
   }
@@ -378,7 +380,7 @@ export class InstanceDetailComponent implements OnInit {
     var heighOut = 20
     if ((this.viewType == 'd')){
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
-    }  
+    }
     if (!classViewDetail) return;
     let heightVD = classViewDetail.clientHeight;
     let classHeader = document.getElementsByClassName('codx-detail-header')[0];

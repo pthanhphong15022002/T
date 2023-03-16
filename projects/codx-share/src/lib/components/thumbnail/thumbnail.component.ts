@@ -27,7 +27,8 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() hideMoreF = '1';
   @Input() hideHover = '1';
   @Input() isScroll = '0';
-  @Input() permissions :any ; 
+  @Input() permissions :any ;
+  @Input() objectID = ""; 
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
@@ -156,7 +157,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         .closed.subscribe(x => {
           if (x.event.status == "Y") {
             if (this.isDeleteTemp == '0') {
-              this.fileService.deleteFileToTrash(file.recID, "", true).subscribe(item => {
+              this.fileService.deleteFileToTrash(file.recID, "", true,this.objectID).subscribe(item => {
                 if (item) {
                   let list = this.files;
                   var index = -1;

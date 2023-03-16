@@ -1,6 +1,6 @@
 <div class="tm-meeting">
   <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings"
-    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsAsync"
+    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsCalendarAsync"
     (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID"
     (onActions)="onActions($event)">
   </codx-views>

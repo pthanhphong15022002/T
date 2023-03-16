@@ -201,6 +201,7 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   edit(data?) {
+    
     if (data) {
       this.view.dataService.dataSelected = data;
       var oldEmployeeID = data.employeeID;
@@ -217,6 +218,7 @@ export class EmployeeListComponent extends UIComponent {
         var dialog = this.callfc.openSide(
           PopupAddNewHRComponent,
           {
+            isEdit: true,
             oldEmployeeID: oldEmployeeID,
             actionType: 'edit',
             itemSelected: this.view.dataService.dataSelected,
