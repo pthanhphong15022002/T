@@ -247,6 +247,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action === 'copy') {
+      this.instanceNoSetting = this.process.instanceNoSetting ;
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
         (this.newIdProccess = dt.data.newIdProccess),

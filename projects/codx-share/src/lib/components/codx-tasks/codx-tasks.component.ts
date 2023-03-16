@@ -42,6 +42,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
 import { AssignTaskModel } from '../../models/assign-task.model';
+import { concat } from 'rxjs';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -425,10 +426,6 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
-    // this.api.execSv<any>("TM","TM","TaskBusiness","CheckRecIDAndTaskIDAsync",[]).subscribe(res=>{
-    //   if(res){}
-    //   debugger
-    // })
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1734,16 +1731,25 @@ export class CodxTasksComponent
           let type = this.view.views[index].type;
           if (type == 7 || type == 8) {
             // calender + schedule
+            // var filer = [] ;
+            //  filer.push(this.view.currentView['schedule'].dataService.filter.filters[0].filters[0] );
+            //  filer.push(this.view.currentView['schedule'].dataService.filter.filters[0].filters[1] );
+
+            // this.view.currentView['schedule'].dataService.filter.filters[0].filters =[];
+
             // if(Array.isArray(e.data)){
             //   e.data.forEach((filter:any)=>{
             //     if(!this.view.currentView['schedule'].dataService.filter.filters){
             //       this.view.currentView['schedule'].dataService.filter.filters = [];
             //     }
-            //     debugger
             //     this.view.currentView['schedule'].dataService.filter.filters[0].filters.push(filter);
-            // });
-            //   this.view.currentView['schedule'].refresh();
-            //}
+            // });       
+            // this.view.currentView['schedule'].dataService.filter.filters[0].filters= filer.concat(this.view.currentView['schedule'].dataService.filter.filters[0].filters)
+            // var fileCrr = this.view.currentView['schedule'].dataService.filter.filters[0];
+            // this.view.currentView['schedule'].dataService.filter.filters= [] ;
+            // this.view.currentView['schedule'].dataService.filter.filters.push(fileCrr) ;
+            // this.view.currentView['schedule'].refresh();
+            // }
           }
         }
         break;
