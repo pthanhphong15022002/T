@@ -43,8 +43,6 @@ export class PopupAddNewHRComponent
   dialog: DialogRef;
   oldEmployeeID: string;
   isEdit: boolean = false;
-
-  // formModel: FormModel;
   funcID;
 
   @ViewChild('form', { static: true }) form: LayoutAddComponent;
@@ -90,13 +88,10 @@ export class PopupAddNewHRComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    console.log('dialog', this.dialog);
-
     this.data = this.dialog.dataService.dataSelected;
     this.isEdit = dialogData?.data.isEdit != null ? true : false;
     this.oldEmployeeID = dialogData.data.oldEmployeeID;
     this.actionType = dialogData?.data?.actionType;
-    console.log('olddddID popup', this.oldEmployeeID);
     this.funcID = this.dialog.formModel.funcID;
   }
 
@@ -115,7 +110,6 @@ export class PopupAddNewHRComponent
         let today = new Date().valueOf();
         let diffMS = today - birthday;
         let diff = new Date(diffMS).getFullYear() - 1970;
-
         let result =
           diff >= 18 ? null : { formControl: { value: formControl.value } };
         return result;
@@ -157,10 +151,6 @@ export class PopupAddNewHRComponent
   }
 
   onSaveForm() {
-    // if(this.form.formGroup.invalid){
-    //   this.hrService.notifyInvalid(this.form.formGroup, this.form.formModel);
-    //   return;
-    // }
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
@@ -170,12 +160,10 @@ export class PopupAddNewHRComponent
           if (res.update) {
             result = res.update;
           }
-          console.log('resulttttt', result);
-
           this.data = result;
           this.dialog && this.dialog.close(result);
         }
-      })
-      this.detectorRef.detectChanges();
+      });
+    this.detectorRef.detectChanges();
   }
 }

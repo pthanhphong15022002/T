@@ -47,21 +47,13 @@
         <div id="employeeID">
           <codx-label [formModel]="form.formModel" fiedName="employeeID">
           </codx-label>
-          <!--             
-            <codx-input
-            [formModel]="form?.formModel" FormModel dang setting an input
-            [Group]="form?.formGroup"
-            ControlName="employeeID"
-            >
-          </codx-input> -->
-
-          <codx-input       
+          <codx-input
             [disabled]="isEdit"
-            type="text" [crrValue]="data?.employeeID"
+            type="text"
+            [crrValue]="data?.employeeID"
             (valueChange)="valueChange($event)"
             field="employeeID"
-            >
-            <!-- [disabled]="isEdit" -->
+          >
           </codx-input>
         </div>
       </div>
