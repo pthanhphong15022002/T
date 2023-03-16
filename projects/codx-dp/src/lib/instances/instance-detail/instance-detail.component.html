@@ -84,7 +84,7 @@
                 <span
                   [ngStyle]="
                     +progress < 20
-                      ? { position: 'relative', left: '7px' }
+                      ? { position: 'relative', left: '15px' }
                       : {}
                   "
                   >{{ progress || 0 }}%</span
@@ -138,7 +138,7 @@
           ></codx-gantt-chart>
           <ng-template #ganttItems let-data>
             <div
-              class="badge badge-light badge-square badge-md fs-7 p-2"
+              class=""
               (click)="clickDetailGanchart(data.recID)"
               [ngStyle]="{ 'background-color': getColor(data.recID) }"
             >

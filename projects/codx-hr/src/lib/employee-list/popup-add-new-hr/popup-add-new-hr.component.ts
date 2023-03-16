@@ -42,6 +42,7 @@ export class PopupAddNewHRComponent
   actionType: string;
   dialog: DialogRef;
   oldEmployeeID: string;
+  isEdit: boolean = false;
 
   // formModel: FormModel;
   funcID;
@@ -92,27 +93,14 @@ export class PopupAddNewHRComponent
     console.log('dialog', this.dialog);
 
     this.data = this.dialog.dataService.dataSelected;
-    // this.isEdit = dialogData?.data.isEdit != null ? true : false;
+    this.isEdit = dialogData?.data.isEdit != null ? true : false;
     this.oldEmployeeID = dialogData.data.oldEmployeeID;
     this.actionType = dialogData?.data?.actionType;
     console.log('olddddID popup', this.oldEmployeeID);
-    
-
-    // this.formModel = ;
     this.funcID = this.dialog.formModel.funcID;
   }
 
-  onInit(): void {
-    // if(!this.formModel)
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     this.formModel = res;
-    //   });
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     let formControl =
@@ -134,7 +122,11 @@ export class PopupAddNewHRComponent
       }
     };
   }
-
+  valueChange(event) {
+    if (event?.field && event?.data != null) {
+      this.data[event.field] = event.data;
+    }
+  }
   buttonClick(e: any) {
     console.log(e);
   }
@@ -154,7 +146,6 @@ export class PopupAddNewHRComponent
       if (this.actionType == 'copy') {
         option.methodName = 'AddEmployeeAsync';
       } else {
-        
         option.methodName = 'UpdateEmpInfoAsync';
         option.data = [itemData, this.oldEmployeeID];
         return true;
@@ -184,6 +175,7 @@ export class PopupAddNewHRComponent
           this.data = result;
           this.dialog && this.dialog.close(result);
         }
-      });
+      })
+      this.detectorRef.detectChanges();
   }
 }
