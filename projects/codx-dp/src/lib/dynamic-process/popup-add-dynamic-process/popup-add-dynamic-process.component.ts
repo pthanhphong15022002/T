@@ -2061,7 +2061,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickMFStep(e: any, data: any) {
-    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteStep(data);
