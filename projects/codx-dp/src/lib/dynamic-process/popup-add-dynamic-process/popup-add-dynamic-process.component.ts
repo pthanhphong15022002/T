@@ -1757,11 +1757,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['stepName'] = this.stepName;
       this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
       this.popupAddStage.close();
-      this.viewStepSelect(
-        this.stepList.length > 0
-          ? this.stepList[this.stepList?.length - 1 || 0]
-          : []
-      );
+      this.viewStepSelect(this.stepList[this.stepList?.length - 1 || 0]);
       if(this.action == 'edit'){
         this.listStepAdd.push(this.stepNew.recID);
       }
@@ -2738,7 +2734,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.checkedSat = false;
       this.checkedSun = false;
     }
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
   }
 
   autoHandleStepReason() {
