@@ -60,16 +60,20 @@
       </div> -->
       <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
-        <span class="fs-7 text-gray-600" #createdOn>{{
-          data.createdOn
-            | formatvalue
-              : view.formModel
-              : "createdOn"
-              : createdOn
-              : "DPInstances"
-              : "grvDPInstances"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #createdOn
+          [innerHTML]="
+            data.createdOn
+              | formatvalue
+                : view.formModel
+                : 'createdOn'
+                : createdOn
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
       </div>
     </div>
   </ng-template>
