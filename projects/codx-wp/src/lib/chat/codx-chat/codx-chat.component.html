@@ -1,5 +1,5 @@
 <div #dropdown  ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose"   container="body">
-  <button type="button" class="btn btn-sm" (click)="openChatList()" id="chat-box"
+  <button type="button" class="btn btn-sm" (click)="loaded = true" id="chat-box"
     ngbDropdownToggle>
     <div
     class="btn btn-icon btn-clean position-relative"
@@ -9,23 +9,24 @@
         class="svg-icon"
         [ngClass]="codxService.toolbarButtonIconSizeClass">
     </span>
-    <ng-container *ngIf="totalMessage > 0"
-      class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
-      <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
+    <ng-container *ngIf="totalMessage > 0">
+      <span class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
+        <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
+      </span>
     </ng-container>
   </div>
   </button>
-  <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
-    class="chat-popup w-300px">
+  <div ngbDropdownMenu aria-labelledby="chat-box" id="chatbox-dropdownPopup"
+    class="chat-popup">
     <div class="chat-list">
       <div class="chat-list-header">
-          <div class="row">
-              <h3 class="fw-bolder">Chatting</h3>
+          <div class="fw-bold fs-4 text-dark">
+            <codx-label [formModel]="formModel" name="lblHeadertext" [default]="'Tin nhắn'"></codx-label>
           </div>
           <div class="row">
               <div class="d-flex align-items-center justify-content-end">
                   <ul class="chat-list-header_func">
-                      <li class="cursor-pointer" (click)="openPopupAdd()">
+                      <li class="cursor-pointer" (click)="clickOpenPopup()">
                           <i class="icon-people_alt"></i>
                       </li>
                       <li class="cursor-pointer" (click)="clickReadAll()">
@@ -47,7 +48,7 @@
       </div>
       <div class="chat-list-body" (click)="close()">
         <ng-container *ngIf="loaded">
-            <wp-chat-list #listChat ></wp-chat-list>
+          <wp-chat-list #listChat></wp-chat-list>
         </ng-container>
       </div>
     </div>

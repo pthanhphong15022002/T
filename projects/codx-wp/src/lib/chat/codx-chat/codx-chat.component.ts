@@ -10,7 +10,7 @@ declare var window: any;
 @Component({
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
-  styleUrls: ['./codx-chat.component.css']
+  styleUrls: ['./codx-chat.component.scss']
 })
 export class CodxChatComponent implements OnInit,AfterViewInit {
   @HostBinding('class') get class() {
@@ -28,7 +28,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   lstBoxChat:any[] = [];
   @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
   @ViewChild("listChat") listChat:ChatListComponent;
-  @ViewChild(NgbDropdown) dropdown:NgbDropdown;
+  @ViewChild(NgbDropdown) ngbDropdown:NgbDropdown;
   constructor(
     private injector:Injector,
     private auth: AuthStore,
@@ -43,6 +43,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   ) 
   { 
     this.user = this.auth.get();
+    this.formModel = new FormModel();
   }
   
   ngOnInit(): void {
@@ -52,7 +53,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       .subscribe((func: any) => {
         if (func) {
           this.function = JSON.parse(JSON.stringify(func));
-          this.formModel = new FormModel();
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
           this.formModel.formName = func.formName;
@@ -97,7 +97,9 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   // open chat box
   openChatList(){
     if(!this.loaded)
+    {
       this.loaded = true;
+    }
   }
 
   // add codx chat container
@@ -110,48 +112,50 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       document.querySelector("#codx-container-chat")?.append(view);
     }
   }
-  // open popup 
-  openPopupAdd(){
-    if (this.function){
-      this.autoClose = false;
-      let option = new DialogModel();
-      option.FormModel = this.formModel;
-      let data = {
-        headerText: 'Tạo nhóm chat',
-        gridViewSetUp: this.grdViewSetUp,
-      };
-      let popup = this.callFCSV.openForm(
-        PopupAddGroupComponent,
-        '',
-        0,
-        window.innerHeight,
-        this.function.funcID,
-        data,
-        '',
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        if(res.event){
-          this.listChat.addGroup(res.event);
-        }
-        this.autoClose = true;
-      });
-    }
+  //click  open popup 
+  clickOpenPopup(){
+    this.autoClose = false;
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    let data = {
+      headerText: 'Tạo nhóm chat',
+      gridViewSetUp: this.grdViewSetUp,
+    };
+    let popup = this.callFCSV.openForm(
+      PopupAddGroupComponent,
+      '',
+      0,
+      window.innerHeight,
+      this.function.funcID,
+      data,
+      '',
+      option
+    );
+    popup.closed.subscribe((res: any) => {
+      if(res.event){
+        this.listChat.addGroup(res.event);
+      }
+      this.autoClose = true;
+    });
   }
   // check read all
   clickReadAll(){
+    // chưa có mssgCode
+    this.autoClose = false;
     this.notifySV.alertCode("Đánh dấu xem tất cả?").subscribe((res:any) =>{
-      debugger
       if(res.event.status === 'Y')
       {
         this.listChat.readAllMessage();
         this.totalMessage = 0;
       }
+      this.autoClose = true
     });
   }
   // searrch
   search(event: any) {
-    this.listChat.search(event);
+    if(this.listChat){
+      this.listChat.search(event);
+    }
   }
   //select goup chat
   selectItem(group: any){
@@ -169,7 +173,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     }
   }
 
-
+  // close ngbDropdown
   close(){
+    this.ngbDropdown.close();
   }
 }

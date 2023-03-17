@@ -291,7 +291,7 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
     this.view.dataService
@@ -320,7 +320,6 @@ export class InstancesComponent
                     .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                     .subscribe((res) => {
                       if (res) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = res;
                         this.openPopUpAdd(
                           applyFor,
@@ -337,7 +336,6 @@ export class InstancesComponent
                     )
                     .subscribe((isNo) => {
                       if (isNo) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = isNo;
                         this.openPopUpAdd(
                           applyFor,
@@ -387,6 +385,7 @@ export class InstancesComponent
   }
 
   edit(data, titleAction) {
+    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }

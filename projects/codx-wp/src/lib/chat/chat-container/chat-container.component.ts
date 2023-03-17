@@ -62,7 +62,6 @@ export class ChatContainerComponent implements OnInit {
       }
     });
   }
-
   // handle box chat
   handleBoxChat(groupID:any){
     let isOpen = this.lstGroupActive.some(x=>x == groupID);
@@ -107,7 +106,7 @@ export class ChatContainerComponent implements OnInit {
           objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
           objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
         }
-    this.lstGroupCollapse.push(item);
+    this.lstGroupCollapse.unshift(item);
     codxBoxChat.ngOnDestroy();
     this.dt.detectChanges();
   }
@@ -130,6 +129,11 @@ export class ChatContainerComponent implements OnInit {
     let index = this.lstGroupCollapse.findIndex(x => x.id == group.id); 
     this.lstGroupCollapse.splice(index, 1);
     this.dt.detectChanges();
+  }
+
+  // hover
+  hover(item){
+    alert("hover")
   }
 }
 
