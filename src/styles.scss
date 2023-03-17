@@ -1865,8 +1865,7 @@ lib-dynamic-process .card-header.m-h-auto.p-0{
 } 
 .btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean.focus:not(.btn-text) {
   color:var(--primary-dark);
-  background-color: #F3F6F9;
-  border-color: transparent;
+  background-color:var(--gray-100);
 }
 // .dialog-vll codx-valuelist{
 
