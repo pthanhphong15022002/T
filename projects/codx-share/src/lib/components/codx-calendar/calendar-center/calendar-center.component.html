@@ -36,43 +36,54 @@
           data?.data?.priority | vll : vllPriority : "text" | async
         }}</span>
       </div>
-      <div #priority *ngIf="!data?.data?.priority">
-        {{
+      <div
+        #priority
+        *ngIf="!data?.data?.priority"
+        [innerHTML]="
           data?.data?.priority
             | formatvalue
               : view.formModel
-              : "priority"
+              : 'priority'
               : priority
-              : "Tasks"
-              : "grvTasks"
+              : 'Tasks'
+              : 'grvTasks'
             | async
-        }}
-      </div>
+        "
+      ></div>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
         <span class="ms-1 fw-bold">
-          <span *ngIf="data?.data?.dueDate" class="text-gray-700" #dueDate>{{
-            data?.data?.dueDate
-              | formatvalue
-                : view.formModel
-                : "dueDate"
-                : dueDate
-                : "Tasks"
-                : "grvTasks"
-              | async
-          }}</span>
-          <span #dueDate *ngIf="!data?.data?.dueDate">{{
-            data?.data?.dueDate
-              | formatvalue
-                : view.formModel
-                : "dueDate"
-                : dueDate
-                : "Tasks"
-                : "grvTasks"
-              | async
-          }}</span>
+          <span
+            *ngIf="data?.data?.dueDate"
+            class="text-gray-700"
+            #dueDate
+            [innerHTML]="
+              data?.data?.dueDate
+                | formatvalue
+                  : view.formModel
+                  : 'dueDate'
+                  : dueDate
+                  : 'Tasks'
+                  : 'grvTasks'
+                | async
+            "
+          ></span>
+          <span
+            #dueDate
+            *ngIf="!data?.data?.dueDate"
+            [innerHTML]="
+              data?.data?.dueDate
+                | formatvalue
+                  : view.formModel
+                  : 'dueDate'
+                  : dueDate
+                  : 'Tasks'
+                  : 'grvTasks'
+                | async
+            "
+          ></span>
         </span>
       </div>
     </div>
@@ -126,16 +137,20 @@
           placement="left bottom top right"
           container="body"
         ></span>
-        <span #memo2 *ngIf="!data?.data?.memo2">{{
-          data?.data?.memo2
-            | formatvalue
-              : view.formModel
-              : "memo2"
-              : memo2
-              : "Tasks"
-              : "grvTasks"
-            | async
-        }}</span>
+        <span
+          #memo2
+          *ngIf="!data?.data?.memo2"
+          [innerHTML]="
+            data?.data?.memo2
+              | formatvalue
+                : view.formModel
+                : 'memo2'
+                : memo2
+                : 'Tasks'
+                : 'grvTasks'
+              | async
+          "
+        ></span>
       </ng-container>
       <ng-container *ngIf="data?.data?.category != '2'">
         <span
@@ -148,16 +163,20 @@
           placement="left bottom top right"
           container="body"
         ></span>
-        <span #memo *ngIf="!data?.data?.memo">{{
-          data?.data?.memo
-            | formatvalue
-              : view.formModel
-              : "memo"
-              : memo
-              : "Tasks"
-              : "grvTasks"
-            | async
-        }}</span>
+        <span
+          #memo
+          *ngIf="!data?.data?.memo"
+          [innerHTML]="
+            data?.data?.memo
+              | formatvalue
+                : view.formModel
+                : 'memo'
+                : memo
+                : 'Tasks'
+                : 'grvTasks'
+              | async
+          "
+        ></span>
       </ng-container>
     </ng-template>
     <ng-template #tooltipMemo>
@@ -300,13 +319,18 @@
     </div>
   </ng-container> -->
   <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
-    
-  <codx-booking-car-schedule-content [recID]="data?.transID"></codx-booking-car-schedule-content>
+    <codx-booking-car-schedule-content
+      [recID]="data?.transID"
+    ></codx-booking-car-schedule-content>
   </ng-container>
-  <ng-container #tmpEP_BookingRooms *ngIf="data?.transType == 'EP_BookingRooms'">
-    
-    <codx-booking-room-schedule-content [recID]="data?.transID"></codx-booking-room-schedule-content>
-    </ng-container>
+  <ng-container
+    #tmpEP_BookingRooms
+    *ngIf="data?.transType == 'EP_BookingRooms'"
+  >
+    <codx-booking-room-schedule-content
+      [recID]="data?.transID"
+    ></codx-booking-room-schedule-content>
+  </ng-container>
   <!-- <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
     <div>
       <codx-label
@@ -443,33 +467,38 @@
   </ng-container> -->
   <ng-container #CO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
     <div>
-      <h5 #meetingName>
-        {{
+      <h5
+        #meetingName
+        [innerHTML]="
           data?.data?.meetingName
             | formatvalue
               : view.formModel
-              : "meetingName"
+              : 'meetingName'
               : meetingName
-              : "Meetings"
-              : "grvMeetings"
+              : 'Meetings'
+              : 'grvMeetings'
             | async
-        }}
-      </h5>
+        "
+      ></h5>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
         <span class="ms-1 fw-bold">
-          <span #startDate class="text-gray-700">{{
-            data?.data?.startDate
-              | formatvalue
-                : view.formModel
-                : "startDate"
-                : startDate
-                : "Meetings"
-                : "grvMeetings"
-              | async
-          }}</span>
+          <span
+            #startDate
+            class="text-gray-700"
+            [innerHTML]="
+              data?.data?.startDate
+                | formatvalue
+                  : view.formModel
+                  : 'startDate'
+                  : startDate
+                  : 'Meetings'
+                  : 'grvMeetings'
+                | async
+            "
+          ></span>
           <span
             *ngIf="data?.data?.startDate"
             class="fw-bold p-2"
@@ -502,16 +531,20 @@
             placement="left bottom top right"
             container="body"
           ></span>
-          <span #memo *ngIf="!data?.data?.memo">{{
-            data?.data?.memo
-              | formatvalue
-                : view.formModel
-                : "memo"
-                : memo
-                : "Meetings"
-                : "grvMeetings"
-              | async
-          }}</span>
+          <span
+            #memo
+            *ngIf="!data?.data?.memo"
+            [innerHTML]="
+              data?.data?.memo
+                | formatvalue
+                  : view.formModel
+                  : 'memo'
+                  : memo
+                  : 'Meetings'
+                  : 'grvMeetings'
+                | async
+            "
+          ></span>
         </span>
       </span>
     </div>
