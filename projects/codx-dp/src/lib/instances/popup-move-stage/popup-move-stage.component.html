@@ -25,13 +25,13 @@
         </codx-label>
       </div>
 
-      <!-- <codx-input field="actualEnd" [crrValue]="instancesStepOld.actualEnd" type="datetime"
+      <codx-input field="actualEnd" [crrValue]="instancesStepOld.actualEnd" [Group]="form.formGroup" [formModel]="form.formModel"
         (valueChange)="valueChange($event)">
-      </codx-input> -->
-      <codx-input field="actualEnd" format="d" type="datetime" class="test-datetime" [crrValue]="instancesStepOld?.actualEnd"
-      (valueChange)="valueChange($event)">
-    </codx-input>
+      </codx-input>
 
+      <!-- <codx-input field="actualEnd" format="d" type="datetime" class="test-datetime" [crrValue]="instancesStepOld?.actualEnd"
+      (valueChange)="valueChange($event)">
+    </codx-input> -->
     </div>
 
     <div class="form-group">
@@ -44,7 +44,7 @@
       </codx-input>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!!listTree">
       <div>
         <div class="d-flex justify-content-end">
           <div class="me-auto">
@@ -95,7 +95,7 @@
                       <div class="ms-auto">
                         <div class="d-flex justify-content-end">
                           <div>
-                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                            <codx-imgs [isToolTip]="true" [width]="25" [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                             </codx-imgs>
                           </div>
                           <div class="notify">
@@ -168,42 +168,47 @@
                           <li >
                             <div class="d-inline-block" style="width: 96%;">
                                 <div class="d-flex justify-content-start">
-                                  <div
-                                  class="icon-container"
-                                  [ngStyle]="getColor(task)"
-                                >
-                                  <span
-                                    class="icon-18 text-primary-600 py-2"
-                                    [ngClass]="getIconTask(task)"
-                                  ></span>
-                                </div>
-                                  <div class="ps-5 mt-1"> {{task.taskName}}
-                                    <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
-                                  </div>
-                                  <div class="ms-auto">
-                                    <div class="d-flex justify-content-end">
-                                      <div>
-                                        <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
-                                        </codx-imgs>
+                                  <div class="row">
+                                    <div class="col-6">
+                                      <div
+                                      class="icon-container"
+                                      [ngStyle]="getColor(task)"
+                                    >
+                                      <span
+                                        class="icon-18 text-primary-600 py-2"
+                                        [ngClass]="getIconTask(task)"
+                                      ></span>
+                                    </div>
+                                      <div class="ps-5 mt-1"> {{task.taskName}}
+                                        <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
                                       </div>
-                                      <div class="notify">
-                                        <span class="me-3">
-                                          <codx-attachment-temp [objectID]="task.refID"></codx-attachment-temp>
-                                        </span>
-                                      </div>
-                                      <div class="notify">
-                                        <span class="me-3">
-                                          <codx-comment-temp [objectID]="task.recID"></codx-comment-temp>
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <input
-                                        class="form-check-input rounded-circle"
-                                        type="checkbox"
-                                        [checked]="isCheckAll"
-                                        (change)="checkAllValue($event,task,'task')"
-
-                                        />
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="ms-auto">
+                                        <div class="d-flex justify-content-end">
+                                          <div>
+                                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                                            </codx-imgs>
+                                          </div>
+                                          <div class="notify">
+                                            <span class="me-3">
+                                              <codx-attachment-temp [objectID]="task.refID"></codx-attachment-temp>
+                                            </span>
+                                          </div>
+                                          <div class="notify">
+                                            <span class="me-3">
+                                              <codx-comment-temp [objectID]="task.recID"></codx-comment-temp>
+                                            </span>
+                                          </div>
+                                          <div>
+                                            <input
+                                            class="form-check-input rounded-circle"
+                                            type="checkbox"
+                                            [checked]="isCheckAll"
+                                            (change)="checkAllValue($event,task,'task')"
+                                            />
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>

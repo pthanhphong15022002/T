@@ -63,6 +63,7 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
+      debugger
       if (param["category"] !== "home")
         this.category = param["category"];
       else
