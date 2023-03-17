@@ -72,7 +72,7 @@ export class CodxShowTaskComponent implements OnInit {
       const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
         return {
           ...taskGroup,
-          task: taskGroupList[taskGroup['refID']] ?? [],
+          task: taskGroupList[taskGroup['recID']] ?? [],
         };
       });
       data['taskGroups'] = taskGroupConvert;
