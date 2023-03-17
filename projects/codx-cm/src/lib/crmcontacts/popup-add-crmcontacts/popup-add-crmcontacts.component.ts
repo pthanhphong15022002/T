@@ -1,21 +1,15 @@
-import {
-  Component,
-  OnInit,
-  Optional,
-  ViewChild,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService, CallFuncService, DialogModel, FormModel } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ApiHttpService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment.prod';
-import { PopupAddressComponent } from '../popup-address/popup-address.component';
+import { PopupAddressComponent } from '../../crmcustomer/popup-address/popup-address.component';
 
 @Component({
-  selector: 'lib-popup-add-crmcustomer',
-  templateUrl: './popup-add-crmcustomer.component.html',
-  styleUrls: ['./popup-add-crmcustomer.component.css'],
+  selector: 'lib-popup-add-crmcontacts',
+  templateUrl: './popup-add-crmcontacts.component.html',
+  styleUrls: ['./popup-add-crmcontacts.component.css']
 })
-export class PopupAddCrmcustomerComponent implements OnInit {
+export class PopupAddCrmcontactsComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
 
   data: any;
@@ -42,7 +36,8 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   valueChange(e) {}
 
