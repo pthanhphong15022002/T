@@ -22,8 +22,9 @@ export class EmployeeContractComponent extends UIComponent {
 
   views: Array<ViewModel> = []
   funcID: string
+  eContractHeaderText
   method = 'LoadDataEcontractWithEmployeeInfoAsync';
-
+  numofRecord
   buttonAdd: ButtonModel = {
     id : 'btnAdd',
     text: 'Thêm'
@@ -84,6 +85,21 @@ export class EmployeeContractComponent extends UIComponent {
     ]
     console.log('view cua e contract', this.view);
     this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    console.log('data service data', this.view?.formModel.funcID);
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+      this.eContractHeaderText = res;
+      console.log('hed do` text ne',this.eContractHeaderText);
+    })
+  }
+
+  ngAfterViewChecked(){
+    if(this.view.dataService?.data){
+      this.numofRecord = this.view.dataService.data.length      
+      var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
+      if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
+        PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
+      }
+    }
   }
 
   HandleAction(evt){
@@ -133,7 +149,9 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   addContract(evt){
-    this.HandleEContractInfo(evt.text,'add',null);
+    if(evt.id == 'btnAdd'){
+      this.HandleEContractInfo(evt.text,'add',null);
+    }
   }
 
   // addNew(actionHeaderText, actionType: string, data: any){
@@ -208,4 +226,7 @@ export class EmployeeContractComponent extends UIComponent {
     });
   }
 
+  onMoreMulti(evt){
+    console.log('chon nhieu dong', evt);
+  }
 }
