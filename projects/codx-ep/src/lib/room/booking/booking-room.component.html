@@ -73,8 +73,8 @@
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="text-gray-800">
-          {{ data?.bookingOn | fmDT }}
+        <span class="text-gray-800"  [innerHTML]="data?.bookingOn | formatvalue : formModel : 'BookingOn' | async">
+          
         </span>
       </div>
       <div class="d-flex me-6">
@@ -98,12 +98,12 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2 "
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data?.requester"
+    [title]="data?.requester | formatvalue : formModel : 'Requester' | async"
     [subTitleTmp]="subTitleTmp"
     [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     "
-    [status]="data?.approveStatus"
+    [status]="data?.approveStatus | formatvalue : formModel : 'ApproveStatus' | async"
     [statusVll]="'EP022'"
     [date]="data?.createdOn"
     [imageId]="data?.createdBy"
@@ -149,20 +149,28 @@
   </codx-mfunc>
 </ng-template>
 <ng-template #gridResourceName let-data>  
-  <div>{{data?.resourceName}}</div>
+  <div>
+    <span [innerHTML]="data?.resourceID | formatvalue : formModel : 'ResourceID' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridHost let-data>
   <div>{{data?.host}}</div>
 </ng-template>
 
 <ng-template #gridBookingOn let-data>
-  <div>{{data?.bookingOn | fmDT : "dmy" }}</div>
+  <div>
+    <span [innerHTML]="data?.bookingOn | formatvalue : formModel : 'BookingOn' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridStartDate let-data>
-  <div>{{data?.startDate | fmDT : "dmy" : true}}</div>
+  <div>
+    <span [innerHTML]="data?.startDate | formatvalue : formModel : 'StartDate' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridEndDate let-data>
-  <div>{{data?.endDate | fmDT : "dmy" : true}}</div>
+  <div>
+    <span [innerHTML]="data?.endDate | formatvalue : formModel : 'EndDate' | async"></span>
+  </div>
 </ng-template>
 
 <!-- Other -->
@@ -195,7 +203,8 @@
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >{{ data.title }}</span
+       [innerHTML]="data?.title | formatvalue : view?.formModel : 'Title' | async"
+      ></span
     >
   </div>
 </ng-template>

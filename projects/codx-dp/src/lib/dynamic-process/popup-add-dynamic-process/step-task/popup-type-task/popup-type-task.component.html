@@ -1,53 +1,60 @@
-
 <codx-form
   #form
-  [headerText]="'Chọn Loại Công Việc'"
+  [subHeader]="subHeader"
   [body]="setJobBody"
   [footer]="setJobFooter"
   [dialog]="dialog"
 ></codx-form>
 
- <ng-template #setJobBody>
-   <div
-     *ngFor="let item of listJobType"
-     class="d-flex body-set-job"
-     style="justify-content: space-between; padding: 10px 0"
-     (click)="getTypeJob(item)"
-     [ngStyle]="item?.checked ? {'background-color':'aliceblue'} : {}"
-   >
-     <div style="display: flex; align-items: center" class="job">
-       <span
-         style="margin-right: 10px"
-         class="icon-20 text-primary-600 py-2 circle"
-         ngClass="{{ item?.icon }}"
-         [ngStyle]="item?.color"
-       ></span>
-       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
-     </div>
-     <div style="padding-right: 2rem">
-       <codx-input
-         type="radio"
-         pageSize="50"
-         [checked]="item?.checked"
-       ></codx-input>
-     </div>
-   </div>
- </ng-template>
- 
- <ng-template #setJobFooter>
-   <div class="d-flex justify-content-end">
-     <button
-       type="button"
-       class="btn btn-primary"
-       [disabled]="jobType ? false : true"
-       (click)="handlerContinue()"
-     >
-       <codx-label
-         name="Save"
-         formName="Tasks"
-         default="Tiếp tục"
-       ></codx-label>
-     </button>
-   </div>
- </ng-template>
- <!--End chon cong viec -->
+<ng-template #subHeader>
+  <codx-label
+    name="heardTypeTask"
+    class="h2"
+    default="Chọn Loại Công Việc"
+  ></codx-label>
+</ng-template>
+
+<ng-template #setJobBody>
+  <div
+    *ngFor="let item of listJobType"
+    class="d-flex body-set-job"
+    style="justify-content: space-between; padding: 10px 0"
+    (click)="getTypeJob(item)"
+    [ngStyle]="item?.checked ? { 'background-color': 'aliceblue' } : {}"
+  >
+    <div style="display: flex; align-items: center" class="job">
+      <span
+        style="margin-right: 10px"
+        class="icon-20 text-primary-600 py-2 circle"
+        ngClass="{{ item?.icon }}"
+        [ngStyle]="item?.color"
+      ></span>
+      <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
+    </div>
+    <div style="padding-right: 2rem">
+      <codx-input
+        type="radio"
+        pageSize="50"
+        [checked]="item?.checked"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #setJobFooter>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="jobType ? false : true"
+      (click)="handlerContinue()"
+    >
+      <codx-label
+        name="lblSave"
+        formName="Tasks"
+        default="Tiếp tục"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+<!--End chon cong viec -->

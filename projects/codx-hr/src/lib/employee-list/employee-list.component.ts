@@ -120,16 +120,6 @@ export class EmployeeListComponent extends UIComponent {
           resources: this.columnsGrid,
         },
       },
-      // {
-      //   id: '2',
-      //   type: ViewType.card,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     panelLeftRef: this.panelLeftRef,
-      //     template: this.cardTemp,
-      //   },
-      // },
     ];
     this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();
@@ -143,7 +133,6 @@ export class EmployeeListComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        // this.add();
         this.openPopupAdd();
         break;
     }
@@ -153,7 +142,6 @@ export class EmployeeListComponent extends UIComponent {
     if (this.view) {
       this.view.dataService.addNew().subscribe((res: any) => {
         console.log('add new ', res);
-
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
@@ -204,8 +192,6 @@ export class EmployeeListComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
       var oldEmployeeID = data.employeeID;
-      console.log('oldIDddddddddddddddddd', oldEmployeeID);
-      
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -217,34 +203,18 @@ export class EmployeeListComponent extends UIComponent {
         var dialog = this.callfc.openSide(
           PopupAddNewHRComponent,
           {
+            isEdit: true,
             oldEmployeeID: oldEmployeeID,
             actionType: 'edit',
             itemSelected: this.view.dataService.dataSelected,
           },
           option
         );
-        console.log('old id assign', oldEmployeeID);
         dialog.closed.subscribe((res) => {
-          console.log('dataaaaaaaaaaaa', res);
 
           this.detectorRef.detectChanges();
         });
-        // dialog.closed.subscribe();(e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        //   if (e?.event && e?.event != null) {
-        //     this.view.dataService
-        //       .update(e.event.update.InfoPersonal)
-        //       .subscribe();
-
-        //     this.detectorRef.detectChanges();
-        //   }
-        // });
       });
-    // this.detectorRef.detectChanges();
   }
 
   copy(data) {
@@ -293,7 +263,6 @@ export class EmployeeListComponent extends UIComponent {
 
   async onSelectionChanged($event) {
     await this.setEmployeePredicate($event.dataItem.orgUnitID);
-    // this.employList.onChangeSearch();
   }
 
   setEmployeePredicate(orgUnitID): Promise<any> {
@@ -311,8 +280,6 @@ export class EmployeeListComponent extends UIComponent {
               v = v + element;
               p = p + 'OrgUnitID==@' + index.toString();
             }
-            // this.employList.predicate = p;
-            // this.employList.dataValue = v;
           }
           resolve('');
         });

@@ -45,7 +45,6 @@ export class NotifyBodyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     if(this.defaultStatus)
       this.notiFilter.status = this.defaultStatus;
     this.model.dataObj = JSON.stringify(this.notiFilter);

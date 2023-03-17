@@ -77,17 +77,13 @@
   <div class="d-flex align-items-top mt-2">
     <span class="icon-email icon-16 me-2"> </span>
     <span class="text-dark fw-bold">
-      <span #email>{{
-        data.email | formatvalue : view.formModel : "email" : email | async
-      }}</span>
+      <span #email [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></span>
     </span>
   </div>
   <div class="d-flex align-items-center">
     <span class="icon-phone_android icon-16 me-2"></span>
     <span class="text-dark fw-bold">
-      <span #phone>{{
-        data.phone | formatvalue : view.formModel : "phone" : phone | async
-      }}</span>
+      <span #phone [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></span>
     </span>
   </div>
 </ng-template>
@@ -130,38 +126,30 @@
           </div>
 
           <span class="text-dark">
-            <span #positionName>{{
-              data?.positionID
-                | formatvalue : view.formModel : "positionID"
-                | async
-            }}</span>
+            <span #positionName [innerHTML]=" data?.positionID
+            | formatvalue : view.formModel : 'positionID'
+            | async"></span>
           </span>
 
           <span class="text-dark">
-            <span #organizationName>{{
-              data?.orgUnitID
-                | formatvalue : view.formModel : "orgUnitID"
-                | async
-            }}</span>
+            <span #organizationName [innerHTML]="data?.orgUnitID
+            | formatvalue : view.formModel : 'orgUnitID'
+            | async"></span>
           </span>
 
           <div>
             <span class="text-dark">
-              <span #departmentName>{{
-                data?.departmentID
-                  | formatvalue : view.formModel : "departmentID"
-                  | async
-              }}</span>
+              <span #departmentName [innerHTML]="data?.departmentID
+              | formatvalue : view.formModel : 'departmentID'
+              | async"></span>
             </span>
 
             <span class="text-gray-400"> | </span>
 
             <span class="text-dark">
-              <span #divisionName>{{
-                data?.divisionID
-                  | formatvalue : view.formModel : "divisionID"
-                  | async
-              }}</span>
+              <span #divisionName [innerHTML]="data?.divisionID
+              | formatvalue : view.formModel : 'divisionID'
+              | async"></span>
             </span>
           </div>
         </div>
@@ -176,27 +164,21 @@
       <div class="d-flex align-items-center">
         <span class="icon-email icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
-          <span #email>{{
-            data.email | formatvalue : view.formModel : "email" : email | async
-          }}</span>
+          <span #email [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></span>
         </span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-phone_android icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
-          <span #phone>{{
-            data.phone | formatvalue : view.formModel : "phone" : phone | async
-          }}</span>
+          <span #phone [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></span>
         </span>
       </div>
       <div class="d-flex align-items-center">
         <span class="icon-place icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
-          <span #street>{{
-            data.street
-              | formatvalue : view.formModel : "street" : street
-              | async
-          }}</span>
+          <span #street [innerHTML]="            data.street
+          | formatvalue : view.formModel : 'street'
+          | async"></span>
         </span>
       </div>
     </div>
@@ -215,11 +197,9 @@
           ></codx-label>
         </span>
         <span class="text-dark fw-bold">
-          <span #birthday>{{
-            data.birthday
-              | formatvalue : view.formModel : "birthday" : birthday
-              | async
-          }}</span>
+          <span #birthday [innerHTML]="data.birthday
+          | formatvalue : view.formModel : 'birthday'
+          | async"></span>
         </span>
       </div>
       <div class="align-items-center fs-7">
@@ -232,11 +212,9 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #birthPlace>{{
-            data?.birthPlace
-              | formatvalue : view.formModel : "birthPlace"
-              | async
-          }}</span>
+          <span #birthPlace [innerHTML]="data?.birthPlace
+          | formatvalue : view.formModel : 'birthPlace'
+          | async"></span>
         </span>
       </div>
       <div class="align-items-center fs-7">
@@ -249,11 +227,9 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #education>{{
-            data.education
-              | formatvalue : view.formModel : "education" : education
-              | async
-          }}</span>
+          <span #education [innerHTML]="data.education
+          | formatvalue : view.formModel : 'education'
+          | async"></span>
         </span>
       </div>
     </div>
@@ -277,14 +253,8 @@
           #statusName
           class="badge badge-success badge-sm badge-inline"
           [style.background]="data.statusColor"
+          [innerHTML]="data?.status | formatvalue : view.formModel : 'status' | async"
         >
-          <!-- {{ data?.statusName | formatvalue : HRT03a : "statusName" | async }} -->
-          <!-- {{
-            data.statusName
-              | formatvalue: view.formModel: "statusName" : statusName
-              | async
-          }} -->
-          {{ data?.status | formatvalue : view.formModel : "status" | async }}
         </span>
       </div>
 
@@ -299,11 +269,9 @@
         </span>
         <ng-container *ngIf="data.joinedOn">
           <span class="text-gray-800">
-            <span #joinedOn>{{
-              data.joinedOn
-                | formatvalue : view.formModel : "joinedOn" : joinedOn
-                | async
-            }}</span>
+            <span #joinedOn [innerHTML]="data.joinedOn
+            | formatvalue : view.formModel : 'joinedOn'
+            | async"></span>
           </span>
         </ng-container>
       </div>
@@ -316,7 +284,8 @@
           >
           </codx-label>
         </span>
-        <span>{{ data.senioritydate | timeAgo }}</span>
+        <span
+        >{{ data.senioritydate | timeAgo }}</span>
       </div>
     </div>
   </div>

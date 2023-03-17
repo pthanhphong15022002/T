@@ -1,15 +1,16 @@
-import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, CodxListviewComponent, CRUDService } from 'codx-core';
-import { group } from '@angular/animations';
+import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, AlertConfirmComponent, AlertConfirmConfig,  } from 'codx-core';
 import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
 import { ChatListComponent } from '../chat-list/chat-list.component';
 import { ChatBoxComponent } from '../chat-box/chat-box.component';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+declare var window: any;
 
 @Component({
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
-  styleUrls: ['./codx-chat.component.css']
+  styleUrls: ['./codx-chat.component.scss']
 })
 export class CodxChatComponent implements OnInit,AfterViewInit {
   @HostBinding('class') get class() {
@@ -23,48 +24,48 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   function: any = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
-  autoClose=true;
+  autoClose:boolean = true;
   lstBoxChat:any[] = [];
-  @ViewChild("boxChat") boxChat:TemplateRef<any>;
-
-  @ViewChild('listChat') listChat: ChatListComponent;
+  @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
+  @ViewChild("listChat") listChat:ChatListComponent;
+  @ViewChild(NgbDropdown) ngbDropdown:NgbDropdown;
   constructor(
     private injector:Injector,
-    public codxService:CodxService,
+    private auth: AuthStore,
     private api:ApiHttpService,
+    public codxService:CodxService,
     private signalRSV:SignalRService,
     private applicationRef:ApplicationRef,
     private callFCSV: CallFuncService,
     private cache: CacheService,
     private notifySV: NotificationsService,
-    private dt: ChangeDetectorRef,
-    private auth: AuthStore,
+    private dt: ChangeDetectorRef
   ) 
   { 
     this.user = this.auth.get();
-    this.formModel = new FormModel();
   }
-  
-
   
   ngOnInit(): void {
     // get function - gridViewsetup
     if (this.funcID) {
-      this.cache.functionList(this.funcID).subscribe((func: any) => {
+      this.cache.functionList(this.funcID)
+      .subscribe((func: any) => {
         if (func) {
           this.function = JSON.parse(JSON.stringify(func));
+          this.formModel = new FormModel();
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
+          // grid view set up
           this.cache
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
                 this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
-                this.dt.detectChanges();
               }
             });
+          // more function
           this.cache
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((mFC: any) => {
@@ -76,35 +77,11 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       });
     }
     this.getTotalMessage();
+    this.addContainerChat();
   }
 
   ngAfterViewInit(): void {
-    // active new group - add box chat to all connection
-    this.signalRSV.activeNewGroup.subscribe((res:any) => {
-      if(res){
-        this.addBoxChat(res.groupID);
-      }
-    });
-    // active group - add box chat to connection
-    this.signalRSV.activeGroup.subscribe((res:any) => {
-      if(res)
-      {
-        let boxChat = this.checkBoxChat(res.groupID);
-        if(!boxChat){
-          this.getTotalMessage();
-          this.addBoxChat(res.groupID);
-        }
-      }
-    });
-    //receiver message to connection
-    this.signalRSV.reciverChat.subscribe((res:any) => {
-      if(res.groupID){
-        let isOpenBoxChat = this.checkBoxChat(res.groupID);
-        if(!isOpenBoxChat){
-          this.addBoxChat(res.groupID);
-        }
-      }
-    });
+    
   }
   // get total message
   getTotalMessage(){
@@ -114,53 +91,32 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       "ChatBusiness",
       "GetTotalMessageAsync")
       .subscribe((res:any) => {
+        debugger
         this.totalMessage = res;
       });
   }
   // open chat box
   openChatList(){
     if(!this.loaded)
+    {
       this.loaded = true;
-  }
-  // check box chat
-  checkBoxChat(groupID:string):boolean {
-    let _eleboxChats = document.getElementsByTagName("codx-chat-box");
-    let _arrBoxChat = Array.from(_eleboxChats);
-    if(Array.isArray(_arrBoxChat)){
-      return _arrBoxChat.some(e => e.id === groupID);
-    }
-    return false;
-  }
-  // add box chat
-  addBoxChat(groupID:any){
-    let viewRef = this.boxChat.createEmbeddedView({ $implicit: groupID });
-    this.applicationRef.attachView(viewRef);
-    viewRef.detectChanges();
-    let html = viewRef.rootNodes[0];
-    let elementContainer = document.querySelector(".container-chat");
-    if(elementContainer){
-      let length = elementContainer.children.length;
-      // add box chat
-      if(length < 2){ 
-        html.setAttribute('style',`
-        margin-right: 10px;
-        background-color: white;`);
-        html.setAttribute('id',groupID);
-        elementContainer.append(html);
-      }
-      else
-      {
-        debugger
-        let boxChats = document.getElementsByTagName("codx-chat-box");
-        
-      }
     }
   }
 
+  // add codx chat container
+  addContainerChat(){
+    let viewRef = this.codxChatContainer.createEmbeddedView(null);
+    if(viewRef){
+      this.applicationRef.attachView(viewRef);
+      viewRef.detectChanges();
+      let view = viewRef.rootNodes[0];
+      document.querySelector("#codx-container-chat")?.append(view);
+    }
+  }
   // open popup 
   openPopupAdd(){
-    this.autoClose = false;
-    if (this.function) {
+    if (this.function){
+      this.autoClose = false;
       let option = new DialogModel();
       option.FormModel = this.formModel;
       let data = {
@@ -171,7 +127,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         PopupAddGroupComponent,
         '',
         0,
-        0,
+        window.innerHeight,
         this.function.funcID,
         data,
         '',
@@ -187,8 +143,13 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // check read all
   clickReadAll(){
-    this.listChat.readAllMessage();
-    this.totalMessage = 0;
+    this.notifySV.alertCode("Đánh dấu xem tất cả?").subscribe((res:any) =>{
+      if(res.event.status === 'Y')
+      {
+        this.listChat.readAllMessage();
+        this.totalMessage = 0;
+      }
+    });
   }
   // searrch
   search(event: any) {
@@ -202,7 +163,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     this.signalRSV.sendData(group,"ActiveGroupAsync");
     this.dt.detectChanges();
   }
-
   // select item search
   selectItemSeach(item: any) {
     if(item.type != 'H'){
@@ -211,8 +171,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     }
   }
 
-  clear(event){
-    debugger
+  // close ngbDropdown
+  close(){
+    this.ngbDropdown.close();
   }
-  
 }

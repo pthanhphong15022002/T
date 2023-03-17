@@ -89,22 +89,30 @@
 </ng-template>
 <ng-template #templateBirthday let-item>
   <div>
-    <span *ngIf="item.birthday">{{item.birthday | formatvalue:formModelEmp:"Birthday" | async}}</span>
+    <span *ngIf="item.birthday"
+      [innerHTML]="item.birthday | formatvalue:formModelEmp:'Birthday' | async"
+    ></span>
   </div>
 </ng-template>
 <ng-template #templatePhone let-item>
   <div>
-    <span *ngIf="item.phone">{{item.phone | formatvalue:formModelEmp:"Phone" | async}}</span>
+    <span *ngIf="item.phone"
+      [innerHTML]="item.phone | formatvalue:formModelEmp:'Phone' | async"
+    ></span>
   </div>
 </ng-template>
 <ng-template #templateEmail let-item>
   <div>
-    <span *ngIf="item.email">{{item.email | formatvalue:formModelEmp:"Email" | async}}</span>
+    <span *ngIf="item.email"
+      [innerHTML]="item.email | formatvalue:formModelEmp:'Email' | async"
+    ></span>
   </div>
 </ng-template>
 <ng-template #templateJoinedOn let-item>
   <div>
-    <span *ngIf="item.joinedOn">{{item.joinedOn | formatvalue:formModelEmp:"JoinedOn" | async}}</span>
+    <span *ngIf="item.joinedOn"
+      [innerHTML]="item.joinedOn | formatvalue:formModelEmp:'JoinedOn' | async"
+    ></span>
   </div>
 </ng-template>
 <ng-template #templateStatus let-item>
