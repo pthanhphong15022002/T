@@ -1,31 +1,32 @@
-<div ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose" #dropdown container="body">
-  <button type="button" class="btn btn-sm" (click)="openChatList()" id="chat-box"
+<div #dropdown  ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose"   container="body">
+  <button type="button" class="btn btn-sm" (click)="loaded = true" id="chat-box"
     ngbDropdownToggle>
     <div
-    class="btn btn-icon btn-active-light-primary position-relative"
+    class="btn btn-icon btn-clean position-relative"
     [ngClass]="codxService.toolbarButtonHeightClass">
     <span 
         [inlineSVG]="'./assets/themes/sys/default/img/header_chatting.svg'"
         class="svg-icon"
         [ngClass]="codxService.toolbarButtonIconSizeClass">
     </span>
-    <span *ngIf="totalMessage > 0"
-      class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
-      <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
+    <ng-container *ngIf="totalMessage > 0">
+      <span class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
+        <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
       </span>
+    </ng-container>
   </div>
   </button>
-  <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
-    class="chat-popup w-300px">
-    <div class="chat-list d-flex flex-column h-100">
+  <div ngbDropdownMenu aria-labelledby="chat-box" id="chatbox-dropdownPopup"
+    class="chat-popup">
+    <div class="chat-list">
       <div class="chat-list-header">
-          <div class="row">
-              <h3 class="fw-bolder">Chatting</h3>
+          <div class="fw-bold fs-4 text-dark">
+            <codx-label [formModel]="formModel" name="lblHeadertext" [default]="'Tin nhắn'"></codx-label>
           </div>
           <div class="row">
               <div class="d-flex align-items-center justify-content-end">
                   <ul class="chat-list-header_func">
-                      <li class="cursor-pointer" (click)="openPopupAdd()">
+                      <li class="cursor-pointer" (click)="clickOpenPopup()">
                           <i class="icon-people_alt"></i>
                       </li>
                       <li class="cursor-pointer" (click)="clickReadAll()">
@@ -45,9 +46,9 @@
               </div>
           </div>
       </div>
-      <div class="chat-list-body">
+      <div class="chat-list-body" (click)="close()">
         <ng-container *ngIf="loaded">
-            <wp-chat-list #listChat></wp-chat-list>
+          <wp-chat-list #listChat></wp-chat-list>
         </ng-container>
       </div>
     </div>
@@ -60,12 +61,6 @@
   <codx-chat-box [groupID]="id"></codx-chat-box>
 </ng-template>
 
-<ng-template #lstBoxChat let-lstBoxChat>
-  <ng-container *ngFor="let item of lstBoxChat">
-    <codx-img 
-      [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
-      [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
-      [width]="30">
-    </codx-img>
-  </ng-container>
+<ng-template #codxChatContainer>
+    <codx-chat-container></codx-chat-container>
 </ng-template>

@@ -25,6 +25,7 @@ import {
   ViewType,
   CacheService,
   UIComponent,
+  CRUDService,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -120,16 +121,16 @@ export class EmployeeListComponent extends UIComponent {
           resources: this.columnsGrid,
         },
       },
-      // {
-      //   id: '2',
-      //   type: ViewType.card,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     panelLeftRef: this.panelLeftRef,
-      //     template: this.cardTemp,
-      //   },
-      // },
+      {
+        id: '1',
+        type: ViewType.kanban,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+          resources: this.columnsGrid,
+        },
+      }
     ];
     this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();
@@ -143,7 +144,6 @@ export class EmployeeListComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        // this.add();
         this.openPopupAdd();
         break;
     }
@@ -153,7 +153,6 @@ export class EmployeeListComponent extends UIComponent {
     if (this.view) {
       this.view.dataService.addNew().subscribe((res: any) => {
         console.log('add new ', res);
-
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
@@ -204,9 +203,10 @@ export class EmployeeListComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
       var oldEmployeeID = data.employeeID;
-      console.log('oldIDddddddddddddddddd', oldEmployeeID);
-      
     }
+    let oldEmp = JSON.parse(JSON.stringify(data));
+    console.log('olddemppppppppppppppppppppppppppp', oldEmp);
+    
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -217,34 +217,22 @@ export class EmployeeListComponent extends UIComponent {
         var dialog = this.callfc.openSide(
           PopupAddNewHRComponent,
           {
+            isEdit: true,
             oldEmployeeID: oldEmployeeID,
             actionType: 'edit',
             itemSelected: this.view.dataService.dataSelected,
           },
           option
         );
-        console.log('old id assign', oldEmployeeID);
         dialog.closed.subscribe((res) => {
-          console.log('dataaaaaaaaaaaa', res);
+          if(res.event && res.event.employeeID !=  oldEmp.employeeID){
+            (this.view.dataService as CRUDService).remove(oldEmp).subscribe();
+            (this.view.dataService as CRUDService).add(res.event, oldEmp.index).subscribe();
 
+          }
           this.detectorRef.detectChanges();
         });
-        // dialog.closed.subscribe();(e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        //   if (e?.event && e?.event != null) {
-        //     this.view.dataService
-        //       .update(e.event.update.InfoPersonal)
-        //       .subscribe();
-
-        //     this.detectorRef.detectChanges();
-        //   }
-        // });
       });
-    // this.detectorRef.detectChanges();
   }
 
   copy(data) {
@@ -293,7 +281,6 @@ export class EmployeeListComponent extends UIComponent {
 
   async onSelectionChanged($event) {
     await this.setEmployeePredicate($event.dataItem.orgUnitID);
-    // this.employList.onChangeSearch();
   }
 
   setEmployeePredicate(orgUnitID): Promise<any> {
@@ -311,8 +298,6 @@ export class EmployeeListComponent extends UIComponent {
               v = v + element;
               p = p + 'OrgUnitID==@' + index.toString();
             }
-            // this.employList.predicate = p;
-            // this.employList.dataValue = v;
           }
           resolve('');
         });

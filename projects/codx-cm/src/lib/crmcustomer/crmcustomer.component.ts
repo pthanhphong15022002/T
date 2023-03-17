@@ -3,6 +3,7 @@ import {
   Component,
   Injector,
   OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -10,13 +11,17 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CacheService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupAddCrmcontactsComponent } from '../crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
+import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
+import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
 
 @Component({
-  selector: 'lib-crmcustomer',
+  selector: 'codx-crmcustomer',
   templateUrl: './crmcustomer.component.html',
   styleUrls: ['./crmcustomer.component.css'],
 })
@@ -36,6 +41,9 @@ export class CrmCustomerComponent
   @ViewChild('itemPriority', { static: true }) itemPriority: TemplateRef<any>;
   @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
+  @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
+  @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
+  @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
 
   dataObj?: any;
   columnGrids = [];
@@ -55,84 +63,113 @@ export class CrmCustomerComponent
   //endregion
 
   titleAction = '';
-  vllPriority = 'TM005'
+  vllPriority = 'TM005';
+  crrFuncID = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+  }
+  onInit(): void {}
   ngAfterViewInit(): void {
-    this.cacheSv
-      .gridViewSetup('DPProcesses', 'grvDPProcesses')
-      .subscribe((gv) => {
-        this.columnGrids = [
-          {
-            field: 'customerName',
-            headerText: gv ? gv['CustomerName']?.headerText || 'Tên khách hàng' : 'Tên khách hàng',
-            width: 250,
-            template: this.itemCustomerName,
-          },
-          {
-            field: 'address',
-            headerText: gv ? gv['Address']?.headerText || 'Địa chỉ' : 'Địa chỉ',
-            template: this.itemAddress,
-            width: 250,
-          },
-          {
-            field: 'contact',
-            headerText: gv ? gv['Contact']?.headerText || 'Liên hệ chính' : 'Liên hệ chính',
-            template: this.itemContact,
-            width: 250,
-          },
-          {
-            field: 'priority',
-            headerText: gv ? gv['Piority']?.headerText || 'Độ ưu tiên' : 'Độ ưu tiên',
-            template: this.itemPriority,
-            width: 100,
-          },
-          {
-            field: 'createdBy',
-            headerText: gv ? gv['CreatedBy']?.headerText || 'Người tạo' : 'Người tạo',
-            template: this.itemCreatedBy,
-            width: 100,
-          },
-          {
-            field: 'createdOn',
-            headerText: gv ? gv['CreatedOn']?.headerText || 'Ngày tạo' : 'Ngày tạo',
-            template: this.itemCreatedOn,
-            width: 180,
-          },
-        ];
-        this.views = [
-          {
+    this.crrFuncID = this.funcID;
+    let formModel = this.view?.formModel;
+    if (formModel) {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'customerName',
+              headerText: gv
+                ? gv['CustomerName']?.headerText || 'Tên khách hàng'
+                : 'Tên khách hàng',
+              width: 250,
+              template: this.itemCustomerName,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'contact',
+              headerText: gv
+                ? gv['Contact']?.headerText || 'Liên hệ chính'
+                : 'Liên hệ chính',
+              template: this.itemContact,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+          ];
+          this.views.push({
             sameData: true,
             type: ViewType.grid,
             active: false,
             model: {
               resources: this.columnGrids,
             },
-          },
-          {
-            type: ViewType.listdetail,
-            sameData: true,
-            active: true,
-            model: {
-              template: this.itemTemplate,
-              panelRightRef: this.templateDetail,
-            },
-          },
-        ];
-      });
-
+          });
+        });
+    }
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+    ];
     this.detectorRef.detectChanges();
   }
 
-  onInit(): void {
+  changeView(e) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.crrFuncID != this.funcID) {
+      this.crrFuncID = this.funcID;
+    }
+    this.detectorRef.detectChanges();
   }
+
+  afterLoad(crrFuncID) {}
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -143,19 +180,59 @@ export class CrmCustomerComponent
     }
   }
 
+  clickMF(e, data) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+    }
+  }
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
   //#region Search
   searchChanged(e) {}
   //#endregion
 
   //#region CRUD
   add() {}
+
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        var dialog = this.callfc.openSide(
+          PopupAddCrmcontactsComponent,
+          [
+            'edit',
+            this.titleAction
+          ],
+          option
+        );
+      });
+  }
+
+  copy(data) {}
   //#endregion
 
   //#region event
   selectedChange(data) {
     this.dataSelected = data?.data ? data?.data : data;
     this.detectorRef.detectChanges();
-
   }
   //#endregion
 }

@@ -42,8 +42,7 @@ export class PopupAddNewHRComponent
   actionType: string;
   dialog: DialogRef;
   oldEmployeeID: string;
-
-  // formModel: FormModel;
+  isEdit: boolean = false;
   funcID;
 
   @ViewChild('form', { static: true }) form: LayoutAddComponent;
@@ -89,30 +88,14 @@ export class PopupAddNewHRComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    console.log('dialog', this.dialog);
-
     this.data = this.dialog.dataService.dataSelected;
-    // this.isEdit = dialogData?.data.isEdit != null ? true : false;
+    this.isEdit = dialogData?.data.isEdit != null ? true : false;
     this.oldEmployeeID = dialogData.data.oldEmployeeID;
     this.actionType = dialogData?.data?.actionType;
-    console.log('olddddID popup', this.oldEmployeeID);
-    
-
-    // this.formModel = ;
     this.funcID = this.dialog.formModel.funcID;
   }
 
-  onInit(): void {
-    // if(!this.formModel)
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     this.formModel = res;
-    //   });
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     let formControl =
@@ -127,14 +110,17 @@ export class PopupAddNewHRComponent
         let today = new Date().valueOf();
         let diffMS = today - birthday;
         let diff = new Date(diffMS).getFullYear() - 1970;
-
         let result =
           diff >= 18 ? null : { formControl: { value: formControl.value } };
         return result;
       }
     };
   }
-
+  valueChange(event) {
+    if (event?.field && event?.data != null) {
+      this.data[event.field] = event.data;
+    }
+  }
   buttonClick(e: any) {
     console.log(e);
   }
@@ -154,7 +140,6 @@ export class PopupAddNewHRComponent
       if (this.actionType == 'copy') {
         option.methodName = 'AddEmployeeAsync';
       } else {
-        
         option.methodName = 'UpdateEmpInfoAsync';
         option.data = [itemData, this.oldEmployeeID];
         return true;
@@ -166,10 +151,6 @@ export class PopupAddNewHRComponent
   }
 
   onSaveForm() {
-    // if(this.form.formGroup.invalid){
-    //   this.hrService.notifyInvalid(this.form.formGroup, this.form.formModel);
-    //   return;
-    // }
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
@@ -179,11 +160,10 @@ export class PopupAddNewHRComponent
           if (res.update) {
             result = res.update;
           }
-          console.log('resulttttt', result);
-
           this.data = result;
           this.dialog && this.dialog.close(result);
         }
       });
+    this.detectorRef.detectChanges();
   }
 }

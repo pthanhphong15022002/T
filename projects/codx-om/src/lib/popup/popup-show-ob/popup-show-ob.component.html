@@ -1,16 +1,15 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary h-100'" [body]="alignKR">
+<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
   <div class="w-100 h-100 bg-white d-flex flex-column">
-    <span class="pt-5 bg-secondary row"></span>
     <div class="d-flex align-items-center justify-content-end pt-5 me-5">
       <div class="d-flex align-items-center">
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
+        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
           <span class="symbol-label bg-om-gray">
             <i class="icon-create"></i>
           </span>
-        </div>
+        </div> -->
 
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
           <span class="symbol-label bg-om-gray">
@@ -19,17 +18,21 @@
         </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4 " (click)="editWeight(dataOKR?.recID)">
           <span class="symbol-label bg-om-gray hover-bg-color ">
-              <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
+            <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
           </span>
-      </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
+        </div>
+        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
           <span class="symbol-label bg-om-gray">
             <i class="icon-vertical_align_center text-dark"></i>
           </span>
-        </div>
-        <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4">
-        </codx-dropdown-calendar>
-
+        </div> -->
+        <!-- <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4">
+        </codx-dropdown-calendar> -->
+      <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
+          <span class="mx-2">
+            {{dataOKR?.periodID}}
+          </span>
+        </div> 
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
           <span class="symbol-label bg-om-gray">
             <i class="fas fa-ellipsis-h"></i>
@@ -85,7 +88,7 @@
                             [method]="chartSettings?.method"></codx-chart>
                         </div>
                       </div>
-                      
+
                     </div>
                   </div>
 
@@ -112,9 +115,8 @@
                       </div>
                       <div class="d-flex align-items-center kr-process w-100 ms-3 my-1 col-8">
                         <div class="ms-10 h-15px w-100 bg-gray-200 rounded-4">
-                          <div class="bg-color rounded-4 h-15px" role="progressbar"
-                            [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                            aria-valuemax="100"></div>
+                          <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item.progress + '%'"
+                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="ms-10 text-light process-per position-absolute top-0 fs-8 om-pt-1" [style.left]="
                           (item.progress / 2 > 0 ? item.progress / 2 : 1) + '%'
@@ -160,30 +162,18 @@
                   <!--Filter-->
                   <div class="d-flex align-items-center justify-content-end" #titleOKR>
                     <div class="d-flex align-items-center">
-                      <div ngbDropdown [container]="'body'">
-                        <div ngbDropdownToggle
-                          class="d-flex align-items-center border rounded align-items-center bg-white p-2" type="button"
-                          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="icon-filter_alt me-2"></i>
-                          <codx-label default="Lọc tình trạng" fiedName="lblFilter"></codx-label>
-                          <i class="fas fa-angle-down ms-3"></i>
-                        </div>
-                        <div ngbDropdownMenu class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton">
-                          <div class="dropdown-item py-2 px-4 cursor-pointer" *ngFor="let item of dtStatus">
-                            <span>{{ item?.text }}</span>
-                          </div>
-                        </div>
-                      </div>
                       <div class="ms-2 me-2" ngbDropdown [container]="'body'">
-                        <div ngbDropdownToggle
-                          class="d-flex align-items-center border rounded align-items-center bg-white p-2" type="button"
-                          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="icon-vertical_align_center me-2"></i>
-                          <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
-                          <i class="fas fa-angle-down ms-3"></i>
+                        <div role="button"
+                          class="d-flex align-items-center border rounded align-items-center p-2 w-90px "
+                          (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==true">
+                          <i class="icon-i-arrows-collapse me-2"></i>
+                          <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
                         </div>
-                        <div ngbDropdownMenu class="dropdown-menu p-5" aria-labelledby="dropdownMenuButton">
-                          Collapse
+                        <div role="button"
+                          class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+                          (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==false">
+                          <i class="icon-i-arrows-expand me-2"></i>
+                          <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
                         </div>
                       </div>
                     </div>
@@ -194,495 +184,20 @@
                     <span class="icon-i-signpost-2 text-primary"></span>
                     <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
-                  <div class="px-10">
-                    <div *ngFor="let data of listAlign; let i = index">
-                      <div class="d-flex align-items-center justify-content-between mt-5">
-                        <div class="d-flex align-items-center cursor-pointer w-100" (click)="getItemOKRAlign(i, data.recID)"
-                          data-bs-toggle="collapse" [attr.data-target]="'#collapse' + i" aria-expanded="true"
-                          [attr.aria-controls]="'collapse' + i">
-                          <div class="rounded-circle cursor-pointer me-3 bg-light w-20px h-18px text-center">
-                            <i [class]="
-                                !this.openAccordionAlign[i]
-                                  ? 'icon-navigate_next'
-                                  : 'fas fa-angle-down'
-                              "></i>
-                          </div>
-                          <i class="fa-solid fa-bullseye me-3 fs-3 txt-color-0E4C55"></i>
-                          <span>{{ data.okrName }}</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-end">
-                          <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                          <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-                            <div class="h-15px w-100 bg-gray-200 rounded-4">
-                              <div class="bg-color rounded-4 h-15px" role="progressbar"
-                                [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-
-                            <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
-                              {{ data.progress }}%
-                            </div>
-                            <div class="pic-local" style="left: 77%">
-                              <span class="icon-language text-primary icon-20"></span>
-                            </div>
-                            <div *ngIf="data.confidence" class="pic-face" style="left: 90%">
-                              <img class="w-18px h-18px" [src]="
-                                  'assets/themes/wp/default/img/' +
-                                  (data.confidence == '2'
-                                    ? 'L1480_4'
-                                    : 'L1480_3') +
-                                  '.svg'
-                                " />
-                            </div>
-                          </div>
-                          <div class="d-flex ms-9">
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(data)"> -->
-                              <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.child ? data?.child.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.shares ? data?.shares.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.notes ? data?.notes.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.notes ? data?.notes.length : 0
-                                }}</span>
-                            </button>
-                            <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc>
-                          </div>
-                        </div>
-                      </div>
-                      <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
-                        [class.show]="openAccordionAlign[i]" [attr.aria-labelledby]="'heading' + i"
-                        data-bs-parent="#accordionExample">
-                        <div class="ps-5 mt-2 cursor-pointer w-100 d-flex justify-content-end"
-                          *ngFor="let item of data?.child">
-                          <!--show KR-->
-                          <div class="d-flex align-items-center justify-content-between w-95">
-                            <div class="d-flex align-items-center">
-                              <div
-                                class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center">
-                                KR
-                              </div>
-                              <div class="ps-3">
-                                {{ item.okrName }}
-                              </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-end">
-                              <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                              <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-                                <div class="h-15px w-100 bg-gray-200 rounded-4">
-                                  <div class="bg-color rounded-4 h-15px" role="progressbar"
-                                    [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                                </div>
-                                <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
-                                  {{ item.progress }}%
-                                </div>
-                                <div class="pic-local" style="left: 77%">
-                                  <span class="icon-language text-primary icon-20"></span>
-                                </div>
-                                <div *ngIf="item.confidence" class="pic-face" style="left: 90%">
-                                  <img class="w-18px h-18px" [src]="
-                                      'assets/themes/wp/default/img/' +
-                                      (item.confidence == '2'
-                                        ? 'L1480_4'
-                                        : 'L1480_3') +
-                                      '.svg'
-                                    " />
-                                </div>
-                              </div>
-                              <div class="d-flex ms-9">
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.shares ? item?.shares.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span
-                                    class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.notes ? item?.notes.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span
-                                    class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.notes ? item?.notes.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(item)"> -->
-                                  <span class="icon-attach_file icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item.attachments
-                                    ? item?.attachments.length
-                                    : 0
-                                    }}</span>
-                                </button>
-                                <codx-mfunc [formModel]="formModel" type="view" [dataItem]="item"
-                                  class="ms-4"></codx-mfunc>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <div *ngIf="listAlign && listAlign.length>0" class="px-5">
+                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" ></view-okr>
                   </div>
                   <!--Content-->
                   <div class="ms-5 ps-5 pt-5">
                     <span class="icon-i-signpost-2 text-primary"></span>
                     <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
-                  
-                  <div class="px-10">
-                    <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="listAssign" [enableCheck]="false"
-      idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
-      (selectionChange)="selectionChange($event)">
-      </codx-treeview> 
-          
-    
-          <ng-template #templateTreeView let-item>
-            <!--OB node-->
-             <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
-              
-              <hr class="mt-2 w-100">
-              <div class="w-100 d-flex justify-content-between">
-                <div class="d-flex align-items-center flex-row cursor-pointer w-100">
-                  <span class="fa-solid fa-bullseye me-3 fs-2 txt-color-0E4C55"></span>
-                  <span class="ob-kr" >{{ item?.okrName }}</span>
-                  <codx-vll *ngIf="item?.category"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    [name]="'OM012'"
-                    [value]="item?.category"
-                    class="ms-2 badge badge-light badge-md fs-7">
-                  </codx-vll>
-                  <codx-vll *ngIf="item?.confidence"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    [name]="'OM013'"
-                    [value]="item?.confidence"
-                    class="badge badge-light badge-md fs-7">
-                  </codx-vll>
-                </div>
-                <div class="d-flex align-items-center justify-content-end ">
-                  
-                  <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-                  <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-                    <span>{{item?.progress}}%</span>
-                    <div class="h-7px w-100 bg-gray-200 rounded-4">
-                      <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                  <div *ngIf="listAssign && listAssign.length>0" class="px-5">
+                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" ></view-okr>
+                  </div>
                     
-      
-                  </div>
-                  <div class="d-flex ms-5">
-                    <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
-                      <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.child && item?.child.length >0 ? 'bg-color': 'bg-gray-300'">{{
-                        item?.child? item?.child.length :0 }}</span>
-                    </button>
-                    <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
-                      <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.shares  && item?.shares.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                        item?.shares ? item?.shares?.length : 0 }}</span>
-                    </button>
-                    <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
-                      <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                        item?.updates ? item?.updates.length : 0 }}</span>
-                    </button>
-                    <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
-                      <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                        item?.notes ? item?.notes.length : 0 }}</span>
-                    </button>
-                    <!-- <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item" class="ms-4"
-                      (clickMF)="clickMF($event,item)"></codx-mfunc> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!--KR node-->
-            <div class="d-flex align-items-center justify-content-between mt-2 " *ngIf="item?.okrType==krType">
-              
-              <div class="d-flex align-items-center cursor-pointer w-100">               
-                <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-2 text-center">
-                  KR
-                </div>
-                <span class="ob-kr" > {{ item?.okrName }} </span>
-                <span class="mx-2">|</span>
-                <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>                
-                <span *ngIf="item?.umid"> {{item?.umid}} </span>
-              </div>
-              <div class="d-flex align-items-center justify-content-end ">
-                <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-                  <span>{{item?.progress}}%</span>
-                  <div class="h-7px w-100 bg-gray-200 rounded-4">
-                    <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                      aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-    
-                </div>
-                <div class="d-flex ms-5">
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  " [ngClass]="item?.child  && item?.child.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.child ? item?.child.length : 0 }}</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  " [ngClass]="item?.shares  && item?.shares.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.shares ? item?.shares?.length : 0 }}</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.updates ? item?.updates?.length : 0 }}</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.notes ? item?.notes?.length : 0 }}</span>
-                  </button>
-                  <!-- <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-                    (clickMF)="clickKRMF($event,item,false)"></codx-mfunc> -->
-                </div>
-              </div>
-            </div>
-
-            <!--SKR node-->
-            <div class="d-flex align-items-center justify-content-between mt-2 ms-3" *ngIf="item?.okrType==skrType">
-              <div class="d-flex align-items-center cursor-pointer w-100">
-                <div class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-center justify-content-between ">
-                  SKR
-                </div>
-                <div class="ob-kr" >
-                  {{ item?.okrName }}
-                </div>
-                <span class="mx-2">|</span>
-                <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>                
-                <span *ngIf="item?.umid"> {{item?.umid}} </span>
-              </div>
-              <div class="d-flex align-items-center justify-content-end ">
-                <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-                  <span>{{item?.progress}}%</span>
-                  <div class="h-7px w-100 bg-gray-200 rounded-4">
-                    <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                      aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-    
-                </div>
-                <div class="d-flex ms-5">
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-vpn_key icon-20 text-gray-300 text-hover-primary"></span>
-                    <!-- <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                      item?.kRs? item?.kRs : 0 }}</span> -->
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.shares  && item?.shares.length >0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.shares ? item?.shares?.length : 0 }}</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.updates ? item?.updates?.length : 0 }}</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                    <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                      item?.notes ? item?.notes?.length : 0 }}</span>
-                  </button>
                   
-                </div>
-              </div>
-            </div>
-    
-          </ng-template>
-                    <!-- <div *ngFor="let data of listAssign; let i = index">
-                      <div class="d-flex align-items-center justify-content-between mt-5">
-                        <div class="d-flex align-items-center cursor-pointer w-100" (click)="getItemOKRAssign(i, data.recID)"
-                          data-bs-toggle="collapse" [attr.data-target]="'#collapse' + i" aria-expanded="true"
-                          [attr.aria-controls]="'collapse' + i">
-                          <div class="rounded-circle cursor-pointer me-3 bg-light w-20px h-18px text-center">
-                            <i [class]="
-                                !this.openAccordionAssign[i]
-                                  ? 'icon-navigate_next'
-                                  : 'fas fa-angle-down'
-                              "></i>
-                          </div>
-                          <i class="fa-solid fa-bullseye me-3 fs-3 txt-color-0E4C55"></i>
-                          <span>{{ data.okrName }}</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-end">
-                          <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                          <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-                            <div class="h-15px w-100 bg-gray-200 rounded-4">
-                              <div class="bg-color rounded-4 h-15px" role="progressbar"
-                                [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                            </div>
-
-                            <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
-                              {{ data.progress }}%
-                            </div>
-                            <div class="pic-local" style="left: 77%">
-                              <span class="icon-language text-primary icon-20"></span>
-                            </div>
-                            <div *ngIf="data.confidence" class="pic-face" style="left: 90%">
-                              <img class="w-18px h-18px" [src]="
-                                  'assets/themes/wp/default/img/' +
-                                  (data.confidence == '2'
-                                    ? 'L1480_4'
-                                    : 'L1480_3') +
-                                  '.svg'
-                                " />
-                            </div>
-                          </div>
-                          <div class="d-flex ms-9">
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(data)"> 
-                              <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.child ? data?.child.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.shares ? data?.shares.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.notes ? data?.notes.length : 0
-                                }}</span>
-                            </button>
-                            <button class="btn btn-icon btn-sm position-relative ms-4">
-                              <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
-                              <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                data?.notes ? data?.notes.length : 0
-                                }}</span>
-                            </button>
-                            <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc>
-                          </div>
-                        </div>
-                      </div>
-                      <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
-                        [class.show]="openAccordionAssign[i]" [attr.aria-labelledby]="'heading' + i"
-                        data-bs-parent="#accordionExample">
-                        <div class="ps-5 mt-2 cursor-pointer w-100 d-flex justify-content-end"
-                          *ngFor="let item of data?.child">
-                          <div class="d-flex align-items-center justify-content-between w-95">
-                            <div class="d-flex align-items-center">
-                              <div
-                                class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center">
-                                KR
-                              </div>
-                              <div class="ps-3">
-                                {{ item.okrName }}
-                              </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-end">
-                              <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                              <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-                                <div class="h-15px w-100 bg-gray-200 rounded-4">
-                                  <div class="bg-color rounded-4 h-15px" role="progressbar"
-                                    [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                                </div>
-                                <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
-                                  {{ item.progress }}%
-                                </div>
-                                <div class="pic-local" style="left: 77%">
-                                  <span class="icon-language text-primary icon-20"></span>
-                                </div>
-                                <div *ngIf="item.confidence" class="pic-face" style="left: 90%">
-                                  <img class="w-18px h-18px" [src]="
-                                      'assets/themes/wp/default/img/' +
-                                      (item.confidence == '2'
-                                        ? 'L1480_4'
-                                        : 'L1480_3') +
-                                      '.svg'
-                                    " />
-                                </div>
-                              </div>
-                              <div class="d-flex ms-9">
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.shares ? item?.shares.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span
-                                    class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.notes ? item?.notes.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <span
-                                    class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item?.notes ? item?.notes.length : 0
-                                    }}</span>
-                                </button>
-                                <button class="btn btn-icon btn-sm position-relative ms-4">
-                                  <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(item)"> 
-                                  <span class="icon-attach_file icon-20 text-gray-600 text-hover-primary"></span>
-                                  <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
-                                    item.attachments
-                                    ? item?.attachments.length
-                                    : 0
-                                    }}</span>
-                                </button>
-                                <codx-mfunc [formModel]="formModel" type="view" [dataItem]="item"
-                                  class="ms-4"></codx-mfunc>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-                  </div>
-                  <!--Content-->                  
+                  <!--Content-->
                 </div>
               </div>
             </ng-template>
@@ -754,5 +269,353 @@
         </e-tabitems>
       </ejs-tab>
     </div>
+  </div>
+</ng-template>
+
+<ng-template>
+  <div class="px-10">
+    <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="listAssign"
+      [enableCheck]="false" idField="recID" parentIdField="parentID" [autoLoad]="false"
+      [isOutput]="true" [isLoadChild]="true" (selectionChange)="selectionChange($event)">
+    </codx-treeview>
+
+
+    <ng-template #templateTreeView let-item>
+      <!--OB node-->
+      <div class="d-flex align-items-center flex-column justify-content-between "
+        *ngIf="item?.okrType==obType">
+
+        <hr class="mt-2 w-100">
+        <div class="w-100 d-flex justify-content-between">
+          <div class="d-flex align-items-center flex-row cursor-pointer w-100">
+            <span class="fa-solid fa-bullseye me-3 fs-2 txt-color-0E4C55"></span>
+            <span class="ob-kr">{{ item?.okrName }}</span>
+            <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+              [value]="item?.category" class="ms-2 badge badge-light badge-md fs-7">
+            </codx-vll>
+            <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+              [value]="item?.confidence" class="badge badge-light badge-md fs-7">
+            </codx-vll>
+          </div>
+          <div class="d-flex align-items-center justify-content-end ">
+
+            <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+            <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+              <span>{{item?.progress}}%</span>
+              <div class="h-7px w-100 bg-gray-200 rounded-4">
+                <div class="bg-color rounded-4 h-7px" role="progressbar"
+                  [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                  aria-valuemax="100"></div>
+              </div>
+
+
+            </div>
+            <div class="d-flex ms-5">
+              <button class="btn btn-icon btn-sm position-relative ms-4">
+                <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                  [ngClass]="item?.child && item?.child.length >0 ? 'bg-color': 'bg-gray-300'">{{
+                  item?.child? item?.child.length :0 }}</span>
+              </button>
+              <button class="btn btn-icon btn-sm position-relative ms-4">
+                <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                  [ngClass]="item?.shares  && item?.shares.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                  item?.shares ? item?.shares?.length : 0 }}</span>
+              </button>
+              <button class="btn btn-icon btn-sm position-relative ms-4">
+                <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                  [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                  item?.updates ? item?.updates.length : 0 }}</span>
+              </button>
+              <button class="btn btn-icon btn-sm position-relative ms-4">
+                <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                  [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                  item?.notes ? item?.notes.length : 0 }}</span>
+              </button>
+              <!-- <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item" class="ms-4"
+      (clickMF)="clickMF($event,item)"></codx-mfunc> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--KR node-->
+      <div class="d-flex align-items-center justify-content-between mt-2 "
+        *ngIf="item?.okrType==krType">
+
+        <div class="d-flex align-items-center cursor-pointer w-100">
+          <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-2 text-center">
+            KR
+          </div>
+          <span class="ob-kr"> {{ item?.okrName }} </span>
+          <span class="mx-2">|</span>
+          <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+          <span *ngIf="item?.umid"> {{item?.umid}} </span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end ">
+          <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+            <span>{{item?.progress}}%</span>
+            <div class="h-7px w-100 bg-gray-200 rounded-4">
+              <div class="bg-color rounded-4 h-7px" role="progressbar"
+                [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100"></div>
+            </div>
+
+          </div>
+          <div class="d-flex ms-5">
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                [ngClass]="item?.child  && item?.child.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.child ? item?.child.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                [ngClass]="item?.shares  && item?.shares.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.shares ? item?.shares?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.updates ? item?.updates?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.notes ? item?.notes?.length : 0 }}</span>
+            </button>
+            <!-- <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
+    (clickMF)="clickKRMF($event,item,false)"></codx-mfunc> -->
+          </div>
+        </div>
+      </div>
+
+      <!--SKR node-->
+      <div class="d-flex align-items-center justify-content-between mt-2 ms-3"
+        *ngIf="item?.okrType==skrType">
+        <div class="d-flex align-items-center cursor-pointer w-100">
+          <div
+            class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-center justify-content-between ">
+            SKR
+          </div>
+          <div class="ob-kr">
+            {{ item?.okrName }}
+          </div>
+          <span class="mx-2">|</span>
+          <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+          <span *ngIf="item?.umid"> {{item?.umid}} </span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end ">
+          <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+            <span>{{item?.progress}}%</span>
+            <div class="h-7px w-100 bg-gray-200 rounded-4">
+              <div class="bg-color rounded-4 h-7px" role="progressbar"
+                [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100"></div>
+            </div>
+
+          </div>
+          <div class="d-flex ms-5">
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-vpn_key icon-20 text-gray-300 text-hover-primary"></span>
+              <!-- <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+      item?.kRs? item?.kRs : 0 }}</span> -->
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.shares  && item?.shares.length >0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.shares ? item?.shares?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.updates ? item?.updates?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.notes ? item?.notes?.length : 0 }}</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+    </ng-template>
+    <!-- <div *ngFor="let data of listAssign; let i = index">
+      <div class="d-flex align-items-center justify-content-between mt-5">
+        <div class="d-flex align-items-center cursor-pointer w-100" (click)="getItemOKRAssign(i, data.recID)"
+          data-bs-toggle="collapse" [attr.data-target]="'#collapse' + i" aria-expanded="true"
+          [attr.aria-controls]="'collapse' + i">
+          <div class="rounded-circle cursor-pointer me-3 bg-light w-20px h-18px text-center">
+            <i [class]="
+                !this.openAccordionAssign[i]
+                  ? 'icon-navigate_next'
+                  : 'fas fa-angle-down'
+              "></i>
+          </div>
+          <i class="fa-solid fa-bullseye me-3 fs-3 txt-color-0E4C55"></i>
+          <span>{{ data.okrName }}</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+          <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
+          <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
+            <div class="h-15px w-100 bg-gray-200 rounded-4">
+              <div class="bg-color rounded-4 h-15px" role="progressbar"
+                [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100"></div>
+            </div>
+
+            <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
+              {{ data.progress }}%
+            </div>
+            <div class="pic-local" style="left: 77%">
+              <span class="icon-language text-primary icon-20"></span>
+            </div>
+            <div *ngIf="data.confidence" class="pic-face" style="left: 90%">
+              <img class="w-18px h-18px" [src]="
+                  'assets/themes/wp/default/img/' +
+                  (data.confidence == '2'
+                    ? 'L1480_4'
+                    : 'L1480_3') +
+                  '.svg'
+                " />
+            </div>
+          </div>
+          <div class="d-flex ms-9">
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(data)"> 
+              <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                data?.child ? data?.child.length : 0
+                }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                data?.shares ? data?.shares.length : 0
+                }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                data?.notes ? data?.notes.length : 0
+                }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                data?.notes ? data?.notes.length : 0
+                }}</span>
+            </button>
+            <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc>
+          </div>
+        </div>
+      </div>
+      <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
+        [class.show]="openAccordionAssign[i]" [attr.aria-labelledby]="'heading' + i"
+        data-bs-parent="#accordionExample">
+        <div class="ps-5 mt-2 cursor-pointer w-100 d-flex justify-content-end"
+          *ngFor="let item of data?.child">
+          <div class="d-flex align-items-center justify-content-between w-95">
+            <div class="d-flex align-items-center">
+              <div
+                class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center">
+                KR
+              </div>
+              <div class="ps-3">
+                {{ item.okrName }}
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+              <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
+              <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
+                <div class="h-15px w-100 bg-gray-200 rounded-4">
+                  <div class="bg-color rounded-4 h-15px" role="progressbar"
+                    [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+                </div>
+                <div class="process-per position-absolute top-0 fs-8" style="left: 72%">
+                  {{ item.progress }}%
+                </div>
+                <div class="pic-local" style="left: 77%">
+                  <span class="icon-language text-primary icon-20"></span>
+                </div>
+                <div *ngIf="item.confidence" class="pic-face" style="left: 90%">
+                  <img class="w-18px h-18px" [src]="
+                      'assets/themes/wp/default/img/' +
+                      (item.confidence == '2'
+                        ? 'L1480_4'
+                        : 'L1480_3') +
+                      '.svg'
+                    " />
+                </div>
+              </div>
+              <div class="d-flex ms-9">
+                <button class="btn btn-icon btn-sm position-relative ms-4">
+                  <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                    item?.shares ? item?.shares.length : 0
+                    }}</span>
+                </button>
+                <button class="btn btn-icon btn-sm position-relative ms-4">
+                  <span
+                    class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                    item?.notes ? item?.notes.length : 0
+                    }}</span>
+                </button>
+                <button class="btn btn-icon btn-sm position-relative ms-4">
+                  <span
+                    class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                    item?.notes ? item?.notes.length : 0
+                    }}</span>
+                </button>
+                <button class="btn btn-icon btn-sm position-relative ms-4">
+                  <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(item)"> 
+                  <span class="icon-attach_file icon-20 text-gray-600 text-hover-primary"></span>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                    item.attachments
+                    ? item?.attachments.length
+                    : 0
+                    }}</span>
+                </button>
+                <codx-mfunc [formModel]="formModel" type="view" [dataItem]="item"
+                  class="ms-4"></codx-mfunc>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
   </div>
 </ng-template>

@@ -61,9 +61,6 @@
                   />
                 </a>
               </ng-container>
-              <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
-            [numberImages]="5" (click)="openPopup(data)">
-          </codx-imgs> -->
             </div>
             <div
               class=""
@@ -73,7 +70,11 @@
                 class="container"
                 *ngFor="let item of data.chooseRoles; index as num"
               >
-                <a *ngIf="num <= 5">
+                <a
+                  *ngIf="
+                    num < 5 || (num == 5 && data?.chooseRoles?.length == 6)
+                  "
+                >
                   <img
                     [ngbPopover]="item.customName"
                     triggers="mouseenter:mouseleave"
@@ -85,7 +86,7 @@
                   />
                 </a>
               </ng-container>
-              <ng-container>
+              <ng-container *ngIf="data?.chooseRoles?.length > 6">
                 <span
                   [ngbPopover]="manyModule"
                   [autoClose]="'outside'"
@@ -176,7 +177,7 @@
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, data)"
             [dataItem]="data"
-            (changeDataMF)="changeDataMF($event, data)"
+            (changeDataMF)="changeDataMF($event,data)"
             type="hover"
           >
           </codx-mfunc>

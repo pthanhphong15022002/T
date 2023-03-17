@@ -31,18 +31,15 @@ import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.
 @Component({
   selector: 'wp-chat-list',
   templateUrl: './chat-list.component.html',
-  styleUrls: ['./chat-list.component.css'],
+  styleUrls: ['./chat-list.component.scss'],
 })
 export class ChatListComponent implements OnInit, AfterViewInit {
-  
-  
   funcID: string = 'WPT11';
   function: any = null;
   formModel: FormModel = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
   user:any = null;
-  dataSVSearch:DataService = null;
   searched:boolean = false;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
@@ -60,7 +57,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   {
     this.user = this.auth.get();
     this.formModel = new FormModel();
-    this.dataSVSearch = new DataService(this.injector);
   }
 
   ngOnInit(): void {
@@ -91,11 +87,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    this.dataSVSearch.service = "WP";
-    this.dataSVSearch.assemblyName = "ERM.Business.WP";
-    this.dataSVSearch.className = "GroupBusiness";
-    this.dataSVSearch.method = "SearchAsync";
-
   }
 
   ngAfterViewInit() {

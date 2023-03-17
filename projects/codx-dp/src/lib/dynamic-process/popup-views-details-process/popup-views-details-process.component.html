@@ -2,19 +2,23 @@
   <div class="py-3 mx-6 popup-process-header">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="text-dark fw-bold fs-4 me-4" #processName>{{
-          process.processName
-            | formatvalue
-              : dialog.formModel
-              : "processName"
-              : processName
-              : "DPProcesses"
-              : "grvDPProcesses"
-            | async
-        }}</span>
+        <span
+          class="text-dark fw-bold fs-4 me-4"
+          #processName
+          [innerHTML]="
+            process.processName
+              | formatvalue
+                : dialog.formModel
+                : 'processName'
+                : processName
+                : 'DPProcesses'
+                : 'grvDPProcesses'
+              | async
+          "
+        ></span>
         <span class="mt-1" (click)="showGuide(p)">
           <span
-            class="icon-event_notes text-hover-primary cursor-pointer"       
+            class="icon-event_notes text-hover-primary cursor-pointer"
             [ngbPopover]="popperMemo"
             #p="ngbPopover"
             (mouseenter)="process.memo ? p.open() : ''"
@@ -44,7 +48,8 @@
             ></codx-vll>
           </span>
         </span>
-        <button type="button"
+        <button
+          type="button"
           class="btn btn-icon btn-light"
           (click)="closeDetailInstance(process)"
         >

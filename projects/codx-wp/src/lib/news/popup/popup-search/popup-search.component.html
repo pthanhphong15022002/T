@@ -60,7 +60,7 @@
             </div>
             <div class="d-flex align-items-center me-4">
                 <span class="icon-calendar_today me-2"></span>
-                <span *ngIf="data.createdOn">{{data.createdOn | formatvalue:dialogRef.formModel:"createdOn" | async}}</span>
+                <span *ngIf="data.createdOn" [innerHTML]="data.createdOn | formatvalue:dialogRef.formModel:'CreatedOn' | async"></span>
             </div>
             <div class="d-flex align-items-center me-4">
                 <span class="icon-visibility me-2"></span>

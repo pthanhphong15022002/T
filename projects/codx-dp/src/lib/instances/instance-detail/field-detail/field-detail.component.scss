@@ -83,8 +83,12 @@
 }
 
 //Thao css
+.class-field>.crr-fiels{
+  border: 1px transparent solid;
+}
 .class-field>.crr-fiels:hover {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff;
+  // box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  //border-radius: 5px;
+  //background-color: #f0f8ff;
+  border-color: var(--gray-150);
 }

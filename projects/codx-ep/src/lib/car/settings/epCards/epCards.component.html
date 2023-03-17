@@ -5,23 +5,43 @@
     <codx-img [objectId]="data?.recID" [objectName]="data.resourceName" [funcId]="funcID" [objectType]="'EP_Resources'"
       imageType="circle" width="40" [imgOn]="data.modifiedOn"></codx-img>
   </ng-template>
-
+  <ng-template #itemAction let-data>
+    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+    </codx-mfunc>
+  </ng-template>
   <ng-template #statusCol let-data>
     <codx-vll [name]="'EP016'" [value]="data?.status" [showText]="true" [showBgColor]="true"
       class="badge badge-light badge-square badge-md fs-7 p-2">
     </codx-vll>
 
   </ng-template>
-
+  <ng-template #noteCol let-data>
+    <div class="d-flex align-items-center">
+        <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
+    </div>
+  </ng-template>
+  <ng-template #noteCol let-data>
+    <div class="d-flex align-items-center">
+        <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
+    </div>
+  </ng-template>
+  <ng-template #resID let-data>
+    <div class="d-flex align-items-center">
+        <span  [innerHTML]="data?.resourceID| formatvalue : formModel : 'resourceID' | async"></span>    
+    </div>
+  </ng-template>
+  <ng-template #resName let-data>
+    <div class="d-flex align-items-center">
+        <span  [innerHTML]="data?.resourceName| formatvalue : formModel : 'resourceName' | async"></span>    
+    </div>
+  </ng-template>
   <ng-template #ownerCol let-data>
-    <div class="d-flex has-action-menu align-items-center">
+    <div class="d-flex  align-items-center">
       <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
       <div class="ms-2">
-        <div class="fw-bold">{{ data?.ownerName }}</div>
+        <span class="fw-bold"[innerHTML]=" data?.owner | formatvalue : formModel : 'Owner' | async"></span>
       </div>
-      <codx-mfunc [dataItem]="data" (changeDataMF)="changeDataMF($event, data)" [formModel]="formModel"
-        (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
-    </div>
+      </div>
   </ng-template>
 
 </codx-views>

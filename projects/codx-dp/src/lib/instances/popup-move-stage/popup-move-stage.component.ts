@@ -233,8 +233,11 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
-    this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-    this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
+    if((!!this.listTask || !!this.listTaskGroup ) && this.stepIdClick === this.stepIdOld ) {
+      this.stepIdOld = '';
+    }
+    !this.listTask && this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+    !this.listTaskGroup && this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
@@ -411,9 +414,9 @@ export class PopupMoveStageComponent implements OnInit {
     return { 'background-color': color?.color };
   }
 
-  removeReasonInSteps(stepReason, listStepCbx){
-    stepReason.isUseFail && this.removeItemFail(listStepCbx);
-    stepReason.isUpdateSuccess && this.removeItemSuccess(listStepCbx);
+  removeReasonInSteps(listStepCbx,stepReason){
+    !stepReason.isUseFail && this.removeItemFail(listStepCbx);
+    !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
   }
 
 }

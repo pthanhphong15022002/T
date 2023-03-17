@@ -23,7 +23,10 @@
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
 }
-
+.place-holder{
+  opacity: .65;
+  font-style: italic;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem!important;
@@ -56,6 +59,8 @@ codx-view-list-detail {
   }
 
 }
+
+
 /** custom bootstrap  **/
 .rounded-4 {
   border-radius: 1rem !important;
@@ -93,6 +98,7 @@ textarea.e-input,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
   color: var(--gray-800)!important;
+  line-height: 34px;
 }
 
 
@@ -1681,8 +1687,8 @@ codx-dropdown-calendar{
 // }
 
 codx-view-list-detail .codx-detail-footer .badge.badge-sm {
-  margin-top: 2px;
-  margin-left: -3px;
+  margin-top: 4px;
+  margin-left: -5px;
   padding-left: 1px !important;
   padding-right: 1px !important;
   font-size: 10px !important;
@@ -1837,12 +1843,30 @@ erm-quick-links-inner .dropdown-menu{
   overflow: auto;
 }
 
-
-
+lib-dynamic-process .card-header.m-h-auto.p-0{
+  border: 0;
+}
+.card.rounded-2 .codx-image {
+  border-radius: 0.4rem 0.4rem 0 0!important;
+}
 .codx-form > .card-body, .e-dialog > .e-dlg-content .card-body {
   margin-right: 2px;
 }
+//
 
+.btn-clean{
+
+  .svg-icon.svg-icon-primary svg [fill]:not(.permanent):not(g) {
+      fill:var(--primary);
+  }
+  .svg-icon.svg-icon-primary svg g [fill] {
+    fill: var(--primary) !important;
+  }
+} 
+.btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean.focus:not(.btn-text) {
+  color:var(--primary-dark);
+  background-color:var(--gray-100);
+}
 // .dialog-vll codx-valuelist{
 
 // }
