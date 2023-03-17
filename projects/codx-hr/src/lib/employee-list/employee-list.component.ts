@@ -25,6 +25,7 @@ import {
   ViewType,
   CacheService,
   UIComponent,
+  CRUDService,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -120,6 +121,16 @@ export class EmployeeListComponent extends UIComponent {
           resources: this.columnsGrid,
         },
       },
+      {
+        id: '1',
+        type: ViewType.kanban,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+          resources: this.columnsGrid,
+        },
+      }
     ];
     this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();
@@ -193,6 +204,9 @@ export class EmployeeListComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
       var oldEmployeeID = data.employeeID;
     }
+    let oldEmp = JSON.parse(JSON.stringify(data));
+    console.log('olddemppppppppppppppppppppppppppp', oldEmp);
+    
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -211,7 +225,11 @@ export class EmployeeListComponent extends UIComponent {
           option
         );
         dialog.closed.subscribe((res) => {
+          if(res.event && res.event.employeeID !=  oldEmp.employeeID){
+            (this.view.dataService as CRUDService).remove(oldEmp).subscribe();
+            (this.view.dataService as CRUDService).add(res.event, oldEmp.index).subscribe();
 
+          }
           this.detectorRef.detectChanges();
         });
       });

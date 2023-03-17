@@ -1587,7 +1587,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (x.recID == this.stepOfFields.recID)
         x.showColumnControl = showColumnControl;
     });
-    this.changeDetectorRef.detectChanges();
+    //this.changeDetectorRef.detectChanges();
   }
 
   dropFields(event: CdkDragDrop<string[]>, recID) {
@@ -2733,7 +2733,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.checkedSat = false;
       this.checkedSun = false;
     }
-    this.changeDetectorRef.detectChanges();
   }
 
   autoHandleStepReason() {
