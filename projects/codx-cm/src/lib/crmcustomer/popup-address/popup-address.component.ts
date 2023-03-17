@@ -8,7 +8,7 @@ import { DialogRef, DialogData } from 'codx-core';
 })
 export class PopupAddressComponent implements OnInit {
   dialog: any;
-
+  data: any;
   constructor(
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -19,4 +19,7 @@ export class PopupAddressComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onSave(){
+
+  }
 }
