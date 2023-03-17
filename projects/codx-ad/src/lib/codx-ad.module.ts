@@ -65,7 +65,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'approvers/:funcID',
+        path: 'usergroups/:funcID',
         component: ApproversComponent,
       },
       {
