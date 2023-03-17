@@ -1830,6 +1830,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
         this.saveGroupTask(type, taskGroup, data);
+        let check = this.listStepEdit.some(id => id == data?.stepID)
+        if(!check){
+          this.listStepEdit.push(data?.stepID)
+        }
       }
     });
   }
@@ -1905,7 +1909,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.taskList.splice(i, 1);
           }
         }
-        console.log(this.taskList);
+        let check = this.listStepEdit.some(id => id == data?.stepID)
+        if(!check){
+          this.listStepEdit.push(data?.stepID);
+        }
       }
     });
   }
@@ -1988,6 +1995,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               }
               this.addRole(data['roles'][0], roleOld[0]);
             }
+            let check = this.listStepEdit.some(id => id == taskData?.stepID)
+            if(!check){
+              this.listStepEdit.push(taskData?.stepID);
+            }
             this.sumTimeStep();
           }
         });
@@ -1997,7 +2008,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   deleteTask(taskList, task) {
-    console.log(this.taskList);
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         // delete view
@@ -2015,6 +2025,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskList.splice(indexDb, 1);
         }
         this.sumTimeStep();
+        let check = this.listStepEdit.some(id => id == task?.stepID)
+        if(!check){
+          this.listStepEdit.push(task?.stepID);
+        }
       }
     });
   }
@@ -2167,6 +2181,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       this.setIndex(event.previousContainer.data, 'indexNo');
       this.setIndex(event.container.data, 'indexNo');
+      let check = this.listStepEdit.some(id => id == dataDrop['stepID'])
+      if(!check){
+        this.listStepEdit.push(dataDrop['stepID']);
+      }
     }
   }
 
