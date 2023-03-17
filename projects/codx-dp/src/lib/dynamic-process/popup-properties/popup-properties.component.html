@@ -1,20 +1,31 @@
-<codx-form #form [headerText]="data.processName" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
-  [dialog]="dialog" class="dialog-property">
+<codx-form
+  #form
+  [headerText]="data.processName"
+  [subHeader]="header"
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  class="dialog-property"
+>
 </codx-form>
 <ng-template #header>
   <div class="offcanvas-header w-100">
-    <div class="btn-extand d-flex align-items-center"
-      [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'">
+    <div
+      class="btn-extand d-flex align-items-center"
+      [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
+    >
       <ng-container *ngIf="!hideExtend">
         <span [style.marginLeft]="'52%'">
           <codx-label name="lblInfoExpand" default="Thông tin mở rộng">
           </codx-label>
         </span>
       </ng-container>
-      <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer" (click)="extendShow()">
+      <a
+        class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
+        (click)="extendShow()"
+      >
         <span *ngIf="hideExtend" class="text-dark me-2">
-          <codx-label name="lblExpand" default="Mở rộng">
-          </codx-label>
+          <codx-label name="lblExpand" default="Mở rộng"> </codx-label>
         </span>
         <span class="icon-login icon-20 ext_button"></span>
       </a>
@@ -28,7 +39,10 @@
       <div class="flex-grow-1 extend-main">
         <div class="h-100 extend-content">
           <div class="dms-info">
-            <div *ngIf="linkAvt!=''" class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column">
+            <div
+              *ngIf="linkAvt != ''"
+              class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+            >
               <div class="dropzone-msg dz-message needsclick">
                 <ng-container>
                   <img [src]="linkAvt" class="image-maxsize" />
@@ -42,102 +56,182 @@
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center me-4">
                 <span class="fw-bold text-dark">
-                  <codx-label fiedName="CreatedBy" [formModel]="form.formModel" default="Người tạo:"> </codx-label>
+                  <codx-label
+                    fiedName="CreatedBy"
+                    [formModel]="form.formModel"
+                    default="Người tạo:"
+                  >
+                  </codx-label>
                 </span>
-                <span class="text-dark" style="margin-left: 10px;">
-                  <div>{{userName}}</div>
+                <span class="text-dark" style="margin-left: 10px">
+                  <div>{{ userName }}</div>
                 </span>
               </div>
               <div class="d-flex align-items-center">
-                <span class="me-1 icon-16 icon-access_alarm"></span><span #createdOn> {{
-                  process.createdOn | formatvalue
-                  : dialog.formModel
-                  : "createdOn"
-                  : createdOn
-                  : "Processes"
-                  : "grvProcesses"
-                  | async
-                  }}</span>
+                <span class="me-1 icon-16 icon-access_alarm"></span
+                ><span
+                  #createdOn
+                  [innerHTML]="
+                    process.createdOn
+                      | formatvalue
+                        : dialog.formModel
+                        : 'createdOn'
+                        : createdOn
+                        : 'Processes'
+                        : 'grvProcesses'
+                      | async
+                  "
+                ></span>
               </div>
             </div>
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center me-4">
-                <span class="fw-bold text-dark" style="margin-right: 10px !important;">
-                  <codx-label name="lblSupervisor"  [default]="'Người giám sát'">
+                <span
+                  class="fw-bold text-dark"
+                  style="margin-right: 10px !important"
+                >
+                  <codx-label name="lblSupervisor" [default]="'Người giám sát'">
                   </codx-label>
                 </span>
                 <ng-container *ngFor="let item of lstO; index as i">
-                  <div *ngIf="i<2" class="d-flex justify-content-between user-mini-nav align-items-center"
-                    style="background-color: #f4f7ff" disabled="isView">
-
+                  <div
+                    *ngIf="i < 2"
+                    class="d-flex justify-content-between user-mini-nav align-items-center"
+                    style="background-color: #f4f7ff"
+                    disabled="isView"
+                  >
                     <span *ngIf="item?.objectID != null && item.objectID != ''">
-                      <codx-img [width]="25" class="me-2" [objectId]="item?.objectID" objectType="AD_Users"></codx-img>
+                      <codx-img
+                        [width]="25"
+                        class="me-2"
+                        [objectId]="item?.objectID"
+                        objectType="AD_Users"
+                      ></codx-img>
                     </span>
-                    <span *ngIf="item?.objectID == null || item.objectID == ''"
-                      class="d-flex justify-content-between user-mini align-items-center">
-                      <img class="svg-icon w-20px user-admin" src="../../../assets/codx/user/user-admin.svg">
+                    <span
+                      *ngIf="item?.objectID == null || item.objectID == ''"
+                      class="d-flex justify-content-between user-mini align-items-center"
+                    >
+                      <img
+                        class="svg-icon w-20px user-admin"
+                        src="../../../assets/codx/user/user-admin.svg"
+                      />
                     </span>
-                    <span class="text-dark fw-bold"> {{ item?.objectName}} </span>
+                    <span class="text-dark fw-bold">
+                      {{ item?.objectName }}
+                    </span>
                   </div>
-                    <codx-user-properties *ngIf="i==2" [list]="lstO" [item]="item"></codx-user-properties>
+                  <codx-user-properties
+                    *ngIf="i == 2"
+                    [list]="lstO"
+                    [item]="item"
+                  ></codx-user-properties>
                 </ng-container>
               </div>
             </div>
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center me-4">
                 <span class="fw-bold text-dark">
-                  <codx-label name="lblParticipants" [default]="'Người tham gia'"
-                    style="margin-right: 10px !important;">
+                  <codx-label
+                    name="lblParticipants"
+                    [default]="'Người tham gia'"
+                    style="margin-right: 10px !important"
+                  >
                   </codx-label>
                 </span>
                 <ng-container *ngFor="let item of lstP; index as i">
-                  <div *ngIf="i<2" class="d-flex justify-content-between user-mini-nav align-items-center"
-                    style="background-color: #f4f7ff" disabled="isView">
-
+                  <div
+                    *ngIf="i < 2"
+                    class="d-flex justify-content-between user-mini-nav align-items-center"
+                    style="background-color: #f4f7ff"
+                    disabled="isView"
+                  >
                     <span *ngIf="item?.objectID != null && item.objectID != ''">
-                      <codx-img [width]="25" class="me-2" [objectId]="item?.objectID" objectType="AD_Users"></codx-img>
+                      <codx-img
+                        [width]="25"
+                        class="me-2"
+                        [objectId]="item?.objectID"
+                        objectType="AD_Users"
+                      ></codx-img>
                     </span>
-                    <span *ngIf="item?.objectID == null || item.objectID == ''"
-                      class="d-flex justify-content-between user-mini align-items-center">
-                      <img class="svg-icon w-20px user-admin" src="../../../assets/codx/user/user-admin.svg">
+                    <span
+                      *ngIf="item?.objectID == null || item.objectID == ''"
+                      class="d-flex justify-content-between user-mini align-items-center"
+                    >
+                      <img
+                        class="svg-icon w-20px user-admin"
+                        src="../../../assets/codx/user/user-admin.svg"
+                      />
                     </span>
-                    <span class="text-dark fw-bold"> {{ item?.objectName}} </span>
+                    <span class="text-dark fw-bold">
+                      {{ item?.objectName }}
+                    </span>
                   </div>
-                    <codx-user-properties *ngIf="i==2" [list]="lstP" [item]="item"></codx-user-properties>
+                  <codx-user-properties
+                    *ngIf="i == 2"
+                    [list]="lstP"
+                    [item]="item"
+                  ></codx-user-properties>
                 </ng-container>
               </div>
             </div>
             <div class="d-flex flex-wrap mb-1">
               <div class="d-flex align-items-center me-4">
-                <span class="fw-bold text-dark" style="margin-right: 10px !important;">
+                <span
+                  class="fw-bold text-dark"
+                  style="margin-right: 10px !important"
+                >
                   <codx-label name="lblFollowers" [default]="'Người theo dõi'">
                   </codx-label>
                 </span>
                 <ng-container *ngFor="let item of lstF; index as i">
-                  <div *ngIf="i<2" class="d-flex justify-content-between user-mini-nav align-items-center"
-                    style="background-color: #f4f7ff" disabled="isView">
-
+                  <div
+                    *ngIf="i < 2"
+                    class="d-flex justify-content-between user-mini-nav align-items-center"
+                    style="background-color: #f4f7ff"
+                    disabled="isView"
+                  >
                     <span *ngIf="item?.objectID != null && item.objectID != ''">
-                      <codx-img [width]="25" class="me-2" [objectId]="item?.objectID" objectType="AD_Users"></codx-img>
+                      <codx-img
+                        [width]="25"
+                        class="me-2"
+                        [objectId]="item?.objectID"
+                        objectType="AD_Users"
+                      ></codx-img>
                     </span>
-                    <span *ngIf="item?.objectID == null || item.objectID == ''"
-                      class="d-flex justify-content-between user-mini align-items-center">
-                      <img class="svg-icon w-20px user-admin" src="../../../assets/codx/user/user-admin.svg">
+                    <span
+                      *ngIf="item?.objectID == null || item.objectID == ''"
+                      class="d-flex justify-content-between user-mini align-items-center"
+                    >
+                      <img
+                        class="svg-icon w-20px user-admin"
+                        src="../../../assets/codx/user/user-admin.svg"
+                      />
                     </span>
-                    <span class="text-dark fw-bold"> {{ item?.objectName}} </span>
+                    <span class="text-dark fw-bold">
+                      {{ item?.objectName }}
+                    </span>
                   </div>
-                    <codx-user-properties *ngIf="i==2" [list]="lstF" [item]="item"></codx-user-properties>
+                  <codx-user-properties
+                    *ngIf="i == 2"
+                    [list]="lstF"
+                    [item]="item"
+                  ></codx-user-properties>
                 </ng-container>
               </div>
             </div>
           </div>
           <div class="card-rating mt-3">
             <div class="fw-bold text-gray-600 mb-3">
-              <codx-label class="fw-bold " name="lblRating" default="Đánh giá"> </codx-label>
+              <codx-label class="fw-bold" name="lblRating" default="Đánh giá">
+              </codx-label>
             </div>
             <div class="d-flex">
               <div class="d-flex flex-column me-20 text-center">
-                <div class="fw-bolder text-warning mb-2" [style.fontSize]="'40px'">
+                <div
+                  class="fw-bolder text-warning mb-2"
+                  [style.fontSize]="'40px'"
+                >
                   {{ totalRating }}
                 </div>
                 <div class="rating-group">
@@ -148,7 +242,10 @@
                     <span class="icon-star text-gray-500 icon-16 me-1"></span>
                     <span class="icon-star text-gray-500 icon-16 me-1"></span>
                   </div>
-                  <div [style.width]="styleRating" class="d-flex rating-percent">
+                  <div
+                    [style.width]="styleRating"
+                    class="d-flex rating-percent"
+                  >
                     <span class="icon-star text-warning icon-16 me-1"></span>
                     <span class="icon-star text-warning icon-16 me-1"></span>
                     <span class="icon-star text-warning icon-16 me-1"></span>
@@ -163,7 +260,9 @@
               </div>
               <!--end::Section-->
               <div class="flex-grow-1">
-                <div class="d-flex justify-content-end align-items-start flex-wrap">
+                <div
+                  class="d-flex justify-content-end align-items-start flex-wrap"
+                >
                   <div class="d-flex align-items-center w-100 mw-275px mb-1">
                     <div class="d-flex align-items-center me-3">
                       <span class="me-1">5</span>
@@ -172,8 +271,14 @@
                       </div>
                     </div>
                     <div class="progress h-6px w-100 me-3">
-                      <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating5" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        [style.width]="rating5"
+                        aria-valuenow="50"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                     <span class="text-primary fw-bold">{{ rating5 }}</span>
                   </div>
@@ -185,8 +290,14 @@
                       </div>
                     </div>
                     <div class="progress h-6px w-100 me-3">
-                      <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating4" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        [style.width]="rating4"
+                        aria-valuenow="50"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                     <span class="text-primary fw-bold">{{ rating4 }}</span>
                   </div>
@@ -198,8 +309,14 @@
                       </div>
                     </div>
                     <div class="progress h-6px w-100 me-3">
-                      <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating3" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        [style.width]="rating3"
+                        aria-valuenow="50"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                     <span class="text-primary fw-bold">{{ rating3 }}</span>
                   </div>
@@ -211,8 +328,14 @@
                       </div>
                     </div>
                     <div class="progress h-6px w-100 me-3">
-                      <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating2" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        [style.width]="rating2"
+                        aria-valuenow="50"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                     <span class="text-primary fw-bold">{{ rating2 }}</span>
                   </div>
@@ -224,8 +347,14 @@
                       </div>
                     </div>
                     <div class="progress h-6px w-100 me-3">
-                      <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating1" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100"></div>
+                      <div
+                        class="progress-bar bg-warning"
+                        role="progressbar"
+                        [style.width]="rating1"
+                        aria-valuenow="50"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
                     <span class="text-primary fw-bold">{{ rating1 }}</span>
                   </div>
@@ -233,33 +362,64 @@
               </div>
             </div>
           </div>
-          <div class=" process-rating mt-1">
-            <div class="d-flex flex-column py-2 flex-grow-1 border-top my-rating">
+          <div class="process-rating mt-1">
+            <div
+              class="d-flex flex-column py-2 flex-grow-1 border-top my-rating"
+            >
               <div class="d-flex align-items-center">
                 <div class="font-size-lg fw-bold flex-grow-1">
-                  <codx-label name="lblRateFile" default="Đánh giá tài liệu này">
+                  <codx-label
+                    name="lblRateFile"
+                    default="Đánh giá tài liệu này"
+                  >
                   </codx-label>
                 </div>
                 <div class="d-flex">
-                  <ngb-rating [(rate)]="currentRate" max="5" (rateChange)="readonly = false" (hover)="hovered = $event"
-                    (leave)="hovered = currentRate" [readonly]="readonly">
+                  <ngb-rating
+                    [(rate)]="currentRate"
+                    max="5"
+                    (rateChange)="readonly = false"
+                    (hover)="hovered = $event"
+                    (leave)="hovered = currentRate"
+                    [readonly]="readonly"
+                  >
                     <ng-template let-fill="fill" let-index="index">
-                      <span class="star" [class.filled]="fill === 100" [class.bad]="index < 5">&#9733;</span>
+                      <span
+                        class="star"
+                        [class.filled]="fill === 100"
+                        [class.bad]="index < 5"
+                        >&#9733;</span
+                      >
                     </ng-template>
                   </ngb-rating>
                 </div>
               </div>
               <div div class="text-gray-500 fs-7">
-                <codx-label name="lblPonder" default="Cho người khác biết suy nghĩ của bạn ....">
+                <codx-label
+                  name="lblPonder"
+                  default="Cho người khác biết suy nghĩ của bạn ...."
+                >
                 </codx-label>
               </div>
               <div class="d-flex align-items-center mt-4">
                 <div class="comment-box flex-grow-1">
-                  <codx-input name="lblComment" placeholder="Nhận xét của bạn..." id="myInput" class="form-control test-datetime"
-                    type="textarea" format="ed2" style="width: 100%" [crrValue]="commenttext"
-                    (valueChange)="txtValue($event, 'commenttext')"></codx-input>
+                  <codx-input
+                    name="lblComment"
+                    placeholder="Nhận xét của bạn..."
+                    id="myInput"
+                    class="form-control test-datetime"
+                    type="textarea"
+                    format="ed2"
+                    style="width: 100%"
+                    [crrValue]="commenttext"
+                    (valueChange)="txtValue($event, 'commenttext')"
+                  ></codx-input>
                 </div>
-                <span (click)="setComment()" id="myBtn" class="btn btn-primary ms-3 min-w-60px">
+                <span
+                  (click)="setComment()"
+                  id="myBtn"
+                  class="btn btn-primary ms-3 min-w-60px"
+                >
                   <codx-label name="lblSend" default="Gửi"> </codx-label>
                 </span>
               </div>
@@ -268,33 +428,59 @@
             <div class="mb-3">
               <!-- <ng-container *ngFor="let view of fileEditing.views; let i = index"> -->
               <!--begin::Foot-->
-              <ng-container *ngIf="process.ratings != null && process.ratings.length>0">
+              <ng-container
+                *ngIf="process.ratings != null && process.ratings.length > 0"
+              >
                 <ng-container *ngFor="let view of ratings; let i = index">
-                  <div *ngIf="view.rating > 0" class="d-flex flex-column py-3 w-100 border-bottom user-rating">
-                    <div class="d-flex justify-content-between align-items-center">
+                  <div
+                    *ngIf="view.rating > 0"
+                    class="d-flex flex-column py-3 w-100 border-bottom user-rating"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
                       <div class="me-3">
-                        <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users" imgCss="w-30px me-3"
-                          [imageWidth]="30" [title]="view.objectName" [subTitle]="view.positionName">
+                        <codx-temp-full
+                          [imageId]="view.objectID"
+                          imageObjType="AD_Users"
+                          imgCss="w-30px me-3"
+                          [imageWidth]="30"
+                          [title]="view.objectName"
+                          [subTitle]="view.positionName"
+                        >
                         </codx-temp-full>
                       </div>
                       <div class="d-flex flex-column">
-                        <div class="task-date text-gray-600 d-flex flex-column align-items-center">
+                        <div
+                          class="task-date text-gray-600 d-flex flex-column align-items-center"
+                        >
                           <div class="text-gray-500 fs-7 mb-1">
-                            <span class="text-gray-600 me-2">{{view.createdOn |
-                              timefrom}}</span>
+                            <span class="text-gray-600 me-2">{{
+                              view.createdOn | timefrom
+                            }}</span>
                           </div>
                           <div class="d-flex user-rated">
-                            <span [ngClass]="setClassRating(1, view.rating)"></span>
-                            <span [ngClass]="setClassRating(2, view.rating)"></span>
-                            <span [ngClass]="setClassRating(3, view.rating)"></span>
-                            <span [ngClass]="setClassRating(4, view.rating)"></span>
-                            <span [ngClass]="setClassRating(5, view.rating)"></span>
+                            <span
+                              [ngClass]="setClassRating(1, view.rating)"
+                            ></span>
+                            <span
+                              [ngClass]="setClassRating(2, view.rating)"
+                            ></span>
+                            <span
+                              [ngClass]="setClassRating(3, view.rating)"
+                            ></span>
+                            <span
+                              [ngClass]="setClassRating(4, view.rating)"
+                            ></span>
+                            <span
+                              [ngClass]="setClassRating(5, view.rating)"
+                            ></span>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="rating-comment mt-3">
-                      {{view.comment}}
+                      {{ view.comment }}
                     </div>
                   </div>
                 </ng-container>
