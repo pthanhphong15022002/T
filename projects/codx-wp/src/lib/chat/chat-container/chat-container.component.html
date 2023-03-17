@@ -12,7 +12,7 @@
     <div class="chat-container-boxchat-more">
         <ng-container *ngFor="let item of lstGroupCollapse;index as i">
             <ng-container *ngIf="i < 3">
-                <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2" onmouseover="hover(item)">
+                <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2">
                     <ng-container *ngIf="i==0 && lstGroupCollapse.length > 3">
                         <div class="more-box-chat">
                             <span>+{{lstGroupCollapse.length - 3}}</span>
