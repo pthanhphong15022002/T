@@ -73,7 +73,11 @@
     <div class="w-25">
       <div class="d-flex flex-column">
         <div class="text-gray-700">
-          <span>{{ data?.contractTypeID | formatvalue : view.formModel : "contractTypeID" | async}}</span>
+          <span
+          [innerHTML]="data?.contractTypeID | formatvalue : view.formModel : 'contractTypeID' | async"
+          >
+
+          </span>
         </div>
 
         <div class="text-gray-700">
@@ -98,8 +102,9 @@
     </codx-attachment>
     </div>
 
-    <div class="w-25">
-      {{ data?.signStatus | formatvalue : view.formModel : "signStatus" | async}}
+    <div class="w-25"
+      [innerHTML]="data?.signStatus | formatvalue : view.formModel : 'signStatus' | async"
+    >
     </div>
 
     <codx-mfunc
