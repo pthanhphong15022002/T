@@ -1,13 +1,11 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  DataRequest,
-  ImageViewerComponent,
-  RequestOption,
+  DataRequest, RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { map, Observable } from 'rxjs';
 import { ItemsService } from './items.service';
