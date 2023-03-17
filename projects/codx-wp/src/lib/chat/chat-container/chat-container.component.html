@@ -1,12 +1,35 @@
-<div class="codx-chat-container">
-    <div class="chat-content">
-        <div class="box-chats" id="boxChats">
-        </div>
-        <div class="box-chat-list">
-            <ng-container *ngFor="let item of groups">
-                
+<div class="chat-container">
+    <div class="chat-container-boxchat" id="chat-container-boxchat">
+        <ng-container *ngFor="let item of lstGroupActive">
+            <codx-chat-box #codxChatBox 
+                [id]="item" 
+                [groupID]="item" 
+                (close)="removeGroup(item,codxChatBox)"
+                (collapse)="collapse(item,codxChatBox)">
+            </codx-chat-box>
+        </ng-container>
+    </div>
+    <div class="chat-container-boxchat-more">
+        <ng-container *ngFor="let item of lstGroupCollapse;index as i">
+            <ng-container *ngIf="i < 3">
+                <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2">
+                    <ng-container *ngIf="i==0 && lstGroupCollapse.length > 3">
+                        <div class="more-box-chat">
+                            <span>+{{lstGroupCollapse.length - 3}}</span>
+                        </div>
+                    </ng-container>
+                    <div (click)="activeGroup(item)">
+                    <codx-img
+                        [objectId]="item.objectID" 
+                        [objectName]="item.objectName" 
+                        [objectType]="item.objectType" 
+                        [width]="40">
+                    </codx-img>
+                    </div>
+                </div>                
             </ng-container>
-        </div>
+        </ng-container>
+        
     </div>
 </div>
 

@@ -48,7 +48,6 @@
           <codx-label [formModel]="form.formModel" fiedName="employeeID">
           </codx-label>
           <codx-input
-            [disabled]="isEdit"
             type="text"
             [crrValue]="data?.employeeID"
             (valueChange)="valueChange($event)"

@@ -1,9 +1,7 @@
 import {
   Component,
-  Injector,
-  OnInit,
-  Optional,
-  ViewChild,
+  Injector, Optional,
+  ViewChild
 } from '@angular/core';
 import {
   CodxFormComponent,
@@ -12,7 +10,7 @@ import {
   ImageViewerComponent,
   NotificationsService,
   UIComponent,
-  UploadFile,
+  UploadFile
 } from 'codx-core';
 import { map } from 'rxjs/operators';
 import { UMConversion } from '../interfaces/UMConversion.interface';
@@ -31,17 +29,6 @@ export class PopupAddItemConversionComponent extends UIComponent {
   itemConversion: UMConversion = {} as UMConversion;
   savedItemConversions: UMConversion[] = [];
   isEdit: boolean = false;
-  requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    {
-      gvsPropName: 'FromUMID',
-    },
-    {
-      gvsPropName: 'ToUMID',
-    },
-    {
-      gvsPropName: 'Conversion',
-    },
-  ];
   formTitle: string;
 
   constructor(
@@ -103,9 +90,8 @@ export class PopupAddItemConversionComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemConversion,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;
@@ -146,9 +132,8 @@ export class PopupAddItemConversionComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemConversion,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;
