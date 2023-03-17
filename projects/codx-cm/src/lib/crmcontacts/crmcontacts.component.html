@@ -1,33 +1,108 @@
-<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="CRM_Contacts"
-  className="ProcessesBusiness" [method]="'GetListProcessesAsync'" [views]="views" [button]="showButtonAdd ? button : null"
-  (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID" [autoSearch]="true"
-  (searchChanged)="searchChange($event)">
-</codx-views>
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [className]="className" [method]="method" [views]="views" [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField"
+  [autoSearch]="true" (searchChanged)="searchChange($event)" (viewChanged)="changeView($event)"
+  ></codx-views>
 
 <!--grid view-->
-<ng-template #itemContactName></ng-template>
-<ng-template #itemPhoneNumber></ng-template>
-<ng-template #itemEmail></ng-template>
-<ng-template #itemAddress></ng-template>
-<ng-template #itemPriority></ng-template>
-<ng-template #itemCreatedBy></ng-template>
-<ng-template #itemCreatedOn></ng-template>
+<ng-template #itemContactName let-data>
+  <div>
+    {{data?.processName}}
+  </div>
+</ng-template>
+<ng-template #itemPhone let-data>
+  <div>
+    <span class="icon-phone_android text-primary icon-16 me-1"></span>
+    <span class="text-gray-900 text-primary">0702411141</span>
+  </div>
+</ng-template>
+<ng-template #itemEmail let-data>
+  <div>
+    <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900">tdnphuck42@gmail.com</span>
+  </div>
+</ng-template>
+<ng-template #itemAddress let-data>
+  Xã phú mậu, thành phố Huế, Thừa thiên Huế
+</ng-template>
+<ng-template #itemContact let-data>
+  <div class="d-flex flex-column">
+    <span class="text-dark fw-bold mb-2">
+      Trương Đặng Ngọc Phúc
+    </span>
+    <div class="mb-2">
+      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+      <span class="text-gray-900 text-primary">0702411141</span>
+    </div>
+    <div class="mb-2">
+      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900">tdnphuck42@gmail.com</span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemPriority let-data>
+  <span class="icon-14 me-1" [class]="'1' | vll : vllPriority : 'icon' | async" [style.color]="
+    '1' | vll : vllPriority : 'textColor' | async
+  ">
+  </span>
+</ng-template>
+<ng-template #itemCreatedBy let-data>
+  <div>
+    <codx-imgs [isToolTip]="true" [width]="30" [objectId]="data.createdBy" [objectType]="'AD_Users'" [numberImages]="1">
+    </codx-imgs>
+  </div>
+</ng-template>
+<ng-template #itemCreatedOn let-data>
+  {{data?.createdOn | date : "dd/MM/yyyy, hh:mm"}}
+</ng-template>
 <!--grid view-->
 
 
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'" [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="data?.contactName" [imageWidth]="35" imgCss="me-3"
-    imageObjType="AD_Users" [title]="data.contactName" [titleCss]="'fs-6'" [descTmp]="descTmp" [formModel]="view.formModel"
-    [footer]="footer" [dataItem]="data">
+  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
+    [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="data?.processName" [imageWidth]="35" imgCss="me-3"
+    imageObjType="AD_Users" [title]="data.processName" [titleCss]="'fs-6'" [descTmp]="descTmp"
+    [formModel]="view.formModel" [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
 </ng-template>
-<ng-template #descTmp></ng-template>
-<ng-template #footer></ng-template>
+<ng-template #descTmp let-data>
+  <div class="d-flex flex-column">
+    <div class="mt-1">
+      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+      <span class="text-gray-900 text-primary">0702411141</span>
+    </div>
+    <div class="mt-1">
+      <span class="icon-email text-primary icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900 text-primary">tdnphuck42@gmail.com</span>
+    </div>
+    <div class="mt-1">
+      <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
+      <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer let-data>
+  <div class="d-flex justify-content-end">
+    <span class="d-flex align-items-center me-1 text-gray-700">{{data?.createdOn | date : "dd/MM/yyyy"}}</span>
+    <codx-imgs [isToolTip]="true" [width]="30" [objectId]="data.createdBy" [objectType]="'AD_Users'" [numberImages]="1">
+    </codx-imgs>
+  </div>
+</ng-template>
+<ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <span class="icon-14 me-1" [class]="'1' | vll : vllPriority : 'icon' | async" [style.color]="
+    '1' | vll : vllPriority : 'textColor' | async
+  ">
+    </span>
+  </div>
+</ng-template>
 
 <!--list details tempfull-->
 
 <!--list detail right-->
-<ng-template #templateDetail></ng-template>
+<ng-template #templateDetail>
+  <codx-crmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel" [dataSelected]="dataSelected" [funcID]="crrFuncID">
+  </codx-crmcustomer-detail>
+</ng-template>
 <!--list detail right-->
