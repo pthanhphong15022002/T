@@ -35,6 +35,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('cardTranTmp') cardTranTmp: TemplateRef<any>;
+  @ViewChild('itemAction') itemAction: TemplateRef<any>;
+  @ViewChild('noteCol') noteCol: TemplateRef<any>;
+  @ViewChild('resID') resID: TemplateRef<any>;
+  @ViewChild('resName') resName: TemplateRef<any>;
   funcID: string;
   viewType = ViewType;
   views: Array<ViewModel> = [];
@@ -154,12 +158,22 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvEpCards = gv;
           this.columnGrids = [
+            
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'resourceID',
+              template: this.resID,
               headerText: gv['ResourceID'].headerText,
             },
             {
               field: 'resourceName',
+              template: this.resName,
               headerText: gv['ResourceName'].headerText,
               width: '20%',
             },
@@ -179,6 +193,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             },
             {
               field: 'note',
+              template: this.noteCol,
               headerText: gv['Note'].headerText,
             },
             {
@@ -355,15 +370,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
         if (res) {
-          // this.api
-          // .execSv(
-          //   'DM',
-          //   'ERM.Business.DM',
-          //   'FileBussiness',
-          //   'DeleteByObjectIDAsync',
-          //   [obj.recID, 'EP_EPCards', true]
-          // )
-          // .subscribe();
           this.detectorRef.detectChanges();
         }
       });

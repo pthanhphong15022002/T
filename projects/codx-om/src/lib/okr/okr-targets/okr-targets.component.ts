@@ -456,6 +456,7 @@ export class OkrTargetsComponent implements OnInit {
               ob.child = [];
             }
             ob.child.push(kr);
+            return;
           }
         }
       } else {
@@ -464,11 +465,14 @@ export class OkrTargetsComponent implements OnInit {
             if (ob.child == null) {
               ob.child = [];
             }
-            ob.child.forEach((oldKR) => {
-              if (oldKR.recID == kr.recID) {
-                this.editRender(oldKR, kr);
+            for(let i=0;i<ob.child.length;i++){
+              if (ob.child[i].recID == kr.recID) {
+                this.editRender(ob.child[i], kr);
+                return;
               }
-            });
+            }
+            // đổi mục tiêu cho kr
+            
           }
         }
       }
