@@ -54,17 +54,18 @@
               (mouseleave)="p.close()"
               placement="bottom right top"
               [popoverClass]="data.recID"
-            >
-              {{
-                data?.processName
+
+              [innerHTML]="
+              data?.processName
                   | formatvalue
                     : view.formModel
-                    : "processName"
+                    : 'processName'
                     : processName
-                    : "Processes"
-                    : "grvProcesses"
+                    : 'Processes'
+                    : 'grvProcesses'
                   | async
-              }}
+              "
+            >
             </div>
           </div>
           <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>

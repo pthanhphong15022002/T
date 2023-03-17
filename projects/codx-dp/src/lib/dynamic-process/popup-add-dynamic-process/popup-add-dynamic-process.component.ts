@@ -128,11 +128,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isClick: boolean = false;
   stepNameSuccess: string = '';
   stepNameFail: string = '';
+  stepNameReason: string = '';
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
   totalInstance: number = 0;
-
+  titleRadioYes: string = '';
+  titleRadioNo: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -140,10 +142,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly viewStepReasonFail: string = 'reasonFail';
   readonly radioYes: string = 'yes';
   readonly radioNo: string = 'no';
-  readonly titleRadioYes: string = 'Có';
-  readonly titleRadioNo: string = 'Không';
-  // readonly saturday: string = 'Thứ 7';
-  // readonly sunday: string = 'Chủ nhật';
   readonly viewSaturday: string = '7';
   readonly viewSunday: string = '8';
   readonly formNameSteps: string = 'DPSteps';
@@ -255,6 +253,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.getIconReason();
+    this.getValueYesNo();
     if (this.action === 'copy') {
       this.instanceNoSetting = this.process.instanceNoSetting ;
       this.listClickedCoppy = dt.data.conditionCopy;
@@ -320,7 +320,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
-    this.getIconReason();
   }
 
   setDefaultOwner() {
@@ -353,6 +352,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+
+
   }
 
   ngAfterViewInit(): void {
@@ -2841,14 +2842,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   // method for edit reason or copy reason
   openPopupReason(viewReason, reason, clickMore) {
-    // if (!this.isClick) {
-    //   return;
-    // }
-    // this.isClick = false;
     this.headerText =
       viewReason === this.viewStepReasonSuccess
-        ? clickMore?.customName ?? 'Thêm' + ' lý do thành công'
-        : clickMore?.customName ?? 'Thêm' + ' lý do thất bại';
+        ? (clickMore?.customName ?? this.titleAdd) +' ' + this.LowercaseFirstPipe((this.joinTwoString(this.stepNameReason,this.stepNameSuccess)))
+        : (clickMore?.customName ?? this.titleAdd) +' ' + this.LowercaseFirstPipe((this.joinTwoString(this.stepNameReason,this.stepNameFail)));
     if (
       clickMore?.functionID === 'SYS03' ||
       clickMore?.functionID === 'SYS04'
@@ -2963,12 +2960,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getIconReason(){
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
-        this.iconReasonSuccess = res.datas.filter(x=> x.value === 'S')[0];
-        this.iconReasonFail = res.datas.filter(x=> x.value === 'F')[0];
+        for(let item of res.datas) {
+          if(item.value === 'S'){
+            this.iconReasonSuccess = item;
+          }else if(item.value === 'F'){
+            this.iconReasonFail = item;
+          }else if(item.value === 'R'){
+            var reasonValue = item;
+          }
+        }
+
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;
+        this.stepNameReason = reasonValue?.text;
+        this.changeDetectorRef.detectChanges();
       }
     });
+  }
+  getValueYesNo(){
+    this.cache.valueList('DP039').subscribe((res) => {
+      if (res.datas) {
+        for(let item of res.datas) {
+          if(item.value === 'Y'){
+           this.titleRadioYes = item.text;
+          }else if(item.value === 'N'){
+            this.titleRadioNo = item.text;
+          }
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  joinTwoString(valueFrist,valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo ) return '';
+    return valueFrist+' '+ valueTwo;
+  }
+  LowercaseFirstPipe (value){
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion
