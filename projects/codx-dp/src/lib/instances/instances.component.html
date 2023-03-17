@@ -172,7 +172,7 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="font me-3">
+      <div class="font me-3 p-1 px-2">
         <div *ngFor="let item of listSteps">
           <span *ngIf="item.stepID === data.stepID">
             {{ item.stepName }}
