@@ -28,7 +28,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   lstBoxChat:any[] = [];
   @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
   @ViewChild("listChat") listChat:ChatListComponent;
-  @ViewChild("dropdown") dropdown:NgbDropdown;
+  @ViewChild(NgbDropdown) dropdown:NgbDropdown;
   constructor(
     private injector:Injector,
     private auth: AuthStore,
