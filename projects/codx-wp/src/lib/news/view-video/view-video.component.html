@@ -1,5 +1,5 @@
 <div class="d-flex align-items-end w-100 h-100" >
-    <video controls class="w-100" (click)="clickUploadFile()">
+    <video controls class="w-100">
         <ng-container *ngIf="file?.source;else noVideo">
             <source [src]="file.source" type="video/mp4">
         </ng-container>    

@@ -342,14 +342,13 @@
                                   >
                                   </codx-label>
                                   <!-- <span [innerHTML]="task?.modifiedOn | formatvalue: frmModel : 'ModifiedOn' | async"> -->
-                                    <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
-                                    <span>
+                                  <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
+                                  <span>
                                     {{
                                       task?.modifiedOn || task?.createdOn
                                         | date : dateTimeFomat
                                     }}
-                                  </span
-                                  >
+                                  </span>
                                   <span *ngIf="taskList?.note"
                                     >, {{ taskList?.note }}</span
                                   >
@@ -511,149 +510,173 @@
 
 <!-- Cập nhật kết quả thực hiện -- nvthuan -->
 <ng-template #updateProgress>
-  <codx-form
-    [headerText]="'Cập nhật kết quả thực hiện'"
-    [subHeaderText]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
-    [body]="updateProgressBody"
-    [footer]="updateProgressFooter"
-    [dialog]="popupUpdateProgress"
-  >
-  </codx-form>
-</ng-template>
-
-<ng-template #updateProgressBody>
-  <div class="mt-5">
-    <div class="form-group d-flex justify-content-between row">
-      <div class="col-6">
-        <div class="d-flex align-items-center justify-content-between">
-          <codx-label
-            fiedName="progress"
-            [formModel]="grvTaskGroupsForm"
-            default="Tiến độ thực hiện"
-          ></codx-label>
-          <div class="d-flex align-items-center justify-content-end">
-            <codx-input
-              type="switch"
-              [checked]="dataProgress?.progress == '100' ? true : false"
-              field="progress"
-              (valueChange)="checkProgress($event, dataProgress)"
-              [disabled]="disabledProgressCkeck"
-            >
-            </codx-input>
-            <span class="ms-2">100%</span>
+  <div class="p-5 position-relative">
+    <div>
+      <ng-container [ngTemplateOutlet]="header"></ng-container>
+    </div>
+    <div>
+      <ng-container [ngTemplateOutlet]="updateProgressBody"></ng-container>
+    </div>
+    <div class="position-absolute w-100">
+      <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
+    </div>
+  </div>
+  <ng-template #header>
+    <div>
+      <codx-label
+        class="h3"
+        fiedName="progressHeader"
+        [formModel]="grvTaskGroupsForm"
+        [default]="'Cập nhật kết quả thực hiện'"
+      ></codx-label>
+    </div>
+    <div>
+      <codx-label
+        class="text-gray-400"
+        fiedName="progressHeaderMemo"
+        [formModel]="grvTaskGroupsForm"
+        [default]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
+      ></codx-label>
+    </div>
+    
+  </ng-template>
+  <ng-template #updateProgressBody>
+    <div class="mt-5">
+      <div class="form-group d-flex justify-content-between row">
+        <div class="col-6">
+          <div class="d-flex align-items-center justify-content-between">
+            <codx-label
+              fiedName="progress"
+              [formModel]="grvTaskGroupsForm"
+              default="Tiến độ thực hiện"
+            ></codx-label>
+            <div class="d-flex align-items-center justify-content-end">
+              <codx-input
+                type="switch"
+                [checked]="dataProgress?.progress == '100' ? true : false"
+                field="progress"
+                (valueChange)="checkProgress($event, dataProgress)"
+                [disabled]="disabledProgressCkeck"
+              >
+              </codx-input>
+              <span class="ms-2">100%</span>
+            </div>
           </div>
+          <ejs-numerictextbox
+            [value]="dataProgress?.progress"
+            format="###'%'"
+            min="0"
+            max="100"
+            (change)="changeProgress($event, dataProgress)"
+          ></ejs-numerictextbox>
         </div>
-        <codx-input
-          field="progress"
-          [formModel]="grvTaskGroupsForm"
-          (valueChange)="changeValueInput($event, dataProgress)"
-          [crrValue]="dataProgress?.progress"
-          type="number"
-          [min]="0"
-          [max]="100"
-          [showSpinButton]="true"
-        >
-        </codx-input>
+        <div class="col-6">
+          <div>
+            <codx-label
+              fiedName="actualEnd"
+              [formModel]="grvTaskGroupsForm"
+              default="Ngày hoàn thành thực tế"
+            >
+            </codx-label>
+            <span *ngIf="dataProgress?.progress == 100" style="color: red">
+              *</span
+            >
+          </div>
+          <codx-input
+            field="actualEnd"
+            (valueChange)="changeValueDate($event, dataProgress)"
+            [crrValue]="dataProgress?.actualEnd"
+            format="F"
+            type="datetime"
+          >
+          </codx-input>
+        </div>
       </div>
-      <div class="col-6">
+
+      <div class="form-group">
         <div>
           <codx-label
-            fiedName="actualEnd"
+            fiedName="note"
             [formModel]="grvTaskGroupsForm"
-            default="Ngày hoàn thành thực tế"
-          >
-          </codx-label>
-          <span *ngIf="dataProgress?.progress == 100" style="color: red"> *</span>
+            default="Ghi
+            chú"
+          ></codx-label>
         </div>
         <codx-input
-          field="actualEnd"
-          (valueChange)="changeValueDate($event, dataProgress)"
-          [crrValue]="dataProgress?.actualEnd"
-          format="F"
-          type="datetime"
+          field="note"
+          type="textarea"
+          headerposition="none"
+          format="ed2"
+          height="100"
+          [crrValue]="dataProgress?.note"
+          (valueChange)="changeValueInput($event, dataProgress)"
         >
         </codx-input>
       </div>
-    </div>
-
-    <div class="form-group">
-      <div>
-        <codx-label
-          fiedName="note"
-          [formModel]="grvTaskGroupsForm"
-          default="Ghi
-          chú"
-        ></codx-label>
-      </div>
-      <codx-input
-        field="note"
-        type="textarea"
-        headerposition="none"
-        format="ed2"
-        height="100"
-        [crrValue]="dataProgress?.note"
-        (valueChange)="changeValueInput($event, dataProgress)"
-      >
-      </codx-input>
-    </div>
-    <ng-container>
-      <div class="d-flex align-items-center justify-content-between mt-4"
-        *ngIf="showLabelAttachment"
-        style="float: left; clear: left">
-        <div class="d-flex align-items-center mb-2">
-          <div class="fw-bold text-primary">
-            <codx-label fiedName="lblAttachments" [formModel]="grvTaskGroupsForm"
-              default="Tài liệu">
-            </codx-label>
+      <ng-container>
+        <div
+          class="d-flex align-items-center justify-content-between mt-4"
+          *ngIf="showLabelAttachment"
+          style="float: left; clear: left"
+        >
+          <div class="d-flex align-items-center mb-2">
+            <div class="fw-bold text-primary">
+              <codx-label
+                fiedName="lblAttachments"
+                [formModel]="grvTaskGroupsForm"
+                default="Tài liệu"
+              >
+              </codx-label>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <codx-attachment
-          #attachment
-          [objectId]="dataProgress?.recID"
-          hideFolder="1"
-          hideImageUpload="0"
-          hideImageThumb="0"
-          hideUploadBtn="1"
-          hideDes="1"
-          type="inline"
-          allowMultiFile="1"
-          [functionID]="funcIDparent"
-          (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)"
-          (viewFile)="getfileDelete($event)"
-          displayThumb="full"
-          showMessage="0"
-          [fdID]="folderID"
-        >
-        </codx-attachment>
-      </div>
-    </ng-container>
-  </div>
-</ng-template>
+        <div>
+          <codx-attachment
+            #attachment
+            [objectId]="dataProgress?.recID"
+            hideFolder="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            allowMultiFile="1"
+            [functionID]="funcIDparent"
+            (fileAdded)="fileAdded($event)"
+            (fileCount)="getfileCount($event)"
+            (viewFile)="getfileDelete($event)"
+            displayThumb="full"
+            showMessage="0"
+            [fdID]="folderID"
+          >
+          </codx-attachment>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
 
-<ng-template #updateProgressFooter>
-  <div class="mb-4">
-    <button
-    style="float: left"
-    type="button"
-    class="btn btn-light-primary me-3"
-    (click)="addFile($event)"
-  >
-    <i class="icon-cloud_upload fs-5"></i
-    ><span>
-      <codx-label
-        name="UploadFile"
-        formName="Tasks"
-        default="Đính kèm"
-      ></codx-label>
-    </span>
-  </button>
-    <button type="button" class="btn btn-primary" (click)="handelProgress()">
-      <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-    </button>
-  </div>
+  <ng-template #updateProgressFooter>
+    <div class="mb-4 d-flex justify-content-between w-100">
+      <button
+        style="float: left"
+        type="button"
+        class="btn btn-light-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            formName="Tasks"
+            default="Đính kèm"
+          ></codx-label>
+        </span>
+      </button>
+      <button type="button" class="btn btn-primary" (click)="handelProgress()">
+        <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
 </ng-template>
 
 <!--Control group user-->
@@ -674,11 +697,7 @@
         </div>
         <span class="text-gray-600">{{ stepNameEnd }}</span>
       </div>
-      <div
-        class="d-flex justify-content-between"
-        *ngIf="
-        !!proccesNameMove
-        ">
+      <div class="d-flex justify-content-between" *ngIf="!!proccesNameMove">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>
         </div>

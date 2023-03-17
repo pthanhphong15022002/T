@@ -11,11 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CacheService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { PopupAddCrmcontactsComponent } from './popup-add-crmcontacts/popup-add-crmcontacts.component';
 
 @Component({
   selector: 'codx-contacts',
@@ -180,10 +182,47 @@ export class CrmContactsComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+    }
+  }
   //#endregion
 
   //#region Crud
   add() {}
+
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        var dialog = this.callfc.openSide(
+          PopupAddCrmcontactsComponent,
+          [
+            'edit',
+            this.titleAction
+          ],
+          option
+        );
+      });
+  }
+
+  copy(data){
+
+  }
   //#endregion
 }

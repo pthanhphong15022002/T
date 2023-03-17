@@ -65,53 +65,72 @@ export class ChatContainerComponent implements OnInit {
   // handle box chat
   handleBoxChat(groupID:any){
     let isOpen = this.lstGroupActive.some(x=>x == groupID);
+    let index = this.lstGroupCollapse.findIndex(x => x.id === groupID);
     if(!isOpen){
+      // check collaspe
+      if(index > -1){
+        this.lstGroupCollapse.splice(index,1);
+      }
       if(this.lstGroupActive.length == 2){
+        
         let id = this.lstGroupActive.shift();
         let ele = document.getElementById(id);
+        // get current instance của element trên DOM
         let codxBoxChat = window.ng.getComponent(ele);
         let item = 
         {
-          id:codxBoxChat.groupID,
+          id:codxBoxChat.group.groupID,
+          message:codxBoxChat.group.message,
           objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
           objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
           objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
         }
         this.lstGroupCollapse.push(item);
       }
-      this.lstGroupActive.push(groupID);
+      else
+      {
+        this.lstGroupActive.push(groupID);
+      }
     }
     this.dt.detectChanges();
     
   }
-  //removeGroup(item)
-  removeGroup(id:string,ele:ChatBoxComponent){
+  //close box chat
+  closeBoxChat(id:string,codxBoxChat:ChatBoxComponent){
     let index = this.lstGroupActive.findIndex(x => x == id); 
-    this.lstGroupActive.splice(index, 1);
-    if(this.lstGroupCollapse.length > 0){
-      let group = this.lstGroupCollapse.pop();
-      this.lstGroupActive.push(group.id);
+    if(index > -1 ){
+      this.lstGroupActive.splice(index, 1);
+      if(this.lstGroupCollapse.length > 0){
+        let group = this.lstGroupCollapse.pop();
+        if(group?.id){
+          this.lstGroupActive.push(group.id);
+        }
+      }
+      // lấy element hiện tại của component trên DOM
+      window.ng.getHostElement(codxBoxChat)?.remove();
+      this.dt.detectChanges();
     }
-    ele.ngOnDestroy();
-    this.dt.detectChanges();
   }
   // collapse box chat
-  collapse(id:string,codxBoxChat:ChatBoxComponent){
+  collapseBoxChat(id:string,codxBoxChat:ChatBoxComponent){
     let index = this.lstGroupActive.findIndex(x => x == id); 
-    this.lstGroupActive.splice(index, 1);
-    let item = 
-        {
-          id:codxBoxChat.groupID,
-          objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-          objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-          objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
-        }
-    this.lstGroupCollapse.unshift(item);
-    codxBoxChat.ngOnDestroy();
-    this.dt.detectChanges();
+    if(index > -1){
+      this.lstGroupActive.splice(index, 1);
+      let item = 
+      {
+        id:codxBoxChat.groupID,
+        message:codxBoxChat.group.message,
+        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+      }
+      this.lstGroupCollapse.unshift(item);
+      window.ng.getHostElement(codxBoxChat)?.remove();
+      this.dt.detectChanges();
+    }
   }
-  //
-  activeGroup(group:any){
+  // expanse box chat
+  expanseBoxChat(group:any){
     if(this.lstGroupActive.length == 2){
       let id = this.lstGroupActive.shift();
       let ele = document.getElementById(id);
@@ -119,6 +138,7 @@ export class ChatContainerComponent implements OnInit {
       let item = 
       {
         id:codxBoxChat.groupID,
+        message:codxBoxChat.group.message,
         objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
         objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
         objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
@@ -131,10 +151,6 @@ export class ChatContainerComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  // hover
-  hover(item){
-    alert("hover")
-  }
 }
 
 

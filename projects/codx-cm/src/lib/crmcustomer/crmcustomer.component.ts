@@ -16,6 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupAddCrmcontactsComponent } from '../crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
 import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
 
@@ -213,9 +214,9 @@ export class CrmCustomerComponent
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.Width = '850px';
+        option.Width = '800px';
         var dialog = this.callfc.openSide(
-          PopupAddCrmcustomerComponent,
+          PopupAddCrmcontactsComponent,
           [
             'edit',
             this.titleAction
