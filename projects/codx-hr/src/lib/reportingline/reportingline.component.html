@@ -48,7 +48,9 @@
                             <codx-label [formModel]="view.formModel" fiedName="DepartmentID"></codx-label>
                         </ng-template>
                         <ng-template #noDepartment>
-                            <span *ngIf="data.companyID">{{ data.companyID | formatvalue : view.formModel : "companyID" | async }}</span>
+                            <span *ngIf="data.companyID"
+                                [innerHTML]="data.companyID | formatvalue : view.formModel : 'companyID' | async"
+                            ></span>
                           </ng-template>
                     </div>
                     <ng-container *ngIf="isCorporation">
@@ -79,7 +81,9 @@
                         <codx-label [formModel]="view.formModel" fiedName="JobLevel" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark" *ngIf="data.jobLevel">{{ data?.jobLevel | formatvalue : view.formModel : "jobLevel" | async }}
+                    <span class="text-dark" *ngIf="data.jobLevel"
+                        [innerHTML]="data?.jobLevel | formatvalue : view.formModel : 'jobLevel' | async"
+                    >
                     </span>
                 </div>
             </div>

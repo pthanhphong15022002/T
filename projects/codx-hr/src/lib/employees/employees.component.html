@@ -89,7 +89,9 @@
           </div>
 
           <ng-template #elseCompany>
-            <span *ngIf="data.companyID">{{ data.companyID | formatvalue : view.formModel : "companyID" | async }}</span>
+            <span *ngIf="data.companyID"
+              [innerHTML]="data.companyID | formatvalue : view.formModel : 'companyID' | async"
+            ></span>
           </ng-template>
           
         </div>
