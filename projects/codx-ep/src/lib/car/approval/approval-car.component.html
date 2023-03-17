@@ -18,14 +18,12 @@
 <ng-template #subTitleTmp let-data>
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="mb-2">
-      <span>{{ data?.title }}</span>
+      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="">
-          {{ data?.startDate | fmDT }}
-        </span>
+        <span class=""[innerHTML]="data?.startDate | formatvalue : formModel : 'StartDate' | async"></span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
@@ -44,7 +42,7 @@
 
   <div class="" *ngIf="!sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
-      <span>{{ data?.title }}</span>
+      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">
@@ -69,7 +67,7 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data?.requester"
+    [title]="data?.requester | formatvalue : formModel : 'Requester' | async"
     [subTitleTmp]="subTitleTmp"
     [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
@@ -168,26 +166,6 @@
   </div>
 </ng-template>
 
-<ng-template #footer let-data>
-  <div class="container my-3 p-3">
-    <div class="row">
-      <div>
-        <span>{{ data?.title }}</span>
-      </div>
-      <div>
-        <codx-temp-full [formModel]="view.formModel"> </codx-temp-full>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-3 d-flex justify-content-center">
-        <codx-img [objectId]="data?.requester" [width]="35"></codx-img>
-      </div>
-      <div class="col-9">
-        <span class="text-muted mt-3">{{ data?.requester }}</span>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
 <ng-template #contentTmp let-data>
   <codx-booking-car-schedule-content [recID]="data?.recID"></codx-booking-car-schedule-content>
@@ -244,12 +222,12 @@
   </div>
 </ng-template>
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-column w-100" (click)="getMoreInfo(data.recID)">
+  <div class="d-flex flex-column w-100">
     <span>{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span>
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >{{ data.title }}</span
-    >
+      [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+    
   </div>
 </ng-template>

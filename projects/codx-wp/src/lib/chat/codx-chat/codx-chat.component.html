@@ -1,5 +1,5 @@
 <div #dropdown  ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose"   container="body">
-  <button type="button" class="btn btn-sm" (click)="openChatList()" id="chat-box"
+  <button type="button" class="btn btn-sm" (click)="loaded = true" id="chat-box"
     ngbDropdownToggle>
     <div
     class="btn btn-icon btn-clean position-relative"
@@ -9,9 +9,10 @@
         class="svg-icon"
         [ngClass]="codxService.toolbarButtonIconSizeClass">
     </span>
-    <ng-container *ngIf="totalMessage > 0"
-      class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
-      <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
+    <ng-container *ngIf="totalMessage > 0">
+      <span class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
+        <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
+      </span>
     </ng-container>
   </div>
   </button>

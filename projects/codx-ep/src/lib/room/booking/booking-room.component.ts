@@ -58,6 +58,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
   @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
   @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
+  @ViewChild('gridNote') gridNote: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
   showToolBar = 'true';
