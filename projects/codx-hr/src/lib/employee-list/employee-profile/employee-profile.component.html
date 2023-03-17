@@ -3137,14 +3137,14 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
                   >
-                  <div class="text-uppercase">
-                    <codx-label
-                    name="lblBenefit"
-                    [formModel]="view.formModel"
-                    default="Phụ cấp"
-                  >
-                  </codx-label>
-                  </div>
+                    <div class="text-uppercase">
+                      <codx-label
+                        name="lblBenefit"
+                        [formModel]="view.formModel"
+                        default="Phụ cấp"
+                      >
+                      </codx-label>
+                    </div>
                     <div class="d-flex align-items-center ms-5">
                       <button
                         class="btn btn-icon btn-sm position-relative ms-2"
@@ -3155,10 +3155,7 @@
                         ></span>
                       </button>
                       <span class="text-gray-500 ms-2"> | </span>
-                      <codx-label
-                        name="lblSeeAllEBenefit"
-                        default="Xem tất cả"
-                      >
+                      <codx-label name="lblSeeAllEBenefit" default="Xem tất cả">
                       </codx-label>
                       <codx-input
                         type="switch"
@@ -3210,21 +3207,18 @@
                       </div>
                     </ng-container>
                   </div>
-                  <div>
+                  <div></div>
 
-                  </div>
-
-                  <div *ngIf="ViewAllEBenefitFlag == true" >
-                    <div class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5">
+                  <div *ngIf="ViewAllEBenefitFlag == true">
+                    <div
+                      class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
+                    >
                       <div class="d-flex me-3">
-                        <codx-label
-                          default="Chi tiết"
-                          class ="text-uppercase"
-                        >
+                        <codx-label default="Chi tiết" class="text-uppercase">
                         </codx-label>
                         <span class="text-gray-500 ms-2"> | </span>
-                        <span>({{eBenefitRowCount}})</span>
-                    </div>
+                        <span>({{ eBenefitRowCount }})</span>
+                      </div>
                       <div class="d-flex me-3">
                         <codx-dropdown-select
                           [cssClass]="'rounded-pill border-1'"
@@ -3236,7 +3230,7 @@
                           (valueChange)="valueChangeFilterBenefit($event)"
                         ></codx-dropdown-select>
                         <codx-dropdown-calendar
-                        [cssPopup]="'w-600px h-400px'"
+                          [cssPopup]="'w-600px h-400px'"
                           emptyText="Chọn năm..."
                           [firstChange]="false"
                           [displayOption]="ops"
@@ -3251,7 +3245,8 @@
                     [gridViewName]="benefitFormodel.gridViewName"
                     [entityName]="benefitFormodel.entityName" -->
                     <div>
-                      <codx-gridview *ngIf="benefitColumnGrid"
+                      <codx-gridview
+                        *ngIf="benefitColumnGrid"
                         #gridView
                         [formModel]="benefitFormodel"
                         [columnsGrid]="benefitColumnGrid"
@@ -3268,7 +3263,6 @@
                       ></codx-gridview>
                     </div>
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -3468,7 +3462,7 @@
                       *ngFor="let asset of lstAsset"
                     >
                       <div class="has-action-menu">
-                        {{ asset.assetCategory }} 
+                        {{ asset.assetCategory }}
                         <codx-mfunc
                           [formModel]="formModel"
                           (clickMF)="clickMF($event, asset, 'Assets')"
@@ -3677,7 +3671,7 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{appointionRowCount}})</span>
+                    <span>({{ appointionRowCount }})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -3715,21 +3709,22 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  <codx-gridview *ngIf="appointionColumnGrid"
-                  #appointionGridView
-                  [formModel]="appointionFormodel"
-                  [columnsGrid]="appointionColumnGrid"
-                  [service]="'HR'"
-                  [assemblyName]="'Core'"
-                  [className]="'DataBusiness'"
-                  [method]="'LoadDataAsync'"
-                  [predicates]="'EmployeeID=@0'"
-                  [dataValues]="data.employeeID"
-                  [pageSize]="numPageSizeGridView"
-                  [entityName]="'HR_EAppointions'"
-                  [rowHeight]="50"
-                  height="240px"
-                ></codx-gridview>
+                    <codx-gridview
+                      *ngIf="appointionColumnGrid"
+                      #appointionGridView
+                      [formModel]="appointionFormodel"
+                      [columnsGrid]="appointionColumnGrid"
+                      [service]="'HR'"
+                      [assemblyName]="'Core'"
+                      [className]="'DataBusiness'"
+                      [method]="'LoadDataAsync'"
+                      [predicates]="'EmployeeID=@0'"
+                      [dataValues]="data.employeeID"
+                      [pageSize]="numPageSizeGridView"
+                      [entityName]="'HR_EAppointions'"
+                      [rowHeight]="50"
+                      height="240px"
+                    ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -3752,7 +3747,7 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{dayoffRowCount}})</span>
+                    <span>({{ dayoffRowCount }})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -3795,29 +3790,30 @@
                 <div class="mb-1">
                   <div class="d-flex me-3">
                     <codx-dropdown-select
-                    [cssClass]="'rounded-pill border-1'"
-                    cssPopup="h-350px w-300px"
-                    [isMulti]="true"
-                    type="combobox"
-                    field="KowID"
-                    [refValue]="'HRKowsOff'"
-                    (valueChange)="valueChangeFilterDayOff($event)"
-                  ></codx-dropdown-select>
-                  <codx-dropdown-calendar
-                  [cssPopup]="'w-600px h-400px'"
-                    emptyText="Chọn năm..."
-                    [firstChange]="false"
-                    [displayOption]="ops"
-                    [selectedType]="'y'"
-                    [cssClass]="'rounded-pill'"
-                    (change)="valueChangeYearFilterDayOff($event)"
-                  ></codx-dropdown-calendar>
+                      [cssClass]="'rounded-pill border-1'"
+                      cssPopup="h-350px w-300px"
+                      [isMulti]="true"
+                      type="combobox"
+                      field="KowID"
+                      [refValue]="'HRKowsOff'"
+                      (valueChange)="valueChangeFilterDayOff($event)"
+                    ></codx-dropdown-select>
+                    <codx-dropdown-calendar
+                      [cssPopup]="'w-600px h-400px'"
+                      emptyText="Chọn năm..."
+                      [firstChange]="false"
+                      [displayOption]="ops"
+                      [selectedType]="'y'"
+                      [cssClass]="'rounded-pill'"
+                      (change)="valueChangeYearFilterDayOff($event)"
+                    ></codx-dropdown-calendar>
                   </div>
-                  
+
                   <div
                     class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3"
                   >
-                    <codx-gridview *ngIf="dayoffColumnGrid"
+                    <codx-gridview
+                      *ngIf="dayoffColumnGrid"
                       #dayoffGridView
                       [formModel]="dayofFormModel"
                       [columnsGrid]="dayoffColumnGrid"
@@ -3854,12 +3850,12 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{eBusinessTravelRowCount}})</span>
+                    <span>({{ eBusinessTravelRowCount }})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
                   <codx-dropdown-calendar
-                  [cssPopup]="'w-600px h-400px'"
+                    [cssPopup]="'w-600px h-400px'"
                     emptyText="Chọn năm..."
                     [firstChange]="false"
                     [displayOption]="ops"
@@ -3910,21 +3906,22 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  <codx-gridview *ngIf="businessTravelColumnGrid"
-                  #businessTravelGrid
-                  [formModel]="EBusinessTravelFormodel"
-                  [columnsGrid]="businessTravelColumnGrid"
-                  [service]="'HR'"
-                  [assemblyName]="'Core'"
-                  [className]="'DataBusiness'"
-                  [method]="'LoadDataAsync'"
-                  [predicates]="'EmployeeID=@0'"
-                  [dataValues]="data.employeeID"
-                  [pageSize]="numPageSizeGridView"
-                  [entityName]="'HR_EBusinessTravels'"
-                  [rowHeight]="50"
-                  height="240px"
-                ></codx-gridview>
+                    <codx-gridview
+                      *ngIf="businessTravelColumnGrid"
+                      #businessTravelGrid
+                      [formModel]="EBusinessTravelFormodel"
+                      [columnsGrid]="businessTravelColumnGrid"
+                      [service]="'HR'"
+                      [assemblyName]="'Core'"
+                      [className]="'DataBusiness'"
+                      [method]="'LoadDataAsync'"
+                      [predicates]="'EmployeeID=@0'"
+                      [dataValues]="data.employeeID"
+                      [pageSize]="numPageSizeGridView"
+                      [entityName]="'HR_EBusinessTravels'"
+                      [rowHeight]="50"
+                      height="240px"
+                    ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -4078,14 +4075,13 @@
                   </div>
                   <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
-
                       name="lblEmployeeDegree"
                       [formModel]="view.formModel"
                       default="Bằng cấp"
                     >
                     </codx-label>
                     <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{degreeRowCount}})</span>
+                    <span>({{ degreeRowCount }})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -4192,22 +4188,23 @@
                       </ng-container>
                     </div> -->
                     <div>
-                    <codx-gridview *ngIf="degreeColumnGrid"
-                    #degreeGridView
-                    [formModel]="degreeFormodel"
-                    [columnsGrid]="degreeColumnGrid"
-                    [service]="'HR'"
-                    [assemblyName]="'Core'"
-                    [className]="'DataBusiness'"
-                    [method]="'LoadDataAsync'"
-                    [predicates]="'EmployeeID=@0'"
-                    [dataValues]="data.employeeID"
-                    [pageSize]="numPageSizeGridView"
-                    [entityName]="'HR_EDegrees'"
-                    [rowHeight]="50"
-                    height="240px"
-                  ></codx-gridview>
-                  </div>
+                      <codx-gridview
+                        *ngIf="degreeColumnGrid"
+                        #degreeGridView
+                        [formModel]="degreeFormodel"
+                        [columnsGrid]="degreeColumnGrid"
+                        [service]="'HR'"
+                        [assemblyName]="'Core'"
+                        [className]="'DataBusiness'"
+                        [method]="'LoadDataAsync'"
+                        [predicates]="'EmployeeID=@0'"
+                        [dataValues]="data.employeeID"
+                        [pageSize]="numPageSizeGridView"
+                        [entityName]="'HR_EDegrees'"
+                        [rowHeight]="50"
+                        height="240px"
+                      ></codx-gridview>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5271,30 +5268,24 @@
 </ng-template>
 
 <ng-template #templateBenefitID let-data>
-  {{data?.benefitID | formatvalue: benefitFormodel:"benefitID" | async }}
+  {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
-
   <div #benefitNorm>
-    {{data?.benefitAmt }}  / 
+    {{ data?.benefitAmt }} /
     {{
-      data?.benefitNorm | formatvalue: benefitFormodel:"benefitNorm" | async
+      data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
     }}
   </div>
-  
 </ng-template>
 
 <ng-template #templateBenefitEffected let-data>
-  <div>
-    {{data?.effectedDate | fmDT}} - {{ data?.expiredDate| fmDT }}
-  </div>
+  <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
 </ng-template>
 
 <ng-template #templateBenefitIsCurrent let-data>
-  <div *ngIf="data?.isCurrent == 1">
-    Đang hiệu lực
-  </div>
+  <div *ngIf="data?.isCurrent == 1">Đang hiệu lực</div>
 </ng-template>
 
 <ng-template #templateBenefitMoreFunc let-data>
@@ -5308,31 +5299,50 @@
 </ng-template>
 
 <ng-template #templateAppointionGridCol1 let-data>
-  <div>
-    {{data?.appoint | formatvalue: appointionFormodel:"appoint" | async}}
-  </div>
+  <div
+    [innerHTML]="
+      data?.appoint | formatvalue : appointionFormodel : 'appoint' | async
+    "
+  ></div>
   <div>
     <i class="icon-calendar_today"></i>
-    {{data?.effectedDate | fmDT}} - {{ data?.expiredDate| fmDT }}
+    {{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}
   </div>
 </ng-template>
 
 <ng-template #templateAppointionGridCol2 let-data>
+  <div
+    [innerHTML]="
+      data?.positionID | formatvalue : appointionFormodel : 'positionID' | async
+    "
+  ></div>
   <div>
-    {{data?.positionID | formatvalue: appointionFormodel:"positionID" | async}}
-  </div>
-  <div>Cũ: 
-    {{data?.oldPositionID | formatvalue: appointionFormodel:"oldPositionID" | async}}
+    <span>Cũ:</span>
+    <span
+      [innerHTML]="
+        data?.oldPositionID
+          | formatvalue : appointionFormodel : 'oldPositionID'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
 <ng-template #templateAppointionGridCol3 let-data>
+  <div
+    [innerHTML]="
+      data?.orgUnitID | formatvalue : appointionFormodel : 'orgUnitID' | async
+    "
+  ></div>
   <div>
-    {{data?.orgUnitID | formatvalue: appointionFormodel:"orgUnitID" | async}}
-  </div>
-  <div>
-    Cũ: 
-    {{data?.oldOrgUnitID | formatvalue: appointionFormodel:"oldOrgUnitID" | async}}
+    <span>Cũ:</span>
+    <span
+      [innerHTML]="
+        data?.oldOrgUnitID
+          | formatvalue : appointionFormodel : 'oldOrgUnitID'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -5349,27 +5359,29 @@
 <ng-template #templateDayOffGridCol1 let-data>
   <div>
     <i class="icon-calendar_today"></i>
-    {{data?.kowID | formatvalue: dayofFormModel:"kowID" | async}}
+    {{ data?.kowID | formatvalue : dayofFormModel : "kowID" | async }}
   </div>
   <div>
-    {{data?.registeredDate | fmDT}}
+    {{ data?.registeredDate | fmDT }}
   </div>
 </ng-template>
 
 <ng-template #templateDayOffGridCol2 let-data>
   <div>
     <i class="icon-calendar_today"></i>
-    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+    {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}
   </div>
   <div>
-    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
-    {{data?.totalDaysOff}}
+    <i
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+    ></i>
+    {{ data?.totalDaysOff }}
   </div>
 </ng-template>
 
 <ng-template #templateDayOffGridCol3 let-data>
   <div>
-    {{data?.reason}}
+    {{ data?.reason }}
   </div>
 </ng-template>
 
@@ -5383,76 +5395,83 @@
   </codx-mfunc>
 </ng-template>
 
-
 <ng-template #templateBusinessTravelGridCol1 let-data>
   <div>
     <i class="icon-home_work"></i>
-    {{data?.businessPlace }}
+    {{ data?.businessPlace }}
   </div>
   <div>
-    <i class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"></i>
-    {{data?.kowID | formatvalue: EBusinessTravelFormodel:"kowID" | async}}
+    <i
+      class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"
+    ></i>
+    {{ data?.kowID | formatvalue : EBusinessTravelFormodel : "kowID" | async }}
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
   <div>
     <i class="icon-calendar_today"></i>
-    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+    {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}
   </div>
   <div>
-    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
-    {{data?.days}}
+    <i
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+    ></i>
+    {{ data?.days }}
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
   <div class="has-action-menu">
-    {{data?.businessPurpose}}
+    {{ data?.businessPurpose }}
     <codx-mfunc
-    [formModel]="EBusinessTravelFormodel"
-    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
-  </codx-mfunc>
+      [formModel]="EBusinessTravelFormodel"
+      (clickMF)="clickMF($event, data, 'eBusinessTravels')"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelMoreFunc let-data>
   <codx-mfunc
     [formModel]="EBusinessTravelFormodel"
-    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')"
+  >
   </codx-mfunc>
 </ng-template>
 
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
-    {{data?.degreeName}}
+    {{ data?.degreeName }}
   </div>
   <div>
-    {{data?.trainFieldDetail}}
+    {{ data?.trainFieldDetail }}
   </div>
-
 </ng-template>
 <ng-template #templateDegreeGridCol2 let-data>
-  <div>
-    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
-  </div>
+  <div
+    [innerHTML]="
+      data?.trainSupplierID
+        | formatvalue : degreeFormodel : 'trainSupplierID'
+        | async
+    "
+  ></div>
   <div>
     <i class="icon-school"></i>
-    {{data?.ranking}}
+    {{ data?.ranking }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.totalScore}}
+    {{ data?.totalScore }}
   </div>
-  
 </ng-template>
 <ng-template #templateDegreeGridCol3 let-data>
   <span>
     <i class="icon-calendar_today"></i>
-    {{data?.yearGraduated}}
+    {{ data?.yearGraduated }}
   </span>
   <span>
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.issuedDate | fmDT}}
+    {{ data?.issuedDate | fmDT }}
   </span>
   <div *ngIf="data.isMain">
     <label>Là bằng cấp chính</label>

@@ -1,6 +1,6 @@
 import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel,  } from 'codx-core';
+import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, AlertConfirmComponent, AlertConfirmConfig,  } from 'codx-core';
 import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
 import { ChatListComponent } from '../chat-list/chat-list.component';
 import { ChatBoxComponent } from '../chat-box/chat-box.component';
@@ -10,7 +10,7 @@ declare var window: any;
 @Component({
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
-  styleUrls: ['./codx-chat.component.css']
+  styleUrls: ['./codx-chat.component.scss']
 })
 export class CodxChatComponent implements OnInit,AfterViewInit {
   @HostBinding('class') get class() {
@@ -28,7 +28,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   lstBoxChat:any[] = [];
   @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
   @ViewChild("listChat") listChat:ChatListComponent;
-  @ViewChild("dropdown") dropdown:NgbDropdown;
+  @ViewChild(NgbDropdown) ngbDropdown:NgbDropdown;
   constructor(
     private injector:Injector,
     private auth: AuthStore,
@@ -91,13 +91,16 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       "ChatBusiness",
       "GetTotalMessageAsync")
       .subscribe((res:any) => {
+        debugger
         this.totalMessage = res;
       });
   }
   // open chat box
   openChatList(){
     if(!this.loaded)
+    {
       this.loaded = true;
+    }
   }
 
   // add codx chat container
@@ -124,7 +127,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         PopupAddGroupComponent,
         '',
         0,
-        0,
+        window.innerHeight,
         this.function.funcID,
         data,
         '',
@@ -140,8 +143,13 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // check read all
   clickReadAll(){
-    this.listChat.readAllMessage();
-    this.totalMessage = 0;
+    this.notifySV.alertCode("Đánh dấu xem tất cả?").subscribe((res:any) =>{
+      if(res.event.status === 'Y')
+      {
+        this.listChat.readAllMessage();
+        this.totalMessage = 0;
+      }
+    });
   }
   // searrch
   search(event: any) {
@@ -163,9 +171,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     }
   }
 
-
+  // close ngbDropdown
   close(){
-    debugger
-    this.dropdown.close();
+    this.ngbDropdown.close();
   }
 }
