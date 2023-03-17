@@ -178,6 +178,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   iconReasonSuccess:any;
   iconReasonFail:any;
 
+  listStepAdd = [];
+  listStepDelete = [];
+  listStepEdit = [];
+
   dayStep = 0;
   hourStep = 0;
   stepName = '';
@@ -416,10 +420,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
+      data = [this.process];
     } else {
       op.methodName = 'UpdateProcessAsync';
+      data = [this.process,this.listStepAdd,  this.listStepEdit, this.listStepDelete];
     }
-    data = [this.process];
     op.data = data;
   }
 
@@ -1755,10 +1760,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           ? this.stepList[this.stepList?.length - 1 || 0]
           : []
       );
+      if(this.action == 'edit'){
+        this.listStepAdd.push(this.stepNew.recID);
+      }
     } else {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
       this.stepNew['modifiedBy'] = this.userId;
+      if(this.action == 'edit'){
+        this.listStepEdit.push(this.stepNew.recID);
+      }
     }
     this.popupAddStage.close();
     // this.isSaveStep = false;
@@ -1777,6 +1788,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               ? this.stepList[this.stepList?.length - 1 || 0]
               : []
           );
+          if(this.action == 'edit'){
+            let index = this.listStepAdd.findIndex((stepID) => stepID == id);
+            if(index >= 0){
+              this.listStepAdd.splice(index,1);
+            }else{
+              this.listStepDelete.push(id);
+            }
+          }
         }
       }
     });
