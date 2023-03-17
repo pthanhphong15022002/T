@@ -102,3 +102,8 @@
     </div>
   </div>
 </ng-template>
+<ng-template #noteCol let-data>
+  <div class="d-flex align-items-center">
+      <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
+  </div>
+</ng-template>

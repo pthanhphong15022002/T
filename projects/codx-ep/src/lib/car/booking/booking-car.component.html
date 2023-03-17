@@ -24,7 +24,7 @@
 <ng-template #subTitleTmp let-data>
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="mb-2">
-      <span>{{ data?.title }}</span>
+      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
@@ -175,27 +175,6 @@
   </div>
 </ng-template>
 
-<ng-template #footer let-data>
-  <div class="container my-3 p-3">
-    <div class="row">
-      <div>
-        <span>{{ data?.title }}</span>
-      </div>
-      <div>
-        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-3 d-flex justify-content-center">
-        <codx-img [objectId]="data?.requester" [width]="35"></codx-img>
-      </div>
-      <div class="col-9">
-        <span class="text-muted mt-3">{{ data?.requester }}</span>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
 <ng-template #contentTmp let-data>
   <codx-booking-car-schedule-content [recID]="data?.recID"></codx-booking-car-schedule-content>
 
@@ -206,8 +185,7 @@
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >{{ data.title }}</span
-    >
+      [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
   </div>
 </ng-template>
 
@@ -219,19 +197,38 @@
   </codx-mfunc>
 </ng-template>
 <ng-template #gridResourceName let-data>  
-  <div>{{data?.resourceName}}</div>
+  <div>
+    <span [innerHTML]="data?.resourceID | formatvalue : formModel : 'ResourceID' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridHost let-data>
   <div>{{data?.host}}</div>
 </ng-template>
 
+
 <ng-template #gridBookingOn let-data>
-  <div>{{data?.bookingOn | fmDT : "dmy" }}</div>
+  <div>
+    <span [innerHTML]="data?.bookingOn | formatvalue : formModel : 'BookingOn' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridStartDate let-data>
-  <div>{{data?.startDate | fmDT : "dmy" : true}}</div>
+  <div>
+    <span [innerHTML]="data?.startDate | formatvalue : formModel : 'StartDate' | async"></span>
+  </div>
 </ng-template>
 <ng-template #gridEndDate let-data>
-  <div>{{data?.endDate | fmDT : "dmy" : true}}</div>
+  <div>
+    <span [innerHTML]="data?.endDate | formatvalue : formModel : 'EndDate' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridPhone let-data>
+  <div>
+    <span [innerHTML]="data?.phone | formatvalue : formModel : 'Phone' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridAddress let-data>
+  <div>
+    <span [innerHTML]="data?.address | formatvalue : formModel : 'Address' | async"></span>
+  </div>
 </ng-template>
 

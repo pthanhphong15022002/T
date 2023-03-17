@@ -1,21 +1,26 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [views]="views" [button]="buttons" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [idField]="idField"
   [className]="className" (onLoading)="onLoading($event)" [method]="method" [viewActiveType]="viewType.grid">
+  
+  <ng-template #itemAction let-data>
+    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+    </codx-mfunc>
+  </ng-template>
+
   <ng-template #resourceNameCol let-data>
     <div class="d-flex flex-row align-items-center">
       <codx-img [objectName]="data.resourceName" [objectId]="data?.recID" [funcId]="funcID"
         [objectType]="'EP_Resources'" imageType="circle" width="35" [imgOn]="data.modifiedOn"></codx-img>
       <div class="ms-3 d-flex flex-column">
-        <span class="fw-bold">{{ data.resourceName }}</span>
+        <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'ResourceName' | async"></span>
+      
       </div>
     </div>
   </ng-template>
   <ng-template #locationCol let-data>
     <div class="d-flex flex-column justify-content-start">
-      <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
-      <span class="text-truncate" [title]="data?.companyName">{{
-        data?.companyName
-        }}</span>
+      <span class="text-truncate" [innerHTML]=" data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
+  
     </div>
   </ng-template>
   <ng-template #popupDevice let-dialog>
@@ -67,28 +72,27 @@
       <codx-label [default]="'Thiết bị'" class="ms-1 fw-bold" name="lblDevice"></codx-label>
     </div>
   </ng-template>
+
   <ng-template #noteCol let-data>
-    <div class="has-action-menu d-flex align-items-center">
-      <span>{{ data?.note }}</span>
-      <span>&nbsp;</span>
-      <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
+    <div class="d-flex align-items-center">
+        <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
     </div>
   </ng-template>
 
   <ng-template #carCol let-data>
-    <div *ngIf="data.linkID" class="d-flex flex-row align-items-center">
+    <div class="d-flex flex-row align-items-center">
       <codx-img [objectId]="data.carRecID" [objectName]="data.carName" imageType="circle" [imgOn]="data.modifiedOn"
         [width]="35" [objectType]="'EP_Resources'"></codx-img>
-      <div class="ms-3 d-flex flex-column">
-        <span class="fw-bold">{{ data?.carName }}</span>
-      </div>
+        <div class="ms-2">
+          <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>   
+        </div>
     </div>
   </ng-template>
   <ng-template #ownerCol let-data>
     <div class="d-flex has-action-menu align-items-center">
       <codx-img [width]="25" [objectId]="data.owner" objectType="AD_Users"></codx-img>
       <div class="ms-2">
-        <div class="fw-bold">{{ data.ownerName }}</div>
+        <span class="fw-bold"[innerHTML]=" data?.owner | formatvalue : formModel : 'Owner' | async"></span>
       </div>
     </div>
   </ng-template>
