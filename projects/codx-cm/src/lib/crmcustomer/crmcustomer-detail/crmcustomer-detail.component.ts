@@ -35,6 +35,8 @@ export class CrmcustomerDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.dataSelected.steps);
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
