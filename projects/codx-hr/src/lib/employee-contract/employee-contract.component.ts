@@ -93,13 +93,13 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   ngAfterViewChecked(){
-    if(this.view.dataService?.data){
-      this.numofRecord = this.view.dataService.data.length      
-      var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
-      if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
-        PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
-      }
-    }
+    // if(this.view.dataService?.data){
+    //   this.numofRecord = this.view.dataService.data.length      
+    //   var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
+    //   if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
+    //     PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
+    //   }
+    // }
   }
 
   HandleAction(evt){
