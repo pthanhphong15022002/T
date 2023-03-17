@@ -11,7 +11,11 @@
 >
   <ng-template #header>
     <div class="d-flex justify-content-between mb-2">
-      <h3>{{ itemDetail?.reasonID }}</h3>
+      <h3
+        [innerHTML]="
+          itemDetail?.reasonID | formatvalue : formModel : 'ReasonID' | async
+        "
+      ></h3>
       <codx-vll
         [name]="'EP022'"
         [value]="itemDetail?.approveStatus"

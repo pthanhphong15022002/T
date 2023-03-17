@@ -1,6 +1,6 @@
-<div class="container overflow-auto h-100" *ngIf="formModel?.funcID!=undefined">
-  <div class="accordion overflow-auto h-100 mt-5">
-    <div class="container" [ngClass]="isHiddenChart ? 'd-none': 'd-block'">
+<div class="w-100 px-25 h-100" *ngIf="formModel?.funcID!=undefined">
+  <div class="h-100 mt-5">
+    <div class="" [ngClass]="isHiddenChart ? 'd-none': 'd-block'">
 
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
@@ -46,12 +46,12 @@
           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px "
             (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==true">
             <i class="icon-i-arrows-collapse me-2"></i>
-            <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
+            <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
           </div>
           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
             (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==false">
             <i class="icon-i-arrows-expand me-2"></i>
-            <codx-label default="Expand" fiedName="lblExpand"></codx-label>
+            <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
           </div>
         </div>
         <codx-toolbar-button [button]="button"  (buttonClick)="click($event)">
@@ -241,7 +241,7 @@
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
             <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-              (clickMF)="clickKRMF($event,item,false)"></codx-mfunc>
+              (clickMF)="clickKRMF($event,item,false)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
           </div>
         </div>
       </div>
@@ -292,7 +292,7 @@
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
             <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
-              (clickMF)="clickKRMF($event,item,true)"></codx-mfunc>
+              (clickMF)="clickKRMF($event,item,true)"  (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
           </div>
         </div>
       </div>

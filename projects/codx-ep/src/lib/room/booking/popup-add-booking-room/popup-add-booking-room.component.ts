@@ -1311,6 +1311,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     var listUserID = '';
     var listDepartmentID = '';
     var listUserIDByOrg = '';
+    var listGroupMembersID;
     var type = 'U';
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -1322,6 +1323,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           case 'O':
           case 'D':
             listDepartmentID += obj.id + ';';
+            break;
+            case 'UG':
+              listGroupMembersID+= obj.id + ';'
             break;
         }
       }
@@ -1344,6 +1348,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             listUserIDByOrg += res;
             if (listUserID != '') listUserIDByOrg += ';' + listUserID;
             this.valueUser(listUserIDByOrg);
+          }
+        });
+    }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.codxEpService
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueUser(res);
           }
         });
     }

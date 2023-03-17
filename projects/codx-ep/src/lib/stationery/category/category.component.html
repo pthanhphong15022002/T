@@ -32,9 +32,22 @@
             [objectName]="data.resourceName"
           ></codx-img>
           <div class="m-2">
-            <div class="fw-bold">{{ data?.resourceName }}</div>
+            <div
+              class="fw-bold"
+              [innerHTML]="
+                data?.resourceName
+                  | formatvalue : view.formModel : 'ResourceName'
+                  | async
+              "
+            ></div>
             <div>
-              <span>{{ data?.resourceID }}</span>
+              <span
+                [innerHTML]="
+                  data?.resourceID
+                    | formatvalue : view.formModel : 'ResourceID'
+                    | async
+                "
+              ></span>
               <span> | </span>
               <span
                 ><codx-label
@@ -125,7 +138,7 @@
           >
           </codx-img>
           <div class="ms-2">
-            <div>{{ data?.ownerName }}</div>
+            <div >{{ data?.ownerName }}</div>
             <div class="text-black-50">{{ data?.position }}</div>
           </div>
         </div>

@@ -115,7 +115,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -200,10 +200,10 @@ export class InstanceDetailComponent implements OnInit {
       return x.stepNo > 0 && y.stepNo > 0
         ? x.stepNo - y.stepNo
         : x.stepNo > 0
-        ? -1
-        : y.stepNo > 0
-        ? 1
-        : x.stepNo - y.stepNo;
+          ? -1
+          : y.stepNo > 0
+            ? 1
+            : x.stepNo - y.stepNo;
     });
     ins = listStep
       .reduce((result, x) => {
@@ -296,7 +296,7 @@ export class InstanceDetailComponent implements OnInit {
   //   this.changeDetec.detectChanges();
   // }
 
-  setHTMLCssStages(oldStage, newStage) {}
+  setHTMLCssStages(oldStage, newStage) { }
 
   //ganttchar
   getDataGanttChart(instanceID, processID) {
@@ -310,8 +310,6 @@ export class InstanceDetailComponent implements OnInit {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
-          console.table(this.ganttDsClone);
-          
         }
       });
   }
@@ -378,7 +376,7 @@ export class InstanceDetailComponent implements OnInit {
   rollHeight() {
     let classViewDetail: any;
     var heighOut = 20
-    if ((this.viewType == 'd')){
+    if ((this.viewType == 'd')) {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;
@@ -409,7 +407,10 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
   saveAssign(e) {
-    if (e) this.loadTree(this.listSteps);
+    if (e) { 
+      this.loadTree(this.listSteps);
+      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+    };
   }
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {

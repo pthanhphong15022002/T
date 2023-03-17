@@ -343,16 +343,28 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   clickMF(evt: any) {
     switch (evt?.functionID) {
-      case OMCONST.MFUNCID.PlanWeight:
+      case OMCONST.MFUNCID.PlanWeightCOMP:
+        case OMCONST.MFUNCID.PlanWeightDEPT:
+          case OMCONST.MFUNCID.PlanWeightORG:
+            case OMCONST.MFUNCID.PlanWeightPER:
         this.editPlanWeight(evt?.text);
         break;
-      case OMCONST.MFUNCID.ReleasePlan:
+      case OMCONST.MFUNCID.ReleasePlanCOMP:
+        case OMCONST.MFUNCID.ReleasePlanDEPT:
+          case OMCONST.MFUNCID.ReleasePlanORG:
+            case OMCONST.MFUNCID.ReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
         break;
-      case OMCONST.MFUNCID.UnReleasePlan:
+      case OMCONST.MFUNCID.UnReleasePlanCOMP:
+        case OMCONST.MFUNCID.UnReleasePlanDEPT:
+          case OMCONST.MFUNCID.UnReleasePlanORG:
+            case OMCONST.MFUNCID.UnReleasePlanPER:
         //this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
         break;
-      case OMCONST.MFUNCID.SharesPlan:
+      case OMCONST.MFUNCID.SharesPlanCOMP:
+        case OMCONST.MFUNCID.SharesPlanDEPT:
+          case OMCONST.MFUNCID.SharesPlanORG:
+            case OMCONST.MFUNCID.SharesPlanPER:
         this.sharePlan(evt?.text);
         break;
 

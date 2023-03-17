@@ -66,8 +66,7 @@
                   [showBgColor]="true">
               </codx-vll>
             </span>
-            <span class="text-gray-400">
-              {{ posts[0].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+            <span class="text-gray-400" [innerHTML]="posts[0].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
             </span>
           </div>
         </ng-container>
@@ -112,8 +111,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[1].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[1].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>
@@ -156,8 +154,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[2].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[2].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>
@@ -201,8 +198,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[3].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[3].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>

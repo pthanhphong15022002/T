@@ -420,6 +420,15 @@ getOKRModel() {
       []
     );
   }
+  calculatorProgressOfPlan(listRecID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'CalculatorProgressOfPlanByIDAsync',
+      [listRecID]
+    );
+  }
   checkInKR(recID: string, checkIn: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -510,7 +519,7 @@ getOKRModel() {
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'EditOKRWeightAsync',
+      'OKRWeightAsync',
       [recID, type, child]
     );
   }

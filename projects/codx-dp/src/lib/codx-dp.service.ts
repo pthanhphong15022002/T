@@ -441,7 +441,7 @@ export class CodxDpService {
   getListStepByIdProccessCopy(data) {
     return this.api.exec<any>(
       'DP',
-      'StepsBusiness',
+      'ProcessesBusiness',
       'GetListStepCopyAsync',
       data
     );

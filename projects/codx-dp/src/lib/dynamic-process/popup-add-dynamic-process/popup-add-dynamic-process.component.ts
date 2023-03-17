@@ -126,13 +126,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkedSat: boolean = false;
   checkedSun: boolean = false;
   isClick: boolean = false;
-  stepNameSuccess: string = 'Thành công';
-  stepNameFail: string = 'Thất bại';
+  stepNameSuccess: string = '';
+  stepNameFail: string = '';
+  stepNameReason: string = '';
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
   totalInstance: number = 0;
-
+  titleRadioYes: string = '';
+  titleRadioNo: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -140,18 +142,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly viewStepReasonFail: string = 'reasonFail';
   readonly radioYes: string = 'yes';
   readonly radioNo: string = 'no';
-  readonly titleRadioYes: string = 'Có';
-  readonly titleRadioNo: string = 'Không';
-  // readonly saturday: string = 'Thứ 7';
-  // readonly sunday: string = 'Chủ nhật';
   readonly viewSaturday: string = '7';
   readonly viewSunday: string = '8';
   readonly formNameSteps: string = 'DPSteps';
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl';
   readonly formLeaTimeCtrl: string = 'LeadtimeControl';
-  readonly formEdit: string = 'edit'; // form edit
-  readonly formAdd: string = 'add'; // form add
+  readonly formEdit: string = 'edit'; // form edit for poup reason
+  readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -174,6 +172,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
   listFileTask: string[] = [];
+  listIconReason=[];
+  iconReasonSuccess:any;
+  iconReasonFail:any;
 
   dayStep = 0;
   hourStep = 0;
@@ -192,6 +193,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   actionStep = '';
   isSaveStep = false;
   processNameBefore = '';
+  strDay = ' ngày ';
+  strHour = ' giờ ';
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -246,7 +249,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.getIconReason();
+    this.getValueYesNo();
     if (this.action === 'copy') {
+      this.instanceNoSetting = this.process.instanceNoSetting ;
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
         (this.newIdProccess = dt.data.newIdProccess),
@@ -342,6 +348,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+
+
   }
 
   ngAfterViewInit(): void {
@@ -1803,7 +1811,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
         this.saveGroupTask(type, taskGroup, data);
-        this.sumTimeStep();
       }
     });
   }
@@ -1843,6 +1850,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
       this.taskGroupList.splice(index - 1, 0, taskGroup);
+      this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
     } else {
@@ -1859,6 +1867,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ) {
         this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
+      this.sumTimeStep();
     }
   }
 
@@ -1960,6 +1969,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               }
               this.addRole(data['roles'][0], roleOld[0]);
             }
+            this.sumTimeStep();
           }
         });
         this.groupTaskID = null;
@@ -1985,6 +1995,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (indexDb >= 0) {
           this.taskList.splice(indexDb, 1);
         }
+        this.sumTimeStep();
       }
     });
   }
@@ -2812,14 +2823,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   // method for edit reason or copy reason
   openPopupReason(viewReason, reason, clickMore) {
-    // if (!this.isClick) {
-    //   return;
-    // }
-    // this.isClick = false;
     this.headerText =
       viewReason === this.viewStepReasonSuccess
-        ? clickMore?.customName ?? 'Thêm' + ' lý do thành công'
-        : clickMore?.customName ?? 'Thêm' + ' lý do thất bại';
+        ? (clickMore?.customName ?? this.titleAdd) +' ' + this.LowercaseFirstPipe((this.joinTwoString(this.stepNameReason,this.stepNameSuccess)))
+        : (clickMore?.customName ?? this.titleAdd) +' ' + this.LowercaseFirstPipe((this.joinTwoString(this.stepNameReason,this.stepNameFail)));
     if (
       clickMore?.functionID === 'SYS03' ||
       clickMore?.functionID === 'SYS04'
@@ -2930,6 +2937,49 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.viewStepSelect(this.stepList[0]);
       }
     });
+  }
+  getIconReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for(let item of res.datas) {
+          if(item.value === 'S'){
+            this.iconReasonSuccess = item;
+          }else if(item.value === 'F'){
+            this.iconReasonFail = item;
+          }else if(item.value === 'R'){
+            var reasonValue = item;
+          }
+        }
+
+        this.stepNameSuccess = this.iconReasonSuccess?.text;
+        this.stepNameFail = this.iconReasonFail?.text;
+        this.stepNameReason = reasonValue?.text;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  getValueYesNo(){
+    this.cache.valueList('DP039').subscribe((res) => {
+      if (res.datas) {
+        for(let item of res.datas) {
+          if(item.value === 'Y'){
+           this.titleRadioYes = item.text;
+          }else if(item.value === 'N'){
+            this.titleRadioNo = item.text;
+          }
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  joinTwoString(valueFrist,valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo ) return '';
+    return valueFrist+' '+ valueTwo;
+  }
+  LowercaseFirstPipe (value){
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion

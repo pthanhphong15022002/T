@@ -164,7 +164,7 @@
     <ng-container *ngIf="fileDocuments.length > 0">
         <div class="codx-files-documents">
             <ng-container *ngFor="let item of fileDocuments">
-                <div class="d-flex align-items-center my-1" (dblclick)="clickFileDocument(item)">
+                <div class="d-flex align-items-center my-1" (click)="clickFileDocument(item)">
                     <!-- <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
                         title="{{item.fileName}}" [descLine]="1" >
                     </codx-temp-full> -->
