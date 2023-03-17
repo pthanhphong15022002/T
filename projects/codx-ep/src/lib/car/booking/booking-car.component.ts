@@ -49,6 +49,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
   @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
   @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
+  @ViewChild('gridPhone') gridPhone: TemplateRef<any>;
+  @ViewChild('gridAddress') gridAddress: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -257,10 +259,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
               },
               {
                 field: 'address',
+                template: this.gridAddress,
                 headerText: this.grView?.address?.headerText,
               },
               {
                 field: 'phone',
+                template: this.gridPhone,
                 headerText: this.grView?.phone?.headerText,
               },
             ];
