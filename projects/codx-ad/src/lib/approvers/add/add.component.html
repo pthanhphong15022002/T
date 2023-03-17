@@ -65,8 +65,8 @@
             </codx-label>
           </div>
         </div>
-        <!-- [disabled]="form?.formGroup.status == 'INVALID'" -->
         <codx-input
+          [disabled]="form?.formGroup?.status === 'INVALID'"
           type="combobox"
           [refType]="'P'"
           refValue="Share_Users"
@@ -111,8 +111,13 @@
   <ng-template #footer>
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-primary-light" (click)="onSave()">
-          <codx-label name="lblSaveUserGroup" [default]="'Lưu'"> </codx-label>
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="popRoles()"
+        >
+          <codx-label name="lblSaveUserGroup" [default]="'Phân quyền'">
+          </codx-label>
         </button>
       </div>
       <div class="d-flex">
