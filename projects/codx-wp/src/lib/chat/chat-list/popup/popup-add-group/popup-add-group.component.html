@@ -35,6 +35,7 @@
           <codx-label
             class="fw-bolder"
             [formModel]="dialogRef.formModel"
+            name="lblListUser"
             default="Danh sách người dùng"
           ></codx-label>
           <codx-searchbar
@@ -128,7 +129,13 @@
   </ng-template>
   <ng-template #headerTemplate>
     <div class="row fw-bolder ms-2 w-100">
-      {{ "Selected (" + arrUsers.length + ")" }}
+      <codx-label
+          class="fw-bolder"
+          [formModel]="dialogRef.formModel"
+          name="lblListUser"
+          default="Đã chọn">
+        </codx-label>
+      {{ "Đã chọn (" + arrUsers.length + ")" }}
     </div>
   </ng-template>
 </ng-template>
