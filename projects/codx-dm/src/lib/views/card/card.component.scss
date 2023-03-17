@@ -74,3 +74,12 @@ codx-view-tree-detail .e-pane.e-static-pane+.e-pane {
 codx-card-img .line-clamp-2 {
     word-break: break-all;
 }
+.file-name
+{
+    width: 150px;
+    white-space: nowrap;
+    /* word-break: break-all; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+}

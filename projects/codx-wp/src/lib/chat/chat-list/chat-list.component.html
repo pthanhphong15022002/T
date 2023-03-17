@@ -24,13 +24,13 @@
         <!-- group name - created - seen -->
         <div class="col-10">
             <div class="d-flex justify-content-between w-100">
-                <span class="fw-bolder m-0 p-0">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
+                <span class="fw-bold m-0 p-0">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
                 <span *ngIf="item.messageMissed > 0" class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item.messageMissed}}</span>
             </div>
             <div class="d-flex justify-content-between w-100">
                 <span class="" [classList]="item.isRead ? 'text-dark-500' : 'text-primary'">{{item.message}}</span>
                 <ng-container *ngIf="item.messageSend">
-                    <span class="text-dark-500 me-2">{{item.messageSend | timefrom}}</span>
+                    <span class="text-gray-500 me-2">{{item.messageSend | timefrom}}</span>
                 </ng-container>
                 
             </div>

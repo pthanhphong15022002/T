@@ -1308,15 +1308,27 @@
               <div class="fw-bold text-dark line-clamp line-clamp-1">{{ itemStep?.stepName }}</div>
 
               <div class="text-gray-500">
-                Thời hạn:
+                <codx-label
+                  fiedName="durationTime"
+                  [formModel]="dialog.formModel"
+                  [default]="'Thời hạn: '"
+                ></codx-label>
                 <span class="text-gray-700">{{
                   itemStep?.durationDay || 0
                 }}</span>
-                ngày
+                <codx-label
+                  fiedName="day"
+                  [formModel]="dialog.formModel"
+                  [default]="' ngày '"
+                ></codx-label>
                 <span class="text-gray-700">{{
                   itemStep?.durationHour || 0
                 }}</span>
-                giờ
+                <codx-label
+                fiedName="hour"
+                [formModel]="dialog.formModel"
+                [default]="' giờ '"
+              ></codx-label>
               </div>
               <div class="text-gray-500">
                 <codx-label
@@ -2291,8 +2303,7 @@
               <codx-label
                 name="lblParticipantRoleControl"
                 default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-              viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
-              nhiệm vụ"
+              viên trong quy trình"
               >
               </codx-label>
             </div>

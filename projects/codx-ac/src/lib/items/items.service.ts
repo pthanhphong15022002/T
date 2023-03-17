@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ApiHttpService, NotificationsService } from 'codx-core';
 
 @Injectable({
@@ -14,23 +15,37 @@ export class ItemsService {
     return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
   }
 
+  toPascalCase(camelCase: string): string {
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  }
+
   validateFormData(
-    formData: any,
+    formGroup: FormGroup,
     gridViewSetup: any,
-    requiredFields: { gvsPropName: string; dataPropName?: string }[]
+    irregularFields: string[] = []
   ): boolean {
+    console.log(formGroup);
+    console.log(gridViewSetup);
+
+    const controls = formGroup.controls;
     let isValid: boolean = true;
-    for (const rf of requiredFields) {
-      const dataPropName = rf?.dataPropName ?? this.toCamelCase(rf.gvsPropName);
-      if (!formData[dataPropName]?.trim()) {
+    for (const propName in controls) {
+      if (controls[propName].invalid) {
+        const gvsPropName =
+          irregularFields.find(
+            (i) => i.toLowerCase() === propName.toLowerCase()
+          ) ?? this.toPascalCase(propName);
+
         this.notiService.notifyCode(
           'SYS009',
           0,
-          `"${gridViewSetup[rf.gvsPropName]?.headerText}"`
+          `"${gridViewSetup[gvsPropName]?.headerText}"`
         );
+
         isValid = false;
       }
     }
+
     return isValid;
   }
 
