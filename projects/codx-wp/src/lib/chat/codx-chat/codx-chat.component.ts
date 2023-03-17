@@ -10,7 +10,7 @@ declare var window: any;
 @Component({
   selector: 'codx-chat',
   templateUrl: './codx-chat.component.html',
-  styleUrls: ['./codx-chat.component.css']
+  styleUrls: ['./codx-chat.component.scss']
 })
 export class CodxChatComponent implements OnInit,AfterViewInit {
   @HostBinding('class') get class() {
@@ -28,7 +28,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   lstBoxChat:any[] = [];
   @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
   @ViewChild("listChat") listChat:ChatListComponent;
-  @ViewChild(NgbDropdown) dropdown:NgbDropdown;
+  @ViewChild(NgbDropdown) ngbDropdown:NgbDropdown;
   constructor(
     private injector:Injector,
     private auth: AuthStore,
@@ -91,13 +91,16 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       "ChatBusiness",
       "GetTotalMessageAsync")
       .subscribe((res:any) => {
+        debugger
         this.totalMessage = res;
       });
   }
   // open chat box
   openChatList(){
     if(!this.loaded)
+    {
       this.loaded = true;
+    }
   }
 
   // add codx chat container
@@ -141,7 +144,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   // check read all
   clickReadAll(){
     this.notifySV.alertCode("Đánh dấu xem tất cả?").subscribe((res:any) =>{
-      debugger
       if(res.event.status === 'Y')
       {
         this.listChat.readAllMessage();
@@ -169,7 +171,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     }
   }
 
-
+  // close ngbDropdown
   close(){
+    this.ngbDropdown.close();
   }
 }
