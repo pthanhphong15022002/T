@@ -19,11 +19,11 @@
   height: 100%;
 }
 
-.role-left .user-mini-nav,
+/* .role-left .user-mini-nav,
 .role-right .list-role {
   height: calc(100% - 56px) !important;
   overflow: auto;
-}
+} */
 
 .table {
   width: 100%;

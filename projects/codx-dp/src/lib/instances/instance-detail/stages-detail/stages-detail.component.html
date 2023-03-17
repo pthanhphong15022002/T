@@ -38,7 +38,7 @@
           ><span class="ms-1">{{ startDate }}</span>
         </div>
       </div>
-      <div class="progress mt-2 h-20px">
+      <div class="progress mt-2 h-16px">
         <div
           class="progress-done"
           role="progressbar"
@@ -174,7 +174,7 @@
 <ng-template #task>
   <div class="back-info">
     <div
-      class="header-info p-5 d-flex align-items-center justify-content-between mb-0"
+      class="header-info py-3 px-5 d-flex align-items-center justify-content-between mb-0"
     >
       <div>
         <codx-label
@@ -186,28 +186,26 @@
         </codx-label>
       </div>
       <div class="group-button">
-        <button type="button" (click)="openPopupTaskGroup()">
-          <span
+        <button type="button" class="btn btn-icon btn-outlight-primary" (click)="openPopupTaskGroup()">
+          <i
             [ngClass]="
-              !this.isCreate || isClosed ? '' : 'icon-add icon-18 me-2'
+              !this.isCreate || isClosed ? '' : 'icon-add icon-18'
             "
-          ></span>
+          ></i>
         </button>
-        <button class="button-custom" (click)="openTypeTask()">
-          <span
+        <button type="button" class="btn btn-icon btn-outlight-primary ms-1" (click)="openTypeTask()">
+          <i
             [ngClass]="
               !this.isCreate || isClosed
                 ? ''
-                : 'icon-add_task icon-20 text-primary-600 py-2'
+                : 'icon-add_task icon-18'
             "
-            style="font-weight: 500"
-          ></span>
+          ></i>
         </button>
-        <button class="button-custom" (click)="clickShow($event, 'step-task')">
-          <span
-            class="icon-expand_less icon-20 text-primary-600 py-2"
-            style="font-weight: 500"
-          ></span>
+        <button type="button" class="btn btn-icon btn-outlight-primary ms-1" (click)="clickShow($event, 'step-task')">
+          <i
+            class="icon-expand_less icon-18"
+          ></i>
         </button>
       </div>
     </div>
