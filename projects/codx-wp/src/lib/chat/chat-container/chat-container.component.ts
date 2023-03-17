@@ -87,7 +87,10 @@ export class ChatContainerComponent implements OnInit {
         }
         this.lstGroupCollapse.push(item);
       }
-      this.lstGroupActive.push(groupID);
+      else
+      {
+        this.lstGroupActive.push(groupID);
+      }
     }
     this.dt.detectChanges();
     
