@@ -10,17 +10,26 @@
         </ng-container>
     </div>
     <div class="chat-container-boxchat-more">
-        <ng-container *ngFor="let item of lstGroupCollapse">
-            <div (click)="activeGroup(item)">
-                <codx-img
-                [classList]="'cursor-pointer'"
-                [objectId]="item.objectID" 
-                [objectName]="item.objectName" 
-                [objectType]="item.objectType" 
-                [width]="40">
-            </codx-img>
-            </div>
+        <ng-container *ngFor="let item of lstGroupCollapse;index as i">
+            <ng-container *ngIf="i < 3">
+                <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2" onmouseover="hover(item)">
+                    <ng-container *ngIf="i==0 && lstGroupCollapse.length > 3">
+                        <div class="more-box-chat">
+                            <span>+{{lstGroupCollapse.length - 3}}</span>
+                        </div>
+                    </ng-container>
+                    <div (click)="activeGroup(item)">
+                    <codx-img
+                        [objectId]="item.objectID" 
+                        [objectName]="item.objectName" 
+                        [objectType]="item.objectType" 
+                        [width]="40">
+                    </codx-img>
+                    </div>
+                </div>                
+            </ng-container>
         </ng-container>
+        
     </div>
 </div>
 
