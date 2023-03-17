@@ -52,7 +52,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1,
         },
       },
     ];

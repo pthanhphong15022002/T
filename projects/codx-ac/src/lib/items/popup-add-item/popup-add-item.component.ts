@@ -97,24 +97,6 @@ export class PopupAddItemComponent
       name: 'Other information',
     },
   ];
-  requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    {
-      gvsPropName: 'ItemGroupID',
-    },
-    {
-      gvsPropName: 'ItemID',
-    },
-    {
-      gvsPropName: 'ItemName',
-    },
-    {
-      gvsPropName: 'UMID',
-      dataPropName: 'umid',
-    },
-    {
-      gvsPropName: 'ItemType',
-    },
-  ];
   fmItemsPurchase: FormModel = {
     entityName: 'IV_ItemsPurchase',
     formName: 'ItemsPurchase',
@@ -504,9 +486,9 @@ export class PopupAddItemComponent
 
     if (
       !this.itemsService.validateFormData(
-        this.item,
+        this.form.formGroup,
         this.gridViewSetup,
-        this.requiredFields
+        ['UMID']
       )
     ) {
       return;

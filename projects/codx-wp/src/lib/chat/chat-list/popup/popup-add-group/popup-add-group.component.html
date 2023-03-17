@@ -128,14 +128,14 @@
     </div>
   </ng-template>
   <ng-template #headerTemplate>
-    <div class="row fw-bolder ms-2 w-100">
+    <div class="d-flex fw-bolder ms-2 w-100 ">
       <codx-label
           class="fw-bolder"
           [formModel]="dialogRef.formModel"
           name="lblListUser"
           default="Đã chọn">
         </codx-label>
-      {{ "Đã chọn (" + arrUsers.length + ")" }}
+      <span>{{'('+arrUsers.length+')'}}</span>
     </div>
   </ng-template>
 </ng-template>
