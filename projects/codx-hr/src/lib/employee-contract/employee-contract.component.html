@@ -12,6 +12,7 @@
   [button]="buttonAdd"
   (buttonClick)="addContract($event)"
   (onActions)="HandleAction($event)"
+  (oneMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -73,23 +74,19 @@
     <div class="w-25">
       <div class="d-flex flex-column">
         <div class="text-gray-700">
-          <span
-          [innerHTML]="data?.contractTypeID | formatvalue : view.formModel : 'contractTypeID' | async"
-          >
-
-          </span>
+          <span [title]="eContractHeaderText['ContractTypeID']" [innerHTML]="data?.contractTypeID | formatvalue : view.formModel : 'contractTypeID' | async"></span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data?.effectedDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['EffectedDate']" >{{ data?.effectedDate | fmDT }}</span>
           <span> - </span>
-          <span>{{ data?.expiredDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['ExpiredDate']" >{{ data?.expiredDate | fmDT }}</span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data?.contractNo}}</span>
+          <span [title]="eContractHeaderText['ContractNo']" > {{ data?.contractNo}}</span>
           <span> - </span>
-          <span>{{ data?.signedDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['SignedDate']" >{{ data?.signedDate | fmDT }}</span>
         </div>
       </div>
     </div>
@@ -102,9 +99,7 @@
     </codx-attachment>
     </div>
 
-    <div class="w-25"
-      [innerHTML]="data?.signStatus | formatvalue : view.formModel : 'signStatus' | async"
-    >
+    <div class="w-25" [innerHTML]=" data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async" >
     </div>
 
     <codx-mfunc
