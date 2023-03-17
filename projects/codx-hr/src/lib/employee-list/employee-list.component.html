@@ -248,21 +248,19 @@
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
-        <codx-vll
-          field="Status"
-          [formModel]="view.formModel"
-          [value]="data.status"
-          [showBgColor]="true"
-          [showIcon]="false"
-          [showText]="true"
-        >
-        </codx-vll>
         <span
-          #statusName
-          class="badge badge-success badge-sm badge-inline"
-          [style.background]="data.statusColor"
+        *ngIf="data.status==50; else newEmp"
+        class="badge badge-success badge-sm badge-inline"
+        [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
+       >
+       </span>
+        <ng-template #newEmp>
+          <span
+          class="badge badge-secondary badge-sm badge-inline"
           [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
-        ></span>
+         >
+         </span>
+        </ng-template>
       </div>
 
       <div class="align-items-center fs-7 mt-1">
