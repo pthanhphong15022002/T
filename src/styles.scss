@@ -1852,7 +1852,21 @@ lib-dynamic-process .card-header.m-h-auto.p-0{
 .codx-form > .card-body, .e-dialog > .e-dlg-content .card-body {
   margin-right: 2px;
 }
+//
 
+.btn-clean{
+
+  .svg-icon.svg-icon-primary svg [fill]:not(.permanent):not(g) {
+      fill:var(--primary);
+  }
+  .svg-icon.svg-icon-primary svg g [fill] {
+    fill: var(--primary) !important;
+  }
+} 
+.btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean.focus:not(.btn-text) {
+  color:var(--primary-dark);
+  background-color:var(--gray-100);
+}
 // .dialog-vll codx-valuelist{
 
 // }

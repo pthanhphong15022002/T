@@ -388,6 +388,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.adUser,
         this.viewChooseRole,
         checkDifference,
+        '0',
+        this.lstChangeModule,
       ])
       .subscribe();
   }
