@@ -1,5 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp
+    style="height: 100%"
     [header]="header"
     [formModel]="formModel"
     [body]="body"
@@ -34,9 +35,12 @@
                   default="Mô tả: "
                 ></codx-label>
               </div>
-              <div class="text-dark"
+              <div
+                class="text-dark"
                 *ngIf="dataSelect?.memo"
-                [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
+                [innerHTML]="
+                  sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)
+                "
               ></div>
             </div>
             <!-- <div class="mb-6">
@@ -82,9 +86,7 @@
               >
                 <span
                   [ngStyle]="
-                    +progress < 5
-                      ? { position: 'relative', left: '15px' }
-                      : {}
+                    +progress < 20 ? { position: 'relative', left: '15px' } : {}
                   "
                   >{{ progress || 0 }}%</span
                 >
@@ -111,7 +113,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="d-flex justify-content-end instance-select">
         <codx-input
           class="no-boder"
@@ -137,11 +139,18 @@
           ></codx-gantt-chart>
           <ng-template #ganttItems let-data>
             <div
-              class="badge badge-light badge-square badge-md fs-7 p-2"
+              class="d-flex justify-content-center align-items-center"
               (click)="clickDetailGanchart(data.recID)"
-              [ngStyle]="{ 'background-color': getColor(data.recID) }"
+              [ngStyle]="{
+                'background-color': getColor(data.recID),
+                'min-height': '35px',
+                'border-radius': '5px',
+                'min-width': '20px'
+              }"
             >
-              <div class="fw-bold text-dark">{{ data.name }}</div>
+              <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+                {{ data.name }}
+              </div>
             </div>
           </ng-template>
 
@@ -159,7 +168,7 @@
               <ng-container *ngFor="let item of listSteps; index as i">
                 <div
                   id="step-click"
-                  style="flex-grow: 1;cursor: pointer;"
+                  style="flex-grow: 1; cursor: pointer"
                   [ngClass]="getColorStepName(item?.stepStatus)"
                   (click)="click(i, item.stepID)"
                 >

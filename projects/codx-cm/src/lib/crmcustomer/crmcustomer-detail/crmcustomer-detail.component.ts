@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { CRUDService } from 'codx-core';
 
 @Component({
@@ -10,7 +10,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
-
+  @Input() funcID = 'CM0101'; //True - Khách hàng; False - Liên hệ
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -28,11 +28,6 @@ export class CrmcustomerDetailComponent implements OnInit {
   nameDetail = 'Information';
 
   tabDetail = [
-    { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-    { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
-    { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
-    { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
-
   ]
   constructor(
     private changeDetectorRef: ChangeDetectorRef
@@ -41,6 +36,28 @@ export class CrmcustomerDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.listTab(this.funcID);
+  }
+
+  listTab(funcID){
+    if(funcID == 'CM0101'){
+      this.tabDetail = [
+        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+        { name: 'Task', textDefault: 'Công việc', icon: 'icon-format_list_numbered', isActive: false },
+        { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
+        { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
+      ]
+    }else{
+      this.tabDetail = [
+        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+        { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
+        { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
+      ]
+    }
+  }
 
   clickMenu(item) {
     this.nameDetail = item.name;

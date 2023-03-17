@@ -33,7 +33,7 @@
     [imageObjType]="view.formModel.entityName"
     [desc]="
       placeholder(
-        data.birthday | date: 'dd/MM/yyyy',
+        data.birthday | date : 'dd/MM/yyyy',
         view.formModel,
         'Birthday'
       ) | async
@@ -66,7 +66,8 @@
       [objectId]="data.employeeID"
       [objectName]="data.employeeName"
       objectType="HR_Employees"
-      [referType]="'avt'">
+      [referType]="'avt'"
+    >
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
@@ -91,8 +92,13 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
-          [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
+  <codx-vll
+    [value]="data.status"
+    [name]="'HR003'"
+    [showText]="true"
+    [showBgColor]="true"
+    [className]="'badge badge-success badge-sm badge-inline'"
+  ></codx-vll>
 </ng-template>
 
 <ng-template #itemBirthDay let-data>

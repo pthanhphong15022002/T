@@ -229,44 +229,55 @@
         data?.priority | vll : vllPriority : "text" | async
       }}</span>
     </div>
-    <div #priority *ngIf="!data?.priority">
-      {{
+    <div
+      #priority
+      *ngIf="!data?.priority"
+      [innerHTML]="
         data?.priority
           | formatvalue
             : view.formModel
-            : "priority"
+            : 'priority'
             : priority
-            : "Tasks"
-            : "grvTasks"
+            : 'Tasks'
+            : 'grvTasks'
           | async
-      }}
-    </div>
+      "
+    ></div>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2">
     <div class="d-flex me-6">
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
-        <span *ngIf="data.dueDate" class="text-gray-700" #dueDate>{{
-          data.dueDate
-            | formatvalue
-              : view.formModel
-              : "dueDate"
-              : dueDate
-              : "Tasks"
-              : "grvTasks"
-            | async
-        }}</span>
-        <span #dueDate *ngIf="!data.dueDate">{{
-          data?.dueDate
-            | formatvalue
-              : view.formModel
-              : "dueDate"
-              : dueDate
-              : "Tasks"
-              : "grvTasks"
-            | async
-        }}</span>
+        <span
+          *ngIf="data.dueDate"
+          class="text-gray-700"
+          #dueDate
+          [innerHTML]="
+            data.dueDate
+              | formatvalue
+                : view.formModel
+                : 'dueDate'
+                : dueDate
+                : 'Tasks'
+                : 'grvTasks'
+              | async
+          "
+        ></span>
+        <span
+          #dueDate
+          *ngIf="!data.dueDate"
+          [innerHTML]="
+            data?.dueDate
+              | formatvalue
+                : view.formModel
+                : 'dueDate'
+                : dueDate
+                : 'Tasks'
+                : 'grvTasks'
+              | async
+          "
+        ></span>
       </span>
     </div>
   </div>
@@ -323,16 +334,20 @@
         placement="left bottom top right"
         container="body"
       ></span>
-      <span #memo2 *ngIf="!data?.memo2">{{
-        data?.memo2
-          | formatvalue
-            : view.formModel
-            : "memo2"
-            : memo2
-            : "Tasks"
-            : "grvTasks"
-          | async
-      }}</span>
+      <span
+        #memo2
+        *ngIf="!data?.memo2"
+        [innerHTML]="
+          data?.memo2
+            | formatvalue
+              : view.formModel
+              : 'memo2'
+              : memo2
+              : 'Tasks'
+              : 'grvTasks'
+            | async
+        "
+      ></span>
     </ng-container>
 
     <ng-container *ngIf="data?.category != '2'">

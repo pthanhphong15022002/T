@@ -72,21 +72,28 @@
               [showBgColor]="true">
             </codx-vll>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-700" *ngIf="data.positionID">
             <span>{{data.positionName}}</span>
           </div>
 
-          <div class="text-gray-700">
+          <div class="text-gray-700" >
             <span>{{data.orgUnitName}}</span>
           </div>
 
           <div class="text-gray-700">
-            <span *ngIf="data.departmentName">{{data.departmentName}}</span>
+            <span *ngIf="data.departmentName && data.orgUnitID!= data.departmentID; else elseCompany">{{data.departmentName}}</span>
               <ng-container *ngIf="data.divisionName">
                 <span class="text-gray-300 mx-2">|</span>
                 <span >{{data.divisionName}}</span>
               </ng-container>
           </div>
+
+          <ng-template #elseCompany>
+            <span *ngIf="data.companyID"
+              [innerHTML]="data.companyID | formatvalue : view.formModel : 'companyID' | async"
+            ></span>
+          </ng-template>
+          
         </div>
       </div>
     </div>

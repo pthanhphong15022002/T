@@ -1,0 +1,27 @@
+
+.chat-container{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    position: relative;
+}
+.chat-container-boxchat{
+    width: 95%;
+    height: 0;
+    display: flex;
+    justify-content: end;
+    flex-direction: row-reverse;
+    position: absolute;
+    top: -500px;
+    right: 50px;
+}
+.chat-container-boxchat-more{
+    width: 5%;
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+}
