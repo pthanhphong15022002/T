@@ -1,6 +1,6 @@
 <ng-container *ngIf="dataSelected?.recID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelected" [hideMF]="false"
-    [footer]="tabs">
+    [footer]="tabs" (clickMF)="clickMF($event, dataSelected)">
     <ng-template #header let-data>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101'">

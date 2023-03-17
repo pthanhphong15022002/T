@@ -29,28 +29,18 @@ export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.cache.valueList("SYS055").subscribe((vll: any) => {
-      if (vll) {
+    this.cache.valueList("SYS055")
+    .subscribe((vll:any) => {
+      if(vll){
         this.vllType = vll.datas;
-        let _default = vll.datas.find(x => x.value === "");
-        if (_default) {
-          this.type = _default;
-        }
-        else {
-          this.type = vll.datas[0];
-        }
+        this.type = vll.datas[0];
       }
     });
-    this.cache.valueList("SYS057").subscribe((vll: any) => {
-      if (vll) {
+    this.cache.valueList("SYS057")
+    .subscribe((vll:any) => {
+      if(vll){
         this.vllStatus = vll.datas;
-        let _default = vll.datas.find(x => x.value === "");
-        if (_default) {
-          this.status = _default;
-        }
-        else {
-          this.status = vll.datas[0];
-        }
+        this.status = vll.datas[0];
       }
     });
   }
