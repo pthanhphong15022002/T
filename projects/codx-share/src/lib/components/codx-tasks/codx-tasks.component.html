@@ -361,11 +361,20 @@
         placement="left bottom top right"
         container="body"
       ></span>
-      <span #memo *ngIf="!data?.memo">{{
-        data?.memo
-          | formatvalue : view.formModel : "memo" : memo : "Tasks" : "grvTasks"
-          | async
-      }}</span>
+      <span
+        #memo
+        *ngIf="!data?.memo"
+        [innerHTML]="
+          data?.memo
+            | formatvalue
+              : view.formModel
+              : 'memo'
+              : memo
+              : 'Tasks'
+              : 'grvTasks'
+            | async
+        "
+      ></span>
     </ng-container>
   </ng-template>
 
@@ -466,16 +475,20 @@
         </codx-vll>
       </ng-container>
       <span>
-        <span class="fs-7 text-gray-600" #dueDate>{{
-          data.dueDate
-            | formatvalue
-              : view.formModel
-              : "dueDate"
-              : dueDate
-              : "Tasks"
-              : "grvTasks"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #dueDate
+          [innerHTML]="
+            data.dueDate
+              | formatvalue
+                : view.formModel
+                : 'dueDate'
+                : dueDate
+                : 'Tasks'
+                : 'grvTasks'
+              | async
+          "
+        ></span>
       </span>
     </div>
     <div
@@ -589,16 +602,20 @@
               </codx-vll>
             </span>
             <span>
-              <span class="text-gray-700" #dueDate>{{
-                item.dueDate
-                  | formatvalue
-                    : view.formModel
-                    : "dueDate"
-                    : dueDate
-                    : "Tasks"
-                    : "grvTasks"
-                  | async
-              }}</span>
+              <span
+                class="text-gray-700"
+                #dueDate
+                [innerHTML]="
+                  item.dueDate
+                    | formatvalue
+                      : view.formModel
+                      : 'dueDate'
+                      : dueDate
+                      : 'Tasks'
+                      : 'grvTasks'
+                    | async
+                "
+              ></span>
             </span>
           </div>
         </div>

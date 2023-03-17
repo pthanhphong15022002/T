@@ -1,5 +1,11 @@
 import { GroupMembers, UserGroup } from '../../models/UserGroups.model';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
   CallFuncService,
@@ -10,6 +16,7 @@ import {
   NotificationsService,
   RequestOption,
 } from 'codx-core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-add',
@@ -25,6 +32,8 @@ export class AddApproversComponent implements OnInit {
   dialog: DialogRef;
   title: string = '';
   action: string = 'add';
+  isInValid = true;
+
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -40,6 +49,10 @@ export class AddApproversComponent implements OnInit {
     this.master = dialog.dataService!.dataSelected;
     this.orgData = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
   }
+  //#endregion
+
+  //#region ViewChild
+  @ViewChild('form', { static: true }) form;
   //#endregion
 
   //#region  Init
@@ -62,10 +75,23 @@ export class AddApproversComponent implements OnInit {
       this.dialog.dataService.clear();
     });
   }
+
+  ngAfterViewInit() {
+    // if (this.form) {
+    //   this.form?.formGroup?.statusChanges.subscribe((res) => {
+    //     this.isInValid = res == 'INVALID';
+    //     if (!this.isInValid) {
+    //       this.changeDetectorRef.detectChanges();
+    //     }
+    //   });
+    // }
+  }
   //#endregion
 
   //#region event
   eventApply(e) {
+    console.log('mems', e);
+
     if (!e.data || e.data.length == 0) return;
     if (!this.dialog.dataService.hasSaved && this.action == 'add') {
       this.dialog.dataService
@@ -122,14 +148,16 @@ export class AddApproversComponent implements OnInit {
   //#endregion
 
   //#region Method
-  saveMember(data: Array<any>) {
+  saveMember(data: any) {
     let groupMembers = new Array<GroupMembers>();
-    data.forEach((e) => {
+    data?.dataSelected?.forEach((e) => {
       let member = new GroupMembers();
       member.groupID = this.master.groupID;
       member.memberID = e.id;
-      member.memberType = e.objectType;
+      member.memberType = 'U';
       member.memberName = e.text || e.objectName;
+      member.positionName = e.positionName;
+      member.orgUnitName = e.orgUnitName;
       groupMembers.push(member);
     });
     this.api
@@ -144,6 +172,7 @@ export class AddApproversComponent implements OnInit {
             : res[1];
           this.details = [...this.details, ...res[2]];
           this.master.members = this.details;
+          this.dialog.dataService.hasSaved = false;
           //  this.dialog.dataService.update(this.master).subscribe();
         }
       });
@@ -161,4 +190,12 @@ export class AddApproversComponent implements OnInit {
     return true;
   }
   //#endregion
+
+  //#region Test
+  show() {
+    console.log('form', this.form);
+  }
+  //#endregion
+
+  popRoles() {}
 }

@@ -1305,7 +1305,7 @@
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="d-flex flex-column">
-              <div class="fw-bold text-dark">{{ itemStep?.stepName }}</div>
+              <div class="fw-bold text-dark line-clamp line-clamp-1">{{ itemStep?.stepName }}</div>
 
               <div class="text-gray-500">
                 Thời hạn:
@@ -1348,7 +1348,7 @@
             </div>
             <div class="d-flex flex-column">
               <div class="text-dark fw-bold">
-                <codx-label [default]="stepNameSuccess"></codx-label>
+              {{stepNameSuccess}}
               </div>
               <div class="text-gray-500">
                 <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
@@ -1367,7 +1367,7 @@
           </div>
             <div class="d-flex flex-column">
               <div class="text-dark fw-bold">
-                <codx-label [default]="stepNameFail"></codx-label>
+               {{stepNameFail}}
               </div>
               <div class="text-gray-500">
                 <codx-label
@@ -1460,6 +1460,7 @@
             <codx-label
               fiedName="taskMemo"
               default="Công việc mặc định người phụ trách phải thực hiện trong giai đoạn"
+              [formModel]="dialog.formModel"
             >
             </codx-label>
           </div>
@@ -1470,12 +1471,13 @@
               <codx-label
                 fiedName="taskMemo"
                 default="Thời hạn công việc so với giai đoạn"
+                [formModel]="dialog.formModel"
               >
               </codx-label>
             </div>
             <div class="text-primary">
-              {{ dayStep }} ngày {{ hourStep }} giờ /
-              {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ
+              {{ dayStep + strDay + hourStep + strHour}}/
+              {{ step?.durationDay + strDay + step?.durationHour + strHour }}
             </div>
           </div>
           <div class="d-flex align-items-center ms-5">
@@ -1937,7 +1939,7 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label default="Lý do thành công"></codx-label>
+          <codx-label [default]="joinTwoString(stepNameReason,stepNameSuccess)"></codx-label>
         </div>
         <div class="text-gray-600">
           <codx-label
@@ -1983,7 +1985,7 @@
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
               <div *ngIf="stepSuccess.isUsed; else other_content">
-                {{ stepNameSuccess }}
+                {{ item?.reasonName }}
                 <codx-mfunc
                   [formModel]="dialog.formModel"
                   (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
@@ -1997,7 +1999,7 @@
           </ul>
           <ng-template #other_content>
             <div>
-              {{ stepNameFail}}
+              {{ item?.reasonName }}
               <codx-mfunc
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
@@ -2142,7 +2144,7 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label default="Lý do thất bại"></codx-label>
+          <codx-label [default]="joinTwoString(stepNameReason,stepNameFail)"></codx-label>
         </div>
         <div class="text-gray-600">
           <codx-label
@@ -2202,7 +2204,7 @@
 
           <ng-template #other_fail>
             <div>
-              {{ item.reasonName }}
+              {{ item?.reasonName }}
               <codx-mfunc
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFReason($event, item, viewStepReasonFail)"

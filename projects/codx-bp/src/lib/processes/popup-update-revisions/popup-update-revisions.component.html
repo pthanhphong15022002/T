@@ -29,14 +29,24 @@
                 </span>
               </div>
               <ng-template #firstVersionNo>
-                <div class="text-dark fw-bold fs-5 button-version cursor-pointer" (click)="getProcessesStep(item)">
-                  <span>{{item.versionName}}:</span>
-                  <span  [innerHTML]="
-                  item?.versionNo
-                  | formatvalue : form.formModel
-                  : 'versionNo'
-                  | async">
-
+                <div
+                  class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                  (click)="getProcessesStep(item)"
+                >
+                  <span>{{ item.versionName }}:</span>
+                  <span
+                    #versionNo
+                    [innerHTML]="
+                      item?.versionNo
+                        | formatvalue
+                          : form.formModel
+                          : 'versionNo'
+                          : versionNo
+                          : 'Processes'
+                          : 'grvProcesses'
+                        | async
+                    "
+                  >
                   </span>
                 </div>
               </ng-template>
@@ -76,15 +86,24 @@
                 {{ item.createdOn | timefrom }}
               </span>
             </div>
-            <div *ngIf="item?.comment" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"></div>
-            <div *ngIf="!item?.comment" [innerHTML]="
-            item?.comment
-            | formatvalue
-            : form.formModel
-            : 'comment'
-            | async">
-
-            </div>
+            <div
+              *ngIf="item?.comment"
+              [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"
+            ></div>
+            <div
+              *ngIf="!item?.comment"
+              #comment
+              [innerHTML]="
+                item?.comment
+                  | formatvalue
+                    : form.formModel
+                    : 'comment'
+                    : comment
+                    : 'ProcessRevisions'
+                    : 'grvProcessRevisions'
+                  | async
+              "
+            ></div>
           </div>
         </div>
 
@@ -99,14 +118,19 @@
             </codx-label>
           </div>
           <div class="justify-content-end">
-            <div [innerHTML]="
-            item.activedOn
-            | formatvalue : form.formModel
-            : 'activedOn'
-            | async">
-
-            </div>
-
+            <div
+              #activedOn
+              [innerHTML]="
+                item?.activedOn
+                  | formatvalue
+                    : form.formModel
+                    : 'activedOn'
+                    : activedOn
+                    : 'Processes'
+                    : 'grvProcesses'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>

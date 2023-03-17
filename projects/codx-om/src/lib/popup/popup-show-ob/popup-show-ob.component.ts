@@ -30,7 +30,6 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
 import { ChartSettings } from '../../model/chart.model';
-import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.component';
 
 @Component({
@@ -128,6 +127,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   okrChild= [];
   title='';
   listAssign: any;
+  isCollapsed=true;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -151,7 +151,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = 'Xem chi tiết - Mục tiêu'; //dialogData?.data[2];
+    this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.obRecID = dialogData.data[0];    
     this.title = dialogData.data[1];
@@ -219,7 +219,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
         .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
-            this.listAlign =[res];           
+            this.listAlign =res;           
           }
         });
   }
@@ -228,11 +228,30 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
         .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Assign)
         .subscribe((res: any) => {
           if (res) {
-            this.listAssign = [res];           
+            this.listAssign = res;           
           }
         });
   }
-
+  collapeKR(collapsed: boolean) {
+    this.collapedData(this.listAlign,collapsed);
+    this.collapedData(this.listAssign,collapsed);
+    
+    this.isCollapsed = collapsed;
+  }
+  collapedData(data:any,collapsed:any){
+    data.forEach((ob) => {
+      ob.isCollapse = collapsed;
+    });
+    this.detectorRef.detectChanges();
+    data.forEach((ob) => {
+      if (ob.items != null && ob.items.length > 0) {
+        ob.items.forEach((kr) => {
+          kr.isCollapse = collapsed;
+        });
+      }
+    });
+    this.detectorRef.detectChanges();
+  }
   //#region Chart
   // getChartData() {
   //   let krDetail = this.dataKR;

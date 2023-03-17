@@ -48,7 +48,8 @@
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
-  <codx-temp-full style="width: 100%;" [title]="data.title" [descTmp]="descTmp"> </codx-temp-full>
+  <codx-temp-full style="width: 100%" [title]="data.title" [descTmp]="descTmp">
+  </codx-temp-full>
   <ng-template #descTmp>
     <div class="flex-body">
       <!-- <div class="d-flex align-items-center">
@@ -57,18 +58,22 @@
       <div class="d-flex align-items-center">
         <span class="text-gray-600"></span><span>70% la cai gi</span>
       </div> -->
-      <div class="d-flex justify-content-end" >
+      <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
-        <span class="fs-7 text-gray-600" #createdOn>{{
-          data.createdOn
-            | formatvalue
-              : view.formModel
-              : "createdOn"
-              : createdOn
-              : "DPInstances"
-              : "grvDPInstances"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #createdOn
+          [innerHTML]="
+            data.createdOn
+              | formatvalue
+                : view.formModel
+                : 'createdOn'
+                : createdOn
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
       </div>
     </div>
   </ng-template>
@@ -84,16 +89,20 @@
       </ng-container> -->
       <span>
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
-        <span class="fs-7 text-gray-600" #endDate>{{
-          data.endDate
-            | formatvalue
-              : view.formModel
-              : "endDate"
-              : endDate
-              : "DPInstances"
-              : "grvDPInstances"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #endDate
+          [innerHTML]="
+            data.endDate
+              | formatvalue
+                : view.formModel
+                : 'endDate'
+                : endDate
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
       </span>
     </div>
     <!-- <div class="d-flex justify-content-center">
@@ -142,16 +151,20 @@
   <div class="flex-body">
     <div class="d-flex justify-content-end">
       <span class="text-gray-600 icon-14 icon-alarm_add me-1"></span>
-      <span class="fs-7 text-gray-600" #createdOn>{{
-        data.createdOn
-          | formatvalue
-            : formModel
-            : "createdOn"
-            : createdOn
-            : "DPInstances"
-            : "grvDPInstances"
-          | async
-      }}</span>
+      <span
+        class="fs-7 text-gray-600"
+        #createdOn
+        [innerHTML]="
+          data.createdOn
+            | formatvalue
+              : formModel
+              : 'createdOn'
+              : createdOn
+              : 'DPInstances'
+              : 'grvDPInstances'
+            | async
+        "
+      ></span>
     </div>
   </div>
 </ng-template>
@@ -168,16 +181,20 @@
       </div>
       <span>
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
-        <span class="fs-7 text-gray-600" #endDate>{{
-          data.endDate
-            | formatvalue
-              : formModel
-              : "endDate"
-              : endDate
-              : "DPInstances"
-              : "grvDPInstances"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #endDate
+          [innerHTML]="
+            data.endDate
+              | formatvalue
+                : formModel
+                : 'endDate'
+                : endDate
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
       </span>
     </div>
     <div class="d-flex justify-content-center">
