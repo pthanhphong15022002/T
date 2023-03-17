@@ -2597,7 +2597,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
     }
-    this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
     if (this.stepList.length > 0) {
