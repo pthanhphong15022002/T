@@ -129,7 +129,10 @@
             </ng-container>
           </ng-container>
           <ng-container *ngIf="nameDetail == 'Task'">
-            <ng-container>Công việc </ng-container>
+            <ng-container
+              [ngTemplateOutlet]="task"
+              [ngTemplateOutletContext]="{ value: dataSelected.steps }"
+            ></ng-container>
           </ng-container>
           <ng-container *ngIf="nameDetail == 'Opportunity'">
             <ng-container [ngTemplateOutlet]="opportunity">
@@ -265,5 +268,12 @@
         <span class="me-2">50.000.000 VND</span>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #task let-data="value">
+  <!-- <div>{{data[0] | json}}</div> -->
+  <div *ngFor="let step of data">
+    <h4>{{step.stepName}}</h4>
+    <codx-show-task [dataSource]="step"></codx-show-task>
   </div>
 </ng-template>

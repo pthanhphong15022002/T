@@ -1756,6 +1756,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
       this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
+      this.popupAddStage.close();
       this.viewStepSelect(
         this.stepList.length > 0
           ? this.stepList[this.stepList?.length - 1 || 0]
