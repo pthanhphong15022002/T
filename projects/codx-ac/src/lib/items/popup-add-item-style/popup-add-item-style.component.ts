@@ -6,7 +6,7 @@ import {
   ImageViewerComponent,
   NotificationsService,
   UIComponent,
-  UploadFile,
+  UploadFile
 } from 'codx-core';
 import { map } from 'rxjs/operators';
 import { ItemStyle } from '../interfaces/ItemStyle.interface';
@@ -25,14 +25,6 @@ export class PopupAddItemStyleComponent extends UIComponent {
   itemStyle: ItemStyle = {} as ItemStyle;
   savedItemStyles: ItemStyle[] = [];
   isEdit: boolean = false;
-  requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    {
-      gvsPropName: 'StyleID',
-    },
-    {
-      gvsPropName: 'StyleName',
-    },
-  ];
   formTitle: string;
 
   constructor(
@@ -88,9 +80,8 @@ export class PopupAddItemStyleComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemStyle,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;
@@ -126,9 +117,8 @@ export class PopupAddItemStyleComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemStyle,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;

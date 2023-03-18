@@ -38,3 +38,18 @@
     opacity: 0.9;
     color: #ffffff;
 }
+.box-collaspe{
+    position: relative;
+}
+.box-collaspe-hover{
+    position: absolute;
+    left: -40px;
+    background-color: #ffffff;
+    padding: 4px;
+    display: none;
+}
+.box-collaspe:hover{
+    .box-collaspe-hover{
+        display: block;
+    }
+}
