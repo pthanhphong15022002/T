@@ -186,26 +186,32 @@
         </codx-label>
       </div>
       <div class="group-button">
-        <button type="button" class="btn btn-icon btn-outlight-primary" (click)="openPopupTaskGroup()">
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary"
+          (click)="openPopupTaskGroup()"
+        >
+          <i
+            [ngClass]="!this.isCreate || isClosed ? '' : 'icon-add icon-18'"
+          ></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary ms-1"
+          (click)="openTypeTask()"
+        >
           <i
             [ngClass]="
-              !this.isCreate || isClosed ? '' : 'icon-add icon-18'
+              !this.isCreate || isClosed ? '' : 'icon-add_task icon-18'
             "
           ></i>
         </button>
-        <button type="button" class="btn btn-icon btn-outlight-primary ms-1" (click)="openTypeTask()">
-          <i
-            [ngClass]="
-              !this.isCreate || isClosed
-                ? ''
-                : 'icon-add_task icon-18'
-            "
-          ></i>
-        </button>
-        <button type="button" class="btn btn-icon btn-outlight-primary ms-1" (click)="clickShow($event, 'step-task')">
-          <i
-            class="icon-expand_less icon-18"
-          ></i>
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary ms-1"
+          (click)="clickShow($event, 'step-task')"
+        >
+          <i class="icon-expand_less icon-18"></i>
         </button>
       </div>
     </div>
@@ -510,35 +516,41 @@
 
 <!-- Cập nhật kết quả thực hiện -- nvthuan -->
 <ng-template #updateProgress>
-  <div class="p-5 position-relative">
+  <div class="p-5">
     <div>
       <ng-container [ngTemplateOutlet]="header"></ng-container>
     </div>
     <div>
       <ng-container [ngTemplateOutlet]="updateProgressBody"></ng-container>
     </div>
-    <div class="position-absolute w-100">
+    <div class="">
       <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
     </div>
   </div>
   <ng-template #header>
-    <div>
-      <codx-label
-        class="h3"
-        fiedName="progressHeader"
-        [formModel]="grvTaskGroupsForm"
-        [default]="'Cập nhật kết quả thực hiện'"
-      ></codx-label>
+    <div class="d-flex justify-content-between " (click)="popupUpdateProgress.close()">
+      <div>
+        <div>
+          <codx-label
+            class="h3"
+            fiedName="progressHeader"
+            [formModel]="grvTaskGroupsForm"
+            [default]="'Cập nhật kết quả thực hiện'"
+          ></codx-label>
+        </div>
+        <div>
+          <codx-label
+            class="text-gray-400"
+            fiedName="progressHeaderMemo"
+            [formModel]="grvTaskGroupsForm"
+            [default]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
+          ></codx-label>
+        </div>
+      </div>
+      <div>
+        <span class="icon-close icon-18 cursor-pointer"></span>
+      </div>
     </div>
-    <div>
-      <codx-label
-        class="text-gray-400"
-        fiedName="progressHeaderMemo"
-        [formModel]="grvTaskGroupsForm"
-        [default]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
-      ></codx-label>
-    </div>
-    
   </ng-template>
   <ng-template #updateProgressBody>
     <div class="mt-5">
