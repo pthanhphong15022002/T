@@ -2036,6 +2036,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if(!check){
           this.listStepEdit.push(task?.stepID);
         }
+        let checkExistStep = this.checkExistUser(this.step, task['roles'][0], 'R');
+        if (!checkExistStep) {
+          let index = this.step?.roles.findIndex(
+            (roleFind) => roleFind.objectID === task['roles'][0]['objectID']
+          );
+          if (index > -1) {
+            this.step?.roles?.splice(index, 1);
+          }
+        }
       }
     });
   }
