@@ -31,11 +31,10 @@
 </ng-template>
 
 <ng-template #footer>
-  <button type="button" class="btn btn-primary" (click)="save()">
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
     <codx-label
       fiedName="lblSave"
-      [formName]="dialogRef.formModel?.formName"
-      [gridViewName]="dialogRef.formModel?.gridViewName"
+      [formModel]="dialogRef.formModel"
       default="Lưu"
     ></codx-label>
   </button>
@@ -103,18 +102,10 @@
       <div class="col-3 form-group">
         <codx-label fiedName="umid" [formModel]="form.formModel"></codx-label>
         <codx-input
-          type="combobox"
-          refType="3"
-          refValue="UnitsOfMearsure"
           field="umid"
-          [crrValue]="form.data?.umid"
-          (valueChange)="handleInputChange($event)"
-        ></codx-input>
-        <!-- <codx-input
-          field="uMID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-        ></codx-input> -->
+        ></codx-input>
       </div>
     </div>
 
@@ -201,10 +192,9 @@
       <div class="d-flex py-5 gap-7">
         <div class="d-flex gap-2">
           <codx-input
-            type="switch"
             field="sales"
-            [checked]="form.data?.sales"
-            (valueChange)="handleInputChange($event)"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
           <codx-label
             fiedName="sales"
@@ -214,10 +204,9 @@
 
         <div class="d-flex gap-2">
           <codx-input
-            type="switch"
             field="purchase"
-            [checked]="form.data?.purchase"
-            (valueChange)="handleInputChange($event)"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
           <codx-label
             fiedName="purchase"
@@ -227,10 +216,9 @@
 
         <div class="d-flex gap-2">
           <codx-input
-            type="switch"
             field="production"
-            [checked]="form.data?.production"
-            (valueChange)="handleInputChange($event)"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
           <codx-label
             fiedName="production"
@@ -243,21 +231,21 @@
     <div class="row form-group">
       <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
       <codx-input
-        type="textarea"
         field="note"
-        format="ed2"
-        [crrValue]="form.data?.note"
-        (valueChange)="handleInputChange($event)"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="row">
-      <codx-input
-        field="stop"
-        label="Ngưng sử dụng"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
+      <div class="d-flex gap-2">
+        <codx-input
+          field="stop"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <codx-label fiedName="stop" [formModel]="form.formModel"></codx-label>
+      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -424,12 +412,18 @@
     </div>
 
     <div class="row mb-3">
-      <codx-input
-        field="autoConversion"
-        label="Tính hệ số quy đổi theo quy cách"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
+      <div class="d-flex gap-2">
+        <codx-input
+          class="check-circle"
+          field="autoConversion"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <codx-label
+          fiedName="autoConversion"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </div>
     </div>
 
     <div class="row">
@@ -565,12 +559,15 @@
     </div>
 
     <div class="row mb-3">
-      <codx-input
-        field="cwItem"
-        label="Sử dụng song song 2 đơn vị tính"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
+      <div class="d-flex gap-2">
+        <codx-input
+          class="check-circle"
+          field="cwItem"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <codx-label fiedName="cwItem" [formModel]="form.formModel"></codx-label>
+      </div>
     </div>
 
     <div class="row">
@@ -1155,13 +1152,19 @@
     </div>
 
     <div class="row">
-      <codx-input
-        field="autoIssue"
-        label="Xuất kèm hao hụt khi đề nghị xuất kho"
-        [formModel]="fmItemsProduction"
-        [crrValue]="itemsProduction?.autoIssue"
-        (valueChange)="handleInputChange($event, 'itemsProduction')"
-      ></codx-input>
+      <div class="d-flex gap-2">
+        <codx-input
+          class="check-circle"
+          field="autoIssue"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.autoIssue"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+        <codx-label
+          fiedName="autoIssue"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -1210,10 +1213,9 @@
 
     <div class="d-flex gap-2 mt-3">
       <codx-input
-        type="switch"
         field="userItemIDToCreateDIM2"
-        [checked]="form.data?.userItemIDToCreateDIM2"
-        (valueChange)="handleInputChange($event)"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
       <codx-label
         fiedName="userItemIDToCreateDIM2"
@@ -1262,7 +1264,11 @@
       </div>
 
       <div class="text-secondary fs-7">
-        (*) Chỉ áp dụng cho phương pháp bình quân gia quyền
+        <codx-label
+          fiedName="lblUnknown"
+          default="(*) Chỉ áp dụng cho phương pháp bình quân gia quyền"
+          [formModel]="form.formModel"
+        ></codx-label>
       </div>
     </div>
   </ng-container>

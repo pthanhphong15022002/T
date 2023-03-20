@@ -41,12 +41,17 @@
                         </ng-template>
                     </div>
                     <div>
-                        <ng-container *ngIf="data.departmentName">
+                        <ng-container *ngIf="data.departmentName && data.orgUnitID!= data.departmentID; else noDepartment">
                             <span>{{data.departmentName}}</span>
                         </ng-container>
                         <ng-template #noDepartmentName>
                             <codx-label [formModel]="view.formModel" fiedName="DepartmentID"></codx-label>
                         </ng-template>
+                        <ng-template #noDepartment>
+                            <span *ngIf="data.companyID"
+                                [innerHTML]="data.companyID | formatvalue : view.formModel : 'companyID' | async"
+                            ></span>
+                          </ng-template>
                     </div>
                     <ng-container *ngIf="isCorporation">
                        <div>
@@ -76,7 +81,9 @@
                         <codx-label [formModel]="view.formModel" fiedName="JobLevel" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark" *ngIf="data.jobLevel">{{ data?.jobLevel | formatvalue : view.formModel : "jobLevel" | async }}
+                    <span class="text-dark" *ngIf="data.jobLevel"
+                        [innerHTML]="data?.jobLevel | formatvalue : view.formModel : 'jobLevel' | async"
+                    >
                     </span>
                 </div>
             </div>

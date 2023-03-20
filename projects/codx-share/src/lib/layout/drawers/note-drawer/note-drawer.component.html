@@ -4,7 +4,7 @@
             <div class="pw-search">
                 <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
             </div>
-            <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative btn-sort">
+            <div class="btn btn-icon btn-white me-1 btn btn-icon btn-clean position-relative btn-sort">
                 <i class="icon-sort_Z-A icon-18" (click)="sortDataByASC()" *ngIf="checkSortASC == false"></i>
                 <i class="icon-sort_A-Z icon-18" (click)="sortDataByDESC()" *ngIf="checkSortASC == true"></i>
             </div>

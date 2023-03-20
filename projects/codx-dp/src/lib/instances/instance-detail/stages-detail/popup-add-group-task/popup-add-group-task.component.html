@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [headerText]="'Thêm Nhóm Công Việc'"
+  [headerText]="'Thêm nhóm công việc'"
   [body]="addGroupJobBody"
   [footer]="addGroupJobFooter"
   [dialog]="dialog"
@@ -64,15 +64,16 @@
       </div>
     </div>
 
-    <div class="form-group d-flex justify-content-between">
-      <div class="me-2 clo-6">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group ">
         <codx-label
           fiedName="durationDay"
           [formModel]="grvTaskGroupsForm"
           default="Thời lượng công việc "
         >
         </codx-label>
-        <div class="form-group d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
           <div class="position-relative">
             <codx-input
               field="durationDay"
@@ -109,33 +110,34 @@
           </div>
         </div>
       </div>
-      <div class="ms-2 col-6">
-        <codx-label
-          fiedName="reminders"
-          [formModel]="grvTaskGroupsForm"
-          default="Nhắc nhở trước khi bắt đầu"
-        >
-        </codx-label>
-        <codx-input
-          field="reminders"
-          [formModel]="grvTaskGroupsForm"
-          [crrValue]="taskGroup?.reminders"
-          refValue="DP030"
-          type="valuelist"
-          (valueChange)="changeValueInput($event, taskGroup)"
-        >
-        </codx-input>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            fiedName="reminders"
+            [formModel]="grvTaskGroupsForm"
+            default="Nhắc nhở trước khi bắt đầu"
+          >
+          </codx-label>
+          <codx-input
+            field="reminders"
+            [formModel]="grvTaskGroupsForm"
+            [crrValue]="taskGroup?.reminders"
+            refValue="DP030"
+            type="valuelist"
+            (valueChange)="changeValueInput($event, taskGroup)"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
 
     <div class="form-group">
-      <div>
-        <codx-label
+      <codx-label
           fiedName="memo"
           [formModel]="grvTaskGroupsForm"
           default="Ghi chú"
         ></codx-label>
-      </div>
       <codx-input
         field="memo"
         [formModel]="grvTaskGroupsForm"

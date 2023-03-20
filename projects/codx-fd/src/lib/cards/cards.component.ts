@@ -19,18 +19,18 @@ import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.compon
   encapsulation: ViewEncapsulation.None
 })
 export class CardsComponent extends UIComponent {
-
   user = null;
   buttonAdd: ButtonModel;
   views: Array<ViewModel> = [];
   itemSelected: any = null;
   cardType = "";
-  funcID:string = "";
-  selectedID:string = "";
-  grdViewSetup:any = null;
-  ratingVLL:string = "";
+  funcID: string = "";
+  selectedID: string = "";
+  grdViewSetup: any = null;
+  ratingVLL: string = "";
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
+
   constructor(
     private inject: Injector,
     private notifiSV: NotificationsService,
@@ -40,18 +40,16 @@ export class CardsComponent extends UIComponent {
     this.user = this.auth.userValue;
   }
 
-
   onInit(): void {
-    this.router.params.subscribe((param:any)=>{
-      if(param){
+    this.router.params.subscribe((param: any) => {
+      if (param) {
         let funcID = param['funcID'];
-        if(funcID){
+        if (funcID) {
           this.funcID = funcID;
-          this.cache.functionList(funcID).subscribe((func:any)=>{
-            if(func){
-              this.cache.gridViewSetup(func.formName,func.gridViewName)
-              .subscribe((grd:any)=>{
-                if(grd){
+          this.cache.functionList(funcID).subscribe((func: any) => {
+            if (func) {
+              this.cache.gridViewSetup(func.formName, func.gridViewName).subscribe((grd: any) => {
+                if (grd) {
                   this.ratingVLL = grd['Rating']['referedValue'];
                 }
               });
@@ -61,10 +59,12 @@ export class CardsComponent extends UIComponent {
       }
     });
   }
+
   ngAfterViewInit() {
     this.buttonAdd = {
       id: 'btnAdd',
     };
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -79,7 +79,7 @@ export class CardsComponent extends UIComponent {
   }
 
   selectedItem(event: any) {
-    if(!event || !event.data){
+    if (!event || !event.data) {
       this.selectedID = "";
     }
     else {
@@ -87,6 +87,7 @@ export class CardsComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
+
   clickShowAssideRight() {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -95,9 +96,8 @@ export class CardsComponent extends UIComponent {
     this.callfc.openSide(PopupAddCardsComponent, this.funcID, option);
   }
 
-
-  clickMF(event:any,data:any){
-    switch(event.functionID){
+  clickMF(event: any, data: any) {
+    switch (event.functionID) {
       case "SYS02":
         break;
       case "SYS03":
@@ -108,7 +108,6 @@ export class CardsComponent extends UIComponent {
     }
   }
 
-  deleteCard(card:any) {
-  }
+  deleteCard(card: any) { }
 
 }

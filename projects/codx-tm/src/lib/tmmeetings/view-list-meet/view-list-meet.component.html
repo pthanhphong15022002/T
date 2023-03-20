@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class="w-15 me-5">
-    <codx-imgs [width]="30" [objectId]="resourceID" objectType="AD_Users" [numberImages]="4"
+    <codx-imgs [width]="30" [objectId]="objectID" objectType="AD_Users" [numberImages]="4"
       (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
       #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500">
     </codx-imgs>
@@ -60,20 +60,20 @@
 <ng-template #popEmpList>
   <div class="fw-bold">
     <codx-label name="Resouces" [formModel]="formModel" default="Danh sách phân công cho"></codx-label>
-    <span>{{ "(" + data.resources.length + ")" }}</span>
+    <span>{{ "(" + data.permissions.length + ")" }}</span>
   </div>
   <!-- <div>
     <codx-searchbar *ngIf="data.resources.length > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div> -->
-  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of data.resources">
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of data.permissions">
     <div class="me-3">
       <div>
-        <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+        <codx-img class="" [objectId]="item?.objectID" objectType="AD_Users">
         </codx-img>
       </div>
     </div>
     <div class="d-flex flex-column flex-grow-1">
-      <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
+      <div class="text-dark fw-bold">{{ item?.objectName }}</div>
       <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
     </div>
   </div>

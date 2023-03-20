@@ -58,6 +58,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
   @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
   @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
+  @ViewChild('gridNote') gridNote: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
   showToolBar = 'true';
@@ -199,7 +200,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
                 headerText: this.grView?.bookingOn?.headerText,
-
               },
               {
                 field: 'resourceID',
@@ -213,7 +213,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
               {
                 field: 'title',
                 template: this.gridHost,
-                headerText: "Người chủ trì",
+                headerText: 'Người chủ trì',
               },
               {
                 field: 'startDate',
@@ -239,8 +239,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                   //resources: this.columnGrids,
                   template2:this.mfButton
                 },
-              },
-            )
+            });
           }
         });
     }
@@ -465,7 +464,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
-    if(event.type == 'doubleClick' || event.type == 'edit'){
+    if (event.type == 'doubleClick' || event.type == 'edit') {
       this.edit(event.data);
     }
   }
@@ -543,7 +542,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-
     this.codxEpService
       .cancel(data?.recID, '', this.formModel.entityName)
       .subscribe((res: any) => {
@@ -779,7 +777,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         meetingStartDate,
         meetingStartTime
       )
-      .then((url) => {
+      .subscribe((url) => {
         if (url) {
           window.open(url, '_blank');
         }

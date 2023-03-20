@@ -1,12 +1,11 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  DataRequest,
-  RequestOption,
+  DataRequest, RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { map, Observable } from 'rxjs';
 import { ItemsService } from './items.service';
@@ -24,7 +23,6 @@ export class ItemsComponent extends UIComponent {
   @ViewChild('header1', { static: true }) header1: TemplateRef<any>;
   @ViewChild('header2', { static: true }) header2: TemplateRef<any>;
   @ViewChild('header3', { static: true }) header3: TemplateRef<any>;
-  @ViewChild('header4', { static: true }) header4: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
@@ -165,17 +163,15 @@ export class ItemsComponent extends UIComponent {
       options.Width = '800px';
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
-      this.callfc
-        .openSide(
-          PopupAddItemComponent,
-          {
-            formType: 'edit',
-            title: `${e.text} ${this.functionName}`,
-          },
-          options,
-          this.view.funcID
-        )
-        .closed.subscribe((res) => console.log(res));
+      this.callfc.openSide(
+        PopupAddItemComponent,
+        {
+          formType: 'edit',
+          title: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
     });
   }
 

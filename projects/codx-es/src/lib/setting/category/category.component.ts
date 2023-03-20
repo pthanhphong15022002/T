@@ -67,7 +67,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   funcList: any = {};
 
   dataSelected: any;
-  dialog!: DialogRef;
+  dialog: DialogRef;
 
   constructor(
     private cacheSv: CacheService,
@@ -229,7 +229,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           isAddNew: true,
         };
         if (!isAddNewEmail) {
-          data.templateID = 'ec122998-ec56-4028-982c-8850191d2bec';
+          data.templateID = '79009019-9e0f-4fb3-b77b-7ef1086af1ad';
           data.isAddNew = false;
         }
 

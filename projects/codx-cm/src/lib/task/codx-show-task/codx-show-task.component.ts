@@ -72,10 +72,31 @@ export class CodxShowTaskComponent implements OnInit {
       const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
         return {
           ...taskGroup,
-          task: taskGroupList[taskGroup['refID']] ?? [],
+          task: taskGroupList[taskGroup['recID']] ?? [],
         };
       });
       data['taskGroups'] = taskGroupConvert;
+    }
+  }
+
+  clickMFTaskGroup(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        // this.deleteGroupTask(data);
+        break;
+      case 'SYS03':
+        // this.openPopupTaskGroup(data, 'edit');
+        break;
+      case 'SYS04':
+        // this.openPopupTaskGroup(data, 'copy');
+        break;
+      case 'DP08':
+        // this.groupTaskID = data?.recID;
+        // this.openTypeTask();
+        break;
+      case 'DP12':
+        // this.viewTask(data,'G');
+        break;
     }
   }
 

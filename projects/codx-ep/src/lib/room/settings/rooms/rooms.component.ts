@@ -33,6 +33,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
+  @ViewChild('noteCol') noteCol: TemplateRef<any>;
   @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   @ViewChild('itemAction') itemAction: TemplateRef<any>;
@@ -149,6 +150,7 @@ export class RoomsComponent extends UIComponent {
               headerText: gv['Note'].headerText,
               //textAlign: 'center',
               width: '20%', //width: gv['Note'].width,
+              template: this.noteCol,
               field: 'note',
             },
             {

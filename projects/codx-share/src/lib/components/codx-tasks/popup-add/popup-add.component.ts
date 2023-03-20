@@ -16,6 +16,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -1205,7 +1206,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   openControlShare(controlShare: any, roleType) {
     this.crrRole = roleType;
     if (controlShare) {
-      this.callFC.openForm(controlShare, '', 450, 600);
+      let option = new DialogModel();
+      option.zIndex = 1010;
+      this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
     }
   }
 

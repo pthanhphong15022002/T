@@ -34,6 +34,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   @ViewChild('noteCol') noteCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
 
+  @ViewChild('itemAction') itemAction: TemplateRef<any>;
   @Input() data!: any;
 
   service = 'EP';
@@ -112,6 +113,14 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvDrivers = gv;
           this.columnGrids = [
+            
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,

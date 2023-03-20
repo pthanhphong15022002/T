@@ -13,21 +13,18 @@
 
 .progress {
   background-color: #d8d8d8;
-  border-radius: 20px;
+  border-radius: 16px;
   position: relative;
   width: 100%;
 }
 
 .progress-done {
   background: linear-gradient(to left, #F2709C, #FF9472);
-  box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px #F2709C;
-  border-radius: 20px;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-
   transition: 1s ease 0.3s;
 }
 
@@ -236,12 +233,12 @@
   margin-left: 5px;
 }
 
-.drap-drop:hover {
-  box-shadow: 0 0px 5px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff;
-  cursor: default;
-}
+// .drap-drop:hover {
+//   box-shadow: 0 0px 5px 0 rgba(0, 174, 255, 0.2) inset;
+//   border-radius: 5px;
+//   background-color: #f0f8ff;
+//   cursor: default;
+// }
 
 .drap-drop:active {
   cursor: grab;
@@ -290,7 +287,7 @@
   position: relative;
 }
 
-.card-job.stages-task:has(.task-groups){
+.card-job.stages-task:has(.cdk-drop-list.task){
 
   &::before{
     display: block;
@@ -299,7 +296,7 @@
     border-left: 1px var(--gray-300) dotted;
     position: absolute;
     top: 20px;
-    left: 15px;
+    left: 30px;
     bottom: 0;
   }
   .cdk-drop-list.task .cdk-drag.drap-drop{
@@ -311,8 +308,8 @@
     width: 30px;
     border-top: 1px var(--gray-300) dotted;
     position: absolute;
-    top: 20px;
-    left: -28px;
+    top: 32px;
+    left: -19px;
     height: 10px;
   }
   

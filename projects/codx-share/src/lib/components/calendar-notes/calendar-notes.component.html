@@ -1,15 +1,17 @@
 <div class="cal-notes">
   <div class="more-btn">
     <span
-      class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative"
+      class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary me-1"
       (click)="openFormAddNote()"
     ></span>
     <div
       ngbDropdown
-      class="dropdown"
+      class="dropdown d-inline-block"
       container="body"
       placement="top"
-      style="margin-top: -29px; margin-left: 30px; width: 30px"
+      [container]="'body'"
+      placement="right auto"
+      display="dynamic"
     >
       <a
         href="javascript:void(0)"
@@ -19,7 +21,7 @@
         aria-expanded="false"
       >
         <i
-          class="icon-more_vert icon-20 icon-gray btn btn-icon btn-active-light-primary position-relative"
+          class="icon-more_vert icon-20 icon-gray btn btn-icon btn-active-light-primary"
         ></i>
       </a>
       <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">

@@ -38,6 +38,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('linkCol') linkCol: TemplateRef<any>;
 
   @ViewChild('itemAction') itemAction: TemplateRef<any>;
+  @ViewChild('noteCol') noteCol: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -152,6 +153,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               headerText: gv['Note'].headerText,
               //textAlign: 'center',
               width: '20%',
+              template: this.noteCol,
               field: 'note',
             },
             {

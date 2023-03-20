@@ -1,12 +1,30 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [className]="className" [method]="method" [views]="views" [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField"
-  [autoSearch]="true" (selectedChange)="selectedChange($event)" (searchChanged)="searchChanged($event)"></codx-views>
+  [autoSearch]="true" (selectedChange)="selectedChange($event)" (onLoading)="onLoading($event)" (searchChanged)="searchChanged($event)"
+  (viewChanged)="changeView($event)" [viewActiveType]="viewMode"></codx-views>
 
 <!--grid view-->
 <ng-template #itemCustomerName let-data>
   <div>
     {{data?.processName}}
+  </div>
+</ng-template>
+<ng-template #itemContactName let-data>
+  <div>
+    {{data?.processName}}
+  </div>
+</ng-template>
+<ng-template #itemPhone let-data>
+  <div>
+    <span class="icon-phone_android text-primary icon-16 me-1"></span>
+    <span class="text-gray-900 text-primary">0702411141</span>
+  </div>
+</ng-template>
+<ng-template #itemEmail let-data>
+  <div>
+    <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+    <span class="text-gray-900">tdnphuck42@gmail.com</span>
   </div>
 </ng-template>
 <ng-template #itemAddress let-data>
@@ -50,7 +68,8 @@
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
     [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="data?.processName" [imageWidth]="35" imgCss="me-3"
     imageObjType="AD_Users" [title]="data.processName" [titleCss]="'fs-6'" [descTmp]="descTmp"
-    [formModel]="view.formModel" [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
+    (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'" [formModel]="view.formModel"
+    [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
@@ -88,6 +107,7 @@
 <!--list details tempfull-->
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-crmcustomer-detail [dataService]="view.dataService" [formModel]="view.formModel" [dataSelected]="dataSelected">
+  <codx-crmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
+    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)">
   </codx-crmcustomer-detail>
 </ng-template>

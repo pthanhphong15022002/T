@@ -3,14 +3,14 @@
   </codx-views>
   <div class="more-function">
     <div class="d-flex flex-column">
-      <a (click)="openPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <a (click)="openPopupSearch()" class="cursor-pointer btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
       <ng-container *ngIf="userPermission && userPermission.create">
         <span class="postnews mt-3" >
           <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
           <div class="d-flex btn-postnews">
-            <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+            <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="cursor-pointer btn btn-icon btn-primary me-3"><i
                 class="icon-video_call fs-1"></i></a>
-            <a (click)="openPopupAdd(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+            <a (click)="openPopupAdd(NEWSTYPE.POST)" class="cursor-pointer btn btn-icon btn-primary"><i
                 class="icon-post_add fs-1"></i></a>
           </div>
         </span>
@@ -66,8 +66,7 @@
                   [showBgColor]="true">
               </codx-vll>
             </span>
-            <span class="text-gray-400">
-              {{ posts[0].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+            <span class="text-gray-400" [innerHTML]="posts[0].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
             </span>
           </div>
         </ng-container>
@@ -112,8 +111,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[1].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[1].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>
@@ -156,8 +154,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[2].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[2].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>
@@ -201,8 +198,7 @@
                     [showBgColor]="true">
                 </codx-vll>
               </span>
-              <span class="text-gray-400">
-                {{ posts[3].createdOn | formatvalue:view.formModel:"CreatedOn" | async}}
+              <span class="text-gray-400" [innerHTML]="posts[3].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
               </span>  
             </div>
           </div>

@@ -1,0 +1,54 @@
+<div class="p-5">
+  <div class="d-flex justify-content-between mb-4">
+    <div class="h2">
+      <codx-label name="lblAddress" [formModel]="dialog.formModel" default="Thêm địa chỉ"></codx-label>
+    </div>
+    <div class="d-flex justify-content-end">
+      <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
+    </div>
+  </div>
+  <div class="d-flex flex-column mb-4">
+    <div class="form-group">
+      <codx-label fiedName="AddressType" [formModel]="dialog.formModel" default="Loại địa chỉ"></codx-label>
+      <codx-input type="valuelist" [crrValue]="data?.addressType" [formModel]="dialog.formModel" field="addressType">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Country" [formModel]="dialog.formModel" default="Quốc gia"></codx-label>
+      <codx-input type="valuelist" [crrValue]="data?.country" [formModel]="dialog.formModel" field="country">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Province" [formModel]="dialog.formModel" default="Tỉnh / Thành phố"></codx-label>
+      <codx-input type="valuelist" [crrValue]="data?.province" [formModel]="dialog.formModel" field="province">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="District" [formModel]="dialog.formModel" default="Quận / Huyện"></codx-label>
+      <codx-input type="valuelist" [crrValue]="data?.district" [formModel]="dialog.formModel" field="district">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Ward" [formModel]="dialog.formModel" default="Phường / Xã"></codx-label>
+      <codx-input type="valuelist" [crrValue]="data?.ward" [formModel]="dialog.formModel" field="ward">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Street" [formModel]="dialog.formModel" default="Số nhà, tên đường"></codx-label>
+      <codx-input type="text" [crrValue]="data?.street" [formModel]="dialog.formModel" field="street">
+      </codx-input>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <div class="me-2">
+      <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
+        <codx-label name="lblCancel" [formModel]="dialog.formModel" default="Hủy"></codx-label>
+      </button>
+    </div>
+    <div class="">
+      <button type="button" (click)="onSave()" class="btn btn-primary">
+        <codx-label name="lblSave" [formModel]="dialog.formModel" default="Đồng ý"></codx-label>
+      </button>
+    </div>
+  </div>
+</div>
