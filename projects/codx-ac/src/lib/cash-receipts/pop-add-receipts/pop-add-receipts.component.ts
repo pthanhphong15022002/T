@@ -174,8 +174,6 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   }
   objectChanged(e: any) {}
   cellChanged(e: any) {
-    console.log(e);
-
     if ((e.field === 'dr' || e.field === 'rowNo') && !e.value) {
       e.data[e.field] = 0;
     }
