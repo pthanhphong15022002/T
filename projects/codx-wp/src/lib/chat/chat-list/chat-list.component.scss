@@ -3,11 +3,15 @@
     padding: 4px 8px;
 }
 .last-message{
-    width: 50%;
+    width: 80%;
     display: -webkit-box;
     -webkit-box-orient: horizontal ;
     -webkit-line-clamp: 1;
     text-align: left;
+}
+.last-message-send{
+    width: 20%;
+    text-align: right;
 }
 .dots {
     height: 6px;

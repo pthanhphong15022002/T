@@ -11,8 +11,8 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
 export class NewsTagComponent extends UIComponent {
   funcID: string = "";
   entityName: string = "WP_News";
-  predicate: string = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false ";
-  dataValue: string = "companyinfo;5;2";
+  predicate: string = "Category != @0 && (ApproveStatus==@1 ||  ApproveStatus==@2 || ApproveStatus==null) && Status==@3 && Stop==false ";
+  dataValue: string = "companyinfo;1;5;2";
   predicates: string = "Tags.Contains(@0)"
   dataValues: string = "";
   listViews: any = [];
@@ -31,6 +31,15 @@ export class NewsTagComponent extends UIComponent {
   {
     super(injector);
   }
+  onInit() {
+    this.funcID = this.router.snapshot.params["funcID"];
+    this.router.params.subscribe((param:any) => {
+      this.tagName = param["tagName"];
+      this.dataValues = this.tagName;
+    })
+    this.loadDataAsync();
+    this.getUserPermission(this.funcID);
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -44,15 +53,7 @@ export class NewsTagComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  onInit() {
-    this.funcID = this.router.snapshot.params["funcID"];
-    this.router.params.subscribe((param:any) => {
-      this.tagName = param["tagName"];
-      this.dataValues = this.tagName;
-    })
-    this.loadDataAsync();
-    this.getUserPermission(this.funcID);
-  }
+  
   //
   getUserPermission(funcID:string){
     if(funcID){

@@ -16,6 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupAddCrmcontactsComponent } from '../crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
 import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
 
@@ -43,6 +44,8 @@ export class CrmCustomerComponent
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
   @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
+  @ViewChild('itemContactName', { static: true })
+  itemContactName: TemplateRef<any>;
 
   dataObj?: any;
   columnGrids = [];
@@ -64,6 +67,7 @@ export class CrmCustomerComponent
   titleAction = '';
   vllPriority = 'TM005';
   crrFuncID = '';
+  viewMode = 2;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -82,7 +86,7 @@ export class CrmCustomerComponent
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
     let formModel = this.view?.formModel;
-    if (formModel) {
+    if (this.funcID == 'CM0101') {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
@@ -136,39 +140,260 @@ export class CrmCustomerComponent
               width: 180,
             },
           ];
-          this.views.push({
-            sameData: true,
-            type: ViewType.grid,
-            active: false,
-            model: {
-              resources: this.columnGrids,
+          this.views = [
+            {
+              sameData: true,
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnGrids,
+              },
             },
-          });
+            {
+              type: ViewType.listdetail,
+              sameData: true,
+              active: false,
+              model: {
+                template: this.itemTemplate,
+                panelRightRef: this.templateDetail,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
+
+        });
+    } else {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'contactName',
+              headerText: gv
+                ? gv['ContactName']?.headerText || 'Họ tên'
+                : 'Họ tên',
+              width: 250,
+              template: this.itemContactName,
+            },
+            {
+              field: 'phone',
+              headerText: gv
+                ? gv['Phone']?.headerText || 'Điện thoại'
+                : 'Điện thoại',
+              template: this.itemPhone,
+              width: 250,
+            },
+            {
+              field: 'email',
+              headerText: gv ? gv['Email']?.headerText || 'Email' : 'Email',
+              template: this.itemEmail,
+              width: 250,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+          ];
+          this.views = [
+            {
+              sameData: true,
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnGrids,
+              },
+            },
+            {
+              type: ViewType.listdetail,
+              sameData: true,
+              active: false,
+              model: {
+                template: this.itemTemplate,
+                panelRightRef: this.templateDetail,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
+
         });
     }
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        active: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-    ];
-    this.detectorRef.detectChanges();
+
+  }
+
+  onLoading(e) {
+    // this.afterLoad();
   }
 
   changeView(e) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != this.funcID) {
+    var funcIDClick = this.activedRouter.snapshot.params['funcID'];
+    if (this.crrFuncID != funcIDClick) {
+      this.funcID = funcIDClick;
+      this.afterLoad();
       this.crrFuncID = this.funcID;
     }
-    this.detectorRef.detectChanges();
+
   }
 
-  afterLoad(crrFuncID) {}
+  afterLoad() {
+    let formModel = this.view?.formModel;
+    if (this.funcID == 'CM0101') {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'customerName',
+              headerText: gv
+                ? gv['CustomerName']?.headerText || 'Tên khách hàng'
+                : 'Tên khách hàng',
+              width: 250,
+              template: this.itemCustomerName,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'contact',
+              headerText: gv
+                ? gv['Contact']?.headerText || 'Liên hệ chính'
+                : 'Liên hệ chính',
+              template: this.itemContact,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+          ];
+          var i = this.views.findIndex((x) => x.type == 11);
+          if (i != -1) {
+            this.views[i].model.resources = this.columnGrids;
+          }
+          this.detectorRef.detectChanges();
+
+        });
+    } else {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'contactName',
+              headerText: gv
+                ? gv['ContactName']?.headerText || 'Họ tên'
+                : 'Họ tên',
+              width: 250,
+              template: this.itemContactName,
+            },
+            {
+              field: 'phone',
+              headerText: gv
+                ? gv['Phone']?.headerText || 'Điện thoại'
+                : 'Điện thoại',
+              template: this.itemPhone,
+              width: 250,
+            },
+            {
+              field: 'email',
+              headerText: gv ? gv['Email']?.headerText || 'Email' : 'Email',
+              template: this.itemEmail,
+              width: 250,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+          ];
+          var iGrid = this.views.findIndex((x) => x.type == 11);
+          if (iGrid != -1) {
+            this.views[iGrid].model.resources = this.columnGrids;
+          }
+          this.detectorRef.detectChanges();
+        });
+    }
+
+  }
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
@@ -213,13 +438,10 @@ export class CrmCustomerComponent
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.Width = '850px';
+        option.Width = '800px';
         var dialog = this.callfc.openSide(
-          PopupAddCrmcustomerComponent,
-          [
-            'edit',
-            this.titleAction
-          ],
+          this.funcID == 'CM0101' ? PopupAddCrmcustomerComponent : PopupAddCrmcontactsComponent,
+          ['edit', this.titleAction],
           option
         );
       });
