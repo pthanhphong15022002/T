@@ -1,6 +1,5 @@
 <codx-form
   #form
-  class="dialog-vll"
   [headerText]="formTitle"
   [subHeader]="subHeader"
   [body]="body"
@@ -23,7 +22,7 @@
 </ng-template>
 
 <ng-template #body>
-  <ejs-tab #tabGeneralInfo class="popup-cash-transfer">
+  <ejs-tab #tabGeneralInfo class="popup-cash-transfer pe-3">
     <e-tabitems>
       <!-- Tab thông tin chứng từ -->
         <e-tabitem>
@@ -34,7 +33,7 @@
                 </div>
             </ng-template>
             <ng-template #content>
-              <div class="row mt-5">
+              <div class="row mt-6">
                 <div class="col-9">
                   <div class="row">
                     <div class="col-4 form-group">
@@ -63,7 +62,7 @@
                         [crrValue]="getCashBookNameById(cashTransfer?.cashBookID)"
                       ></codx-input>
                     </div>
-                    <div class="col-3 form-group">
+                    <div class="col-2 form-group">
                       <codx-label
                         fiedName="transactionText"
                         [formModel]="form.formModel"
@@ -88,7 +87,7 @@
                         [Group]="form.formGroup"
                       ></codx-input>
                     </div>
-                    <div class="col-7 form-group">
+                    <div class="col-6 form-group">
                       <codx-label
                         fiedName="cashBookName2"
                         [formModel]="form.formModel"
@@ -105,7 +104,7 @@
                   </div>
     
                   <div class="row">
-                    <div class="col-11 form-group">
+                    <div class="col-10 form-group">
                       <codx-label
                         fiedName="note"
                         [formModel]="form.formModel"
@@ -164,7 +163,7 @@
                         [Group]="form.formGroup"
                       ></codx-input>
                     </div>
-                    <div class="col-3 form-group">
+                    <div class="col-2 form-group">
     
                       <codx-label
                         fiedName="feeControl"
@@ -265,7 +264,8 @@
                     ></codx-input>
                     </div>
                   </div>
-                  <div class="col-8 row">
+                  <div class="col-8">
+                    <div class="row">
                     <div class="col-4 form-group">
                       <codx-label
                         fiedName="invoiceForm"
@@ -319,6 +319,7 @@
                         [disabled]="!hasInvoice"
                       ></codx-input>
                     </div>
+                  </div>
                   </div>       
                   
                 </div>
@@ -339,7 +340,8 @@
                       ></codx-input>
                     </div>
                   </div>
-                  <div class="col-8 row">
+                  <div class="col-8">
+                    <div class="row">
                     <div class="col-4 form-group">
                       <codx-label
                         fiedName="taxBase"
@@ -380,6 +382,7 @@
                       ></codx-input>
                     </div>
                   </div>
+                  </div>
                  
                   
                 </div>
@@ -400,7 +403,8 @@
                       ></codx-input>
                     </div>
                   </div>
-                  <div class="col-8 row">
+                  <div class="col-8">
+                    <div class="row">
                     <div class="col-4 form-group">
                       <codx-label
                         fiedName="diM3"
@@ -440,6 +444,7 @@
                         [disabled]="!hasInvoice"
                       ></codx-input>
                     </div>
+                  </div>
                   </div>
                   
                 </div>

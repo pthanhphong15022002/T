@@ -1874,7 +1874,17 @@ codx-header #chat-box{
 .e-dlg-target .e-tab .e-content.e-lib {
   padding-left: 0;
 }
-.input-circle.input-sm{
-//border: 1px aqua solid;
+.input-circle.input-sm .e-input-group.e-ddl{
+  border-radius: 26px!important;
+  padding-left: 5px!important;
+  height: 30px!important;
+  font-size: 12px!important;
+  width: 120px!important;
+  line-height: 28px!important;
+  padding-right: 5px!important;
+}
+.input-circle .e-input-group:not(.e-success):not(.e-warning):not(.e-error), 
+.input-circle .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
+  border-radius: 26px !important;
 }
 /// 14/2/2023 
