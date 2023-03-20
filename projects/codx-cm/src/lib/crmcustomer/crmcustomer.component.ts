@@ -144,7 +144,6 @@ export class CrmCustomerComponent
             {
               sameData: true,
               type: ViewType.grid,
-              active: true,
               model: {
                 resources: this.columnGrids,
               },
@@ -152,7 +151,6 @@ export class CrmCustomerComponent
             {
               type: ViewType.listdetail,
               sameData: true,
-              active: false,
               model: {
                 template: this.itemTemplate,
                 panelRightRef: this.templateDetail,
@@ -253,9 +251,8 @@ export class CrmCustomerComponent
   }
 
   changeView(e) {
-    var funcIDClick = this.activedRouter.snapshot.params['funcID'];
-    if (this.crrFuncID != funcIDClick) {
-      this.funcID = funcIDClick;
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.crrFuncID != this.funcID) {
       this.afterLoad();
       this.crrFuncID = this.funcID;
     }
