@@ -1764,13 +1764,37 @@
 </ng-template>
 <!-- Popup thêm giai đoạn  -->
 <ng-template #addStage>
-  <codx-form
+  <!-- <codx-form
     [headerText]="headerText"
     [body]="addStageBody"
     [footer]="addStageFooter"
     [dialog]="popupAddStage"
   >
-  </codx-form>
+  </codx-form> -->
+  <div class="d-flex flex-column p-5 h-100" >
+    <div>
+      <ng-container [ngTemplateOutlet]="addStageHeader"></ng-container>
+    </div>
+    <div style="flex-grow: 1;">
+      <ng-container [ngTemplateOutlet]="addStageBody"></ng-container>
+    </div>
+    <div class="">
+      <ng-container [ngTemplateOutlet]="addStageFooter"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addStageHeader>
+  <div class="d-flex justify-content-between ">
+        <codx-label
+          class="h3"
+          [fiedName]="actionStep == 'edit' ? headerStep?.edit[1] : headerStep?.add[1]"
+          [formModel]="grvStep"
+          [default]="actionStep == 'edit' ? headerStep?.edit[0] : headerStep?.add[0]"
+        ></codx-label>      
+      <span class="icon-close icon-18 cursor-pointer" (click)="popupAddStage.close()"></span>
+
+  </div>
 </ng-template>
 
 <ng-template #addStageBody>
