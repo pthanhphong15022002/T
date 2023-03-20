@@ -75,7 +75,7 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone h-od-tab" *ngIf="itemDetailStt">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <li [ngbNavItem]="1">
           <a class="ps-0" ngbNavLink>
