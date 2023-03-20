@@ -479,6 +479,9 @@ export class DynamicProcessComponent
           case 'SYS001':
           case 'SYS002':
           case 'SYS003':
+          //more core - thay doi nhieu dong, bo chon, chon tat ca..
+          case 'SYS007':
+          case 'SYS006':
             res.disabled = true;
             break;
           case 'SYS104':
@@ -751,7 +754,7 @@ export class DynamicProcessComponent
           this.notificationsService.notifyCode('SYS008');
         }
       });
-    }  
+    }
   }
 
   async checkExitsProcessName(processName, processID){
