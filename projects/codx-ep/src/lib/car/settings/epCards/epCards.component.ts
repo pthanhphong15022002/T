@@ -193,6 +193,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc:true
               },
             },
           ];
@@ -393,10 +394,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.cardNote = e.data;
     this.changeDetectorRef.detectChanges();
   }
-  changeDataMF(event, data:any) {        
+  changeDataMF(event, data:any) {
     if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
+      // event.forEach(func => {
+      //   func.disabled=true;
       // });
       if(data.status=='1'){
         event.forEach(func => {
@@ -404,7 +405,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           {
             func.disabled=true;
           }
-        });  
+        });
       }
       else{
         event.forEach(func => {
@@ -412,7 +413,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           {
             func.disabled=true;
           }
-        });  
+        });
       }
     }
   }
@@ -438,9 +439,9 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.selectedCard.status=currTrans;
-          this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
+          this.view.dataService.update(this.selectedCard).subscribe((res) => {});
           this.popupDialog.close();
-          this.notificationsService.notifyCode('SYS034');    
+          this.notificationsService.notifyCode('SYS034');
         }
         this.cardUserID=null;
         this.cardDate=null;

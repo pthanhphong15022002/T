@@ -236,7 +236,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 type: ViewType.grid,
                 active: false,
                 model: {
-                  resources: this.columnGrids,
+                  //resources: this.columnGrids,
+                  template2:this.mfButton
                 },
               },
             )

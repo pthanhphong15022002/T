@@ -156,6 +156,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc:true
               },
             },
           ];

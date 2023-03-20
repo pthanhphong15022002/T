@@ -21,7 +21,7 @@
 <ng-template #process let-data>
   <div class="has-action-menu">
     <div
-      class="progress-approval mt-3 mb-3"
+      class="progress-approval ms-3 mx-3"
       *ngIf="data?.countStep > 0"
       (click)="viewDetail(data)"
     >
@@ -63,7 +63,7 @@
 </ng-template>
 
 <ng-template #icon let-data>
-  <div class="">
+  <div class="d-flex justify-content-center">
     <i
       [ngClass]="data.icon"
       [style.background]="data.color"
@@ -82,7 +82,8 @@
     [disabled]="true"
   >
   </codx-input> -->
-  <codx-input
+  <div class="d-flex justify-content-center">
+    <codx-input
     #checkbox
     type="switch"
     id="switch"
@@ -90,6 +91,8 @@
     [disabled]="true"
   >
   </codx-input>
+  </div>
+
 </ng-template>
 
 <!-- <ng-template #color let-data>

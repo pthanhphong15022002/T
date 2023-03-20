@@ -36,7 +36,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('linkCol') linkCol: TemplateRef<any>;
-  
+
   @ViewChild('itemAction') itemAction: TemplateRef<any>;
 
   @Input() data!: any;
@@ -125,7 +125,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               headerText: '',
               width: 30,
               template: this.itemAction,
-              textAlign: 'center',
+              textAlign: 'Center',
             },
             {
               field: 'resourceName',
@@ -172,6 +172,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc:true
               },
             },
           ];
