@@ -528,7 +528,7 @@
     </div>
   </div>
   <ng-template #header>
-    <div class="d-flex justify-content-between " (click)="popupUpdateProgress.close()">
+    <div class="d-flex justify-content-between ">
       <div>
         <div>
           <codx-label
@@ -548,7 +548,7 @@
         </div>
       </div>
       <div>
-        <span class="icon-close icon-18 cursor-pointer"></span>
+        <span class="icon-close icon-18 cursor-pointer" (click)="popupUpdateProgress.close()"></span>
       </div>
     </div>
   </ng-template>
