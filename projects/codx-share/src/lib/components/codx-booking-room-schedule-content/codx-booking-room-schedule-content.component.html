@@ -13,8 +13,15 @@
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-location_on me-1"></i>
     <span class="fw-bold text-break">
-       {{data?.resourceName}}
+      <span>
+        {{data?.resourceName }} 
+     </span>
+     <span *ngIf="data?.agencyName!=null && data?.agencyName!=''">
+      <span class="mx-1"> - </span>
+      <span>{{data?.agencyName}}</span>
+     </span>
     </span>
+    
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 position-relative">
