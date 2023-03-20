@@ -157,7 +157,7 @@ export class PopupMoveStageComponent implements OnInit {
         switch (this.assignControl) {
           //Phụ trách giai đoạn hiện tại
           case '0':
-            this.owner = this.stepCurrent.owner;
+            this.owner = this.stepCurrent?.owner;
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Phụ trách giai đoạn chuyển tiếp
@@ -175,18 +175,18 @@ export class PopupMoveStageComponent implements OnInit {
             i = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepCurrent.stepID
             );
-            this.stepOld = this.listStepsCbx[i - 1].owner;
+            this.stepOld = this.listStepsCbx[i - 1]?.owner;
             this.owner = this.stepOld;
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Người nhận nhiệm vụ đầu tiên
           case '3':
-            this.owner = this.firstInstance.owner;
+            this.owner = this.firstInstance?.owner;
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Người nhận nhiệm vụ hiện tại
           case '4':
-            this.owner = this.instance.owner;
+            this.owner = this.instance?.owner;
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
         }
