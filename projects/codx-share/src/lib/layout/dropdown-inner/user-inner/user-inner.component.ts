@@ -67,7 +67,13 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private callSV: CallFuncService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
-      if (res) this.functionList = res;
+      if (res) {
+        this.functionList = res;
+        this.formModel = {
+          formName: this.functionList.formName,
+          gridViewName: this.functionList.gridViewName,
+        };
+      }
     });
   }
 
@@ -87,12 +93,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
-    if (this.functionList) {
-      this.formModel = {
-        formName: this.functionList?.formName,
-        gridViewName: this.functionList?.gridViewName,
-      };
-    }
+    // if (this.functionList) {
+
+    // }
     this.refreshAvatar();
   }
 
