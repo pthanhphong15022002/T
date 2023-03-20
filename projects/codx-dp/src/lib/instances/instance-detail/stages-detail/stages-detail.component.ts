@@ -720,7 +720,7 @@ export class StagesDetailComponent implements OnInit {
       this.updateProgress,
       '',
       550,
-      370
+      450
     );
   }
   checkEventProgress(data) {
@@ -970,12 +970,12 @@ export class StagesDetailComponent implements OnInit {
     this.calculateProgressStep();
   }
 
+  changeProgress(e,data){
+    data['progress'] = e?.value ?  e?.value : 0;
+  }
+   
   changeValueInput(event, data) {
-    if(event?.field == 'progress' && !event?.data){
-      data[event?.field] = 0;
-    }else{
-      data[event?.field] = event?.data;
-    }
+    data[event?.field] = event?.data;
   }
 
   changeValueDate(event, data) {

@@ -4,23 +4,38 @@
             <codx-chat-box #codxChatBox 
                 [id]="item" 
                 [groupID]="item" 
-                (close)="removeGroup(item,codxChatBox)"
-                (collapse)="collapse(item,codxChatBox)">
+                (close)="closeBoxChat(item,codxChatBox)"
+                (collapse)="collapseBoxChat(item,codxChatBox)">
             </codx-chat-box>
         </ng-container>
     </div>
     <div class="chat-container-boxchat-more">
-        <ng-container *ngFor="let item of lstGroupCollapse">
-            <div (click)="activeGroup(item)">
-                <codx-img
-                [classList]="'cursor-pointer'"
-                [objectId]="item.objectID" 
-                [objectName]="item.objectName" 
-                [objectType]="item.objectType" 
-                [width]="40">
-            </codx-img>
-            </div>
+        <ng-container *ngFor="let item of lstGroupCollapse;index as i">
+            <ng-container *ngIf="i < 3">
+                <div class="symbol symbol-40px symbol-cir cursor-pointer mt-2">
+                    <ng-container *ngIf="i==0 && lstGroupCollapse.length > 6">
+                        <div class="more-box-chat">
+                            <span>+{{lstGroupCollapse.length - 6}}</span>
+                        </div>
+                    </ng-container>
+                    <div class="" (click)="expanseBoxChat(item)" placement="start" [ngbTooltip]="tramchoa">
+                        <codx-img
+                            [objectId]="item.objectID" 
+                            [objectName]="item.objectName" 
+                            [objectType]="item.objectType" 
+                            [width]="40">
+                        </codx-img>
+                        <ng-template #tramchoa>
+                            <div class="w-200px p-2 text-start overflow-hidden">
+                                <p class="fw-bolder">{{item.objectName}}</p>
+                                <p class="message ">{{item.message}}</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>                
+            </ng-container>
         </ng-container>
+        
     </div>
 </div>
 

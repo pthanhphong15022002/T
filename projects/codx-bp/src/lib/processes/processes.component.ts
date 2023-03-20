@@ -48,7 +48,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -68,6 +69,10 @@ export class ProcessesComponent
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
   itemMemo?: TemplateRef<any>;
+  @ViewChild('itemCheckPerms', { static: true })
+  itemCheckPerms?: TemplateRef<any>;
+  @ViewChild('itemMoreFc', { static: true })
+  itemMoreFc?: TemplateRef<any>;
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
   dialog!: DialogRef;
@@ -157,7 +162,7 @@ export class ProcessesComponent
     if (this.user?.employee) this.employee = this.user?.employee;
     this.userGroupID = this.user?.groupID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
- 
+
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -182,14 +187,67 @@ export class ProcessesComponent
       id: 'btnAdd',
     };
     this.columnsGrid = [
-      { headerTemplate: this.itemProcessName, width: 250 },
-      { headerTemplate: null, width: 100 },
-      { headerTemplate: this.itemOwner, width: 200 },
-      { headerTemplate: this.itemStatus, width: 100 },
-      { headerTemplate: this.itemVersionNo, width: 100 },
-      { headerTemplate: this.itemActivedOn, width: 120 },
-      { headerTemplate: this.itemMemo, width: 200 },
-      { field: '', headerText: '', width: 10 },
+      {
+        width: 250,
+        field: 'processName',
+        fieldName: 'ProcessName',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Tên quy trình',
+        template: this.itemProcessName,
+      },
+      {
+        width:100,
+        template: this.itemCheckPerms
+      },
+      {
+        width: 200,
+        field: 'owner',
+        fieldName: 'Owner',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Chủ quy trình',
+        template: this.itemOwner
+      },
+      {
+        width: 100,
+        field: 'status',
+        fieldName: 'Status',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Tình trạng',
+        template: this.itemStatus
+      },
+      {
+        width: 100,
+        field: 'versionNo',
+        fieldName: 'VersionNo',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Phiên bản',
+        template: this.itemVersionNo
+      },
+      {
+        width: 120,
+        field: 'activedOn',
+        fieldName: 'ActivedOn',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Ngày hiệu lực',
+      },
+      {
+        width: 200,
+        field: 'memo',
+        fieldName: 'Memo',
+        formName: 'Processes',
+        gridViewName: 'grvProcesses',
+        headerText: 'Mô tả',
+        template: this.itemMemo
+      },
+      {
+        width: 10,
+        template: this.itemMoreFc
+      },
     ];
     this.afterLoad();
     this.acceptEdit();
@@ -227,8 +285,8 @@ export class ProcessesComponent
         sameData: true,
         model: {
           resources: this.columnsGrid,
-          template: this.itemViewList,
-          headerTemplate: this.headerTemplate,
+
+          hideMoreFunc:true
         },
       },
       {
@@ -723,8 +781,7 @@ export class ProcessesComponent
         this.changeDetectorRef.detectChanges();
         this.dialogPopup.close();
       }
-    }
-    else {
+    } else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
   }
@@ -758,7 +815,7 @@ export class ProcessesComponent
       });
   }
 
-  onDragDrop(e: any) { }
+  onDragDrop(e: any) {}
 
   async changeDataMF(e, data) {
     if (e != null && data != null) {
@@ -942,12 +999,9 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
-    this.bpService.funcIDParent.next(this.funcID)
+    this.bpService.funcIDParent.next(this.funcID);
     let isEdit = data.write;
-    let editRole =
-      isEdit && !data.deleted
-        ? true
-        : false;
+    let editRole = isEdit && !data.deleted ? true : false;
 
     let obj = {
       moreFunc: moreFunc,
@@ -985,7 +1039,7 @@ export class ProcessesComponent
     });
   }
 
-  approval($event) { }
+  approval($event) {}
   //tesst
   // getFlowchart(data) {
   //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
@@ -1020,7 +1074,9 @@ export class ProcessesComponent
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        if (parent <= child) { p.open(); }
+        if (parent <= child) {
+          p.open();
+        }
       }
     } else p.close();
     this.popupOld = p;
@@ -1031,7 +1087,7 @@ export class ProcessesComponent
   }
 
   setTextPopover(text) {
-    return (text);
+    return text;
   }
 
   openPopup() {
@@ -1087,8 +1143,7 @@ export class ProcessesComponent
     (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
       if (res) {
         this.isAcceptEdit = true;
-      }
-      else if (!this.user.edit) {
+      } else if (!this.user.edit) {
         this.isAcceptEdit = false;
       }
       this.isAdminBp = res;
@@ -1101,7 +1156,6 @@ export class ProcessesComponent
   //   (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
   //   return check;
   // }
-
 
   restoreBinById(data) {
     if (data.recID) {

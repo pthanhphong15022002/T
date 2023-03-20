@@ -230,13 +230,15 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 headerText: this.grView?.requester?.headerText,
               },
             ];
-            this.views.push({
-              sameData: true,
-              type: ViewType.grid,
-              active: false,
-              model: {
-                resources: this.columnGrids,
-              },
+            this.views.push(
+              {
+                sameData: true,
+                type: ViewType.grid,
+                active: false,
+                model: {
+                  //resources: this.columnGrids,
+                  template2:this.mfButton
+                },
             });
           }
         });

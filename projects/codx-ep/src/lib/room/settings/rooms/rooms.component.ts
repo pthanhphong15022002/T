@@ -124,7 +124,7 @@ export class RoomsComponent extends UIComponent {
               headerText: '',
               width: 40,
               template: this.itemAction,
-              textAlign: 'center',
+              textAlign: 'Center',
             },
             {
               field: 'resourceName',
@@ -171,6 +171,7 @@ export class RoomsComponent extends UIComponent {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc:true
               },
             },
           ];

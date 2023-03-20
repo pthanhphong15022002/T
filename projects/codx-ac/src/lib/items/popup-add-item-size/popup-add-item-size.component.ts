@@ -14,7 +14,6 @@ import {
   UIComponent,
   UploadFile,
 } from 'codx-core';
-import { combineLatest } from 'rxjs';
 import { combineLatestWith, map } from 'rxjs/operators';
 import { ItemSize } from '../interfaces/ItemSize.interface';
 import { ItemsService } from '../items.service';
@@ -36,14 +35,6 @@ export class PopupAddItemSizeComponent
   isEdit: boolean = false;
   dialogRef: DialogRef;
   formTitle: string;
-  requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    {
-      gvsPropName: 'SizeID',
-    },
-    {
-      gvsPropName: 'SizeName',
-    },
-  ];
 
   constructor(
     private injector: Injector,
@@ -125,9 +116,8 @@ export class PopupAddItemSizeComponent
 
     if (
       !this.itemsService.validateFormData(
-        this.itemSize,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;
@@ -165,9 +155,8 @@ export class PopupAddItemSizeComponent
 
     if (
       !this.itemsService.validateFormData(
-        this.itemSize,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;

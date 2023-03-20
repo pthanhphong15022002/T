@@ -291,7 +291,7 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
     this.view.dataService
@@ -320,7 +320,6 @@ export class InstancesComponent
                     .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                     .subscribe((res) => {
                       if (res) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = res;
                         this.openPopUpAdd(
                           applyFor,
@@ -337,7 +336,6 @@ export class InstancesComponent
                     )
                     .subscribe((isNo) => {
                       if (isNo) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = isNo;
                         this.openPopUpAdd(
                           applyFor,
@@ -387,6 +385,7 @@ export class InstancesComponent
   }
 
   edit(data, titleAction) {
+    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -544,7 +543,6 @@ export class InstancesComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS005':
           case 'SYS003':
             if ((data.status !== '1' && data.status !== '2') || data.closed)
               res.disabled = true;
@@ -552,7 +550,10 @@ export class InstancesComponent
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
-          case 'DP011':
+          //more core - thay doi nhieu dong, bo chon, chon tat ca..
+          case 'SYS005':
+          case 'SYS007':
+          case 'SYS006':
             res.disabled = true;
             break;
           //Chỉnh sửa, chuyển tiếp, thất bại, thành công

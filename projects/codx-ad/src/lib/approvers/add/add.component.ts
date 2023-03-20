@@ -156,6 +156,8 @@ export class AddApproversComponent implements OnInit {
       member.memberID = e.id;
       member.memberType = 'U';
       member.memberName = e.text || e.objectName;
+      member.positionName = e.positionName;
+      member.orgUnitName = e.orgUnitName;
       groupMembers.push(member);
     });
     this.api
@@ -194,4 +196,6 @@ export class AddApproversComponent implements OnInit {
     console.log('form', this.form);
   }
   //#endregion
+
+  popRoles() {}
 }

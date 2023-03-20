@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CRUDService } from 'codx-core';
 
 @Component({
@@ -11,6 +11,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() funcID = 'CM0101'; //True - Khách hàng; False - Liên hệ
+  @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -34,10 +35,13 @@ export class CrmcustomerDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.dataSelected.steps);
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.listTab(this.funcID);
+    this.nameDetail == 'Information'
   }
 
   listTab(funcID){
@@ -67,5 +71,9 @@ export class CrmcustomerDetailComponent implements OnInit {
       } else obj.isActive = false;
     });
     this.changeDetectorRef.detectChanges();
+  }
+
+  clickMF(e, data){
+    this.clickMoreFunc.emit({e: e, data: data});
   }
 }

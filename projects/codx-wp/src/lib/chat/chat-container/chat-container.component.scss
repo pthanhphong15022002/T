@@ -25,3 +25,31 @@
     right: 0px;
     bottom: 0px;
 }
+.more-box-chat{
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    border-radius: 50%;
+    background-color: #767171;
+    opacity: 0.9;
+    color: #ffffff;
+}
+.box-collaspe{
+    position: relative;
+}
+.box-collaspe-hover{
+    position: absolute;
+    left: -40px;
+    background-color: #ffffff;
+    padding: 4px;
+    display: none;
+}
+.box-collaspe:hover{
+    .box-collaspe-hover{
+        display: block;
+    }
+}

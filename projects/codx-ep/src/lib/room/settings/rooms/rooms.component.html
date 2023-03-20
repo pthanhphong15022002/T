@@ -7,7 +7,7 @@
   </codx-mfunc>
 </ng-template>
 <ng-template #resourceNameCol let-data>
-  <div class="d-flex flex-row align-items-center">
+  <div class="d-flex flex-row justify-content-start">
     <codx-img #avatar [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle"
       width="50" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column">
@@ -79,14 +79,14 @@
 </ng-template>
 <ng-template #equipmentsCol let-data>
   <div (click)="openPopupDevice(popupDevice, data?.equipments)"
-    class="d-flex align-items-center cursor-pointer text-hover-primary">
+    class="d-flex justify-content-center cursor-pointer text-hover-primary">
     <i class="icon-devices me-2"></i>
     <span class="fw-bold me-1">{{ data?.equipmentQty }}</span>
     <codx-label [default]="'Thiết bị'" class="fs-7" name="lblDevice"></codx-label>
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
-  <div class="d-flex align-items-center">
+  <div class="d-flex justify-content-center">
     <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold" [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
@@ -95,7 +95,7 @@
 </ng-template>
 
 <ng-template #preparatorCol let-data>
-  <div class="d-flex  align-items-center">
+  <div class="d-flex  justify-content-center">
     <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
@@ -104,6 +104,6 @@
 </ng-template>
 <ng-template #noteCol let-data>
   <div class="d-flex align-items-center">
-      <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>    
+      <span  [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>
   </div>
 </ng-template>

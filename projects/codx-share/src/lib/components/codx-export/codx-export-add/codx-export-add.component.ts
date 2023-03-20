@@ -97,16 +97,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     //Thêm mới
     if (this.action == "add") {
       if (this.fileCount > 0) {
-
+        debugger
         this.api
-          .execActionData<any>(
-            this.module,
-            [this.exportAddForm.value],
-            'SaveAsync'
+          .execSv(
+            "SYS",
+            "AD",
+            "ExcelTemplatesBusiness",
+            "SaveTemplateAsync",
+            this.exportAddForm.value
           ).subscribe(item => {
-            if (item[0] == true) {
+            if (item && item[0]) {
               this.notifySvr.notifyCode("RS002");
-              this.attachment.objectId = item[1][0].recID;
+              this.attachment.objectId = item[1].recID;
               this.attachment.saveFiles();
               this.dialog.close([item[1], this.type]);
             }
@@ -124,10 +126,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           [this.exportAddForm.value],
           'UpdateAsync'
         ).subscribe(item => {
+          debugger
           if (item[0] == true) {
             this.notifySvr.notifyCode("RS002");
             this.attachment.objectId = item[1][0].recID;
-            if (this.fileCount >= 0) {
+            if (this.fileCount > 0) {
               /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                 console.log(item);
               }); */
@@ -135,7 +138,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.attachment.objectId = item[1][0].recID;
               this.attachment.saveFiles();
             }
-            this.dialog.close([item[1], this.type]);
+            this.dialog.close([item[1][0], this.type]);
           }
           else this.notifySvr.notify("SYS021");
         })

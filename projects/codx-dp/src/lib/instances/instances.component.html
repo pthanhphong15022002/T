@@ -60,16 +60,20 @@
       </div> -->
       <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
-        <span class="fs-7 text-gray-600" #createdOn>{{
-          data.createdOn
-            | formatvalue
-              : view.formModel
-              : "createdOn"
-              : createdOn
-              : "DPInstances"
-              : "grvDPInstances"
-            | async
-        }}</span>
+        <span
+          class="fs-7 text-gray-600"
+          #createdOn
+          [innerHTML]="
+            data.createdOn
+              | formatvalue
+                : view.formModel
+                : 'createdOn'
+                : createdOn
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
       </div>
     </div>
   </ng-template>
@@ -168,17 +172,17 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="font me-3">
+      <div class="font me-3 p-1 px-2">
         <div *ngFor="let item of listSteps">
           <span *ngIf="item.stepID === data.stepID">
             {{ item.stepName }}
           </span>
         </div>
       </div>
-      <span>
-        <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
+      <div class="d-flex align-items-center text-gray-600">
+        <span class="icon-16 icon-av_timer me-1"></span>
         <span
-          class="fs-7 text-gray-600"
+          class="fs-7"
           #endDate
           [innerHTML]="
             data.endDate
@@ -191,7 +195,7 @@
               | async
           "
         ></span>
-      </span>
+      </div>
     </div>
     <div class="d-flex justify-content-center">
       <codx-imgs
