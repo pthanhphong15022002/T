@@ -46,7 +46,8 @@ export class CrmCustomerComponent
   @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
-
+  @ViewChild('itemMoreFunc', { static: true })
+  itemMoreFunc: TemplateRef<any>;
   dataObj?: any;
   columnGrids = [];
   views: Array<ViewModel> = [];
@@ -139,26 +140,22 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
-          ];
-          this.views = [
             {
-              sameData: true,
-              type: ViewType.grid,
-              model: {
-                resources: this.columnGrids,
-              },
-            },
-            {
-              type: ViewType.listdetail,
-              sameData: true,
-              model: {
-                template: this.itemTemplate,
-                panelRightRef: this.templateDetail,
-              },
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
             },
           ];
+          this.views.push({
+            sameData: true,
+            type: ViewType.grid,
+            model: {
+              resources: this.columnGrids,
+            },
+          });
           this.detectorRef.detectChanges();
-
         });
     } else {
       this.cacheSv
@@ -220,30 +217,28 @@ export class CrmCustomerComponent
               width: 180,
             },
           ];
-          this.views = [
-            {
-              sameData: true,
-              type: ViewType.grid,
-              active: true,
-              model: {
-                resources: this.columnGrids,
-              },
+          this.views.push({
+            sameData: true,
+            type: ViewType.grid,
+            model: {
+              resources: this.columnGrids,
             },
-            {
-              type: ViewType.listdetail,
-              sameData: true,
-              active: false,
-              model: {
-                template: this.itemTemplate,
-                panelRightRef: this.templateDetail,
-              },
-            },
-          ];
+          });
           this.detectorRef.detectChanges();
-
         });
     }
 
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
   onLoading(e) {
@@ -256,7 +251,6 @@ export class CrmCustomerComponent
       this.afterLoad();
       this.crrFuncID = this.funcID;
     }
-
   }
 
   afterLoad() {
@@ -320,7 +314,6 @@ export class CrmCustomerComponent
             this.views[i].model.resources = this.columnGrids;
           }
           this.detectorRef.detectChanges();
-
         });
     } else {
       this.cacheSv
@@ -389,7 +382,6 @@ export class CrmCustomerComponent
           this.detectorRef.detectChanges();
         });
     }
-
   }
 
   click(evt: ButtonModel) {
@@ -437,7 +429,9 @@ export class CrmCustomerComponent
         option.FormModel = this.view.formModel;
         option.Width = '800px';
         var dialog = this.callfc.openSide(
-          this.funcID == 'CM0101' ? PopupAddCrmcustomerComponent : PopupAddCrmcontactsComponent,
+          this.funcID == 'CM0101'
+            ? PopupAddCrmcustomerComponent
+            : PopupAddCrmcontactsComponent,
           ['edit', this.titleAction],
           option
         );

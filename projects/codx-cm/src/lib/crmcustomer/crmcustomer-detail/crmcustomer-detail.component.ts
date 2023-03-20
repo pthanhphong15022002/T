@@ -36,11 +36,12 @@ export class CrmcustomerDetailComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.dataSelected.steps);
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.listTab(this.funcID);
+    this.nameDetail == 'Information'
   }
 
   listTab(funcID){
