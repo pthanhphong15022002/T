@@ -191,6 +191,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   nameStage = '';
   isAddStage = true;
   headerText = '';
+  headerFiedName = '';
   groupTaskID = '';
   stepRoleOld: any;
   jobType: any;
@@ -199,6 +200,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   processNameBefore = '';
   strDay = ' ngày ';
   strHour = ' giờ ';
+  headerStep = {
+    add: ["Thêm Giai Đoạn","headerAddStep"],
+    edit: ["Sửa giai đoạn","headerEditStep"]
+  }
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -1733,13 +1738,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['stepNo'] = this.stepList.length + 1;
       this.stepNew['createdBy'] = this.userId;
       this.stepName = '';
-      this.headerText = 'Thêm Giai Đoạn';
     } else if (type === 'copy') {
-      this.headerText = 'Copy Giai Đoạn';
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     } else {
-      this.headerText = 'Sửa Giai Đoạn';
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     }
