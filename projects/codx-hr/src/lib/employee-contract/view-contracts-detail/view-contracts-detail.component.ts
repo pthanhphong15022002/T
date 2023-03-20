@@ -33,7 +33,7 @@ import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/po
 @Component({
   selector: 'lib-view-contracts-detail',
   templateUrl: './view-contracts-detail.component.html',
-  styleUrls: ['./view-contracts-detail.component.scss']
+  styleUrls: ['./view-contracts-detail.component.css']
 })
 export class ViewDetailComponent implements OnInit {
   constructor(
