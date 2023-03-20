@@ -385,7 +385,7 @@ export class PopupJobComponent implements OnInit {
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
       let groupTask = this.taskGroupList.find((x) => x.recID == task['taskGroupID']);
-      if (task['dependRule'] != '1' || task['parentID'].trim() || groupTask['task'].length === 0) {
+      if (task['dependRule'] != '1' || !task['parentID'].trim() || groupTask['task'].length === 0) {
         //No parentID
         this.checkSave(groupTask);
       } else {
