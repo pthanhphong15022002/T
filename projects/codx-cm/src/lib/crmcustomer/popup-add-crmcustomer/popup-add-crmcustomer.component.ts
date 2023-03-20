@@ -92,6 +92,6 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     dataModel.gridViewName = 'grvCRMCustomers';
     dataModel.entityName = 'CRM_Customers';
     opt.FormModel = dataModel;
-    this.callFc.openForm(PopupAddressComponent,'', 500, 700,'','','',opt);
+    this.callFc.openForm(PopupAddressComponent,'', 500, 550,'','','',opt);
   }
 }

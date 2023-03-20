@@ -29,6 +29,7 @@ import { CodxTaskComponent } from './task/codx-task/codx-task.component';
 import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
 import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
 import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
+import { PopupAddCrmcontactsComponent } from './crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTaskComponent,
     PopupAddCrmcustomerComponent,
     PopupAddressComponent,
+    PopupAddCrmcontactsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

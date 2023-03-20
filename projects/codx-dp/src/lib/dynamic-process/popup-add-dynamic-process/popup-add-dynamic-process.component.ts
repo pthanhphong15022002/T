@@ -191,6 +191,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   nameStage = '';
   isAddStage = true;
   headerText = '';
+  headerFiedName = '';
   groupTaskID = '';
   stepRoleOld: any;
   jobType: any;
@@ -199,6 +200,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   processNameBefore = '';
   strDay = ' ngày ';
   strHour = ' giờ ';
+  headerStep = {
+    add: ["Thêm Giai Đoạn","headerAddStep"],
+    edit: ["Sửa giai đoạn","headerEditStep"]
+  }
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -1587,7 +1592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (x.recID == this.stepOfFields.recID)
         x.showColumnControl = showColumnControl;
     });
-    this.changeDetectorRef.detectChanges();
+    //this.changeDetectorRef.detectChanges();
   }
 
   dropFields(event: CdkDragDrop<string[]>, recID) {
@@ -1733,13 +1738,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['stepNo'] = this.stepList.length + 1;
       this.stepNew['createdBy'] = this.userId;
       this.stepName = '';
-      this.headerText = 'Thêm Giai Đoạn';
     } else if (type === 'copy') {
-      this.headerText = 'Copy Giai Đoạn';
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     } else {
-      this.headerText = 'Sửa Giai Đoạn';
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     }
@@ -1756,12 +1758,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
       this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
-      this.popupAddStage.close();
-      this.viewStepSelect(
-        this.stepList.length > 0
-          ? this.stepList[this.stepList?.length - 1 || 0]
-          : []
-      );
+      this.viewStepSelect(this.stepList[this.stepList?.length - 1 || 0]);
       if(this.action == 'edit'){
         this.listStepAdd.push(this.stepNew.recID);
       }
@@ -1914,6 +1911,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if(!check){
           this.listStepEdit.push(data?.stepID);
         }
+        let checkExistStep = this.checkExistUser(this.step, data['roles'][0], 'R');
+        if (!checkExistStep) {
+          let index = this.step?.roles.findIndex(
+            (roleFind) => roleFind.objectID === data['roles'][0]['objectID']
+          );
+          if (index > -1) {
+            this.step?.roles?.splice(index, 1);
+          }
+        }
       }
     });
   }
@@ -2029,6 +2035,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let check = this.listStepEdit.some(id => id == task?.stepID)
         if(!check){
           this.listStepEdit.push(task?.stepID);
+        }
+        let checkExistStep = this.checkExistUser(this.step, task['roles'][0], 'R');
+        if (!checkExistStep) {
+          let index = this.step?.roles.findIndex(
+            (roleFind) => roleFind.objectID === task['roles'][0]['objectID']
+          );
+          if (index > -1) {
+            this.step?.roles?.splice(index, 1);
+          }
         }
       }
     });
@@ -2402,8 +2417,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
         let checkExistStep = this.checkExistUser(this.step, roleOld, 'R');
         if (!checkExistStep) {
-          console.log(this.step?.roles);
-
           let index = this.step?.roles.findIndex(
             (roleFind) => roleFind.objectID === roleOld['objectID']
           );
@@ -2602,7 +2615,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
     }
-    this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
     if (this.stepList.length > 0) {
@@ -2738,7 +2750,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.checkedSat = false;
       this.checkedSun = false;
     }
-    this.changeDetectorRef.detectChanges();
   }
 
   autoHandleStepReason() {

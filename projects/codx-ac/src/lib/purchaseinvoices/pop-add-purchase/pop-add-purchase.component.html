@@ -13,7 +13,7 @@
         <!-- Tab thông tin chứng từ -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top">
+            <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-18 me-2"></i>
               <div class="fw-bold fs-6 text-uppercase">Thông tin chứng từ</div>
             </div>
@@ -25,7 +25,7 @@
         <!-- Tab Thông tin hóa đơn -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top">
+            <div class="d-flex align-items-top" *ngIf="VATType == '1'">
               <i class="icon-description icon-18 me-2"></i>
               <div class="fw-bold fs-6 text-uppercase">Thông tin hóa đơn</div>
             </div>
@@ -42,7 +42,7 @@
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top">
+            <div class="d-flex align-items-top me-2" (click)="detaiClick(1)">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
               <span class="fw-bold fs-6 text-uppercase">Chi tiết</span>
             </div>
@@ -54,7 +54,7 @@
         <!-- Tab Thông tin hóa đơn -->
         <e-tabitem>
           <ng-template #headerText>
-            <div class="d-flex align-items-top">
+            <div *ngIf="VATType == '2'" class="d-flex align-items-top" (click)="detaiClick(2)">
               <i class="icon-description icon-18 me-2"></i>
               <div class="fw-bold fs-6 text-uppercase">Thông tin hóa đơn</div>
             </div>
@@ -71,21 +71,19 @@
   </div>
 </ng-template>
 <ng-template #subToolbar>
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex justify-content-start mt-1 me-2">
+  <div class="d-flex align-items-center justify-content-between pt-2">
+    <div class="d-flex justify-content-start me-2">
       <div class="card-title">
         <div class="d-flex flex-column">
           <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-8" *ngIf="form?.formGroup">
-          <codx-input id="containerstatus" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
-          </codx-input>
-        </div>
+      <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+        <codx-input id="containerstatus" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+        </codx-input>
       </div>
     </div>
-    <div class="d-flex justify-content-end mt-1 me-3">
+    <div class="d-flex justify-content-end me-3">
       <div *ngIf="formType != 'edit'" class="ms-2">
         <button type="button" class="btn btn-light-primary">
           <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
@@ -93,7 +91,7 @@
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn btn-primary" style="min-width: 60px">
+        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
           <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
             [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
         </button>
@@ -104,7 +102,7 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
     <div class="row mt-5">
-      <div class="col-6">
+      <div class="col-9">
         <div class="row">
           <div class="col-3">
             <div class="form-group">
@@ -112,7 +110,8 @@
               <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="objectID" [formModel]="form.formModel">
+                <codx-input [Group]="form.formGroup" field="objectID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -123,7 +122,7 @@
               <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel" default="Tên nhà cung cấp">
                 </codx-label>
-                <codx-input [disabled]="true" type="text" field="objectID"></codx-input>
+                <codx-input [disabled]="true" type="text" field="objectID" [crrValue]="objectName"></codx-input>
               </div>
             </div>
           </div>
@@ -133,7 +132,8 @@
               <div class="form-group">
                 <codx-label fiedName="PmtMethodID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="pmtMethodID" [formModel]="form.formModel">
+                <codx-input [Group]="form.formGroup" field="pmtMethodID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -146,7 +146,8 @@
               <div class="form-group">
                 <codx-label fiedName="PmtTermID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="pmtTermID" [formModel]="form.formModel">
+                <codx-input [Group]="form.formGroup" field="pmtTermID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -157,7 +158,8 @@
               <div class="form-group">
                 <codx-label fiedName="Buyer" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="buyer" [formModel]="form.formModel">
+                <codx-input [Group]="form.formGroup" field="buyer" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -168,7 +170,8 @@
               <div class="form-group">
                 <codx-label fiedName="InvoiceDueDate" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="invoiceDueDate" [formModel]="form.formModel">
+                <codx-input [Group]="form.formGroup" field="invoiceDueDate" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -179,52 +182,215 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel">
+              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-2 w-23"></div>
       <div class="col-3">
-        <div class="form-group mb-0 row justify-content-end">
+        <div class="row">
           <!-- Tiền tệ -->
-          <div class="col-4">
+          <div class="col-6">
             <div class="form-group">
               <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel">
+              <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
           <!-- Tỷ giá -->
-          <div class="col-4">
+          <div class="col-6">
             <div class="form-group">
               <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel">
+              <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
         </div>
         <!-- Ngày chứng từ -->
-        <div class="form-group mb-0 row justify-content-end">
-          <div class="col-8">
+        <div class="form-group">
+          <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <!-- Số chứng từ -->
+        <div class="form-group">
+          <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #tabBill>
+  <ng-container *ngIf="fgVATInvoices">
+    <div class="row mt-5" *ngIf="VATType == '1'">
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <!-- mẫu số -->
             <div class="form-group">
-              <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+              <codx-label fiedName="InvoiceForm" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate">
+              <codx-input [Group]="fgVATInvoices" field="invoiceForm" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
               </codx-input>
             </div>
           </div>
         </div>
-        <!-- Số chứng từ -->
-        <div class="form-group mb-0 row justify-content-end">
-          <div class="col-8">
+        <div class="col-2">
+          <div class="form-group">
+            <!-- mẫu số -->
             <div class="form-group">
-              <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+              <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel">
+              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+            <!-- mẫu số -->
+            <div class="form-group">
+              <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- ký hiệu -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceSeri" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceSeri" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"></codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- số hóa đơn -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceNo" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceNo" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- ngày hóa đơn -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceDate" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceDate" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <!-- dvt -->
+            <div class="form-group">
+              <codx-label fiedName="UMID" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="umid" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="Quantity" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="quantity" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="UnitPrice" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="unitPrice" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="TaxBase" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="taxBase" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="VATID" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="vatid" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="TaxAmt" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="taxAmt" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-9">
+          <div class="form-group">
+            <!-- số lượng -->
+            <div class="form-group">
+              <codx-label fiedName="TaxNote" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input id="taxNote" [Group]="fgVATInvoices" field="taxNote" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
               </codx-input>
             </div>
           </div>
@@ -233,190 +399,107 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #tabBill>
-  <div class="row mt-5">
-    <div class="row">
-      <div class="col-2">
-        <div class="form-group">
-          <!-- mẫu số -->
-          <div class="form-group">
-            <codx-label fiedName="InvoiceForm" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="invoiceForm" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-2">
-        <div class="form-group">
-          <!-- mẫu số -->
-          <div class="form-group">
-            <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-2">
-        <div class="form-group">
-          <!-- mẫu số -->
-          <div class="form-group">
-            <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- ký hiệu -->
-          <div class="form-group">
-            <codx-label fiedName="InvoiceSeri" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="invoiceSeri" [formModel]="fmVATInvoices"></codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- số hóa đơn -->
-          <div class="form-group">
-            <codx-label fiedName="InvoiceNo" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="invoiceNo" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- ngày hóa đơn -->
-          <div class="form-group">
-            <codx-label fiedName="InvoiceDate" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="invoiceDate" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-2">
-        <div class="form-group">
-          <!-- dvt -->
-          <div class="form-group">
-            <codx-label fiedName="UMID" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="umid" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="Quantity" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="quantity" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="UnitPrice" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="unitPrice" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-2">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="TaxBase" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="taxBase" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-2">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="VATID" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="vatid" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="col-1">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="TaxAmt" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input [Group]="fgVATInvoices" field="taxAmt" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-9">
-        <div class="form-group">
-          <!-- số lượng -->
-          <div class="form-group">
-            <codx-label fiedName="TaxNote" [formModel]="fmVATInvoices">
-            </codx-label>
-            <codx-input id="taxNote" [Group]="fgVATInvoices" field="taxNote" [formModel]="fmVATInvoices">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <ng-template #tabLine>
   <codx-gridview-v2 #gridPurchase [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
     [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
-    [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight"
-    [autoLoad]="false" rowHeight="40" (cellChanged)="cellChanged($event)"
-    (created)="gridCreated($event)"></codx-gridview-v2>
+    [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
+    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #tabLineBill>
-  <codx-gridview-v2 #gridInvoices [formName]="fmVATInvoices.formName"
-  [gridViewName]="fmVATInvoices.gridViewName" [entityName]="fmVATInvoices.entityName"
-  [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
-  [dataSource]="objectvatinvoices" service="AC" [height]="gridHeight"
-  [autoLoad]="false" rowHeight="40" (cellChanged)="cellChanged($event)"
-  (created)="gridCreated($event)"></codx-gridview-v2>
+  <codx-gridview-v2 *ngIf="VATType == '2'" #gridInvoices [formName]="fmVATInvoices.formName"
+    [gridViewName]="fmVATInvoices.gridViewName" [entityName]="fmVATInvoices.entityName" [templateMore]="morefunction"
+    [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true" [dataSource]="objectvatinvoices"
+    service="AC" [height]="gridHeight" rowHeight="40" (cellChanged)="cellChangedInvoice($event)"
+    (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #addLine let-data>
-  <div class="form-group mb-0 mt-2 row">
+  <div class="form-group mb-0 mt-5 row">
     <div class="col-12">
       <div class="form-group mb-0 row">
         <div class="col-2">
-          <button type="button" class="btn btn-light-primary">
-            <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
+          <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
+            <div class="d-flex">
+              <span class="mb-2">
+                <i class="icon-add_box icon-20"></i>
+              </span>
+              <span class="fs-5 fw-bold">Thêm dòng</span>
+            </div>
           </button>
         </div>
       </div>
     </div>
   </div>
+  <ng-container *ngIf="fgVATInvoices">
+    <div *ngIf="countDetail > 0">
+      <div class="mt-4 mb-3 text-primary fw-bold fs-5">
+        <codx-label [formModel]="form.formModel" default="Thông tin hóa đơn tham chiếu"></codx-label>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <!-- mẫu số -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceForm" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceForm" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVATLine($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- ký hiệu -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceSeri" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceSeri" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVATLine($event)"></codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- số hóa đơn -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceNo" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceNo" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVATLine($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="form-group">
+            <!-- ngày hóa đơn -->
+            <div class="form-group">
+              <codx-label fiedName="InvoiceDate" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="invoiceDate" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVATLine($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
-<ng-template #morefunction>
-
+<ng-template #morefunction let-data>
+  <div class="col-6 d-flex align-items-center justify-content-end" (click)="deleteRow(data)">
+    <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1">
+      <i class="icon-delete icon-16"></i>
+    </span>
+  </div>
 </ng-template>
 <ng-template #footer>
-
+  <div class="row" *ngIf="purchaseinvoices">
+    <ng-container *ngTemplateOutlet="tabRef"></ng-container>
+  </div>
+</ng-template>
+<ng-template #tabRef>
+  <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
+    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
 </ng-template>

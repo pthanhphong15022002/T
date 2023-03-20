@@ -48,11 +48,11 @@
           <codx-label [formModel]="form.formModel" fiedName="employeeID">
           </codx-label>
           <codx-input
-            [disabled]="isEdit"
             type="text"
             [crrValue]="data?.employeeID"
             (valueChange)="valueChange($event)"
             field="employeeID"
+            [placeholder]="'Mã nhân viên'"
           >
           </codx-input>
         </div>
@@ -209,10 +209,12 @@
             </codx-label>
             <codx-input
               field="shiftCalendarID"
-              [formModel]="form.formModel"
               [Group]="form.formGroup"
-            >
+              [crrValue]="data?.shiftCalendarID"
+              [placeholder]="'Lịch làm việc'"
+              >
             </codx-input>
+            <!-- [formModel]="form.formModel" -->
           </div>
         </div>
         <div class="col-6">
@@ -221,10 +223,12 @@
             </codx-label>
             <codx-input
               field="ALObjectID"
-              [formModel]="form.formModel"
               [Group]="form.formGroup"
-            >
+              [crrValue]="data?.ALObjectID"
+              [placeholder]="'Đối tượng phép năm'"
+              >
             </codx-input>
+            <!-- [formModel]="form.formModel" -->
           </div>
         </div>
       </div>
@@ -236,10 +240,12 @@
             </codx-label>
             <codx-input
               field="payrollGroupID"
-              [formModel]="form.formModel"
               [Group]="form.formGroup"
-            >
+              [crrValue]="data?.payrollGroupID"
+              [placeholder]="'Nhóm tính lương'"
+              >
             </codx-input>
+            <!-- [formModel]="form.formModel" -->
           </div>
         </div>
         <div class="col-6">
@@ -556,8 +562,8 @@
             </codx-label>
             <codx-input
               field="wardID"
-              [formModel]="form.formModel"
               [Group]="form.formGroup"
+              [formModel]="form.formModel"
             >
             </codx-input>
           </div>
@@ -612,6 +618,7 @@
         </div>
       </div>
       <div id="tWardID-tHamlet" class="row form-group">
+        <!-- Phường xã -->
         <div class="col-6">
           <div id="tWardID">
             <codx-label fiedName="tWardID" [formModel]="form.formModel">
@@ -624,12 +631,17 @@
             </codx-input>
           </div>
         </div>
-
         <div class="col-6">
           <div id="tHamlet">
             <codx-label fiedName="tHamlet" [formModel]="form.formModel">
             </codx-label>
-            <codx-input field="tHamlet" v> </codx-input>
+            <codx-input
+              field="tHamlet"
+              [Group]="form.formGroup"
+              [crrValue]="data?.tHamlet"
+              [placeholder]="'Thôn/ Xóm'"
+            >
+            </codx-input>
           </div>
         </div>
       </div>

@@ -73,6 +73,7 @@
   </ng-container>
 </ng-template>
 
+
 <ng-template #footer let-data>
   <div class="d-flex align-items-top mt-2">
     <span class="icon-email icon-16 me-2"> </span>
@@ -240,22 +241,11 @@
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
-        <codx-vll
-          field="Status"
-          [formModel]="view.formModel"
-          [value]="data.status"
-          [showBgColor]="true"
-          [showIcon]="false"
-          [showText]="true"
-        >
-        </codx-vll>
         <span
-          #statusName
-          class="badge badge-success badge-sm badge-inline"
-          [style.background]="data.statusColor"
-          [innerHTML]="data?.status | formatvalue : view.formModel : 'status' | async"
-        >
-        </span>
+        [ngClass]="data.status == 50 ? 'badge badge-success badge-sm badge-inline' : 'badge badge-secondary badge-sm badge-inline' "
+        [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
+       >
+       </span>
       </div>
 
       <div class="align-items-center fs-7 mt-1">

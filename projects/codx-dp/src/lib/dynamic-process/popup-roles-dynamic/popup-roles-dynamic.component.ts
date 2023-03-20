@@ -92,6 +92,8 @@ export class PopupRolesDynamicComponent implements OnInit {
         // this.process.permissions[oldIndex].publish = this.publish;
         this.process.permissions[oldIndex].delete = this.delete;
         this.process.permissions[oldIndex].assign = this.assign;
+        this.process.permissions[oldIndex].isActive = true;
+
         // this.permissions[oldIndex].startDate = this.startDate;
         // this.process.permissions[oldIndex].endDate = this.endDate;
       }
@@ -190,9 +192,10 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.process.permissions[this.currentPemission].assign = this.assign;
       this.process.permissions[this.currentPemission].delete = this.delete;
       this.process.permissions[this.currentPemission].edit = this.edit;
+      this.process.permissions[this.currentPemission].isActive = true;
       // this.process.permissions[this.currentPemission].publish = this.publish;
     }
-    if (this.type == 'add') {
+    if (this.type == 'add' || this.type == 'copy') {
       this.dialog.close(this.process.permissions);
     } else {
       this.dpSv.updatePermissionProcess(this.process).subscribe((res) => {

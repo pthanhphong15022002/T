@@ -132,6 +132,7 @@ export class CardTransComponent
               active: true,
               model: {
                 resources: this.columnGrids,
+
               },
             },
           ];
@@ -190,9 +191,9 @@ export class CardTransComponent
       .subscribe((res) => {
         if (res) {
           // this.selectedCard.status=currTrans;
-          // this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
+          // this.view.dataService.update(this.selectedCard).subscribe((res) => {});
           // this.popupDialog.close();
-          // this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA         
+          // this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA
         }
       });
   }

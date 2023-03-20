@@ -352,7 +352,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         });
     }
   }
-  getCalendatTime() {
+  getCalendateTime() {
     //Lấy giờ làm việc
     this.codxEpService.getEPRoomSetting('1').subscribe((setting: any) => {
       if (setting) {
@@ -465,7 +465,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   onInit(): void {
     this.getCacheData();
-    this.getCalendatTime();
+    this.getCalendateTime();
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {

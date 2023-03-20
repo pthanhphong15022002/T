@@ -155,7 +155,7 @@
     </div>
     <div class="col-6">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Avata" default="Ảnh đại diện"></codx-label>
+        <codx-label [formModel]="form.formModel" name="lblAvatar" default="Ảnh đại diện"></codx-label>
         <ng-container [ngTemplateOutlet]="avata"></ng-container>
       </div>
       <div class="form-group">
@@ -317,7 +317,7 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">
-      <codx-label fiedName="Save" [formModel]="dialog.formModel" default="Lưu"></codx-label>
+      <codx-label name="lblSave" [formModel]="dialog.formModel" default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>

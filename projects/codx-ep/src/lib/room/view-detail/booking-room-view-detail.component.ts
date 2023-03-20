@@ -26,12 +26,12 @@ import { Permission } from '@shared/models/file.model';
 import { BookingRoomComponent } from '../booking/booking-room.component';
 import { CodxEpService } from '../../codx-ep.service';
 @Component({
-  selector: 'booking-room-view-detail2',
-  templateUrl: 'booking-room-view-detail2.component.html',
-  styleUrls: ['booking-room-view-detail2.component.scss'],
+  selector: 'booking-room-view-detail',
+  templateUrl: 'booking-room-view-detail.component.html',
+  styleUrls: ['booking-room-view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BookingRoomViewDetailComponent2
+export class BookingRoomViewDetailComponent
   extends UIComponent
   implements OnChanges
 {
