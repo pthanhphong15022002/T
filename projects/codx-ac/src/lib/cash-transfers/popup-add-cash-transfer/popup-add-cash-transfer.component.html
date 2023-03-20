@@ -22,426 +22,447 @@
 </ng-template>
 
 <ng-template #body>
-  <ejs-tab #tabGeneralInfo>
+  <ejs-tab #tabGeneralInfo class="popup-cash-transfer">
     <e-tabitems>
-      <e-tabitem [header]="{ text: 'Thông tin chung', iconCss: 'icon-info' }">
-        <ng-template #content>
-          <div class="row mt-3">
-            <div class="col-8">
-              <div class="row">
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="cashBookID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashBookID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
-                  ></codx-input>
+      <!-- Tab thông tin chứng từ -->
+        <e-tabitem>
+            <ng-template #headerText>
+                <div class="d-flex align-items-top">
+                    <i class="icon-info icon-18 me-2"></i>
+                    <div class="fw-bold fs-6 text-uppercase">Thông tin chung</div>
                 </div>
-                <div class="col-6 form-group">
-                  <codx-label
-                    fiedName="cashBookName"
-                    [formModel]="form.formModel"
-                    default="Đối tượng chuyển"
-                  ></codx-label>
-                  <codx-input
-                    type="text"
-                    field="cashBookName"
-                    [disabled]="true"
-                    [formModel]="form.formModel"
-                    [crrValue]="getCashBookNameById(cashTransfer?.cashBookID)"
-                  ></codx-input>
+            </ng-template>
+            <ng-template #content>
+              <div class="row mt-5">
+                <div class="col-9">
+                  <div class="row">
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="cashBookID"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="cashBookID"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                        (valueChange)="handleInputChange($event)"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="cashBookName"
+                        [formModel]="form.formModel"
+                        default="Đối tượng chuyển"
+                      ></codx-label>
+                      <codx-input
+                        type="text"
+                        field="cashBookName"
+                        [disabled]="true"
+                        [formModel]="form.formModel"
+                        [crrValue]="getCashBookNameById(cashTransfer?.cashBookID)"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="transactionText"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="transactionText"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="cashBookID2"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="cashBookID2"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                    <div class="col-6 form-group">
+                      <codx-label
+                        fiedName="cashBookName2"
+                        [formModel]="form.formModel"
+                        default="Đối tượng nhận"
+                      ></codx-label>
+                      <codx-input
+                        type="text"
+                        field="cashBookName2"
+                        [disabled]="true"
+                        [formModel]="form.formModel"
+                        [crrValue]="getCashBookNameById(cashTransfer?.cashBookID2)"
+                      ></codx-input>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col-10 form-group">
+                      <codx-label
+                        fiedName="note"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="note"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="cashAcctID"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="cashAcctID"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="offsetAcctID"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="offsetAcctID"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="payAmount"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="payAmount"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                        (controlBlur)="payAmountChanged($event)"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="paymentFees"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="paymentFees"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+    
+                      <codx-label
+                        fiedName="feeControl"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <div>
+                      <codx-input
+                        field="feeControl"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-3 form-group">
-                  <codx-label
-                    fiedName="transactionText"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="transactionText"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
+    
+                <div class="col-3">
+                  <div class="row">
+                    <div class="col-6 form-group">
+                      <codx-label
+                        fiedName="currencyID"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="currencyID"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                        (valueChange)="handleInputChange($event)"
+                      ></codx-input>
+                    </div>
+                    <div class="col-6 form-group">
+                      <codx-label
+                        fiedName="exchangeRate"
+                        [formModel]="form.formModel"
+                      ></codx-label>
+                      <codx-input
+                        field="exchangeRate"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                  </div>
+    
+                  <div class="form-group">
+                    <codx-label
+                      fiedName="voucherDate"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="voucherDate"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                  <div class="form-group">
+                    <codx-label
+                      fiedName="voucherNo"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="voucherNo"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
                 </div>
               </div>
-
-              <div class="row">
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="cashBookID2"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashBookID2"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-6 form-group">
-                  <codx-label
-                    fiedName="cashBookName2"
-                    [formModel]="form.formModel"
-                    default="Đối tượng nhận"
-                  ></codx-label>
-                  <codx-input
-                    type="text"
-                    field="cashBookName2"
-                    [disabled]="true"
-                    [formModel]="form.formModel"
-                    [crrValue]="getCashBookNameById(cashTransfer?.cashBookID2)"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-8 form-group">
-                  <codx-label
-                    fiedName="note"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="note"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="cashAcctID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashAcctID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="offsetAcctID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="offsetAcctID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="payAmount"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="payAmount"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (controlBlur)="payAmountChanged($event)"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="paymentFees"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="paymentFees"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 d-flex gap-2 align-items-center">
-                  <codx-input
-                    field="feeControl"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                  <codx-label
-                    fiedName="feeControl"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                </div>
-              </div>
-
+    
+              <hr />
               <!-- #region Cập nhật hóa đơn -->
-              <div class="row">
-                <div class="d-flex gap-2">
-                  <codx-input
-                    type="switch"
-                    [formModel]="form.formModel"
-                    [checked]="hasInvoice"
-                    (valueChange)="handleInputChange($event, 'hasInvoice')"
-                  ></codx-input>
+              <div class="d-flex gap-2 align-items-top mt-5">
+                <codx-input class="me-1"
+                  type="switch"
+                  [formModel]="form.formModel"
+                  [checked]="hasInvoice"
+                  (valueChange)="handleInputChange($event, 'hasInvoice')"
+                ></codx-input>
+                <codx-label class="fw-bold fs-6"
+                  fiedName="hasInvoice"
+                  [formModel]="form.formModel"
+                  default="Cập nhật hóa đơn"
+                ></codx-label>
+              </div>
+              <div class="border mt-2 bg-gray-100 rounded-2 py-4 px-6">
+                <div class="row">
+                  <div class="col-4 row pe-9">
+                    <div class="col-12 form-group">
+                    <codx-label
+                      fiedName="objectID"
+                      [formModel]="fmVATInvoice"
+                    ></codx-label>
+                    <codx-input
+                      field="objectID"
+                      [formModel]="fmVATInvoice"
+                      [crrValue]="vatInvoice?.objectID"
+                      (valueChange)="handleInputChange($event, 'vatInvoice')"
+                      [disabled]="!hasInvoice"
+                    ></codx-input>
+                    </div>
+                  </div>
+                  <div class="col-8 row">
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="invoiceForm"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="invoiceForm"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.invoiceForm"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="invoiceSeri"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="invoiceSeri"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.invoiceSeri"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-2 form-group">
+                      <codx-label
+                        fiedName="invoiceNo"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="invoiceNo"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.invoiceNo"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="invoiceDate"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="invoiceDate"
+                        type="datetime"
+                        format="F"
+                        [crrValue]="vatInvoice?.invoiceDate"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                  </div>       
+                  
+                </div>
+    
+                <div class="row">
+                  <div class="col-4 row pe-9">
+                    <div class="col-12 form-group">
+                      <codx-label
+                        fiedName="goods"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="goods"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.goods"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                  </div>
+                  <div class="col-8 row">
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="taxBase"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="taxBase"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.taxBase"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="vatid"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="vatid"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.vatid"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="taxAmt"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="taxAmt"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.taxAmt"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                  </div>
+                 
+                  
+                </div>
+    
+                <div class="row">
+                  <div class="col-4 row pe-9">
+                    <div class="col-12">
+                      <codx-label class="fw-bold"
+                        fiedName="taxNote"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="taxNote"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.taxNote ?? ''"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                  </div>
+                  <div class="col-8 row">
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="diM3"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="diM3"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.diM3"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="diM1"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="diM1"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.diM1"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                    <div class="col-4 form-group">
+                      <codx-label
+                        fiedName="diM2"
+                        [formModel]="fmVATInvoice"
+                      ></codx-label>
+                      <codx-input
+                        field="diM2"
+                        [formModel]="fmVATInvoice"
+                        [crrValue]="vatInvoice?.diM2"
+                        (valueChange)="handleInputChange($event, 'vatInvoice')"
+                        [disabled]="!hasInvoice"
+                      ></codx-input>
+                    </div>
+                  </div>
+                  
+                </div>
+                <!-- #endregion -->
+              </div>
+              <div class="d-flex justify-content-end me-12 mt-4">
+                <div class="d-flex align-items-center">
                   <codx-label
-                    fiedName="hasInvoice"
+                    default="Tổng cộng:"
+                    fiedName="lblTotalAmount"
                     [formModel]="form.formModel"
-                    default="Cập nhật hóa đơn"
+                    class="fw-bold fs-2 me-2 text-dark"
                   ></codx-label>
+                  <span class="fw-bold fs-2 text-primary">
+                    {{
+                      (cashTransfer?.payAmount || 0) +
+                        (cashTransfer?.paymentFees || 0) +
+                        (hasInvoice ? vatInvoice?.taxAmt || 0 : 0)
+                    }}
+                  </span>
                 </div>
               </div>
-
-              <div class="row mt-3">
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="invoiceForm"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="invoiceForm"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.invoiceForm"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="invoiceSeri"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="invoiceSeri"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.invoiceSeri"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="invoiceNo"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="invoiceNo"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.invoiceNo"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="invoiceDate"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="invoiceDate"
-                    type="datetime"
-                    format="F"
-                    [crrValue]="vatInvoice?.invoiceDate"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-4 form-group">
-                  <codx-label
-                    fiedName="objectID"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="objectID"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.objectID"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-3 form-group">
-                  <codx-label
-                    fiedName="goods"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="goods"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.goods"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="taxBase"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="taxBase"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.taxBase"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="vatid"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="vatid"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.vatid"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="taxAmt"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="taxAmt"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.taxAmt"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-3 form-group">
-                  <codx-label
-                    fiedName="taxNote"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="taxNote"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.taxNote ?? ''"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="diM3"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="diM3"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.diM3"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="diM1"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="diM1"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.diM1"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="diM2"
-                    [formModel]="fmVATInvoice"
-                  ></codx-label>
-                  <codx-input
-                    field="diM2"
-                    [formModel]="fmVATInvoice"
-                    [crrValue]="vatInvoice?.diM2"
-                    (valueChange)="handleInputChange($event, 'vatInvoice')"
-                    [disabled]="!hasInvoice"
-                  ></codx-input>
-                </div>
-              </div>
-              <!-- #endregion -->
-            </div>
-
-            <div class="col-4">
-              <div class="row justify-content-end">
-                <div class="col-3 form-group">
-                  <codx-label
-                    fiedName="currencyID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="currencyID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
-                  ></codx-input>
-                </div>
-                <div class="col-3 form-group">
-                  <codx-label
-                    fiedName="exchangeRate"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="exchangeRate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row justify-content-end">
-                <div class="col-6 form-group">
-                  <codx-label
-                    fiedName="voucherDate"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="voucherDate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-              <div class="row justify-content-end">
-                <div class="col-6 form-group">
-                  <codx-label
-                    fiedName="voucherNo"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="voucherNo"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-end">
-            <div class="col-3">
-              <codx-label
-                default="Tổng cộng"
-                fiedName="lblTotalAmount"
-                [formModel]="form.formModel"
-                class="fw-bold fs-5"
-              ></codx-label>
-              <span class="fw-bold fs-3 ms-3">
-                {{
-                  (cashTransfer?.payAmount || 0) +
-                    (cashTransfer?.paymentFees || 0) +
-                    (hasInvoice ? vatInvoice?.taxAmt || 0 : 0)
-                }}
-              </span>
-            </div>
-          </div>
-        </ng-template>
-      </e-tabitem>
+            </ng-template>
+        </e-tabitem>
     </e-tabitems>
   </ejs-tab>
 </ng-template>
