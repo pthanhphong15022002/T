@@ -46,7 +46,8 @@ export class CrmCustomerComponent
   @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
-
+  @ViewChild('itemMoreFunc', { static: true })
+  itemMoreFunc: TemplateRef<any>;
   dataObj?: any;
   columnGrids = [];
   views: Array<ViewModel> = [];
@@ -138,6 +139,13 @@ export class CrmCustomerComponent
                 : 'Ngày tạo',
               template: this.itemCreatedOn,
               width: 180,
+            },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
             },
           ];
           this.views.push({
