@@ -338,6 +338,7 @@
                               <div class="steplist-hearder">
                                 <div class="text-dark fw-bold fs-6">
                                   <span>{{ task?.taskName }}</span>
+                                  <span [ngClass]="checkExitsParentID(taskList?.task,task) ? '' : 'd-none'" class="h4" style="color: red;">*</span>
                                 </div>
                                 <div class="text-gray-600">
                                   <codx-label
