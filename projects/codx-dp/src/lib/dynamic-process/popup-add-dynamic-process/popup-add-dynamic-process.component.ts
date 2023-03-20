@@ -1911,6 +1911,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if(!check){
           this.listStepEdit.push(data?.stepID);
         }
+        let checkExistStep = this.checkExistUser(this.step, data['roles'][0], 'R');
+        if (!checkExistStep) {
+          let index = this.step?.roles.findIndex(
+            (roleFind) => roleFind.objectID === data['roles'][0]['objectID']
+          );
+          if (index > -1) {
+            this.step?.roles?.splice(index, 1);
+          }
+        }
       }
     });
   }
@@ -2399,8 +2408,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
         let checkExistStep = this.checkExistUser(this.step, roleOld, 'R');
         if (!checkExistStep) {
-          console.log(this.step?.roles);
-
           let index = this.step?.roles.findIndex(
             (roleFind) => roleFind.objectID === roleOld['objectID']
           );
