@@ -78,11 +78,9 @@
           <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-8" *ngIf="form?.formGroup">
-          <codx-input id="containerstatus" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
-          </codx-input>
-        </div>
+      <div class="ms-3" *ngIf="form?.formGroup">
+        <codx-input class="input-circle input-sm" id="containerstatus" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+        </codx-input>
       </div>
     </div>
     <div class="d-flex justify-content-end mt-1 me-3">
