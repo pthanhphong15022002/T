@@ -56,6 +56,7 @@ export class EmployeeListComponent extends UIComponent {
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
+  @ViewChild('listDetail') listDetail: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
   @ViewChild('itemInfoPersonal', { static: true })
@@ -114,7 +115,7 @@ export class EmployeeListComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           panelLeftRef: this.panelLeftRef,
@@ -123,14 +124,14 @@ export class EmployeeListComponent extends UIComponent {
       },
       {
         id: '1',
-        type: ViewType.kanban,
-        active: true,
+        type: ViewType.card,
+        active: false,
         sameData: true,
         model: {
           panelLeftRef: this.panelLeftRef,
-          resources: this.columnsGrid,
+          resources: this.cardTemp,
         },
-      }
+      },
     ];
     this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();

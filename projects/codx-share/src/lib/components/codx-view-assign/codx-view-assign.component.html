@@ -8,9 +8,20 @@
     </div>
   </ng-container>
 </div>
-<codx-treeview #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [entityName]="'TM_Tasks'" [service]="'TM'"
-  [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-  [isLoadChild]="false" (selectionChange)="selectionChange($event)">
+<codx-treeview
+  #treeView
+  [itemTemplate]="templateTreeView"
+  [data]="dataTree"
+  [entityName]="'TM_Tasks'"
+  [service]="'TM'"
+  [enableCheck]="true"
+  idField="recID"
+  parentIdField="parentID"
+  [autoLoad]="false"
+  [isOutput]="true"
+  [isLoadChild]="false"
+  (selectionChange)="selectionChange($event)"
+>
 </codx-treeview>
 
 <!-- temptree -->
@@ -20,36 +31,63 @@
       <div class="d-flex align-items-start justify-content-between mb-3">
         <div class="d-flex align-items-start">
           <span *ngIf="data?.items.length > 0">
-            <div id="{{ data.taskID }}"
-              class="icon-16  me-2 align-items-start pt-3  {{data.isCollapse?'icon-indeterminate_check_box' : 'icon-add_box'}}">
-            </div>
+            <div
+              id="{{ data.taskID }}"
+              class="icon-16  me-2 align-items-start pt-3  {{
+                data.isCollapse
+                  ? 'icon-indeterminate_check_box'
+                  : 'icon-add_box'
+              }}"
+            ></div>
           </span>
           <div class="d-flex align-items-top w-100">
-            <div class="me-3" >
+            <div class="me-3">
               <div style="position: relative">
-                <codx-img [width]="35" #image [objectId]="data?.userID"></codx-img>
+                <codx-img
+                  [width]="35"
+                  #image
+                  [objectId]="data?.userID"
+                ></codx-img>
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <ng-container *ngFor="let role of listRoles">
                     <ng-container *ngIf="role.value == data.roleType">
-                      <span><img src="/assets/themes/tm/default/img/{{ role.icon }}" alt="" /></span>
+                      <span
+                        ><img
+                          src="/assets/themes/tm/default/img/{{ role.icon }}"
+                          alt=""
+                      /></span>
                     </ng-container>
                   </ng-container>
                 </div>
-              </div>          
+              </div>
             </div>
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex align-items-center">
                 <span class="text-dark fw-bold">{{ data?.userName }}</span>
-                <span *ngIf="data?.isTimeOut" class="icon-notifications expired icon-16 ms-1" [ngbPopover]="popOverDue"
-                  #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
-                  placement="top right"></span>
+                <span
+                  *ngIf="data?.isTimeOut"
+                  class="icon-notifications expired icon-16 ms-1"
+                  [ngbPopover]="popOverDue"
+                  #popOver="ngbPopover"
+                  [openDelay]="500"
+                  (mouseenter)="popOver.open()"
+                  (mouseleave)="popOver.close()"
+                  placement="top right"
+                ></span>
               </div>
               <div class="text-gray-700 text-italic fs-7">
                 {{ data?.positionName }}
               </div>
               <div class="text-gray-600">
-                <span *ngIf="data.category == '1' || data.category == '3'">
-                  {{ data?.taskName }}</span>
+                <span
+                  *ngIf="data.category == '1' || data.category == '3'"
+                  [innerHTML]="
+                    data?.memo
+                      ? sanitizer.bypassSecurityTrustHtml(data?.memo)
+                      : data?.taskName
+                  "
+                >
+                </span>
                 <span *ngIf="data.category == '2'"> {{ data?.memo2 }}</span>
               </div>
             </div>
@@ -57,18 +95,30 @@
         </div>
         <div class="d-flex align-items-center ms-7" (click)="clickTemp($event)">
           <span class="me-4">
-            <codx-assign-temp [objectID]="data.taskID" [formModel]="formModel"></codx-assign-temp>
+            <codx-assign-temp
+              [objectID]="data.taskID"
+              [formModel]="formModel"
+            ></codx-assign-temp>
           </span>
           <span class="me-4">
             <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
           </span>
           <span class="me-4">
-            <codx-attachment-temp [objectID]="data.recID" [formModel]="formModel"></codx-attachment-temp>
+            <codx-attachment-temp
+              [objectID]="data.recID"
+              [formModel]="formModel"
+            ></codx-attachment-temp>
           </span>
 
           <div class="w-125px d-flex justify-content-end">
-            <codx-vll [name]="data?.category=='3'?vllStatusAssign:vllStatus" [field]="'Status'" [value]="data?.status"
-              [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+            <codx-vll
+              [name]="data?.category == '3' ? vllStatusAssign : vllStatus"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-md fs-7 ms-2"
+            >
             </codx-vll>
           </div>
           <div class="d-flex flex-column w-50px ms-3">
@@ -76,7 +126,11 @@
               {{ data?.percentage.toFixed(2) }}%
             </div>
             <div class="progress w-100 h-5px">
-              <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
+              <div
+                class="progress-bar progress-bar-done"
+                role="progressbar"
+                [style.width.%]="data?.percentage"
+              ></div>
             </div>
           </div>
         </div>
@@ -86,7 +140,12 @@
 
   <ng-template #popOverDue>
     <span>
-      <codx-label name="lblOverDue" [formName]="'Tasks'" [gridViewName]="'grvTasks'" default="Đã quá hạn!"></codx-label>
+      <codx-label
+        name="lblOverDue"
+        [formName]="'Tasks'"
+        [gridViewName]="'grvTasks'"
+        default="Đã quá hạn!"
+      ></codx-label>
     </span>
   </ng-template>
 </ng-template>
