@@ -1,11 +1,9 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
-  CRUDService,
   DialogRef,
   FormModel,
   NotificationsService,
   ResourceModel,
-  SidebarModel,
   UIComponent,
   Util,
   ViewModel,
@@ -13,7 +11,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
-import { FuncID } from '../../models/enum/enum';
 
 @Component({
   selector: 'approval-room',
@@ -64,8 +61,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   selectBookingItems = [];
   selectBookingAttendees = '';
   queryParams: any;
-  private approvalRule = '0';
-  private autoApproveItem = '0';
+  approvalRule = '0';
   grView: any;
 
   constructor(
@@ -135,7 +131,6 @@ export class ApprovalRoomsComponent extends UIComponent {
       if (res) {
         let dataValue = res.dataValue;
         let json = JSON.parse(dataValue);
-        this.autoApproveItem = json.AutoApproveItem;
       }
     });
 
