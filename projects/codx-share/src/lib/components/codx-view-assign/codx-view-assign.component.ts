@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CacheService, FormModel } from 'codx-core';
 
 @Component({
@@ -18,22 +19,26 @@ import { CacheService, FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
-  listRoles = []
+  listRoles = [];
   vllStatusAssign = 'TM007';
   vllStatus = 'TM004';
   dialog: any;
   isClose = true;
   isShow = false;
-  vllRole = 'TM002'
+  vllRole = 'TM002';
 
-  constructor(private dt: ChangeDetectorRef,private cache :CacheService) {
+  constructor(
+    private dt: ChangeDetectorRef,
+    private cache: CacheService,
+    public sanitizer: DomSanitizer
+  ) {
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     this.dt.detectChanges();
   }
@@ -55,7 +60,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
     //   }
     // }
   }
-  clickTemp(e){
-    e.stopPropagation() ;
+  clickTemp(e) {
+    e.stopPropagation();
   }
 }

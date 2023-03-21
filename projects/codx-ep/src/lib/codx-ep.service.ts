@@ -342,13 +342,13 @@ export class CodxEpService {
     );
   }
 
-  rescheduleBooking(recID: string, startDate: any, endDate: any) {
+  rescheduleBooking(data: any, note: any,) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'RescheduleAsync',
-      [recID, startDate, endDate]
+      [data, note]
     );
   }
 
@@ -559,11 +559,32 @@ export class CodxEpService {
         processID,
         entityName,
         funcID,
-        '<div>' + booking.title + '</div>',
+        '<div>' + booking.title + '</div>'
       ]
     );
   }
-
+  releaseOwner(
+    booking: any,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    owner: string
+  ): Observable<any> {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        booking?.recID,
+        processID,
+        entityName,
+        funcID,
+        '<div>' + booking.title + '</div>',
+        owner,
+      ]
+    );
+  }
   approve(recID: string, status: string, reasonID: string, comment: string) {
     return this.api.execSv(
       'ES',
@@ -614,9 +635,19 @@ export class CodxEpService {
     );
   }
 
-  checkRole(curUser: any, owner: string, isAdmin: boolean) {
+  checkRole(curUser: any, owner: string, isAdmin: boolean,host:string ='' ) {
     return (
       curUser?.userID == owner ||
+      curUser?.systemAdmin ||
+      curUser?.functionAdmin ||
+      curUser?.administrator ||
+      isAdmin == true ||      
+      curUser?.userID == host 
+    );
+  }
+  checkRoleHost(curUser: any, host: string, isAdmin: boolean) {
+    return (
+      curUser?.userID == host ||
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
       curUser?.administrator ||

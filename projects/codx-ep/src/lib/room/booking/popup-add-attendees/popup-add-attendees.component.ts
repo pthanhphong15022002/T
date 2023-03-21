@@ -1,16 +1,20 @@
-
 import {
   CacheService,
   DialogData,
   DialogRef,
   ApiHttpService,
   NotificationsService,
-  CodxFormComponent,
   AuthStore,
 } from 'codx-core';
-import { Component, OnInit, Optional,  ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef,
+} from '@angular/core';
 
-import { FormsModule } from '@angular/forms';
 import { CodxEpService } from '../../../codx-ep.service';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 
@@ -24,7 +28,7 @@ export class PopupAddAttendeesComponent implements OnInit {
 
   dialogRef: any;
   title = '';
-  listRoles=[];
+  listRoles = [];
 
   popover: any;
   idUserSelected: any;
@@ -33,13 +37,13 @@ export class PopupAddAttendeesComponent implements OnInit {
   funcID: any;
   formModel: any;
   headerText: any;
-  oldAttendees=[];
-  newAttendees=[];
+  oldAttendees = [];
+  newAttendees = [];
   isPopupUserCbb: boolean;
   lstUser: any[];
-  attendeesList=[];
-  resources=[];
-  listUserID=[];
+  attendeesList = [];
+  resources = [];
+  listUserID = [];
   user: any;
   curUser: any;
   constructor(
@@ -55,11 +59,11 @@ export class PopupAddAttendeesComponent implements OnInit {
     this.dialogRef = dialog;
     this.data = dialogData.data[0];
     this.formModel = dialogData.data[1];
-    this.dialogRef.formModel=this.formModel;
+    this.dialogRef.formModel = this.formModel;
     this.user = this.authStore.get();
     this.headerText = dialogData.data[2];
     this.cache.valueList('EP009').subscribe((res) => {
-      if (res && res?.datas.length > 0) { 
+      if (res && res?.datas.length > 0) {
         let tmpArr = res.datas;
         tmpArr.forEach((item) => {
           if (item.value != '4') {
@@ -71,67 +75,64 @@ export class PopupAddAttendeesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.codxEpService.getListAttendees(this.data.recID).subscribe((res:any) => {
-      if (res) {
-        res.forEach((people) => {
-          let tempAttender = new BookingAttendees();
-          tempAttender.userID = people.userID;
-          tempAttender.userName = people.userName;
-          tempAttender.status = people.status;
-          tempAttender.roleType = people.roleType;
-          tempAttender.optional = people.optional;
-          this.listRoles.forEach((element) => {
-            if (element.value == tempAttender.roleType) {
-              tempAttender.icon = element.icon;
-              tempAttender.roleName = element.text;
-            }
-          });          
-          this.oldAttendees.push(tempAttender);
-          this.resources.push(tempAttender);
-
-        });
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-
+    this.codxEpService
+      .getListAttendees(this.data.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((people) => {
+            let tempAttender = new BookingAttendees();
+            tempAttender.userID = people.userID;
+            tempAttender.userName = people.userName;
+            tempAttender.status = people.status;
+            tempAttender.roleType = people.roleType;
+            tempAttender.optional = people.optional;
+            this.listRoles.forEach((element) => {
+              if (element.value == tempAttender.roleType) {
+                tempAttender.icon = element.icon;
+                tempAttender.roleName = element.text;
+              }
+            });
+            this.oldAttendees.push(tempAttender);
+            this.resources.push(tempAttender);
+          });
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
- 
-  
 
-  onSave(){
-    this.codxEpService.inviteAttendees(this.data.recID,this.newAttendees).subscribe(res=>{
-      if(res){
-        let listUserID=this.data.bookingAttendees;
-        this.newAttendees.forEach(item=>{        
-          listUserID=listUserID+';'+item.userID;        
-        });
-        this.data.bookingAttendees=listUserID;
-        this.notificationsService.notifyCode('SYS034');
-        this.dialogRef && this.dialogRef.close(this.data);
-      }
-      else{
-        this.dialogRef.close();
-      }
-
-    });
+  onSave() {
+    this.codxEpService
+      .inviteAttendees(this.data.recID, this.newAttendees)
+      .subscribe((res) => {
+        if (res) {
+          let listUserID = this.data.bookingAttendees;
+          this.newAttendees.forEach((item) => {
+            listUserID = listUserID + ';' + item.userID;
+          });
+          this.data.bookingAttendees = listUserID;
+          this.notificationsService.notifyCode('SYS034');
+          this.dialogRef && this.dialogRef.close(this.data);
+        } else {
+          this.dialogRef.close();
+        }
+      });
   }
-  
+
   closePopUpCbb() {
     this.isPopupUserCbb = false;
   }
-  
+
   openUserPopup() {
     this.isPopupUserCbb = true;
   }
   valueCbxUserChange(event) {
-    
     if (event == null) {
       this.isPopupUserCbb = false;
       return;
     }
     if (event?.dataSelected) {
       this.lstUser = [];
-      event.dataSelected.forEach((people) => {        
+      event.dataSelected.forEach((people) => {
         let tempAttender = new BookingAttendees();
         tempAttender.userID = people.UserID;
         tempAttender.userName = people.UserName;
@@ -144,19 +145,19 @@ export class PopupAddAttendeesComponent implements OnInit {
             tempAttender.roleName = element.text;
           }
         });
-        this.lstUser.push(tempAttender);        
+        this.lstUser.push(tempAttender);
       });
-        this.lstUser.forEach(item=>{          
-          let check =true;
-          this.oldAttendees.forEach(old=>{
-            if(item.userID==old.userID){
-              check=false;
-            }
-          })
-          if(check){
-            this.newAttendees.push(item);
+      this.lstUser.forEach((item) => {
+        let check = true;
+        this.oldAttendees.forEach((old) => {
+          if (item.userID == old.userID) {
+            check = false;
           }
         });
+        if (check) {
+          this.newAttendees.push(item);
+        }
+      });
       // this.attendeesList.forEach((item) => {
       //   if (item.userID == this.curUser.userID) {
       //     this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
@@ -167,14 +168,14 @@ export class PopupAddAttendeesComponent implements OnInit {
       // this.changeDetectorReftorRef.detectChanges();
       // let tmpDataCBB='';
       // // this.attendeesList.forEach(item=>{
-      // //   tmpDataCBB=tmpDataCBB+";"+item.userID;        
+      // //   tmpDataCBB=tmpDataCBB+";"+item.userID;
       // // });
       // let roleCheck=0;
       // if(this.curUser.roleType!="1"){
       //   this.attendeesList.forEach(item=>{
       //     if(item.roleType=="1"){
-      //       roleCheck=roleCheck+1;        
-      //     }      
+      //       roleCheck=roleCheck+1;
+      //     }
       //   });
       //   if(roleCheck<1){
       //     this.curUser.roleType='1';
@@ -190,7 +191,7 @@ export class PopupAddAttendeesComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
-  
+
   eventApply(e) {
     var listUserID = '';
     var listDepartmentID = '';
@@ -293,32 +294,30 @@ export class PopupAddAttendeesComponent implements OnInit {
             //   });
             //   this.resources.push(tmpResource);
             // } else {
-              tmpResource.userID = emp?.userID;
-              tmpResource.userName = emp?.userName;
-              tmpResource.positionName = emp?.positionName;
-              tmpResource.roleType = '3';
-              tmpResource.optional = false;
-              this.listRoles.forEach((element) => {
-                if (element.value == tmpResource.roleType) {
-                  tmpResource.icon = element.icon;
-                  tmpResource.roleName = element.text;
-                }
-              });
-              this.resources.push(tmpResource);
-            //}
-            
-          }
-          this.resources.forEach(item=>{
-            let isDuplicate=false;
-            this.oldAttendees.forEach(oItem=>{
-              if(item.userID == oItem.userID){
-                isDuplicate=true;
+            tmpResource.userID = emp?.userID;
+            tmpResource.userName = emp?.userName;
+            tmpResource.positionName = emp?.positionName;
+            tmpResource.roleType = '3';
+            tmpResource.optional = false;
+            this.listRoles.forEach((element) => {
+              if (element.value == tmpResource.roleType) {
+                tmpResource.icon = element.icon;
+                tmpResource.roleName = element.text;
               }
             });
-            if(!isDuplicate){
-
+            this.resources.push(tmpResource);
+            //}
+          }
+          this.resources.forEach((item) => {
+            let isDuplicate = false;
+            this.oldAttendees.forEach((oItem) => {
+              if (item.userID == oItem.userID) {
+                isDuplicate = true;
+              }
+            });
+            if (!isDuplicate) {
               this.newAttendees.push(item);
-            };
+            }
           });
           this.newAttendees = this.filterArray(this.newAttendees);
           this.changeDetectorRef.detectChanges();
@@ -335,7 +334,7 @@ export class PopupAddAttendeesComponent implements OnInit {
       }
     });
   }
-  
+
   showPopover(p, userID) {
     // if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
@@ -343,30 +342,30 @@ export class PopupAddAttendeesComponent implements OnInit {
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
-     if(value=="1"){
-    //   if(this.curUser.roleType=="1"){
-    //     this.curUser.roleType="3";
-    //     this.listRoles.forEach((role) => {
-    //       if (this.curUser.roleType == role.value) {
-    //         this.curUser.icon = role.icon;
-    //       }
-    //     });
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    //   else{
-    //     this.attendeesList.forEach(att=>{
-    //       if(att.roleType == "1"){
-    //         att.roleType="3";
-    //         this.listRoles.forEach((role) => {
-    //           if (att.roleType == role.value) {
-    //             att.icon = role.icon;
-    //           }
-    //         });
-    //         this.changeDetectorRef.detectChanges();     
-    //       }      
-    //     });
-    //   }      
-      }
+    if (value == '1') {
+      //   if(this.curUser.roleType=="1"){
+      //     this.curUser.roleType="3";
+      //     this.listRoles.forEach((role) => {
+      //       if (this.curUser.roleType == role.value) {
+      //         this.curUser.icon = role.icon;
+      //       }
+      //     });
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      //   else{
+      //     this.attendeesList.forEach(att=>{
+      //       if(att.roleType == "1"){
+      //         att.roleType="3";
+      //         this.listRoles.forEach((role) => {
+      //           if (att.roleType == role.value) {
+      //             att.icon = role.icon;
+      //           }
+      //         });
+      //         this.changeDetectorRef.detectChanges();
+      //       }
+      //     });
+      //   }
+    }
 
     // if(idUserSelected==this.curUser.userID){
     //   this.curUser.roleType=value;
@@ -374,10 +373,10 @@ export class PopupAddAttendeesComponent implements OnInit {
     //     if (this.curUser.roleType == role.value) {
     //       this.curUser.icon = role.icon;
     //     }
-    //   });      
+    //   });
     //   this.changechangeDetectorRef.detectChanges();
     // }
-    else{
+    else {
       this.attendeesList.forEach((res) => {
         if (res.userID == idUserSelected) {
           res.roleType = value;
@@ -387,17 +386,16 @@ export class PopupAddAttendeesComponent implements OnInit {
             }
           });
         }
-      });      
+      });
       this.changeDetectorRef.detectChanges();
-    }    
+    }
     this.changeDetectorRef.detectChanges();
     this.popover.close();
-
   }
-  deleteAttender(attID:string){
+  deleteAttender(attID: string) {
     var tempDelete;
-    this.newAttendees.forEach(item=>{
-      if(item.userID== attID){
+    this.newAttendees.forEach((item) => {
+      if (item.userID == attID) {
         tempDelete = item;
       }
     });

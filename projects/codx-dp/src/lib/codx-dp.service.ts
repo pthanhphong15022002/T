@@ -201,6 +201,14 @@ export class CodxDpService {
       data
     );
   }
+  checkExitsInstancesStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'CheckExitsInstancesStep',
+      data
+    );
+  }
   // Instances_Steps_TaskGroups
   addTaskGroups(data) {
     return this.api.exec<any>(

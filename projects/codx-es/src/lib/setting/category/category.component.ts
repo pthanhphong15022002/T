@@ -39,12 +39,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('process', { static: true }) process;
+  @ViewChild('process') process!:TemplateRef<any>;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
-  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
-  @ViewChild('eSign', { static: true }) eSign: TemplateRef<any>;
-  @ViewChild('color', { static: true }) color: TemplateRef<any>;
-  @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
+  @ViewChild('icon') icon!: TemplateRef<any>;
+  @ViewChild('eSign') eSign!: TemplateRef<any>;
+  @ViewChild('color') color!: TemplateRef<any>;
+  @ViewChild('memo') memo!: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
@@ -126,19 +126,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnsGrid = [
-            {
-              field: '',
-              headerText: '',
-              width: 30,
-              template: this.itemAction,
-              textAlign: 'center',
-            },
+            // {
+            //   field: '',
+            //   headerText: '',
+            //   width: 30,
+            //   template: this.itemAction,
+            //   textAlign: 'center',
+            // },
             {
               field: 'categoryID',
               headerText: gv
                 ? gv['CategoryID'].headerText || 'categoryID'
                 : 'categoryID',
-              template: '',
+              //template: '',
               width: 100,
             },
             {
@@ -146,7 +146,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               headerText: gv
                 ? gv['CategoryName'].headerText || 'CategoryName'
                 : 'CategoryName',
-              template: '',
+              //template: '',
               width: 180,
             },
             // {
@@ -164,19 +164,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             {
               field: 'memo',
               headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
-              template: this.memo,
+              template : this.memo,
               width: 180,
             },
             {
               field: 'eSign',
               headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
-              template: this.eSign,
+              template : this.eSign,
               width: 80,
             },
             {
               field: 'processID',
               headerText: 'Quy trình duyệt',
-              template: this.process,
+              template : this.process,
               width: 220,
             },
           ];
@@ -196,6 +196,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               active: true,
               model: {
                 resources: this.columnsGrid,
+                hideMoreFunc:true
               },
             },
           ];

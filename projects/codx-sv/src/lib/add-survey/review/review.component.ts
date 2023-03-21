@@ -37,6 +37,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
   itemSessionFirst: any;
   user: any;
   empty = '';
+  lstQuestionTemp: any;
+  lstQuestion: any;
+
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -90,8 +93,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
     });
   }
 
-  lstQuestionTemp: any;
-  lstQuestion: any;
+
   loadData() {
     this.questions = null;
     this.api
@@ -103,6 +105,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           this.questions = this.getHierarchy(res[0], res[1]);
           if (this.questions) {
             this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
+            this.lstQuestion = this.lstQuestionTemp;
             this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
             this.itemSessionFirst = JSON.parse(
               JSON.stringify(this.questions[0])

@@ -237,7 +237,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     if (this.checkDownloadRight()) {   
       this.fileService.downloadFile(id).subscribe(async res => {
         if (res) {                   
-          let blob = await fetch(res).then(r => r.blob());                
+          let blob = await fetch(environment.urlUpload+ "/" + res).then(r => r.blob());                
           let url = window.URL.createObjectURL(blob);
           var link = document.createElement("a");
           link.setAttribute("href", url);

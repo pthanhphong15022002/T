@@ -22,6 +22,8 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+  
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -52,6 +54,8 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+ 
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -82,6 +86,8 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+   
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -112,6 +118,7 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+    
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }

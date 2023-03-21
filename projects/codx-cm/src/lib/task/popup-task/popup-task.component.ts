@@ -56,9 +56,10 @@ export class PopupTaskComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.frmModel = dt?.data?.frmModel;
+    this.frmModel = this.dialog?.formModel;
     this.title = dt?.data?.typeTask?.text;
     this.typeTask = dt?.data?.typeTask?.value;
+
     console.log(this.typeTask);
     
     // this.status = dt?.data[0];
