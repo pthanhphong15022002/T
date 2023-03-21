@@ -373,7 +373,7 @@ export class CodxTasksComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        showFilter: false,
+        showFilter: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -1732,36 +1732,36 @@ export class CodxTasksComponent
         this.viewTask(e?.data);
         break;
       case 'pined-filter':
-        var index = this.view.views.findIndex((x) => x.active == true);
-        if (index != 1) {
-          let type = this.view.views[index].type;
-          if (type == 7 || type == 8) {
-            // calender + schedule
-            this.view.currentView['schedule'].dataService.filter.filters = [
-              this.view.currentView['schedule'].dataService.filter.filters[0],
-            ];
-            if (Array.isArray(e.data) && e?.data?.length > 0) {
-              this.view.currentView['schedule'].applyFilter(e.data);
-            } else {            
-              this.view.currentView['schedule'].refresh();
-            }
+        // var index = this.view.views.findIndex((x) => x.active == true);
+        // if (index != 1) {
+        //   let type = this.view.views[index].type;
+        //   if (type == 7 || type == 8) {
+        //     // calender + schedule
+        //     this.view.currentView['schedule'].dataService.filter.filters = [
+        //       this.view.currentView['schedule'].dataService.filter.filters[0],
+        //     ];
+        //     if (Array.isArray(e.data) && e?.data?.length > 0) {
+        //       this.view.currentView['schedule'].applyFilter(e.data);
+        //     } else {
+        //       this.view.currentView['schedule'].refresh();
+        //     }
 
-            //if (Array.isArray(e.data)) {
-            //   e.data.forEach((filter: any) => {
-            //     if (
-            //       !this.view.currentView['schedule'].dataService.filter.filters
-            //     ) {
-            //       this.view.currentView['schedule'].dataService.filter.filters =
-            //         [];
-            //     }
-            //     this.view.currentView[
-            //       'schedule'
-            //     ].dataService.filter.filters[0].filters.push(filter);
-            //   });
-            //   this.view.currentView['schedule'].refresh();
-            //  }
-          }
-        }
+        //     //if (Array.isArray(e.data)) {
+        //     //   e.data.forEach((filter: any) => {
+        //     //     if (
+        //     //       !this.view.currentView['schedule'].dataService.filter.filters
+        //     //     ) {
+        //     //       this.view.currentView['schedule'].dataService.filter.filters =
+        //     //         [];
+        //     //     }
+        //     //     this.view.currentView[
+        //     //       'schedule'
+        //     //     ].dataService.filter.filters[0].filters.push(filter);
+        //     //   });
+        //     //   this.view.currentView['schedule'].refresh();
+        //     //  }
+        //   }
+        // }
         break;
     }
   }

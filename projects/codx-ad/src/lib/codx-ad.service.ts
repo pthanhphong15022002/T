@@ -219,15 +219,26 @@ export class CodxAdService {
     );
   }
 
-  getListValidOrderForModules(lstmoduleID) {
+  getListValidOrderForModules(lstmoduleID, quantity: number = 1) {
     return this.api.execSv(
       'Tenant',
       'ERM.Business.Tenant',
       'TenantModulesBusiness',
       'GetListValidRecIDAsync',
-      [lstmoduleID]
+      [lstmoduleID, quantity]
     );
   }
+
+  checkExistedUserRoles(lstMemberID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'CheckExistedUserRolesAsync',
+      [lstMemberID]
+    );
+  }
+
   addUserRole(itemUser, lstURoles) {
     return this.api.execSv(
       'SYS',
