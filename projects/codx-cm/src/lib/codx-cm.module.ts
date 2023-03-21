@@ -33,6 +33,7 @@ import { PopupAddCrmcontactsComponent } from './crmcontacts/popup-add-crmcontact
 import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
 import { CrmPartnersComponent } from './crm-partners/crm-partners.component';
 import { CrmPartnersDetailComponent } from './crm-partners/crm-partners-detail/crm-partners-detail.component';
+import { PopupAddCrmPartnerComponent } from './crm-partners/popup-add-crm-partner/popup-add-crm-partner.component';
 const routes: Routes = [
   {
     path: '',
@@ -74,6 +75,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewListCrmComponent,
     CrmPartnersComponent,
     CrmPartnersDetailComponent,
+    PopupAddCrmPartnerComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
