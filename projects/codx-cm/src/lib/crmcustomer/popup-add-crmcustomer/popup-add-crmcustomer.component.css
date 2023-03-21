@@ -21,3 +21,12 @@
   height: 100%;
   object-fit: cover;
 }
+
+.body_detail {
+  border: 1px solid #ececec;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+.footer_content {
+  padding: 15px 15px 2px 15px;
+}
