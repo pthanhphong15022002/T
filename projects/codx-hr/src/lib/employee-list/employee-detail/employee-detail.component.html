@@ -6681,3 +6681,41 @@
 </ng-template>
 
 <!-- #endregion -->
+
+
+<ng-template
+  #tmpTemp
+>
+  <div class="" *ngIf="ViewAllEContractFlag">
+    <div class="d-flex align-items-center mb-3 mt-5">
+      <span class="icon-i-filter-right icon-20 me-2"></span>
+      <div class="d-flex align-items-center me-3">
+        <codx-label
+          default="Chi tiết"
+          class="fw-bold text-uppercase fs-5 text-gray-600"
+        >
+        </codx-label>
+        <span class="text-gray-500 mx-2"> | </span>
+        <span class="text-gray-500">({{ eContractRowCount }})</span>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <codx-gridview
+        *ngIf="eContractColumnGrid && eContractFormModel"
+        #eContractGridview
+        [formModel]="eContractFormModel"
+        [columnsGrid]="eContractColumnGrid"
+        [service]="'HR'"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        [predicates]="'EmployeeID=@0'"
+        [dataValues]="employeeID"
+        [pageSize]="numPageSizeGridView"
+        [rowHeight]="30"
+        height="auto"
+      ></codx-gridview>
+    </div>
+  </div>
+</ng-template>

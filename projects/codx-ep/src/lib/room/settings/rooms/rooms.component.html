@@ -86,7 +86,7 @@
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
-  <div class="d-flex justify-content-center">
+  <div class="d-flex justify-content-start">
     <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold" [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
@@ -95,7 +95,7 @@
 </ng-template>
 
 <ng-template #preparatorCol let-data>
-  <div class="d-flex  justify-content-center">
+  <div class="d-flex  justify-content-start">
     <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>

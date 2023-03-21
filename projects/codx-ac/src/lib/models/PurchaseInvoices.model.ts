@@ -31,7 +31,7 @@ export class PurchaseInvoices {
   invoiceForm: any;
   invoiceName: any;
   invoiceNo: any;
-  invoiceSeriNo: any;
+  invoiceSeri: any;
   invoiceTaxCode: any;
   invoiceType: any;
   journalNo: any;
