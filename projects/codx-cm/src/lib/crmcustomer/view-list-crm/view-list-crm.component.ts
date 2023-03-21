@@ -9,6 +9,7 @@ export class ViewListCrmComponent implements OnInit {
   @Input() dataSelected: any
   @Input() formModel: any;
   @Input() vllPriority = '';
+  @Input() funcID = 'CM0101';
   constructor() { }
 
   ngOnInit(): void {
