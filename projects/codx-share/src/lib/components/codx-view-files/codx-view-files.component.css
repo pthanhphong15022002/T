@@ -55,3 +55,25 @@
     background-size: cover;
     position: relative;
 }
+/* css template format grid */
+.grid-medias{
+    width: 100%;
+    height: auto;
+}
+.grid-medias-item{
+    height: 100px;
+    margin: 2px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.grid-medias-item_video{
+    width: 100%;
+    height: 100%;
+}
+.grid-documents{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
