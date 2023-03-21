@@ -1,5 +1,5 @@
 <div class="pt-3 px-5 rounded-2" *ngIf="dataSelected">
-  <div *ngIf="funcID == 'CM0101'">
+  <div *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
     <ng-container [ngTemplateOutlet]="customers"></ng-container>
   </div>
   <div *ngIf="funcID == 'CM0102'">
@@ -61,10 +61,17 @@
         </span>
       </div>
       <div class="col-4 d-flex justify-content-end">
-        <span class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
-        <span class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
-        <span class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
-        <span class="icon-shopping_bag icon-18 text-gray-700 me-2">0</span>
+        <div *ngIf="funcID == 'CM0101'">
+          <span class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
+          <span class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
+          <span class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
+          <span class="icon-shopping_bag icon-18 text-gray-700 me-2">0</span>
+        </div>
+        <div *ngIf="funcID == 'CM0103'">
+          <span class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
+          <span class="icon-shopping_cart icon-18 text-gray-700 me-2">0</span>
+
+        </div>
         <div class="w-10px min-w-10px">
           <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, dataSelected)" [isBookMark]="false"
             [dataItem]="dataSelected" type="hover">
