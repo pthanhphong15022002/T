@@ -1791,8 +1791,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var count = this.fileUploadList.length;
     //this.getFolderPath();
     //console.log(files);
-   
     for (var i = 0; i < files.length; i++) {
+      if (
+        files[i].size >= this.maxFileSizeUpload &&
+        this.maxFileSizeUpload != 0
+      ) {
+        this.notificationsService.notifyCode(
+          'DM057',
+          0,
+          files[i].name,
+          this.maxFileSizeUploadMB
+        );
+        break;
+      }
       let index = this.fileUploadList.findIndex(
         (d) => d.fileName.toString() === files[i].name.toString()
       ); //find index in your array
