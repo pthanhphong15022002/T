@@ -142,7 +142,7 @@ export class RoomsComponent extends UIComponent {
               field: 'equipments',
               template: this.equipmentsCol,
               // headerTextAlign: 'Center',
-              // textAlign: 'Center',
+              textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
