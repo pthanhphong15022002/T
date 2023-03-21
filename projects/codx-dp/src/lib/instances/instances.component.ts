@@ -117,6 +117,7 @@ export class InstancesComponent
   stepSuccess: any;
   stepFail: any;
   viewType = 'd';
+  autoName:string = '';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -139,6 +140,7 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
+    this.autoName = this.dataProccess.autoName;
     this.stepSuccess = this.dataProccess.steps.filter(
       (x) => x.isSuccessStep
     )[0];
@@ -364,6 +366,7 @@ export class InstancesComponent
         (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
+        this.autoName,
       ],
       option
     );
@@ -385,7 +388,6 @@ export class InstancesComponent
   }
 
   edit(data, titleAction) {
-    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -426,6 +428,7 @@ export class InstancesComponent
                     (this.sumDaySteps = this.getSumDurationDayOfSteps(
                       this.listStepsCbx
                     )),
+                    this.autoName,
                   ],
                   option
                 );

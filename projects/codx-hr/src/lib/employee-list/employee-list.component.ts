@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { CrudAction } from '@syncfusion/ej2-angular-diagrams';
 import { triggerFocus } from '@syncfusion/ej2-angular-inputs';
 import {
   ApiHttpService,
@@ -115,21 +116,11 @@ export class EmployeeListComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
-        },
-      },
-      {
-        id: '1',
-        type: ViewType.card,
-        active: false,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-          resources: this.cardTemp,
         },
       },
     ];
@@ -187,7 +178,7 @@ export class EmployeeListComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        console.log(e);
+        this.view.dataService.addNew(e.event).subscribe();
         this.detectorRef.detectChanges();
       });
     });

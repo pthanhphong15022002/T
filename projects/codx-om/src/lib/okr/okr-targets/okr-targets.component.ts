@@ -826,4 +826,9 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
+  clicka(evt:any){
+    debugger
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
 }

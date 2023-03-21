@@ -121,9 +121,10 @@
                         <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
                             <emoji-mart 
                                 [showSingleCategory]="true" 
-                                [showPreview]="false" 
+                                [showPreview]="emojiPreview" 
                                 [set]="emojiMode" 
-                                [perLine]="7"
+                                [maxFrequentRows]="emojiMaxFrequentRows"
+                                [perLine]="emojiPerLine"
                                 (emojiSelect)="addEmoji($event)">
                             </emoji-mart>
                         </div>
