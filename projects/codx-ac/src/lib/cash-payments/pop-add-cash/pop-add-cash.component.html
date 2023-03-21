@@ -19,7 +19,7 @@
           [Group]="form.formGroup"
           field="status"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
+          (valueChange)="changeType($event)"
         >
         </codx-input>
       </div>
@@ -47,7 +47,7 @@
       </e-tabitems>
     </ejs-tab>
     <br />
-    <ejs-tab>
+    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event)">
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
@@ -61,6 +61,21 @@
           </ng-template>
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+        <!-- Test tab -->
+        <e-tabitem [disabled]="true" aria-hidden="true">
+          <ng-template #headerText>
+            <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <div class="icon-format_list_numbered icon-20"></div>
+              </div>
+              <div class="fw-bold fs-5">Tổng hợp</div>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div [style.height]="'300px'"></div>
+            aabbccddeeffgghhiijjnnmmooppqqttuuyywwzz
           </ng-template>
         </e-tabitem>
       </e-tabitems>

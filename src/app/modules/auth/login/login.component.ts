@@ -441,8 +441,14 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.router.navigate([`${this.returnUrl}`]);
           else if (environment.saas == 1) {
             if (!data.tenant) this.router.navigate(['/tenants']);
-            else this.router.navigate([`${data.tenant}`]);
-          } else this.router.navigate([`${data.tenant}`]);
+            else
+              this.router.navigate([
+                `${this.returnUrl ? this.returnUrl : data.tenant}`,
+              ]);
+          } else
+            this.router.navigate([
+              `${this.returnUrl ? this.returnUrl : data.tenant}`,
+            ]);
         }
       } else {
         // this.alerttext = data.error;
@@ -450,7 +456,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.notificationsService.notify(data.error);
         // alert(data.error);
       }
-      // this.router.navigate([this.returnUrl]);
+      this.router.navigate([this.returnUrl]);
     }
   }
   //#endregion
