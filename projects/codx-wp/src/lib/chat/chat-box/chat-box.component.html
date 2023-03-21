@@ -85,9 +85,9 @@
                 </div>  
             </ng-container>
         </div>
-        <div class="chat-box-footer">
+        <div class="chat-box-footer border-top bg-body">
             <div class="footer-emoji" ngbDropdown>
-                <span class="icon-tag_faces icon-16" ngbDropdownToggle></span>
+                <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
                     <emoji-mart 
                         [set]="emojiMode" 
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="footer-attachments">
-                <span class="icon-photo icon-16" (click)="clickUploadFile()"></span>
+                <span class="icon-photo icon-20" (click)="clickUploadFile()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATM 
