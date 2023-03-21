@@ -103,6 +103,14 @@ export class CrmCustomerComponent
         },
       },
     ];
+
+    // bắt sự kiện tại đây chứ k dc bắt trên viewChanged nha cu, sự kiện viewChange dc emit khi view đã đc change, k đúng với case này.
+    this.router.params.subscribe((param:any) => {
+      if(param.funcID){
+        this.funcID = param.funcID;
+        this.afterLoad();
+      }
+    })
   }
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
@@ -335,19 +343,8 @@ export class CrmCustomerComponent
           ];
           var i = this.views.findIndex((x) => x.type == 11);
           if (i != -1) {
-            let active = this.views[i].active;
-            this.views.splice(i, 1);
-            this.views.push({
-              type: ViewType.grid,
-              sameData: true,
-              active: active,
-              model: {
-                resources: this.columnGrids,
-                hideMoreFunc: true,
-              },
-            });
+            this.views[i].model.resources = this.columnGrids;
           }
-          this.views = this.views.slice();
           this.detectorRef.detectChanges();
         });
     } else {
@@ -419,19 +416,8 @@ export class CrmCustomerComponent
           ];
           var iGrid = this.views.findIndex((x) => x.type == 11);
           if (iGrid != -1) {
-            let active = this.views[iGrid].active;
-            this.views.splice(iGrid, 1);
-            this.views.push({
-              type: ViewType.grid,
-              sameData: true,
-              active: active,
-              model: {
-                resources: this.columnGrids,
-                hideMoreFunc: true,
-              },
-            });
+            this.views[iGrid].model.resources = this.columnGrids;
           }
-          this.views = this.views.slice();
           this.detectorRef.detectChanges();
         });
     }

@@ -121,7 +121,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   range: any;
   optionalData;
   saveAndApprove = false;
-  userInfo;
   user;
   saveCheck = false;
   listUserID = [];
@@ -146,7 +145,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.oData = dialogData?.data[0];
+    this.data = { ...dialogData?.data[0]};
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
@@ -154,10 +153,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.userInfo = authStore.get();
     this.user = this.authStore.get();
 
-    this.data = { ...this.oData };
     if (this.isAdd) {
       if (this.optionalData != null) {
         this.data.bookingOn = this.optionalData.startDate;
@@ -1537,7 +1534,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.memmo,
         60,
         null,
-        this.userInfo.userName,
+        this.user.userName,
         'Dang Test',
         true,
         this.data.onlineUrl,
