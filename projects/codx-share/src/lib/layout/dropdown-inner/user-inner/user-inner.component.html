@@ -19,7 +19,7 @@
     </codx-img>
   </button>
   <div ngbDropdownMenu class="w-250px">
-    <ng-container *ngIf="user$ | async as _user">
+    <ng-container *ngIf="formModel && user$ | async as _user">
       <div class="menu-item">
         <div class="menu-content d-flex align-items-center px-3">
           <codx-img

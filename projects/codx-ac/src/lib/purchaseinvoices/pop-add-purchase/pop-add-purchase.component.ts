@@ -52,6 +52,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   VATType: any;
   objectName: any;
   detailActive = 1;
+  countDetail = 0;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
@@ -153,19 +154,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseinvoices);
   }
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        //this.deleteRow(data);
-        break;
-      case 'SYS03':
-        //this.editRow(data);
-        break;
-      case 'SYS04':
-        //this.copyRow(data);
-        break;
-    }
-  }
   valueChange(e: any) {
     if (e.field.toLowerCase() === 'voucherdate' && e.data)
       this.purchaseinvoices[e.field] = e.data;
@@ -199,16 +187,43 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   valueChangeVAT(e: any) {
     this.vatinvoices[e.field] = e.data;
   }
+  valueChangeVATLine(e: any) {
+    this.vatinvoices[e.field] = e.data;
+    this.purchaseinvoices[e.field] = e.data;
+  }
   gridCreated(e) {
     let hBody, hTab, hNote;
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
-    this.gridHeight = hBody - (hTab + hNote + 200); //40 là header của tab
+    this.gridHeight = hBody - (hTab + hNote + 100); //40 là header của tab
   }
-  cellChanged(e: any) {
-    
+  cellChangedPurchase(e: any) {}
+  cellChangedInvoice(e: any) {
+    if (e.field == 'vatid' && e.data.vatid != null) {
+      e.data.isTaxDetail = true;
+      this.loadInvoiceInfo();
+    }
+    if (e.data?.isAddNew == null) {
+      this.api
+        .exec('AC', 'VATInvoicesBusiness', 'CheckExistVATInvoice', [
+          e.data.recID,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            e.data.isAddNew = res;
+          }
+        });
+    }
+  }
+  loadInvoiceInfo() {
+    this.countDetail = 0;
+    this.gridInvoices.dataSource.forEach((element) => {
+      if (element.vatid != null) {
+        this.countDetail++;
+      }
+    });
   }
   addRow() {
     if (this.detailActive == 1) {
@@ -235,6 +250,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.gridInvoices.addRow(res, idx);
           }
         });
+    }
+  }
+  deleteRow(data){
+    if (this.detailActive == 1) {
+      this.gridPurchase.deleteRow(data);
+    }else{
+      if (data.vatid != null) {
+        this.countDetail --;
+      }
+      this.gridInvoices.deleteRow(data)
     }
   }
   checkValidate() {
@@ -274,7 +299,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         ])
         .subscribe((res: any) => {});
     } else {
-      //this.objectvatinvoices = this.gridInvoices.dataSource;
+      this.objectvatinvoices = this.gridInvoices.dataSource;
+      this.api
+        .exec('AC', 'VATInvoicesBusiness', 'AddVATInvoiceAsync', [
+          this.vatinvoices,
+          this.objectvatinvoices
+        ])
+        .subscribe((res: any) => {});
     }
   }
   onSave() {

@@ -22,6 +22,10 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+    else {
+      this.caches.set(keyRoot, new Map<string, any>());
+    }
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -52,6 +56,10 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+    else {
+      this.caches.set(keyRoot, new Map<string, any>());
+    }
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -82,6 +90,10 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+    else {
+      this.caches.set(keyRoot, new Map<string, any>());
+    }
+
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }
@@ -112,6 +124,10 @@ export class CodxOdService {
         return c.get(key);
       }
     }
+    else {
+      this.caches.set(keyRoot, new Map<string, any>());
+    }
+    
     if (this.cachedObservables.has(key)) {
       this.cachedObservables.get(key)
     }

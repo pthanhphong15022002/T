@@ -1,18 +1,16 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
-  CRUDService,
   DialogRef,
   FormModel,
   NotificationsService,
   ResourceModel,
-  SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
-import { FuncID } from '../../models/enum/enum';
 
 @Component({
   selector: 'approval-room',
@@ -63,8 +61,8 @@ export class ApprovalRoomsComponent extends UIComponent {
   selectBookingItems = [];
   selectBookingAttendees = '';
   queryParams: any;
-  private approvalRule = '0';
-  private autoApproveItem = '0';
+  approvalRule = '0';
+  grView: any;
 
   constructor(
     private injector: Injector,
@@ -82,6 +80,13 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -121,28 +126,11 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    
-    this.codxEpService.getListResource('1').subscribe((res: any) => {
-      if (res) {
-        this.listRoom = [];
-        this.listRoom = res;
-      }
-    });
-
-    this.codxEpService
-      .getListReason('EP_BookingRooms')
-      .subscribe((res: any) => {
-        if (res) {
-          this.listReason = [];
-          this.listReason = res;
-        }
-      });
 
     this.codxEpService.getEPStationerySetting('1').subscribe((res: any) => {
       if (res) {
         let dataValue = res.dataValue;
         let json = JSON.parse(dataValue);
-        this.autoApproveItem = json.AutoApproveItem;
       }
     });
 
@@ -197,44 +185,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
 
   click(event) {}
-  getResourceName(resourceID: any) {
-    this.tempRoomName = '';
-    this.listRoom.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempRoomName = r.resourceName;
-      }
-    });
-    return this.tempRoomName;
-  }
-  getReasonName(reasonID: any) {
-    this.tempReasonName = '';
-    this.listReason.forEach((r) => {
-      if (r.reasonID == reasonID) {
-        this.tempReasonName = r.description;
-      }
-    });
-    return this.tempReasonName;
-  }
-  getMoreInfo(recID: any) {
-    this.selectBookingItems = [];
-    this.selectBookingAttendees = '';
 
-    this.codxEpService.getListItems(recID).subscribe((item: any) => {
-      if (item) {
-        this.selectBookingItems = item;
-      }
-    });
-    this.codxEpService.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          this.selectBookingAttendees =
-            this.selectBookingAttendees + element.userID + ';';
-        });
-        this.selectBookingAttendees;
-      }
-    });
-  }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -294,14 +245,14 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
   undo(data: any) {
     this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
-        if (res != null) {          
-          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-          data.approveStatus = '3';    
-          this.view.dataService.update(data).subscribe();
-        } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+        data.approveStatus = '3';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
   }
   approve(data: any) {
     this.codxEpService
@@ -313,9 +264,8 @@ export class ApprovalRoomsComponent extends UIComponent {
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          
-            this.notificationsService.notifyCode('SYS034'); //đã duyệt
-            data.approveStatus = '5';
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          data.approveStatus = '5';
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -331,9 +281,9 @@ export class ApprovalRoomsComponent extends UIComponent {
         ''
       )
       .subscribe((res: any) => {
-        if (res?.msgCodeError == null && res?.rowCount >= 0) {          
-            this.notificationsService.notifyCode('SYS034'); //đã duyệt
-            data.approveStatus = '4';
+        if (res?.msgCodeError == null && res?.rowCount >= 0) {
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          data.approveStatus = '4';
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -349,10 +299,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  
-  updateStatus(data: any) {
-    this.view.dataService.update(data).subscribe();
-  }
+
   closeAddForm(event) {}
 
   changeItemDetail(event) {

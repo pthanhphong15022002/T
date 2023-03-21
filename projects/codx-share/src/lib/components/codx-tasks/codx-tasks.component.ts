@@ -210,7 +210,7 @@ export class CodxTasksComponent
     this.requestTree.idField = 'taskID';
 
     this.afterLoad();
-    this.getParams();
+    //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
@@ -426,6 +426,7 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
+    //this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1736,12 +1737,12 @@ export class CodxTasksComponent
           let type = this.view.views[index].type;
           if (type == 7 || type == 8) {
             // calender + schedule
+            this.view.currentView['schedule'].dataService.filter.filters = [
+              this.view.currentView['schedule'].dataService.filter.filters[0],
+            ];
             if (Array.isArray(e.data) && e?.data?.length > 0) {
               this.view.currentView['schedule'].applyFilter(e.data);
-            } else {
-              this.view.currentView['schedule'].dataService.filter.filters = [
-                this.view.currentView['schedule'].dataService.filter.filters[0],
-              ];
+            } else {            
               this.view.currentView['schedule'].refresh();
             }
 
@@ -1896,9 +1897,10 @@ export class CodxTasksComponent
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach((ele) => {
-            this.dayoff = res;
-          });
+          this.dayoff = res;
+        //  res.forEach((ele) => {
+         //   this.dayoff = res;
+         // });
         }
       });
   }

@@ -30,6 +30,7 @@ import { InformationComponent } from './crmcustomer/crmcustomer-detail/informati
 import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
 import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
 import { PopupAddCrmcontactsComponent } from './crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
+import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
 import { CrmPartnersComponent } from './crm-partners/crm-partners.component';
 import { CrmPartnersDetailComponent } from './crm-partners/crm-partners-detail/crm-partners-detail.component';
 const routes: Routes = [
@@ -70,6 +71,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddCrmcustomerComponent,
     PopupAddressComponent,
     PopupAddCrmcontactsComponent,
+    ViewListCrmComponent,
     CrmPartnersComponent,
     CrmPartnersDetailComponent,
   ],

@@ -73,6 +73,7 @@
   </ng-container>
 </ng-template>
 
+
 <ng-template #footer let-data>
   <div class="d-flex align-items-top mt-2">
     <span class="icon-email icon-16 me-2"> </span>
@@ -241,18 +242,10 @@
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
         <span
-        *ngIf="data.status==50; else newEmp"
-        class="badge badge-success badge-sm badge-inline"
+        [ngClass]="data.status == 50 ? 'badge badge-success badge-sm badge-inline' : 'badge badge-secondary badge-sm badge-inline' "
         [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
        >
        </span>
-        <ng-template #newEmp>
-          <span
-          class="badge badge-secondary badge-sm badge-inline"
-          [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
-         >
-         </span>
-        </ng-template>
       </div>
 
       <div class="align-items-center fs-7 mt-1">

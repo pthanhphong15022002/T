@@ -10,13 +10,11 @@ import {
 import {
   ButtonModel,
   CacheService,
-  CodxGridviewComponent,
   DialogRef,
   FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -36,7 +34,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('linkCol') linkCol: TemplateRef<any>;
-  
+
   @ViewChild('itemAction') itemAction: TemplateRef<any>;
   @ViewChild('noteCol') noteCol: TemplateRef<any>;
 
@@ -124,9 +122,9 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             {
               field: '',
               headerText: '',
-              width: 30,
+              width: 40,
               template: this.itemAction,
-              textAlign: 'center',
+              textAlign: 'Center',
             },
             {
               field: 'resourceName',
@@ -139,7 +137,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: '15%',
               field: 'companyID',
               template: this.locationCol,
-
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -174,6 +171,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc: true,
               },
             },
           ];
@@ -281,7 +279,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => { });
+                this.view.dataService.update(x.event).subscribe((res) => {});
               }
             });
           });
@@ -312,7 +310,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => { });
+                this.view.dataService.update(x.event).subscribe((res) => {});
               }
             });
           });

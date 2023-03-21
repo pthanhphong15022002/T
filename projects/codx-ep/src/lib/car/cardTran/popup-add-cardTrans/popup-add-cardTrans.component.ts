@@ -82,7 +82,7 @@ export class PopupAddCardTransComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.funcID == 'EPT22') {
+    if (this.funcID == 'EP7T12') {
       this.data.transType = '1';
     } else {
       this.data.transType = '2';
