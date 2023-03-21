@@ -25,10 +25,10 @@ export class CompanyInforComponent extends UIComponent {
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
     private sanitizer: DomSanitizer
-    ) 
-    {
-      super(injector);
-    }
+  ) 
+  {
+    super(injector);
+  }
   ngAfterViewInit(): void {
     this.views= [{
       id: "1",

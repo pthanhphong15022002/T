@@ -22,6 +22,8 @@ export class CodxViewFilesComponent implements OnInit {
   @Input() formModel:FormModel = null;
   @Input() allowEdit: boolean = false;
   @Input() medias: number = 0;
+  @Input() format:string = "";
+
   @Output() fileClicked = new EventEmitter();
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   user: any = null;
@@ -149,7 +151,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // remove files
   removeFiles(file: any) {
-    debugger
     this.deleteFiles
     let _key = file.hasOwnProperty('recID') ? "recID" : "fileName";
     let _index = this.files.findIndex(x => x[_key] === file.recID);
@@ -200,7 +201,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   saveFiles(files:any[]):Observable<boolean>{
     if(!this.objectID && !files){
-      this.notifySvr.notify("Thêm file không thành công!");
       return of(false);
     }
     else{

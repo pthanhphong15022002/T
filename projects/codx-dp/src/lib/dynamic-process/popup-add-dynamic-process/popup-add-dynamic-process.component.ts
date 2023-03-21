@@ -135,6 +135,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   totalInstance: number = 0;
   titleRadioYes: string = '';
   titleRadioNo: string = '';
+  noteSuccess: string = '';
+  noteFail: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -1778,6 +1780,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         let id = data['recID'] || '';
+        let stepNo = data['stepNo'];
         let index = this.stepList.findIndex((step) => step.recID == id);
         if (index >= 0) {
           this.stepList.splice(index, 1);
@@ -1793,6 +1796,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.listStepAdd.splice(index,1);
             }else{
               this.listStepDelete.push(id);
+              let listIDEdit = this.stepList?.filter(step => step.stepNo >= stepNo)?.map(stepFind => {
+                return stepFind.recID
+              });
+              if(listIDEdit?.length > 0){
+                listIDEdit.forEach(id => {
+                  let check = this.listStepAdd?.some(step => step == id);
+                  if(!check){
+                    this.listStepAdd.push(id);
+                  }
+                })
+              }
             }
           }
         }
@@ -2997,6 +3011,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.iconReasonFail = item;
           }else if(item.value === 'R'){
             var reasonValue = item;
+          }
+          else if (parseInt(item.value) % 2 === 0) {
+            this.noteSuccess = item.text;
+          }
+          else if (parseInt(item.value) % 2 !== 0) {
+            this.noteFail = item.text;
           }
         }
 

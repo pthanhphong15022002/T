@@ -50,13 +50,16 @@ export class PopupAddPostComponent implements OnInit {
   }
   copyFormat:string = "clean";
   // emoji  
-  emojiMode = 'apple';
-  // end emoji
+  emojiMode: 'native' | 'apple' |'facebook' | 'google' | 'twitter' = 'facebook';
+  emojiPreview:boolean = false;
+  emojiPerLine:number = 7;
+  emojiMaxFrequentRows:number = 4;
+
   // popup
   showCBB:boolean = false;
   width:number = 720;
   height:number = window.innerHeight;
-  // end popup
+
   
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   @ViewChild("codxFile") codxFile:ImageGridComponent;
@@ -112,6 +115,7 @@ export class PopupAddPostComponent implements OnInit {
           this.data.refType ="WP_Comments";
         }
       }
+      this.getSettingForm();
     }
     
   }
@@ -467,7 +471,7 @@ export class PopupAddPostComponent implements OnInit {
       ["WPParameters"])
       .subscribe((res:any) => {
         if(res){
-          let _param = JSON.stringify(res);
+          let _param = JSON.parse(res);
           if(_param["CopyFormat"] === "1")
             this.copyFormat = 'keepFormat';
         }
