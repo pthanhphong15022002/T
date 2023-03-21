@@ -200,8 +200,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   actionStep = '';
   isSaveStep = false;
   processNameBefore = '';
-  strDay = ' ngày ';
-  strHour = ' giờ ';
+  strDay = '';
+  strHour = '';
   headerStep = {
     add: ['Thêm Giai Đoạn', 'headerAddStep'],
     edit: ['Sửa giai đoạn', 'headerEditStep'],
@@ -262,6 +262,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
     this.getValueYesNo();
+    this.getValueDayHour();
     if (this.action === 'copy') {
       this.instanceNoSetting = this.process.instanceNoSetting;
       this.listClickedCoppy = dt.data.conditionCopy;
@@ -3075,6 +3076,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.titleRadioYes = item.text;
           } else if (item.value === 'N') {
             this.titleRadioNo = item.text;
+          }
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  getValueDayHour(){
+    this.cache.valueList('DP040').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'D') {
+            this.strDay = ' '+item.text+' ';
+          } else if (item.value === 'H') {
+            this.strHour = ' '+item.text+' ';
           }
         }
         this.changeDetectorRef.detectChanges();
