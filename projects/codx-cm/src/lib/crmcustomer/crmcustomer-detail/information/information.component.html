@@ -1,4 +1,4 @@
-<ng-container *ngIf="funcID == 'CM0101 || CM0103';then customers
+<ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0103';then customers
   else contacts">
 </ng-container>
 
@@ -38,7 +38,7 @@
             facebook.com/phuctdn
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Nguồn khách hàng:"></codx-label>
           </div>
@@ -46,7 +46,15 @@
             Khách hàng tự tìm đến
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Là khách hàng từ:"></codx-label>
+          </div>
+          <div class="col-6">
+            30/02/2023
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="funcID == 'CM0103'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Là khách hàng từ:"></codx-label>
           </div>
@@ -58,7 +66,7 @@
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Quy mô nhân sự:"></codx-label>
           </div>
@@ -90,7 +98,7 @@
             Dịch vụ cung ứng phần mềm
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Doanh thu:"></codx-label>
           </div>
@@ -98,7 +106,7 @@
             3,000,000,000
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
           </div>
@@ -106,7 +114,7 @@
             0123456789
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
             <codx-label class="text-gray-300" fieldName="" default="Mở tại ngân hàng:"></codx-label>
           </div>

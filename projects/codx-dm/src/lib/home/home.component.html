@@ -148,10 +148,27 @@
             </th>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
               <th scope="col" class="w-200px">
-                <div class="fw-bold text-dark">Người yêu cầu</div>
+                <div class="fw-bold text-dark">Đối tượng được cấp quyền</div>
               </th>
               <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Quyền được cấp</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Người yêu cầu</div>
+              </th>
+              
+              <th scope="col" class="w-200px">
                 <div class="fw-bold text-dark">Ngày yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Lý do yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Mô tả lý do yêu cầu</div>
+              </th>
+              
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Tình trạng</div>
               </th>
             </ng-container>
           
@@ -190,10 +207,25 @@
             </td>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
               <td class="w-200px">
-                {{getPUser(item)}}
+                {{item.approverName}}
+              </td>
+              <td class="w-200px">
+                {{viewPermiss(item.permissions)}}
+              </td>
+              <td class="w-200px">
+                {{item.requestPermissionName}}
               </td>
               <td class="w-200px">
                 {{getDUser(item) | date: "dd/MM/yyyy"}}
+              </td>
+              <td class="w-200px">
+                {{item.permissions[0].title}}
+              </td>
+              <td class="w-200px" >
+                {{extractContent(item.permissions[0].description)}}
+              </td>
+              <td class="w-200px">
+                {{item.approvalStatus == "3" ? "Chờ xét duyệt" : "Đã duyệt" }}
               </td>
             </ng-container>
             <td class="w-200px">
