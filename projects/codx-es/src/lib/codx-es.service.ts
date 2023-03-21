@@ -669,7 +669,19 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(model: GridModels) {
+  // getApprovalSteps(model: GridModels) {
+  //   if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
+  //     return this.api.execSv<any>(
+  //       'es',
+  //       'ERM.Business.ES',
+  //       'ApprovalStepsBusiness',
+  //       'GetListApprovalStepAsync',
+  //       [model]
+  //     );
+  //   } else return EMPTY;
+  // }
+
+  getApprovalSteps(model: DataRequest) {
     if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
       return this.api.execSv<any>(
         'es',

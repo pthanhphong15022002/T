@@ -1,21 +1,25 @@
+import { detach } from '@syncfusion/ej2-base';
 import { CodxEpService } from './../../../codx-ep.service';
 
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef, Injector, ViewChild } from '@angular/core';
 import {
   DialogData,
   DialogRef,
   ApiHttpService,
   NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import moment from 'moment';
 import { APICONSTANT } from '@shared/constant/api-const';
+import { Resource } from '../../../models/resource.model';
 
 @Component({
   selector: 'popup-reschedule-booking',
   templateUrl: './popup-reschedule-booking.component.html',
   styleUrls: ['./popup-reschedule-booking.component.css'],
 })
-export class PopupRescheduleBookingComponent implements OnInit {
+export class PopupRescheduleBookingComponent extends UIComponent implements OnInit {
+  @ViewChild('cusCBB') cusCBB: any;
   bookingOn:any;
   dialogRef: any;
   title = '';
@@ -36,21 +40,24 @@ export class PopupRescheduleBookingComponent implements OnInit {
   endDate: any;
   funcID: any;
   comment = '';
+  showAllResource = false;
   formModel: any;
   headerText: any;
   calendarStartTime: string;
   calendarEndTime: string;
   bookingOnValid: boolean;
+  note: any;
   constructor(
-    private api: ApiHttpService,
+    private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxEpService: CodxEpService,
     @Optional() dialogData?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
     this.dialogRef = dialog;
-    this.data = dialogData.data[0];
+    this.data = {...dialogData.data[0]};
     this.formModel = dialogData.data[1];
     this.dialogRef.formModel=this.formModel;
     this.headerText = dialogData.data[2];
@@ -67,7 +74,8 @@ export class PopupRescheduleBookingComponent implements OnInit {
         ('0' + tmpEnd.getMinutes()).toString().slice(-2);
   }
 
-  ngOnInit(): void {
+  onInit(): void {
+    this.getResourceForCurrentTime();
     this.api
       .callSv(
         'SYS',
@@ -163,7 +171,7 @@ export class PopupRescheduleBookingComponent implements OnInit {
       this.notificationsService.notifyCode('EP002');
       return;
     }
-    this.codxEpService.rescheduleBooking(this.data.recID, this.data.startDate, this.data.endDate).subscribe(res=>{
+    this.codxEpService.rescheduleBooking(this.data, this.note).subscribe(res=>{
       if(res){
         this.notificationsService.notifyCode('SYS034');
         this.dialogRef && this.dialogRef.close(this.data);
@@ -182,14 +190,13 @@ export class PopupRescheduleBookingComponent implements OnInit {
     }
   }
   
-  valueDateChange(event: any) {
-    if (event.data) {
-      this.data.bookingOn = event.data.fromDate;
-      
-      this.changeDetectorRef.detectChanges();
+  
+  valueBookingOnChange(evt:any){}
+  changeNote(evt:any){
+    if(evt){
+      this.note=evt?.data;
     }
   }
-  valueBookingOnChange(evt:any){}
   bookingOnCheck() {
     let selectDate = new Date(this.data.bookingOn);        
     let tmpCrrDate = new Date();
@@ -321,7 +328,103 @@ export class PopupRescheduleBookingComponent implements OnInit {
       }
       this.changeDetectorRef.detectChanges();
     }
+    
+    this.getResourceForCurrentTime();
     return true;
+  }
+
+  cbbResource = [];
+  fields: Object = { text: 'resourceName', value: 'resourceID' };
+  cbbResourceName: string;
+  getResourceForCurrentTime() {
+    if(this.data.startDate && this.data.endDate){
+      this.codxEpService
+      .getAvailableResources(
+        '1',
+        this.data.startDate,
+        this.data.endDate,
+        this.data.recID,
+        this.showAllResource
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.cbbResource = [];
+          Array.from(res).forEach((item: any) => {
+            let tmpRes = new Resource();
+            tmpRes.resourceID = item.resourceID;
+            tmpRes.resourceName = item.resourceName;
+            tmpRes.capacity = item.capacity;
+            tmpRes.equipments = item.equipments;
+            this.cbbResource.push(tmpRes);
+          });
+          let resourceStillAvailable = false;
+          if (this.data.resourceID != null) {
+            this.cbbResource.forEach((item) => {
+              if (item.resourceID == this.data.resourceID) {
+                resourceStillAvailable = true;
+              }
+            });
+            if (!resourceStillAvailable) {
+              this.data.resourceID = null;
+              //this.tmplstDevice = [];
+              this.cusCBB.value = null;
+            } else {
+              this.cbxResourceChange(this.data.resourceID);
+              this.cusCBB.value = this.data.resourceID;
+            }
+          }
+
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+    
+  }
+  cbxResourceChange(evt: any) {
+    if (evt) {
+      this.data.resourceID = evt;
+      let selectResource = this.cbbResource.filter((obj) => {
+        return obj.resourceID == evt;
+      });
+      if (selectResource) {
+        //this.roomCapacity = selectResource[0].capacity;
+        //this.tmplstDevice = [];
+        // if (
+        //   selectResource[0].equipments &&
+        //   selectResource[0].equipments.length > 0
+        // ) {
+        //   selectResource[0].equipments.forEach((item) => {
+        //     let tmpDevice = new Device();
+        //     tmpDevice.id = item.equipmentID;
+        //     if (this.tmplstDeviceEdit.length > 0) {
+        //       this.tmplstDeviceEdit.forEach((oldItem) => {
+        //         if (oldItem.id == tmpDevice.id) {
+        //           tmpDevice.isSelected = oldItem.isSelected;
+        //           tmpDevice.createdOn = oldItem.createdOn;
+        //           tmpDevice.createdBy = oldItem.createdBy;
+        //         }
+        //       });
+        //     }
+        //     this.vllDevices.forEach((vlItem) => {
+        //       if (tmpDevice.id == vlItem.value) {
+        //         tmpDevice.text = vlItem.text;
+        //         tmpDevice.icon = vlItem.icon;
+        //       }
+        //     });
+        //     this.tmplstDevice.push(tmpDevice);
+        //   });
+        // }
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  showAllResourceChange(evt: any) {
+    if (evt != null) {
+      this.showAllResource = evt;
+      this.getResourceForCurrentTime();
+      this.detectorRef.detectChanges();
+    }
   }
 
 }

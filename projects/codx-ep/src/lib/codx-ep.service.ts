@@ -342,13 +342,13 @@ export class CodxEpService {
     );
   }
 
-  rescheduleBooking(recID: string, startDate: any, endDate: any) {
+  rescheduleBooking(data: any, note: any,) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'RescheduleAsync',
-      [recID, startDate, endDate]
+      [data, note]
     );
   }
 
@@ -614,9 +614,19 @@ export class CodxEpService {
     );
   }
 
-  checkRole(curUser: any, owner: string, isAdmin: boolean) {
+  checkRole(curUser: any, owner: string, isAdmin: boolean,host:string ='' ) {
     return (
       curUser?.userID == owner ||
+      curUser?.systemAdmin ||
+      curUser?.functionAdmin ||
+      curUser?.administrator ||
+      isAdmin == true ||      
+      curUser?.userID == host 
+    );
+  }
+  checkRoleHost(curUser: any, host: string, isAdmin: boolean) {
+    return (
+      curUser?.userID == host ||
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
       curUser?.administrator ||

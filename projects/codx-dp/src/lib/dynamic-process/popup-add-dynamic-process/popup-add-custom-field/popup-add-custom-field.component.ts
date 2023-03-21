@@ -117,7 +117,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveData() {
-    if (this.field.fieldName == null || this.field.fieldName.trim() == '') {
+    if ((this.field.fieldName == null || this.field.fieldName.trim() == '') && this.grvSetup['FieldName']?.isRequired) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -125,7 +125,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.dataType) {
+    if (!this.field.dataType && this.grvSetup['DataType']?.isRequired) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -146,7 +146,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    if (this.field.note == null || this.field.note.trim() == '') {
+    if ((this.field.note == null || this.field.note.trim() == '')&& this.grvSetup['Note']?.isRequired) {
       this.notiService.notifyCode(
         'SYS009',
         0,

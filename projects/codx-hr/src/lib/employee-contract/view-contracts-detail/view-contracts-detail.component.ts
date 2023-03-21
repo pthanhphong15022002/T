@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -25,15 +26,15 @@ import {
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
-import { CodxEsService, GridModels } from '../../codx-es.service';
-import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
+import { GridModels } from 'projects/codx-es/src/public-api';
+import { CodxEsService,  } from 'projects/codx-es/src/public-api';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 
 
 @Component({
-  selector: 'lib-view-detail',
-  templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'lib-view-contracts-detail',
+  templateUrl: './view-contracts-detail.component.html',
+  styleUrls: ['./view-contracts-detail.component.css']
 })
 export class ViewDetailComponent implements OnInit {
   constructor(
@@ -236,6 +237,8 @@ export class ViewDetailComponent implements OnInit {
           gridModels.gridViewName = fmApprovalStep.gridViewName;
           // gridModels.pageSize = 20;
           gridModels.pageLoading = false;
+          gridModels.srtColumns = "StepNo";
+          gridModels.srtDirections = 'asc';
 
           if (gridModels.dataValue != null) {
             this.esService.getApprovalSteps(gridModels).subscribe((res) => {

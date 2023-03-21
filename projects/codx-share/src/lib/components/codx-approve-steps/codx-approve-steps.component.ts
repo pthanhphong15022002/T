@@ -16,6 +16,7 @@ import {
   ButtonModel,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -129,13 +130,15 @@ export class CodxApproveStepsComponent
 
   initForm() {
     if (this.transId != '') {
-      let gridModels = new GridModels();
+      let gridModels = new DataRequest();
       gridModels.dataValue = this.transId;
       gridModels.predicate = 'TransID=@0';
       gridModels.funcID = this.formModel.funcID;
       gridModels.entityName = this.formModel.entityName;
       gridModels.gridViewName = this.formModel.gridViewName;
-      gridModels.pageSize = 20;
+      gridModels.pageLoading = false;
+      gridModels.srtColumns = "StepNo";
+      gridModels.srtDirections = 'asc';
 
       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
         if (res && res?.length >= 0) {

@@ -12,31 +12,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #header>
-    <div class="d-flex justify-content-between flex-grow-1 mb-3">
-      <div class="d-flex align-items-center">
-        <codx-temp-full
-          [title]="itemDetail?.title"
-          [icoCss]="
-            'icon-14 es-icon-title rounded-circle me-2 ' + itemDetail?.icon
-          "
-          [icoStyle]="setStyles(itemDetail?.color)"
-          [titleCss]="'fs-4'"
-        >
-        </codx-temp-full>
-      </div>
-      <div class="d-flex align-self-center">
-        <codx-vll
-          *ngIf="showApproveStatus"
-          [showText]="true"
-          [showBgColor]="true"
-          [formModel]="formModel"
-          [field]="'ApproveStatus'"
-          [value]="itemDetail?.approveStatus"
-          class="badge badge-light badge-square badge-md fs-7"
-        >
-        </codx-vll>
-      </div>
-    </div>
+    <!-- header------------------------ -->
 
     <div class="d-flex mb-2">
       <codx-temp-full
@@ -45,22 +21,144 @@
         [subTitle]="itemDetail?.ownerPosition ?? ''"
         [imageId]="itemDetail?.owner"
         imageObjType="AD_Users"
-        [imageWidth]="40"
+        [imageWidth]="80"
+        [titleTmp]="titleTmp"
+        
       >
       </codx-temp-full>
     </div>
-    <div class="d-flex align-item-center mb-2">
-      <div class="me-1 icon-apartment icon-16 text-gray-700"></div>
-      <div class="d-flex align-items-center me-5">
+    <!-- ------------------------------------------ -->
+
+    <!-- ------------------------------------------ -->
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="contractNo"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.contractNo }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="signedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.signedDate | fmDT }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="contractTypeID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold"
+        [innerHTML]="itemDetail?.contractTypeID | formatvalue : formModel : 'contractTypeID' | async"
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="limitMonths"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.limitMonths != null ? itemDetail?.limitMonths + ' Tháng': 'Đang cập nhật' }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="contractNo"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.contractNo }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.EffectedDate | fmDT }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
         <codx-label
           fiedName="OrgUnitID"
           [formModel]="formModel"
-          class="fw-bold label-colon"
-        ></codx-label>
-        <span class="text-gray-700">{{ itemDetail?.ownerOrgUnit }}</span>
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold"
+        [innerHTML]="itemDetail?.OrgUnitID | formatvalue : formModel : 'OrgUnitID' | async"
+        >
+        </span>
       </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="PositionID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold"
+        [innerHTML]="itemDetail?.PositionID | formatvalue : formModel : 'PositionID' | async"
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="LocationID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold"
+        [innerHTML]="itemDetail?.LocationID | formatvalue : formModel : 'LocationID' | async"
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="transportType"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold"
+        [innerHTML]="itemDetail?.transportType | formatvalue : formModel : 'transportType' | async"
+        >
+        </span>
+      </div>
+
     </div>
-    <div class="d-flex flex-wrap mt-2">
+
+    <!-- <div class="d-flex flex-wrap mt-2">
       <div class="d-flex align-items-center me-5 mb-1">
         <codx-label
           fiedName="CreatedOn"
@@ -120,7 +218,7 @@
           {{ itemDetail?.refDate | fmDT }}
         </span>
       </div>
-    </div>
+    </div> -->
     <div class="mt-2">
       <ng-container *ngIf="files.length > 0">
         <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
@@ -130,7 +228,8 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab" *ngIf="itemDetailStt">
+    <div>body++++++++++++++++++++++++</div>
+    <div class="tab-horizone h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <li [ngbNavItem]="1">
           <a class="ps-0" ngbNavLink>
@@ -431,5 +530,52 @@
         </a>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #titleTmp>
+  <div class="d-flex flex-column">
+    <div class="justify-content-between text-dark fw-bold mb-3">
+      <span>
+        {{ itemDetail?.emp?.employeeName }}
+      </span>
+    </div>
+    <!-- 1 -->
+    <div class="justify-content-between text-gray-700 mb-3">
+      <span
+        [innerHTML]="
+          itemDetail?.emp?.positionID
+            | formatvalue : view.formModel : 'positionID'
+            | async
+        "
+      ></span>
+      <span>
+        <i class="icon-email"></i>
+        {{
+          itemDetail?.emp?.email != null
+            ? itemDetail?.emp?.email
+            : "Đang cập nhật"
+        }}
+      </span>
+      <span>
+        <i class="icon-phone_android"></i>
+        {{
+          itemDetail?.emp?.mobile != null
+            ? itemDetail?.emp?.mobile
+            : "Đang cập nhật"
+        }}
+      </span>
+    </div>
+    <!-- 2 -->
+    <div class="justify-content-between text-dark">
+      <span
+        [innerHTML]="
+          itemDetail.orgUnitID
+            | formatvalue : view.formModel : 'orgUnitID'
+            | async
+        "
+      ></span>
+    </div>
+
   </div>
 </ng-template>
