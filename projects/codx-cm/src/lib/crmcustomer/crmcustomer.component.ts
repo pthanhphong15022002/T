@@ -141,11 +141,8 @@ export class CrmCustomerComponent
               width: 180,
             },
             {
-              field: '',
-              headerText: '',
               width: 30,
               template: this.itemMoreFunc,
-              textAlign: 'center',
             },
           ];
           this.views.push({
@@ -153,6 +150,7 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
+              hideMoreFunc:true
             },
           });
           this.detectorRef.detectChanges();
@@ -216,12 +214,20 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
+            },
           ];
           this.views.push({
             sameData: true,
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
+              hideMoreFunc:true
             },
           });
           this.detectorRef.detectChanges();
@@ -308,6 +314,13 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
+            },
           ];
           var i = this.views.findIndex((x) => x.type == 11);
           if (i != -1) {
@@ -373,6 +386,13 @@ export class CrmCustomerComponent
                 : 'Ngày tạo',
               template: this.itemCreatedOn,
               width: 180,
+            },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
             },
           ];
           var iGrid = this.views.findIndex((x) => x.type == 11);
