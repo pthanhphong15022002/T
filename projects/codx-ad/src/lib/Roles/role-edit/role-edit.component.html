@@ -81,6 +81,7 @@
       </div>
       <div class="d-flex justify-content-end">
         <div
+          *ngIf="!data.administrator"
           [class]="
             'd-flex align-items-center' +
             (data.roleType == '1' ||

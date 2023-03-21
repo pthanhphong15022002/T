@@ -493,14 +493,12 @@
     </div>
     <div
       *ngIf="item?.transType == 'EP_BookingRooms'"
-      (click)="redirectToFuncID(item)"
+      [ngStyle]="{
+        'background-color': EP_BookingRoomsParam?.ShowBackground,
+        'border-left': '3px ' + EP_BookingRoomsParam?.ShowColor + ' solid'
+      }"
     >
-      <div
-        [ngStyle]="{
-          'background-color': EP_BookingRoomsParam?.ShowBackground,
-          'border-left': '3px ' + EP_BookingRoomsParam?.ShowColor + ' solid'
-        }"
-      >
+      <div (click)="redirectToFuncID(item)">
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
             <span
@@ -510,13 +508,6 @@
           <div class="d-flex flex-column note-option">
             <div class="d-flex flex-column note-option">
               {{ item?.data?.location }}
-              <!-- <ng-container
-                *ngTemplateOutlet="
-                  fieldValue;
-                  context: { data: getFieldValue(item?.memo, item?.data) }
-                "
-              >
-              </ng-container> -->
             </div>
           </div>
           <div class="d-flex flex-column note-option">
@@ -524,17 +515,29 @@
           </div>
         </div>
       </div>
+      <button
+        type="button"
+        (click)="quickInfo(item)"
+        class="w-150px min-w-150px btn btn-sm btn-light-primary"
+        [ngbPopover]="tmpHover"
+        #popoverList="ngbPopover"
+        placement="right bottom"
+        container="body"
+        autoClose="outside"
+        [openDelay]="500"
+      >
+        <codx-label name="lblQuickInfo" default="Xem nhanh"></codx-label>
+      </button>
+      <div></div>
     </div>
     <div
       *ngIf="item?.transType == 'EP_BookingCars'"
-      (click)="redirectToFuncID(item)"
+      [ngStyle]="{
+        'background-color': EP_BookingCarsParam?.ShowBackground,
+        'border-left': '3px ' + EP_BookingCarsParam?.ShowColor + ' solid'
+      }"
     >
-      <div
-        [ngStyle]="{
-          'background-color': EP_BookingCarsParam?.ShowBackground,
-          'border-left': '3px ' + EP_BookingCarsParam?.ShowColor + ' solid'
-        }"
-      >
+      <div (click)="redirectToFuncID(item)">
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
             <span
@@ -612,4 +615,23 @@
     >
     </span>
   </ng-container>
+</ng-template>
+
+<ng-template #tmpHover>
+  <div
+    *ngIf="curHoverItem?.transType == 'EP_BookingCars'"
+    class="EP_BookingCars"
+  >
+    <codx-booking-car-schedule-content
+      [recID]="curHoverItem?.transID"
+    ></codx-booking-car-schedule-content>
+  </div>
+  <div
+    *ngIf="curHoverItem?.transType == 'EP_BookingRooms'"
+    class="EP_BookingRooms"
+  >
+    <codx-booking-room-schedule-content
+      [recID]="curHoverItem?.transID"
+    ></codx-booking-room-schedule-content>
+  </div>
 </ng-template>

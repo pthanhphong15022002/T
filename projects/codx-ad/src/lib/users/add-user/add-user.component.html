@@ -228,7 +228,12 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSave()"
+      [disabled]="this.saveSuccess"
+    >
       <codx-label
         fiedName="Save"
         [formModel]="formModel"
