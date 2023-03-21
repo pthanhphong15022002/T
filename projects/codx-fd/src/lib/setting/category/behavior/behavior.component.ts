@@ -104,6 +104,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
         .gridViewSetup(formModel.formName, formModel.gridViewName)
         .subscribe((res) => {
           if (res) {
+            console.log(res);
             this.columnsGrid = [
               {
                 field: 'parentName',
