@@ -11,7 +11,6 @@ import {
 import { FormGroup } from '@angular/forms';
 
 import {
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -47,10 +46,10 @@ export class PopupAddDriversComponent
   fGroupAddDriver: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
-  grvDriver:any;
+  grvDriver: any;
   CbxName: any;
   isAfterRender = false;
-  returnData:any;
+  returnData: any;
   imgRecID: any;
   constructor(
     private injector: Injector,
@@ -60,43 +59,39 @@ export class PopupAddDriversComponent
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data =  dialogData?.data[0];
-    this.isAdd = dialogData?.data[1];    
-    this.headerText=dialogData?.data[2];
+    this.data = dialogData?.data[0];
+    this.isAdd = dialogData?.data[1];
+    this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    if(this.isAdd){
-      this.imgRecID=null;
-    }
-    else{
-      this.imgRecID=this.data.recID;
+    if (this.isAdd) {
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
     }
   }
 
   onInit(): void {
-    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName)
-    .subscribe(res=>{
-      if(res){
-        this.grvDriver=res;
-        if(this.isAdd){
-          this.data.code=res?.Code?.headerText;
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.grvDriver = res;
+          if (this.isAdd) {
+            this.data.code = res?.Code?.headerText;
+          }
         }
-      }
-    })
+      });
     this.initForm();
-    
   }
 
   ngAfterViewInit(): void {}
 
   initForm() {
     this.codxEpService
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName
-      )
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddDriver = item;        
+        this.fGroupAddDriver = item;
         this.isAfterRender = true;
       });
   }
@@ -104,30 +99,29 @@ export class PopupAddDriversComponent
   valueChange(event: any) {
     if (event?.field != null && event?.field != '') {
       if (event.data instanceof Object) {
-        this.data['field']=event.data.value;
+        this.data['field'] = event.data.value;
       } else {
-        this.data['field']=event.data;
+        this.data['field'] = event.data;
       }
     }
   }
   emailChange(event: any) {
     if (event?.field != null && event?.field != '') {
-      this.data.email=event.data;      
-      this.detectorRef.detectChanges();  
+      this.data.email = event.data;
+      this.detectorRef.detectChanges();
     }
   }
   valueCbxCarChange(event: any) {
-    if (event?.data && event.data != '') {      
+    if (event?.data && event.data != '') {
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach((element) => {
         if (element.ResourceID == event.component.valueSelected) {
-          this.data.code = element.Code; 
-          this.detectorRef.detectChanges();         
+          this.data.code = element.Code;
+          this.detectorRef.detectChanges();
         }
       });
       this.detectorRef.detectChanges();
     }
-    
   }
 
   beforeSave(option: any) {
@@ -142,53 +136,48 @@ export class PopupAddDriversComponent
     if (this.fGroupAddDriver.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddDriver, this.formModel);
       return;
-    }   
-    let index:any
-    if(this.isAdd){
-      index=0;
     }
-    else{
-      index=null;
+    let index: any;
+    if (this.isAdd) {
+      index = 0;
+    } else {
+      index = null;
     }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),index)
+      .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
-        if (res.save || res.update) {          
+        if (res.save || res.update) {
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.returnData?.recID)
-          {
-            if(this.imageUpload?.imageUpload?.item) {
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-              .updateFileDirectReload(this.returnData.recID)
-              .subscribe((result) => {
-                if (result) {                  
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialogRef && this.dialogRef.close(this.returnData);                
-                }
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              });  
-            }          
-            else 
-            {
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                });
+            } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
-          } 
-        }
-        else{ 
-          //Trả lỗi từ backend.         
+          }
+        } else {
+          //Trả lỗi từ backend.
           return;
         }
       });
   }
-  
-  changeCategory(event:any){
-    if(event?.data && event?.data!='1'){
-      this.data.companyID=null;
+
+  changeCategory(event: any) {
+    if (event?.data && event?.data != '1') {
+      this.data.companyID = null;
       this.detectorRef.detectChanges();
     }
   }
