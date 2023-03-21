@@ -75,6 +75,9 @@ export class PopupMoveStageComponent implements OnInit {
   isCheckAll: boolean = false;
   isUseReason:any;
   isStopData: boolean = true;
+  totalRequireCompleted: number = 0;
+  totalRequireCompletedChecked: number = 0;
+  actionCheck:string = '';
 
   readonly oneHundredNumber: number = 100;
   constructor(
@@ -218,6 +221,10 @@ export class PopupMoveStageComponent implements OnInit {
     // } else {
 
     // }
+    if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
+      this.notiService.notifyCode('DP022');
+      return;
+    }
     this.beforeSave();
   }
   beforeSave() {
@@ -306,6 +313,7 @@ export class PopupMoveStageComponent implements OnInit {
       const parentId = child.taskGroupID;
       if (parentId in lookup) {
         lookup[parentId].children.push(child);
+        this.totalRequireCompleted = this.UpdateRequireCompletedCheck(child,this.totalRequireCompleted,true);
       }
     });
 
@@ -315,7 +323,6 @@ export class PopupMoveStageComponent implements OnInit {
         tree.push(parent);
       }
     });
-
     return tree;
   }
 
@@ -323,6 +330,7 @@ export class PopupMoveStageComponent implements OnInit {
     for(let item of children) {
       if(item?.taskGroupID === null || item?.taskGroupID === undefined || item?.taskGroupID === ''){
         parents.push(item);
+        this.totalRequireCompleted = this.UpdateRequireCompletedCheck(item,this.totalRequireCompleted,true);
       }
     }
     return this.buildTree(parents, children);
@@ -351,11 +359,15 @@ export class PopupMoveStageComponent implements OnInit {
         this.isCheckAll = $event.target.checked;
         this.listTaskGroupDone = this.listTaskGroup;
         this.listTaskDone = this.listTask;
+        this.totalRequireCompletedChecked = this.totalRequireCompleted;
+        this.actionCheck = 'custom';
       }
       else {
         this.isCheckAll = $event.target.checked;
         this.listTaskGroupDone = [];
         this.listTaskDone = [];
+        this.totalRequireCompletedChecked = 0;
+        this.actionCheck = '';
       }
     }
     else if ($event && view == 'taskGroup') {
@@ -371,11 +383,13 @@ export class PopupMoveStageComponent implements OnInit {
 
   addItem(list: any, data) {
     list.push(data)
+    this.UpdateRequireCompletedCheck(data,this.totalRequireCompleted,true);
   }
 
   removeItem(list, id) {
     let idx = list.findIndex((x) => x.recID === id);
     if (idx >= 0) list.splice(idx, 1);
+    this.UpdateRequireCompletedCheck(list[idx],this.totalRequireCompleted,false);
   }
   removeItemSuccess(list) {
     let idx = list.findIndex((x) => x.isSuccessStep);
@@ -417,6 +431,18 @@ export class PopupMoveStageComponent implements OnInit {
   removeReasonInSteps(listStepCbx,stepReason){
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
+  }
+
+  UpdateRequireCompletedCheck(item:any,checkValue,isCheck){
+    if(!!item) {
+      if(isCheck && item.requireCompleted) {
+       checkValue++;
+      }
+      else if (!isCheck && item.requireCompleted) {
+       checkValue--;
+      }
+    }
+    return checkValue??0;
   }
 
 }
