@@ -25,7 +25,7 @@
         </codx-label>
       </div>
 
-      <codx-input field="actualEnd" [crrValue]="instancesStepOld.actualEnd" [Group]="form.formGroup" [formModel]="form.formModel"
+      <codx-input field="actualEnd" [crrValue]="instancesStepOld?.actualEnd" [Group]="form.formGroup" [formModel]="form.formModel"
         (valueChange)="valueChange($event)">
       </codx-input>
 
@@ -168,8 +168,6 @@
                           <li >
                             <div class="d-inline-block" style="width: 96%;">
                                 <div class="d-flex justify-content-start">
-                                  <div class="row">
-                                    <div class="col-6">
                                       <div
                                       class="icon-container"
                                       [ngStyle]="getColor(task)"
@@ -182,8 +180,6 @@
                                       <div class="ps-5 mt-1"> {{task.taskName}}
                                         <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
                                       </div>
-                                    </div>
-                                    <div class="col-6">
                                       <div class="ms-auto">
                                         <div class="d-flex justify-content-end">
                                           <div>
@@ -210,8 +206,6 @@
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </div>
                                 </div>
                             </div>
                           </li>
