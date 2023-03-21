@@ -18,9 +18,11 @@
                         [objectType]="'WP_Groups'">
                     </codx-img>
                 </ng-template>
-                <div class="group-avatar_status">
-                    <span class="group-avatar_status-icon"></span>
-                </div>
+                <ng-container *ngIf="group.isOnline">
+                    <div class="group-avatar_status">
+                        <span class="group-avatar_status-icon"></span>
+                    </div>
+                </ng-container>
             </div>
             <div class="group-infor">
                 <div class="group-infor_name">
@@ -73,7 +75,6 @@
                             <codx-view-files 
                                 [objectID]="item.recID" 
                                 [objectType]="'WP_Messages'" 
-                                [medias]="1"
                                 [formModel]="formModel"
                                 [format]="'grid'"
                                 (fileClicked)="clickViewFile($event)">
@@ -148,14 +149,14 @@
                                         [src]="item.source | safe:'resourceUrl'">
                                     </video>
                                 </ng-container>
-                                <ng-template #fileDocument>
+                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.APPLICATION">
                                     <codx-temp-full 
                                         [imageSrc]="item.extension | avtFile" 
                                         imgCss="w-50px h-50px"
                                         [title]="item.fileName" 
-                                        [descLine]="1">
+                                        [descLine]="2">
                                     </codx-temp-full>
-                                </ng-template>
+                                </ng-container>
                             </div>
                         </ng-container>
                     </div>
