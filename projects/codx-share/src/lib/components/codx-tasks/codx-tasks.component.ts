@@ -210,7 +210,7 @@ export class CodxTasksComponent
     this.requestTree.idField = 'taskID';
 
     this.afterLoad();
-    this.getParams();
+    //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
@@ -1897,9 +1897,10 @@ export class CodxTasksComponent
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach((ele) => {
-            this.dayoff = res;
-          });
+          this.dayoff = res;
+        //  res.forEach((ele) => {
+         //   this.dayoff = res;
+         // });
         }
       });
   }
