@@ -227,6 +227,7 @@ export class EditFileComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = "";
   data: any;
+  gridViewSetup: any
   @ViewChild('fileNameCtrl') fileNameCtrl;
   
   /* vlL1473 : any; */
@@ -253,7 +254,9 @@ export class EditFileComponent implements OnInit {
       this.user = this.auth.get();
       this.dialog = dialog;     
       this.id = this.fileEditing.recID;
-      if(this.data[2]) this.isCopyRight = this.data[2];      
+      if(this.data[2]) this.isCopyRight = this.data[2];    
+      
+      if(dialog.formModel) this.formModel = dialog.formModel;
       // this.dmSV.isFileEditing.subscribe(item => {
       //   if (item != undefined && this.fileEditing.recID == item.recID) {
       //     this.fileEditing.permissions = item.permissions;
@@ -266,13 +269,16 @@ export class EditFileComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    if(this.fileEditing.type == null)
-    {
-      this.fileEditing.type = this.fileEditing.extension.replace('.', '');
-    }
     var arrName = this.fileEditing.fileName.split(".");
     if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
+
+    if(this.fileEditing.type == null) this.fileEditing.type = this.fileEditing.extension.replace('.', '');
+
     this.fileEditing.fileName = arrName.join('.');
+
+    this.dmSV.loadGridView(this.formModel?.formName , this.formModel?.gridViewName).subscribe(item=>{
+      if(item) this.gridViewSetup = item;
+    })
 /* if(this.fileEditing.language)
         {
           this.cache.valueList("L1473").subscribe(item=>{
@@ -307,7 +313,7 @@ export class EditFileComponent implements OnInit {
     //   }
     // }
     //Check bản quyền
-    if(this.isCopyRight && this.checkRequired()) return
+    if(this.isCopyRight && this.checkCopyRight()) return
 
     if (this.id !=undefined &&  this.id != "") {
       // update file
@@ -396,6 +402,28 @@ export class EditFileComponent implements OnInit {
 
   }
   
+  checkCopyRight()
+  {
+    if(this.isCopyRight && this.gridViewSetup)
+    {
+      var name = [];
+      if(this.gridViewSetup["Author"].isRequire && !this.fileEditing.author) name.push(this.gridViewSetup["Author"].headerText)
+      if(this.gridViewSetup["Publisher"].isRequire && !this.fileEditing.publisher) name.push(this.gridViewSetup["Publisher"].headerText)
+      if(this.gridViewSetup["PublishYear"].isRequire && !this.fileEditing.publishYear) name.push(this.gridViewSetup["PublishYear"].headerText)
+      if(this.gridViewSetup["CopyRights"].isRequire && !this.fileEditing.copyRights) name.push(this.gridViewSetup["CopyRights"].headerText)
+      if(this.gridViewSetup["PublishDate"].isRequire && !this.fileEditing.publishDate) name.push(this.gridViewSetup["PublishDate"].headerText)
+
+      if(name.length > 0)
+      {
+        var text = name.join(" , ");
+        this.notificationsService.notifyCode('SYS009', 0, text);
+        return true;
+      }
+      return false;
+    }
+    return false
+  }
+
   checkInputFile() {
     return this.fileEditing.fileName === ""  ? true : false;
   } 
@@ -404,21 +432,7 @@ export class EditFileComponent implements OnInit {
 
   }
 
-  checkRequired()
-  {
-    var arr = [];
-    if(!this.fileEditing.author || this.fileEditing.author == "") arr.push(this.titleAuthor);
-    if(!this.fileEditing.publisher || this.fileEditing.publisher == "") arr.push(this.titlePublisher);
-    if(!this.fileEditing.publishYear || this.fileEditing.publishYear == "") arr.push(this.titlePublishyear);
-    if(!this.fileEditing.copyRights || this.fileEditing.copyRights == "") arr.push(this.titleCopyright);
-    if(!this.fileEditing.publishDate || this.fileEditing.publishDate == "") arr.push(this.titlePublishDate);
-    if(arr.length>0) 
-    {
-      this.notificationsService.notifyCode("SYS009",0,arr.join(" ,")); 
-      return true
-    }
-    return false;
-  }
+  
   removeUserRight(index, list: Permission[] = null) {
     if (list == null) {
       if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
@@ -465,7 +479,7 @@ export class EditFileComponent implements OnInit {
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "").closed.subscribe(item => {
-      if (item) {
+      if (item && item?.event) {
         this.fileEditing = item.event;
         this.changeDetectorRef.detectChanges();
       }        
@@ -630,10 +644,8 @@ export class EditFileComponent implements OnInit {
   checkFileName() {
    // const fs = require('fs');
    
-    if (this.fileEditing.fileName === "")
-      return "1";
-    else
-      return "0";
+    if (this.fileEditing && !this.fileEditing.fileName)  return "1";
+    else return "0";
   }
 
   validate(item) {

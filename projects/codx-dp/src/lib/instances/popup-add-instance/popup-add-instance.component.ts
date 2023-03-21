@@ -33,7 +33,7 @@ export class PopupAddInstanceComponent implements OnInit {
   @ViewChild('tabInputInfo') tabInputInfo: TemplateRef<any>;
   @ViewChild('tabOpporGeneralInfo') tabOpporGeneralInfo: TemplateRef<any>;
 
-  title = 'Nhiệm vụ';
+  title = '';
   titleAction: string = '';
 
   gridViewSetup: any;
@@ -90,6 +90,7 @@ export class PopupAddInstanceComponent implements OnInit {
   oldEndDate: Date;
   oldIdInstance: string;
   user: any;
+  autoName: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -109,8 +110,10 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.totalDaySteps = dt?.data[6];
+    this.autoName = dt?.data[9];
     this.user = this.authStore.get();
     if (this.action === 'edit') {
+      this.autoName = dt?.data[7];
       this.owner = this.instance?.owner;
       if (
         this.instance.permissions != null &&
@@ -185,8 +188,13 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    this.title =
-      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
+    if(!!this.autoName){
+      this.title = this.titleAction + ' '+ this.autoName;
+    }
+    else {
+      this.title = this.titleAction + ' ' + e;
+      this.autoName = e;
+    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -254,14 +262,14 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    // if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
-    //   this.notificationsService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
-    //   );
-    //   return;
-    // }
+    if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
     else if (
       this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
     ) {

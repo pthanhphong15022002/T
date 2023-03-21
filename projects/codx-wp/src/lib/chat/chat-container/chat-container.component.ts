@@ -66,32 +66,28 @@ export class ChatContainerComponent implements OnInit {
   handleBoxChat(groupID:any){
     let isOpen = this.lstGroupActive.some(x=>x == groupID);
     let index = this.lstGroupCollapse.findIndex(x => x.id === groupID);
-    if(!isOpen){
-      // check collaspe
-      if(index > -1){
-        this.lstGroupCollapse.splice(index,1);
-      }
-      if(this.lstGroupActive.length == 2){
-        
-        let id = this.lstGroupActive.shift();
-        let ele = document.getElementById(id);
-        // get current instance của element trên DOM
-        let codxBoxChat = window.ng.getComponent(ele);
-        let item = 
-        {
-          id:codxBoxChat.group.groupID,
-          message:codxBoxChat.group.message,
-          objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-          objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-          objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
-        }
-        this.lstGroupCollapse.push(item);
-      }
-      else
-      {
-        this.lstGroupActive.push(groupID);
-      }
+    if(isOpen) return ;
+    // check collaspe
+    if(index > -1)
+    {
+      this.lstGroupCollapse.splice(index,1);
     }
+    if(this.lstGroupActive.length == 2){
+      let id = this.lstGroupActive.shift();
+      let ele = document.getElementById(id);
+      // get current instance của element trên DOM
+      let codxBoxChat = window.ng.getComponent(ele);
+      let item = 
+      {
+        id:codxBoxChat.group.groupID,
+        message:codxBoxChat.group.message,
+        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+      }
+      this.lstGroupCollapse.push(item);
+    }
+    this.lstGroupActive.push(groupID);
     this.dt.detectChanges();
     
   }

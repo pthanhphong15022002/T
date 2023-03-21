@@ -210,7 +210,7 @@ export class CodxTasksComponent
     this.requestTree.idField = 'taskID';
 
     this.afterLoad();
-    this.getParams();
+    //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
@@ -373,7 +373,7 @@ export class CodxTasksComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        showFilter: false,
+        showFilter: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -426,7 +426,7 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
-   // this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
+    //this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1732,36 +1732,36 @@ export class CodxTasksComponent
         this.viewTask(e?.data);
         break;
       case 'pined-filter':
-        var index = this.view.views.findIndex((x) => x.active == true);
-        if (index != 1) {
-          let type = this.view.views[index].type;
-          if (type == 7 || type == 8) {
-            // calender + schedule
-            if (Array.isArray(e.data) && e?.data?.length > 0) {
-              this.view.currentView['schedule'].applyFilter(e.data);
-            } else {
-              this.view.currentView['schedule'].dataService.filter.filters = [
-                this.view.currentView['schedule'].dataService.filter.filters[0],
-              ];
-              this.view.currentView['schedule'].refresh();
-            }
+        // var index = this.view.views.findIndex((x) => x.active == true);
+        // if (index != 1) {
+        //   let type = this.view.views[index].type;
+        //   if (type == 7 || type == 8) {
+        //     // calender + schedule
+        //     this.view.currentView['schedule'].dataService.filter.filters = [
+        //       this.view.currentView['schedule'].dataService.filter.filters[0],
+        //     ];
+        //     if (Array.isArray(e.data) && e?.data?.length > 0) {
+        //       this.view.currentView['schedule'].applyFilter(e.data);
+        //     } else {
+        //       this.view.currentView['schedule'].refresh();
+        //     }
 
-            //if (Array.isArray(e.data)) {
-            //   e.data.forEach((filter: any) => {
-            //     if (
-            //       !this.view.currentView['schedule'].dataService.filter.filters
-            //     ) {
-            //       this.view.currentView['schedule'].dataService.filter.filters =
-            //         [];
-            //     }
-            //     this.view.currentView[
-            //       'schedule'
-            //     ].dataService.filter.filters[0].filters.push(filter);
-            //   });
-            //   this.view.currentView['schedule'].refresh();
-            //  }
-          }
-        }
+        //     //if (Array.isArray(e.data)) {
+        //     //   e.data.forEach((filter: any) => {
+        //     //     if (
+        //     //       !this.view.currentView['schedule'].dataService.filter.filters
+        //     //     ) {
+        //     //       this.view.currentView['schedule'].dataService.filter.filters =
+        //     //         [];
+        //     //     }
+        //     //     this.view.currentView[
+        //     //       'schedule'
+        //     //     ].dataService.filter.filters[0].filters.push(filter);
+        //     //   });
+        //     //   this.view.currentView['schedule'].refresh();
+        //     //  }
+        //   }
+        // }
         break;
     }
   }
@@ -1897,9 +1897,10 @@ export class CodxTasksComponent
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach((ele) => {
-            this.dayoff = res;
-          });
+          this.dayoff = res;
+        //  res.forEach((ele) => {
+         //   this.dayoff = res;
+         // });
         }
       });
   }
