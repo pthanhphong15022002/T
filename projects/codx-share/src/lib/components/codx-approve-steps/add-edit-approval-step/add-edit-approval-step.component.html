@@ -344,7 +344,7 @@
 </ng-template>
 <ng-template #tabQuery>
   <div class="w-100">
-    <codx-query-builder #queryBuilder [isPopup]="false" [isAdvance]="false" (change)="saveFilterChange($event)"></codx-query-builder>
+    <codx-query-builder *ngIf="!this.hideTabQuery" #queryBuilder [isPopup]="false" [isAdvance]="true" (change)="saveFilterChange($event)" [filters]="data.constraints" [funcID]="formModel?.funcID"></codx-query-builder>
   </div>
 </ng-template>
 <ng-template #tabEmail>

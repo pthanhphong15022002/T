@@ -1,25 +1,20 @@
 declare var window: any;
-import { title } from 'process';
 import {
   Component,
   TemplateRef,
   ViewChild,
   Injector,
-  ChangeDetectorRef,
   AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
-  CacheService,
   DataRequest,
-  DialogModel,
   DialogRef,
   ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   CallFuncService,
   ViewType,
   FormModel,
@@ -29,7 +24,6 @@ import {
   Util,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
-import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';

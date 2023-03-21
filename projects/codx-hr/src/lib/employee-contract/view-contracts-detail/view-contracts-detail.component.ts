@@ -16,6 +16,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   NotificationsService,
@@ -228,13 +229,16 @@ export class ViewDetailComponent implements OnInit {
       this.esService.getFormModel('EST04').then((res) => {
         if (res) {
           let fmApprovalStep = res;
-          let gridModels = new GridModels();
+          let gridModels = new DataRequest();
           gridModels.dataValue = this.transID;
           gridModels.predicate = 'TransID=@0';
           gridModels.funcID = fmApprovalStep.funcID;
           gridModels.entityName = fmApprovalStep.entityName;
           gridModels.gridViewName = fmApprovalStep.gridViewName;
-          gridModels.pageSize = 20;
+          // gridModels.pageSize = 20;
+          gridModels.pageLoading = false;
+          gridModels.srtColumns = "StepNo";
+          gridModels.srtDirections = 'asc';
 
           if (gridModels.dataValue != null) {
             this.esService.getApprovalSteps(gridModels).subscribe((res) => {

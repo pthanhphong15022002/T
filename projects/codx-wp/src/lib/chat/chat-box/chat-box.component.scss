@@ -133,7 +133,22 @@ codx-chat-box{
     margin-top: -500px;
     background-color: white;
 }
-
+.footer-upload{
+    width: 200px;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.footer-upload-files{
+    width: 200px;
+    height: 60px;
+    display: flex;
+    overflow-x: scroll;
+}
+.footer-upload-text{
+    width: 200px;
+    border: 0;
+}
 codx-chat-box.active{
 
     .footer-emoji span{
@@ -148,9 +163,16 @@ codx-chat-box.active{
     }
     .footer-button span{
         color: --primary-active;
-
     }
 
 }
 
     
+.codx-message-files{
+    width: 90%;
+}
+.upload-files-item{
+    width: 50px;
+    height: 50px;
+    margin-right: 8px;
+}
