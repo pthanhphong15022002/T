@@ -879,12 +879,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         .getCategoryByEntityName(this.formModel.entityName)
         .subscribe((res: any) => {
           this.codxEpService
-            .releaseOwner(
+            .release(
               this.returnData,
               res?.processID,
               'EP_Bookings',
-              this.formModel.funcID,
-              this.data.owner
+              this.formModel.funcID
             )
             .subscribe((res) => {
               if (res?.msgCodeError == null && res?.rowCount) {
