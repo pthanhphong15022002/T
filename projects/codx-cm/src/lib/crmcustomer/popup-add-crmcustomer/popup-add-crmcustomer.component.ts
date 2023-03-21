@@ -24,6 +24,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   action: any;
   linkAvatar = '';
   funcID= '';
+  contactsPerson: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
