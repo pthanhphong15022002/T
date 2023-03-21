@@ -4,6 +4,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   UrlUtil,
@@ -77,6 +78,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   referedData: any;
   isClickSave = false;
   crrRole: any;
+  accountable: boolean = false;
+
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
@@ -389,59 +392,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-
-          //send mail FE
-          // if (this.param?.ConfirmControl == '1')
-          //   this.tmSv
-          //     .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
-          //     .subscribe();
-          // else
-          //   this.tmSv
-          //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
-          //     .subscribe();
-
-          //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
-          // var taskParent = res[1][0];
-          // var objectType = this.formModel.entityName;
-          // var objectID = this.task.refID;
-          // this.api
-          //   .execSv<any>(
-          //     'SYS',
-          //     'AD',
-          //     'UsersBusiness',
-          //     'LoadUserListByIDAsync',
-          //     JSON.stringify(taskParent.assignTo.split(';'))
-          //   )
-          //   .subscribe((users) => {
-          //     if (users?.length > 0) {
-          //       var dataObj = [];
-          //       users.forEach((user) => {
-          //         dataObj.push({
-          //           objectType: objectType,
-          //           objectID: user.userID,
-          //           objectName: user.userName,
-          //         });
-          //       });
-
-          //       var tmpHistorry = {
-          //         objectType: objectType,
-          //         objectID: objectID,
-          //         actionType: 'T',
-          //         functionID: this.formModel.funcID,
-          //         sendToObjects: dataObj,
-          //       };
-
-          //       this.api
-          //         .execSv<any>(
-          //           'BG',
-          //           'ERM.Business.BG',
-          //           'TrackLogsBusiness',
-          //           'InsertAsync',
-          //           tmpHistorry
-          //         )
-          //         .subscribe();
-          //     }
-          //   });
         } else {
           this.notiService.notifyCode('TM038');
           this.dialog.close();
@@ -514,6 +464,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '';
     if (!e && e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -531,6 +482,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             break;
           case 'RE':
             listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
             break;
         }
       }
@@ -561,7 +515,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListEmployeeID(listEmployeeID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             this.valueSelectUser(res);
           }
         });
@@ -571,19 +525,40 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListPositionsID(listPositionID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             if (!res[1]) this.notiService.notifyCode('TM066');
             assignTo = res[0];
             this.valueSelectUser(assignTo);
           } else this.notiService.notifyCode('TM066');
         });
     }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.tmSv
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
+    }
   }
 
   valueSelectUser(assignTo) {
     if (assignTo != '') {
+      var arrAssign = assignTo.split(';');
+      if (arrAssign?.length > 1 && this.crrRole == 'A' && this.accountable) {
+        this.notiService.notifyCode('TM078');
+        // this.notiService.notify(
+        //   'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+        //   '2'
+        // );
+        return;
+      }
       if (this.task.assignTo && this.task.assignTo != '') {
-        var arrAssign = assignTo.split(';');
         var arrNew = [];
         arrAssign.forEach((e) => {
           if (!this.task.assignTo.includes(e)) {
@@ -594,6 +569,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           assignTo = arrNew.join(';');
           this.getListUser(assignTo);
         }
+        if (arrNew?.length != arrAssign?.length)
+          this.notiService.notifyCode('TM077');
+        // this.notiService.notify(
+        //   'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+        //   '3'
+        // );
       } else {
         this.getListUser(assignTo);
       }
@@ -607,7 +588,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     if (!this.listUser) this.listUser = [];
-
+    var crrRole = this.crrRole;
     this.api
       .execSv<any>(
         'HR',
@@ -626,7 +607,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = this.crrRole ?? 'R';
+            taskResource.roleType = crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
 
@@ -650,6 +631,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
+    if (value == 'A' && this.accountable) {
+      var checkRoleA = this.listTaskResources.some(
+        (x) => x.roleType == 'A' && x.resourceID != idUserSelected
+      );
+      if (checkRoleA) {
+        this.notiService.notifyCode('TM078');
+        return;
+      }
+    }
     this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
     });
@@ -731,16 +721,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
+          if (param.Accountable == '1') this.accountable = true;
+          else this.accountable = false;
+          //var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
           if (this.param?.PlanControl == '1' && this.task.startDate == null) {
             this.task.startDate = new Date();
           }
-          //  else {
-          //   this.task.startDate = null;
-          //   this.task.endDate = null;
-          //   this.task.estimated = 0;
-          // }
         }
       });
   }
@@ -937,7 +925,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   openControlShare(controlShare: any, roleType) {
     this.crrRole = roleType;
     if (controlShare) {
-      this.callFC.openForm(controlShare, '', 450, 600);
+      let option = new DialogModel();
+      option.zIndex = 1010;
+      this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
     }
   }
 }

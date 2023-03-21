@@ -71,18 +71,21 @@
                         class="icon-phone_android icon-16 text-gray-700 me-2"
                       ></span>
                       <div div class="text-gray-700">
-                        <span #phone>{{
-                          taskExtends
-                            ? itemSelected?.phone
-                            : (itemSelected?.phoneCreate
-                              | formatvalue
-                                : formModel
-                                : "phone"
-                                : phone
-                                : "Employees"
-                                : "grvEmployees"
-                              | async)
-                        }}</span>
+                        <span
+                          #phone
+                          [innerHTML]="
+                            taskExtends
+                              ? itemSelected?.phone
+                              : (itemSelected?.phoneCreate
+                                | formatvalue
+                                  : formModel
+                                  : 'phone'
+                                  : phone
+                                  : 'Employees'
+                                  : 'grvEmployees'
+                                | async)
+                          "
+                        ></span>
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
@@ -90,18 +93,21 @@
                         class="icon-email icon-16 text-gray-700 me-2"
                       ></span>
                       <div div class="font-size-sm">
-                        <span #email>{{
-                          taskExtends
-                            ? itemSelected?.email
-                            : (itemSelected?.emailCreate
-                              | formatvalue
-                                : formModel
-                                : "email"
-                                : email
-                                : "Employees"
-                                : "grvEmployees"
-                              | async)
-                        }}</span>
+                        <span
+                          #email
+                          [innerHTML]="
+                            taskExtends
+                              ? itemSelected?.email
+                              : (itemSelected?.emailCreate
+                                | formatvalue
+                                  : formModel
+                                  : 'email'
+                                  : email
+                                  : 'Employees'
+                                  : 'grvEmployees'
+                                | async)
+                          "
+                        ></span>
                       </div>
                     </div>
                   </div>
@@ -181,27 +187,31 @@
                       *ngIf="taskExtends.dueDate"
                       class="text-gray-700"
                       #dueDate
-                      >{{
+                      [innerHTML]="
                         taskExtends.dueDate
                           | formatvalue
                             : formModel
-                            : "dueDate"
+                            : 'dueDate'
                             : dueDate
-                            : "TaskExtends"
-                            : "grvTaskExtends"
+                            : 'TaskExtends'
+                            : 'grvTaskExtends'
                           | async
-                      }}</span
-                    >
-                    <span #dueDate *ngIf="!taskExtends?.dueDate">{{
-                      taskExtends.dueDate
-                        | formatvalue
-                          : formModel
-                          : "dueDate"
-                          : dueDate
-                          : "TaskExtends"
-                          : "grvTaskExtends"
-                        | async
-                    }}</span>
+                      "
+                    ></span>
+                    <span
+                      #dueDate
+                      *ngIf="!taskExtends?.dueDate"
+                      [innerHTML]="
+                        taskExtends.dueDate
+                          | formatvalue
+                            : formModel
+                            : 'dueDate'
+                            : dueDate
+                            : 'TaskExtends'
+                            : 'grvTaskExtends'
+                          | async
+                      "
+                    ></span>
                   </div>
                   <div class="col-6">
                     <span class="text-dark me-1 d-flex">
@@ -218,27 +228,31 @@
                       *ngIf="taskExtends.extendDate"
                       class="text-gray-700"
                       #extendDate
-                      >{{
+                      [innerHTML]="
                         taskExtends.extendDate
                           | formatvalue
                             : formModel
-                            : "extendDate"
+                            : 'extendDate'
                             : extendDate
-                            : "TaskExtends"
-                            : "grvTaskExtends"
+                            : 'TaskExtends'
+                            : 'grvTaskExtends'
                           | async
-                      }}</span
-                    >
-                    <span #extendDate *ngIf="!taskExtends.extendDate">{{
-                      taskExtends.extendDate
-                        | formatvalue
-                          : formModel
-                          : "extendDate"
-                          : extendDate
-                          : "TaskExtends"
-                          : "grvTaskExtends"
-                        | async
-                    }}</span>
+                      "
+                    ></span>
+                    <span
+                      #extendDate
+                      *ngIf="!taskExtends.extendDate"
+                      [innerHTML]="
+                        taskExtends.extendDate
+                          | formatvalue
+                            : formModel
+                            : 'extendDate'
+                            : extendDate
+                            : 'TaskExtends'
+                            : 'grvTaskExtends'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
                 <div class="mt-1">
@@ -252,16 +266,20 @@
                     >
                     </codx-label>
                   </span>
-                  <span class="text-gray-700" #reason>{{
-                    taskExtends.reason
-                      | formatvalue
-                        : formModel
-                        : "reason"
-                        : reason
-                        : "TaskExtends"
-                        : "grvTaskExtends"
-                      | async
-                  }}</span>
+                  <span
+                    class="text-gray-700"
+                    #reason
+                    [innerHTML]="
+                      taskExtends.reason
+                        | formatvalue
+                          : formModel
+                          : 'reason'
+                          : reason
+                          : 'TaskExtends'
+                          : 'grvTaskExtends'
+                        | async
+                    "
+                  ></span>
                 </div>
               </div>
               <div class="d-flex me-6 mb-1">
@@ -279,27 +297,31 @@
                   *ngIf="itemSelected.dueDate"
                   class="text-gray-700"
                   #dueDateCrr
-                  >{{
+                  [innerHTML]="
                     itemSelected.dueDate
                       | formatvalue
                         : formModel
-                        : "dueDate"
+                        : 'dueDate'
                         : dueDateCrr
-                        : "Tasks"
-                        : "grvTasks"
+                        : 'Tasks'
+                        : 'grvTasks'
                       | async
-                  }}</span
-                >
-                <span #dueDate *ngIf="!itemSelected?.dueDate">{{
-                  itemSelected.dueDate
-                    | formatvalue
-                      : formModel
-                      : "dueDate"
-                      : dueDate
-                      : "Tasks"
-                      : "grvTasks"
-                    | async
-                }}</span>
+                  "
+                ></span>
+                <span
+                  #dueDate
+                  *ngIf="!itemSelected?.dueDate"
+                  [innerHTML]="
+                    itemSelected.dueDate
+                      | formatvalue
+                        : formModel
+                        : 'dueDate'
+                        : dueDate
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="d-flex align-items-center text-dark me-6 mb-1">
                 <div class="fw-bold">
@@ -331,18 +353,20 @@
                     itemSelected?.priority | vll : vllPriority : "text" | async
                   }}</span>
                 </div>
-                <div #priority *ngIf="!itemSelected?.priority">
-                  {{
+                <div
+                  #priority
+                  *ngIf="!itemSelected?.priority"
+                  [innerHTML]="
                     itemSelected?.priority
                       | formatvalue
                         : formModel
-                        : "priority"
+                        : 'priority'
                         : priority
-                        : "Tasks"
-                        : "grvTasks"
+                        : 'Tasks'
+                        : 'grvTasks'
                       | async
-                  }}
-                </div>
+                  "
+                ></div>
               </div>
               <div class="d-flex me-6 mb-1">
                 <div class="fw-bold">
@@ -358,18 +382,20 @@
                 <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">
                   {{ itemSelected?.taskGroupName }}
                 </div>
-                <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>
-                  {{
+                <div
+                  *ngIf="!itemSelected?.taskGroupName"
+                  #taskGroupName
+                  [innerHTML]="
                     itemSelected?.taskGroupName
                       | formatvalue
                         : formModel
-                        : "taskGroupName"
+                        : 'taskGroupName'
                         : taskGroupName
-                        : "TaskGroups"
-                        : "grvTaskGroups"
+                        : 'TaskGroups'
+                        : 'grvTaskGroups'
                       | async
-                  }}
-                </div>
+                  "
+                ></div>
               </div>
             </div>
             <div class="float-left mb-1">
@@ -388,27 +414,31 @@
                   *ngIf="itemSelected?.startDate"
                   class="text-gray-700"
                   #startDate
-                  >{{
+                  [innerHTML]="
                     itemSelected?.startDate
                       | formatvalue
                         : formModel
-                        : "startDate"
+                        : 'startDate'
                         : startDate
-                        : "Tasks"
-                        : "grvTasks"
+                        : 'Tasks'
+                        : 'grvTasks'
                       | async
-                  }}</span
-                >
-                <span #startDate *ngIf="!itemSelected?.startDate">{{
-                  itemSelected?.startDate
-                    | formatvalue
-                      : formModel
-                      : "startDate"
-                      : startDate
-                      : "Tasks"
-                      : "grvTasks"
-                    | async
-                }}</span>
+                  "
+                ></span>
+                <span
+                  #startDate
+                  *ngIf="!itemSelected?.startDate"
+                  [innerHTML]="
+                    itemSelected?.startDate
+                      | formatvalue
+                        : formModel
+                        : 'startDate'
+                        : startDate
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="d-flex align-items-center text-dark me-6">
                 <div class="d-flex">
@@ -425,27 +455,32 @@
                   *ngIf="itemSelected?.endDate"
                   class="text-gray-700"
                   #endDate
-                  >{{
+                  [innerHTML]="
                     itemSelected?.endDate
                       | formatvalue
                         : formModel
-                        : "endDate"
+                        : 'endDate'
                         : endDate
-                        : "Tasks"
-                        : "grvTasks"
+                        : 'Tasks'
+                        : 'grvTasks'
                       | async
-                  }}</span
+                  "
                 >
-                <span #endDate *ngIf="!itemSelected?.endDate">{{
-                  itemSelected?.endDate
-                    | formatvalue
-                      : formModel
-                      : "endDate"
-                      : endDate
-                      : "Tasks"
-                      : "grvTasks"
-                    | async
-                }}</span>
+                </span>
+                <span
+                  #endDate
+                  *ngIf="!itemSelected?.endDate"
+                  [innerHTML]="
+                    itemSelected?.endDate
+                      | formatvalue
+                        : formModel
+                        : 'endDate'
+                        : endDate
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="d-flex me-6">
                 <div class="fw-bold">
@@ -462,28 +497,34 @@
                   *ngIf="itemSelected?.completedOn"
                   class="text-gray-700"
                   #completedOnCrr
-                  >{{
+                  [innerHTML]="
                     itemSelected?.completedOn
                       | formatvalue
                         : formModel
-                        : "completedOn"
+                        : 'completedOn'
                         : completedOnCrr
-                        : "Tasks"
-                        : "grvTasks"
+                        : 'Tasks'
+                        : 'grvTasks'
                       | async
-                  }}
+                  "
+                >
                   | {{ itemSelected.completed }} <span>h</span>
                 </span>
-                <span *ngIf="!itemSelected?.completedOn" #completedOn>{{
-                  itemSelected?.completedOn
-                    | formatvalue
-                      : formModel
-                      : "completedOn"
-                      : completedOn
-                      : "Tasks"
-                      : "grvTasks"
-                    | async
-                }}</span>
+                <span
+                  *ngIf="!itemSelected?.completedOn"
+                  #completedOn
+                  [innerHTML]="
+                    itemSelected?.completedOn
+                      | formatvalue
+                        : formModel
+                        : 'completedOn'
+                        : completedOn
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                >
+                </span>
               </div>
             </div>
           </div>
@@ -512,16 +553,20 @@
               <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{
                 itemSelected?.projectName
               }}</span>
-              <span *ngIf="!itemSelected?.projectName" #projectName>{{
-                itemSelected?.projectName
-                  | formatvalue
-                    : formModel
-                    : "projectName"
-                    : projectName
-                    : "Projects"
-                    : "grvProjects"
-                  | async
-              }}</span>
+              <span
+                *ngIf="!itemSelected?.projectName"
+                #projectName
+                [innerHTML]="
+                  itemSelected?.projectName
+                    | formatvalue
+                      : formModel
+                      : 'projectName'
+                      : projectName
+                      : 'Projects'
+                      : 'grvProjects'
+                    | async
+                "
+              ></span>
             </div>
             <div class="d-flex" *ngIf="param?.LocationControl != '0'">
               <span class="fw-bold">
@@ -538,16 +583,20 @@
               <span *ngIf="itemSelected?.location" class="text-gray-700">{{
                 itemSelected?.location
               }}</span>
-              <span #location *ngIf="!itemSelected?.location">{{
-                itemSelected?.location
-                  | formatvalue
-                    : formModel
-                    : "location"
-                    : location
-                    : "Tasks"
-                    : "grvTasks"
-                  | async
-              }}</span>
+              <span
+                #location
+                *ngIf="!itemSelected?.location"
+                [innerHTML]="
+                  itemSelected?.location
+                    | formatvalue
+                      : formModel
+                      : 'location'
+                      : location
+                      : 'Tasks'
+                      : 'grvTasks'
+                    | async
+                "
+              ></span>
             </div>
           </div>
         </div>
@@ -841,16 +890,19 @@
               </codx-vll>
             </div>
             <span>
-              <span #dueDate>{{
-                item.dueDate
-                  | formatvalue
-                    : formModel
-                    : "dueDate"
-                    : dueDate
-                    : "Tasks"
-                    : "grvTasks"
-                  | async
-              }}</span>
+              <span
+                #dueDate
+                [innerHTML]="
+                  item.dueDate
+                    | formatvalue
+                      : formModel
+                      : 'dueDate'
+                      : dueDate
+                      : 'Tasks'
+                      : 'grvTasks'
+                    | async
+                "
+              ></span>
             </span>
           </div>
         </div>

@@ -4,11 +4,9 @@
   [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
-
-
       <div class="row mx-0">
         <div class="col-4 form-group ps-0" *ngIf="grView?.bookingOn?.allowPopup">
-        <!-- <div class="col-4 form-group ps-0">  -->
+          <!-- <div class="col-4 form-group ps-0">  -->
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
           <codx-input field="bookingOn" [crrValue]="data.bookingOn" format="d" type="datetime" class="test-datetime"
@@ -17,7 +15,7 @@
         </div>
 
         <div class="col-3 form-group" *ngIf="grView?.startDate?.allowPopup">
-        <!-- <div class="col-3 form-group"> -->
+          <!-- <div class="col-3 form-group"> -->
           <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName">
           </codx-label>
@@ -25,9 +23,9 @@
             (valueChange)="valueStartTimeChange($event)" [disabled]="false">
           </codx-input>
         </div>
-        
-        <div class="col-3 form-group" *ngIf="grView?.endDate?.allowPopup"> 
-        <!-- <div class="col-3 form-group" > -->
+
+        <div class="col-3 form-group" *ngIf="grView?.endDate?.allowPopup">
+          <!-- <div class="col-3 form-group" > -->
           <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName"></codx-label>
           <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
@@ -41,9 +39,8 @@
           </codx-input>
         </div>
       </div>
-      
-        <div class="form-group" *ngIf="grView?.resourceID?.allowPopup">
-      <!-- <div class="form-group"> -->
+
+      <div class="form-group" *ngIf="grView?.resourceID?.allowPopup">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
@@ -53,26 +50,27 @@
         </codx-input> -->
         <ng-template #showAll>
           <div class="d-flex  bg-light ps-5 py-2 justify-content-start align-items-center">
-            <span role="button"
-            class="me-2" [ngClass]="showAllResource ? 'text-primary icon-check_circle ' : 'text-muted icon-panorama_fish_eye '"
-            (click)="showAllResourceChange(!showAllResource)">
-          </span>
+            <span role="button" class="me-2"
+              [ngClass]="showAllResource ? 'text-primary icon-check_circle ' : 'text-muted icon-panorama_fish_eye '"
+              (click)="showAllResourceChange(!showAllResource)">
+            </span>
             <codx-label default="Hiện tất cả" name="lblShowAll"></codx-label>
           </div>
         </ng-template>
         <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields'
-          [placeholder]="'Phòng họp'" (valueChange)="cbxResourceChange($event)" [footerTemplate]="showAll"></ejs-dropdownlist>
+          [placeholder]="'Phòng họp'" (valueChange)="cbxResourceChange($event)"
+          [footerTemplate]="showAll"></ejs-dropdownlist>
         <div class="row">
           <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
             class="d-flex align-items-center justify-content-between">
             <div class="d-flex flex-wrap">
               <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
                 <li class="d-flex align-items-center me-4 mt-1"
-                  [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 icon-16" [className]="item.icon" [ngClass]="[
-                      item.isSelected ? 'text-primary' : 'text-muted'
+                  [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
+                  <span class="me-1 icon-16" [className]="item?.icon" [ngClass]="[
+                      item?.isSelected ? 'text-primary' : 'text-muted'
                     ]">
-                  </span><span>{{ item.text }}</span>
+                  </span><span>{{ item?.text }}</span>
                 </li>
               </div>
             </div>
@@ -85,6 +83,13 @@
           </div>
         </div>
       </div>
+      <div class="form-group" *ngIf="grView?.agencyName?.allowPopup">
+        <codx-label fiedName="agencyName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
       <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
         <!-- <div class="form-group" > -->
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
@@ -94,20 +99,20 @@
       </div>
 
       <div class="form-group" *ngIf="grView?.title?.allowPopup">
-      <!-- <div class="form-group"> -->
+        <!-- <div class="form-group"> -->
         <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
       </div>
 
       <div class="form-group" *ngIf="grView?.memo?.allowPopup">
-      <!-- <div class="form-group"> -->
+        <!-- <div class="form-group"> -->
         <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px">
         </codx-input>
       </div>
 
       <div class="d-flex flex-column form-group" *ngIf="grView?.online?.allowPopup">
-      <!-- <div class="d-flex flex-column form-group" > -->
+        <!-- <div class="d-flex flex-column form-group" > -->
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
             <codx-input #checkbox type="switch" field="online" [checked]="data?.online" [crrValue]="data?.online"
@@ -127,7 +132,7 @@
         </div>
         <ng-container class="d-flex align-items-center fw-bold" *ngIf="data?.online && data.onlineUrl">
           <button (click)="connectMeetingNow()" class=" bg-transparent border-0 text-start">
-            <span class="text-decoration-underline text-primary fw-bold" >{{ data?.onlineUrl }}</span>
+            <span class="text-decoration-underline text-primary fw-bold">{{ data?.onlineUrl }}</span>
           </button>
         </ng-container>
       </div>
@@ -217,7 +222,8 @@
           <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1"
             hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
             [objectId]="data?.recID" allowMultiFile="1" [idBrowse]="'add'" displayThumb="full"
-            [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)" [referType]="'2'">
+            [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)"
+            [referType]="'2'">
           </codx-attachment>
         </div>
       </div>
@@ -237,17 +243,17 @@
           </codx-input> -->
           <span class="me-2">:</span>
           <span class="fw-bold">{{attendeesNumber}}</span>
-  
+
         </div>
       </div>
-  
+
       <div class="separator my-5"></div>
       <div class="d-flex justify-content-between">
         <div class="d-flex flex-row justify-content-start">
           <ng-container *ngFor="let item of listRoles">
             <div class="d-flex align-items-center justify-content-start me-4">
-              <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
-              <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+              <span inlineSVG="./assets/themes/ep/default/img/{{ item?.icon }}"></span>
+              <div class="fs-8 text-gray-500 ms-1">{{ item?.text }}</div>
             </div>
           </ng-container>
         </div>
@@ -312,10 +318,10 @@
       <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of attendeesList">
 
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-          <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
+          <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users"></codx-img>
+          <div role="button" class="pe-auto" (click)="showPopover(p, item?.userID)">
             <span popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
-              autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item?.icon }}"
               style="bottom: -5px;right:-4px">
 
             </span>
@@ -324,25 +330,25 @@
 
         <div class="d-flex flex-column flex-grow-1">
           <div class="text-dark fw-bold fs-6 fw-bolder">
-            {{ item.userName }}
+            {{ item?.userName }}
           </div>
           <div>
             <span class="text-muted">{{
-              item.roleType | vll: "EP009":"text" | async
+              item?.roleType | vll: "EP009":"text" | async
               }}</span>
           </div>
         </div>
 
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
-          <codx-input type="checkbox" [checked]="item.optional"
-            (valueChange)="attendeesCheckChange($event, item.userID)">
+          <codx-input type="checkbox" [checked]="item?.optional"
+            (valueChange)="attendeesCheckChange($event, item?.userID)">
           </codx-input>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType!='1'">
-          <span class="icon-close" role="button" (click)="deleteAttender(item.userID)"></span>
+        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item?.roleType!='1'">
+          <span class="icon-close" role="button" (click)="deleteAttender(item?.userID)"></span>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType=='1'">
+        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item?.roleType=='1'">
           <span class="icon-close" style="visibility:hidden"></span>
         </div>
 
@@ -351,7 +357,7 @@
 
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img [width]="30" [objectId]="'G'" [objectName]="'G'" objectType="AD_Users"></codx-img>
-          <div role="button" class="pe-auto" >
+          <div role="button" class="pe-auto">
             <span class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ 'EP009_A.svg' }}"
               style="bottom: -5px;right:-4px">
             </span>
@@ -360,7 +366,7 @@
 
         <div class="d-flex flex-column flex-grow-1">
           <codx-label name="lblGuestTitle" default="Guest" class="text-dark fw-bold fs-6 fw-bolder">
-            
+
           </codx-label>
           <div>
             <codx-label class="text-muted" name="lblGuest" default="Khách mời"></codx-label>
@@ -368,11 +374,11 @@
         </div>
 
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
-          <codx-input [cusButton]="true" [min]="0" [max]="50" type="number"  [crrValue]="guestNumber"
+          <codx-input [cusButton]="true" [min]="0" [max]="50" type="number" [crrValue]="guestNumber"
             (valueChange)="guestChange($event)">
           </codx-input>
         </div>
-       
+
 
       </div>
     </ng-container>
@@ -395,28 +401,28 @@
     <div class="d-flex flex-stack mb-4 form-group" *ngFor="let item of lstStationery;let i =index">
       <div class="d-flex align-items-center me-3">
         <div class="pe-4">
-          <codx-img [objectId]="item.objectID" imageType="circle" width="50" objectType="EP_Resources"
-            [objectName]="item.text"></codx-img>
+          <codx-img [objectId]="item?.objectID" imageType="circle" width="50" objectType="EP_Resources"
+            [objectName]="item?.itemName"></codx-img>
         </div>
         <div class="flex-grow-2">
           <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
-            item.text
+            item?.itemName
             }}</span>
           <span class="text-gray-400 d-block fs-6">
             <codx-label name="lblUMID" default="Đơn vị tính"></codx-label>
             :
-            {{ item.umid }}
+            {{ item?.umName }}
           </span>
         </div>
 
       </div>
       <div class="col-4 d-flex justify-content-end">
-        <codx-input type="number" [cusButton]="true" class="test-number min-w-50px" [field]="item.id"
-          [crrValue]="item.quantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
+        <codx-input type="number" [cusButton]="true" class="test-number min-w-50px" [field]="item?.itemID"
+          [crrValue]="item?.quantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
         </codx-input>
 
         <div class="ms-5 d-flex flex-column justify-content-center align-items-center me-5">
-          <span class="icon-close" role="button" (click)="deleteStationery(item.id)"></span>
+          <span class="icon-close" role="button" (click)="deleteStationery(item?.itemID)"></span>
         </div>
       </div>
     </div>
@@ -425,7 +431,7 @@
       <div class="d-flex flex-row text-end align-items-end">
         <button class="btn btn-sm btn-light-primary me-2 py-2 d-flex flex-row align-items-center"
           (click)="openStationeryPopup()" style="height:40px">
-          
+
           <span class="icon-layers icon-18 me-2"></span>
           <codx-label name="lblChooseStationery" class="fw-bold" default="Chọn văn phòng phẩm">
           </codx-label>
@@ -448,16 +454,16 @@
 
   <ng-template #tabMoreInfo>
     <ng-container *ngIf="form && form.formGroup">
-      
+
       <div class="form-group" *ngIf="grView?.category?.allowPopup">
-      <!-- <div class="form-group"> -->
+        <!-- <div class="form-group"> -->
         <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
         <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
       <div class="form-group" *ngIf="grView?.note?.allowPopup">
-      <!-- <div class="form-group"> -->
+        <!-- <div class="form-group"> -->
         <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
         <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
@@ -487,7 +493,7 @@
 
   <ng-template #tabReminder>
     <ng-container *ngIf="form && form.formGroup">
-      
+
       <!-- <div class="form-group col-5" *ngIf="grView?.reminder?.allowPopup"> -->
       <div class="form-group col-5">
         <codx-label [formModel]="form.formModel" fiedName="Reminder"></codx-label>
@@ -546,8 +552,8 @@
       <div class="mb-1" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack p-2 rounded-2 bg-hover">
           <div class="d-flex">
-            <span class="me-1 ps-2" [className]="item.icon"
-              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>
+            <span class="me-1 ps-2" [className]="item?.icon"
+              [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']"></span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="ms-2 text-dark fw-bolder">{{
                 item?.text
@@ -577,11 +583,11 @@
   <div class="d-flex flex-column mb-1 w-150px">
     <ng-container *ngIf="attendeesList && attendeesList.length>0">
       <ng-container *ngFor="let item of listRoles">
-        <div class="d-flex align-items-center btn btn-sm btn-white" (click)="selectRoseType(idUserSelected, item.value)"
-          style="cursor: pointer">
-          <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+        <div class="d-flex align-items-center btn btn-sm btn-white"
+          (click)="selectRoseType(idUserSelected, item?.value)" style="cursor: pointer">
+          <span inlineSVG="./assets/themes/ep/default/img/{{ item?.icon }}"></span>
           <div class="fs-7 ms-2 text-gray-600">
-            {{ item.text }}
+            {{ item?.text }}
           </div>
         </div>
       </ng-container>

@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { load } from '@syncfusion/ej2-angular-charts';
 import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
@@ -15,7 +15,7 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 })
 
 
-export class NewsComponent extends UIComponent {
+export class NewsComponent extends UIComponent implements AfterContentInit {
 
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
@@ -33,6 +33,8 @@ export class NewsComponent extends UIComponent {
   scrolled:boolean = false;
   slides:any[] = [];
   showNavigation:boolean = false;
+  page:number = 0;
+  pageIndex:number = 0;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -48,7 +50,7 @@ export class NewsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('carousel', { static: true }) carousel: NgbCarousel;
+  @ViewChild('carousel') carousel: NgbCarousel;
   constructor
   (
     private injector: Injector
@@ -56,8 +58,12 @@ export class NewsComponent extends UIComponent {
   { 
     super(injector)
   }
+  ngAfterContentInit(): void {
+    
+  }
   onInit(): void {
     this.router.params.subscribe((param) => {
+      debugger
       if (param["category"] !== "home")
         this.category = param["category"];
       else
@@ -121,8 +127,13 @@ export class NewsComponent extends UIComponent {
   }
   // get data async
   loadDataAsync(category: string) {
+    this.page = 0;
+    this.pageIndex = 0;
+    this.posts = [];
+    this.videos = [];
+    this.slides = [];
     this.getPostAsync(category);
-    this.getVideoAsync(category);
+    this.getVideoAsync(category,this.pageIndex);
   }
   // get post
   getPostAsync(category:string){
@@ -154,24 +165,61 @@ export class NewsComponent extends UIComponent {
         [category,pageIndex])
         .subscribe((res:any[]) => {
           let data = res[0];
-          if(this.scrolled)
-          {
-            this.videos = this.videos.concat(data);
-            this.scrolled = false;
+          let total = res[1];
+          if(data.length > 0){
+            this.page = Math.ceil(total/6);
+            if(this.scrolled){
+              this.videos = this.videos.concat(data);
+              this.scrolled = false;
+              this.carousel.pause();
+              let slideIndex = this.slides.length;
+              for (let index = 0; index < data.length; index+=3) {
+                this.slides[slideIndex] = [];
+                this.slides[slideIndex] = data.slice(index,index+3);
+                slideIndex++;
+              }
+              this.scrolled = false;
+              this.detectorRef.detectChanges();
+            }
+            else{
+              this.videos = JSON.parse(JSON.stringify(data));
+              let slide = 0;
+                for (let index = 0; index < this.videos.length; index += 3) {
+                  this.slides[slide] = [];
+                  this.slides[slide] = this.videos.slice(index,index+3);
+                  slide ++;
+                }
+                let ins = setInterval(()=>{
+                  if(this.carousel){
+                    this.showNavigation = this.page >= 1 ? true : false;
+                    this.carousel.pause();
+                    this.detectorRef.detectChanges();
+                    clearInterval(ins);
+                  }
+                },100);
+            }
+            this.pageIndex += 1;
           }
           else
-            this.videos = res[0];
-          let j = 0;
-          for (let index = this.pageIndex; index < this.videos.length; index += 3) {
-            this.slides[j] = [];
-            this.slides[j] = this.videos.slice(index,index+3);
-            j ++;
+          {
+            this.videos = [];
+            this.slides = [];
+            this.page = 0;
+            this.pageIndex = 0;
+            this.showNavigation = false;
+            this.detectorRef.detectChanges();
           }
-          this.showNavigation = j > 1 ? true : false;
-          this.page = res[1];
-          this.pageIndex += 1;
-          this.detectorRef.detectChanges();
         });
+  }
+
+  //
+
+  // slideChange
+  slideChange(slideEvent:NgbSlideEvent){
+    if(slideEvent.source === NgbSlideEventSource.ARROW_RIGHT && this.pageIndex < this.page){
+      this.scrolled = true;
+      this.getVideoAsync(this.category,this.pageIndex);
+    }
   }
   // click view detail news
   clickViewDetail(data: any) {
@@ -189,13 +237,14 @@ export class NewsComponent extends UIComponent {
   }
   // open popup create
   openPopupAdd(newsType: string) {
-    if(this.view && newsType){
+    if(newsType){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
       modal.closed.subscribe((res: any) => {
+        debugger
         if (res?.event) {
           let data = res.event;
           if(data.newsType == this.NEWSTYPE.POST){
@@ -204,9 +253,12 @@ export class NewsComponent extends UIComponent {
               this.posts.splice(-1);
             }
           }
-          else
+          else if(data.newsType == this.NEWSTYPE.VIDEO)
           {
             this.videos.unshift(data);
+            if(this.videos.length > 3){
+              this.showNavigation = true;
+            }
           }
           this.detectorRef.detectChanges();
         }
@@ -224,15 +276,7 @@ export class NewsComponent extends UIComponent {
     } 
   }
 
-  page:number = 0;
-  pageIndex:number = 1;
-  // navigate slider
-  navigate(event:any){
-    if(event.source === "arrowRight" && this.pageIndex < this.page){
-      //load video
-      this.scrolled = true;
-      this.getVideoAsync(this.category,this.pageIndex);
-    }
-  }
+
+  
 
 }

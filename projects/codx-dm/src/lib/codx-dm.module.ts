@@ -59,7 +59,8 @@ export const routes: Routes = [
       // },  
       {
         path: ':funcID',
-        component: HomeComponent
+        component: HomeComponent,
+        data: { noReuse: true },
       },
       {
         path: ':funcID/:fileID',

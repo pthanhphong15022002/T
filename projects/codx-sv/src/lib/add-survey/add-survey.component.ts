@@ -5,6 +5,7 @@ import {
   ViewChild,
   ComponentRef,
   ChangeDetectorRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
@@ -15,6 +16,7 @@ import { SV_Surveys } from '../models/SV_Surveys';
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
   styleUrls: ['./add-survey.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AddSurveyComponent extends UIComponent {
   isModeAdd = true;

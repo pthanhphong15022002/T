@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <codx-label [formModel]="dialog.formModel" name="Receiver" default="Người nhận"></codx-label>
                     <div *ngIf="userReciver" class="mt-2 d-flex align-items-center">
-                        <codx-img [objectId]="userReciver" objectType="AD_Users" [width]="35">
+                        <codx-img [objectId]="userReciver" objectType="AD_Users" referType="image" [width]="35">
                         </codx-img>
                         <span *ngIf="userReciverName" class="ms-3 text-dark font-size-lg">{{userReciverName}}</span>
                     </div>
@@ -124,8 +124,9 @@
                     </ng-template>
                 </div>
             </ng-container>
-            <ng-container
-                *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio">
+            <ng-container *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement 
+                && cardType != CARDTYPE_EMNUM.Share 
+                && cardType != CARDTYPE_EMNUM.Radio">
                 <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
                     <div class="text-dark font-weight-bold">
                         <codx-label [formModel]="dialog.formModel" name="Pattern" default="Chọn thiệp">
@@ -153,8 +154,8 @@
                                                 </ng-container>
                                                 <ng-template #noBackgroundColor>
                                                     <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
-                                                        [isDefaulImg]="true" [imageType]="'square'"
-                                                        objectType="FD_Patterns" [width]="800"
+                                                        [isDefaulImg]="true" [imageType]="'square'" referType="image"
+                                                        objectType="FD_Patterns" [width]="100"
                                                         (click)="selectCard(itemChild)">
                                                     </codx-img>
                                                 </ng-template>
@@ -236,7 +237,7 @@
                 <div class="w-100 h-100" [style.background-color]="patternSelected.backgroundColor"></div>
             </ng-container>
             <ng-template #havePattern>
-                <codx-img [objectId]="patternSelected.recID" [funcId]="funcID" [isDefaulImg]="true"
+                <codx-img [objectId]="patternSelected.recID" [funcId]="funcID" [isDefaulImg]="true" referType="image"
                     [imageType]="'square'" [objectType]="'FD_Patterns'" [width]="800">
                 </codx-img>
             </ng-template>

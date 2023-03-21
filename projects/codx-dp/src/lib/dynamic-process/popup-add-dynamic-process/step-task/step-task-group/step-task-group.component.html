@@ -90,8 +90,14 @@
         </div>
       </div>
     </div>
-
     <codx-user
+      [fiedName]="'roles'"
+      [formModel]="formModel"
+      [default]="'Người phụ trách'"
+      [title]="'Nếu không chọn mặc định là người phụ trách chính của nhiệm vụ'"
+      [fiedNameTitle]="'roleMemo'"
+      [icon]="'icon-person_add_alt_1'"
+      [style]="{'justify-content': ''}"
       [dataSource]="taskGroup?.roles"
       (valueList)="changeUser($event)"
     ></codx-user>

@@ -1,0 +1,346 @@
+<codx-detail-tmp
+  #itemDetailTemplate
+  [formModel]="formModel"
+  [dataItem]="itemDetail"
+  [header]="header"
+  [body]="body"
+  [footer]="hideFooter ? null : footer"
+  [hideMF]="hideMF"
+  (clickMF)="childClickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+>
+  <ng-template #subTitleHeader>
+    <div class="d-flex flex-row">
+      <div class="d-flex align-items-center me-6">
+        <span
+          class="fw-bold"
+          *ngIf="itemDetail?.positionName; else positionPlaceholder"
+        >
+          {{ itemDetail?.positionName }}
+        </span>
+        <ng-template #positionPlaceholder>
+          <codx-label
+            name="lblPosition"
+            default="Vị trí"
+            class="text-gray-600"
+          ></codx-label>
+        </ng-template>
+      </div>
+
+      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+        <i class="icon-email me-1"></i>
+        <span class="fw-bold" *ngIf="itemDetail?.email; else emailPlaceholder">
+          {{ itemDetail?.email }}
+        </span>
+        <ng-template #emailPlaceholder>
+          <codx-label
+            name="lblEmail"
+            default="Email"
+            class="text-gray-600"
+          ></codx-label>
+        </ng-template>
+      </div>
+
+      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+        <i class="icon-phone_android me-1"></i>
+        <span
+          class="fw-bold"
+          *ngIf="itemDetail?.phoneNumber; else phonePlaceholder"
+        >
+          {{ itemDetail?.phoneNumber }}
+        </span>
+        <ng-template #phonePlaceholder>
+          <codx-label
+            name="lblPhone"
+            default="Số điện thoại"
+            class="text-gray-600"
+          ></codx-label>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <div class="d-flex justify-content-between">
+      <h3>{{ itemDetail?.title }}</h3>
+      <codx-vll
+        [name]="'EP022'"
+        [value]="itemDetail?.approveStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
+    </div>
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <codx-temp-full
+        [title]="itemDetail?.requester"
+        [subTitleTmp]="subTitleHeader"
+        [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
+      </codx-temp-full>
+    </div>
+
+    <div class="d-flex">
+      <div class="d-flex text-dark me-6">
+        <!-- <ng-container
+          *ngTemplateOutlet="
+            resourceTypeLabel;
+            context: { $implicit: itemDetail?.resourceType }
+          "
+        >
+        </ng-container> -->
+        <codx-label name="lblCar" default="Xe" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ itemDetail?.resourceName }}
+          <span *ngIf="itemDetail?.code != null">
+            - {{ itemDetail?.code }}</span
+          >
+        </span>
+      </div>
+
+      <div class="d-flex mb-1 text-dark me-6">
+        <codx-label
+          name="lblDriver"
+          default="Tài xế"
+          class="fw-bold"
+        ></codx-label>
+        <span class="me-1 fw-bold">:</span>
+
+        <span *ngIf="itemDetail?.driverName != null">
+          <span class="text-gray-800">
+            {{ itemDetail?.driverName }}
+          </span>
+        </span>
+        <span *ngIf="itemDetail?.driverName == null">
+          <codx-label
+            default="Không có tài xế"
+            class="ms-1 text-gray-800"
+            name="lblUnavailableDriver"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label
+        name="lblTime"
+        default="Thời gian"
+        class="fw-bold"
+      ></codx-label>
+      <span class="me-1 fw-bold">:</span>
+
+      <div *ngIf="!sameDayCheck(itemDetail?.startDate, itemDetail?.endDate)">
+        <div class="ms-1 text-gray-800">
+          <span>
+            {{ itemDetail?.startDate | fmDT : "dmy" : true }}
+          </span>
+          <span> - </span>
+          <span>
+            {{ itemDetail?.endDate | fmDT : "dmy" : true }}
+          </span>
+        </div>
+      </div>
+      <div *ngIf="sameDayCheck(itemDetail?.startDate, itemDetail?.endDate)">
+        <div class="ms-1 text-gray-800">
+          <span>
+            {{ itemDetail?.startDate | fmDT }}
+          </span>
+          <span>
+            {{ showHour(itemDetail?.startDate) }} -
+            {{ showHour(itemDetail?.endDate) }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark">
+        <codx-label
+          name="lblReason"
+          default="Lý do"
+          class="fw-bold"
+        ></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="ms-1 text-gray-800">
+          {{ itemDetail?.reasonID }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark">
+        <codx-label
+          name="lblAttendees"
+          default="Người tham gia"
+          class="fw-bold"
+        ></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            [objectId]="itemDetail?.bookingAttendees"
+            objectType="AD_Users"
+            [numberImages]="6"
+            [width]="30"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mb-2 text-dark me-6">
+      <codx-label
+        name="lblUseCardHeader"
+        default="Sử dụng thẻ"
+        class="fw-bold"
+      ></codx-label>
+      <span class="me-1 fw-bold">:</span>
+
+      <span *ngIf="!!itemDetail?.useCard">
+        <codx-label
+          default="Dùng thẻ"
+          class="badge badge-light-success"
+          name="lblUseCard"
+        ></codx-label>
+      </span>
+      <span *ngIf="!itemDetail?.useCard">
+        <codx-label
+          default="Không dùng thẻ"
+          class="badge badge-light-danger"
+          name="lblNotUseCard"
+        ></codx-label>
+      </span>
+    </div>
+
+    <div class="mb-2">
+      <codx-label
+        default="Nơi công tác"
+        name="lblAddressHeader"
+        class="fw-bold me-4 text-primary"
+      ></codx-label>
+    </div>
+
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label
+        name="lblOrgUnitName"
+        default="Đơn vị"
+        class="fw-bold"
+      ></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ itemDetail?.agencyName }}
+      </span>
+    </div>
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label
+        name="lblAddress"
+        default="Địa chỉ"
+        class="fw-bold"
+      ></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ itemDetail?.address }}
+      </span>
+    </div>
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label
+        name="lblRequester"
+        default="Người liên hệ"
+        class="fw-bold"
+      ></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ itemDetail?.requester }}
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <!-- <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-info me-2"
+                [ngClass]="{ 'text-primary': active === 1 }"
+              ></i
+              ><span>Nội dung</span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngTemplateOutlet="defaulEmpt">
+              <span>{{itemDetail.memo}}</span>
+            </ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-layers me-2"
+                [ngClass]="{ 'text-primary': active === 2 }"
+              ></i
+              ><span>Văn phòng phẩm</span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container
+              *ngIf="
+                data?.tasks && data?.tasks[0] && data?.tasks[0].length > 0;
+                else defaulEmpt
+              "
+            >
+              <codx-treeview
+                #treeAdd
+                id="treeAdd"
+                [data]="data?.tasks[0]"
+                [showSearch]="false"
+                [itemTemplate]="templateorg"
+                [autoLoad]="false"
+                [isOutput]="true"
+                [isLoadChild]="false"
+              ></codx-treeview>
+            </ng-container>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+    </div>-->
+  </ng-template>
+</codx-detail-tmp>
+<ng-template #footer>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [objectID]="itemDetail?.recID"
+    [funcID]="formModel?.funcID"
+    [dataTree]="data?.tasks ? data.tasks : []"
+    [TabControl]="tabControl"
+    [referType]="'2'"
+    [transID]="itemDetail?.recID"
+    [approveStatus]="itemDetail?.approveStatus"
+    [addPermissions]="listFilePermission"
+    [isEdit]="allowUploadFile"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #defaulEmpt>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+

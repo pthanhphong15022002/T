@@ -19,8 +19,17 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { TestComponetComponent } from './test-componet/test-componet.component';
-import { PopupTaskComponent } from './popup-task/popup-task.component';
-import { ContactsComponent } from './crmcontacts/crmcontacts.component';
+import { PopupTaskComponent } from './task/popup-task/popup-task.component';
+import { CrmContactsComponent } from './crmcontacts/crmcontacts.component';
+import { CrmCustomerComponent } from './crmcustomer/crmcustomer.component';
+import { CrmcustomerDetailComponent } from './crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
+import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CodxTaskComponent } from './task/codx-task/codx-task.component';
+import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
+import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
+import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
+import { PopupAddCrmcontactsComponent } from './crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
 
 const routes: Routes = [
   {
@@ -33,7 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'customermanagement/:funcID',
-        component: ContactsComponent,
+        component: CrmCustomerComponent,
       },
       {
         path: '**',
@@ -46,7 +55,21 @@ const routes: Routes = [
 const T_Component: Type<any>[] = [LayoutComponent];
 
 @NgModule({
-  declarations: [CodxCmComponent, LayoutComponent, TestComponetComponent, PopupTaskComponent, ContactsComponent],
+  declarations: [
+    CodxCmComponent,
+    LayoutComponent,
+    TestComponetComponent,
+    PopupTaskComponent,
+    CrmContactsComponent,
+    CrmCustomerComponent,
+    CrmcustomerDetailComponent,
+    CodxShowTaskComponent,
+    InformationComponent,
+    CodxTaskComponent,
+    PopupAddCrmcustomerComponent,
+    PopupAddressComponent,
+    PopupAddCrmcontactsComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -60,6 +83,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxReportModule,
     NgbModule,
     SliderModule,
+    DragDropModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

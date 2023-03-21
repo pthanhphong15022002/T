@@ -32,11 +32,16 @@
                 </div>
                 <div class="group-infor_morefc">
                     <ul class="morefc-list">
+                        <ng-container *ngIf="group.groupType == '2'">
+                            <li class="morefc-list_item">
+                                <span class="icon-group_add"></span>
+                            </li>    
+                        </ng-container>
                         <li class="morefc-list_item">
                             <span class="icon-launch"></span>
                         </li>
                         <li class="morefc-list_item">
-                            <span class="icon-horizontal_rule"></span>
+                            <span class="icon-horizontal_rule" (click)="collapsed()"></span>
                         </li>
                         <li class="morefc-list_item" (click)="closeChatBox()">
                             <span class="icon-close"></span>
@@ -45,7 +50,7 @@
                 </div>   
             </div>
         </div>
-        <div #chatBoxBody class="chat-box-body" (scroll)="scroll()">
+        <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let index = i">
                 <div class="codx-message" [class.justify-content-end]="item.createdBy == user.userID">
                     <span class="message-img" *ngIf="item.createdBy != user.userID">

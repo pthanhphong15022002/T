@@ -28,10 +28,10 @@
     cardCss="card-template border-bottom pt-3 pb-3"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data?.requester"
-    [subTitle]="data?.positionName"
+    [title]="data?.owner | formatvalue : formModel : 'Owner' | async"
+    [subTitle]="data?.positionID | formatvalue : formModel : 'PositionID' | async"
     [subTitleCss]="'text-gray-600'"
-    [content]="data?.reasonID"
+    [content]="data?.reasonID | formatvalue : formModel : 'ReasonID' | async"
     [footer]="footerTmp"
     [icoCss]="
       'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
@@ -74,7 +74,7 @@
         [showText]="true"
         [showBgColor]="true"
         [name]="'EP022'"
-        [value]="data?.status"
+        [value]="data?.approveStatus"
         class="badge badge-light badge-md fs-7"
       >
       </codx-vll>
@@ -89,6 +89,10 @@
       <!-- đợi vll issueStatus -->
     </div>
 
-    <div>{{ data?.bookingOn | fmDT }}</div>
+    <div
+      [innerHTML]="
+        data?.bookingOn | formatvalue : formModel : 'BookingOn' | async
+      "
+    ></div>
   </div>
 </ng-template>

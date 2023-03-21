@@ -85,6 +85,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   contentComment: any;
   userGroupVisible: boolean = true;
   date = new Date();
+
+  //employeeID first change
+  isEmpIDNotNull = false;
+
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -100,6 +104,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
+    this.isEmpIDNotNull = this.adUser.employeeID != null ? true : false;
     if (this.formType == 'edit') {
       // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
@@ -275,7 +280,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   addUserTemp() {
-    debugger;
     this.checkBtnAdd = true;
     var formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
@@ -340,6 +344,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         false,
         false,
         this.lstChangeModule,
+        this.saveSuccess,
       ];
     }
     if (this.formType == 'edit') {
@@ -358,7 +363,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   beforeSaveTemp(op: RequestOption) {
-    debugger;
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';
@@ -369,6 +373,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       false,
       false,
       this.lstChangeModule,
+      this.saveSuccess,
     ];
     op.data = data;
     return true;
@@ -383,6 +388,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.adUser,
         this.viewChooseRole,
         checkDifference,
+        '0',
+        this.lstChangeModule,
       ])
       .subscribe();
   }
@@ -564,7 +571,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.form.formGroup.patchValue({
             // employeeID: this.adUser.employeeID,
             userName: this.adUser.userName,
-            buid: this.adUser.buid,
+            // buid: this.adUser.buid,
             mobile: this.adUser.phone,
           });
           this.changeDetector.detectChanges();

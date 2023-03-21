@@ -69,9 +69,8 @@ export class OKRs {
   }
 
   export class CheckIns{
-    recID:string;
-    oKRID:string;
-    oKRStatus:string;
+    okrid:string;
+    okrStatus:string;
     checkIn:Date;
     value:number;
     cummulated:number;
@@ -84,7 +83,7 @@ export class OKRs {
     modifiedBy:string;
   }
   export class Shares{
-    recID:string;
+    
     objectType:string;
     objectID:string;
     permission:string;

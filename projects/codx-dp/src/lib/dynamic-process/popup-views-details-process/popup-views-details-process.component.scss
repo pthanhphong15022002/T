@@ -55,10 +55,17 @@
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 225px) !important;
+        height: calc(100vh - 110px) !important;
         overflow: hidden;
-        overflow-y: auto;
+    }
+    .process-views-detail {
+        height: calc(100vh - 68px) !important;
+        overflow: hidden;
 
+    }
+
+    .view-details-main {
+        height: calc(100vh - 52px);
     }
 
     .toolbar {
@@ -66,24 +73,40 @@
         align-items: center;
         padding: 0 0 0.5rem 0;
     }
-
-    .process-views-detail {
-        height: calc(100vh - 120px) !important;
-        overflow: hidden;
-
-
-
-        .card-body.fillter-card-body.scroll-y {
-            height: calc(100vh - 342px) !important;
-        }
-
-        .view-details-content {
-            height: calc(100% - 42px) !important;
-        }
-
+    .e-splitter .e-split-bar.e-split-bar-horizontal {
+        background: var(--gray-150);
     }
+   
+}
+.dp-process-main{
 
-    .view-details-main {
-        height: calc(100vh - 54px);
+    .container-toolbar{
+        border-bottom: 1px var(--gray-150) solid;
+        padding: 0 15px;
+
+        .toolbar {
+            padding-bottom: 4px;
+        }
     }
+    codx-kanban{
+        height: 100%;
+    }
+    ejs-kanban{
+        height: 100%;
+    }
+    .e-pane.e-pane-horizontal codx-listview .card-body{
+        padding: 10px 5px 10px 10px!important;
+    }
+}
+
+.process-views-detail .codx-detail-main{
+    padding-bottom: 0;
+}
+.popup-process-detail{
+   .tab-footer {
+        margin-top: 5px!important;
+    }
+}
+#viewModeDetail{
+    padding-right: 5px;
 }

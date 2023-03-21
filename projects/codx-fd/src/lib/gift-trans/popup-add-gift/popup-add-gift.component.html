@@ -40,7 +40,7 @@
         <div class="form-group">
             <codx-label [formModel]="dialogRef.formModel" name="lblGifts" default="Quà tặng"></codx-label>
             <codx-input type="combobox" class="" [crrValue]="giftTrans.ItemID" [multiple]="false" [loadFull]="true"
-                field="itemID" (valueChange)="valueChange($event)" refValue="Gifts">
+                field="itemID" (valueChange)="valueChange($event)" refValue="FDGifts" name="FDGifts">
             </codx-input>
         </div>
         <div class="row">
@@ -73,17 +73,62 @@
             </div>
         </div>
         <div class="form-group">
-            <codx-label [formModel]="dialogRef.formModel" name="lblSiutuation" default="Nội dung"></codx-label>
-            <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="siutuation" name="siutuation"
+            <codx-label [formModel]="dialogRef.formModel" name="lblSituation" default="Nội dung"></codx-label>
+            <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="situation" name="situation"
                 [disabled]="giftTrans.TransType == '4'" (valueChange)="valueChange($event)">
             </codx-input>
         </div>
         <div class="form-group">
-            <ng-container *ngIf="form.controls['transType'].value == '4'">
-                <div class="d-flex">
+            <ng-container *ngIf="giftTrans.TransType == '3'">
+                <!-- <div class="d-flex">
                     <ng-container *ngFor="let item of lstPattern">
                         <ng-container *ngTemplateOutlet="patternItem ; context{ $implicit: item }"></ng-container>
                     </ng-container>
+                </div> -->
+                <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+                    <div class="text-dark font-weight-bold">
+                        <codx-label [formModel]="dialogRef.formModel" name="Pattern" default="Chọn thiệp">
+                        </codx-label>
+                    </div>
+                    <div class="text-right text-primary cursor-pointer" (click)="previewCard()">
+                        <codx-label [formModel]="dialogRef.formModel" name="lblPreView" default="Xem trước">
+                        </codx-label>
+                    </div>
+                </div>
+                <div class="card-slider d-flex align-items-center mt-6 w-100">
+                    <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
+                        [showNavigationArrows]="showNavigationArrows" [showNavigationIndicators]="false">
+                        <ng-container *ngFor="let item of lstPattern; let i = index;">
+                            <ng-template ngbSlide *ngIf="i * 4 < lstPattern.length">
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngFor="let itemChild of lstPattern; let idxChild = index;">
+                                        <ng-container *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
+                                            <div class="fd-parttern-item mx-5 position-relative">
+                                                <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
+                                                    <div [class.selected-pattern]="patternIDSeleted == item.patternID"
+                                                        class="position-relative d-flex justify-content-between align-items-center "
+                                                        [style.background-color]="item.backgroundColor"
+                                                        style="height: 120px; width: 80px;" (click)="selectCard(item)">
+                                                    </div>
+                                                </ng-container>
+                                                <ng-template #noBackgroundColor>
+                                                    <div
+                                                        class=" d-flex justify-content-between align-items-center h-120px w-80px border ">
+                                                        <codx-img class=" h-120px w-80px border-radius-large"
+                                                            [objectId]="item.patternID" objectType="FD_Patterns"
+                                                            [width]="165" (click)="selectCard(item)">
+                                                        </codx-img>
+                                                    </div>
+                                                </ng-template>
+                                                <i *ngIf="patternSelected && itemChild.recID == patternSelected.recID"
+                                                    class="icon-check_circle pattern-selected"></i>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </ngb-carousel>
                 </div>
             </ng-container>
         </div>
@@ -125,4 +170,65 @@
         </div>
 
     </ng-template>
+</ng-template>
+
+<ng-template #popupViewCard let-dialog>
+    <div class="fd-preview-card">
+        <div class="fd-preview-card-background">
+            <ng-container *ngIf="patternSelected.backgroundColor ; else havePattern">
+                <div class="w-100 h-100" [style.background-color]="patternSelected.backgroundColor"
+                    style="height:498px!important"></div>
+            </ng-container>
+            <ng-template #havePattern>
+                <codx-img [objectId]="patternSelected.recID" [funcId]="giftTrans.FunctionID" [isDefaulImg]="true"
+                    [imageType]="'square'" [objectType]="'FD_Patterns'" [width]="800">
+                </codx-img>
+            </ng-template>
+        </div>
+        <div class="fd-review-card-content">
+            <div class="d-flex justify-content-end">
+                <button class="btn" (click)="closeViewCard(dialog)">
+                    <i class="icon-close"></i>
+                </button>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h2 class="fw-bolder">{{title}}</h2>
+            </div>
+            <div class="p-3">
+                <div class="d-flex align-items-center justify-content-center my-4">
+                    <codx-img [objectId]="user.userID" [objectName]="user.userName" [objectType]="'AD_Users'"
+                        [width]="35" [imageType]="'circle'">
+                    </codx-img>
+                    <span class="pic-send mx-3">
+                        <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
+                    </span>
+                    <codx-img [objectId]="userReciver" [objectType]="'AD_Users'" [objectName]="userReceiverName"
+                        [isDefaulImg]="true" [width]="35">
+                    </codx-img>
+                </div>
+                <div class="d-flex justify-content-center p-6">
+                    <div [innerHTML]="giftTrans.Situation"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-center my-4">
+                    <!-- <ng-cintainer *ngIf="rating">
+                        <div class="d-flex align-items-center me-4">
+                            <span class="me-2">
+                                <codx-vll [name]="ratingVll" [value]="rating" [showIcon]="true" [showText]="true">
+                                </codx-vll>
+                            </span>
+                        </div>
+                    </ng-cintainer> -->
+
+                    <div class="d-flex align-items-start">
+                        <ng-container *ngIf="form.controls['giftID'].value && gift">
+                            <img class="symbol-image icon-surface1 h-30px mr-2" src="/assets/img/feedback/gift 1.png" />
+                        </ng-container>
+                        <!-- <ng-container *ngIf="givePoint > 0">
+                            <img class="symbol-image icon-money-1 h-30px mr-2" src="/assets/img/feedback/money-1.png" />
+                        </ng-container> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-template>

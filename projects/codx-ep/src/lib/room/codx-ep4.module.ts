@@ -18,13 +18,12 @@ import { MeetingComponent } from './meeting/meeting.component';
 import { RoomDashboardComponent } from './booking/dashboard/dashboard.component';
 import { Layout4Component } from './_layout4/layout4.component';
 import { BookingRoomComponent } from './booking/booking-room.component';
-import { BookingRoomViewDetailComponent } from './booking/view-detail/booking-room-view-detail.component';
 import { PopupAddBookingRoomComponent } from './booking/popup-add-booking-room/popup-add-booking-room.component';
-import { ApprovalRoomViewDetailComponent } from './approval/approval-room-view-detail/approval-room-view-detail.component';
 import { ApprovalRoomsComponent } from './approval/approval-room.component';
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { PopupAddAttendeesComponent } from './booking/popup-add-attendees/popup-add-attendees.component';
+import { BookingRoomViewDetailComponent } from './view-detail/booking-room-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -69,11 +68,10 @@ const Components: Type<any>[] = [
   RoomsComponent,
   PopupAddRoomsComponent,
   PopupAddBookingRoomComponent,
-  BookingRoomViewDetailComponent,
   RoomDashboardComponent,
-  ApprovalRoomViewDetailComponent,
   PopupRescheduleBookingComponent,
   PopupAddAttendeesComponent,
+  BookingRoomViewDetailComponent,
 ];
 
 @NgModule({

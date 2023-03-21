@@ -28,6 +28,8 @@ export class AppConfigService extends AppConfig {
         environment.SureMeet = res.sureMeet;
         environment.firebase = res.firebase;
         environment.externalLogin = res.externalLogin;
+        environment.captchaKey = res.captchaKey;
+        environment.captchaEnable = res.captchaEnable;
         this.tenantStore.initDefault();
       })
     );

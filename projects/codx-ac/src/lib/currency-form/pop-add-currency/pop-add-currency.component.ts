@@ -82,6 +82,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
+    if (this.currencies.calculation == null) {
+      this.currencies.calculation = '2';
+      this.currencies.multi = true;
+    }
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let add = res.find((x) => x.functionID == 'SYS01');
@@ -135,15 +139,15 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.title = 'Thiết lập' + ' ' + this.funcName;
     var obj = {
       headerText: this.title,
+      data:{...this.currencies}
     };
     let optionForm = new DialogModel();
-    optionForm.DataService = this.dialog.dataService;
     optionForm.FormModel = this.dialog.formModel;
     var dialog = this.callfc.openForm(
       PopSettingExchangeComponent,
       '',
-      500,
-      350,
+      400,
+      300,
       '',
       obj,
       '',
@@ -275,7 +279,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.currencies[keymodel[i]] == null ||
-              this.currencies[keymodel[i]] == ''
+              String(this.currencies[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -344,7 +348,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
             return true;
           })
           .subscribe((res) => {
-            console.log(res);
             if (res.save || res.update) {
               this.api
                 .exec(

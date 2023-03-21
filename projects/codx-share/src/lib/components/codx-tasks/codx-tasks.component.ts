@@ -42,6 +42,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
 import { AssignTaskModel } from '../../models/assign-task.model';
+import { concat } from 'rxjs';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -201,13 +202,6 @@ export class CodxTasksComponent
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
-    // this.requestSchedule = new ResourceModel();
-    // this.requestSchedule.service = 'TM';
-    // this.requestSchedule.assemblyName = 'TM';
-    // this.requestSchedule.className = 'TaskBusiness';
-    // this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    // this.requestSchedule.idField = 'taskID';
-
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
     this.requestTree.assemblyName = 'TM';
@@ -242,7 +236,7 @@ export class CodxTasksComponent
           this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
           this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
           this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
-          this.vllPriority = grv?.Priority.referedValue;
+          this.vllPriority = grv?.Priority?.referedValue;
         }
       });
     });
@@ -432,10 +426,7 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
-    // this.api.execSv<any>("TM","TM","TaskBusiness","CheckRecIDAndTaskIDAsync",[]).subscribe(res=>{
-    //   if(res){}
-    //   debugger
-    // })
+   // this.api.exec<any>("TM","TaskBusiness","RPASendAlertMailIsOverDue1Async",).subscribe();
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1189,7 +1180,12 @@ export class CodxTasksComponent
             .subscribe((res) => {
               t.listTaskResousceSearch = [];
               t.countResource = 0;
-              if (t.popoverCrr && p != t.popoverCrr && mouseenter && t.popoverCrr.isOpen())
+              if (
+                t.popoverCrr &&
+                p != t.popoverCrr &&
+                mouseenter &&
+                t.popoverCrr.isOpen()
+              )
                 t.popoverCrr.close();
               if (t.popoverDataSelected && t.popoverDataSelected.isOpen()) {
                 t.popoverDataSelected.close();
@@ -1732,22 +1728,38 @@ export class CodxTasksComponent
       case 'dbClick':
         this.viewTask(e?.data);
         break;
+      case 'doubleClick':
+        this.viewTask(e?.data);
+        break;
       case 'pined-filter':
         var index = this.view.views.findIndex((x) => x.active == true);
         if (index != 1) {
           let type = this.view.views[index].type;
           if (type == 7 || type == 8) {
             // calender + schedule
-            // if(Array.isArray(e.data)){
-            //   e.data.forEach((filter:any)=>{
-            //     if(!this.view.currentView['schedule'].dataService.filter.filters){
-            //       this.view.currentView['schedule'].dataService.filter.filters = [];
+            if (Array.isArray(e.data) && e?.data?.length > 0) {
+              this.view.currentView['schedule'].applyFilter(e.data);
+            } else {
+              this.view.currentView['schedule'].dataService.filter.filters = [
+                this.view.currentView['schedule'].dataService.filter.filters[0],
+              ];
+              this.view.currentView['schedule'].refresh();
+            }
+
+            //if (Array.isArray(e.data)) {
+            //   e.data.forEach((filter: any) => {
+            //     if (
+            //       !this.view.currentView['schedule'].dataService.filter.filters
+            //     ) {
+            //       this.view.currentView['schedule'].dataService.filter.filters =
+            //         [];
             //     }
-            //     debugger
-            //     this.view.currentView['schedule'].dataService.filter.filters[0].filters.push(filter);
-            // });
+            //     this.view.currentView[
+            //       'schedule'
+            //     ].dataService.filter.filters[0].filters.push(filter);
+            //   });
             //   this.view.currentView['schedule'].refresh();
-            //}
+            //  }
           }
         }
         break;
@@ -1892,4 +1904,22 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+
+  getDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            return res.length;
+          }
+        });
+    }
+  }
 }

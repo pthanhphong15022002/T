@@ -35,6 +35,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('cardTranTmp') cardTranTmp: TemplateRef<any>;
+  @ViewChild('itemAction') itemAction: TemplateRef<any>;
+  @ViewChild('noteCol') noteCol: TemplateRef<any>;
+  @ViewChild('resID') resID: TemplateRef<any>;
+  @ViewChild('resName') resName: TemplateRef<any>;
   funcID: string;
   viewType = ViewType;
   views: Array<ViewModel> = [];
@@ -154,12 +158,22 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvEpCards = gv;
           this.columnGrids = [
+            
+            {
+              field: '',
+              headerText: '',
+              width: 40,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'resourceID',
+              template: this.resID,
               headerText: gv['ResourceID'].headerText,
             },
             {
               field: 'resourceName',
+              template: this.resName,
               headerText: gv['ResourceName'].headerText,
               width: '20%',
             },
@@ -179,6 +193,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             },
             {
               field: 'note',
+              template: this.noteCol,
               headerText: gv['Note'].headerText,
             },
             {
@@ -193,6 +208,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
+                hideMoreFunc:true
               },
             },
           ];
@@ -355,15 +371,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
         if (res) {
-          // this.api
-          // .execSv(
-          //   'DM',
-          //   'ERM.Business.DM',
-          //   'FileBussiness',
-          //   'DeleteByObjectIDAsync',
-          //   [obj.recID, 'EP_EPCards', true]
-          // )
-          // .subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -393,10 +400,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.cardNote = e.data;
     this.changeDetectorRef.detectChanges();
   }
-  changeDataMF(event, data:any) {        
+  changeDataMF(event, data:any) {
     if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
+      // event.forEach(func => {
+      //   func.disabled=true;
       // });
       if(data.status=='1'){
         event.forEach(func => {
@@ -404,7 +411,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           {
             func.disabled=true;
           }
-        });  
+        });
       }
       else{
         event.forEach(func => {
@@ -412,7 +419,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           {
             func.disabled=true;
           }
-        });  
+        });
       }
     }
   }
@@ -438,9 +445,9 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.selectedCard.status=currTrans;
-          this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
+          this.view.dataService.update(this.selectedCard).subscribe((res) => {});
           this.popupDialog.close();
-          this.notificationsService.notifyCode('SYS034');    
+          this.notificationsService.notifyCode('SYS034');
         }
         this.cardUserID=null;
         this.cardDate=null;

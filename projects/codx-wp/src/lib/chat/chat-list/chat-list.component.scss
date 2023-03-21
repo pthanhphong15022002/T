@@ -1,0 +1,32 @@
+
+.chat-list{
+    padding: 4px 8px;
+}
+.last-message{
+    width: 80%;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal ;
+    -webkit-line-clamp: 1;
+    text-align: left;
+}
+.last-message-send{
+    width: 20%;
+    text-align: right;
+}
+.dots {
+    height: 6px;
+    width: 6px;
+    background-color: rgb(19, 101, 224);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+}

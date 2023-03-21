@@ -212,7 +212,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.unitsofmearsure[keymodel[i]] == null ||
-              this.unitsofmearsure[keymodel[i]] == ''
+              String(this.unitsofmearsure[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

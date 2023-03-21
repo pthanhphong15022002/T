@@ -1,0 +1,12 @@
+.w-23{
+    width: 23%;
+}
+#btn-add{
+    border-radius: 50px;
+    transition: transform .2s;
+}
+#btn-add:hover{
+    /* animation: example 0.5s;
+    animation-fill-mode: forwards; */
+    transform: scale(1.1); 
+}

@@ -250,11 +250,27 @@ export class CodxDpService {
       data
     );
   }
+  deleteFileTask(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'DeleteFilesAsync',
+      data
+    );
+  }
+  checkExitsName(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'isExitNameProcessAsync',
+      data
+    );
+  }
   updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'UpdateStepDrapDropAsync',
+      'DeleteFilesAsync',
       data
     );
   }
@@ -425,7 +441,7 @@ export class CodxDpService {
   getListStepByIdProccessCopy(data) {
     return this.api.exec<any>(
       'DP',
-      'StepsBusiness',
+      'ProcessesBusiness',
       'GetListStepCopyAsync',
       data
     );
@@ -479,6 +495,15 @@ export class CodxDpService {
       'ProcessesBusiness',
       'TotalInstanceInProcessAsync',
       data
+    );
+  }
+
+  getTree(listRef){
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeByListRefIDAsync',
+      listRef
     );
   }
 }

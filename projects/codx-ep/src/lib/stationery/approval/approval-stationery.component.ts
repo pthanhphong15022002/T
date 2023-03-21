@@ -92,19 +92,16 @@ export class ApprovalStationeryComponent
     switch (funcID) {
       case 'EPT40301':
         {
-          //alert('Duyệt');
           this.approve(datas);
         }
         break;
       case 'EPT40302':
         {
-          //alert('Từ chối');
           this.reject(datas);
         }
         break;
         case 'EPT40306':
           {
-            //alert('Thu hồi');
             this.undo(datas);
           }
           break;
@@ -115,8 +112,7 @@ export class ApprovalStationeryComponent
         if (res != null) {
           
           this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-          data.approveStatus = '3';
-          data.status = '3';         
+          data.approveStatus = '3';     
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -125,49 +121,39 @@ export class ApprovalStationeryComponent
   }
   reject(data: any) {
     this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(
-            data?.approvalTransRecID, //ApprovelTrans.RecID
-            '4',
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {              
-                this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '4';
-                data.status = '4';              
-              this.view.dataService.update(data).subscribe();
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
+    .approve(
+      data?.approvalTransRecID, //ApprovelTrans.RecID
+      '4',
+      '',
+      ''
+    )
+    .subscribe((res: any) => {
+      if (res?.msgCodeError == null && res?.rowCount >= 0) {              
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          data.approveStatus = '4';           
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
   }
   approve(data: any) {
     this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(
-            data?.approvalTransRecID, //ApprovelTrans.RecID
-            '5',
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {              
-                this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '5';
-                data.status = '5';              
-              this.view.dataService.update(data).subscribe();
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
+    .approve(
+      data?.approvalTransRecID, //ApprovelTrans.RecID
+      '5',
+      '',
+      ''
+    )
+    .subscribe((res: any) => {
+      if (res?.msgCodeError == null && res?.rowCount >= 0) {              
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          data.approveStatus = '5';         
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
   }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {

@@ -56,15 +56,16 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectContactAddress: Array<Contact> = [];
   objectContactAddressDelete: Array<Contact> = [];
   objecttype: string = '1';
-  moreFuncNameAdd:any;
-  moreFuncNameEdit:any;
+  moreFuncNameAdd: any;
+  moreFuncNameEdit: any;
   funcNameContact: any;
-  funcNameBank:any;
-  funcNameAddress:any;
+  funcNameBank: any;
+  funcNameAddress: any;
   gridViewSetup: any;
   valuelist: any;
   formType: any;
   validate: any = 0;
+  dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -179,30 +180,56 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.cache.moreFunction('BankAccounts', 'grvBankAccounts').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20503');
-        this.funcNameBank = m.defaultName;
-      }
-    });
+    this.cache
+      .moreFunction('BankAccounts', 'grvBankAccounts')
+      .subscribe((res) => {
+        if (res && res.length) {
+          let m = res.find((x) => x.functionID == 'ACS20503');
+          this.funcNameBank = m.defaultName;
+        }
+      });
     this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20501');
         this.funcNameContact = m.defaultName;
       }
     });
-    this.cache.moreFunction('AddressBook', 'grvAddressBook').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20502');
-        this.funcNameAddress = m.defaultName;
-      }
-    });
+    this.cache
+      .moreFunction('AddressBook', 'grvAddressBook')
+      .subscribe((res) => {
+        if (res && res.length) {
+          let m = res.find((x) => x.functionID == 'ACS20502');
+          this.funcNameAddress = m.defaultName;
+        }
+      });
   }
   //#endregion
 
   //#region Event
   valueChange(e: any) {
     this.customers[e.field] = e.data;
+  }
+  mstChange(e: any) {
+    if (e && e.crrValue) {
+      this.customers[e.ControlName] = e.crrValue;
+      let mst = this.dicMST.has(e.crrValue);
+      if (mst) this.bindingTaxInfor(this.dicMST.get(e.crrValue));
+      else
+        this.api
+          .exec<any>('SM', 'CustomersBusiness', 'GetCustomerAsync', e.crrValue)
+          .subscribe((res) => {
+            if (res) {
+              this.dicMST.set(e.crrValue, res);
+              this.bindingTaxInfor(res);
+            }
+          });
+    } else {
+      this.dialog.dataService.clear();
+      this.dialog.dataService.addNew().subscribe((res) => {
+        this.form.formGroup.patchValue(res);
+        this.customers = this.dialog.dataService!.dataSelected;
+      });
+    }
   }
   valueChangeOverdueControl(e: any) {
     if (e.data == '0') {
@@ -214,6 +241,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
+  bindingTaxInfor(data) {
+    this.form.formGroup.patchValue({ address: data['address'] });
+    this.form.formGroup.patchValue({ customerName: data['customerName'] });
+    this.form.formGroup.patchValue({ customerID: data['customerID'] });
+  }
   openPopupBank() {
     var obj = {
       headerText: this.moreFuncNameAdd + ' ' + this.funcNameBank,
@@ -295,9 +327,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogcontact.closed.subscribe((x) => {
-            var datacontact = JSON.parse(
-              localStorage.getItem('datacontact')
-            );
+            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
             if (datacontact != null) {
               this.objectContact.push(datacontact);
             }
@@ -334,9 +364,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogaddress.closed.subscribe((x) => {
-            var dataaddress = JSON.parse(
-              localStorage.getItem('dataaddress')
-            );
+            var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
             );
@@ -527,7 +555,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.customers[keymodel[i]] == null ||
-              this.customers[keymodel[i]] == ''
+              String(this.customers[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -578,22 +606,24 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       );
       var checkRegex = regex.test(this.customers.email);
       if (checkRegex == false) {
-        this.notification.notifyCode(
-          'SYS037',
-          0,
-          ''
-        );
+        this.notification.notifyCode('SYS037', 0, '');
         this.validate++;
         return;
       }
     }
   }
-  checkValidPhone(){
+  checkValidPhone() {
     if (this.customers.phone != null) {
-      var phonenumberFormat = /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
-      var checkRegex = this.customers.phone.toLocaleLowerCase().match(phonenumberFormat)
+      var phonenumberFormat =
+        /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
+      var checkRegex = this.customers.phone
+        .toLocaleLowerCase()
+        .match(phonenumberFormat);
       if (checkRegex == null) {
-        this.notification.notify("'Phone' không hợp lệ", '2');
+        this.notification.notify(
+          this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ',
+          '2'
+        );
         this.validate++;
         return;
       }
@@ -603,7 +633,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave() {
-    this.checkValidPhone();  
+    this.checkValidPhone();
     this.checkValidEmail();
     this.checkValidate();
     if (this.validate > 0) {

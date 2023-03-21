@@ -63,8 +63,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "GetTernantHddAsync", [""]);
     }
 
-    deleteFileToTrash(id: string, folderId: string, deleted: boolean): Observable<any> {
-        return this.api.exec<boolean>("DM", "FileBussiness", "DeleteFileToTrashAsync", [id, folderId, deleted]);
+    deleteFileToTrash(id: string, folderId: string, deleted: boolean , objectID:string = ""): Observable<any> {
+        return this.api.exec<boolean>("DM", "FileBussiness", "DeleteFileToTrashAsync", [id, folderId, deleted,objectID]);
     }
 
     restoreFile(id: string, fileName: string, rewrite: string = "0"): Observable<any> {
@@ -186,8 +186,8 @@ export class FileService implements OnDestroy {
         return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField]);
     }
 
-    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive]);
+    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean , funcID: string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive,funcID]);
     }
 
     updateVersionFile(file: FileUpload): Observable<any> {

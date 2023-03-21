@@ -13,8 +13,15 @@
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-location_on me-1"></i>
     <span class="fw-bold text-break">
-       {{data?.resourceName}}
+      <span>
+        {{data?.resourceName }} 
+     </span>
+     <span *ngIf="data?.agencyName!=null && data?.agencyName!=''">
+      <span class="mx-1"> - </span>
+      <span>{{data?.agencyName}}</span>
+     </span>
     </span>
+    
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 position-relative">
@@ -40,13 +47,13 @@
   </div>
 
   <hr />
-  <div class="d-flex mt-1 mb-2 me-6">
+  <!-- <div class="d-flex mt-1 mb-2 me-6" *ngIf="gridViewSetup?.reasonID?.allowPopup">
     <codx-label name="lblReason" default="Lí do" class="fw-bold text-nowrap"></codx-label>
     <span class="me-2 fw-bold">:</span>
     <span class="text-gray-800 text-break">
       {{ data?.reasonID }}
     </span>
-  </div>
+  </div> -->
   <div class="d-flex mt-1 mb-2 me-6" *ngIf="data?.onlineUrl">
     <codx-label default="Họp trực tuyến" name="lblOnlineUrl" class="fw-bold text-nowrap"></codx-label>
     <span class="me-2 fw-bold">:</span>
@@ -82,7 +89,13 @@
       <codx-label name="lblAttachment"  default="Tài liệu đính kèm"></codx-label>
     </span>
   </ng-template>
-  
+  <div class="d-flex  mb-2">
+    <codx-label name="lblHost" default="Người chủ trì" class="fw-bold text-nowrap"></codx-label>
+    <span class="me-2 fw-bold">:</span>
+    <span class="text-gray-800 text-break">
+      {{ data?.host }}
+    </span>
+  </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
       <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold text-nowrap">
@@ -100,7 +113,7 @@
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">
           <div class="me-2">
-            <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
+            <codx-img [objectId]="item?.resourceRecID" imageType="circle" width="35" objectType="EP_Resources"
               [objectName]="item?.itemName"></codx-img>
           </div>
           <div class="">
@@ -118,7 +131,7 @@
         <div class="d-flex align-items-center me-3">
           <codx-label default="Số lượng" name="lblQuantity" class="text-gray-800"></codx-label>
           <span>:</span>
-          <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+          <span class="ms-2 fw-bold">{{ item?.quantity }}</span>
         </div>
       </div>
     </div>

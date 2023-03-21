@@ -27,7 +27,12 @@ import {
   RequestOption,
   Util,
   NotificationsService,
+  DataRequest,
+  AlertConfirmInputConfig,
 } from 'codx-core';
+import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
@@ -109,6 +114,10 @@ export class InstancesComponent
   viewModeDetail = 'S';
   totalInstance: number = 0;
   itemSelected: any;
+  stepSuccess: any;
+  stepFail: any;
+  viewType = 'd';
+
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -130,13 +139,12 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
-    this.isUseSuccess = this.dataProccess.steps.filter(
+    this.stepSuccess = this.dataProccess.steps.filter(
       (x) => x.isSuccessStep
-    )[0].isUsed;
-    this.isUseFail = this.dataProccess.steps.filter(
-      (x) => x.isFailStep
-    )[0].isUsed;
-    this.getListCbxProccess(this.dataProccess?.applyFor);
+    )[0];
+    this.stepFail = this.dataProccess.steps.filter((x) => x.isFailStep)[0];
+    this.isUseSuccess = this.stepSuccess.isUsed;
+    this.isUseFail = this.stepFail.isUsed;
   }
   ngAfterViewInit(): void {
     this.viewMode = this.dataProccess.viewMode ?? 6; //dang lỗi nên gán cứng
@@ -177,7 +185,10 @@ export class InstancesComponent
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
-      hiddenInstanceReason: this.getListStatusInstance(this.isUseSuccess, this.isUseFail),
+      hiddenInstanceReason: this.getListStatusInstance(
+        this.isUseSuccess,
+        this.isUseFail
+      ),
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -213,6 +224,7 @@ export class InstancesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
+    this.getListCbxProccess(this.dataProccess?.applyFor);
   }
 
   click(evt: ButtonModel) {
@@ -279,7 +291,7 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
     this.view.dataService
@@ -308,7 +320,6 @@ export class InstancesComponent
                     .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                     .subscribe((res) => {
                       if (res) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = res;
                         this.openPopUpAdd(
                           applyFor,
@@ -325,7 +336,6 @@ export class InstancesComponent
                     )
                     .subscribe((isNo) => {
                       if (isNo) {
-                        this.view.dataService.dataSelected = data;
                         this.view.dataService.dataSelected.instanceNo = isNo;
                         this.openPopUpAdd(
                           applyFor,
@@ -375,6 +385,7 @@ export class InstancesComponent
   }
 
   edit(data, titleAction) {
+    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -465,6 +476,14 @@ export class InstancesComponent
       case 'DP15':
         this.openOrClosed(data, false);
         break;
+      //export File
+      case 'DP16':
+        this.exportFile();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.approvalTrans('tes1', 'test2');
+        break;
     }
   }
 
@@ -524,7 +543,6 @@ export class InstancesComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS005':
           case 'SYS003':
             if ((data.status !== '1' && data.status !== '2') || data.closed)
               res.disabled = true;
@@ -532,7 +550,10 @@ export class InstancesComponent
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
-          case 'DP011':
+          //more core - thay doi nhieu dong, bo chon, chon tat ca..
+          case 'SYS005':
+          case 'SYS007':
+          case 'SYS006':
             res.disabled = true;
             break;
           //Chỉnh sửa, chuyển tiếp, thất bại, thành công
@@ -569,7 +590,8 @@ export class InstancesComponent
             break;
           case 'DP02':
             let isUpdateFail = data.write;
-            if ( !isUpdateFail ||
+            if (
+              !isUpdateFail ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseFail
@@ -580,7 +602,8 @@ export class InstancesComponent
             break;
           case 'DP10':
             let isUpdateSuccess = data.write;
-            if ( !isUpdateSuccess ||
+            if (
+              !isUpdateSuccess ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseSuccess
@@ -666,6 +689,7 @@ export class InstancesComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
+    this.viewType = 'p';
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -676,6 +700,9 @@ export class InstancesComponent
       '',
       option
     );
+    popup.closed.subscribe((e) => {
+      this.viewType = 'd';
+    });
   }
 
   dropInstance(data) {
@@ -734,9 +761,12 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data, instanceStep) {
+  moveStage(dataMore, data, listStepCbx) {
     if (!this.isClick) {
       return;
+    }
+    if (listStepCbx.length == 0 || listStepCbx == null) {
+      listStepCbx = this.listSteps;
     }
     this.isClick = false;
     this.crrStepID = data.stepID;
@@ -753,20 +783,23 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            debugger;
+            var stepReason = {
+              isUseFail: this.isUseFail,
+              isUseSuccess: this.isUseSuccess,
+            };
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listSteps,
-              instanceStep: instanceStep,
+              listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
+              stepReason: stepReason,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
-              800,
-              600,
+              850,
+              900,
               '',
               obj
             );
@@ -789,6 +822,7 @@ export class InstancesComponent
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -813,9 +847,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.findIndex((x) => x.isSuccessStep)]
-              : this.listSteps[this.listSteps.findIndex((x) => x.isFailStep)];
+            let reason = isMoveSuccess ? this.stepSuccess : this.stepFail;
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -844,8 +876,8 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                if(data.refID !== this.guidEmpty) {
-                  this.valueListID.emit(data.refID)
+                if (data.refID !== this.guidEmpty) {
+                  this.valueListID.emit(data.refID);
                 }
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
@@ -853,6 +885,7 @@ export class InstancesComponent
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -893,7 +926,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    //   this.lstStepInstances = e.lstStepInstance;
+    this.lstStepInstances = e.lstStepCbx;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
@@ -908,6 +941,9 @@ export class InstancesComponent
           processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
+        this.listProccessCbx = this.listProccessCbx.filter(
+          (x) => x !== this.dataProccess.recID
+        );
       });
     });
   }
@@ -917,18 +953,100 @@ export class InstancesComponent
     return total;
   }
 
-  getListStatusInstance(isSuccess: boolean, isFail: boolean){
-    if(!isSuccess && !isFail)
-    {
+  getListStatusInstance(isSuccess: boolean, isFail: boolean) {
+    if (!isSuccess && !isFail) {
       return '1;2';
-    }
-    else if(!isSuccess) {
+    } else if (!isSuccess) {
       return '3;4';
-    }
-    else if(!isFail) {
+    } else if (!isFail) {
       return '5;6';
     }
     return '';
   }
   #endregion;
+
+  //Export file
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+  }
+  //Xét duyệt
+  approvalTrans(processID: any, datas: any) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     processID
+    //   )
+    //   .subscribe((res2: any) => {
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex=1010 ;
+    //trình ký
+    //  if (res2?.eSign == true) {
+    //let signFile = new ES_SignFile();
+    // signFile.recID = datas.recID;
+    //  signFile.title = datas.title;
+    // signFile.categoryID = res2?.categoryID;
+    //signFile.refId = datas.recID;
+    // signFile.refDate = datas.refDate;
+    //signFile.refNo = datas.refNo;
+    //signFile.priority = datas.urgency;
+    // signFile.refType = this.formModel?.entityName;
+    //signFile.files = [];
+    // if (this.data?.files) {
+    //   for (var i = 0; i < this.data?.files.length; i++) {
+    //     var file = new File();
+    //     file.fileID = this.data?.files[i].recID;
+    //     file.fileName = this.data?.files[i].fileName;
+    //     file.eSign = true;
+    //     signFile.files.push(file);
+    //   }
+    // }
+    // let dialogApprove = this.callfc.openForm(
+    //   PopupAddSignFileComponent,
+    //   'Chỉnh sửa',
+    //   700,
+    //   650,
+    //   '',
+    //   {
+    //     oSignFile: signFile,
+    //     // files: this.data?.files,
+    //     //  cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
+    //     disableCateID: true,
+    //     formModel: this.view?.currentView?.formModel,
+    //   },
+    //   '',
+    //   dialogModel
+    // );
+    // dialogApprove.closed.subscribe((res) => {
+    //   if (res.event && res.event?.approved == true) {
+    //   }
+    // });
+    //this.callfunc.openForm();
+    // } else if (res2?.eSign == false) {
+    // }
+    //xét duyệt
+    // });
+  }
 }

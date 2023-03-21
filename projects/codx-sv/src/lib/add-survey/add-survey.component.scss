@@ -39,5 +39,21 @@
   height: calc(100vh - 92px) !important;
 }
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: 2px #67AFF7 solid  !important;
+  color: #4C2B87 !important;
+  border-bottom: 3px #623DA1 solid  !important;
+}
+.ejstab-survey
+{
+  .e-tab-text
+  {
+    text-transform: none !important;
+  }
+}
+.ejstab-survey .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap
+{
+  padding: 0 20px !important;
+}
+.row-content
+{
+  --bs-gutter-x: 0 !important;
 }

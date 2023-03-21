@@ -62,7 +62,7 @@ export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
   captChaValid = false;
   // private fields
   constructor(private dt: ChangeDetectorRef, private api: ApiHttpService) {
-    this.enableCaptcha = environment.reCaptchaEnable;
+    this.enableCaptcha = environment.captchaEnable;
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     }

@@ -48,7 +48,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   cashpayment: CashPayment;
   formType: any;
   gridViewSetup: any;
-  cashbookName: any;
   validate: any = 0;
   parentID: string;
   cashpaymentline: Array<CashPaymentLine> = [];
@@ -98,19 +97,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.cashpayment?.voucherNo != null) {
-      //#region  load cashpaymentline
-      this.acService
-        .loadData(
-          'ERM.Business.AC',
-          'CashPaymentsLinesBusiness',
-          'LoadDataAsync',
-          this.cashpayment.recID
-        )
-        .subscribe((res: any) => {
-          this.cashpaymentline = res;
-        });
-      //#endregion
+    if (this.formType == 'edit') {
+      if (this.cashpayment?.voucherNo != null) {
+        //#region  load cashpaymentline
+        this.acService
+          .loadData(
+            'ERM.Business.AC',
+            'CashPaymentsLinesBusiness',
+            'LoadDataAsync',
+            this.cashpayment.recID
+          )
+          .subscribe((res: any) => {
+            this.cashpaymentline = res;
+          });
+        //#endregion
+      }
     }
   }
   //#endregion
@@ -139,6 +140,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteRow(data);
+        break;
+      case 'SYS03':
+        //this.editRow(data);
+        break;
+      case 'SYS04':
+        this.copyRow(data);
         break;
     }
   }
@@ -297,14 +304,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          this.grid.addRow(data, idx);
+          this.grid.addRow(res, idx);
         }
       });
   }
 
   deleteRow(data) {
     this.cashpaymentlineDelete.push(data);
-    this.grid.deleteRow();
+    this.grid.deleteRow(data);
+  }
+
+  editRow(data) {
+    this.grid.updateRow(data.rowNo, data);
+  }
+
+  copyRow(data) {
+    let idx = this.grid.dataSource.length;
+    data.rowNo = idx + 1;
+    data.recID = Util.uid();
+    this.grid.addRow(data, idx);
   }
 
   setDefault(o) {
@@ -321,16 +339,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.cashpayment;
       this.cashpaymentline = this.grid.dataSource;
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [data];
+            opt.data = [this.cashpayment];
             return true;
           })
           .subscribe((res) => {
@@ -356,7 +373,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [data];
+            opt.data = [this.cashpayment];
             return true;
           })
           .subscribe((res) => {
@@ -383,8 +400,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.form.data;
-
       this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -392,7 +407,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [data];
+          opt.data = [this.cashpayment];
           return true;
         })
         .subscribe((res) => {
@@ -440,19 +455,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
-
-  getvalueNameCashBook(data: any) {
-    this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-      .subscribe((res: any) => {
-        res.forEach((element) => {
-          if (element.cashBookID == data) {
-            this.cashbookName = element.cashBookName;
-          }
-        });
-      });
-  }
-
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
@@ -462,7 +464,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]] == ''
+              String(this.cashpayment[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

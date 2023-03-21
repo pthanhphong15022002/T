@@ -26,10 +26,11 @@ import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.component';
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
 import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
-import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
 import { OkrTreesComponent } from './okr/okr-trees/okr-trees.component';
 import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component';
 import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-okr-plan.component';
+import { PopupShareOkrPlanComponent } from './popup/popup-share-okr-plans/popup-share-okr-plans.component';
+import { ViewOKRComponent } from './component/view-okr/view-okr.component';
 
 const routes: Routes = [
   {
@@ -87,9 +88,10 @@ const routes: Routes = [
     PopupSaveVersionComponent,
     PopupViewVersionComponent,
     PopupOKRWeightComponent,
-    OkrPlanShareComponent,
+    PopupShareOkrPlanComponent,
     OkrTreesComponent,
     PopupAddOKRPlanComponent,
+    ViewOKRComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

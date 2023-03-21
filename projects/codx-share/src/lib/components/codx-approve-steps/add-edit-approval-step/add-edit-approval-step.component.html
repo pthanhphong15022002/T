@@ -6,12 +6,13 @@
   [subHeader]="subHeader"
   [dialog]="dialog"
   [openMore]="true"
-  [tabContent]="[tabInfo0, tabEmail, tabAnother]"
+  [tabContent]="this.hideTabQuery? [tabInfo0, tabEmail, tabAnother] : [tabInfo0, tabQuery, tabEmail, tabAnother]"
   (setTitle)="setTitle($event)"
   (buttonClick)="buttonClick($event)"
   [footer]="footer"
   [openMore]="false"
   [data]="data"
+  (tabChange)="buttonClick($event)"
 >
 </codx-layout-add>
 
@@ -343,7 +344,7 @@
 </ng-template>
 <ng-template #tabQuery>
   <div class="w-100">
-    <codx-query-builder></codx-query-builder>
+    <codx-query-builder *ngIf="!this.hideTabQuery" #queryBuilder [isPopup]="false" [isAdvance]="true" (change)="saveFilterChange($event)" [filters]="data.constraints" [funcID]="formModel?.funcID"></codx-query-builder>
   </div>
 </ng-template>
 <ng-template #tabEmail>
@@ -481,7 +482,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <a class="btn btn-primary fw-bold" (click)="onSaveForm()">
+    <a class="btn btn-primary fw-bold" (click)="beforeSave()">
       <codx-label
         name="lblSave"
         default="Lưu"

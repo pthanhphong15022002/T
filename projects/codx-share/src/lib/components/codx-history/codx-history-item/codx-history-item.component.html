@@ -36,6 +36,10 @@
     <ng-container *ngSwitchCase="'D'">
       <ng-container *ngTemplateOutlet="D"></ng-container>
     </ng-container>
+    <!--  Copy thêm template lịch sử xóa file đính kèm type D1 từ D -->
+    <ng-container *ngSwitchCase="'D1'">
+      <ng-container *ngTemplateOutlet="D"></ng-container>
+    </ng-container>
     <!-- chỉnh sửa gì đó ai biết -->
     <ng-container *ngSwitchCase="'C1'">
       <ng-container *ngTemplateOutlet="C1"></ng-container>
@@ -190,7 +194,7 @@
           class="w-100"
           [innerHTML]="data.description"
         ></div>
-        <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7">
+        <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7 mb-1">
           {{ data.createdOn | timefrom }}
         </div>
       </div>
@@ -232,7 +236,7 @@
             </ng-container>
           </span>
         </div>
-        <div class="text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">
+        <div class="text-gray-400 flex-grow-1 fs-7 mb-1" data-toggle="tooltip">
           {{ data.createdOn | timefrom }}
         </div>
       </div>
@@ -826,7 +830,7 @@
           class="w-100"
           [innerHTML]="data.description"
         ></div>
-        <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7">
+        <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7 mb-1">
           {{ data.createdOn | timefrom }}
         </div>
       </div>

@@ -1,6 +1,6 @@
-<div class="container overflow-auto h-100" *ngIf="formModel?.funcID!=undefined">
-  <div class="accordion overflow-auto h-100 mt-5">
-    <div class="container" [ngClass]="isHiddenChart ? 'd-none': 'd-block'">
+<div class="w-100 px-25 h-100" *ngIf="formModel?.funcID!=undefined">
+  <div class="h-100 mt-5">
+    <div class="" [ngClass]="isHiddenChart ? 'd-none': 'd-block'">
 
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
@@ -46,12 +46,12 @@
           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px "
             (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==true">
             <i class="icon-i-arrows-collapse me-2"></i>
-            <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
+            <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
           </div>
           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
             (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==false">
             <i class="icon-i-arrows-expand me-2"></i>
-            <codx-label default="Expand" fiedName="lblExpand"></codx-label>
+            <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
           </div>
         </div>
         <codx-toolbar-button [button]="button"  (buttonClick)="click($event)">
@@ -72,8 +72,8 @@
       <!--OB node-->
       <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
 
-        <hr class="mt-2 w-100">
-        <div class="w-100 d-flex justify-content-between">
+        <hr class=" w-100 my-0">
+        <div class="w-100 pt-3 pb-2 ob-background d-flex justify-content-between">
           <div class="d-flex align-items-center flex-row cursor-pointer w-100">
             <span class="fa-solid fa-bullseye me-3 fs-2 txt-color-0E4C55"></span>
             <span>{{ item?.okrName }}</span>
@@ -96,7 +96,7 @@
 
 
             </div>
-            <div class="d-flex ms-5 align-item-end">
+            <div class="d-flex ms-5 align-items-end">
               <button class="btn btn-icon btn-sm position-relative ms-4">
                 <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
@@ -126,12 +126,77 @@
             </div>
           </div>
         </div>
+
+
+        <!-- <div class=" w-100 d-flex flex-column justify-content-start">
+          <span>
+            Liên kết
+          </span>
+          <div *ngFor="let align of item?.alignOKR;let i=index;">
+            <div class="w-100 d-flex justify-content-between">
+              <div class="d-flex align-items-center flex-row cursor-pointer w-100">
+                <span class="fa-solid fa-bullseye me-3 fs-2 txt-color-0E4C55"></span>
+                <span>{{ align?.okrName }}</span>
+                <codx-vll *ngIf="align?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+                  [value]="align?.category" class="ms-2 badge badge-light badge-md fs-7">
+                </codx-vll>
+                <codx-vll *ngIf="align?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+                  [value]="align?.confidence" class="badge badge-light badge-md fs-7">
+                </codx-vll>
+              </div>
+              <div class="d-flex align-items-center justify-content-end ">
+    
+                <codx-img [objectId]="align?.owner" [objectType]="'AD_Users'"></codx-img>
+                <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+                  <span>{{align?.progress}}%</span>
+                  <div class="h-7px w-100 bg-gray-200 rounded-4">
+                    <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="align?.progress + '%'"
+                      aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+    
+    
+                </div>
+                <div class="d-flex ms-5 align-items-end">
+                  <button class="btn btn-icon btn-sm position-relative ms-4">
+                    <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                      [ngClass]="align?.child && align?.child.length >0 ? 'bg-color': 'bg-gray-300'">{{
+                        align?.child? align?.child.length :0 }}</span>
+                  </button>
+                  <button class="btn btn-icon btn-sm position-relative ms-4">
+                    <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                      [ngClass]="align?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
+                        align?.totalLinkOKR ? align?.totalLinkOKR : 0 }}</span>
+                  </button>
+                  <button class="btn btn-icon btn-sm position-relative ms-4">
+                    <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                      [ngClass]="align?.updates  && align?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                        align?.updates ? align?.updates.length : 0 }}</span>
+                  </button>
+                  <button class="btn btn-icon btn-sm position-relative ms-4">
+                    <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                      [ngClass]="align?.notes  && align?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                        align?.notes ? align?.notes.length : 0 }}</span>
+                  </button>
+                  <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="align" class="ms-4"
+                    (clickMF)="clickMF($event,align)"></codx-mfunc>
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>-->
       </div>
+      
+
+
 
       <!--KR node-->
-      <div class="d-flex align-items-center justify-content-between mt-2 " *ngIf="item?.okrType==krType">
+      <div class="d-flex align-items-center  py-2 kr-background justify-content-between  " *ngIf="item?.okrType==krType">
 
-        <div class="d-flex align-items-center cursor-pointer w-100">
+        <div class="d-flex align-items-center cursor-pointer  w-100">
           <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-2 text-center">
             KR
           </div>
@@ -150,7 +215,7 @@
             </div>
 
           </div>
-          <div class="d-flex ms-5  align-item-end">
+          <div class="d-flex ms-5 align-items-end">
             <button class="btn btn-icon btn-sm position-relative ms-4">
               <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
               <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
@@ -176,13 +241,13 @@
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
             <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-              (clickMF)="clickKRMF($event,item,false)"></codx-mfunc>
+              (clickMF)="clickKRMF($event,item,false)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
           </div>
         </div>
       </div>
 
       <!--SKR node-->
-      <div class="d-flex align-items-center justify-content-between mt-2 ms-3" *ngIf="item?.okrType==skrType">
+      <div class="d-flex align-items-center  py-2 skr-background justify-content-between  ms-3" *ngIf="item?.okrType==skrType">
         <div class="d-flex align-items-center cursor-pointer w-100">
           <div
             class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-center justify-content-between ">
@@ -203,7 +268,7 @@
             </div>
 
           </div>
-          <div class="d-flex ms-5  align-item-end">
+          <div class="d-flex ms-5  align-items-end">
             <button class="btn btn-icon btn-sm position-relative ms-4">
               <span class="icon-vpn_key icon-20 text-gray-300 text-hover-primary"></span>
 
@@ -227,7 +292,7 @@
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
             <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
-              (clickMF)="clickKRMF($event,item,true)"></codx-mfunc>
+              (clickMF)="clickKRMF($event,item,true)"  (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
           </div>
         </div>
       </div>

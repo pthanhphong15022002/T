@@ -152,11 +152,7 @@ ejs-listview .e-ul>li {
 //     margin-bottom: 5px !important;
 // }
 
-.remove-file {
-    //visibility: hidden;
-    visibility: visible;
-    opacity: 0.3;
-}
+
 
 .position-relative:hover .remove-file {
     //visibility: visible;
@@ -335,7 +331,13 @@ ejs-listview .e-ul>li {
 .WP_News-images>codx-img>div>img {
     width: 100% !important;
 }
-
+.news-image{
+    width: 100% !important;
+}
+.news-image > img {
+    width: 100% !important;
+    height: 300px !important;
+}
 .wp-share-contents {
     margin-top: 8px;
 }

@@ -1,3 +1,4 @@
+import { Sorting } from '@syncfusion/ej2-pivotview';
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
@@ -14,63 +15,62 @@ import { CardType, Valuelist } from '../../models/model';
   encapsulation: ViewEncapsulation.None
 })
 export class PopupAddCardsComponent implements OnInit {
-  funcID: string = "";
-  entityName = "FD_Cards"
-  gridViewName: string = "";
-  formName: string = "";
-  lstPattern: any[] = [];
-  parameter: any = null;
-  givePoint: number = 0;
-  quantity: number = 0;
-  quantityOld: number = 0;
-  amount: number = 0;
-  situation: string = "";
-  rating: string = "";
-  isWalletReciver = false;
-  myWallet: any = null;
-  user: any;
-  wallet: any;
-  behavior = [];
-  industry = "";
-  price: number = 0;
-  showNavigationArrows: boolean = false;
+  @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
+
   dialog: DialogRef;
-  title: string = "";
-  cardType: string = "";
-  CARDTYPE_EMNUM = {
-    Commendation: "1",
-    Thankyou: "2",
-    CommentForChange: "3",
-    SuggestionImprovement: "4",
-    Share: "5",
-    Congratulation: "6",
-    Radio: "7"
-  };
   form: FormGroup;
-  refValue = "Behaviors_Grp";
-  userReciver: string = "";
-  userReciverName: string = "";
+
+  lstPattern: any[] = [];
+  behavior: any[] = [];
   lstShare: any[] = [];
   gifts: any[] = [];
-  giftCount: number;
-  shareControl: string = "9";
-  objectType: string = "";
-  totalRecorItem = 4;
+
   patternSelected: any;
-  ratingVll: string = "";
+  user: any;
+  wallet: any;
   lstRating: any = null;
+  myWallet: any = null;
+  parameter: any = null;
+
+  ratingVll: string = "";
+  objectType: string = "";
   mssgNoti: string = "";
+  userReciver: string = "";
+  userReciverName: string = "";
+  title: string = "";
+  cardType: string = "";
+  situation: string = "";
+  rating: string = "";
+  industry: string = "";
+  funcID: string = "";
+  gridViewName: string = "";
+  formName: string = "";
+  shareControl: string = "9";
+  entityName: string = "FD_Cards"
+  refValue: string = "Behaviors_Grp";
+
   countCardReive: number = 0;
   countCardSend: number = 0;
   countPointSend: number = 0;
   max: number = 0;
   min: number = 0;
+  giftCount: number;
+  givePoint: number = 0;
+  quantity: number = 0;
+  quantityOld: number = 0;
+  amount: number = 0;
+  price: number = 0;
+  totalRecorItem: number = 4;
+
+  isWalletReciver: boolean = false;
+  showNavigationArrows: boolean = false;
 
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
   }
+
   SHARECONTROLS = {
     OWNER: "1",
     MYGROUP: "2",
@@ -86,7 +86,17 @@ export class PopupAddCardsComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
+
+  CARDTYPE_EMNUM = {
+    Commendation: "1",
+    Thankyou: "2",
+    CommentForChange: "3",
+    SuggestionImprovement: "4",
+    Share: "5",
+    Congratulation: "6",
+    Radio: "7"
+  };
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -108,110 +118,96 @@ export class PopupAddCardsComponent implements OnInit {
     this.getMessageNoti("SYS009");
     this.getMyWallet(this.user.userID);
   }
+
   loadDataAsync(funcID: string) {
     if (funcID) {
-      this.cache.functionList(funcID)
-        .subscribe((func: any) => {
-          if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
-            this.cardType = func.dataValue;
-            this.formName = func.formName;
-            this.gridViewName = func.gridViewName;
-            this.entityName = func.entityName;
-            this.title = func.description;
-            this.cache.gridViewSetup(this.formName, this.gridViewName)
-              .subscribe((grdSetUp: any) => {
-                if (grdSetUp && grdSetUp?.Rating?.referedValue) {
-                  console.log(grdSetUp)
-                  this.ratingVll = grdSetUp.Rating.referedValue;
-                  this.cache.valueList(this.ratingVll)
-                    .subscribe((vll: any) => {
-                      if (vll) {
-                        this.lstRating = vll.datas;
-                      }
-                    })
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
+          this.cardType = func.dataValue;
+          this.formName = func.formName;
+          this.gridViewName = func.gridViewName;
+          this.entityName = func.entityName;
+          this.title = func.description;
+          this.cache.gridViewSetup(this.formName, this.gridViewName).subscribe((grdSetUp: any) => {
+            if (grdSetUp && grdSetUp?.Rating?.referedValue) {
+              console.log(grdSetUp)
+              this.ratingVll = grdSetUp.Rating.referedValue;
+              this.cache.valueList(this.ratingVll).subscribe((vll: any) => {
+                if (vll) {
+                  this.lstRating = vll.datas;
                 }
               })
-            this.loadParameter(this.cardType);
-            if (this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Radio) {
-              this.loadDataPattern(this.cardType);
             }
+          })
+          this.loadParameter(this.cardType);
+          if (this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Radio) {
+            this.loadDataPattern(this.cardType);
           }
-        })
+        }
+      })
     }
   }
+
   loadParameter(cardType: string) {
-    this.api.execSv(
-      "SYS",
-      "ERM.Business.SYS",
-      "SettingValuesBusiness",
-      "GetParameterAsync",
-      ["FDParameters", cardType])
-      .subscribe((res: any) => {
-        if (res) {
-          this.parameter = JSON.parse(res);
-          if (this.parameter.MaxSendControl === "1") {
-            this.getCountCardSend(this.user.userID, this.cardType);
-          }
-          if (this.parameter.MaxPointControl === "1") {
-            if (this.parameter.ActiveCoins) {
-              this.getCountPointSend(this.user.userID, this.cardType, this.parameter.ActiveCoins);
-            }
-          }
-          this.dt.detectChanges();
+    this.api.execSv("SYS", "ERM.Business.SYS", "SettingValuesBusiness", "GetParameterAsync", ["FDParameters", cardType]).subscribe((res: any) => {
+      if (res) {
+        this.parameter = JSON.parse(res);
+        if (this.parameter.MaxSendControl === "1") {
+          this.getCountCardSend(this.user.userID, this.cardType);
         }
-      })
+        if (this.parameter.MaxPointControl === "1") {
+          if (this.parameter.ActiveCoins) {
+            this.getCountPointSend(this.user.userID, this.cardType, this.parameter.ActiveCoins);
+          }
+        }
+        this.dt.detectChanges();
+      }
+    })
   }
+
   getCountCardSend(senderID: string, cardType: string) {
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountCardSendAsync", [senderID, cardType])
-      .subscribe((res: number) => {
-        if (res >= 0) {
-          this.countCardSend = res;
-        }
-      })
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountCardSendAsync", [senderID, cardType]).subscribe((res: number) => {
+      if (res >= 0) {
+        this.countCardSend = res;
+      }
+    })
   }
+
   getCountCardRecive(reciverID: string, cardType: string) {
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountCardReciveAsync", [reciverID, cardType])
-      .subscribe((res: number) => {
-        if (res >= 0) {
-          this.countCardReive = res;
-        }
-      })
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountCardReciveAsync", [reciverID, cardType]).subscribe((res: number) => {
+      if (res >= 0) {
+        this.countCardReive = res;
+      }
+    })
   }
+
   getCountPointSend(userID: string, cardType: string, activeCoins: string) {
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountPointSendAsync", [userID, cardType, activeCoins])
-      .subscribe((res: number) => {
-        if (res >= 0) {
-          this.countPointSend = res;
-        }
-      })
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCountPointSendAsync", [userID, cardType, activeCoins]).subscribe((res: number) => {
+      if (res >= 0) {
+        this.countPointSend = res;
+      }
+    })
   }
+
   loadDataPattern(cardType: string) {
-    this.api
-      .execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [
-        cardType,
-      ])
-      .subscribe((res: any) => {
-        if (res && res.length > 0) {
-          this.lstPattern = res;
-          let patternDefault = this.lstPattern.find((e: any) => e.isDefault == true);
-          this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0];
-          this.dt.detectChanges();
-        }
-      });
+    this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType,]).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.lstPattern = res;
+        let patternDefault = this.lstPattern.find((e: any) => e.isDefault == true);
+        this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0];
+        this.dt.detectChanges();
+      }
+    });
   }
+
   getMyWallet(userID: string) {
-    this.api.execSv(
-      "FD",
-      "ERM.Business.FD",
-      "WalletsBusiness",
-      "GetWalletsAsync",
-      [userID]
-    ).subscribe((res: any) => {
+    this.api.execSv("FD", "ERM.Business.FD", "WalletsBusiness", "GetWalletsAsync", [userID]).subscribe((res: any) => {
       if (res) {
         this.myWallet = res;
       }
     })
   }
+
   initForm() {
     this.form = new FormGroup({
       receiver: new FormControl(null),
@@ -225,6 +221,7 @@ export class PopupAddCardsComponent implements OnInit {
       coins: new FormControl(0)
     })
   }
+
   valueChange(e: any) {
     // if (!e?.field || !e?.data) {
     //   return;
@@ -237,9 +234,11 @@ export class PopupAddCardsComponent implements OnInit {
         this.rating = data;
         this.form.patchValue({ rating: data });
         break;
+
       case "giftID":
         this.getGiftInfor(data);
         break;
+
       case "quantity":
         if (!this.gifts[0] || !this.gifts[0]?.availableQty || !this.gifts[0]?.price) {
           this.form.patchValue({ quantity: 0 });
@@ -259,10 +258,12 @@ export class PopupAddCardsComponent implements OnInit {
           this.form.patchValue({ quantity: data });
         }
         break;
+
       case "behavior":
         this.behavior = data;
         this.form.patchValue({ behavior: this.behavior });
         break;
+
       case "industry":
         this.industry = data;
         let obj = {};
@@ -282,10 +283,12 @@ export class PopupAddCardsComponent implements OnInit {
         )
         this.form.patchValue(obj);
         break;
+
       case "situation":
         this.situation = data;
         this.form.patchValue({ situation: this.situation });
         break;
+
       case "receiver":
         if (data) {
           this.userReciver = data;
@@ -305,22 +308,14 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   checkValidateWallet(receiverID: string) {
-    this.api
-      .execSv<any>(
-        "FD",
-        "ERM.Business.FD",
-        "WalletsBusiness",
-        "CheckWallet",
-        receiverID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.isWalletReciver = true;
-        } else {
-          this.isWalletReciver = false;
-          this.notifySV.notify("Người nhận chưa tích hợp ví");
-        }
-      });
+    this.api.execSv<any>("FD", "ERM.Business.FD", "WalletsBusiness", "CheckWallet", receiverID).subscribe((res) => {
+      if (res) {
+        this.isWalletReciver = true;
+      } else {
+        this.isWalletReciver = false;
+        this.notifySV.notify("Người nhận chưa tích hợp ví");
+      }
+    });
   }
 
   getMessageNoti(mssgCode: string) {
@@ -331,6 +326,7 @@ export class PopupAddCardsComponent implements OnInit {
       }
     })
   }
+
   Save() {
     if (!this.form.controls['receiver'].value) {
       let mssg = Util.stringFormat(this.mssgNoti, "Người nhận");
@@ -382,19 +378,23 @@ export class PopupAddCardsComponent implements OnInit {
       card.shareControl = this.shareControl;
       card.objectType = this.objectType;
       card.listShare = this.lstShare;
+
       if (this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share) {
         if (this.patternSelected?.patternID) {
           card.pattern = this.patternSelected.patternID;
         }
       }
-      if (this.gifts) {
+
+      if (this.gifts && this.gifts.length > 0) {
         card.hasGifts = true;
         card.gifts = this.gifts;
       }
+
       if (this.givePoint > 0) {
         card.hasPoints = true;
         card.coins = this.givePoint
       }
+
       // if(this.parameter){
       //   // max send
       //   if(this.parameter.MaxSendControl === "1")
@@ -421,24 +421,21 @@ export class PopupAddCardsComponent implements OnInit {
       //     }  
       //   }
       // }
-      this.api
-        .execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card)
-        .subscribe((res: any[]) => {
-          if (res && res[0] && res[1]) {
-            (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
-            this.dialog.close();
-          }
-          else {
-            this.notifySV.notify(res[1]);
-          }
-        });
+      this.api.execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card).subscribe((res: any[]) => {
+        if (res && res[0] && res[1]) {
+          (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
+          this.dialog.close();
+        }
+        else {
+          this.notifySV.notify(res[1]);
+        }
+      });
     }
-
   }
+
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }
-
 
   eventApply(event: any) {
     if (!event) {
@@ -507,6 +504,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.givePoint--;
     this.dt.detectChanges();
   }
+
   addPoint() {
     // max points
     let point = this.givePoint + 1;
@@ -526,13 +524,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.max = 0;
 
     if (giftID) {
-      this.api.execSv(
-        "FD",
-        "ERM.Business.FD",
-        "GiftsBusiness",
-        "GetGiftAsync",
-        [giftID]
-      ).subscribe((res: any) => {
+      this.api.execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetGiftAsync", [giftID]).subscribe((res: any) => {
         if (res) {
           if (res.availableQty <= 0) {
             this.notifySV.notify("Số dư quà tặng không đủ");

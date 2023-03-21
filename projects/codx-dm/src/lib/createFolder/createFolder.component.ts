@@ -369,7 +369,6 @@ export class CreateFolderComponent implements OnInit {
     this.showAll = true;
     this.folderService.getFolder(this.id).subscribe(async (res) => {
       if (res) {
-        debugger;
         this.setFolderAS(res);
         if (this.edit) {
           this.noeditName = false;
@@ -619,8 +618,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;

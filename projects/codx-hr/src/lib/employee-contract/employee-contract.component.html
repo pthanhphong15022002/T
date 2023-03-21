@@ -12,6 +12,8 @@
   [button]="buttonAdd"
   (buttonClick)="addContract($event)"
   (onActions)="HandleAction($event)"
+  (oneMoreMulti)="onMoreMulti($event)"
+  (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
 
@@ -20,48 +22,48 @@
     <div class="w-25">
       <div class="d-flex align-items-start">
         <span
-        *ngIf="data.isCurrent == true"
-          class="bullet bullet-vertical d-flex align-items-center min-h-100px me-3 bg-primary"
+          class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
+          [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'"
         >
         </span>
         <div class="d-flex flex-column">
           <codx-img
             [width]="35"
             class="me-3"
-            [objectId]="data.emp.domainUser"
+            [objectId]="data?.emp?.employeeID"
             [referType]="'avt'"
-            [objectName]="data.emp.employeeName"
-            [objectType]="'AD_Users'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
           >
           </codx-img>
           <codx-vll
-          class="badge badge-sm"
-          [name]="'HR001'"
-          [value]="data.emp.gender"
-          [showText]="true"
-          [showBgColor]="true"
-        >
-        </codx-vll>
+            class="badge badge-sm"
+            [name]="'HR001'"
+            [value]="data?.emp?.gender"
+            [showText]="false"
+            [showIcon]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
         </div>
         <div class="d-flex flex-column">
           <div>
             <div class="text-dark fw-bold">
               <span>
-                {{ data.emp.employeeName }}
+                {{ data?.emp?.employeeName }}
               </span>
-              <i class="icon-accessibility"></i>
+              <i class="icon-qr_code_scanner icon-14 me-1"></i>
               <span>
-                {{ data.emp.employeeID }}
+                {{ data?.emp?.employeeID }}
               </span>
             </div>
-
           </div>
           <div class="text-gray-700">
-            <span>{{ data.positionID }}</span>
+            <span>{{ data?.positionID }}</span>
           </div>
 
           <div class="text-gray-700">
-            <span>{{ data.orgUnitID }}</span>
+            <span>{{ data?.orgUnitID }}</span>
           </div>
         </div>
       </div>
@@ -70,34 +72,63 @@
     <div class="w-25">
       <div class="d-flex flex-column">
         <div class="text-gray-700">
-          <span>{{ data.contractTypeID | formatvalue : view.formModel : "contractTypeID" | async}}</span>
+          <span
+            [title]="eContractHeaderText['ContractTypeID']"
+            [innerHTML]="
+              data?.contractTypeID
+                | formatvalue : view.formModel : 'contractTypeID'
+                | async
+            "
+          ></span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data.effectedDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['EffectedDate']">{{
+            data?.effectedDate | fmDT
+          }}</span>
           <span> - </span>
-          <span>{{ data.expiredDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['ExpiredDate']">{{
+            data?.expiredDate | fmDT
+          }}</span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data.contractNo}}</span>
+          <span [title]="eContractHeaderText['ContractNo']">
+            {{ data?.contractNo }}</span
+          >
           <span> - </span>
-          <span>{{ data.signedDate | fmDT }}</span>
+          <span [title]="eContractHeaderText['SignedDate']">{{
+            data?.signedDate | fmDT
+          }}</span>
         </div>
       </div>
     </div>
 
     <div class="w-25">
-      <codx-attachment #attachment [objectId]="data.recID" [objectType]="view.formModel.entityName" hideFolder="1"
-      hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
-      [formModel]="view.formModel" 
-      displayThumb="full" showMessage="0">
-    </codx-attachment>
+      <codx-attachment
+        #attachment
+        [objectId]="data?.recID"
+        [objectType]="view.formModel.entityName"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="view.formModel"
+        displayThumb="full"
+        showMessage="0"
+      >
+      </codx-attachment>
     </div>
 
-    <div class="w-25">
-      {{ data.signStatus | formatvalue : view.formModel : "signStatus" | async}}
-    </div>
+    <div
+      class="w-25"
+      [innerHTML]="
+        data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async
+      "
+    ></div>
 
     <codx-mfunc
       [formModel]="view.formModel"
@@ -110,66 +141,132 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25">Nhân viên</div>
-  <div class="w-25">Hợp đồng</div>
-  <div class="w-25">Đính kèm</div>
-  <div class="w-25">Tình trạng</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Nhân viên</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Hợp đồng</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Đính kèm</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Tình trạng</div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>
   <div class="row">
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
 
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
 
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
   </div>
 </ng-template>
 
 <ng-template #contractTemplate let-data>
   <div>
-    <div>data.contractTypeID</div>
-    <div>data.effectedDate</div>
-    <div>data.signedDate</div>
+    <div>data?.contractTypeID</div>
+    <div>data?.effectedDate</div>
+    <div>data?.signedDate</div>
   </div>
 
-  <!-- <div class="d-flex align-items-center mt-1">
-      <span
-        class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
-      ></span
-      >{{
-        data.benefitID
-          | formatvalue : benefitFormodel : "benefitID"
-          | async
-      }}
-    </div>
-    <div class="d-flex align-items-center mt-1">
-      <span
-        class="icon-attach_money text-gray-600 pe-2 icon-14"
-      >
-      </span>
-      {{ data.benefitAmt }}
-      /
-      <span class="text-dark fw-bold">
-        {{
-          data?.benefitNorm
-            | formatvalue : benefitFormodel : "benefitNorm"
-            | async
-        }}
-      </span>
-    </div>
+</ng-template>
 
-    <div class="d-flex align-items-center mt-1">
-      <span class="icon-event text-gray-600 icon-14 pe-2"></span
-      >Hiệu lực:
-      {{ data.effectedDate | fmDT }}
-      -
-      {{ data.expiredDate | fmDT }}
-    </div> -->
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    (clickMF)="clickMF($event, data)"
+    cardCss="card codx_cardcenter p-3"
+    [imageId]="data?.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [titleTmp]="titleTmp"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    
+  >
+  </codx-temp-full>
+  <ng-template #titleTmp let-data>
+    <div>
+      <div class="justify-content-between text-dark fw-bold">
+        <span>
+          {{ data?.emp?.employeeName }}
+        </span>
+
+        <span>
+          <i class="icon-qr_code_scanner icon-14 me-1"></i>
+          <span class="text-danger">
+            {{ data?.emp?.employeeID }}
+          </span>
+          
+        </span>
+      </div>
+
+      <div class="justify-content-between text-gray-700">
+        <span
+          [innerHTML]="
+            data.emp.positionID
+              | formatvalue : view.formModel : 'positionID'
+              | async
+          "
+        ></span>
+      </div>
+
+      <div class="justify-content-between text-dark">
+        <span
+          [innerHTML]="
+            data.contractTypeID
+              | formatvalue : view.formModel : 'contractTypeID'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="justify-content-between text-dark">
+        <span>
+          <i class="icon-calendar_today text-primary fw-bold"></i>
+          {{ data.effectedDate | fmDT }}
+          -
+          {{ data.expiredDate | fmDT }}
+        </span>
+      </div>
+      <div class="justify-content-between text-dark">
+        <span class="mt-2">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.signStatus"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+
+        <span class="d-flex flex-row justify-content-end">
+          <codx-imgs
+            [objectId]="getIdUser(data.createdBy, data.owner)"
+            [objectType]="'AD_Users'"
+            [width]="30"
+            [numberImages]="3"
+            [mode]="false"
+          >
+          </codx-imgs>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+</ng-template>
+
+<ng-template #panelRightListDetail let-data>
+  <lib-view-contracts-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    (uploaded)="getDetailContract($event, data)"
+    >
+  </lib-view-contracts-detail>
+  <ng-template #itemRightDetail> </ng-template>
 </ng-template>

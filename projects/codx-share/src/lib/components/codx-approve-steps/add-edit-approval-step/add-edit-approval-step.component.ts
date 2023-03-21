@@ -21,16 +21,14 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  QueryBuilderComponent,
 } from 'codx-core';
 // import { Approvers } from 'projects/codx-es/src/lib/codx-es.model';
 // import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { Approvers, CodxShareService } from '../../../codx-share.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lib-add-edit-approval-step',
@@ -42,6 +40,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
+  @ViewChild('queryBuilder', { static: false })
+  queryBuilder: QueryBuilderComponent;
 
   @Output() close = new EventEmitter();
   @Input() transId = '';
@@ -98,6 +98,18 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   buttonClick(e: any) {
+    if (e.nextId == 'tabQuery') {
+      setTimeout(() => {
+        document
+          .getElementsByTagName('codx-query-builder')[0]
+          ?.querySelector('.card-header')
+          .classList.add('d-none');
+        document
+          .getElementsByTagName('codx-query-builder')[0]
+          ?.querySelector('.card-footer')
+          .classList.add('d-none');
+      }, 200);
+    }
     console.log(e);
   }
 
@@ -134,6 +146,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       this.tabEmail,
       this.tabAnother,
     ];
+
+    //test tabQuery
+    //this.hideTabQuery = !this.hideTabQuery;
+
+
     if (this.hideTabQuery) {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
@@ -348,6 +365,24 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  beforeSave(){
+    console.log(this.queryBuilder);
+    if(this.queryBuilder){
+      this.queryBuilder.saveForm()
+      return;
+    }
+    else{
+      this.onSaveForm();
+    }
+    
+  }
+
+  
+  saveFilterChange(event) {
+    this.data.constraints = event.filters;
+    this.onSaveForm();
   }
 
   onSaveForm() {

@@ -35,6 +35,7 @@ import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { MeetingComponent } from '../../../room/meeting/meeting.component';
 import { FuncID } from '../../../models/enum/enum';
+import { BookingItems } from '../../../models/bookingItems.model';
 
 export class Device {
   id;
@@ -59,7 +60,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
-  @Input() data!: any;
+  @Input() oData!: any;
   fGroupAddBookingRoom: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -118,7 +119,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   isCopy = false;
   ep8Avaiable: any;
   sysSetting: any;
-  guestNumber=0;
+  guestNumber = 0;
   lstEquipment = [];
 
   listRoles = [];
@@ -137,8 +138,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   private autoApproveItem = '0';
   dueDateControl: any;
   listFilePermission = [];
-  attendeesNumber=0;
+  attendeesNumber = 0;
   grView: any;
+  data: any;
 
   constructor(
     private injector: Injector,
@@ -154,7 +156,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogData?.data[0];
+    this.oData = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
@@ -165,6 +167,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.userInfo = authStore.get();
     this.user = this.authStore.get();
 
+    this.data = { ...this.oData };
     if (this.isAdd) {
       if (this.optionalData != null) {
         this.data.bookingOn = this.optionalData.startDate;
@@ -173,6 +176,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
+      this.attendeesNumber = this.data?.attendees;
       this.data.reminder = 15;
     } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
@@ -185,17 +189,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ('0' + tmpEndTime.getHours()).toString().slice(-2) +
         ':' +
         ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
-    }
-    
-    this.attendeesNumber=this.data.attendees;
-  }
 
-  onInit(): void {
-    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(grv=>{
-      if(grv){
-        this.grView=Util.camelizekeyObj(grv);
-      }
-    })
+      this.attendeesNumber = this.data?.attendees;
+    }
+  }
+  getCacheData() {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
     this.codxEpService.getSettingValue('System').subscribe((sys: any) => {
       if (sys) {
         this.ep8Avaiable = JSON.parse(sys.dataValue)?.EP8;
@@ -260,7 +265,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.autoApproveItem = json.AutoApproveItem;
       }
     });
-    //Lấy giờ làm việc
     this.codxEpService
       .getEPRoomSetting('4')
       .subscribe((approvalSetting: any) => {
@@ -280,11 +284,81 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
       });
+    // Lấy list role người tham gia
+    this.cache.valueList('EP009').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        let tmpArr = [];
+        tmpArr = res.datas;
+        tmpArr.forEach((item) => {
+          if (item.value != '4') {
+            this.listRoles.push(item);
+          }
+        });
+        //thêm người đặt(người dùng hiên tại) khi thêm mới
+        if (this.isAdd) {
+          let people = this.authService.userValue;
+          this.curUser.userID = people.userID;
+          this.curUser.userName = people.userName;
+          this.curUser.status = '1';
+          this.curUser.roleType = '1';
+          this.curUser.optional = false;
+          this.curUser.quantity = 1;
+          this.listRoles.forEach((element) => {
+            if (element.value == this.curUser.roleType) {
+              this.curUser.icon = element.icon;
+              this.curUser.roleName = element.text;
+            }
+          });
+          this.resources.push(this.curUser);
+          this.changeDetectorRef.detectChanges();
+        } else {
+          //lấy ds người tham gia khi sửa
+          if (this.data.resources != null) {
+            this.guestNumber = this.data.attendees - this.data.resources.length;
+            this.peopleAttend = this.data.resources;
+            this.peopleAttend.forEach((people) => {
+              let tempAttender = new BookingAttendees();
+              tempAttender.userID = people.userID;
+              tempAttender.userName = people.userName;
+              tempAttender.status = people.status;
+              tempAttender.roleType = people.roleType;
+              tempAttender.quantity = people.quantity;
+              tempAttender.optional = people.optional;
+              this.listRoles.forEach((element) => {
+                if (element.value == tempAttender.roleType) {
+                  tempAttender.icon = element.icon;
+                  tempAttender.roleName = element.text;
+                }
+              });
+              if (tempAttender.userID != this.data.createdBy) {
+                this.attendeesList.push(tempAttender);
+                this.resources.push(this.curUser);
+              }
+              if (tempAttender.userID == this.data.createdBy) {
+                this.curUser = tempAttender;
+              }
+            });
+          }
+        }
+      }
+    });
+    if ((this.isAdd && this.data.resourceID != null) || !this.isAdd) {
+      this.codxEpService
+        .getResourceByID(this.data.resourceID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.roomCapacity = res.capacity;
+          }
+        });
+    }
+  }
+  getCalendateTime() {
+    //Lấy giờ làm việc
     this.codxEpService.getEPRoomSetting('1').subscribe((setting: any) => {
       if (setting) {
         let sysSetting = JSON.parse(setting.dataValue);
         this.calendarID = sysSetting?.CalendarID;
-        this.dueDateControl = sysSetting?.DueDateControl;
+        this.dueDateControl = '0'; //sysSetting?.DueDateControl;
         if (this.calendarID) {
           this.codxEpService
             .getCalendarWeekdays(this.calendarID)
@@ -388,23 +462,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         });
       }
     });
-
-    //Thêm lấy thời gian hiện tại làm thông tin đặt phòng khi thêm mới
-    // if (this.isAdd && this.optionalData!=null) {
-    //   let tmpDate = new Date();
-    //   let crrMinute = tmpDate.getMinutes();
-    //   let crrHour = tmpDate.getHours();
-    //   if (crrMinute < 30) {
-    //     crrMinute = 30;
-    //   } else {
-    //     crrMinute = 0;
-    //     crrHour = crrHour + 1;
-    //   }
-    //   this.startTime =
-    //     ('0' + crrHour.toString()).slice(-2) +
-    //     ':' +
-    //     ('0' + crrMinute.toString()).slice(-2);
-    // }
+  }
+  onInit(): void {
+    this.getCacheData();
+    this.getCalendateTime();
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -495,119 +556,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.changeDetectorRef.detectChanges();
     });
     this.detectorRef.detectChanges();
-    // Lấy list role người tham gia
-    this.cache.valueList('EP009').subscribe((res) => {
-      if (res && res?.datas.length > 0) {
-        let tmpArr = [];
-        tmpArr = res.datas;
-        tmpArr.forEach((item) => {
-          if (item.value != '4') {
-            this.listRoles.push(item);
-          }
-        });
-        //thêm người đặt(người dùng hiên tại) khi thêm mới
-        if (this.isAdd) {
-          let people = this.authService.userValue;
-          this.curUser.userID = people.userID;
-          this.curUser.userName = people.userName;
-          this.curUser.status = '1';
-          this.curUser.roleType = '1';
-          this.curUser.optional = false;          
-          this.curUser.quantity = 1;
-          this.listRoles.forEach((element) => {
-            if (element.value == this.curUser.roleType) {
-              this.curUser.icon = element.icon;
-              this.curUser.roleName = element.text;
-            }
-          });
-          this.resources.push(this.curUser);
-          this.changeDetectorRef.detectChanges();
-        } else {
-          //lấy ds người tham gia khi sửa
-          if (this.data.resources != null) {
-            this.guestNumber=this.data.attendees-this.data.resources.length;
-            this.peopleAttend = this.data.resources;
-                this.peopleAttend.forEach((people) => {
-                  let tempAttender = new BookingAttendees();
-                  tempAttender.userID = people.userID;
-                  tempAttender.userName = people.userName;
-                  tempAttender.status = people.status;
-                  tempAttender.roleType = people.roleType;
-                  tempAttender.quantity = people.quantity;
-                  tempAttender.optional = people.optional;
-                  this.listRoles.forEach((element) => {
-                    if (element.value == tempAttender.roleType) {
-                      tempAttender.icon = element.icon;
-                      tempAttender.roleName = element.text;
-                    }
-                  });
-                  if (
-                    tempAttender.userID != this.authService.userValue.userID
-                  ) {
-                    this.attendeesList.push(tempAttender);
-                    this.resources.push(this.curUser);
-                  }
-                  if (
-                    tempAttender.userID == this.authService.userValue.userID
-                  ) {
-                    this.curUser = tempAttender;
-                    this.resources.push(this.curUser);
-                  }
-              });
-          }
-          else{
-            this.apiHttpService
-            .callSv(
-              'EP',
-              'ERM.Business.EP',
-              'BookingAttendeesBusiness',
-              'GetAsync',
-              [this.data.recID]
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.peopleAttend = res.msgBodyData[0];
-                this.guestNumber=this.data.attendees-this.peopleAttend.length;
-                this.peopleAttend.forEach((people) => {
-                  let tempAttender = new BookingAttendees();
-                  tempAttender.userID = people.userID;
-                  tempAttender.userName = people.userName;
-                  tempAttender.status = people.status;
-                  tempAttender.roleType = people.roleType;
-                  tempAttender.optional = people.optional;
-                  this.listRoles.forEach((element) => {
-                    if (element.value == tempAttender.roleType) {
-                      tempAttender.icon = element.icon;
-                      tempAttender.roleName = element.text;
-                    }
-                  });
-                  if (
-                    tempAttender.userID != this.authService.userValue.userID
-                  ) {
-                    this.attendeesList.push(tempAttender);
-                    this.resources.push(this.curUser);
-                  }
-                  if (
-                    tempAttender.userID == this.authService.userValue.userID
-                  ) {
-                    this.curUser = tempAttender;
-                    this.resources.push(this.curUser);
-                  }
-                  //else if (people.optional == false) {
-                  //   //EP_WAIT xóa sau khi debug lại
-                  //   this.lstUser.push(tempAttender);
-                  // } else {
-                  //   this.lstUserOptional.push(tempAttender);
-                  // }
-                });
-                this.changeDetectorRef.detectChanges();
-              }
-            });
-          }
-          
-        }
-      }
-    });
 
     this.initForm();
 
@@ -624,43 +572,30 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
 
     if (!this.isAdd) {
-      this.apiHttpService
-        .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', [
-          this.data.recID,
-        ])
-        .subscribe((res) => {
+      this.codxEpService
+        .getBookingItems(this.data.recID)
+        .subscribe((res: any) => {
           if (res) {
-            res.msgBodyData[0].forEach((stationery) => {
-              let order: {
-                id: string;
-                quantity: number;
-                text: string;
-                objectType: string;
-                umid: string;
-                objectID: any;
-              } = {
-                id: stationery.itemID,
-                text: stationery.itemName,
-                quantity: stationery.quantity,
-                objectType: 'EP_Resources',
-                objectID: stationery.itemRecID,
-                umid: stationery.umid,
-              };
-              this.lstStationery.push(order);
+            res.forEach((item) => {
+              let tmpSta = new BookingItems();
+              (tmpSta.itemID = item?.itemID),
+                (tmpSta.quantity = item?.quantity),
+                (tmpSta.itemName = item?.itemName),
+                (tmpSta.umid = item?.umid),
+                (tmpSta.umName =
+                  item?.umName != null && item?.umName != ''
+                    ? item?.umName
+                    : item?.umid),
+                (tmpSta.objectType = 'EP_Resources'),
+                (tmpSta.objectID = item?.resourceRecID),
+                this.lstStationery.push(tmpSta);
             });
             this.changeDetectorRef.detectChanges();
           }
         });
     }
-    if ((this.isAdd && this.data.resourceID != null) || !this.isAdd) {
-      this.codxEpService
-        .getResourceByID(this.data.resourceID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.roomCapacity = res.capacity;
-          }
-        });
-    }
+
+    this.isAfterRender = true;
   }
 
   initForm() {
@@ -669,8 +604,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       .then((item) => {
         if (item) {
           this.fGroupAddBookingRoom = item;
-          this.isAfterRender = true;
-          this.fGroupAddBookingRoom.patchValue(item);
         }
       });
     this.changeDetectorRef.detectChanges();
@@ -763,16 +696,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.stopOn = this.data.endDate;
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
-        this.data.status = '5';
-      } 
-        this.data.approveStatus = this.data.approveStatus?? '1';
-        this.data.status = this.data.status ?? '1';        
-      
-      
-      this.data.resourceType = this.data.resourceType??'1';
+      }
+      this.data.approveStatus = this.data.approveStatus ?? '1';
+      this.data.status = this.data.status ?? '1';
+
+      this.data.resourceType = this.data.resourceType ?? '1';
       this.data.approval = this.approvalRule;
       this.data.requester = this.curUser.userName;
-      this.data.attendees = this.tmpAttendeesList.length +this.guestNumber;
+      this.data.attendees = this.tmpAttendeesList.length + this.guestNumber;
       this.data.attachments = this.attachment.fileUploadList.length;
       //check
       this.codxEpService
@@ -881,19 +812,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   attendeesValidateStep(approval) {
-    this.api
-      .exec(
-        'ERM.Business.EP',
-        'BookingsBusiness',
-        'BookingAttendeesValidatorAsync',
-        [
-          this.tmpAttendeesList,
-          this.data.startDate.toUTCString(),
-          this.data.endDate.toUTCString(),
-          this.data.recID,
-        ]
+    this.codxEpService
+      .bookingAttendeesValidator(
+        this.tmpAttendeesList,
+        this.data.startDate,
+        this.data.endDate,
+        this.data.recID
       )
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         if (res != null && res.length > 0) {
           this.busyAttendees = '';
           res.forEach((item) => {
@@ -942,108 +868,67 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 (item2: any) => {
                   if (item2?.status == 0) {
                     this.fileAdded(item2);
-                    if (approval) {
-                      if (this.approvalRule != '0') {
-                        this.codxEpService
-                          .getCategoryByEntityName(this.formModel.entityName)
-                          .subscribe((res: any) => {
-                            this.codxEpService
-                              .release(
-                                this.returnData,
-                                res?.processID,
-                                'EP_Bookings',
-                                this.formModel.funcID
-                              )
-                              .subscribe((res) => {
-                                if (res?.msgCodeError == null && res?.rowCount) {
-                                  this.notificationsService.notifyCode('ES007');
-                                  this.returnData.approveStatus = '3';
-                                  this.returnData.status = '3';
-                                  this.returnData.write = false;
-                                  this.returnData.delete = false;
-                                  (this.dialogRef.dataService as CRUDService)
-                                    .update(this.returnData)
-                                    .subscribe();
-                                  this.dialogRef && this.dialogRef.close(this.returnData);
-                                } else {
-                                  this.notificationsService.notifyCode(res?.msgCodeError);
-                                  // Thêm booking thành công nhưng gửi duyệt thất bại
-                                  this.dialogRef && this.dialogRef.close(this.returnData);
-                                }
-                              });
-                          });
-                      } else {
-                        this.notificationsService.notifyCode('ES007');
-                        this.codxEpService
-                          .afterApprovedManual(
-                            this.formModel.entityName,
-                            this.returnData.recID,
-                            '5'
-                          )
-                          .subscribe();
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      }
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    } else {
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    }
+                  }
+                  if (approval) {
+                    this.startRelease();
+                  } else {
+                    this.dialogRef && this.dialogRef.close(this.returnData);
                   }
                 }
               );
             }
-          }
-          else{
+          } else {
             if (approval) {
-              if (this.approvalRule != '0') {
-                this.codxEpService
-                  .getCategoryByEntityName(this.formModel.entityName)
-                  .subscribe((res: any) => {
-                    this.codxEpService
-                      .release(
-                        this.returnData,
-                        res?.processID,
-                        'EP_Bookings',
-                        this.formModel.funcID
-                      )
-                      .subscribe((res) => {
-                        if (res?.msgCodeError == null && res?.rowCount) {
-                          this.notificationsService.notifyCode('ES007');
-                          this.returnData.approveStatus = '3';
-                          this.returnData.status = '3';
-                          this.returnData.write = false;
-                          this.returnData.delete = false;
-                          (this.dialogRef.dataService as CRUDService)
-                            .update(this.returnData)
-                            .subscribe();
-                          this.dialogRef && this.dialogRef.close(this.returnData);
-                        } else {
-                          this.notificationsService.notifyCode(res?.msgCodeError);
-                          // Thêm booking thành công nhưng gửi duyệt thất bại
-                          this.dialogRef && this.dialogRef.close(this.returnData);
-                        }
-                      });
-                  });
-              } else {
-                this.notificationsService.notifyCode('ES007');
-                this.codxEpService
-                  .afterApprovedManual(
-                    this.formModel.entityName,
-                    this.returnData.recID,
-                    '5'
-                  )
-                  .subscribe();
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              }
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              this.startRelease();
             } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
           }
-          
         } else {
           return;
         }
       });
+  }
+  startRelease() {
+    if (this.approvalRule != '0') {
+      this.codxEpService
+        .getCategoryByEntityName(this.formModel.entityName)
+        .subscribe((res: any) => {
+          this.codxEpService
+            .release(
+              this.returnData,
+              res?.processID,
+              'EP_Bookings',
+              this.formModel.funcID
+            )
+            .subscribe((res) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notificationsService.notifyCode('ES007');
+                this.returnData.approveStatus = '3';
+                this.returnData.write = false;
+                this.returnData.delete = false;
+                (this.dialogRef.dataService as CRUDService)
+                  .update(this.returnData)
+                  .subscribe();
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+                // Thêm booking thành công nhưng gửi duyệt thất bại
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              }
+            });
+        });
+    } else {
+      this.notificationsService.notifyCode('ES007');
+      this.codxEpService
+        .afterApprovedManual(
+          this.formModel.entityName,
+          this.returnData.recID,
+          '5'
+        )
+        .subscribe();
+      this.dialogRef && this.dialogRef.close(this.returnData);
+    }
   }
 
   valueChange(event) {
@@ -1072,10 +957,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmplstDevice[index].isSelected = event.data;
     }
   }
-  guestChange(evt:any){
-    if(evt?.data!=null){
-      this.guestNumber=evt?.data;
-      this.attendeesNumber=this.attendeesList.length + 1 +this.guestNumber;      
+  guestChange(evt: any) {
+    if (evt?.data != null) {
+      this.guestNumber = evt?.data;
+      this.attendeesNumber = this.attendeesList.length + 1 + this.guestNumber;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -1088,7 +973,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueDateChange(event: any) {
     if (event?.data && event?.data?.fromDate) {
       this.data.bookingOn = event.data.fromDate;
-      
+
       if (!this.bookingOnCheck()) {
         this.checkLoop = !this.checkLoop;
         if (!this.checkLoop) {
@@ -1279,68 +1164,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.isPopupStationeryCbb = true;
   }
 
-  // openUserPopup() {
-  //   this.isPopupUserCbb = true;
-  // }
-  
-
-  // cbbDataUser = '';
-  // valueCbxUserChange(event) {
-  //   if (event == null) {
-  //     this.isPopupUserCbb = false;
-  //     return;
-  //   }
-  //   if (event?.dataSelected) {
-  //     this.lstUser = [];
-  //     event.dataSelected.forEach((people) => {
-  //       let tempAttender = new BookingAttendees();
-  //       tempAttender.userID = people.UserID;
-  //       tempAttender.userName = people.UserName;
-  //       tempAttender.status = '1';
-  //       tempAttender.roleType = '3';
-  //       tempAttender.optional = false;
-  //       this.listRoles.forEach((element) => {
-  //         if (element.value == tempAttender.roleType) {
-  //           tempAttender.icon = element.icon;
-  //           tempAttender.roleName = element.text;
-  //         }
-  //       });
-  //       this.attendeesList.push(tempAttender);
-  //     });
-  //     this.attendeesList.forEach((item) => {
-  //       if (item.userID == this.curUser.userID) {
-  //         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
-  //       }
-  //     });
-  //     this.attendeesList = this.filterArray(this.attendeesList);
-  //     this.data.attendees = this.attendeesList.length + 1;
-  //     this.changeDetectorRef.detectChanges();
-  //     let tmpDataCBB = '';
-  //     // this.attendeesList.forEach(item=>{
-  //     //   tmpDataCBB=tmpDataCBB+";"+item.userID;
-  //     // });
-  //     let roleCheck = 0;
-  //     if (this.curUser.roleType != '1') {
-  //       this.attendeesList.forEach((item) => {
-  //         if (item.roleType == '1') {
-  //           roleCheck = roleCheck + 1;
-  //         }
-  //       });
-  //       if (roleCheck < 1) {
-  //         this.curUser.roleType = '1';
-  //         this.listRoles.forEach((element) => {
-  //           if (element.value == this.curUser.roleType) {
-  //             this.curUser.icon = element.icon;
-  //             this.curUser.roleName = element.text;
-  //           }
-  //         });
-  //       }
-  //     }
-  //     this.cbbDataUser = tmpDataCBB;
-  //     this.isPopupUserCbb = false;
-  //     this.changeDetectorRef.detectChanges();
-  //   }
-  // }
   filterArray(arr) {
     return [...new Map(arr.map((item) => [item['userID'], item])).values()];
   }
@@ -1376,25 +1199,20 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       return;
     }
     event.dataSelected.forEach((item) => {
-      let tempStationery: {
-        id: string;
-        quantity: number;
-        text: string;
-        objectType: string;
-        umid: string;
-        objectID: string;
-      } = {
-        id: item.ResourceID,
-        quantity: this.attendeesNumber,
-        text: item.ResourceName,
-        umid: item.UMID,
-        objectType: 'EP_Resources',
-        objectID: item.RecID,
-      };
-      this.lstStationery.push(tempStationery);
+      let tmpSta = new BookingItems();
+      (tmpSta.itemID = item.ResourceID),
+        (tmpSta.quantity = this.attendeesNumber),
+        (tmpSta.itemName = item.ResourceName),
+        (tmpSta.umid = item.UMID),
+        (tmpSta.umName = item.UMID), //Chờ cập nhật thành tên đơn vị tính
+        (tmpSta.objectType = 'EP_Resources'),
+        (tmpSta.objectID = item.RecID),
+        this.lstStationery.push(tmpSta);
     });
     this.lstStationery = [
-      ...new Map(this.lstStationery.map((item) => [item['id'], item])).values(),
+      ...new Map(
+        this.lstStationery.map((item) => [item['itemID'], item])
+      ).values(),
     ];
 
     this.changeDetectorRef.detectChanges();
@@ -1417,10 +1235,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //   return item.quantity != 0;
     // });
   }
-  deleteStationery(id: any) {
-    if (id) {
+  deleteStationery(itemID: any) {
+    if (itemID != null && this.lstStationery != null) {
       this.lstStationery = this.lstStationery.filter((item) => {
-        return item?.id != id;
+        return item?.itemID != itemID;
       });
     }
   }
@@ -1493,6 +1311,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     var listUserID = '';
     var listDepartmentID = '';
     var listUserIDByOrg = '';
+    var listGroupMembersID;
     var type = 'U';
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -1504,6 +1323,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           case 'O':
           case 'D':
             listDepartmentID += obj.id + ';';
+            break;
+            case 'UG':
+              listGroupMembersID+= obj.id + ';'
             break;
         }
       }
@@ -1526,6 +1348,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             listUserIDByOrg += res;
             if (listUserID != '') listUserIDByOrg += ';' + listUserID;
             this.valueUser(listUserIDByOrg);
+          }
+        });
+    }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.codxEpService
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueUser(res);
           }
         });
     }
@@ -1582,7 +1417,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               tmpResource.userName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = '1';
-              tmpResource.quantity  = 1;
+              tmpResource.quantity = 1;
               tmpResource.optional = false;
 
               this.listRoles.forEach((element) => {
@@ -1613,7 +1448,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           });
           this.attendeesList = this.filterArray(this.attendeesList);
-          this.attendeesNumber = this.attendeesList.length + 1 +this.guestNumber;
+          this.attendeesNumber =
+            this.attendeesList.length + 1 + this.guestNumber;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -1626,7 +1462,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
     this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
-    this.attendeesNumber = this.attendeesList.length + 1 +this.guestNumber;
+    this.attendeesNumber = this.attendeesList.length + 1 + this.guestNumber;
     this.changeDetectorRef.detectChanges();
   }
   cbbResource = [];
@@ -1726,7 +1562,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.startDate,
         this.startTime
       )
-      .then((url) => {
+      .subscribe((url) => {
+        console.log('url', url);
+
         window.open(url, '_blank');
       });
   }

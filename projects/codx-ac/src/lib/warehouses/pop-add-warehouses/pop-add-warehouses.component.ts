@@ -225,7 +225,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.warehouses[keymodel[i]] == null ||
-              this.warehouses[keymodel[i]] == ''
+              String(this.warehouses[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

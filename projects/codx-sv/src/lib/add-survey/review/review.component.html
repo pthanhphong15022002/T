@@ -1,5 +1,5 @@
-<div class="page-questions mt-4" id="page-questions">
-  <div class="d-flex w-100 justify-content-center  ">
+<div class="page-questions pt-5" id="page-questions">
+  <div class="d-flex w-100 justify-content-center">
     <div class="d-flex flex-column">
       <div class="box">
         <div *ngIf="itemSession">
@@ -43,29 +43,25 @@
                         "
                       ></ng-container>
                     </form>
-                    <form
-                      id="formSession"
-                      class="form-horizontal example-box b-t-index"
-                      title="sd"
-                    >
-                      <ng-container
-                        *ngTemplateOutlet="
-                          template_card_session;
-                          context: {
-                            itemSession: itemSession
-                          }
-                        "
-                      ></ng-container>
-                    </form>
+                    <div class="formSession2 d-flex align-items-center b-t-index">
+                      <span
+                        *ngIf="itemSession.question"
+                        style="color: white"
+                        [innerHTML]="itemSession.question"
+                      ></span>
+                      <span *ngIf="!itemSession.question" style="color: white">
+                        {{"Mẫu không có tiêu đề"}}</span>
+                    </div>
                   </ng-container>
                 </div>
               </div>
             </div>
           </div>
           <div class="list example-boundary">
-            <div *ngFor="let itemQuestion of itemSession.children">
+            <div *ngFor="let itemQuestion of itemSession.children ; let i = index">
               <div
                 class="card-survey"
+                [ngClass]="i==0?'div-f-c':''"
                 [id]="'card-survey-question-' + itemQuestion.recID"
               >
                 <div
@@ -81,7 +77,7 @@
                   >
                     <form id="formId" class="form-horizontal example-box">
                       <ng-container #body>
-                        <div *ngIf="itemQuestion.category == 'Q'" class="ms-6">
+                        <div *ngIf="itemQuestion.category == 'Q'">
                           <div *ngIf="!itemQuestion.showAnswer">
                             <ng-container
                               *ngTemplateOutlet="
@@ -254,22 +250,22 @@
               </div>
             </div>
           </div>
-          <div class="d-flex justify-content-start" #footer>
+          <div class="d-flex justify-content-start mb-5" #footer>
             <button
               *ngIf="itemSession.seqNo > 0"
               type="button"
-              class="btn btn-primary me-6"
+              class="btn btn-submit-white text-purple me-6"
               (click)="continue(itemSession.seqNo - 1)"
             >
-              <codx-label fiedName="Back" default="Quay lại"></codx-label>
+              <codx-label fiedName="Back" default="Quay lại" class="text-bolder"></codx-label>
             </button>
             <button
               *ngIf="itemSession.seqNo != questions.length - 1"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-submit-white text-purple"
               (click)="continue(itemSession.seqNo + 1)"
             >
-              <codx-label fiedName="Continue" default="Tiếp"></codx-label>
+              <codx-label fiedName="Continue" default="Tiếp" class="text-bolder"></codx-label>
             </button>
             <button
               *ngIf="itemSession.seqNo == questions.length - 1"
@@ -317,7 +313,7 @@
       labelPosition="After"
       [disabled]="false"
       class="test-check"
-      name="group"
+      [name]="seqNoSession+itemQuestion?.recID"
       [label]="itemAnswer.answer"
       field="O"
       [crrValue]="itemAnswer.answer"
@@ -332,7 +328,7 @@
         labelPosition="After"
         [disabled]="false"
         class="test-check"
-        name="group"
+        [name]="seqNoSession+itemQuestion?.recID"
         [label]="'Mục khác:'"
         field="O"
         [checked]="itemAnswer.choose"
@@ -575,7 +571,7 @@
 >
   <div class="d-flex w-100">
     <div #header class="w-100">
-      <div class="form-group question w-100 mt-3">
+      <div class="form-group question w-100 mt-3 ms-6">
         <div
           [ngClass]="
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
@@ -605,18 +601,17 @@
   <div #contentByImage *ngIf="itemQuestion?.qPicture && lstEditIV.length > 0">
     <div *ngFor="let item of lstEditIV">
       <div
-        class="w-100 min-h-253px"
+        class="w-100 min-h-253px mb-6"
         *ngIf="item.objectID == itemQuestion.recID"
       >
-        <div
-          [ngClass]="
+        <!-- [ngClass]="
             itemQuestion?.alignCenterImg
               ? 'position-relative w-100 d-flex justify-content-center'
               : itemQuestion?.alignRightImg
               ? 'position-relative w-100 d-flex justify-content-end'
               : 'position-relative w-100 d-flex'
-          "
-        >
+          " -->
+        <div class="position-relative w-100 d-flex justify-content-center bg-q-img px-6">
           <img [src]="getSrcImage(item)" />
         </div>
       </div>
@@ -661,7 +656,7 @@
   </div>
   <div
     *ngIf="itemQuestion.answerType != 'O2' || itemQuestion.answerType != 'C2'"
-    class="list answer"
+    class="list answer ms-6"
   >
     <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
       <div class="has-action-menu">
@@ -995,7 +990,7 @@
         *ngIf="itemSession.comment"
         [innerHTML]="itemSession.comment"
       ></span>
-      <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
+     
     </div>
   </div>
   <div class="d-flex align-items-center mt-3 border-top py-3">
@@ -1015,7 +1010,7 @@
             [innerHTML]="itemSession.question"
           ></span>
           <span *ngIf="!itemSession.question" style="color: white">{{
-            "Câu hỏi"
+            "Mẫu không có tiêu đề"
           }}</span>
         </div>
       </div>
@@ -1026,7 +1021,6 @@
           *ngIf="itemSession.comment"
           [innerHTML]="itemSession.comment"
         ></span>
-        <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
       </div>
     </div>
   </div>

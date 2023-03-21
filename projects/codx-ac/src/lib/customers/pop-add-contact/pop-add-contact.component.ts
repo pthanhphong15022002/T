@@ -99,7 +99,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.contact[keymodel[i]] == null ||
-              this.contact[keymodel[i]] == ''
+              String(this.contact[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

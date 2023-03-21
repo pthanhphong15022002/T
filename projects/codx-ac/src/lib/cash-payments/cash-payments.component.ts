@@ -13,6 +13,7 @@ import {
   CallFuncService,
   DialogModel,
   DialogRef,
+  FormModel,
   RequestOption,
   UIComponent,
   ViewModel,
@@ -37,6 +38,9 @@ export class CashPaymentsComponent extends UIComponent {
   moreFuncName: any;
   funcName: any;
   parentID: string;
+  width: any;
+  height: any;
+  innerWidth: any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -62,7 +66,9 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.innerWidth = window.innerWidth;
+  }
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -98,6 +104,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
     }
   }
   //#endregion
@@ -110,6 +119,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
+    this.loadscreen();
     this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -121,12 +131,14 @@ export class CashPaymentsComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
+        option.IsModal = true;
         this.dialog = this.callfunc.openForm(
           PopAddCashComponent,
           '',
-          null,
-          null,
+          this.width,
+          969,
           this.view.funcID,
           obj,
           '',
@@ -134,8 +146,8 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
-
   edit(e, data) {
+    this.loadscreen();
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -149,12 +161,42 @@ export class CashPaymentsComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
         this.dialog = this.callfunc.openForm(
           PopAddCashComponent,
           '',
-          null,
-          null,
+          this.width,
+          this.height,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
+  }
+  copy(e, data) {
+    this.loadscreen();
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
+        this.dialog = this.callfunc.openForm(
+          PopAddCashComponent,
+          '',
+          this.width,
+          this.height,
           this.view.funcID,
           obj,
           '',
@@ -187,6 +229,14 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  loadscreen() {
+    return new Promise<FormModel>((resolve, rejects) => {
+      const elmnt = document.getElementById('codx-aside');
+      var widthaside = elmnt.offsetWidth;
+      this.height = elmnt.offsetHeight;
+      this.width = this.innerWidth - widthaside;
+    });
+  }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashPaymentsBusiness';

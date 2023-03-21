@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
+import { BookingItems } from '../../../models/bookingItems.model';
 
 @Component({
   selector: 'popup-request-stationery',
@@ -148,8 +149,27 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
-      this.cart = this.data.bookingItems;
-      this.changeTab(2);
+      this.epService
+        .getBookingItems(this.data?.recID)
+        .subscribe((res: any) => {
+          if (res) {
+            res.forEach((item) => {
+              let tmpSta=new BookingItems()
+              tmpSta.itemID= item?.itemID,
+              tmpSta.quantity= item?.quantity,
+              tmpSta.itemName= item?.itemName,
+              tmpSta.umid= item?.umid,
+              tmpSta.umName= item?.umName !=null && item?.umName!=""? item?.umName : item?.umid,
+              tmpSta.objectType='EP_Resources',
+              tmpSta.objectID= item?.resourceRecID,      
+              this.cart.push(tmpSta);
+            });
+            this.changeTab(2);//Lấy xong cart mới chuyển sang tab thông tin khi edit
+            this.detectorRef.detectChanges();
+
+          }
+        });
+      
     } else {
       if (this.data?.category == '1') {
         this.radioPersonalCheck = true;
@@ -266,10 +286,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  valueChangeQtyStationery(event: any, resourceID: string) {
+  valueChangeQtyStationery(event: any, itemID: string) {
     if (event?.data) {
       this.cart.forEach((item) => {
-        if (item.resourceID == resourceID) {
+        if (item.itemID == itemID) {
           if (event.data > 0) {
             item.quantity = event.data;
           } else {
@@ -281,10 +301,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  deleteStationery(id: any) {
-    if (id) {
+  deleteStationery(itemID: any) {
+    if (itemID) {
       this.cart = this.cart.filter((item) => {
-        return item?.id != id;
+        return item?.itemID != itemID;
       });
     }
   }
@@ -295,7 +315,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
+    option.data = [itemData, this.isAddNew, null, this.lstStationery, this.lstStationery];
     return true;
   }
 
@@ -376,7 +396,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus;
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
-      this.data.status = '5';
     }
     this.data.approveStatus = this.data.approveStatus ?? '1';
     this.data.status = this.data.status ?? '1';
@@ -425,7 +444,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
                         if (res?.msgCodeError == null && res?.rowCount >= 0) {
                           this.notificationsService.notifyCode('ES007');
                           item.approveStatus = '3';
-                          item.status = '3';
                           item.write = false;
                           item.delete = false;
                           (this.dialogRef.dataService as CRUDService)
@@ -453,7 +471,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
                   )
                   .subscribe(res);
                 item.approveStatus = '5';
-                item.status = '5';
                 item.write = false;
                 item.delete = false;
               });
@@ -505,7 +522,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   getItemQty(itemID) {
-    let item = this.cart.filter((x) => x.resourceID == itemID);
+    let item = this.cart.filter((x) => x.itemID == itemID);
     if (item.length == 0) {
       return 0;
     }
@@ -513,13 +530,19 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   addCart(event, data) {
-    let tmpResource;
-    tmpResource = { ...data };
+    let tmpResource = new BookingItems();
+    tmpResource.itemID = data?.resourceID;
+    tmpResource.quantity = 1;
+    tmpResource.itemName = data?.resourceName;
+    tmpResource.umid = data?.umid;
+    tmpResource.umName = data?.umName;
+    tmpResource.objectType = 'EP_Resources';
+    tmpResource.objectID = data?.recID;
 
-    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+    let isPresent = this.cart.find((item) => item.itemID == tmpResource.itemID);
 
     //NagetivePhysical = 0: khong am kho
-    if (tmpResource.currentQty <= 0) {
+    if (data.currentQty <= 0) {
       if (this.nagetivePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');
@@ -529,18 +552,45 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     if (isPresent) {
       this.cart.filter((item: any) => {
-        if (item.recID == tmpResource.recID) {
+        if (item.itemID == tmpResource.itemID) {
           item.quantity = item.quantity + 1;
-          item.itemName = item.resourceName;
+          item.itemName = item.itemName;
         }
       });
     } else {
-      tmpResource.quantity = 1;
-      tmpResource.itemName = tmpResource.resourceName;
       this.cart.push(tmpResource);
     }
     this.detectorRef.detectChanges();
   }
+  // addCart(event, data) {
+  //   let tmpResource;
+  //   tmpResource = { ...data };
+
+  //   let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+
+  //   //NagetivePhysical = 0: khong am kho
+  //   if (tmpResource.currentQty <= 0) {
+  //     if (this.nagetivePhysical == '0') {
+  //       //không add
+  //       this.notificationsService.notifyCode('EP013');
+  //       return;
+  //     }
+  //   }
+
+  //   if (isPresent) {
+  //     this.cart.filter((item: any) => {
+  //       if (item.recID == tmpResource.recID) {
+  //         item.quantity = item.quantity + 1;
+  //         item.itemName = item.resourceName;
+  //       }
+  //     });
+  //   } else {
+  //     tmpResource.quantity = 1;
+  //     tmpResource.itemName = tmpResource.resourceName;
+  //     this.cart.push(tmpResource);
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
 
   addQuota() {
     this.cart.map((item) => {
@@ -574,6 +624,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   itemByRecID(index, item) {
-    return item.recID;
+    return item.itemID;
   }
 }

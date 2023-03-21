@@ -115,7 +115,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.arposting[keymodel[i]] == null ||
-              this.arposting[keymodel[i]] == ''
+              String(this.arposting[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

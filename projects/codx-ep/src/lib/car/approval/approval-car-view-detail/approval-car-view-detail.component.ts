@@ -65,6 +65,7 @@ export class ApprovalCarViewDetailComponent
   tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
   listFilePermission=[];
+  isEdit: boolean;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -98,23 +99,45 @@ export class ApprovalCarViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
-              let listAttendees = res.bookingAttendees.split(";");
+            this.listFilePermission = [];
+            if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
+              let listAttendees = res.bookingAttendees.split(';');
               listAttendees.forEach((item) => {
-                if(item!=''){
-                  let tmpPer= new Permission()
-                  tmpPer.objectID= item;//
-                  tmpPer.objectType= 'U';
-                  tmpPer.read= true;
-                  tmpPer.share=  true;
-                  tmpPer.download=  true;
-                  tmpPer.isActive=  true;
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
                   this.listFilePermission.push(tmpPer);
-                }                
+                }
               });
-              this.detectorRef.detectChanges();
-
-            } 
+            }
+            if (res?.listApprovers != null && res?.listApprovers.length > 0) {
+              res.listApprovers.forEach((item) => {
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
+                  this.listFilePermission.push(tmpPer);
+                }
+              });
+            }
+            this.isEdit = false;
+            // for (let u of res.bookingAttendees) {
+            //   if (
+            //     res?.createdBy == this.authService?.userValue?.userID ||
+            //     this.authService?.userValue?.userID == u?.userID
+            //   ) {
+            //     this.allowUploadFile = true;
+            //   }
+            // }
             this.detectorRef.detectChanges();
           }
         });
@@ -230,7 +253,6 @@ export class ApprovalCarViewDetailComponent
   //     if (res != null) {
   //       this.notificationsService.notifyCode('SYS034'); //đã thu hồi
   //       data.approveStatus = '3';
-  //       data.status = '3';
   //       this.updateStatus.emit(data);
   //     } else {
   //       this.notificationsService.notifyCode(res?.msgCodeError);

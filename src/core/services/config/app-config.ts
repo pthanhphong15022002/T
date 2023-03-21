@@ -10,6 +10,8 @@ export abstract class AppConfig {
   themeMode: string;
   sureMeet: any;
   firebase: any;
+  captchaKey: string;
+  captchaEnable: number;
   externalLogin: ExternalLogin;
 }
 
@@ -19,4 +21,3 @@ export abstract class ExternalLogin {
   googleId: string;
   microsoftId: string;
 }
-

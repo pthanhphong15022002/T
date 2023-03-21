@@ -18,11 +18,14 @@
         #imageUpload
         class="image-inpt-wrapper fullImage"
         [width]="90"
-        [funcId]="formModel?.funcID"
+        [funcId]="'HR000'"
         [objectId]="adUser.userID"
-        [objectType]="'AD_Users'"
+        [objectType]="'HR_Employees'"
         [isAllowEdit]="true"
         [isDefaulImg]="true"
+        [parentType]="'AD_Users'"
+        [referType]="'avt2'"
+        [parentID]="adUser.userID"
         [imgOn]="date"
       >
       </codx-img>
@@ -46,7 +49,7 @@
           <codx-label fiedName="EmployeeID" [formModel]="form?.formModel">
           </codx-label>
           <codx-input
-            [disabled]="!adUser.employeeID ? false : true"
+            [disabled]="isEmpIDNotNull"
             field="employeeID"
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"

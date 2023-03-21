@@ -78,7 +78,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.umconversion[keymodel[i]] == null ||
-              this.umconversion[keymodel[i]] == ''
+              String(this.umconversion[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

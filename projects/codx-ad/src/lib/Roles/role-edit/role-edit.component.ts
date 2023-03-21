@@ -133,14 +133,15 @@ export class RoleEditComponent
     //   this.SaveRole(true, false, false);
     // }
 
-    if (this.formType == 'edit' || this.formType == 'add') this.SaveRole(true);
-    else {
+    if (this.formType == 'add') this.SaveRole(true);
+    else if (this.formType == 'edit') {
+      this.UpdateRole();
+    } else {
       this.SaveRole(false);
     }
   }
   isAdd = false;
   SaveRole(isCopyPermision: boolean) {
-    //var listview = this.adsv.listview;
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
         this.data,
@@ -154,6 +155,29 @@ export class RoleEditComponent
           this.notificationsService.notifyCode('SYS020');
         }
       });
+  }
+
+  UpdateRole() {
+    this.api
+      .execAction('AD_Roles', [this.data], 'UpdateAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(this.data);
+        }
+      });
+    // this.api
+    //   .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
+    //     this.data,
+    //     this.formType,
+    //     this.oldID,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res && res.msgBodyData[0]) {
+    //       this.dialog.close(res.msgBodyData[0]);
+    //     } else {
+    //       this.notificationsService.notifyCode('SYS020');
+    //     }
+    //   });
   }
 
   closeEdit(): void {}

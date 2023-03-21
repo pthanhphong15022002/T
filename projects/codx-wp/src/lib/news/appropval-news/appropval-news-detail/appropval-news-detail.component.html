@@ -1,12 +1,14 @@
-<codx-detail-tmp 
-    [header]="header" 
-    [body]="body" 
-    (clickMF)="clickMF($event)" 
-    [hideMF]="data.approveStatus == 5"
-    [formModel]="formModel" 
-    [dataItem]="data"
-    [footer]="footer">
-</codx-detail-tmp>
+<ng-container *ngIf="data">
+    <codx-detail-tmp 
+        [header]="header" 
+        [body]="body" 
+        (clickMF)="clickMF($event)" 
+        [hideMF]="hideMFC"
+        [formModel]="formModel" 
+        [dataItem]="data"
+        [footer]="footer">
+    </codx-detail-tmp>
+</ng-container>
 
 <ng-template #header>
     <div class="d-flex align-items-center">
@@ -158,8 +160,8 @@
             <ng-template #video>
                 <div class="row mt-2 px-5 p-2">
                     <div class="border border-3 border-light ms- py-5">
-                        <wp-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                        </wp-video>
+                        <wp-view-video [objectID]="data.recID" [objectType]="'WP_News'">
+                        </wp-view-video>
                     </div>
                 </div>
             </ng-template>

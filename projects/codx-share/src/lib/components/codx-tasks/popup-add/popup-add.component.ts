@@ -16,6 +16,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -99,6 +100,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   dataReferences = [];
   disabledProject = false;
   isClickSave = false;
+  accountable = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -176,9 +178,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       ...this.task,
       ...dt?.data[0],
     };
-    if (this.task.taskGroupID != null) {
+    this.getParam();
+    if (this.task.taskGroupID) {
       this.logicTaskGroup(this.task.taskGroupID);
-    } else this.getParam();
+    }
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
@@ -221,7 +224,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.planholderTaskGoal = res['Memo']?.description;
       }
     });
-   
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -323,11 +326,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          //var dataValue = JSON.parse(res.dataValue);
           var param = JSON.parse(res.dataValue);
-          this.param = param;
-          this.taskType = param?.TaskType;
-          if (this.param?.PlanControl == '1' && this.task.startDate == null)
-            this.task.startDate = new Date();
+          if (param.Accountable == '1') this.accountable = true;
+          else this.accountable = false;
+          if (!this.task.taskGroupID) {
+            this.param = param;
+            this.taskType = param?.TaskType;
+            if (this.param?.PlanControl == '1' && this.task.startDate == null)
+              this.task.startDate = new Date();
+          }
         }
       });
   }
@@ -686,6 +694,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '';
     if (!e || e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -703,6 +712,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             break;
           case 'RE':
             listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
             break;
         }
       }
@@ -732,7 +744,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListEmployeeID(listEmployeeID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             this.valueSelectUser(res);
           }
         });
@@ -742,18 +754,39 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListPositionsID(listPositionID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             if (!res[1]) this.notiService.notifyCode('TM066');
             this.valueSelectUser(res[0]);
           } else this.notiService.notifyCode('TM066');
+        });
+    }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.tmSv
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueSelectUser(res);
+          }
         });
     }
   }
 
   valueSelectUser(assignTo) {
     if (assignTo != '') {
+      var arrAssign = assignTo.split(';');
+      if (arrAssign?.length > 1 && this.crrRole == 'A' && this.accountable) {
+        this.notiService.notifyCode('TM078');
+        // this.notiService.notify(
+        //   'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+        //   '2'
+        // );
+        return;
+      }
       if (this.task.assignTo && this.task.assignTo != '') {
-        var arrAssign = assignTo.split(';');
         var arrNew = [];
         arrAssign.forEach((e) => {
           if (!this.task.assignTo.includes(e)) {
@@ -762,9 +795,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         });
         if (arrNew.length > 0) {
           assignTo = arrNew.join(';');
-          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
+        if (arrNew?.length != arrAssign?.length)
+          this.notiService.notifyCode('TM077');
+        // this.notiService.notify(
+        //   'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+        //   '3'
+        // );
       } else {
         // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
@@ -890,11 +928,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           ) {
             this.task.startDate = new Date();
           }
-          //  else {
-          //   this.task.startDate = null;
-          //   this.task.endDate = null;
-          //   this.task.estimated = 0;
-          // }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
       });
@@ -905,7 +938,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-
+    var crrRole =this.crrRole 
     this.api
       .execSv<any>(
         'HR',
@@ -925,7 +958,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = this.crrRole ?? 'R';
+            taskResource.roleType = crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
           if (arrUser.length != res.length) {
@@ -1030,22 +1063,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
 
-  // searchName(e) {
-  //   var listUserDetailSearch = [];
-  //   var searchField = e;
-  //   if (searchField.trim() == '') {
-  //     this.listUserDetailSearch = this.listUserDetail;
-  //     return;
-  //   }
-  //   this.listUserDetail.forEach((res) => {
-  //     var name = res.userName;
-  //     if (name.toLowerCase().includes(searchField.toLowerCase())) {
-  //       listUserDetailSearch.push(res);
-  //     }
-  //   });
-  //   this.listUserDetailSearch = listUserDetailSearch;
-  // }
-
   //#region popver select RolType
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -1055,6 +1072,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
+    if (value == 'A' && this.accountable) {
+      var checkRoleA = this.listTaskResources.some(
+        (x) => x.roleType == 'A' && x.resourceID != idUserSelected
+      );
+      if (checkRoleA) {
+        this.notiService.notifyCode('TM078');
+        return;
+      }
+    }
     this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
     });
@@ -1065,47 +1091,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
-  // loadDataReferences() {
-  //   if (this.task.category == '1') {
-  //     this.dataReferences = [];
-  //     return;
-  //   }
-  //   this.dataReferences = [];
-  //   if (this.task.category == '2') {
-  //     this.api
-  //       .execSv<any>(
-  //         'TM',
-  //         'TM',
-  //         'TaskBusiness',
-  //         'GetTaskParentByTaskIDAsync',
-  //         this.task.taskID
-  //       )
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           var ref = new tmpReferences();
-  //           ref.recIDReferences = res.recID;
-  //           ref.refType = 'TM_Tasks';
-  //           ref.createdOn = res.createdOn;
-  //           ref.memo = res.taskName;
-  //           ref.createdBy = res.createdBy;
-  //           var taskParent = res;
-  //           this.api
-  //             .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-  //               res.createdBy,
-  //             ])
-  //             .subscribe((user) => {
-  //               if (user) {
-  //                 ref.createByName = user.userName;
-  //                 this.dataReferences.push(ref);
-  //                 this.getReferencesByCategory3(taskParent);
-  //               }
-  //             });
-  //         }
-  //       });
-  //   } else if (this.task.category == '3') {
-  //     this.getReferencesByCategory3(this.task);
-  //   }
-  // }
   //referen new
   loadDataReferences() {
     this.dataReferences = [];
@@ -1221,7 +1206,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   openControlShare(controlShare: any, roleType) {
     this.crrRole = roleType;
     if (controlShare) {
-      this.callFC.openForm(controlShare, '', 450, 600);
+      let option = new DialogModel();
+      option.zIndex = 1010;
+      this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
     }
   }
 

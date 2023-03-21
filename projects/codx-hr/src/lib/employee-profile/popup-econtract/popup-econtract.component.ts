@@ -301,42 +301,4 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       }
     });
   }
-
-  // validateBeforeSave(isAddNew: boolean) {
-  //   if (this.lstAllContract && this.lstAllContract?.length > 0) {
-  //     //khoảng thời gian ["Ngày hiệu lực", "Ngày hết hạn"] ko được lồng nhau với các HĐLĐ đã tồn tại trước đó
-  //     if (this.data?.isAppendix == false) {
-  //       let lstIsAppendix = this.lstAllContract.filter(
-  //         (x) => x.IsAppendix == false
-  //       );
-  //       if (lstIsAppendix?.length > 0) {
-  //         if (this.data?.effectedDate < lstIsAppendix[0].expiredDate) {
-  //           this.notify.notifyCode('HR007');
-  //           return;
-  //         }
-  //       }
-  //     }
-
-  //     if (isAddNew) {
-  //       //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có  HĐ đang hiệu lực là HĐ không xác định thời hạn (có phân loại = 1)
-  //       let crrValidContract = this.lstAllContract.filter(
-  //         (p) => p.isCurrent == true
-  //       );
-  //       if (crrValidContract) {
-  //         let cType = this.dataCbxContractType.filter(
-  //           (p) => p.contractTypeID == crrValidContract.contractTypeID
-  //         );
-  //         if (cType && cType?.contractGroup == 1) {
-  //           this.notify.alertCode('HR008').subscribe((x) => {
-  //             if (x.event?.status == 'Y') {
-  //               this.onSaveForm(false);
-  //             } else return;
-  //           });
-  //         }
-  //       }
-
-  //       //Cập nhật “Ngày hợp đồng chính thức” đối với Hợp đồng chính thức đầu tiên
-  //     }
-  //   }
-  // }
 }

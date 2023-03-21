@@ -245,7 +245,7 @@
     <div class="WP_News-images">
       <ng-container *ngIf="news.recID">
         <codx-img 
-          [cssClass]="'news-image w-100 h-100'" 
+          [cssClass]="'news-image'" 
           [objectId]="news.recID" 
           [objectType]="'WP_News'" 
           [referType]="'image'"
@@ -266,8 +266,7 @@
         </div>
       </ng-container>
       <ng-container *ngIf="news.createdOn">
-        <div class="text-gray-600">
-          {{news.createdOn | formatvalue:listview.formModel:"CreatedOn" | async}}
+        <div class="text-gray-600" [innerHTML]="news.createdOn | formatvalue:listview.formModel:'CreatedOn' | async">
         </div>
       </ng-container>
     </div>

@@ -17,6 +17,7 @@ import {
   NotificationsService,
   AuthService,
   CodxScheduleComponent,
+  Util,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -40,6 +41,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+
+  @ViewChild('gridResourceName') gridResourceName: TemplateRef<any>;
+  @ViewChild('gridHost') gridHost: TemplateRef<any>;
+  @ViewChild('gridMF') gridMF: TemplateRef<any>;
+  @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
+  @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
+  @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
+  @ViewChild('gridPhone') gridPhone: TemplateRef<any>;
+  @ViewChild('gridAddress') gridAddress: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -68,23 +78,24 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   funcIDName = '';
   columnsGrid: any;
   popupClosed = true;
-  
-  listCar=[];  
-  listReason=[];  
-  listAttendees=[];  
-  listItem=[];
-  tempReasonName='';
-  tempCarName='';  
-  tempAttendees='';
-  selectBookingItems=[];  
-  selectBookingAttendees='';
+
+  listCar = [];
+  listReason = [];
+  listAttendees = [];
+  listItem = [];
+  tempReasonName = '';
+  tempCarName = '';
+  tempAttendees = '';
+  selectBookingItems = [];
+  selectBookingAttendees = '';
   listDriver: any[];
-  tempDriverName='';  
-  driverName='';
+  tempDriverName = '';
+  driverName = '';
   queryParams: any;
-  navigated=false;
+  navigated = false;
   columnGrids: any;
   isAdmin: boolean;
+  grView: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -114,14 +125,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.codxEpService.roleCheck().subscribe(res=>{
-    if(res==true){
-      this.isAdmin=true;
-    }
-    else{        
-      this.isAdmin=false;
-    }
-  })
+    this.codxEpService.roleCheck().subscribe((res) => {
+      if (res == true) {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -130,9 +140,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){
-      this.request.predicate=this.queryParams?.predicate;
-      this.request.dataValue=this.queryParams?.dataValue;
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.request.predicate = this.queryParams?.predicate;
+      this.request.dataValue = this.queryParams?.dataValue;
     }
 
     this.modelResource = new ResourceModel();
@@ -182,29 +192,102 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       id: 'btnAdd',
     };
 
-    this.codxEpService.getListResource('2').subscribe((res:any)=>{
-      if(res){
-        this.listCar=[];
-        this.listCar=res;
-      }        
+    this.codxEpService.getListResource('2').subscribe((res: any) => {
+      if (res) {
+        this.listCar = [];
+        this.listCar = res;
+      }
     });
-    this.codxEpService.getListResource('3').subscribe((res:any)=>{
-      if(res){
-        this.listDriver=[];
-        this.listDriver=res;
-      }        
+    this.codxEpService.getListResource('3').subscribe((res: any) => {
+      if (res) {
+        this.listDriver = [];
+        this.listDriver = res;
+      }
     });
-    this.codxEpService.getListReason('EP_BookingCars').subscribe((res:any)=>{
-      if(res){
-        this.listReason=[];
-        this.listReason=res;
-      }        
+    this.codxEpService.getListReason('EP_BookingCars').subscribe((res: any) => {
+      if (res) {
+        this.listReason = [];
+        this.listReason = res;
+      }
     });
   }
-
+  onLoading(evt: any) {
+    if (this.formModel) {
+      this.cache
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .subscribe((grv) => {
+          if (grv) {
+            this.grView = Util.camelizekeyObj(grv);
+            this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: 40,
+                template: this.gridMF,
+                textAlign: 'center',
+              },
+              {
+                field: 'bookingOn',
+                template: this.gridBookingOn,
+                headerText: this.grView?.bookingOn?.headerText,
+              },
+              {
+                field: 'resourceID',
+                template: this.gridResourceName,
+                headerText: this.grView?.resourceID?.headerText,
+              },
+              {
+                field: 'title',
+                headerText: this.grView?.title?.headerText,
+              },
+              {
+                field: 'startDate',
+                template: this.gridStartDate,
+                headerText: this.grView?.startDate?.headerText,
+              },
+              {
+                field: 'endDate',
+                template: this.gridEndDate,
+                headerText: this.grView?.endDate?.headerText,
+              },
+              {
+                field: 'requester',
+                headerText: this.grView?.requester?.headerText,
+              },
+              {
+                field: 'address',
+                template: this.gridAddress,
+                headerText: this.grView?.address?.headerText,
+              },
+              {
+                field: 'phone',
+                template: this.gridPhone,
+                headerText: this.grView?.phone?.headerText,
+              },
+            ];
+            this.views.push({
+              sameData: true,
+              type: ViewType.grid,
+              active: false,
+              model: {
+                resources: this.columnGrids,
+              },
+            });
+          }
+        });
+    }
+  }
   ngAfterViewInit(): void {
-    
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
+    this.columnGrids = [
+      {
+        field: '',
+        headerText: '',
+        width: 40,
+        template: this.gridMF,
+        textAlign: 'center',
+      },
+    ];
     this.views = [
       {
         sameData: false,
@@ -213,12 +296,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         request2: this.modelResource,
         request: this.request,
         //toolbarTemplate: this.footerButton,
-        showSearchBar: false,        
-        showFilter:false,
+        showSearchBar: false,
+        showFilter: false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
-          template:this.cardTemplate,
+          template: this.cardTemplate,
           resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
@@ -238,38 +321,40 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      {
-        sameData: true,
-      type: ViewType.grid,
-      active: true,
-      model: {
-        resources: this.columnGrids,
-      },
-    }
     ];
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
-      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
-        if(res){
-          setInterval(()=> this.navigate(res.startDate),2000);
-        }
-      });
-    }  
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.codxEpService
+        .getBookingByRecID(this.queryParams?.dataValue)
+        .subscribe((res: any) => {
+          if (res) {
+            setInterval(() => this.navigate(res.startDate), 2000);
+          }
+        });
+    }
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
-    if (evt.type == 'add' && evt.data?.resourceId!=null) {
+    if (evt.type == 'add' && evt.data?.resourceId != null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
     }
+    if (evt.type == 'doubleClick') {
+      this.edit(evt.data);
+    }
   }
   navigate(date) {
-    if(!this.navigated){
+    if (!this.navigated) {
       let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
-        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
-          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
-          this.navigated=true;
-        }        
+        if (
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
+            .first.element.id == 'Schedule'
+        ) {
+          (
+            window.ng.getComponent(ele) as CodxScheduleComponent
+          ).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated = true;
+        }
       }
     }
   }
@@ -288,8 +373,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (
-            //Ẩn: hủy 
-            func.functionID == 'EP7T1102' /*MF hủy*/ 
+            //Ẩn: hủy
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -298,15 +383,16 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Chép 
+            // Hiện: Chép
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -315,14 +401,16 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       } else if (data.approveStatus == '3') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép - hủy
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'EP7T1102' /*MF hủy*/
+          if (
+            //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt
-            
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP7T1101' /*MF gửi duyệt*/
@@ -330,37 +418,39 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             func.disabled = true;
           }
         });
-      }
-      else if (data.approveStatus == '4') {
+      } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
-      }
-      else {
+      } else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'EP7T1101' /*MF gửi duyệt*/||   
-          func.functionID == 'SYS02' /*MF sửa*/ ||
-          func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy       
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -368,9 +458,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         });
       }
     }
-  
   }
-  
+
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
@@ -386,7 +475,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       case 'EP7T1101':
         this.release(data);
         break;
-        case 'EP7T1102':
+      case 'EP7T1102':
         this.cancel(data);
         break;
     }
@@ -406,84 +495,27 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     }
   }
   cancel(data: any) {
-    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
+    if (
+      !this.codxEpService.checkRole(
+        this.authService.userValue,
+        data?.owner,
+        this.isAdmin
+      )
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      if (res != null  && res?.msgCodeError==null) {
-        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-        data.approveStatus = '0';
-        data.status = '0';
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
-  }
-  getMoreInfo(recID:any){  
-    this.selectBookingAttendees='';
-    this.driverName=' ';
-    let driverCheck=true;
-    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
-      if(attendees){
-        let lstAttendees=attendees;
-        lstAttendees.forEach(element => {
-          if(element.roleType!='2'){            
-            this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
-          }
-          else{
-            this.driverName= this.getDriverName(element.userID);
-          }
-        });
-        this.selectBookingAttendees;
-        
-        if(this.driverName==' '){
-          this.driverName=null;
-        };
-      }        
-    });
-  }
-  getListAttendees(resources:any){
-    if(resources){
-      let attendees='';
-      for(let i=0;i<resources.length;i++){
-        attendees+=resources[i]?.userID+';';
-      }
-      return attendees;
-    }
-    else {
-      return '';
-    }
-  }
-  getResourceName(resourceID:any){
-    this.tempCarName='';
-    this.listCar.forEach(r=>{
-      if(r.resourceID==resourceID){
-        this.tempCarName= r.resourceName;
-      }      
-    });
-    return this.tempCarName;
-  }
-  getDriverName(resourceID:any){
-    this.tempDriverName='';
-    this.listDriver.forEach(r=>{
-      if(r.resourceID==resourceID){
-        this.tempDriverName= r.resourceName;
-      }      
-    });
-    return this.tempDriverName;
-  }
-
-  getReasonName(reasonID:any){
-    this.tempReasonName='';
-    this.listReason.forEach(r=>{
-      if(r.reasonID==reasonID){
-        this.tempReasonName= r.description;
-      }      
-    });
-    return this.tempReasonName;
+    this.codxEpService
+      .cancel(data?.recID, '', this.formModel.entityName)
+      .subscribe((res: any) => {
+        if (res != null && res?.msgCodeError == null) {
+          this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+          data.approveStatus = '0';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
 
   changeItemDetail(event) {
@@ -494,48 +526,39 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
   release(data: any) {
     if (
-      this.authService.userValue.userID != data?.owner 
+      this.authService.userValue.userID != data?.owner
       //&& !this.authService.userValue.administrator
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    if(data.approval!='0'){
+    if (data.approval != '0') {
       this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .release(
-            data,
-            res?.processID,
-            'EP_Bookings',
-            this.funcID
-          )
-          .subscribe((res) => {
-            if (res?.msgCodeError == null && res?.rowCount) {
-              this.notificationsService.notifyCode('ES007');
-              data.approveStatus = '3';
-              data.status = '3';
-              data.write = false;
-              data.delete = false;
-              this.view.dataService.update(data).subscribe();    
-
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);              
-            }
-          });
-      });
-    }    
-    else
-    {
+        .getCategoryByEntityName(this.formModel.entityName)
+        .subscribe((res: any) => {
+          this.codxEpService
+            .release(data, res?.processID, 'EP_Bookings', this.funcID)
+            .subscribe((res) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notificationsService.notifyCode('ES007');
+                data.approveStatus = '3';
+                data.write = false;
+                data.delete = false;
+                this.view.dataService.update(data).subscribe();
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+              }
+            });
+        });
+    } else {
       data.approveStatus = '5';
-      data.status = '5';
       data.write = false;
       data.delete = false;
-      this.view.dataService.update(data).subscribe(); 
+      this.view.dataService.update(data).subscribe();
       this.notificationsService.notifyCode('ES007');
-      this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
-      
+      this.codxEpService
+        .afterApprovedManual(this.formModel.entityName, data.recID, '5')
+        .subscribe();
     }
   }
   addNew(evt?) {
@@ -567,32 +590,38 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
+      if (
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          evt?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
       if (this.popupClosed) {
-        this.view.dataService.dataSelected = evt;
-        this.view.dataService
-          .edit(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            this.popupClosed = false;
-            this.dataSelected = this.view.dataService.dataSelected;
-            let option = new SidebarModel();
-            option.Width = '800px';
-            option.DataService = this.view?.dataService;
-            option.FormModel = this.formModel;
-            this.dialog = this.callFuncService.openSide(
-              PopupAddBookingCarComponent,
-              [this.view.dataService.dataSelected, false, this.popupTitle],
-              option
-            );
-            this.dialog.closed.subscribe((returnData) => {
-              this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();
+        this.codxEpService.getBookingByRecID(evt?.recID).subscribe((booking) => {
+          if (booking) {
+            this.view.dataService.edit(booking).subscribe((res) => {
+              this.popupClosed = false;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              this.view.dataService.dataSelected = booking;
+              option.DataService = this.view?.dataService;
+              option.FormModel = this.formModel;
+              this.dialog = this.callFuncService.openSide(
+                PopupAddBookingCarComponent,
+                [this.view.dataService.dataSelected, false, this.popupTitle],
+                option
+              );
+              this.dialog.closed.subscribe((returnData) => {
+                this.popupClosed = true;
+                if (!returnData.event) this.view.dataService.clear();
+              });
             });
-          });
+          }
+        });
       }
     }
   }
@@ -600,18 +629,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   copy(evt?) {
     if (evt) {
       if (this.popupClosed) {
-        this.view.dataService.dataSelected = evt;
-        this.view.dataService
-          .copy(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            this.popupClosed = false;
-            this.dataSelected = this.view.dataService.dataSelected;
-            let option = new SidebarModel();
-            option.Width = '800px';
-            option.DataService = this.view?.dataService;
-            option.FormModel = this.formModel;
-            this.dialog = this.callFuncService.openSide(
-              PopupAddBookingCarComponent,
+        
+        this.codxEpService.getBookingByRecID(evt?.recID).subscribe((booking) => {
+          if (booking) {
+            this.view.dataService.copy(booking).subscribe((res) => {
+              this.popupClosed = false;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              this.view.dataService.dataSelected = booking;
+              option.DataService = this.view?.dataService;
+              option.FormModel = this.formModel;
+              this.dialog = this.callFuncService.openSide(
+                PopupAddBookingCarComponent,
               [
                 this.view.dataService.dataSelected,
                 true,
@@ -619,13 +648,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
                 null,
                 true,
               ],
-              option
-            );
-            this.dialog.closed.subscribe((returnData) => {
-              this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();
+                option
+              );
+              this.dialog.closed.subscribe((returnData) => {
+                this.popupClosed = true;
+                if (!returnData.event) this.view.dataService.clear();
+              });
             });
-          });
+          }
+        });
       }
     }
   }
@@ -634,14 +665,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
+      if (
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          evt?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
     }
-    this.view.dataService.delete([deleteItem]).subscribe((res) => {   
-    });
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {});
   }
   sameDayCheck(sDate: any, eDate: any) {
     return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
@@ -659,8 +694,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       this.dialog && this.dialog.close();
     }
   }
-
-  
 
   onSelect(obj: any) {
     //console.log(obj);

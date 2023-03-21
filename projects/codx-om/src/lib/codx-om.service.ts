@@ -353,7 +353,7 @@ getOKRModel() {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKRPlan,
+      OMCONST.BUSINESS.OKR,
       'ChangePlanStatusAsync',
       [recID,status]
     );
@@ -387,6 +387,15 @@ getOKRModel() {
       [periodID, interval, year]
     );
   }
+  getOKRPlansByID(recID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetOKRPlansByIDAsync',
+      [recID]
+    );
+  }
 
   //Chia sẻ bộ mục tiêu
   shareOKRPlans(recID: any, okrsShare: any) {
@@ -409,6 +418,15 @@ getOKRModel() {
       OMCONST.BUSINESS.OKR,
       'GetCheckInModelAsync',
       []
+    );
+  }
+  calculatorProgressOfPlan(listRecID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'CalculatorProgressOfPlanByIDAsync',
+      [listRecID]
     );
   }
   checkInKR(recID: string, checkIn: any) {
@@ -487,12 +505,21 @@ getOKRModel() {
       [recID, distributeToType, listDistribute, isAdd]
     );
   }
+  assignmentOKR( recID: string, distributeToType: string, okrAssign: any, isUpdateAll: boolean,funcID:string ) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'AssignOKRAsync',
+      [recID, distributeToType, okrAssign, isUpdateAll,funcID]
+    );
+  }
   editOKRWeight(recID: string, type: string, child: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'EditOKRWeightAsync',
+      'OKRWeightAsync',
       [recID, type, child]
     );
   }

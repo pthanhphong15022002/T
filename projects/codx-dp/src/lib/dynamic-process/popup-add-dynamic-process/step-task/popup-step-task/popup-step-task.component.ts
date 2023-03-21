@@ -1,23 +1,21 @@
-import { map } from 'rxjs';
-import { group } from '@angular/animations';
-import { async } from '@angular/core/testing';
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
   OnInit,
   Optional,
+  Component,
   ViewChild,
+  ElementRef,
+  HostListener,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
-  CacheService,
-  CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
-  NotificationsService,
   Util,
+  FormModel,
+  DialogRef,
+  DialogData,
+  CacheService,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -44,8 +42,9 @@ export class PopupJobComponent implements OnInit {
   stepName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Steps_Tasks_Roles[] = [];
-  listChair = [];
+  roles: DP_Steps_Tasks_Roles[] = [];
+  participant: DP_Steps_Tasks_Roles[] = [];
+  owner: DP_Steps_Tasks_Roles[] = [];
   recIdEmail = '';
   isNewEmails = true;
   taskGroupList = [];
@@ -68,11 +67,20 @@ export class PopupJobComponent implements OnInit {
   frmModel: FormModel;
   view = [];
   step: DP_Steps;
+  listFileTask: string[] = [];
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -100,16 +108,25 @@ export class PopupJobComponent implements OnInit {
     }
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
+    this.listFileTask = dt?.data[7];
   }
   async ngOnInit() {
     this.getTypeTask();
     this.getFormModel();
-    this.listOwner = this.stepsTasks['roles'];
-    if (this.stepsTasks['parentID']) {
-      this.litsParentID = this.stepsTasks['parentID'].split(';');
-    }
-
-    this.dataCombobox = await this.setTaskLink(this.stepsTasks?.taskGroupID);
+    this.roles = this.stepsTasks['roles'];
+    this.owner = this.roles?.filter((role) => role.roleType === 'O');
+    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    this.litsParentID = this.stepsTasks['parentID']
+      ? this.stepsTasks['parentID']?.split(';')
+      : [];
+    let group = this.taskGroupList?.find(
+      (x) => x.recID === this.stepsTasks?.taskGroupID
+    );
+    let listTaskConvert = group?.recID
+      ? JSON.parse(JSON.stringify(group['task']))
+      : JSON.parse(JSON.stringify(this.taskList));
+    await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
+    this.dataCombobox = this.mapDataTask(listTaskConvert, this.litsParentID);
     this.valueInput = this.dataCombobox
       .filter((x) => x.checked)
       .map((y) => y.value)
@@ -130,7 +147,6 @@ export class PopupJobComponent implements OnInit {
         }
       });
     }
-
     if (listID && listID.length > 0 && taskLinks.length > 0) {
       data = taskLinks.map((task) => {
         return listID.some((x) => x == task.key)
@@ -140,10 +156,6 @@ export class PopupJobComponent implements OnInit {
       taskLinks = data;
     }
     return taskLinks;
-  }
-
-  setOwner(){
-    
   }
 
   getTypeTask() {
@@ -164,19 +176,21 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  async filterText(value, key) {
-    this.stepsTasks[key] = value;
-    this.taskGroupName = this.taskGroupList.find((x) => x.recID === value)[
-      'taskGroupName'
-    ];
-    this.dataCombobox = await this.setTaskLink(value);
-  }
-
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  applyOwner(e, datas) {
+  changeOwner(e) {
+    let owner = e?.map((x) => {
+      return {
+        ...x,
+        roleType: 'O',
+      };
+    });
+    this.owner = owner;
+  }
+
+  changeRoler(e, datas, type) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
     listUser.forEach((element) => {
@@ -185,7 +199,7 @@ export class PopupJobComponent implements OnInit {
           objectID: element.id,
           objectName: element.text,
           objectType: element.objectType,
-          roleType: element.objectName,
+          roleType: type,
           taskID: this.stepsTasks['recID'],
         });
       }
@@ -197,52 +211,36 @@ export class PopupJobComponent implements OnInit {
     if (index != -1) data.splice(index, 1);
   }
 
+  async changeCombobox(value, key) {
+    this.stepsTasks[key] = value;
+    let group = this.taskGroupList.find((x) => x.recID === value);
+    this.taskGroupName = group['taskGroupName'];
+    let taskLink = group?.recID
+      ? JSON.parse(JSON.stringify(group['task']))
+      : JSON.parse(JSON.stringify(this.taskList));
+    this.dataCombobox = this.mapDataTask(taskLink);
+    await this.getTasksWithoutLoop(this.stepsTasks, this.dataCombobox);
+    this.stepsTasks['parentID'] = '';
+  }
+
+  async getTasksWithoutLoop(task, tasks) {
+    let indexTask = tasks?.findIndex((item) => item.recID === task.recID);
+    if (indexTask >= 0) {
+      tasks.splice(indexTask, 1);
+    }
+    let listTask = tasks.filter((item) =>
+      item?.parentID?.includes(task?.recID)
+    );
+    if (listTask?.length == 0) return;
+
+    listTask?.forEach(async (element) => {
+      await this.getTasksWithoutLoop(element, tasks);
+    });
+  }
+
   showCombobox() {
     this.show = !this.show;
   }
-  // xử lý công việc liên kêt
-  async setTaskLink(groupTaskID?: string) {
-    let taskLinks = [];
-    if (groupTaskID) {
-      if (this.status == 'add' || this.status == 'copy') {
-        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
-        if (groupTask && groupTask['task']) {
-          taskLinks = this.mapDataTask(groupTask['task']);
-        }
-      } else {
-        let litsParentID = this.stepsTasks['parentID'].split(';');
-        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
-        if (groupTask && groupTask['task']) {
-          //lấy những task mà không có liên kết với task đang edit
-          let tasks = groupTask['task'].filter(
-            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
-          );
-          taskLinks = this.mapDataTask(tasks, litsParentID);
-        }
-        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
-        taskLinks.splice(index, 1);
-      }
-    } else {
-      if (this.status == 'add' || this.status == 'copy') {
-        if (this.taskList?.length > 0) {
-          taskLinks = this.mapDataTask(this.taskList);
-        }
-      } else {
-        let litsParentID = this.stepsTasks['parentID'].split(';');
-        if (this.taskList?.length > 0) {
-          //lấy những task mà không có liên kết với task đang edit
-          let tasks = this.taskList.filter(
-            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
-          );
-          taskLinks = this.mapDataTask(tasks, litsParentID);
-        }
-        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
-        taskLinks.splice(index, 1);
-      }
-    }
-    return taskLinks;
-  }
-
   // combobox chọn nhiều
   handelCheck(data) {
     data.checked = !data.checked;
@@ -332,7 +330,9 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    console.log(e);
+  }
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -343,10 +343,9 @@ export class PopupJobComponent implements OnInit {
   getfileDelete(event) {
     event.data.length;
   }
-
   // save
   async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
@@ -363,6 +362,15 @@ export class PopupJobComponent implements OnInit {
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
           if (res) {
+            if (res?.length >= 0) {
+              res.forEach((item) => {
+                if (item['data']['recID']) {
+                  this.listFileTask.push(item['data']['recID']);
+                }
+              });
+            } else {
+              this.listFileTask.push(res['data']['recID']);
+            }
             this.handelSave();
           }
         });
@@ -373,30 +381,19 @@ export class PopupJobComponent implements OnInit {
   }
 
   handelSave() {
-    if (this.stepsTasks['taskGroupID']) {
-      let groupTask = this.taskGroupList.find(
-        (x) => x.recID == this.stepsTasks['taskGroupID']
-      );
-
-      if (this.stepsTasks['dependRule'] != '1') {
-        // nếu công việc được thực hiện sau khi tạo
+    let task = this.stepsTasks;
+    // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
+    if (task['taskGroupID']) {
+      let groupTask = this.taskGroupList.find((x) => x.recID == task['taskGroupID']);
+      if (task['dependRule'] != '1' || !task['parentID'].trim() || groupTask['task'].length === 0) {
+        //No parentID
         this.checkSave(groupTask);
       } else {
-        // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
-        if (
-          !this.stepsTasks['parentID'].trim() ||
-          groupTask['task'].length === 0
-        ) {
-          // nếu chưa có công việc liên quan
-          this.checkSave(groupTask);
-        } else {
-          let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
-          this.checkSave(groupTask, time);
-        }
+        let timeMax = this.getTimeMaxGroupTask(groupTask['task'], this.stepsTasks);
+        this.checkSave(groupTask, timeMax);
       }
     } else {
-      // kiểm tra xem task có time lớn hơn step hay không if lớn thì hỏi ý kiến
-      if (!this.stepsTasks['parentID'].trim()) {
+      if (!task['parentID'].trim() || task['dependRule'] != '1') {
         //if ko có parentID thì so sánh trực tiếp với step
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
           this.notiService.alertCode('DP010').subscribe((x) => {
@@ -404,19 +401,17 @@ export class PopupJobComponent implements OnInit {
               this.step['durationDay'] = this.stepsTasks['durationDay'];
               this.step['durationHour'] = this.stepsTasks['durationHour'];
               this.dialog.close({ data: this.stepsTasks, status: this.status });
-            } else {
-              this.dialog.close({ data: this.stepsTasks, status: this.status });
-            }
+            } 
           });
         } else {
           this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
       } else {
         // tính thời gian dựa vào công việc liên quan rồi mới so sánh
-        let parentIDs = this.stepsTasks['parentID'].split(';');
+        let listIdTask = this.stepsTasks['parentID'].split(';');
         let maxtime = 0;
-        parentIDs?.forEach((id) => {
-          let time = this.calculateTimeTaskNoGroup(id);
+        listIdTask?.forEach((id) => {
+          let time = this.getSumTimeTask(this.taskList,id);
           maxtime = Math.max(time, maxtime);
         });
         maxtime += this.getHour(this.stepsTasks);
@@ -425,8 +420,6 @@ export class PopupJobComponent implements OnInit {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = Math.floor(maxtime / 24);
               this.step['durationHour'] = maxtime % 24;
-              this.dialog.close({ data: this.stepsTasks, status: this.status });
-            } else {
               this.dialog.close({ data: this.stepsTasks, status: this.status });
             }
           });
@@ -490,20 +483,37 @@ export class PopupJobComponent implements OnInit {
     return sum;
   }
 
-  calculateTimeTaskNoGroup(taskId) {
-    let task = this.taskList.find((t) => t['recID'] === taskId);
+  getTimeMaxGroupTask(tasks, task) {
+    if(!task) return 0;
+    if(!tasks || tasks?.length <= 0) return this.getHour(task);
+    let listTask = JSON.parse(JSON.stringify(tasks));
+    let maxTime = 0;
+    if(this.status === 'edit'){
+      let index = listTask?.findIndex(t => t.recID == task.recID);
+      if(index >=0){
+        listTask?.splice(index,1,task);
+      }
+      listTask?.forEach((itemTask) => {
+        let time = this.getSumTimeTask(listTask,itemTask['recID']);
+        maxTime = Math.max(maxTime, time);
+      });
+    }else{
+      listTask?.push(task);
+      maxTime = this.getSumTimeTask(listTask,task['recID']);
+    }
+    return maxTime;
+  }
+
+  getSumTimeTask(taskList: any[], taskId: string) {
+    let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      let groupFind = this.taskGroupList.find(
-        (x) => x['recID'] === task['taskGroupID']
-      );
-      let hourGroup = this.sumHourGroupTask(groupFind['indexNo'] - 1);
-      return hourGroup + this.getHour(task);
+      return this.getHour(task);
     } else {
-      const parentIds = task.parentID.split(';');
+      const parentIds = task?.parentID.split(';');
       let maxTime = 0;
       parentIds?.forEach((parentId) => {
-        const parentTime = this.calculateTimeTaskNoGroup(parentId);
+        const parentTime = this.getSumTimeTask(taskList, parentId);
         maxTime = Math.max(maxTime, parentTime);
       });
       const completionTime = this.getHour(task) + maxTime;
@@ -511,27 +521,4 @@ export class PopupJobComponent implements OnInit {
     }
   }
 
-  checkSaveDependRule(groupTask, task) {
-    let idTask = task['parentID'].trim() ? task['parentID'].split(';') : [];
-    if (idTask.length > 0) {
-      let taskMax = 0;
-      let taskFindMax;
-      idTask?.forEach((element) => {
-        let taskFind = groupTask['task'].find((x) => x.recID == element);
-        if (taskFind && this.getHour(taskFind) >= taskMax) {
-          taskMax = this.getHour(taskFind) || 0;
-          taskFindMax = taskFind;
-        }
-      });
-      if (taskMax == 0) {
-        return this.getHour(task);
-      } else {
-        return (
-          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFindMax)
-        );
-      }
-    } else {
-      return this.getHour(task);
-    }
-  }
 }
