@@ -152,7 +152,7 @@
                             </ng-template>
                           </div>
                           <span
-                            *ngIf="perm.isSystem == false && this.assignRight && !perm.isParentShare" 
+                            *ngIf="perm.isSystem == false && this.assignRight && !perm.isParentShare && !this.propertiesFolder"
                             (click)="removeUserRight(i)"
                             class="icon-close icon-16 ms-2 text-danger"
                           >
@@ -426,8 +426,7 @@
                         </td>
                         <td [innerHtml]="sub.description"></td>
                         <td>
-                          <div
-                            class="action-menu d-flex align-items-center cursor-pointer"
+                          <div *ngIf="!propertiesFolder" class="action-menu d-flex align-items-center cursor-pointer"
                           >
                             <div
                               class="btn btn-sm btn-icon btn-white cursor-pointer"
@@ -465,7 +464,7 @@
                                                     </div> -->
                         </td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="!propertiesFolder">
                         <td
                           class="cursor-pointer"
                           (click)="openSubFolder()"
