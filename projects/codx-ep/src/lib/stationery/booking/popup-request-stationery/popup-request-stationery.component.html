@@ -240,12 +240,12 @@
               [objectId]="
                 isAddNew
                   ? user?.userID
-                  : dialogAddBookingStationery?.value?.owner
+                  : data?.owner
               "
               [objectName]="
                 isAddNew
                   ? user?.userName
-                  : dialogAddBookingStationery?.value?.requester
+                  : data?.requester
               "
               [objectType]="'AD_Users'"
             ></codx-img>
@@ -255,21 +255,22 @@
               {{
                 isAddNew
                   ? user?.userName
-                  : dialogAddBookingStationery?.value?.requester
+                  : data?.requester
               }}
             </div>
             <div class="fw-bold text-black-50">
               {{
                 isAddNew
                   ? user?.employee?.positionName
-                  : dialogAddBookingStationery?.value?.positionName
+                  : data?.positionName
               }}
             </div>
           </div>
         </div>
+        <!-- check lại -->
         <codx-vll
           [name]="'EP022'"
-          [value]="dialogAddBookingStationery?.value.status"
+          [value]="data.approveStatus"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-square badge-md fs-7 p-2"

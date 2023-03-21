@@ -55,49 +55,29 @@
         </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="" default="Tên người liên hệ chính">
-        </codx-label>
-        <codx-input type="text" [crrValue]="data?.abbreviations" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="abbreviations">
-        </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center">
+            <codx-label [formModel]="form.formModel" fiedName="Contacts" default="Liên hệ chính">
+            </codx-label>
+          </div>
+          <div class="d-flex justify-content-end">
+            <div class="me-3">
+              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickPopupContacts()">
+                <i class="icon-check-correct icon-18 text-primary" ></i>
+
+              </button>
+            </div>
+            <div class="">
+              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
+                <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Phone" default="Số điện thoại người liên hệ chính">
-        </codx-label>
-        <codx-input type="text" [crrValue]="data?.phone" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="phone">
-        </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Email" default="Email người liên hệ chính">
-        </codx-label>
-        <codx-input type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="email">
-        </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Website" default="Website người liên hệ chính">
+        <codx-label [formModel]="form.formModel" fiedName="Website" default="Website">
         </codx-label>
         <codx-input type="text" [crrValue]="data?.website" (valueChange)="valueChange($event)"
           [formModel]="form.formModel" field="website">
@@ -204,20 +184,6 @@
         <codx-label [formModel]="form.formModel" fiedName="" default="Loại hình">
         </codx-label>
         <codx-input type="valuelist" [crrValue]="data?.website" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="website">
-        </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="" default="Lĩnh vực hoạt động">
-        </codx-label>
-        <codx-input type="text" [crrValue]="data?.website" (valueChange)="valueChange($event)"
           [formModel]="form.formModel" field="website">
         </codx-input>
         <!-- <codx-input
@@ -339,4 +305,37 @@
     displayThumb="full" showMessage="0" category="0">
   </codx-attachment>
 
+</ng-template>
+
+<ng-template #contacts>
+  <div class="body_detail p-6">
+    <ng-container *ngIf="contactsPerson != null">
+      <div class="d-flex">
+        <div class="me-3">
+          <codx-img [objectId]="'ADMIN'" [objectName]="'Trần Đoàn Tuyết Khanh'" objectType="AD_Users" [width]="35">
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              Trương Đặng Ngọc Phúc
+            </div>
+            <div class="mb-1">
+              <span class="icon-phone_android text-primary icon-16 me-1"></span>
+              <span class="text-gray-900">0702411141</span>
+            </div>
+            <div>
+              <span class="icon-email icon-16 me-1 text-primary"></span>
+              <span class="text-gray-900">tdnphuck42@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="contactsPerson == null">
+      <div class="" style="text-align: center;">
+        <codx-label class="text-gray-300" name="lblContactPerson" [formModel]="dialog.formModel" default="Chọn hoặc thêm người liên hệ chính"></codx-label>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>

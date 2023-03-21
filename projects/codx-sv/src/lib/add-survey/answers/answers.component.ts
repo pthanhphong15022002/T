@@ -206,7 +206,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   //Lọc dữ liệu câu hỏi 
   loadDataAnswerID(idQ:any)
   {
-    debugger
     var indexQs = this.lstCountQuestion.findIndex(x=>x.idQ == idQ);
     if(indexQs >= 0) return
     for(var a = 0 ; a < this.lstRespondents.length ; a++)
@@ -280,7 +279,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       }
       
     }
-    debugger
     console.log(this.lstCountQuestion)
     this.detectorRef.detectChanges();
   }

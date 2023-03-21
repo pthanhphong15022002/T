@@ -1,8 +1,6 @@
 import { Equipments } from './../../../models/equipments.model';
 import { Permission } from './../../../../../../../src/shared/models/file.model';
-import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { Resource } from './../../../models/resource.model';
-import { Subscriber } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -13,10 +11,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup } from '@angular/forms';
 import {
-  ApiHttpService,
   AuthService,
   AuthStore,
   CacheService,
@@ -31,10 +27,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
-import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
-import { MeetingComponent } from '../../../room/meeting/meeting.component';
-import { FuncID } from '../../../models/enum/enum';
 import { BookingItems } from '../../../models/bookingItems.model';
 
 export class Device {
@@ -128,14 +121,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   range: any;
   optionalData;
   saveAndApprove = false;
-  userInfo;
   user;
   saveCheck = false;
   listUserID = [];
   tabInfo = [];
   private approvalRule = '0';
-  private approvalRuleStationery = '0';
-  private autoApproveItem = '0';
   dueDateControl: any;
   listFilePermission = [];
   attendeesNumber = 0;
@@ -143,20 +133,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   data: any;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notificationsService: NotificationsService,
     private codxEpService: CodxEpService,
     private authService: AuthService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
-    private apiHttpService: ApiHttpService,
     private authStore: AuthStore,
 
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.oData = dialogData?.data[0];
+    this.data = { ...dialogData?.data[0]};
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
@@ -164,10 +153,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.userInfo = authStore.get();
     this.user = this.authStore.get();
 
-    this.data = { ...this.oData };
     if (this.isAdd) {
       if (this.optionalData != null) {
         this.data.bookingOn = this.optionalData.startDate;
@@ -256,13 +243,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             },
           ];
         }
-      }
-    });
-    this.codxEpService.getEPStationerySetting('1').subscribe((res: any) => {
-      if (res) {
-        let dataValue = res.dataValue;
-        let json = JSON.parse(dataValue);
-        this.autoApproveItem = json.AutoApproveItem;
       }
     });
     this.codxEpService
@@ -946,7 +926,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.initForm();
     this.closeEdit.emit();
   }
-  setTitle(e: any) {
+  setTitle() {
     this.title = this.tmpTitle;
     this.changeDetectorRef.detectChanges();
   }
@@ -965,7 +945,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
@@ -1131,7 +1110,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-  valueAttendeesChange(event: any) {
+  valueAttendeesChange() {
     // if (event?.data != null) {
     //   if (event.data < 0) {
     //     event.data = 0;
@@ -1141,17 +1120,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
   }
   //Attachment
-  popup(evt: any) {
+  popup() {
     this.attachment.openPopup();
   }
-  popupUploadFile(evt: any) {
+  popupUploadFile() {
     this.attachment.uploadFile();
   }
 
   fileAdded(event: any) {
     this.data.attachments = event.data.length;
   }
-  fileCount(event: any) {}
+  fileCount() {}
 
   //Popup Stationery and User
   closePopUpCbb() {
@@ -1555,7 +1534,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.memmo,
         60,
         null,
-        this.userInfo.userName,
+        this.user.userName,
         'Dang Test',
         true,
         this.data.onlineUrl,

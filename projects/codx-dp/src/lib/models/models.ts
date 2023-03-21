@@ -344,6 +344,7 @@ export class DP_Instances_Steps {
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
   memo: string;
+  requireCompleted: boolean;
   reasonControl: boolean = false;
   isSuccessStep: boolean =  false;
   isFailStep: boolean = false;
