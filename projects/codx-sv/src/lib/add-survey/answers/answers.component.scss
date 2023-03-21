@@ -9,17 +9,131 @@
   }
   .ejstab-survey
   {
+    .e-tab-header
+    {
+      background: none;
+    }
     .e-tab-header::before
     {
       border: none !important;
     }
     .e-tab-header .e-toolbar-item.e-active {
       color: #4C2B87 !important;
-      border-bottom: 2px #623DA1 solid  !important;
+      border-bottom: 3px #623DA1 solid  !important;
     }
+    .e-toolbar-items
+    {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 100px;
+      border: solid 1px #e2e3ee;
+      border-top: none;
+      border-bottom-right-radius: 7px;
+      border-bottom-left-radius: 7px;
+      margin-top: -7px !important;
+      background: white;
+      .e-toolbar-item{
+        margin-top: -1px ;
+      }
+    }
+    .btn-dp-icon
+    {
+      i{
+        color: #3699ff;
+      }
+    }
+    .btn-dp-icon:hover
+    {
+      i{
+        color: white;
+      }
+    }
+  }
+  .border-bt-none
+    {
+      .e-toolbar-items
+      {
+        border-bottom-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+    }
+  .content-dropdown
+  {
+    width: 200px;
+    text-align: left;
+  }
+  .div-header-1
+  {
+    border: solid 1px #e2e3ee;
+    border-bottom: none;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+  }
+  .div-header-2
+  {
+   
+  }
+  .ip-number
+  {
+    width: 80px;
+  }
+  .div-back-cricle
+  {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .disabled
+  {
+    width: 45px;
+    height: 45px;
+  }
+  .div-back-cricle:hover
+  {
+    background: #F9F9F9;
+  }
+  .disabled 
+  {
+    i{
+      color: #D6D7D8
+    }
+  }
+  .div-drop-question
+  {
+    p{
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .ip-ans
+  {
+    margin-top: -15px;
+  }
+  .text-1A73EC
+  {
+    color: #1A73EC;
+  }
+  .mg-btn
+  {
+    margin-left: -13px;
   }
 }
 
 .mt-032px {
   margin-top: -32px !important;
+}
+.dropdown
+{
+  .dropdown-item
+  {
+    padding: 13px;
+  }
+}
+.btn-dpd-1
+{
+  width: 248px;
 }

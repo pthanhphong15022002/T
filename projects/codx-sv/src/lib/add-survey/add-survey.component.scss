@@ -40,7 +40,7 @@
 }
 .e-tab .e-tab-header .e-toolbar-item.e-active {
   color: #4C2B87 !important;
-  border-bottom: 2px #623DA1 solid  !important;
+  border-bottom: 3px #623DA1 solid  !important;
 }
 .ejstab-survey
 {
@@ -52,4 +52,8 @@
 .ejstab-survey .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap
 {
   padding: 0 20px !important;
+}
+.row-content
+{
+  --bs-gutter-x: 0 !important;
 }
