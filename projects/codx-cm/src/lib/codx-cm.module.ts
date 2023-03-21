@@ -35,6 +35,7 @@ import { CrmPartnersComponent } from './crm-partners/crm-partners.component';
 import { CrmPartnersDetailComponent } from './crm-partners/crm-partners-detail/crm-partners-detail.component';
 import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxTableComponent } from './task/codx-table/codx-table.component';
 const routes: Routes = [
   {
     path: '',
@@ -77,7 +78,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupListContactsComponent,
     PopupQuickaddContactComponent,
     CrmPartnersComponent,
-    CrmPartnersDetailComponent
+    CrmPartnersDetailComponent,
+    CodxTableComponent
   ],
   imports: [
     RouterModule.forChild(routes),
