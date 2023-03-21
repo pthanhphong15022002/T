@@ -14,12 +14,10 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
-  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-
 
 @Component({
   selector: 'popup-add-epCards',
@@ -35,7 +33,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
-  returnData:any;
+  returnData: any;
   headerText = '';
   subHeaderText = '';
   fGroupAddEpCards: FormGroup;
@@ -46,12 +44,11 @@ export class PopupAddEpCardsComponent extends UIComponent {
   gviewEpCards: any;
   avatarID: any = null;
   funcID: any;
-  autoNumDisable= false;
+  autoNumDisable = false;
   imgRecID: any;
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -61,42 +58,39 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    if(this.isAdd){
-      this.imgRecID=null;
-    }
-    else{
-      this.imgRecID=this.data.recID;
+    if (this.isAdd) {
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
     }
   }
 
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    this.initForm();    
-    this.codxEpService.getAutoNumberDefault(this.formModel.funcID).subscribe(autoN=>{
-      if(autoN){
-        if(!autoN?.stop ){
-          this.autoNumDisable=true;
+    this.initForm();
+    this.codxEpService
+      .getAutoNumberDefault(this.formModel.funcID)
+      .subscribe((autoN) => {
+        if (autoN) {
+          if (!autoN?.stop) {
+            this.autoNumDisable = true;
+          }
         }
-      }
-    })
+      });
   }
-  valueChange(evt:any){
+  valueChange(evt: any) {
     console.log(evt);
   }
-  initForm() {    
+  initForm() {
     this.codxEpService
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName
-      )
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddEpCards = item;        
+        this.fGroupAddEpCards = item;
         this.isAfterRender = true;
       });
   }
 
-  
   beforeSave(option: any) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -110,46 +104,41 @@ export class PopupAddEpCardsComponent extends UIComponent {
       this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
       return;
     }
-    let index:any
-    if(this.isAdd){
-      index=0;
-    }
-    else{
-      index=null;
+    let index: any;
+    if (this.isAdd) {
+      index = 0;
+    } else {
+      index = null;
     }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),index)
+      .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
-        if (res.save || res.update) {          
+        if (res.save || res.update) {
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.returnData?.recID)
-          {
-            if(this.imageUpload?.imageUpload?.item) {
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-              .updateFileDirectReload(this.returnData.recID)
-              .subscribe((result) => {
-                if (result) {                  
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialogRef && this.dialogRef.close(this.returnData);                
-                }
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              });  
-            }          
-            else 
-            {
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                });
+            } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
-          } 
-        }
-        else{ 
-          //Trả lỗi từ backend.         
+          }
+        } else {
+          //Trả lỗi từ backend.
           return;
         }
       });
-  }  
+  }
 }

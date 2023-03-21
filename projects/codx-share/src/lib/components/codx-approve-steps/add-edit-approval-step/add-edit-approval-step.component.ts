@@ -146,7 +146,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       this.tabEmail,
       this.tabAnother,
     ];
+
+    //test tabQuery
     //this.hideTabQuery = !this.hideTabQuery;
+
+
     if (this.hideTabQuery) {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
@@ -378,8 +382,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   
   saveFilterChange(event) {
     this.data.constraints = event.filters;
-    console.log('1111111', event);
-    
     this.onSaveForm();
   }
 

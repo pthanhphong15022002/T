@@ -1,13 +1,5 @@
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
-import {
-  CacheService,
-  CallFuncService,
-  DialogModel,
-  UIComponent,
-  FormModel,
-  AuthService,
-  ResourceModel,
-} from 'codx-core';
+import { DialogModel, UIComponent, FormModel, AuthService } from 'codx-core';
 import {
   AfterViewInit,
   Component,

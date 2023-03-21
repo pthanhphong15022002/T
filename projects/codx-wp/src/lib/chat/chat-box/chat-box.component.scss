@@ -44,7 +44,10 @@
     justify-content: space-between;
 }
 .group-infor_name{
-
+    width: 50%;
+    height: 100%;
+    line-break: anywhere;
+    overflow: hidden;
 }
 .group-infor_morefc{
 
@@ -66,7 +69,8 @@
     width: 100%;
     height: 400px;
     background-color: #ffff;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
     padding: 8px;
 }
 .chat-box-footer{
@@ -104,20 +108,21 @@
     display: flex;
     align-items: center;
     margin: 8px 0px;
+    line-break: anywhere;
 }
 .my-message{
     max-width: 250px;
     background-color: blue;
     color: white;
     text-align: right;
-    border-radius: 40px;
+    border-radius: 15px;
     padding: 4px 8px;
 }
 .message-content{
     max-width: 250px;
     background-color: rgb(241, 241, 245);
     text-align: right;
-    border-radius: 40px;
+    border-radius: 15px;
     margin-left: 6px;
     padding: 4px 8px;
 }
@@ -128,7 +133,22 @@ codx-chat-box{
     margin-top: -500px;
     background-color: white;
 }
-
+.footer-upload{
+    width: 200px;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.footer-upload-files{
+    width: 200px;
+    height: 60px;
+    display: flex;
+    overflow-x: scroll;
+}
+.footer-upload-text{
+    width: 200px;
+    border: 0;
+}
 codx-chat-box.active{
 
     .footer-emoji span{
@@ -143,9 +163,16 @@ codx-chat-box.active{
     }
     .footer-button span{
         color: --primary-active;
-
     }
 
 }
 
     
+.codx-message-files{
+    width: 90%;
+}
+.upload-files-item{
+    width: 50px;
+    height: 50px;
+    margin-right: 8px;
+}

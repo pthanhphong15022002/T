@@ -35,6 +35,7 @@ export class CodxBookingRoomScheduleContentComponent
   implements AfterViewInit
 {
   @Input() recID: any;
+  @Input() formModel: any;
   @Input() gridViewSetup: any;
   data:any;
   constructor(

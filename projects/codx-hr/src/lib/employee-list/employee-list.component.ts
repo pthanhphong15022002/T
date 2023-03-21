@@ -25,6 +25,7 @@ import {
   ViewType,
   CacheService,
   UIComponent,
+  CRUDService,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -55,6 +56,7 @@ export class EmployeeListComponent extends UIComponent {
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
+  @ViewChild('listDetail') listDetail: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
   @ViewChild('itemInfoPersonal', { static: true })
@@ -113,11 +115,21 @@ export class EmployeeListComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
+        },
+      },
+      {
+        id: '1',
+        type: ViewType.card,
+        active: false,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+          resources: this.cardTemp,
         },
       },
     ];
@@ -193,6 +205,9 @@ export class EmployeeListComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
       var oldEmployeeID = data.employeeID;
     }
+    let oldEmp = JSON.parse(JSON.stringify(data));
+    console.log('olddemppppppppppppppppppppppppppp', oldEmp);
+    
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -211,7 +226,11 @@ export class EmployeeListComponent extends UIComponent {
           option
         );
         dialog.closed.subscribe((res) => {
+          if(res.event && res.event.employeeID !=  oldEmp.employeeID){
+            (this.view.dataService as CRUDService).remove(oldEmp).subscribe();
+            (this.view.dataService as CRUDService).add(res.event, oldEmp.index).subscribe();
 
+          }
           this.detectorRef.detectChanges();
         });
       });

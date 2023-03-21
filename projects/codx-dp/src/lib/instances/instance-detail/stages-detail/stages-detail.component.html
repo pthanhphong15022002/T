@@ -38,7 +38,7 @@
           ><span class="ms-1">{{ startDate }}</span>
         </div>
       </div>
-      <div class="progress mt-2 h-20px">
+      <div class="progress mt-2 h-16px">
         <div
           class="progress-done"
           role="progressbar"
@@ -93,9 +93,9 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex align-items-center justify-content-between">
       <div
-        class="d-flex align-items-start"
+        class="d-flex align-items-center"
         *ngIf="lstIDInvo != null && lstIDInvo != ''"
       >
         <codx-label
@@ -113,7 +113,7 @@
         >
         </codx-imgs>
       </div>
-      <div class="d-flex align-items-end">
+      <div class="d-flex align-items-center">
         <codx-label
           name="lblOwner"
           default="Người phụ trách:"
@@ -174,7 +174,7 @@
 <ng-template #task>
   <div class="back-info">
     <div
-      class="header-info p-5 d-flex align-items-center justify-content-between mb-0"
+      class="header-info py-3 px-5 d-flex align-items-center justify-content-between mb-0"
     >
       <div>
         <codx-label
@@ -186,28 +186,32 @@
         </codx-label>
       </div>
       <div class="group-button">
-        <button type="button" (click)="openPopupTaskGroup()">
-          <span
-            [ngClass]="
-              !this.isCreate || isClosed ? '' : 'icon-add icon-18 me-2'
-            "
-          ></span>
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary"
+          (click)="openPopupTaskGroup()"
+        >
+          <i
+            [ngClass]="!this.isCreate || isClosed ? '' : 'icon-add icon-18'"
+          ></i>
         </button>
-        <button class="button-custom" (click)="openTypeTask()">
-          <span
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary ms-1"
+          (click)="openTypeTask()"
+        >
+          <i
             [ngClass]="
-              !this.isCreate || isClosed
-                ? ''
-                : 'icon-add_task icon-20 text-primary-600 py-2'
+              !this.isCreate || isClosed ? '' : 'icon-add_task icon-18'
             "
-            style="font-weight: 500"
-          ></span>
+          ></i>
         </button>
-        <button class="button-custom" (click)="clickShow($event, 'step-task')">
-          <span
-            class="icon-expand_less icon-20 text-primary-600 py-2"
-            style="font-weight: 500"
-          ></span>
+        <button
+          type="button"
+          class="btn btn-icon btn-outlight-primary ms-1"
+          (click)="clickShow($event, 'step-task')"
+        >
+          <i class="icon-expand_less icon-18"></i>
         </button>
       </div>
     </div>
@@ -231,7 +235,7 @@
                 <div class="card-job stages-task">
                   <div
                     *ngIf="taskList?.recID"
-                    class="d-flex align-items-center justify-content-between"
+                    class="d-flex align-items-center justify-content-between card-job-expand"
                   >
                     <div
                       class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
@@ -334,6 +338,7 @@
                               <div class="steplist-hearder">
                                 <div class="text-dark fw-bold fs-6">
                                   <span>{{ task?.taskName }}</span>
+                                  <span [ngClass]="checkExitsParentID(taskList?.task,task) ? '' : 'd-none'" class="h4" style="color: red;">*</span>
                                 </div>
                                 <div class="text-gray-600">
                                   <codx-label
@@ -344,14 +349,13 @@
                                   >
                                   </codx-label>
                                   <!-- <span [innerHTML]="task?.modifiedOn | formatvalue: frmModel : 'ModifiedOn' | async"> -->
-                                    <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
-                                    <span>
+                                  <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
+                                  <span>
                                     {{
                                       task?.modifiedOn || task?.createdOn
                                         | date : dateTimeFomat
                                     }}
-                                  </span
-                                  >
+                                  </span>
                                   <span *ngIf="taskList?.note"
                                     >, {{ taskList?.note }}</span
                                   >
@@ -513,16 +517,44 @@
 
 <!-- Cập nhật kết quả thực hiện -- nvthuan -->
 <ng-template #updateProgress>
-  <codx-form
-    [headerText]="'Cập nhật kết quả thực hiện'"
-    [subHeaderText]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
-    [body]="updateProgressBody"
-    [footer]="updateProgressFooter"
-    [dialog]="popupUpdateProgress"
-  >
-  </codx-form>
+  <div class="d-flex flex-column p-5 h-100">
+    <div>
+      <ng-container [ngTemplateOutlet]="header"></ng-container>
+    </div>
+    <div style="flex-grow: 1;">
+      <ng-container [ngTemplateOutlet]="updateProgressBody"></ng-container>
+    </div>
+    <div class="">
+      <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
+    </div>
+  </div>
 </ng-template>
 
+<ng-template #header>
+  <div class="d-flex justify-content-between ">
+    <div>
+      <div>
+        <codx-label
+          class="h3"
+          fiedName="progressHeader"
+          [formModel]="grvTaskGroupsForm"
+          [default]="'Cập nhật kết quả thực hiện'"
+        ></codx-label>
+      </div>
+      <div>
+        <codx-label
+          class="text-gray-400"
+          fiedName="progressHeaderMemo"
+          [formModel]="grvTaskGroupsForm"
+          [default]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
+        ></codx-label>
+      </div>
+    </div>
+    <div>
+      <span class="icon-close icon-18 cursor-pointer" (click)="popupUpdateProgress.close()"></span>
+    </div>
+  </div>
+</ng-template>
 <ng-template #updateProgressBody>
   <div class="mt-5">
     <div class="form-group d-flex justify-content-between row">
@@ -545,17 +577,13 @@
             <span class="ms-2">100%</span>
           </div>
         </div>
-        <codx-input
-          field="progress"
-          [formModel]="grvTaskGroupsForm"
-          (valueChange)="changeValueInput($event, dataProgress)"
-          [crrValue]="dataProgress?.progress"
-          type="number"
-          [min]="0"
-          [max]="100"
-          [showSpinButton]="true"
-        >
-        </codx-input>
+        <ejs-numerictextbox
+          [value]="dataProgress?.progress"
+          format="###'%'"
+          min="0"
+          max="100"
+          (change)="changeProgress($event, dataProgress)"
+        ></ejs-numerictextbox>
       </div>
       <div class="col-6">
         <div>
@@ -565,7 +593,9 @@
             default="Ngày hoàn thành thực tế"
           >
           </codx-label>
-          <span *ngIf="dataProgress?.progress == 100" style="color: red"> *</span>
+          <span *ngIf="dataProgress?.progress == 100" style="color: red">
+            *</span
+          >
         </div>
         <codx-input
           field="actualEnd"
@@ -599,13 +629,18 @@
       </codx-input>
     </div>
     <ng-container>
-      <div class="d-flex align-items-center justify-content-between mt-4"
+      <div
+        class="d-flex align-items-center justify-content-between mt-4"
         *ngIf="showLabelAttachment"
-        style="float: left; clear: left">
+        style="float: left; clear: left"
+      >
         <div class="d-flex align-items-center mb-2">
           <div class="fw-bold text-primary">
-            <codx-label fiedName="lblAttachments" [formModel]="grvTaskGroupsForm"
-              default="Tài liệu">
+            <codx-label
+              fiedName="lblAttachments"
+              [formModel]="grvTaskGroupsForm"
+              default="Tài liệu"
+            >
             </codx-label>
           </div>
         </div>
@@ -634,24 +669,23 @@
     </ng-container>
   </div>
 </ng-template>
-
 <ng-template #updateProgressFooter>
-  <div class="mb-4">
+  <div class="mb-4 d-flex justify-content-between w-100">
     <button
-    style="float: left"
-    type="button"
-    class="btn btn-light-primary me-3"
-    (click)="addFile($event)"
-  >
-    <i class="icon-cloud_upload fs-5"></i
-    ><span>
-      <codx-label
-        name="UploadFile"
-        formName="Tasks"
-        default="Đính kèm"
-      ></codx-label>
-    </span>
-  </button>
+      style="float: left"
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Đính kèm"
+        ></codx-label>
+      </span>
+    </button>
     <button type="button" class="btn btn-primary" (click)="handelProgress()">
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
     </button>
@@ -676,11 +710,7 @@
         </div>
         <span class="text-gray-600">{{ stepNameEnd }}</span>
       </div>
-      <div
-        class="d-flex justify-content-between"
-        *ngIf="
-        !!proccesNameMove
-        ">
+      <div class="d-flex justify-content-between" *ngIf="!!proccesNameMove">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>
         </div>

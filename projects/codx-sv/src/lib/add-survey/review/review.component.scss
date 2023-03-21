@@ -1,7 +1,10 @@
 .page-questions {
-  width: 800px !important;
-  margin: auto;
+  //width: 800px !important;
+  height: 100%;
+  background-color: #F0EBF8;
+  //margin: auto;
   position: relative;
+  overflow: auto;
 
   .moreFC {
     width: 50px !important;
@@ -54,12 +57,17 @@
   }
 
   #formSession {
-    padding-top: 20px;
+    padding-top: 10px;
     margin-bottom: 20px;
     border: 1px solid #e2e3ee;
     border-radius: unset;
     border-bottom-left-radius: 8px !important;
     border-bottom-right-radius: 8px !important;
+
+    p{
+      padding: 0;
+      margin: 0;
+    }
 
   }
   /* <!-- custom code end --> */
@@ -261,7 +269,8 @@
 
   .title-des-index0 {
     text-align: left;
-    font-size: 24pt;
+    font-size: 22pt;
+    margin-left: 10px;
   }
 
   .title-des {
@@ -412,10 +421,10 @@
 
   .b-t-index {
     border: 0px solid #e2e3ee;
-    border-top-color: #3699ff !important;
-    border-top-width: 48px !important;
-    border-top-right-radius: 19px !important;
-    border-top-left-radius: 19px !important;
+    border-top-color: #7248B9 !important;
+    //border-top-width: 48px !important;
+    border-top-right-radius: 10px !important;
+    border-top-left-radius: 10px !important;
   }
 
   .b-l-session {
@@ -559,7 +568,45 @@
 }
 .btn-submit
 {
-  width: 75px;
-  height:35px;
+  width: 91px;
+  height:37px;
+  margin-top: 1px;
   background-color: #7248B9;
+}
+.btn-submit-white
+{
+  width: 93px;
+  height:40px;
+  background-color: white;
+  border: solid 1px #e2e3ee;
+}
+.btn-submit-white:hover
+{
+  background-color: #F9F7FC !important
+}
+.bg-q-img
+{
+  img{
+    width: 100%;
+  }
+}
+.text-purple{
+  color: rgb(103, 58, 183) !important;
+}
+.formSession2
+{
+  background-color: #7248B9;
+  height: 40px;
+  font-size: 15px;
+  padding: 0 22px;
+  p{
+    margin-bottom: 0;
+  }
+}
+.div-f-c
+{
+  form{
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+  }
 }

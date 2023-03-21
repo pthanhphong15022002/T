@@ -1,0 +1,365 @@
+<codx-form #form [headerText]="title" [subHeader]="subHeader" [body]="body" [openMore]="true" [dialog]="dialog"
+  [formModel]="dialog.formModel" [footer]="footer" [data]="data"></codx-form>
+<ng-template #subHeader>
+  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="data?.tags" (valueChange)="valueChange($event)"></codx-tag>
+
+</ng-template>
+<ng-template #body>
+  <div class="mb-3">
+    <codx-label name="lblGeneral" class="text-dark fw-bold" [formModel]="dialog.formModel" default="Thông tin chung">
+    </codx-label>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" name="lblAvatar" default="Ảnh đại diện"></codx-label>
+        <ng-container [ngTemplateOutlet]="avata"></ng-container>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ObjectType" default="Xưng hô">
+        </codx-label>
+        <codx-input type="valuelist" [crrValue]="data?.objectType" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="objectType">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ContactName" default="Họ và đệm">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.contactName" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="contactName">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="contactName" default="Tên">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.contactName" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="contactName">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="BirthDay" default="Ngày sinh">
+        </codx-label>
+        <codx-input type="datetime" style="width:100%" format="d" [crrValue]="data?.birthDay"
+          (valueChange)="valueChange($event)" [formModel]="form.formModel" field="birthDay">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="PhoneNumber" default="Điện thoại">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.phoneNumber" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="phoneNumber">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Email" default="Email">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="email">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Website" default="Website">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.website" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="website">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label fiedName="CustomerForm" class="text-dark fw-bold" [formModel]="dialog.formModel"
+              default="Là khách hàng cá nhân">
+            </codx-label>
+          </div>
+          <codx-input type="switch" [crrValue]="false" (valueChange)="valueChange($event)" [formModel]="form.formModel"
+            field="isCustomer">
+          </codx-input>
+        </div>
+        <codx-input type="datetime" style="width:100%" format="d" [disabled]="true" [crrValue]="data?.customerForm"
+          (valueChange)="valueChange($event)" [formModel]="form.formModel" field="customerForm">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="memo" default="Mô tả">
+        </codx-label>
+        <codx-input type="textarea" format="ed2" [crrValue]="data?.memo" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="memo">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ContactID" default="Mã liên hệ">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.contactID" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="contactID">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="CustomerName" default="Tổ chức">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.customerName" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="customerName">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="JobTitle" default="Chức danh">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.jobTitle" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="jobTitle">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Field" default="Lĩnh vực hoạt động">
+        </codx-label>
+        <codx-input type="text" [crrValue]="data?.field" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="field">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Career" default="Ngành nghề">
+        </codx-label>
+        <codx-input type="valuelist" [crrValue]="data?.career" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="career">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="BackAccount" default="Tài khoản ngân hàng">
+        </codx-label>
+        <codx-input type="valuelist" [crrValue]="data?.backAccount" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="backAccount">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="BankName" default="Mở tại ngân hàng">
+        </codx-label>
+        <codx-input type="valuelist" [crrValue]="data?.bankName" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="bankName">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Source" default="Nguồn khách hàng">
+        </codx-label>
+        <codx-input type="valuelist" [crrValue]="data?.source" (valueChange)="valueChange($event)"
+          [formModel]="form.formModel" field="source">
+        </codx-input>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-input type="switch" class="me-2" [crrValue]="data?.allowCall" (valueChange)="valueChange($event)"
+              [formModel]="form.formModel" field="allowCall"> </codx-input>
+          </div>
+          <div class="w-100">
+            <codx-label [formModel]="form.formModel" fiedName="AllowCall" default="Không điện thoại">
+            </codx-label>
+          </div>
+        </div>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-input type="switch" class="me-2" [crrValue]="data?.allowEmail" (valueChange)="valueChange($event)"
+              [formModel]="form.formModel" field="allowEmail"> </codx-input>
+          </div>
+          <div class="w-100">
+            <codx-label [formModel]="form.formModel" fiedName="AllowEmail" default="Không gửi mail">
+            </codx-label>
+          </div>
+        </div>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="CustomerID"
+          [disabled]="false"
+        >
+        </codx-input> -->
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="d-flex justify-content-between">
+      <div class="mb-2">
+        <codx-label name="lblAddress" class="text-dark fw-bold" [formModel]="dialog.formModel" default="Địa chỉ">
+        </codx-label>
+      </div>
+      <div class="mb-2">
+        <span class="icon-add_location_alt text-primary me-1" (click)="openPopupAddress()"></span>
+      </div>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="row">
+        <div class="col-4">
+          <span class="text-gray-600">Hóa đơn:</span>
+        </div>
+        <div class="col-8">
+          23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <span class="text-gray-600">Giao hàng:</span>
+        </div>
+        <div class="col-8">
+          23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">
+      <codx-label name="lblSave" [formModel]="dialog.formModel" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #avata>
+  <div class="avatar-container">
+    <div class="avatar" (click)="addAvatar()">
+      <ng-container *ngIf="linkAvatar != ''">
+        <img [src]="linkAvatar" alt="">
+      </ng-container>
+      <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
+        <img src="../../../assets/codx/user/avatar.jpg" alt="">
+      </ng-container>
+    </div>
+  </div>
+  <codx-attachment #imageAvatar [objectId]="data.recID" [objectType]="form.formModel.entityName" hideFolder="1"
+    hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
+    [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
+    displayThumb="full" showMessage="0" category="0">
+  </codx-attachment>
+
+</ng-template>

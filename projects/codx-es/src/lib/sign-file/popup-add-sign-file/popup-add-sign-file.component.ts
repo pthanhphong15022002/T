@@ -705,9 +705,6 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#region Methods Save
   onSaveSignFile() {
-    console.log('onSaveSignFile', this.data);
-    console.log('onSaveSignFile', this.dialogSignFile.value);
-
     if (this.dialogSignFile.invalid == true) {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
