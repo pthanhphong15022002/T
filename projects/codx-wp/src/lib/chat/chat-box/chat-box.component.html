@@ -24,41 +24,39 @@
                     </div>
                 </ng-container>
             </div>
-            <div class="group-infor">
-                <div class="group-infor_name">
-                    <p class="m-0 fw-bolder">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</p>
-                    <p class="m-0">
+            <div class="group-infor w-100">
+                <div class="group-infor_name w-100">
+                    <div class="fw-bold fs-6">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</div>
+                    <div class="mb-1">
                         <codx-tag 
                             [isEdit]="false"  
                             [value]="group.tagValue" 
                             [entityName]="'WP_Groups'">
                         </codx-tag>
-                    </p>
+                    </div>
                 </div>
-                <div class="group-infor_morefc">
-                    <ul class="morefc-list">
-                        <ng-container *ngIf="group.groupType == '2'">
-                            <li class="morefc-list_item">
-                                <span class="icon-group_add"></span>
-                            </li>    
-                        </ng-container>
-                        <li class="morefc-list_item">
-                            <span class="icon-launch"></span>
-                        </li>
-                        <li class="morefc-list_item">
-                            <span class="icon-horizontal_rule" (click)="collapsed()"></span>
-                        </li>
-                        <li class="morefc-list_item" (click)="closeChatBox()">
-                            <span class="icon-close"></span>
-                        </li>
-                    </ul>
+                <div class="d-flex align-items-center morefc-list ms-3">
+                    <ng-container *ngIf="group.groupType == '2'">
+                        <button type="button" class="btn btn-icon btn-sm btn-light">
+                            <span class="icon-group_add icon-16"></span>
+                        </button>    
+                    </ng-container>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                        <span class="icon-launch icon-16"></span>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                        <span class="icon-horizontal_rule icon-16" (click)="collapsed()"></span>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1" (click)="closeChatBox()">
+                        <span class="icon-close icon-16"></span>
+                    </button>
                 </div>   
             </div>
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
                 <div class="codx-message" [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null" [class.justify-content-end]="item.createdBy == user.userID">
-                    <div class="message-img" *ngIf="item.createdBy != user.userID">
+                    <div class="message-img me-3" *ngIf="item.createdBy != user.userID">
                         <codx-img 
                             [objectId]="item.createdBy" 
                             [width]="30"
@@ -66,11 +64,11 @@
                         </codx-img>
                     </div>
                     <ng-container *ngIf="item.messageType == '1'">
-                        <div [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                        <div [class]="item.createdBy == user.userID ? 'my-message text-message':'text-message you-message'">
                             {{item.message}}
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'you-message'">
                         <div class="codx-message-files">
                             <codx-view-files 
                                 [objectID]="item.recID" 
@@ -85,7 +83,7 @@
                 </div>  
             </ng-container>
         </div>
-        <div class="chat-box-footer border-top bg-body">
+        <div class="chat-box-footer border-top bg-body aqua">
             <div class="footer-emoji" ngbDropdown>
                 <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
@@ -131,7 +129,7 @@
             </ng-container>
             
             <ng-template #tmpUploadFile>
-                <div class="footer-upload">
+                <div class="footer-upload min-h-50px">
                     <div class="footer-upload-files">
                         <ng-container *ngFor="let item of fileUpload">
                             <div class="upload-files-item cursor-pointer">
@@ -172,9 +170,9 @@
                     </div>
                 </div>
             </ng-template>
-            <div class="footer-button" (click)="sendMessage()">
-                <span class="icon-send icon-16" ></span>
-            </div>
+            <button type="button" class="footer-button btn btn-icon btn-circle btn-primary" (click)="sendMessage()">
+                <span class="icon-send icon-20" ></span>
+            </button>
             
             
         </div>
