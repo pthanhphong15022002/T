@@ -36,6 +36,7 @@ import { CrmPartnersDetailComponent } from './crm-partners/crm-partners-detail/c
 import { PopupAddCrmPartnerComponent } from './crm-partners/popup-add-crm-partner/popup-add-crm-partner.component';
 import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxTableComponent } from './task/codx-table/codx-table.component';
 const routes: Routes = [
   {
     path: '',
@@ -79,6 +80,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupQuickaddContactComponent,
     CrmPartnersComponent,
     CrmPartnersDetailComponent,
+    CodxTableComponent,
     PopupAddCrmPartnerComponent,
   ],
   imports: [

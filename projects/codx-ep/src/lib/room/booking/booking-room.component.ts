@@ -490,7 +490,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
   }
   release(data: any) {
-    if (this.authService.userValue.userID != data?.owner) {
+    if (this.authService.userValue.userID != data?.createdBy) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
@@ -528,7 +528,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     if (
       !this.codxEpService.checkRole(
         this.authService.userValue,
-        data?.owner,
+        data?.createdBy,
         this.isAdmin
       )
     ) {
@@ -591,11 +591,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       host = data?.resources.filter((res) => res.roleType == '1');
     }
     if (
-      !this.codxEpService.checkRole(
+      !this.codxEpService.checkRoleHost(
         this.authService.userValue,
-        data?.owner,
-        this.isAdmin,
-        host[0].userID
+        host[0].userID,
+        this.isAdmin
       )
     ) {
       this.notificationsService.notifyCode('TM052');
@@ -666,7 +665,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if (
         !this.codxEpService.checkRole(
           this.authService.userValue,
-          evt?.owner,
+          evt?.createdBy,
           this.isAdmin
         )
       ) {
@@ -745,7 +744,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if (
         !this.codxEpService.checkRole(
           this.authService.userValue,
-          deleteItem?.owner,
+          deleteItem?.createdBy,
           this.isAdmin
         )
       ) {

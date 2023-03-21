@@ -486,51 +486,25 @@ export class BookingStationeryComponent
     }
   }
 
-  allocate(evt: any) {
-    let warehouseID: string = evt.warehouseID;
-    this.codxEpService.getWarehousesOwner(warehouseID).subscribe((res) => {
-      if (
-        res[0] == this.authService.userValue.userID &&
-        !this.authService.userValue.administrator
-      ) {
-        this.codxEpService
-          .approve(
-            evt?.approvalTransRecID, //ApprovelTrans.RecID
-            '5',
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              this.api
-                .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [
-                  evt.recID,
-                ])
-                .subscribe((dataItem: any) => {
-                  if (dataItem) {
-                    this.codxEpService
-                      .getBookingByRecID(dataItem.recID)
-                      .subscribe((booking) => {
-                        this.view.dataService
-                          .update(booking)
-                          .subscribe((res) => {
-                            if (res) {
-                              this.notificationsService.notifyCode('SYS034');
-                            }
-                          });
-                      });
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
+  allocate(data: any) {
+    if (this.isEmptyGuid(data?.approvalTransRecID)) {
+      this.api
+        .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data.recID])
+        .subscribe((trans: any) => {
+          trans.map((item: any) => {
+            if (item.stepType === 'I') {
+              this.codxEpService
+                .approve(
+                  item.recID, //ApprovelTrans.RecID
+                  '5',
+                  '',
+                  ''
+                )
+                .subscribe();
             }
           });
-      } else {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
-    });
+        });
+    }
   }
 
   release(evt) {
@@ -621,4 +595,8 @@ export class BookingStationeryComponent
   }
 
   closeAddForm(event) {}
+
+  private isEmptyGuid(value: string) {
+    return value === '00000000-0000-0000-0000-000000000000';
+  }
 }
