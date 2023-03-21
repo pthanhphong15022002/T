@@ -41,8 +41,8 @@
             </ng-container>
           </div>
         </div>
-        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
-          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="(!fileEditing?.assign || propertiesFolder)?'dm-div-disable':null">
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
             (valueChange)="onSaveRole($event)">
           </codx-input>
         </div>

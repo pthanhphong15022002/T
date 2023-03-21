@@ -28,6 +28,7 @@ import {
   CallFuncService,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   ViewsComponent,
@@ -1598,24 +1599,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   editfile(file, multi = false, index = 0) {
-    // let option = new SidebarModel();
-    // //option.DataService = this.dataService;
-    // option.FormModel = this.formModel;
-    // option.Width = '550px';
-    // let data = {} as any;
-    // data.title = "test";
-    // this.callfc.openSide(EditFileComponent, data, option);
-    //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
-    let dialog = this.callfc.openForm(
+    var option = new DialogModel();
+        option.FormModel = this.dialog?.formModel;
+    let dialogs = this.callfc.openForm(
       EditFileComponent,
       this.titleDialog,
       800,
       800,
       '',
       [this.functionID, file, this.dataFolder?.copyrights],
-      ''
+      '',
+      option
     );
-    dialog.closed.subscribe((item) => {
+    dialogs.closed.subscribe((item) => {
       if (item.event) {
         var index = this.fileUploadList.findIndex(
           (x) => x.recID == item.event.recID
