@@ -5,9 +5,9 @@ import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/co
 import { ODApprovelComponent } from 'projects/codx-od/src/lib/incomming/approvel/approvel.component';
 import { ODTestDetailComponent } from 'projects/codx-od/src/lib/incomming/test/test.component';
 import { ESApprovelComponent } from './sign-file/approval/approval.component';
-import { BookingRoomViewDetailComponent } from 'projects/codx-ep/src/lib/room/booking/view-detail/booking-room-view-detail.component';
-import { BookingCarViewDetailComponent } from 'projects/codx-ep/src/lib/car/booking/view-detail/booking-car-view-detail.component';
 import { BookingStationeryViewDetailComponent } from 'projects/codx-ep/src/lib/stationery/booking/view-detail/view-detail.component';
+import { BookingRoomViewDetailComponent } from 'projects/codx-ep/src/lib/room/view-detail/booking-room-view-detail.component';
+import { BookingCarViewDetailComponent } from 'projects/codx-ep/src/lib/car/view-detail/booking-car-view-detail.component';
 
 const routes: Routes = [
   {

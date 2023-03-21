@@ -452,7 +452,8 @@ export class ApprovalCarsComponent extends UIComponent {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  updateStatus(data: any) {
-    this.view.dataService.update(data).subscribe();
+  
+  setPopupTitleOption(mfunc) {
+    this.popupTitle = mfunc;
   }
 }

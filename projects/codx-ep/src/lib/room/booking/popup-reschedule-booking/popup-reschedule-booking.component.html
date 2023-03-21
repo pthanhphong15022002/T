@@ -5,10 +5,10 @@
         <div class="col-4">      
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>      
-          <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="form.formGroup">
+          <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="form.formGroup" >
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+        <div class="col-3 ">
           <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName">
           </codx-label>
@@ -16,7 +16,7 @@
             (valueChange)="valueStartTimeChange($event)" [disabled]="false">
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+        <div class="col-3 ">
           <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName"></codx-label>
           <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
@@ -24,16 +24,44 @@
           </codx-input>
         </div>
     
-        <div class="col-2 d-flex flex-column justify-content-center">
+        <div class="col-2 d-flex flex-column align-items-center mb-3 justify-content-end">
           <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
             (valueChange)="valueAllDayChange($event)" [disabled]="false" [checked]="isFullDay">
           </codx-input>
         </div>
       </div>
       <div class="form-group">
+        <div class="d-flex justify-content-between align-items-center">
+          <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+          </codx-label>
+        </div>
+        <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueCbxRoomChange($event)">
+        </codx-input> -->
+        <ng-template #showAll>
+          <div class="d-flex  bg-light ps-5 py-2 justify-content-start align-items-center">
+            <span role="button" class="me-2"
+              [ngClass]="showAllResource ? 'text-primary icon-check_circle ' : 'text-muted icon-panorama_fish_eye '"
+              (click)="showAllResourceChange(!showAllResource)">
+            </span>
+            <codx-label default="Hiện tất cả" name="lblShowAll"></codx-label>
+          </div>
+        </ng-template>
+        <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields'
+          [placeholder]="'Phòng họp'" (valueChange)="cbxResourceChange($event)"
+          [footerTemplate]="showAll"></ejs-dropdownlist>
+        
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="AgencyName" [formModel]="form.formModel">
+        </codx-label>      
+        <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+      <div class="form-group">
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>      
-        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="changeNote($event)">
         </codx-input>
       </div>
     </ng-container>  

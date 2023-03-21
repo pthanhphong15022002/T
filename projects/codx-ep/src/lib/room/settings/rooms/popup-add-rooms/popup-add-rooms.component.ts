@@ -19,6 +19,7 @@ import {
   UIComponent,
   CRUDService,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { Device } from '../../../booking/popup-add-booking-room/popup-add-booking-room.component';
@@ -31,7 +32,7 @@ import { Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
 })
 export class PopupAddRoomsComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  
+
   @Input() data!: any;
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -43,17 +44,18 @@ export class PopupAddRoomsComponent extends UIComponent {
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
-  isDone=true;
+  isDone = true;
   tmplstDevice = [];
   lstDeviceRoom = [];
-  returnData:any;
+  returnData: any;
   formModel: FormModel;
   headerText = '';
   subHeaderText = '';
   lstEquipment = [];
-  moreFunc:any;
-  functionList:any;
-  imgRecID:any;
+  moreFunc: any;
+  functionList: any;
+  imgRecID: any;
+  grView: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -63,34 +65,39 @@ export class PopupAddRoomsComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    
+
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
-    this.headerText=dialogData?.data[2];
+    this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef.formModel;    
-    if(this.isAdd){
-      this.data.preparator= this.authService.userValue.userID;
-      this.data.capacity=null;
-      this.data.area=null;
-      this.imgRecID=null;
-    }
-    else{
-      this.imgRecID=this.data.recID;
+    this.formModel = this.dialogRef.formModel;
+    if (this.isAdd) {
+      this.data.preparator = this.authService.userValue.userID;
+      
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
     }
   }
 
   onInit(): void {
-    this.initForm();    
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
+    this.initForm();
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        device.icon= item.icon;
-        device.isSelected= false;  
-        if (!this.isAdd  && this.data.equipments!=null) {
+        device.icon = item.icon;
+        device.isSelected = false;
+        if (!this.isAdd && this.data.equipments != null) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
               device.isSelected = true;
@@ -101,14 +108,13 @@ export class PopupAddRoomsComponent extends UIComponent {
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
       });
     });
-    
   }
 
   initForm() {
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddRoom = item;        
+        this.fGroupAddRoom = item;
         this.isAfterRender = true;
       });
   }
@@ -124,15 +130,13 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
-    if(this.data.area==null || this.data.area==''){
-      this.data.area=0;
-    }
+    
     this.fGroupAddRoom.patchValue(this.data);
     if (this.fGroupAddRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
       return;
     }
-    this.lstEquipment=[];
+    this.lstEquipment = [];
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
@@ -140,49 +144,44 @@ export class PopupAddRoomsComponent extends UIComponent {
         tempEquip.createdBy = this.authService.userValue.userID;
         this.lstEquipment.push(tempEquip);
       }
-    });    
-    this.fGroupAddRoom.patchValue({      
+    });
+    this.fGroupAddRoom.patchValue({
       equipments: this.lstEquipment,
       category: '1',
-    });   
-    let index:any
-    if(this.isAdd){
-      index=0;
-    }
-    else{
-      index=null;
+    });
+    let index: any;
+    if (this.isAdd) {
+      index = 0;
+    } else {
+      index = null;
     }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),index)
+      .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
-        if (res.save || res.update) {          
+        if (res.save || res.update) {
           if (!res.save) {
-            this.returnData = res.update;            
+            this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.returnData?.recID)
-          {
-            if(this.imageUpload?.imageUpload?.item) {
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-              .updateFileDirectReload(this.returnData.recID)
-              .subscribe((result) => {
-                if (result) {                  
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialogRef && this.dialogRef.close(this.returnData);                
-                }
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              });  
-            }          
-            else 
-            {
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                });
+            } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
-          } 
-        }
-        else{ 
-          //Trả lỗi từ backend.         
+          }
+        } else {
+          //Trả lỗi từ backend.
           return;
         }
       });

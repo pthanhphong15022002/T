@@ -162,7 +162,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             {
               field: '',
               headerText: '',
-              width: 30,
+              width: 40,
               template: this.itemAction,
               textAlign: 'center',
             },

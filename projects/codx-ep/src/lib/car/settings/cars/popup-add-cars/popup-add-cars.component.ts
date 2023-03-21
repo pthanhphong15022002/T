@@ -19,6 +19,7 @@ import {
   NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
@@ -57,6 +58,7 @@ export class PopupAddCarsComponent extends UIComponent {
   returnData:any;
   useCardCheck = false;
   imgRecID: any;
+  grView: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -72,7 +74,6 @@ export class PopupAddCarsComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     if(this.isAdd){
-      this.data.capacity=null;
       this.imgRecID=null;
     }
     else{
@@ -83,6 +84,13 @@ export class PopupAddCarsComponent extends UIComponent {
   ngAfterViewInit(): void {}
 
   onInit(): void {
+    this.cache
+    .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+    .subscribe((grv) => {
+      if (grv) {
+        this.grView = Util.camelizekeyObj(grv);
+      }
+    });
     this.initForm();
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
