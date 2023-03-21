@@ -33,6 +33,8 @@ export class CrmCustomerComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList', { static: true })
+  itemViewList: TemplateRef<any>;
   @ViewChild('itemCustomerName', { static: true })
   itemCustomerName: TemplateRef<any>;
   @ViewChild('itemContact', { static: true })
@@ -91,6 +93,13 @@ export class CrmCustomerComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        model: {
+          template: this.itemViewList,
         },
       },
     ];
@@ -170,7 +179,7 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
-              hideMoreFunc:true
+              hideMoreFunc: true,
             },
           });
           this.detectorRef.detectChanges();
@@ -247,13 +256,12 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
-              hideMoreFunc:true
+              hideMoreFunc: true,
             },
           });
           this.detectorRef.detectChanges();
         });
     }
-
 
     this.detectorRef.detectChanges();
   }

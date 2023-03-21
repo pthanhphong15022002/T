@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="true"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle()" [openMore]="true"
   [tabContent]="this.ep8Avaiable != null && (this.ep8Avaiable ==true || this.ep8Avaiable=='1') ? [tabGeneralInfo, tabPeopleInfo, tabStationery , tabMoreInfo, tabReminder] :[tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder]"
   [data]="data">
   <ng-template #tabGeneralInfo>
@@ -222,7 +222,7 @@
           <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1"
             hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
             [objectId]="data?.recID" allowMultiFile="1" [idBrowse]="'add'" displayThumb="full"
-            [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)"
+            [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" (fileCount)="fileCount()"
             [referType]="'2'">
           </codx-attachment>
         </div>
@@ -513,7 +513,7 @@
   <ng-template #footer>
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
-        <a (click)="popupUploadFile($event)"
+        <a (click)="popupUploadFile()"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
           <span class="icon-cloud_upload btn-text-primary me-2"></span>
           <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"></codx-label>

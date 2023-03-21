@@ -73,7 +73,12 @@
 </ng-template>
 <!--grid view-->
 
+<!--List view-->
 
+<ng-template #itemViewList let-data>
+  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [vllPriority]="vllPriority"></codx-view-list-crm>
+</ng-template>
+<!--List view-->
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"

@@ -1778,6 +1778,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         let id = data['recID'] || '';
+        let stepNo = data['stepNo'];
         let index = this.stepList.findIndex((step) => step.recID == id);
         if (index >= 0) {
           this.stepList.splice(index, 1);
@@ -1793,6 +1794,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.listStepAdd.splice(index,1);
             }else{
               this.listStepDelete.push(id);
+              let listIDEdit = this.stepList?.filter(step => step.stepNo >= stepNo)?.map(stepFind => {
+                return stepFind.recID
+              });
+              if(listIDEdit?.length > 0){
+                listIDEdit.forEach(id => {
+                  let check = this.listStepAdd?.some(step => step == id);
+                  if(!check){
+                    this.listStepAdd.push(id);
+                  }
+                })
+              }
             }
           }
         }
