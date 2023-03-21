@@ -179,10 +179,10 @@
           </span>
         </div>
       </div>
-      <span>
-        <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
+      <div class="d-flex align-items-center text-gray-600">
+        <span class="icon-16 icon-av_timer me-1"></span>
         <span
-          class="fs-7 text-gray-600"
+          class="fs-7"
           #endDate
           [innerHTML]="
             data.endDate
@@ -195,7 +195,7 @@
               | async
           "
         ></span>
-      </span>
+      </div>
     </div>
     <div class="d-flex justify-content-center">
       <codx-imgs

@@ -1,15 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
   Injector,
   Input,
-  OnInit,
   Optional,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import axios from 'axios';
 import {
   UIComponent,
   NotificationsService,
@@ -19,7 +17,6 @@ import {
   DialogData,
   DialogRef,
 } from 'codx-core';
-import { environment } from 'src/environments/environment';
 import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
