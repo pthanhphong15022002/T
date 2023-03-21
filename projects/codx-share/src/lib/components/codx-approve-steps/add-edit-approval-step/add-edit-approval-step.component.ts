@@ -146,7 +146,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       this.tabEmail,
       this.tabAnother,
     ];
+
+    //test tabQuery
     //this.hideTabQuery = !this.hideTabQuery;
+
+
     if (this.hideTabQuery) {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
@@ -298,6 +302,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               }
             });
           }
+
+          //Loại cấp phát -> duyệt đại diện
+          if(this.data.stepType == 'I'){
+            this.data.approveMode = "3";
+            this.dialogApprovalStep.patchValue({ approveMode: this.data.approveMode });
+            this.currentApproveMode = this.data.approveMode;
+            this.cr.detectChanges();
+          }
           break;
         }
         case 'overdueControl': {
@@ -378,8 +390,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   
   saveFilterChange(event) {
     this.data.constraints = event.filters;
-    console.log('1111111', event);
-    
     this.onSaveForm();
   }
 

@@ -117,6 +117,7 @@ export class InstancesComponent
   stepSuccess: any;
   stepFail: any;
   viewType = 'd';
+  autoName:string = '';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -139,6 +140,7 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
+    this.autoName = this.dataProccess.autoName;
     this.stepSuccess = this.dataProccess.steps.filter(
       (x) => x.isSuccessStep
     )[0];
@@ -364,6 +366,7 @@ export class InstancesComponent
         (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
+        this.autoName,
       ],
       option
     );
@@ -385,7 +388,6 @@ export class InstancesComponent
   }
 
   edit(data, titleAction) {
-    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -426,6 +428,7 @@ export class InstancesComponent
                     (this.sumDaySteps = this.getSumDurationDayOfSteps(
                       this.listStepsCbx
                     )),
+                    this.autoName,
                   ],
                   option
                 );
@@ -543,7 +546,6 @@ export class InstancesComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS005':
           case 'SYS003':
             if ((data.status !== '1' && data.status !== '2') || data.closed)
               res.disabled = true;
@@ -551,7 +553,10 @@ export class InstancesComponent
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
-          case 'DP011':
+          //more core - thay doi nhieu dong, bo chon, chon tat ca..
+          case 'SYS005':
+          case 'SYS007':
+          case 'SYS006':
             res.disabled = true;
             break;
           //Chỉnh sửa, chuyển tiếp, thất bại, thành công

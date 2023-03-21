@@ -1,16 +1,10 @@
 .chat-box{
-    width: 300px;
-    height: 500px;
-    margin-right: 10px;
-    background-color: #ffffff;
-    border: #ddd;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    width: 360px;
+    height: 580px;
+    background-color:var(--bg-body);
+    border: 1px var(--gray-150) solid;
+    box-shadow: rgba(50, 50, 93, 0.35) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    border-radius: 6px 6px 0 0;
 }
 .chat-box-header{
     width: 100%;
@@ -18,7 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
+    padding: 12px 8px 5px;
     border-bottom: 1px solid #ede9e9;
 }
 .group-avatar{
@@ -44,11 +38,12 @@
     justify-content: space-between;
 }
 .group-infor_name{
-
+    width: 50%;
+    height: 100%;
+    line-break: anywhere;
+    overflow: hidden;
 }
-.group-infor_morefc{
 
-}
 .morefc-list{
     list-style: none;
     width: 100%;
@@ -66,7 +61,8 @@
     width: 100%;
     height: 400px;
     background-color: #ffff;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
     padding: 8px;
 }
 .chat-box-footer{
@@ -77,15 +73,11 @@
     justify-content: space-between;
     padding: 4px 8px;
 }
-.footer-emoji{
 
-}
 .footer-emoji:hover{
     cursor: pointer;
 }
-.footer-attachments{
 
-}
 .footer-attachments:hover{
     cursor: pointer;
 }
@@ -93,9 +85,7 @@
     width: 200px;
     border: 0;
 }
-.footer-button{
 
-}
 .footer-button:hover{
     cursor: pointer;
 }
@@ -104,20 +94,21 @@
     display: flex;
     align-items: center;
     margin: 8px 0px;
+    line-break: anywhere;
 }
 .my-message{
     max-width: 250px;
     background-color: blue;
     color: white;
     text-align: right;
-    border-radius: 40px;
+    border-radius: 15px;
     padding: 4px 8px;
 }
 .message-content{
     max-width: 250px;
     background-color: rgb(241, 241, 245);
     text-align: right;
-    border-radius: 40px;
+    border-radius: 15px;
     margin-left: 6px;
     padding: 4px 8px;
 }
@@ -128,7 +119,22 @@ codx-chat-box{
     margin-top: -500px;
     background-color: white;
 }
-
+.footer-upload{
+    width: 200px;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.footer-upload-files{
+    width: 200px;
+    height: 60px;
+    display: flex;
+    overflow-x: scroll;
+}
+.footer-upload-text{
+    width: 200px;
+    border: 0;
+}
 codx-chat-box.active{
 
     .footer-emoji span{
@@ -143,9 +149,16 @@ codx-chat-box.active{
     }
     .footer-button span{
         color: --primary-active;
-
     }
 
 }
 
     
+.codx-message-files{
+    width: 90%;
+}
+.upload-files-item{
+    width: 50px;
+    height: 50px;
+    margin-right: 8px;
+}

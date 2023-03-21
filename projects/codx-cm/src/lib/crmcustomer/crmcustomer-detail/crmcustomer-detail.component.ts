@@ -36,11 +36,12 @@ export class CrmcustomerDetailComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.dataSelected.steps);
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.listTab(this.funcID);
+    this.nameDetail == 'Information'
   }
 
   listTab(funcID){
@@ -52,12 +53,19 @@ export class CrmcustomerDetailComponent implements OnInit {
         { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
         { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
       ]
-    }else{
+    }else if(funcID == 'CM0102'){
       this.tabDetail = [
         { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
         { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
         { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
         { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
+      ]
+    }else if(funcID == 'CM0103'){
+      this.tabDetail = [
+        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+        { name: 'Offered', textDefault: 'Sản phẩm cung cấp', icon: 'icon-shopping_cart', isActive: false },
+
       ]
     }
   }
@@ -75,4 +83,6 @@ export class CrmcustomerDetailComponent implements OnInit {
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
   }
+
+
 }

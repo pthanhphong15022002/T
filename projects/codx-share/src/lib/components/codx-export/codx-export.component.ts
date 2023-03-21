@@ -209,6 +209,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
           )
           .closed.subscribe((item) => {
             if (item.event && item.event.length > 0) {
+              debugger
               var typeR = item.event[1];
               if (typeR == 'excel') {
                 if (val == 'add') this.loadEx();

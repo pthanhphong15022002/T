@@ -712,6 +712,22 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   openUpdateProgress(data?: any) {
+    if(data?.parentID){
+      let check = false;
+      let taskName = ''
+      let listID = data?.parentID.split(';');
+      listID?.forEach(item => {
+        let taskFind = this.taskList?.find(task => task.refID == item)
+        if(taskFind?.progress != 100){
+          check = true;
+          taskName = taskFind?.taskName;
+        }
+      })
+      if(check){
+        this.notiService.notifyCode('DP023',0,taskName);
+        return;
+      }
+    }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
       this.dataProgressClone = data;
@@ -720,7 +736,7 @@ export class StagesDetailComponent implements OnInit {
       this.updateProgress,
       '',
       550,
-      370
+      450
     );
   }
   checkEventProgress(data) {
@@ -797,6 +813,23 @@ export class StagesDetailComponent implements OnInit {
       data[event?.field] = 100;
     }
     this.disabledProgressInput = event?.data;
+  }
+  checkExitsParentID(taskList, task):boolean{
+    let check = false;
+    if(task['groupTaskID']){
+      taskList?.forEach((taskItem) => {
+        if(taskItem['parentID']?.includes(task['refID'])){
+          check = true;
+        }
+      });
+    }else{
+      this.taskList?.forEach((taskItem) => {
+        if(taskItem['parentID']?.includes(task['refID'])){
+          check = true;
+        }
+      });
+    }
+    return check;
   }
   // Common
   calculateProgressTaskGroup(data, status) {
@@ -970,12 +1003,12 @@ export class StagesDetailComponent implements OnInit {
     this.calculateProgressStep();
   }
 
+  changeProgress(e,data){
+    data['progress'] = e?.value ?  e?.value : 0;
+  }
+   
   changeValueInput(event, data) {
-    if(event?.field == 'progress' && !event?.data){
-      data[event?.field] = 0;
-    }else{
-      data[event?.field] = event?.data;
-    }
+    data[event?.field] = event?.data;
   }
 
   changeValueDate(event, data) {

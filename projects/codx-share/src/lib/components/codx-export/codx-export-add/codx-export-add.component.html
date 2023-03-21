@@ -9,7 +9,7 @@
   <ng-template popup adde #body>
     <div class="d-flex flex-column mb-3">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex justify-content-start w-100 hideAttachment">
+          <div class="d-flex justify-content-start w-100">
             <codx-attachment 
               #attachment 
               [objectType]="module"
@@ -18,13 +18,12 @@
               hideUploadBtn="1"  
               hideDes="1"
               [functionID]="dialog?.formModel?.funcID"
-              (fileCount)="getfileCount($event)"
+              (fileAdded)="getfileCount($event)"
               (fileGet)="getFile($event)"
               [objectId]="data?.recID"
               [allowMultiFile]="0"
               showMessage="0"
               idBrowse="3"
-              [allowMultiFile]=""
               [allowExtensions]="'.docx,.xlsx'"
               class="w-100"
             >

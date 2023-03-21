@@ -12,9 +12,9 @@ import { environment } from 'src/environments/environment';
 })
 export class ViewVideoComponent implements OnInit {
 
-  @Input() funcID: string | null = null;
-  @Input() ObjectID: string | null = null;
-  @Input() ObjectType:string | null = null;
+  @Input() funcID: string = null;
+  @Input() objectID: string = null;
+  @Input() objectType:string = null;
   @ViewChild("codxATM") codxATM: AttachmentComponent;
   FILE_REFERTYPE = {
     IMAGE: "image",
@@ -29,40 +29,25 @@ export class ViewVideoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if(this.ObjectID){
-      this.getFileByObjectID(this.ObjectID);
-    }
+    this.getFileByObjectID();
+
   }
 
-  getFileByObjectID(objectID:string){
-    if(objectID){
-      this.api.execSv(
-        "DM",
-        "ERM.Business.DM",
-        "FileBussiness",
-        "GetFilesByIbjectIDAsync",
-        [objectID])
-      .subscribe((files:any[]) => 
+  // get file video by objectID objectType 
+  getFileByObjectID(){
+    this.api.execSv(
+      "DM",
+      "ERM.Business.DM",
+      "FileBussiness",
+      "GetFileByOORAsync",
+      [this.objectID,this.objectType,this.FILE_REFERTYPE.VIDEO])
+    .subscribe((res:any) => {
+      if(res.pathDisk)
       {
-        if(files.length > 0)
-        {
-          let fileVideo = files.find((f:any) => f.referType == this.FILE_REFERTYPE.VIDEO);
-          if(fileVideo){
-            fileVideo["source"] = `${environment.urlUpload}`+"/"+ fileVideo.url;
-              this.file = fileVideo;
-            this.dt.detectChanges();
-          }
-        }
-      });
-    }
-  }
-  fileUpload:any[] = [];
-  addVideo(files: any) {
-
-  }
-  clickUploadFile(){
-    if(this.codxATM){
-      this.codxATM.uploadFile();
-    }
+          res["source"] = `${environment.urlUpload}`+"/"+res.pathDisk; 
+          this.file = res;
+          this.dt.detectChanges();
+      }
+    });
   }
 }

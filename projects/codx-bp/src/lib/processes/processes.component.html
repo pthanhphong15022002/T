@@ -397,7 +397,7 @@
       </div>
     </td>
     <td class="rowphoto" (mouseenter)="closePopover()">
-      <div *ngIf="funcID == 'BPT4'">
+      <div *ngIf="funcID == 'BPT4'"  (mouseenter)="closePopover()">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
@@ -466,64 +466,154 @@
   </div>
 </ng-template>
 <ng-template #itemProcessName let-data>
-  <codx-label
-    fiedName="ProcessName"
-    formName="Processes"
-    gridViewName="grvProcesses"
-    default="Tên quy trình"
-  >
-  </codx-label>
+  <div class="d-flex flex-column">
+    <div class="box">
+      <div #processName class="fw-bold line-clamp process-name" [ngbPopover]="setTextPopover(data?.processName)"
+        #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail($event,p, data)" (mouseleave)="p.close()"
+        placement="bottom right top" [popoverClass]="data.recID" [innerHTML]="
+        data?.processName
+        | formatvalue
+        : view.formModel
+        : 'processName'
+        : processName
+        : 'Processes'
+        : 'grvProcesses'
+        | async">
+
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-between mt-2">
+      <div class="d-flex align-items-center">
+        <div class="d-flex me-3 align-items-center">
+          <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"
+            [openDelay]="500" (mouseenter)="phases.open()" (mouseleave)="phases.close()"
+            placement="bottom top right left"></span>
+          <span #phases class="">
+            {{ data.phases }}
+          </span>
+        </div>
+        <div class="d-flex me-3 align-items-center">
+          <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover"
+            [ngbPopover]="popperActivitiest" [openDelay]="500" (mouseenter)="activitiest.open()"
+            (mouseleave)="activitiest.close()" placement="bottom top right
+            left"></span>
+          <span #activities class="">
+            {{ data.activities }}
+          </span>
+        </div>
+        <div class="d-flex me-3 align-items-center">
+          <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+            (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
+            left">
+            <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
+              [openViewPopup]="checkPermissionRead(data)">
+            </codx-attachment-temp>
+          </span>
+        </div>
+        <!-- <div class="d-flex me-3 align-items-center" *ngIf="data.attachments == 0">
+          <span class="icon-attach_file text-primary icon-16 me-1"></span>
+          {{data.attachments}}
+        </div> -->
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #itemOwner let-data>
-  <codx-label
-    fiedName="Owner"
-    formName="Processes"
-    gridViewName="grvProcesses"
-    default="Chủ quy trình"
-  >
-  </codx-label>
+  <codx-temp-full cardCss="card-template" [imageWidth]="30" [imageId]="data.owner" imageObjType="AD_Users"
+        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
+      </codx-temp-full>
 </ng-template>
 <ng-template #itemStatus let-data>
-  <codx-label
-    fiedName="Status"
-    formName="Processes"
-    gridViewName="grvProcesses"
-    default="Tình trạng"
-  >
-  </codx-label>
+  <div class="d-flex justify-content-center">
+    <codx-vll [name]="gridViewSetup['Status'].referedValue" [value]="data?.status" [showText]="true"
+      [showBgColor]="true" class="badge badge-light badge-square badge-md fs-7 p-2">
+    </codx-vll>
+  </div>
 </ng-template>
 
 <ng-template #itemVersionNo let-data>
-  <codx-label
-    fiedName="VersionNo"
-    [formModel]="view.formModel"
-    default="Phiên
-    bản"
-  >
-  </codx-label>
+  <div #versionNo  [innerHTML]="
+  data.versionNo
+    | formatvalue
+      : view.formModel
+      : 'versionNo'
+      : versionNo
+      : 'Processes'
+      : 'grvProcesses'
+    | async
+">
+
+  </div>
 </ng-template>
 
 <ng-template #itemActivedOn let-data>
-  <codx-label
-    fiedName="ActivedOn"
-    formName="Processes"
-    gridViewName="grvProcesses"
-    default="Ngày hiệu lực"
-  >
-  </codx-label>
+  <div #activedOn (mouseenter)="closePopover()"  [innerHTML]="
+    data.activedOn
+    | formatvalue
+      : view.formModel
+      : 'activedOn'
+      : activedOn
+      : 'Processes'
+      : 'grvProcesses'
+    | async
+">
+
+  </div>
 </ng-template>
 
 <ng-template #itemMemo let-data>
-  <codx-label
-    fiedName="Memo"
-    formName="Processes"
-    gridViewName="grvProcesses"
-    default="Mô tả"
-  >
-  </codx-label>
+  <div *ngIf="data.memo">
+    <div class="line-clamp process-name" #memo [ngbPopover]="setTextPopover(data?.memo)" #p="ngbPopover"
+      [openDelay]="500" (mouseenter)="PopoverDetail($event,p, data)" (mouseleave)="p.close()"
+      placement="bottom right top" [popoverClass]="data.recID" [ngClass]="data.recID"  [innerHTML]="
+      data?.memo
+        | formatvalue
+          : view.formModel
+          : 'memo'
+          : memo
+          : 'Processes'
+          : 'grvProcesses'
+        | async
+    ">
+
+    </div>
+  </div>
+  <div *ngIf="!data.memo">
+    <div #memo [innerHTML]="
+    data?.memo
+      | formatvalue
+        : view.formModel
+        : 'memo'
+        : memo
+        : 'Processes'
+        : 'grvProcesses'
+      | async
+  ">
+
+    </div>
+
+  </div>
 </ng-template>
 
+<ng-template #itemCheckPerms let-data>
+  <div class="w-100" (mouseenter)="closePopover()">
+    <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
+  </div>
+</ng-template>
+<ng-template #itemMoreFc let-data>
+  <div class="w-100" (mouseenter)="closePopover()">
+    <div *ngIf="funcID == 'BPT4'"  (mouseenter)="closePopover()">
+      <button class="btn btn-primary" (click)="approval(data)">
+        <codx-label default="Xét duyệt"></codx-label>
+      </button>
+    </div>
+    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+      [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
+    </codx-mfunc>
+  </div>
+</ng-template>
 <ng-template #itemPetitioner let-data>
   <codx-label
     fiedName="Petitioner"

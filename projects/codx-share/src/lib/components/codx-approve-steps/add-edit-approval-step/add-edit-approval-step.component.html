@@ -208,7 +208,7 @@
     </ng-container> -->
   </div>
 
-  <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1">
+  <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1 && data.stepType != 'I'">
     <div class="row">
       <ng-container *ngFor="let item of lstApproveMode; let index = index">
         <div class="col-3" *ngIf="data.approveMode == item.value">
@@ -244,6 +244,29 @@
       </ng-container>
     </div>
   </div>
+
+  <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1 && data.stepType == 'I'">
+    <div class="row">
+      <ng-container *ngFor="let item of lstApproveMode; let index = index">
+        <div class="col-3" *ngIf="data.approveMode == item.value">
+          <div class="d-flex align-items-center">
+            <codx-input
+              type="radio"
+              [checked]="true"
+              [label]="item.text"
+              [crrValue]="data.approveMode == item.value ? true : false"
+              name="radio"
+              field="approveMode"
+              class="test-switch"
+              (valueChange)="valueModeChange($event, item)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
   <div class="row mb-4">
     <div class="d-flex align-items-center col-4" *ngIf="eSign == true">
       <codx-input
@@ -344,7 +367,7 @@
 </ng-template>
 <ng-template #tabQuery>
   <div class="w-100">
-    <codx-query-builder #queryBuilder [isPopup]="false" [isAdvance]="false" (change)="saveFilterChange($event)"></codx-query-builder>
+    <codx-query-builder *ngIf="!this.hideTabQuery" #queryBuilder [isPopup]="false" [isAdvance]="true" (change)="saveFilterChange($event)" [filters]="data.constraints" [funcID]="formModel?.funcID"></codx-query-builder>
   </div>
 </ng-template>
 <ng-template #tabEmail>

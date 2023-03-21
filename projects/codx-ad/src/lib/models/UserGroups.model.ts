@@ -7,6 +7,7 @@ export class GroupMembers {
   description: string;
   positionName: string;
   orgUnitName: string;
+  isAdded: boolean;
 }
 
 export class UserGroup {

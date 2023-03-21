@@ -4,7 +4,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { map } from 'rxjs/operators';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
@@ -21,14 +21,6 @@ export class PopupAddItemColorComponent extends UIComponent {
   itemColor: ItemColor = {} as ItemColor;
   savedItemColors: ItemColor[] = [];
   isEdit: boolean = false;
-  requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    {
-      gvsPropName: 'ColorID',
-    },
-    {
-      gvsPropName: 'ColorName',
-    },
-  ];
   formTitle: string = '';
 
   constructor(
@@ -91,9 +83,8 @@ export class PopupAddItemColorComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemColor,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;
@@ -122,9 +113,8 @@ export class PopupAddItemColorComponent extends UIComponent {
 
     if (
       !this.itemsService.validateFormData(
-        this.itemColor,
-        this.dialogData.data.gridViewSetup,
-        this.requiredFields
+        this.form.formGroup,
+        this.dialogData.data.gridViewSetup
       )
     ) {
       return;

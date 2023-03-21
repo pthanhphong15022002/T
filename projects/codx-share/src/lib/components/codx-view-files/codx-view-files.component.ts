@@ -22,6 +22,8 @@ export class CodxViewFilesComponent implements OnInit {
   @Input() formModel:FormModel = null;
   @Input() allowEdit: boolean = false;
   @Input() medias: number = 0;
+  @Input() format:string = "";
+
   @Output() fileClicked = new EventEmitter();
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   user: any = null;
@@ -66,26 +68,26 @@ export class CodxViewFilesComponent implements OnInit {
       .subscribe((res:any[]) => {
         if(Array.isArray(res) && res.length > 0)
         {
-          let _files = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
+          let _images = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
           this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
           this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
           this.medias = this.fileMedias.length;
-          switch(_files.length)
+          switch(_images.length)
           {
             case 1:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,900);
+              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
               break;
             case 2:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,450);
-              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,450);
+              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,450);
+              _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
               break;
             case 3:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,900);
-              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,450);
-              _files[2]["source"] = this.codxShareSV.getThumbByUrl(_files[2].url,450);
+              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
+              _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
+              _images[2]["source"] = this.codxShareSV.getThumbByUrl(_images[2].url,450);
               break;
             default:
-              _files.map(f => {
+              _images.map(f => {
                 f["source"] = this.codxShareSV.getThumbByUrl(f.url,450);
               })   
               break
@@ -149,7 +151,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // remove files
   removeFiles(file: any) {
-    debugger
     this.deleteFiles
     let _key = file.hasOwnProperty('recID') ? "recID" : "fileName";
     let _index = this.files.findIndex(x => x[_key] === file.recID);
@@ -200,7 +201,6 @@ export class CodxViewFilesComponent implements OnInit {
   }
   saveFiles(files:any[]):Observable<boolean>{
     if(!this.objectID && !files){
-      this.notifySvr.notify("Thêm file không thành công!");
       return of(false);
     }
     else{

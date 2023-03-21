@@ -84,7 +84,7 @@ export class PopupAddAPPostingAccountComponent
     // validate
     const controls = this.form.formGroup.controls;
     let isValid = true;
-    for (const propName in this.form.formGroup.controls) {
+    for (const propName in controls) {
       if (controls[propName].invalid) {
         // form Dieu khoan doens't have this input
         if (
