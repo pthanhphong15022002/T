@@ -14,7 +14,6 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -61,7 +60,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   popupTitle = '';
 
   isAfterRender = false;
-  popupClosed =true;
+  popupClosed = true;
 
   constructor(
     private injector: Injector,
@@ -113,7 +112,6 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvDrivers = gv;
           this.columnGrids = [
-            
             {
               field: '',
               headerText: '',
@@ -165,7 +163,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
-                hideMoreFunc:true
+                hideMoreFunc: true,
               },
             },
           ];

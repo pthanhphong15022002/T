@@ -83,10 +83,22 @@ export class CrmCustomerComponent
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
   }
-  onInit(): void {}
+  onInit(): void {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+    ];
+  }
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
     let formModel = this.view?.formModel;
+    this.columnGrids = [];
     if (this.funcID == 'CM0101') {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -141,11 +153,8 @@ export class CrmCustomerComponent
               width: 180,
             },
             {
-              field: '',
-              headerText: '',
               width: 30,
               template: this.itemMoreFunc,
-              textAlign: 'center',
             },
           ];
           this.views.push({
@@ -153,6 +162,7 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
+              hideMoreFunc:true
             },
           });
           this.detectorRef.detectChanges();
@@ -216,28 +226,27 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
+            },
           ];
           this.views.push({
             sameData: true,
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
+              hideMoreFunc:true
             },
           });
           this.detectorRef.detectChanges();
         });
     }
 
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-    ];
+
     this.detectorRef.detectChanges();
   }
 
@@ -308,11 +317,30 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
+            },
           ];
           var i = this.views.findIndex((x) => x.type == 11);
           if (i != -1) {
-            this.views[i].model.resources = this.columnGrids;
+            let active = this.views[i].active;
+            this.views.splice(i,1);
+            this.views.push({
+              type:ViewType.grid,
+              sameData:true,
+              active:active,
+              model:{
+                resources: this.columnGrids,
+                hideMoreFunc:true
+              }
+            })
+
           }
+          this.views = this.views.slice();
           this.detectorRef.detectChanges();
         });
     } else {
@@ -374,11 +402,29 @@ export class CrmCustomerComponent
               template: this.itemCreatedOn,
               width: 180,
             },
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemMoreFunc,
+              textAlign: 'center',
+            },
           ];
           var iGrid = this.views.findIndex((x) => x.type == 11);
           if (iGrid != -1) {
-            this.views[iGrid].model.resources = this.columnGrids;
+            let active = this.views[iGrid].active;
+            this.views.splice(iGrid,1);
+            this.views.push({
+              type:ViewType.grid,
+              sameData:true,
+              active:active,
+              model:{
+                resources: this.columnGrids,
+                hideMoreFunc:true
+              }
+            })
           }
+          this.views = this.views.slice();
           this.detectorRef.detectChanges();
         });
     }
