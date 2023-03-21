@@ -50,6 +50,8 @@ export class CrmCustomerComponent
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
   itemMoreFunc: TemplateRef<any>;
+  @ViewChild('itemFields', { static: true })
+  itemFields: TemplateRef<any>;
   dataObj?: any;
   columnGrids = [];
   views: Array<ViewModel> = [];
@@ -105,12 +107,12 @@ export class CrmCustomerComponent
     ];
 
     // bắt sự kiện tại đây chứ k dc bắt trên viewChanged nha cu, sự kiện viewChange dc emit khi view đã đc change, k đúng với case này.
-    this.router.params.subscribe((param:any) => {
-      if(param.funcID){
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
         this.funcID = param.funcID;
         this.afterLoad();
       }
-    })
+    });
   }
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
@@ -184,7 +186,7 @@ export class CrmCustomerComponent
           });
           this.detectorRef.detectChanges();
         });
-    } else {
+    } else if (this.funcID == 'CM0102') {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
@@ -249,6 +251,82 @@ export class CrmCustomerComponent
               width: 30,
               template: this.itemMoreFunc,
               textAlign: 'center',
+            },
+          ];
+          this.views.push({
+            sameData: true,
+            type: ViewType.grid,
+            model: {
+              resources: this.columnGrids,
+              hideMoreFunc: true,
+            },
+          });
+          this.detectorRef.detectChanges();
+        });
+    } else if (this.funcID == 'CM0103') {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'customerName',
+              headerText: gv
+                ? gv['CustomerName']?.headerText || 'Tên khách hàng'
+                : 'Tên khách hàng',
+              width: 250,
+              template: this.itemCustomerName,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'fields',
+              headerText: gv
+                ? gv['Fields']?.headerText || 'Lĩnh vực'
+                : 'Lĩnh vực',
+              template: this.itemFields,
+              width: 250,
+            },
+            {
+              field: 'contact',
+              headerText: gv
+                ? gv['Contact']?.headerText || 'Liên hệ chính'
+                : 'Liên hệ chính',
+              template: this.itemContact,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+            {
+              width: 30,
+              template: this.itemMoreFunc,
             },
           ];
           this.views.push({
@@ -347,7 +425,7 @@ export class CrmCustomerComponent
           }
           this.detectorRef.detectChanges();
         });
-    } else {
+    } else if (this.funcID == 'CM0102') {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
@@ -412,6 +490,78 @@ export class CrmCustomerComponent
               width: 30,
               template: this.itemMoreFunc,
               textAlign: 'center',
+            },
+          ];
+          var iGrid = this.views.findIndex((x) => x.type == 11);
+          if (iGrid != -1) {
+            this.views[iGrid].model.resources = this.columnGrids;
+          }
+          this.detectorRef.detectChanges();
+        });
+    } else if (this.funcID == 'CM0103') {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'customerName',
+              headerText: gv
+                ? gv['CustomerName']?.headerText || 'Tên khách hàng'
+                : 'Tên khách hàng',
+              width: 250,
+              template: this.itemCustomerName,
+            },
+            {
+              field: 'address',
+              headerText: gv
+                ? gv['Address']?.headerText || 'Địa chỉ'
+                : 'Địa chỉ',
+              template: this.itemAddress,
+              width: 250,
+            },
+            {
+              field: 'fields',
+              headerText: gv
+                ? gv['Fields']?.headerText || 'Lĩnh vực'
+                : 'Lĩnh vực',
+              template: this.itemFields,
+              width: 250,
+            },
+            {
+              field: 'contact',
+              headerText: gv
+                ? gv['Contact']?.headerText || 'Liên hệ chính'
+                : 'Liên hệ chính',
+              template: this.itemContact,
+              width: 250,
+            },
+            {
+              field: 'priority',
+              headerText: gv
+                ? gv['Piority']?.headerText || 'Độ ưu tiên'
+                : 'Độ ưu tiên',
+              template: this.itemPriority,
+              width: 100,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy']?.headerText || 'Người tạo'
+                : 'Người tạo',
+              template: this.itemCreatedBy,
+              width: 100,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn']?.headerText || 'Ngày tạo'
+                : 'Ngày tạo',
+              template: this.itemCreatedOn,
+              width: 180,
+            },
+            {
+              width: 30,
+              template: this.itemMoreFunc,
             },
           ];
           var iGrid = this.views.findIndex((x) => x.type == 11);
