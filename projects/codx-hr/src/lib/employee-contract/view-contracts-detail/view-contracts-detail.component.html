@@ -23,7 +23,6 @@
         imageObjType="AD_Users"
         [imageWidth]="80"
         [titleTmp]="titleTmp"
-        
       >
       </codx-temp-full>
     </div>
@@ -62,8 +61,13 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-        [innerHTML]="itemDetail?.contractTypeID | formatvalue : formModel : 'contractTypeID' | async"
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.contractTypeID
+              | formatvalue : formModel : 'contractTypeID'
+              | async
+          "
         >
         </span>
       </div>
@@ -76,21 +80,14 @@
         >
         </codx-label>
         <span class="fw-bold">
-          {{ itemDetail?.limitMonths != null ? itemDetail?.limitMonths + ' Tháng': 'Đang cập nhật' }}
+          {{
+            itemDetail?.limitMonths != null
+              ? itemDetail?.limitMonths + " Tháng"
+              : "Đang cập nhật"
+          }}
         </span>
       </div>
 
-      <div class="d-flex align-items-center me-5 mb-5 col-5">
-        <codx-label
-          fiedName="contractNo"
-          [formModel]="formModel"
-          class="text-gray-700 label-colon"
-        >
-        </codx-label>
-        <span class="fw-bold">
-          {{ itemDetail?.contractNo }}
-        </span>
-      </div>
 
       <div class="d-flex align-items-center me-5 mb-5 col-5">
         <codx-label
@@ -104,6 +101,19 @@
         </span>
       </div>
 
+      
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="expiredDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.expiredDate | fmDT }}
+        </span>
+      </div>
+
       <div class="d-flex align-items-center me-5 mb-5 col-12">
         <codx-label
           fiedName="OrgUnitID"
@@ -111,8 +121,13 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-        [innerHTML]="itemDetail?.OrgUnitID | formatvalue : formModel : 'OrgUnitID' | async"
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.OrgUnitID
+              | formatvalue : formModel : 'OrgUnitID'
+              | async
+          "
         >
         </span>
       </div>
@@ -124,8 +139,13 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-        [innerHTML]="itemDetail?.PositionID | formatvalue : formModel : 'PositionID' | async"
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.PositionID
+              | formatvalue : formModel : 'PositionID'
+              | async
+          "
         >
         </span>
       </div>
@@ -137,8 +157,13 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-        [innerHTML]="itemDetail?.LocationID | formatvalue : formModel : 'LocationID' | async"
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.LocationID
+              | formatvalue : formModel : 'LocationID'
+              | async
+          "
         >
         </span>
       </div>
@@ -150,12 +175,16 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-        [innerHTML]="itemDetail?.transportType | formatvalue : formModel : 'transportType' | async"
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.transportType
+              | formatvalue : formModel : 'transportType'
+              | async
+          "
         >
         </span>
       </div>
-
     </div>
 
     <!-- <div class="d-flex flex-wrap mt-2">
@@ -231,6 +260,7 @@
     <div>body++++++++++++++++++++++++</div>
     <div class="tab-horizone h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
+        <!-- 1 -->
         <li [ngbNavItem]="1">
           <a class="ps-0" ngbNavLink>
             <div class="d-flex align-item-center">
@@ -240,22 +270,40 @@
               ></span
               ><span>
                 <codx-label
-                  name="lblAbstract"
                   [formModel]="itemDetailTemplate.formModel"
-                  default="Mô tả ngắn gọn"
+                  default="Chế độ làm việc"
                   class="fw-bold"
                 ></codx-label>
               </span>
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="itemDetail?.abstract; else defaulEmpt">
+            <ng-container>
               <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
-                {{ itemDetail?.abstract }}
+                <!-- Sample -->
+                <!-- <div class="d-flex align-items-center me-5 mb-5 col-5">
+                  <codx-label
+                    fiedName="contractNo"
+                    [formModel]="formModel"
+                    class="text-gray-700 label-colon"
+                  >
+                  </codx-label>
+                  <span class="fw-bold">
+                    {{ itemDetail?.contractNo }}
+                  </span>
+                </div> -->
+                <div>
+                  <span class="text-gray-700">Thời gian làm việc:</span>
+                  <span class="fw-bold"
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8 giờ/Ngày, từ 8:00 đến
+                    17:00</span
+                  >
+                </div>
               </div>
             </ng-container>
           </ng-template>
         </li>
+        <!-- 2 -->
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
@@ -265,18 +313,37 @@
               ></span
               ><span>
                 <codx-label
-                  name="lblBusiness"
                   [formModel]="itemDetailTemplate.formModel"
-                  default="Công việc"
+                  default="Lương & Phụ cấp"
                   class="fw-bold"
                 ></codx-label>
               </span>
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="taskViews != null; else defaulEmpt">
-              <ng-container *ngIf="taskViews != null">
-                <codx-treeview
+            <!-- *ngIf="taskViews != null; else defaulEmpt" -->
+            <ng-container>
+              <div class="summary mt-2" *ngIf="itemDetailStt == '2'">
+                <!-- Sample -->
+                <!-- <div class="d-flex align-items-center me-5 mb-5 col-5">
+                  <codx-label
+                    fiedName="contractNo"
+                    [formModel]="formModel"
+                    class="text-gray-700 label-colon"
+                  >
+                  </codx-label>
+                  <span class="fw-bold">
+                    {{ itemDetail?.contractNo }}
+                  </span>
+                </div> -->
+                <div>
+                  <span class="text-gray-700">Mức lương chính: </span>
+                  <span class="fw-bold"
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8.000.000 vnd/ tháng</span
+                  >
+                </div>
+              </div>
+              <!-- <codx-treeview
                   #treeAdd
                   id="treeAdd"
                   [data]="taskViews[0]"
@@ -286,12 +353,11 @@
                   [isOutput]="true"
                   [isLoadChild]="false"
                 >
-                </codx-treeview>
-              </ng-container>
+                </codx-treeview> -->
             </ng-container>
           </ng-template>
         </li>
-        <li [ngbNavItem]="3">
+        <!-- <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <span
@@ -317,7 +383,7 @@
               </codx-approval-step>
             </ng-container>
           </ng-template>
-        </li>
+        </li> -->
       </ul>
       <div [ngbNavOutlet]="nav" class="pt-4"></div>
     </div>
@@ -325,19 +391,15 @@
 
   <ng-template #footer>
     <codx-tabs
-      [TabControl]="tabControl"
-      [entityName]="formModel.entityName"
-      [objectID]="itemDetail?.recID"
-      [funcID]="formModel.funcID"
-      [dataReferences]="dataReferences"
-      [vllRefType]="vllRefType"
-      [transID]="transID"
-      [approveStatus]="itemDetail?.approveStatus"
+    [TabControl]="tabControl"
+    [entityName]="formModel.entityName"
+    [objectID]="itemDetail?.recID"
+    [funcID]="formModel.funcID"
     >
     </codx-tabs>
   </ng-template>
 
-  <ng-template #templateorg let-data>
+  <!-- <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">
       <div class="d-flex align-items-top mt-5">
         <codx-temp-full
@@ -379,9 +441,9 @@
         </div>
       </div>
     </div>
-  </ng-template>
+  </ng-template> -->
 </codx-detail-tmp>
-<ng-template #footerTask let-data>
+<!-- <ng-template #footerTask let-data>
   <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
     <div class="d-flex align-items-center">
       <span
@@ -402,8 +464,10 @@
       <span class="text-dark"></span>
     </div>
   </div>
-</ng-template>
-<ng-template #taskViewDetail let-user>
+</ng-template> -->
+
+
+<!-- <ng-template #taskViewDetail let-user>
   <div class="user_Info">
     <div class="d-flex">
       <div class="me-4">
@@ -447,9 +511,9 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #defaulEmpt>
+<!-- <ng-template #defaulEmpt>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
@@ -460,13 +524,13 @@
         <div class="fw-bold mt-1 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
-        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+        <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div>
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #addCancelComment let-dialogCancel>
+<!-- <ng-template #addCancelComment let-dialogCancel>
   <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
@@ -531,7 +595,7 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #titleTmp>
   <div class="d-flex flex-column">
@@ -576,6 +640,5 @@
         "
       ></span>
     </div>
-
   </div>
 </ng-template>

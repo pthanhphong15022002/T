@@ -29,6 +29,7 @@ import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/mode
 import { GridModels } from 'projects/codx-es/src/public-api';
 import { CodxEsService,  } from 'projects/codx-es/src/public-api';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 
 @Component({
@@ -39,6 +40,7 @@ import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/po
 export class ViewDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
+    private hrService: CodxHrService,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
@@ -89,7 +91,8 @@ export class ViewDetailComponent implements OnInit {
   tabControl: TabModel[] = [];
 
   ngOnInit(): void {
-    this.itemDetailStt = 3;
+    
+    this.itemDetailStt = 2;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
       this.cache
@@ -99,7 +102,7 @@ export class ViewDetailComponent implements OnInit {
           this.initForm();
         });
     } else {
-      this.esService.getFormModel(this.funcID).then((formModel) => {
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
           this.formModel = formModel;
           this.cache
@@ -117,9 +120,9 @@ export class ViewDetailComponent implements OnInit {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+      { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+      // { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
 
