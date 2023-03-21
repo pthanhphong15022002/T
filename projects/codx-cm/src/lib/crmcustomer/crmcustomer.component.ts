@@ -33,6 +33,8 @@ export class CrmCustomerComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList', { static: true })
+  itemViewList: TemplateRef<any>;
   @ViewChild('itemCustomerName', { static: true })
   itemCustomerName: TemplateRef<any>;
   @ViewChild('itemContact', { static: true })
@@ -91,6 +93,13 @@ export class CrmCustomerComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        model: {
+          template: this.itemViewList,
         },
       },
     ];
@@ -162,7 +171,7 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
-              hideMoreFunc:true
+              hideMoreFunc: true,
             },
           });
           this.detectorRef.detectChanges();
@@ -239,13 +248,12 @@ export class CrmCustomerComponent
             type: ViewType.grid,
             model: {
               resources: this.columnGrids,
-              hideMoreFunc:true
+              hideMoreFunc: true,
             },
           });
           this.detectorRef.detectChanges();
         });
     }
-
 
     this.detectorRef.detectChanges();
   }
@@ -328,17 +336,16 @@ export class CrmCustomerComponent
           var i = this.views.findIndex((x) => x.type == 11);
           if (i != -1) {
             let active = this.views[i].active;
-            this.views.splice(i,1);
+            this.views.splice(i, 1);
             this.views.push({
-              type:ViewType.grid,
-              sameData:true,
-              active:active,
-              model:{
+              type: ViewType.grid,
+              sameData: true,
+              active: active,
+              model: {
                 resources: this.columnGrids,
-                hideMoreFunc:true
-              }
-            })
-
+                hideMoreFunc: true,
+              },
+            });
           }
           this.views = this.views.slice();
           this.detectorRef.detectChanges();
@@ -413,16 +420,16 @@ export class CrmCustomerComponent
           var iGrid = this.views.findIndex((x) => x.type == 11);
           if (iGrid != -1) {
             let active = this.views[iGrid].active;
-            this.views.splice(iGrid,1);
+            this.views.splice(iGrid, 1);
             this.views.push({
-              type:ViewType.grid,
-              sameData:true,
-              active:active,
-              model:{
+              type: ViewType.grid,
+              sameData: true,
+              active: active,
+              model: {
                 resources: this.columnGrids,
-                hideMoreFunc:true
-              }
-            })
+                hideMoreFunc: true,
+              },
+            });
           }
           this.views = this.views.slice();
           this.detectorRef.detectChanges();
