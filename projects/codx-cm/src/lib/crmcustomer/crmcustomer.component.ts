@@ -674,6 +674,7 @@ export class CrmCustomerComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.Width = '800px';
+        this.titleAction = this.titleAction +' '+this.view?.function.description;
         var dialog = this.callfc.openSide(
           this.funcID == 'CM0101'
             ? PopupAddCrmcustomerComponent
