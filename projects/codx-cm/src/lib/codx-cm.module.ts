@@ -79,6 +79,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupQuickaddContactComponent,
     CrmPartnersComponent,
     CrmPartnersDetailComponent,
+    PopupAddCrmPartnerComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
