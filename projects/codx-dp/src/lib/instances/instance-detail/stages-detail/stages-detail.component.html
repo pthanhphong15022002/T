@@ -93,9 +93,9 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex align-items-center justify-content-between">
       <div
-        class="d-flex align-items-start"
+        class="d-flex align-items-center"
         *ngIf="lstIDInvo != null && lstIDInvo != ''"
       >
         <codx-label
@@ -113,7 +113,7 @@
         >
         </codx-imgs>
       </div>
-      <div class="d-flex align-items-end">
+      <div class="d-flex align-items-center">
         <codx-label
           name="lblOwner"
           default="Người phụ trách:"
@@ -235,7 +235,7 @@
                 <div class="card-job stages-task">
                   <div
                     *ngIf="taskList?.recID"
-                    class="d-flex align-items-center justify-content-between"
+                    class="d-flex align-items-center justify-content-between card-job-expand"
                   >
                     <div
                       class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
