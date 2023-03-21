@@ -1,76 +1,200 @@
 <div class="page-anwsers pt-3">
-  <div class="border box-sv border bg-white px-5 pt-5">
-    <div class="d-flex justify-content-between align-items-center">
+  <div class="px-5 pt-5 div-header-1 bg-white" [ngClass]="{'rounded-bottom border-bottom': lstRespondents.length <= 0}">
+    <div class="d-flex justify-content-between align-items-center pb-10">
       <div>
-        <span>3 câu trả lời</span>
+        <span class="fs-2 text-bold">{{lstRespondents.length}} câu trả lời</span>
       </div>
       <div>
         <span>more function</span>
       </div>
     </div>
-    <div #tab>
-      <ejs-tab class="ejstab-survey" headerPlacement="Top">
-        <e-tabitems>
-          <e-tabitem>
-            <ng-template #headerText class="">
-              <div class="nav-item">
-                <a class="nav-link d-flex px-0">
-                  <span class="fw-bold">
-                    <codx-label
-                      default="Bản tóm tắt"
+  </div>
+  <div #tab class="div-header-2" *ngIf="lstRespondents.length>0 ; else nullT">
+    <ejs-tab #tabContent id="ejstab-survey-id" class="ejstab-survey" headerPlacement="Top" (selected)="onSelectTab($event)">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    default="Bản tóm tắt"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content class="pd-t-20">
+            <div class="scroll-y ques-scroll">
+            </div>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    default="Câu hỏi"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content class="pd-t-20">
+            <div class="bg-white border border-top-0 rounded-bottom p-7">
+              <div class="d-flex align-items-center ">
+                <div class="div-drop-question" ngbDropdown container="body">
+                  <button
+                    type="button"
+                    class="btn btn-light btn-sm dropdown1 border bg-white"
+                    ngbDropdownToggle
+                  >
+                    <ng-container>
+                      <div class="d-flex align-items-center p-3">
+                        <div class="content-dropdown">
+                          <span>{{seletedDropDown}}</span>
+                        </div>
+                        <i class="icon-i-caret-down-fill icon-12"></i>
+                      </div>
+                    </ng-container>
+                  </button>
+                  <div ngbDropdownMenu>
+                    <ng-container *ngIf="respondents && respondents.responds.length > 0">
+                      <button class="btn-dpd-1" ngbDropdownItem *ngFor="let item of respondents.responds ; let i = index" (click)="selectedDropDown(i,item.question)">
+                        <span>{{extractContent(item.question)}}</span>
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center ms-7">
+                  <div id="div-pervious" class="disabled p-5 mx-3 cur-point" title="Câu hỏi trước" (click)="changeQuestion('pervious')"><i class="icon-14 icon-arrow_back_ios"></i></div>
+                  <codx-input [ngClass]="['ip-number']" type="number" [min]="1" [max]="respondents ? respondents.responds.length : 1" [showSpinButton]="true" [crrValue]="indexQ" (valueChange)="valueChangeIndex($event)"></codx-input>
+                  <span class="ms-2"> / {{respondents?.responds.length}}</span>
+                  <div id="div-next" class="div-back-cricle p-5 mx-3 cur-point" title="Câu hỏi tiếp theo" (click)="changeQuestion('next')"><i class="icon-14 icon-arrow_forward_ios"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white mt-5 border rounded p-7">
+              <div class="d-flex align-items-center justify-content-between mb-5">
+                <span class="fs-4">{{seletedDropDown}}</span>
+                <button class="btn btn-dp-icon border-0 btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="showCollapse()">
+                  <codx-label [default]="'Xem tùy chọn'"></codx-label>
+                  <i class="icon-i-chevron-down icon-14 ms-2"></i>
+                </button>
+              </div>
+              <div class="collapse" id="collapseExample">
+                <ng-container *ngIf="question && (question.answers.length > 0)">
+                  <div class="d-flex align-items-center py-3" *ngFor="let item of question.answers">
+                    <ng-container *ngIf="question?.answerType" [ngSwitch]="question?.answerType">
+                      <ng-container *ngSwitchCase="'O'">
+                        <codx-input
+                          *ngIf="!item.other"
+                          type="radio"
+                          [disabled]="true"
+                          class="test-check"
+                          field="O"
+                          ngClass="ip-ans me-7"
+                        ></codx-input>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'T'">
+                        <codx-input
+                          type="text"
+                          class="border-0"
+                          [disabled]="true"
+                        >
+                        </codx-input>
+                      </ng-container>
+                    </ng-container>
+                    <span>{{item.answer}}</span>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-container *ngIf="lstCountQuestion[(indexQ - 1)] && lstCountQuestion[(indexQ - 1)].listAnswer &&  lstCountQuestion[(indexQ - 1)].listAnswer.length > 0">
+              <div *ngFor="let item of lstCountQuestion[(indexQ - 1)].listAnswer">
+                <div class="bg-white mt-5 border rounded p-7">
+                  <div class="d-flex align-items-center border-bottom pb-3" *ngIf="item.answer ; else elseAnswer">
+                    <ng-container *ngIf="question?.answerType" [ngSwitch]="question?.answerType">
+                      <ng-container *ngSwitchCase="'O'">
+                        <codx-input
+                          *ngIf="!item.other"
+                          type="radio"
+                          [disabled]="true"
+                          class="test-check"
+                          field="O"
+                          ngClass="ip-ans me-7"
+                          [checked]="true"
+                        ></codx-input>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'T'">
+                        <codx-input
+                          type="text"
+                          class="border-0"
+                          [disabled]="true"
+                        >
+                        </codx-input>
+                      </ng-container>
+                    </ng-container> 
+                    <span>{{item.answer}}</span>
+                  </div>
+                  <ng-template #elseAnswer>
+                    <div class="border-bottom pb-3"><span class="text-italic">Câu hỏi được để trống</span></div>
+                  </ng-template>
+                  <div class="pt-3" ngbDropdown container="body">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm border-0 dropdown1 mg-btn"
+                      ngbDropdownToggle
                     >
-                    </codx-label>
-                  </span>
-                </a>
+                      <ng-container>
+                        <div class="d-flex align-items-center p-1">
+                          <div>
+                            <span>{{item.count}} câu trả lời</span>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </button>
+                    <div ngbDropdownMenu>
+                      <ng-container *ngIf="item.respondents && item.respondents.length > 0">
+                        <div ngbDropdownItem *ngFor="let item2 of item.respondents">
+                          Câu trả lời {{item2.index}}
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </ng-template>
-            <ng-template #content class="pd-t-20">
-              <div class="scroll-y ques-scroll">
-               a
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText class="">
-              <div class="nav-item">
-                <a class="nav-link d-flex px-0">
-                  <span class="fw-bold">
-                    <codx-label
-                      default="Bản tóm tắt"
-                    >
-                    </codx-label>
-                  </span>
-                </a>
-              </div>
-            </ng-template>
-            <ng-template #content class="pd-t-20">
-              <div class="scroll-y ques-scroll">
-               b
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText class="">
-              <div class="nav-item">
-                <a class="nav-link d-flex px-0">
-                  <span class="fw-bold">
-                    <codx-label
-                      default="Bản tóm tắt"
-                    >
-                    </codx-label>
-                  </span>
-                </a>
-              </div>
-            </ng-template>
-            <ng-template #content class="pd-t-20">
-              <div class="scroll-y ques-scroll">
-               c
-              </div>
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-    </div>
+            </ng-container>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    default="Cá nhân"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content class="pd-t-20">
+            <div class="scroll-y ques-scroll">
+            </div>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
   </div>
 </div>
+<ng-template #nullT>
+  <div class="d-flex justify-content-center align-items-center bg-white p-7 rounded border mt-5">
+    <span>Chưa có câu trả lời</span>
+  </div>
+</ng-template>
 
