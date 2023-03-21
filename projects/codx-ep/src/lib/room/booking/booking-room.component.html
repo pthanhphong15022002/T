@@ -14,7 +14,7 @@
         [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
     <div class="col-3 d-flex flex-row justify-content-end">
-      <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+      <codx-img [objectId]="data?.host" objectType="AD_Users" [width]="30">
       </codx-img>
     </div>
   </div>
@@ -80,7 +80,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 " (click)="click(data)" [typeMF]="'hover'"
-    [title]="data?.requester | formatvalue : formModel : 'requester' | async" [subTitleTmp]="subTitleTmp" [icoCss]="
+    [title]="data?.createdBy | formatvalue : formModel : 'createdBy' | async" [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
     imageObjType="AD_Users"  [titleLine]="2" [dataItem]="data"
