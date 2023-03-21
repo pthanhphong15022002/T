@@ -18,15 +18,20 @@
                         [objectType]="'WP_Groups'">
                     </codx-img>
                 </ng-template>
-                <div class="group-avatar_status">
-                    <span class="group-avatar_status-icon"></span>
-                </div>
+                <ng-container *ngIf="group.isOnline">
+                    <div class="group-avatar_status">
+                        <span class="group-avatar_status-icon"></span>
+                    </div>
+                </ng-container>
             </div>
             <div class="group-infor">
                 <div class="group-infor_name">
                     <p class="m-0 fw-bolder">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</p>
                     <p class="m-0">
-                        <codx-tag [isEdit]="false"  [value]="group.tagValue" [entityName]="'WP_Groups'">
+                        <codx-tag 
+                            [isEdit]="false"  
+                            [value]="group.tagValue" 
+                            [entityName]="'WP_Groups'">
                         </codx-tag>
                     </p>
                 </div>
@@ -51,39 +56,128 @@
             </div>
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
-            <ng-container *ngFor="let item of arrMessages; let index = i">
-                <div class="codx-message" [class.justify-content-end]="item.createdBy == user.userID">
-                    <span class="message-img" *ngIf="item.createdBy != user.userID">
+            <ng-container *ngFor="let item of arrMessages; let i = index">
+                <div class="codx-message" [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null" [class.justify-content-end]="item.createdBy == user.userID">
+                    <div class="message-img" *ngIf="item.createdBy != user.userID">
                         <codx-img 
                             [objectId]="item.createdBy" 
                             [width]="30"
                             [objectType]="'AD_Users'">
                         </codx-img>
-                    </span>
-                    <span [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
-                        {{item.message}}
-                    </span>
-                </div>
+                    </div>
+                    <ng-container *ngIf="item.messageType == '1'">
+                        <div [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                            {{item.message}}
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                        <div class="codx-message-files">
+                            <codx-view-files 
+                                [objectID]="item.recID" 
+                                [objectType]="'WP_Messages'" 
+                                [formModel]="formModel"
+                                [format]="'grid'"
+                                (fileClicked)="clickViewFile($event)">
+                            </codx-view-files>
+                        </div>
+                    </ng-container>
+                    
+                </div>  
             </ng-container>
         </div>
-        <div class="chat-box-footer">
-            <div class="footer-emoji">
-                <span class="icon-tag_faces icon-16"></span>
+        <div class="chat-box-footer border-top bg-body">
+            <div class="footer-emoji" ngbDropdown>
+                <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
+                <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
+                    <emoji-mart 
+                        [set]="emojiMode" 
+                        [maxFrequentRows]="emojiMaxFrequentRows"
+                        [perLine]="emojiPerLine"
+                        [showSingleCategory]="true" 
+                        [showPreview]="emojiReview" 
+                        (emojiSelect)="addEmoji($event)">
+                    </emoji-mart>
+                </div>
             </div>
             <div class="footer-attachments">
-                <span class="icon-photo icon-16"></span>
+                <span class="icon-photo icon-20" (click)="clickUploadFile()"></span>
+                <div class="d-none">
+                    <codx-attachment 
+                        #codxATM 
+                        [functionID]="funcID"
+                        [allowMultiFile]="'1'"
+                        [objectType]="'WP_Messages'" 
+                        [showMessage]="'0'"
+                        [hideImageUpload]="'1'" 
+                        [hideUploadBtn]="'1'" 
+                        [hideBtnSave]="'1'" 
+                        [hideImageThumb]="'1'"
+                        [hideUploadBtn]="'1'" 
+                        (fileAdded)="addFiles($event)">
+                    </codx-attachment>
+                </div>
             </div>
-            <div class="footer-message" (keyup.enter)="sendMessage()">
-                <codx-input 
-                    type="text"
-                    [class]="'border-0 bg-light rounded-pill px-4'" 
-                    [crrValue]="message.message"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-            </div>
+            <ng-container *ngIf="fileUpload.length == 0;else tmpUploadFile">
+                <div class="footer-message" (keyup.enter)="sendMessage()">
+                    <codx-input 
+                        type="textarea"
+                        format="ed2" 
+                        [rows]="2"
+                        [class]="'border-0 rounded-pill px-4'" 
+                        [crrValue]="data.message"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </ng-container>
+            
+            <ng-template #tmpUploadFile>
+                <div class="footer-upload">
+                    <div class="footer-upload-files">
+                        <ng-container *ngFor="let item of fileUpload">
+                            <div class="upload-files-item cursor-pointer">
+                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
+                                    <codx-temp-full 
+                                        [imageSrc]="item.source" 
+                                        imgCss="w-50px h-50px">
+                                    </codx-temp-full>
+                                </ng-container>
+                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+                                    <video 
+                                        width="50"
+                                        height="50"
+                                        [autoplay]="false" 
+                                        [src]="item.source | safe:'resourceUrl'">
+                                    </video>
+                                </ng-container>
+                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.APPLICATION">
+                                    <codx-temp-full 
+                                        [imageSrc]="item.extension | avtFile" 
+                                        imgCss="w-50px h-50px"
+                                        [title]="item.fileName" 
+                                        [descLine]="2">
+                                    </codx-temp-full>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="footer-upload-text w-150px" (keyup.enter)="sendMessage()">
+                        <codx-input 
+                            type="textarea"
+                            format="ed2" 
+                            [rows]="2"
+                            [class]="'border-0 rounded-pill px-4'" 
+                            [crrValue]="data.message"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                </div>
+            </ng-template>
             <div class="footer-button" (click)="sendMessage()">
                 <span class="icon-send icon-16" ></span>
             </div>
+            
+            
         </div>
+        
     </div>
 </ng-container>

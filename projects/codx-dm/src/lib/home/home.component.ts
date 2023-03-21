@@ -1435,7 +1435,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   getPUser(data)
   {
     var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
-    if(item) return item?.objectID;
+    debugger
+    if(item) return item?.objectName;
     return ""
   }
 
@@ -1469,4 +1470,22 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     else this.dmSV.clickMF(e, data ,this.view)
     //if(e?.functionID == "DMT0211") this.downc += 1;
   }
+
+  //View Permiss
+  viewPermiss(per: any)
+  {
+    if(per && per.length > 0)
+    {
+      if(per[0].create) return "Tạo , cập nhật , chia sẻ , ..."
+      return "Chỉ được xem"
+    }
+    return ""
+  }
+
+   //Get content form string html
+   extractContent(s:any) {
+    var span = document.createElement('span');
+    span.innerHTML = s;
+    return span.textContent || span.innerText;
+  };
 }

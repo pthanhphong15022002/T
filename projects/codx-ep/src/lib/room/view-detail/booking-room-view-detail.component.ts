@@ -14,12 +14,9 @@ import {
 import {
   AuthService,
   CallFuncService,
-  DataRequest,
   DialogRef,
-  SidebarModel,
   UIComponent,
   Util,
-  ViewsComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Permission } from '@shared/models/file.model';
@@ -48,14 +45,16 @@ export class BookingRoomViewDetailComponent
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
 
   //MFunction Approve
-  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =  new EventEmitter();
+  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
-  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
-  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter();
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
@@ -127,32 +126,34 @@ export class BookingRoomViewDetailComponent
         changes.itemDetail?.currentValue?.recID
     ) {
       this.renderFooter = false;
-      if(this.type=='1'){
-        this.codxEpService.getBookingByRecID(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
-          if (res) {
-            this.itemDetail = res;
-            this.refeshData(this.itemDetail)
-            this.detectorRef.detectChanges();
-          }
-        });
-      this.detectorRef.detectChanges();
+      if (this.type == '1') {
+        this.codxEpService
+          .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
+          .subscribe((res) => {
+            if (res) {
+              this.itemDetail = res;
+              this.refeshData(this.itemDetail);
+              this.detectorRef.detectChanges();
+            }
+          });
+        this.detectorRef.detectChanges();
+      } else if (this.type == '2') {
+        this.codxEpService
+          .getApproveByRecID(changes.itemDetail?.currentValue?.recID)
+          .subscribe((res) => {
+            if (res) {
+              this.itemDetail = res;
+              this.refeshData(this.itemDetail);
+              this.detectorRef.detectChanges();
+            }
+          });
+        this.detectorRef.detectChanges();
       }
-      else if(this.type=='2'){
-        this.codxEpService.getApproveByRecID(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
-          if (res) {
-            this.itemDetail = res;
-            this.refeshData(this.itemDetail)
-            this.detectorRef.detectChanges();
-          }
-        });
-      this.detectorRef.detectChanges();
-      }
-      
     }
     this.setHeight();
     this.active = 1;
   }
-  refeshData(res:any){
+  refeshData(res: any) {
     this.listFilePermission = [];
     if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
       let listAttendees = res.bookingAttendees.split(';');
@@ -168,7 +169,7 @@ export class BookingRoomViewDetailComponent
           this.listFilePermission.push(tmpPer);
         }
       });
-    }            
+    }
     if (res?.listApprovers != null && res?.listApprovers.length > 0) {
       res.listApprovers.forEach((item) => {
         if (item != '') {
@@ -183,15 +184,18 @@ export class BookingRoomViewDetailComponent
         }
       });
     }
-    if(this.type=='1'){
+    if (this.type == '1') {
       this.allowUploadFile = false;
-      for(let u of res.bookingAttendees){
-        if (res?.createdBy == this.authService?.userValue?.userID || this.authService?.userValue?.userID == u?.userID ) {
+      for (let u of res.bookingAttendees) {
+        if (
+          res?.createdBy == this.authService?.userValue?.userID ||
+          this.authService?.userValue?.userID == u?.userID
+        ) {
           this.allowUploadFile = true;
         }
-      } 
+      }
     }
-    
+
     this.detectorRef.detectChanges();
   }
   showHour(date: any) {
@@ -203,41 +207,37 @@ export class BookingRoomViewDetailComponent
     return time;
   }
   childClickMF(event, data) {
-      if(this.type=='1'){
-
-        switch (event?.functionID) {
-
+    if (this.type == '1') {
+      switch (event?.functionID) {
         case 'SYS02': //Xoa
-      this.delete.emit(data);
-        break;
+          this.delete.emit(data);
+          break;
 
-      case 'SYS03': //Sua.
-      this.setPopupTitle.emit(event?.text);
-      this.edit.emit(data);
-        break;
+        case 'SYS03': //Sua.
+          this.setPopupTitle.emit(event?.text);
+          this.edit.emit(data);
+          break;
 
-      case 'SYS04': //copy.
-      this.setPopupTitle.emit(event?.text);
-      this.copy.emit(data);
-        break;
-      case 'EP4T1101': //Dời
-      this.setPopupTitleOption.emit(event?.text);
-      this.reschedule.emit(data);
-        break;
-      case 'EP4T1102': //Mời
-      this.setPopupTitleOption.emit(event?.text);
-      this.invite.emit(data);
-        break;
-      case 'EP4T1103': //Gửi duyệt
-      this.release.emit(data);
-        break;
-      case 'EP4T1104': //Hủy gửi duyệt
-      this.cancel.emit(data);
-        break;
+        case 'SYS04': //copy.
+          this.setPopupTitle.emit(event?.text);
+          this.copy.emit(data);
+          break;
+        case 'EP4T1101': //Dời
+          this.setPopupTitleOption.emit(event?.text);
+          this.reschedule.emit(data);
+          break;
+        case 'EP4T1102': //Mời
+          this.setPopupTitleOption.emit(event?.text);
+          this.invite.emit(data);
+          break;
+        case 'EP4T1103': //Gửi duyệt
+          this.release.emit(data);
+          break;
+        case 'EP4T1104': //Hủy gửi duyệt
+          this.cancel.emit(data);
+          break;
       }
-      
-    }
-    else if(this.type=='2'){
+    } else if (this.type == '2') {
       let funcID = event?.functionID;
       switch (funcID) {
         case 'EPT40101':
@@ -260,7 +260,6 @@ export class BookingRoomViewDetailComponent
           break;
       }
     }
-
   }
   // lviewRelease(data?) {
   //   if (data) {
@@ -307,7 +306,7 @@ export class BookingRoomViewDetailComponent
   //   }
   // }
   changeDataMF(event, data: any) {
-    if ((this.type == '1')) {
+    if (this.type == '1') {
       if (event != null && data != null) {
       }
       if (data.approveStatus == '1') {
@@ -417,8 +416,7 @@ export class BookingRoomViewDetailComponent
           }
         });
       }
-    }
-    else if(this.type=='2'){
+    } else if (this.type == '2') {
       if (event != null && data != null) {
         event.forEach((func) => {
           if (func.functionID == 'SYS04' /*Copy*/) {

@@ -3,7 +3,6 @@ import {
   TemplateRef,
   ViewChild,
   Injector,
-  AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -14,7 +13,6 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
@@ -144,7 +142,7 @@ export class RoomsComponent extends UIComponent {
               field: 'equipments',
               template: this.equipmentsCol,
               // headerTextAlign: 'Center',
-              // textAlign: 'Center',
+              textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,

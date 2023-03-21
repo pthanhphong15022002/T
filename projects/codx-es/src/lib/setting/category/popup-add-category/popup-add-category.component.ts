@@ -223,14 +223,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.form?.formGroup.patchValue(this.data);
       this.esService.getFormModel('EST04').then((res) => {
         if (res && this.data.countStep > 0) {
-          let fmApprovalStep = res;
-          let gridModels = new GridModels();
-          gridModels.dataValue = this.data.recID;
-          gridModels.predicate = 'TransID=@0';
-          gridModels.funcID = fmApprovalStep.funcID;
-          gridModels.entityName = fmApprovalStep.entityName;
-          gridModels.gridViewName = fmApprovalStep.gridViewName;
-          gridModels.pageSize = 20;
+          //let fmApprovalStep = res;
+          // let gridModels = new GridModels();
+          // gridModels.dataValue = this.data.recID;
+          // gridModels.predicate = 'TransID=@0';
+          // gridModels.funcID = fmApprovalStep.funcID;
+          // gridModels.entityName = fmApprovalStep.entityName;
+          // gridModels.gridViewName = fmApprovalStep.gridViewName;
+          // gridModels.pageSize = 20;
         }
       });
 

@@ -80,6 +80,7 @@ export const routes: Routes = [
       {
         path: 'detailcoins/:funcID',
         component: ViewDetailCoinsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'statistical/:funcID',

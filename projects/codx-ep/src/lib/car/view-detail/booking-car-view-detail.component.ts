@@ -10,13 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
-import {
-  AuthService,
-  DataRequest,
-  UIComponent,
-  ViewsComponent,
-} from 'codx-core';
+import { AuthService, UIComponent, ViewsComponent } from 'codx-core';
 import moment from 'moment';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Permission } from '@shared/models/file.model';
@@ -44,7 +38,7 @@ export class BookingCarViewDetailComponent
     new EventEmitter();
   //MFunction Approve
   @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =
-  new EventEmitter();
+    new EventEmitter();
   @Output('approve') approve: EventEmitter<any> = new EventEmitter();
   @Output('reject') reject: EventEmitter<any> = new EventEmitter();
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
@@ -230,9 +224,9 @@ export class BookingCarViewDetailComponent
       }
     }
   }
-  
+
   changeDataMF(event, data: any) {
-    if(this.type=='1'){
+    if (this.type == '1') {
       if (event != null && data != null) {
         if (data.approveStatus == '1') {
           event.forEach((func) => {
@@ -262,10 +256,11 @@ export class BookingCarViewDetailComponent
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: sửa - xóa - duyệt - hủy
+            if (
+              //Ẩn: sửa - xóa - duyệt - hủy
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+              func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
               func.functionID == 'EP7T1102' /*MF hủy*/
             ) {
               func.disabled = true;
@@ -274,14 +269,16 @@ export class BookingCarViewDetailComponent
         } else if (data.approveStatus == '3') {
           event.forEach((func) => {
             //Gửi duyệt
-            if ( //Hiện: chép - hủy
-            func.functionID == 'SYS04' /*MF chép*/||
-            func.functionID == 'EP7T1102' /*MF hủy*/
+            if (
+              //Hiện: chép - hủy
+              func.functionID == 'SYS04' /*MF chép*/ ||
+              func.functionID == 'EP7T1102' /*MF hủy*/
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: sửa - xóa - gửi duyệt
-  
+            if (
+              //Ẩn: sửa - xóa - gửi duyệt
+
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
               func.functionID == 'EP7T1101' /*MF gửi duyệt*/
@@ -289,37 +286,39 @@ export class BookingCarViewDetailComponent
               func.disabled = true;
             }
           });
-        }
-        else if (data.approveStatus == '4') {
+        } else if (data.approveStatus == '4') {
           event.forEach((func) => {
             //Gửi duyệt
-            if ( //Hiện: chép
-            func.functionID == 'SYS04' /*MF chép*/
+            if (
+              //Hiện: chép
+              func.functionID == 'SYS04' /*MF chép*/
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: sửa - xóa - gửi duyệt - hủy
+            if (
+              //Ẩn: sửa - xóa - gửi duyệt - hủy
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+              func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
               func.functionID == 'EP7T1102' /*MF hủy*/
             ) {
               func.disabled = true;
             }
           });
-        }
-        else {
+        } else {
           event.forEach((func) => {
             //Gửi duyệt
-            if ( //Hiện: chép
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
+            if (
+              //Hiện: chép
+              func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'SYS04' /*MF chép*/
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: hủy
+            if (
+              //Ẩn: hủy
               func.functionID == 'EP7T1102' /*MF hủy*/
             ) {
               func.disabled = true;
@@ -327,8 +326,7 @@ export class BookingCarViewDetailComponent
           });
         }
       }
-    }
-    else if(this.type=='2'){
+    } else if (this.type == '2') {
       if (event != null && data != null) {
         event.forEach((func) => {
           if (
@@ -365,15 +363,14 @@ export class BookingCarViewDetailComponent
               func.disabled = false;
             }
             if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-              
               let havedDriver = false;
-              if(data?.resources){              
+              if (data?.resources) {
                 for (let i = 0; i < data?.resources.length; i++) {
                   if (data?.resources[i].roleType == '2') {
-                    havedDriver = true;                  
+                    havedDriver = true;
                   }
                 }
-              }            
+              }
               if (!havedDriver) {
                 func.disabled = false;
               } else {

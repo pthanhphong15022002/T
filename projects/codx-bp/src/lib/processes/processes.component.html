@@ -550,7 +550,7 @@
 
 <ng-template #itemActivedOn let-data>
   <div #activedOn (mouseenter)="closePopover()"  [innerHTML]="
-  data.activedOn
+    data.activedOn
     | formatvalue
       : view.formModel
       : 'activedOn'
@@ -567,8 +567,7 @@
   <div *ngIf="data.memo">
     <div class="line-clamp process-name" #memo [ngbPopover]="setTextPopover(data?.memo)" #p="ngbPopover"
       [openDelay]="500" (mouseenter)="PopoverDetail($event,p, data)" (mouseleave)="p.close()"
-      placement="bottom right top" [popoverClass]="data.recID" [ngClass]="data.recID">
-      [innerHTML]="
+      placement="bottom right top" [popoverClass]="data.recID" [ngClass]="data.recID"  [innerHTML]="
       data?.memo
         | formatvalue
           : view.formModel
@@ -577,7 +576,8 @@
           : 'Processes'
           : 'grvProcesses'
         | async
-    "
+    ">
+
     </div>
   </div>
   <div *ngIf="!data.memo">

@@ -414,21 +414,13 @@
     (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #addLine let-data>
-  <div class="form-group mb-0 mt-5 row">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
-            <div class="d-flex">
-              <span class="mb-2">
-                <i class="icon-add_box icon-20"></i>
-              </span>
-              <span class="fs-5 fw-bold">Thêm dòng</span>
-            </div>
-          </button>
-        </div>
+  <div class="mt-5 mb-2">
+    <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
+      <div class="d-flex align-items-center">
+        <i class="icon-add icon-16"></i>
+        <span>Thêm dòng</span>
       </div>
-    </div>
+    </button>
   </div>
   <ng-container *ngIf="form?.formGroup">
     <div *ngIf="countDetail > 0">
@@ -495,7 +487,11 @@
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="row" *ngIf="purchaseinvoices">
+  
+  <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">
+    <div class="btn btn-white btn-icon tab-action">
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
 </ng-template>
