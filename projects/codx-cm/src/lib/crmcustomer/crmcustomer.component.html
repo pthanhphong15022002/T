@@ -58,7 +58,17 @@
   </div>
 </ng-template>
 <ng-template #itemCreatedOn let-data>
-  {{data?.createdOn | date : "dd/MM/yyyy, hh:mm"}}
+  <span>  {{data?.createdOn | date : "dd/MM/yyyy, hh:mm"}}
+  </span>
+</ng-template>
+<ng-template #itemMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    type="hover"
+    [dataItem]="data"
+  >
+  </codx-mfunc>
 </ng-template>
 <!--grid view-->
 

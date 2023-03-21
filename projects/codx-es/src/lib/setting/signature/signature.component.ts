@@ -127,9 +127,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             {
               field: '',
               headerText: '',
-              width: 40,
+              width: 30,
               template: this.itemAction,
-              textAlign: 'center',
+              textAlign: 'Center',
             },
             // {
             //   field: 'email',
@@ -139,6 +139,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'fullName',
+              controlName:'lblFullName',
+              fieldName: 'FullName',
               headerText: gv
                 ? gv['FullName'].headerText || 'FullName'
                 : 'FullName',
@@ -215,6 +217,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               active: true,
               model: {
                 resources: this.columnsGrid,
+                hideMoreFunc:true,
               },
             },
           ];

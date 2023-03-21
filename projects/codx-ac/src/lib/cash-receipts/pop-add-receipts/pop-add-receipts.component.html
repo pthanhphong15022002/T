@@ -34,7 +34,6 @@
                 </e-tabitem>
             </e-tabitems>
         </ejs-tab>
-        <br />
         <ejs-tab>
             <e-tabitems>
                 <!-- Tab chi tiết bút toán -->
@@ -202,7 +201,8 @@
 </ng-template>
 <ng-template #addLine let-data>
     <div class="mt-3">
-        <button class="btn btn-sm btn-primary" (click)="addRow()">
+        <button class="btn btn-outline-primary" (click)="addRow()">
+            <i class="icon-add icon-16 text-primary"></i>
             <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
         </button>
     </div>

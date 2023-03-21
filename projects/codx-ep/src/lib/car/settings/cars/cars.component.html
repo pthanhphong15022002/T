@@ -13,7 +13,7 @@
     <div class="d-flex flex-column fs-7">
       <span class="d-flex flex-row" >
 
-        <span class="fw-bold" [innerHTML]=" data?.resourceID | formatvalue : formModel : 'resourceID' | async"></span>
+        <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'resourceName' | async"></span>
       
         <span class="fw-bold mx-1">-</span>
         <span class="fw-bold" [innerHTML]=" data?.code | formatvalue : formModel : 'Code' | async"></span>
