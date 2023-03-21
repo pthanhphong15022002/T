@@ -52,6 +52,8 @@ export class PopRolesComponent implements OnInit {
   checkRoleIDNull = false;
   userID: any;
   lstChangeFunc: tmpTNMD[] = [];
+  quantity = 1;
+  isUserGroup = false;
   user: UserModel;
   ermSysTenant = ['', 'default'];
   @ViewChild('form') form: CodxFormComponent;
@@ -69,6 +71,8 @@ export class PopRolesComponent implements OnInit {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
+    this.quantity = dt?.data?.quantity;
+    this.isUserGroup = dt?.data?.isGroupUser;
     if (dt?.data.data?.length > 0) {
       if (dt?.data?.userID)
         this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
@@ -294,15 +298,21 @@ export class PopRolesComponent implements OnInit {
       environment.saas == 1 &&
       !this.ermSysTenant.includes(this.user.tenant)
     ) {
-      this.adService
-        .getListValidOrderForModules(this.lstChangeFunc)
-        .subscribe((lstTNMDs: tmpTNMD[]) => {
-          if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-            this.notiService.notifyCode('AD017');
-          } else {
-            this.onSave(lstTNMDs);
-          }
-        });
+      if (this.isUserGroup) {
+        this.onSave(this.lstChangeFunc);
+
+        // this.dialogSecond.close([this.listChooseRole, this.lstChangeFunc]);
+      } else {
+        this.adService
+          .getListValidOrderForModules(this.lstChangeFunc)
+          .subscribe((lstTNMDs: tmpTNMD[]) => {
+            if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+              this.notiService.notifyCode('AD017');
+            } else {
+              this.onSave(lstTNMDs);
+            }
+          });
+      }
     } else {
       this.onSave([]);
     }
