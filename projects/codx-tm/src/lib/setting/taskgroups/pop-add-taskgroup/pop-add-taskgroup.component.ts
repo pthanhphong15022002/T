@@ -88,7 +88,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if (this.action == 'add' || this.action == 'copy') {
+    if (this.action == 'add') {
       //defaut
       this.taskGroups.maxHoursControl = this.taskGroups.maxHoursControl ?? '0';
       this.taskGroups.locationControl = this.taskGroups.locationControl ?? '0';
@@ -103,31 +103,36 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         this.taskGroups.completedControl ?? '0';
     }
 
-    this.api
-    .execSv<any>(
-      'SYS',
-      'AD',
-      'AutoNumberDefaultsBusiness',
-      'GetFieldAutoNoAsync',
-      [this.functionID, this.dialog.formModel.entityName]
-    )
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.disabledShowInput = true;
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes)
-            this.planceHolderAutoNumber = mes?.customName || mes?.description;
-        });
-      } else {       
-        this.disabledShowInput = false;
-      }
-    });
-   
+    // this.api
+    // .execSv<any>(
+    //   'SYS',
+    //   'AD',
+    //   'AutoNumberDefaultsBusiness',
+    //   'GetFieldAutoNoAsync',
+    //   [this.functionID, this.dialog.formModel.entityName]
+    // )
+    // .subscribe((res) => {
+    //   if (res && !res.stop) {
+    //     this.disabledShowInput = true;
+    //     this.cache.message('AD019').subscribe((mes) => {
+    //       if (mes)
+    //         this.planceHolderAutoNumber = mes?.customName || mes?.description;
+    //     });
+    //   } else {
+    //     this.disabledShowInput = false;
+    //   }
+    // });
+
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+
+  }
 
   ngOnInit(): void {
     //   this.initForm();
+    if(this.action === 'copy'){
+      this.taskGroups.taskGroupID = null;
+    }
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe((res) => {
       if (res) this.gridViewSetup = res;
     });
@@ -147,7 +152,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
     this.getGridViewSetUp();
-    if (this.action === 'edit') this.valueName();
+    if (this.action === 'edit' || this.action === 'copy') this.valueName();
   }
 
   onDeleteTodo(index) {
@@ -550,7 +555,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   beforeSave(op: any) {
     var data = [];
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       op.method = 'AddTaskGroupsAsync';
       data = [this.taskGroups, this.functionID];
     } else if (this.action === 'edit') {
@@ -611,7 +616,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups.checkList = null;
     }
 
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       return this.addRow();
     }
     return this.updateRow();

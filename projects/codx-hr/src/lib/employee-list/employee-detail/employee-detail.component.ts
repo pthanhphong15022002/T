@@ -41,12 +41,14 @@ import {
   DataRequest,
   DataService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
   SidebarModel,
   SortModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -427,6 +429,9 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('eAccidentGridView') eAccidentGridView: CodxGridviewComponent;
 
   //#endregion
+
+  @ViewChild('tmpTemp', { static: true })
+  tmpTemp: TemplateRef<any>;
 
   listEmp: any;
   request: DataRequest;
@@ -4505,6 +4510,20 @@ export class EmployeeDetailComponent extends UIComponent {
         this.eContractRowCount = this.eContractGridview.dataService.rowCount;
       }
     }, 100);
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // if(evt.data == true){
+    //   let dialog = this.callfunc.openForm(
+    //     this.tmpTemp,
+    //     '',
+    //     850,
+    //     550,
+    //     '',
+    //     null,
+    //     '',
+    //     option
+    //   );
+    // }
   }
 
   copyValue(actionHeaderText, data, flag) {
