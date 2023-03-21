@@ -98,7 +98,7 @@
   <div class="d-flex  justify-content-center">
     <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
-      <span  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
+      <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
     </div>
   </div>
 </ng-template>

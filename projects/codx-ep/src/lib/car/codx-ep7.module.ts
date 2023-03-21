@@ -16,9 +16,8 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { Layout7Component } from './_layout7/layout7.component';
 import { BookingCarComponent } from './booking/booking-car.component';
 import { PopupAddBookingCarComponent } from './booking/popup-add-booking-car/popup-add-booking-car.component';
-import { BookingCarViewDetailComponent } from './booking/view-detail/booking-car-view-detail.component';
+import { BookingCarViewDetailComponent } from './view-detail/booking-car-view-detail.component';
 import { CarDashboardComponent } from './booking/dashboard/dashboard.component';
-import { ApprovalCarViewDetailComponent } from './approval/approval-car-view-detail/approval-car-view-detail.component';
 import { ApprovalCarsComponent } from './approval/approval-car.component';
 import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup-driver-assign.component';
 import { CardTransComponent } from './cardTran/cardTrans.component';
@@ -106,7 +105,6 @@ const Components: Type<any>[] = [
   PopupAddCardTransComponent,
   PopupAddEpCardsComponent,
   BookingCarViewDetailComponent,
-  ApprovalCarViewDetailComponent,
   CarDashboardComponent,
   PopupDriverAssignComponent,
 ];

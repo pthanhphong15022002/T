@@ -555,10 +555,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       });
   }
   reschedule(data: any) {
+    let host:any;
+    if(data?.resources!=null){
+      host = data?.resources.filter((res) => res.roleType =='1')
+    }
     if (
-      !this.codxEpService.checkRole(
+      !this.codxEpService.checkRoleHost(
         this.authService.userValue,
-        data?.owner,
+        host[0].userID,
         this.isAdmin
       )
     ) {
@@ -569,7 +573,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       PopupRescheduleBookingComponent,
       '',
       550,
-      300,
+      400,
       this.funcID,
       [data, this.formModel, this.popupTitle]
     );
@@ -589,11 +593,16 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     });
   }
   invite(data: any) {
+    let host:any;
+    if(data?.resources!=null){
+      host = data?.resources.filter((res) => res.roleType =='1')
+    }
     if (
       !this.codxEpService.checkRole(
         this.authService.userValue,
         data?.owner,
-        this.isAdmin
+        this.isAdmin,
+        host[0].userID,
       )
     ) {
       this.notificationsService.notifyCode('TM052');
