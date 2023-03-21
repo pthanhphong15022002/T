@@ -268,6 +268,7 @@ export class CreateFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;
@@ -369,6 +370,7 @@ export class CreateFolderComponent implements OnInit {
     this.showAll = true;
     this.folderService.getFolder(this.id).subscribe(async (res) => {
       if (res) {
+        debugger
         this.setFolderAS(res);
         if (this.edit) {
           this.noeditName = false;
@@ -885,14 +887,14 @@ export class CreateFolderComponent implements OnInit {
 
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
-    this.dmSV.dataFileEditing.assign = true;
+    this.dmSV.dataFileEditing.assign = this.assignRight;
     this.callfc.openForm(
       RolesComponent,
       this.titleRolesDialog,
       950,
       650,
       '',
-      [this.functionID],
+      [this.functionID , null , null ,null, this.propertiesFolder],
       ''
     );
   }

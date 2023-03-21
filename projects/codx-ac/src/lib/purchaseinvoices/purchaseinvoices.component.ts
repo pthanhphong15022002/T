@@ -69,7 +69,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         //this.delete(data);
         break;
       case 'SYS03':
-        //this.edit(e, data);
+        this.edit(e, data);
         break;
       case 'SYS04':
         //this.copy(e, data);
@@ -99,6 +99,33 @@ export class PurchaseinvoicesComponent extends UIComponent {
           '',
           this.width,
           969,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
+  }
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddPurchaseComponent,
+          '',
+          this.width,
+          this.height,
           this.view.funcID,
           obj,
           '',

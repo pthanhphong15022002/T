@@ -1,6 +1,6 @@
 .chat-popup{
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    width: 300px;
+    width: 350px;
 }
 
 .chat-list{
@@ -12,8 +12,9 @@
 }
 .chat-list-body{
     height: auto !important;
-    max-height: calc(100vh - 175px);
+    max-height: 480px;
     overflow: auto;
+    padding-right: 5px;
 }
 .chat-list-header_func{
     margin: 0px;
