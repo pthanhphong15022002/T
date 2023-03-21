@@ -99,8 +99,19 @@
     </codx-attachment>
     </div>
 
-    <div class="w-25" [innerHTML]=" data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async" >
-    </div>
+    <codx-vll
+    class="badge badge-sm"
+    [formModel]="view.formModel"
+    [field]="'SignStatus'"
+    [value]="data?.signStatus"
+    [showText]="true"
+    [showIcon]="false"
+    [showBgColor]="true"
+    >
+    </codx-vll>
+
+    <!-- <div class="w-25" [innerHTML]=" data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async" >
+    </div> -->
 
     <codx-mfunc
       [formModel]="view.formModel"
@@ -176,3 +187,109 @@
       {{ data.expiredDate | fmDT }}
     </div> -->
 </ng-template>
+
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEquipment" default="Cập nhật trạng thái"
+              [formModel]="view.formModel"></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="close2(dialog1)">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+          <codx-label
+            fiedName="signStatus" [formModel]="view.formModel">
+          </codx-label>
+        </label>
+          <codx-input
+            disabled="true"
+            field="signStatus"
+            [formModel]="view.formModel"
+            [Group]="formGroup"
+            ></codx-input>
+          </div>
+            <div class="form-group">
+              <label>
+              <codx-label fiedName="Note" [formModel]="view.formModel"></codx-label>
+            </label>
+              <codx-input
+                field="note"
+                [formModel]="view.formModel"
+                [Group]="formGroup"
+              ></codx-input>
+            </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+          <i class="icon-save"></i>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template >
+
+<!-- <ng-template #templateUpdateStatus>
+  <codx-form
+  [headerText]="'Cập nhật tình trạng'"
+  [data]="editStatusObj"
+  [formModel]="view.formModel"
+  [body]="tmpBody"
+  [footer]="footer"
+>
+<ng-template #tmpBody>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="signStatus" [formModel]="view.formModel">
+    </codx-label>
+    <codx-input
+      disabled="true"
+      field="signStatus"
+      [formModel]="view.formModel"
+      [Group]="formGroup"
+      ></codx-input>
+    </div>
+  
+      <div class="form-group row">
+        <codx-label fiedName="Note" [formModel]="view.formModel"></codx-label>
+        <codx-input
+          field="note"
+          [formModel]="view.formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+</ng-template>
+</codx-form>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="view.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template> -->

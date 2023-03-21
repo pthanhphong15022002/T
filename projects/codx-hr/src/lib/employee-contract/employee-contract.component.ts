@@ -1,7 +1,8 @@
+import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
-import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel } from 'codx-core';
+import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef } from 'codx-core';
 import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +20,8 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
-
+  @ViewChild('templateUpdateStatus', { static: true })
+  templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = []
   funcID: string
   eContractHeaderText
@@ -29,6 +31,10 @@ export class EmployeeContractComponent extends UIComponent {
     id : 'btnAdd',
     text: 'Thêm'
   }
+  formGroup: FormGroup;
+
+  editStatusObj: any;
+  dialogEditStatus: any;
 
 
   // moreFuncs = [
@@ -93,12 +99,18 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   ngAfterViewChecked(){
-    if(this.view.dataService?.data){
-      this.numofRecord = this.view.dataService.data.length      
-      var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
-      if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
-        PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
-      }
+    // if(this.view.dataService?.data){
+    //   this.numofRecord = this.view.dataService.data.length      
+    //   var PageTiltle = (window as any).ng.getComponent(document.querySelector('codx-page-title'));
+    //   if(PageTiltle.pageTitle.breadcrumbs._value[0]?.title){
+    //     PageTiltle.pageTitle.breadcrumbs._value[0].title = `(Tất cả ${this.numofRecord})`;
+    //   }
+    // }
+    if(!this.formGroup?.value){
+      this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
+        this.formGroup = res;
+        console.log('form group ne', this.formGroup);
+      });
     }
   }
 
@@ -106,8 +118,57 @@ export class EmployeeContractComponent extends UIComponent {
     console.log('on action', evt);
   }
 
+  
+  close2(dialog: DialogRef) {
+    dialog.close();
+  }
+  
+  popupUpdateEContractStatus(funcID, data){
+    // let option = new DialogModel();
+    // option.zIndex = 999;
+    // option.FormModel = this.view.formModel
+    if(funcID == 'HRT1001A7') data.signStatus = '5';
+    if(funcID == 'HRT1001A0') data.signStatus = '0';
+    if(funcID == 'HRT1001A9') data.signStatus = '9';
+
+    this.editStatusObj = data;
+    this.formGroup.patchValue(this.editStatusObj);
+    console.log('edit object', this.editStatusObj);
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogEditStatus.closed.subscribe((e) => {
+      this.detectorRef.detectChanges();
+    });
+  }
+
+  onSaveUpdateForm(){
+    this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
+      debugger
+      if(res != null){
+        this.notify.notifyCode('SYS007');
+        this.dialogEditStatus && this.dialogEditStatus.close(res);
+      }
+    })
+  }
+
   clickMF(event, data){
+    debugger
     switch (event.functionID) {
+      case 'HRT1001A7': // cap nhat da ki
+      case 'HRT1001A0': // huy hop dong
+      case 'HRT1001A9': // thanh ly hop dong
+      let oUpdate = JSON.parse(JSON.stringify(data));
+      this.popupUpdateEContractStatus(event.functionID , oUpdate)
+      break;
+      case 'HRT1001A1': // de xuat hop dong tiep theo
+      break;
+
       case 'SYS03':
         this.HandleEContractInfo(event.text, 'edit', data);
         this.df.detectChanges();
@@ -144,7 +205,9 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService
     .copy(data, this.view.formModel, 'RecID')
     .subscribe((res) => {
-      this.HandleEContractInfo(actionHeaderText, 'copy', res);
+      if(flag == 'eContract'){
+        this.HandleEContractInfo(actionHeaderText, 'copy', res);
+      }
     });
   }
 
@@ -217,7 +280,6 @@ export class EmployeeContractComponent extends UIComponent {
         }
         else if(actionType == 'edit'){
           this.view.dataService.update(res.event[0]).subscribe((res) => {
-
           })
           this.df.detectChanges();
         }
