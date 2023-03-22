@@ -37,6 +37,9 @@ import { PopupAddCrmPartnerComponent } from './crm-partners/popup-add-crm-partne
 import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxTableComponent } from './task/codx-table/codx-table.component';
+import { OpportunityComponent } from './opportunity/opportunity.component';
+import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
+import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
 const routes: Routes = [
   {
     path: '',
@@ -49,6 +52,11 @@ const routes: Routes = [
       {
         path: 'customermanagement/:funcID',
         component: CrmCustomerComponent,
+      },
+      {
+        // gán tạm để làm UI
+        path: 'opportunity/:funcID',
+        component: OpportunityComponent,
       },
       {
         path: '**',
@@ -82,6 +90,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CrmPartnersDetailComponent,
     CodxTableComponent,
     PopupAddCrmPartnerComponent,
+    OpportunityComponent,
+    OpportunityDetailComponent,
+    TabDetailCustomComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
