@@ -147,8 +147,10 @@ export class AddEditComponent implements OnInit {
   }
 
   saveLine(dialog) {
-    if (!this.line.recID) this.onSaveLine(dialog);
-    else this.onUpdateLine(dialog);
+    if (!this.line.recID) {
+      this.line.rangeID = this.master.rangeID;
+      this.onSaveLine(dialog);
+    } else this.onUpdateLine(dialog);
   }
 
   onSaveLine(dialog) {
