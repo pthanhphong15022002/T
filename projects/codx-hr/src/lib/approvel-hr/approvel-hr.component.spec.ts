@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrmPartnersComponent } from './crm-partners.component';
+import { ApprovelHrComponent } from './approvel-hr.component';
 
-describe('CrmPartnersComponent', () => {
-  let component: CrmPartnersComponent;
-  let fixture: ComponentFixture<CrmPartnersComponent>;
+describe('ApprovelHrComponent', () => {
+  let component: ApprovelHrComponent;
+  let fixture: ComponentFixture<ApprovelHrComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CrmPartnersComponent ]
+      declarations: [ ApprovelHrComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CrmPartnersComponent);
+    fixture = TestBed.createComponent(ApprovelHrComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -11,20 +11,22 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService, Util } from 'codx-core';
-import { convertHtmlAgency2, extractContent, formatDtDis } from '../../function/default.function';
-import { DispatchService } from '../../services/dispatch.service';
-
+import {
+  convertHtmlAgency,
+  convertHtmlAgency2,
+  extractContent,
+  formatDtDis,
+} from 'projects/codx-od/src/lib/function/default.function';
+import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
+import { CodxHrService } from '../codx-hr.service';
 
 @Component({
-  selector: 'app-od-approvel',
-  templateUrl: './approvel.component.html',
-  styleUrls: ['./approvel.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'lib-approvel-hr',
+  templateUrl: './approvel-hr.component.html',
+  styleUrls: ['./approvel-hr.component.css'],
 })
-export class ODApprovelComponent
-  implements OnInit , AfterViewInit, OnChanges {
-
-    extractContent = extractContent
+export class ApprovelHrComponent implements OnInit,  AfterViewInit, OnChanges{
+  extractContent = extractContent
     convertHtmlAgency = convertHtmlAgency2
     data:any;
     funcID: any;
@@ -37,16 +39,15 @@ export class ODApprovelComponent
     ms020: any;
     ms021: any;
     active = 1;
-    referType = 'source'
   constructor(
     private cache: CacheService,
-    private odService: DispatchService,
+    private hrService: CodxHrService,
     private router : ActivatedRoute
-  ) {
-  
-  }
+  ) {}
+
   ngOnChanges(changes: SimpleChanges, ): void { }
   ngOnInit(): void {
+    debugger
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
       if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
@@ -77,14 +78,13 @@ export class ODApprovelComponent
     this.data = null;
     if(id)
     {
-
-      this.odService.getDetailDispatch(id,this.formModel?.entityName,this.referType,true).subscribe((item) => {
-        //this.getChildTask(id);
-        if (item) {
-          this.data = formatDtDis(item);
-          //this.view.dataService.setDataSelected(this.lstDtDis);
-        }
-      });
+      // this.odService.getDetailDispatch(id,this.formModel?.entityName,true).subscribe((item) => {
+      //   //this.getChildTask(id);
+      //   if (item) {
+      //     this.data = formatDtDis(item);
+      //     //this.view.dataService.setDataSelected(this.lstDtDis);
+      //   }
+      // });
     }
   }
   getSubTitle(relationType:any , agencyName:any , shareBy: any )
@@ -97,7 +97,6 @@ export class ODApprovelComponent
     try {
       switch (type) {
        
-        // Trạng thái RelationType
         case "6":
           {
             var data = this.dvlRelType?.datas.filter(function (el: any) { return el.value == val });

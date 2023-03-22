@@ -140,8 +140,8 @@ export class TMMeetingsComponent
     this.button = {
       id: 'btnAdd',
     };
-  if (!this.funcID)
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
@@ -177,7 +177,6 @@ export class TMMeetingsComponent
       this.requestSchedule.dataValue = this.queryParams?.dataValue;
     }
     this.requestSchedule.idField = 'meetingID';
-
   }
 
   receiveMF(e: any) {
@@ -254,7 +253,7 @@ export class TMMeetingsComponent
     }
   }
 
-  changeMF(e){
+  changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
   //#region schedule
@@ -607,7 +606,7 @@ export class TMMeetingsComponent
         dataObj: dataObj,
       };
       let dialogModel = new DialogModel();
-      dialogModel.FormModel= this.view.formModel
+      dialogModel.FormModel = this.view.formModel;
       dialogModel.IsFull = true;
       dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
@@ -736,6 +735,9 @@ export class TMMeetingsComponent
       case 'edit':
         this.viewDetail(e?.data);
         break;
+      case 'doubleClick':
+        this.viewDetail(e?.data);
+        break;
     }
   }
 
@@ -786,5 +788,4 @@ export class TMMeetingsComponent
   //     return this.resourcesNew.emit(idNew.join(';'));
   //   }
   // }
-
 }
