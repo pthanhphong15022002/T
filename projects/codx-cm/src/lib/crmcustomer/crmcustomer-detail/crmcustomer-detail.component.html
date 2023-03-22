@@ -131,6 +131,32 @@
                 cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
               </div>
             </div>
+            <div class="mb-3" *ngIf="funcID == 'CM0104'">
+              <div class="mb-3">
+                <codx-label class="text-dark fw-bold" name="lblProsCons" [formModel]="formModel" default="Ưu / Nhược điểm">
+                </codx-label>
+              </div>
+              <div class="row">
+                <div class="col-6 row">
+                  <div class="col-6">
+                    <codx-label class="text-gray-300" fiedName="Advantage" default="Ưu điểm:"></codx-label>
+                  </div>
+                  <div class="col-6">
+                    Giá thành rẻ
+                    Chất lượng tốt
+                  </div>
+                </div>
+                <div class="col-6 row">
+                  <div class="col-6">
+                    <codx-label class="text-gray-300" fiedName="Disadvantage" default="Nhược điểm:"></codx-label>
+                  </div>
+                  <div class="col-6">
+                    Nhân viên khó chịu
+                    Giao hàng lâu
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="mb-3">
               <div class="mb-3">
                 <codx-label class="text-dark fw-bold" name="lblAddress" default="Thông tin địa chỉ">
@@ -294,5 +320,5 @@
   </div>
 </ng-template>
 <ng-template #task let-data="value">
-  
+
 </ng-template>

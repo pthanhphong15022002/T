@@ -17,7 +17,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopupAddCrmPartnerComponent } from './popup-add-crm-partner/popup-add-crm-partner.component';
 import { PopupAddCrmcontactsComponent } from './popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
 import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
@@ -624,10 +623,10 @@ export class CrmCustomerComponent
       this.titleAction =
         this.titleAction + ' ' + this.view?.function.description;
       var dialog = this.callfc.openSide(
-        this.funcID == 'CM0101'
-          ? PopupAddCrmcustomerComponent : this.funcID == 'CM0102' ? PopupAddCrmcontactsComponent : this.funcID == 'CM0103' ? PopupAddCrmPartnerComponent
-          : PopupAddCrmcontactsComponent,
-        ['add', this.titleAction],
+        this.funcID == 'CM0101' || this.funcID == 'CM0103' || this.funcID == 'CM0104'
+        ? PopupAddCrmcustomerComponent
+        : PopupAddCrmcontactsComponent,
+        ['edit', this.titleAction],
         option
       );
       dialog.closed.subscribe((e) => {
@@ -651,8 +650,8 @@ export class CrmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.description;
         var dialog = this.callfc.openSide(
-          this.funcID == 'CM0101'
-          ? PopupAddCrmcustomerComponent : this.funcID == 'CM0102' ? PopupAddCrmcontactsComponent : this.funcID == 'CM0103' ? PopupAddCrmPartnerComponent
+          this.funcID == 'CM0101' || this.funcID == 'CM0103' || this.funcID == 'CM0104'
+          ? PopupAddCrmcustomerComponent
           : PopupAddCrmcontactsComponent,
           ['edit', this.titleAction],
           option
