@@ -1917,5 +1917,6 @@ codx-header #chat-box{
 /// 14/2/2023 
 /// 
 codx-chat-container{
-  height: 5px;
+  height: 7px;
+  z-index: 99;
 }
