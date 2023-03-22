@@ -20,10 +20,10 @@
                         </div>
                     </ng-container>
                     <div class="" (click)="expanseBoxChat(item)" placement="start" [ngbTooltip]="tooltipMssage">
-                        <codx-img
-                            [objectId]="item.objectID" 
-                            [objectName]="item.objectName" 
-                            [objectType]="item.objectType" 
+                        <codx-img 
+                            [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
+                            [objectName]="item.groupType == '1'? item.groupName2:item.groupName" 
+                            [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
                             [width]="40">
                         </codx-img>
                         <ng-template #tooltipMssage>
