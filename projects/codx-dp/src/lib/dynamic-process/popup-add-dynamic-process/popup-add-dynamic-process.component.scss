@@ -71,15 +71,28 @@
       }
 
       .stage-body-left-main {
-        height: calc(100vh - 230px);
-        overflow-y: scroll;
-        padding: 0px;
-        padding-bottom: 3px;
-
+        height: calc(100vh - 228px);
+        position: relative;
+        
+        .stage-scroll{
+          height: calc(100vh - 370px);
+          overflow-y: auto;
+          padding: 0px;
+          .cdk-drag.list-stage:last-child{
+            border-bottom: 0!important;
+          }
+        }
+        .stage-fix{
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 140px;
+        }
         .list-stage {
           display: flex;
           align-items: start;
-          padding: 8px 4px;
+          padding: 6px 3px;
         }
 
         .list-stage:hover {
@@ -90,7 +103,7 @@
 
     .stage-body-right {
       .stage-right-main {
-        height: calc(100vh - 230px);
+        height: calc(100vh - 228px);
         overflow-y: scroll;
       }
     }
@@ -288,10 +301,11 @@
 }
 
 .order {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 8px;
   background: var(--primary);
   display: flex;
   justify-content: center;
@@ -302,8 +316,9 @@
 }
 
 .icon-container {
-  height: 35px;
-  width: 35px;
+  height: 32px;
+  width: 32px;
+  min-width: 32px;
   border-radius: 50%;
   background-color:var(--gray-100);
   display: flex;
@@ -411,3 +426,6 @@ codx-attachment{
 }
 
 
+#pane_4 .example-list.stage-body-left-main{
+  height: calc(100vh - 194px)!important;
+}
