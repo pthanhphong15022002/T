@@ -146,16 +146,10 @@
         <ng-container [ngSwitch]="item.refType">
           <!-- WP_Comments -->
           <ng-container *ngSwitchCase="'WP_Comments'">
-            <!-- isContentTmp && contentTmp  dùng cho bên tạo user của Nguyên -->
-            <ng-container *ngIf="item.isContentTmp; else noContentTemp">
-              <ng-container *ngTemplateOutlet="item.contentTmp; context: { $implicit: item }"></ng-container>
-            </ng-container>
-            <ng-template #noContentTemp>
-              <ng-container *ngIf="item.shares;else postShareDeleted">
-                <ng-container *ngTemplateOutlet="templateSharePost; context: { $implicit: item.shares }">
-                </ng-container>
+            <ng-container *ngIf="item.shares;else postShareDeleted">
+              <ng-container *ngTemplateOutlet="templateSharePost; context: { $implicit: item.shares }">
               </ng-container>
-            </ng-template>
+            </ng-container>
           </ng-container>
           <!-- WP_News -->
           <ng-container *ngSwitchCase="'WP_News'">
@@ -164,7 +158,6 @@
               </ng-container>
             </ng-container>
           </ng-container>
-
         </ng-container>
       </div>
     </ng-container>
@@ -201,8 +194,12 @@
   <div class="WP_Comments">
     <div class="wp-share-files">
       <ng-container *ngIf="share.recID">
-        <codx-file [objectID]="share.recID" [objectType]="'WP_Comments'"
-          [funcID]="listview.formModel.funcID"></codx-file>
+          <codx-view-files 
+              [formModel]="listview.formModel" 
+              [objectType]="'WP_Comments'"
+              [medias]="share.medias"
+              [objectID]="share.recID">
+          </codx-view-files>
       </ng-container>
     </div>
     <div class="wp-share-contents">
