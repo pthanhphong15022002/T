@@ -131,13 +131,13 @@
             </div>
             <ng-template #tmpUploadFile>
                 <div class="footer-upload bg-body mh-100px overflow-auto">
-                    <div class="footer-upload-files d-flex flex-wrap">
+                    <div class="footer-upload-files d-flex flex-wrap px-2">
                         <ng-container *ngFor="let item of fileUpload;let i = index">
                             <div class="upload-files-item cursor-pointer">
                                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
                                     <codx-temp-full 
                                         [imageSrc]="item.source" 
-                                        imgCss="w-25px h-25px">
+                                        imgCss="w-50px h-50px">
                                     </codx-temp-full>
                                 </ng-container>
                                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
@@ -162,7 +162,7 @@
                             </div>
                         </ng-container>
                     </div>
-                    <div class="footer-upload-text px-3" (keyup.enter)="sendMessage()">
+                    <div class="footer-upload-text px-2" (keyup.enter)="sendMessage()">
                         <codx-input 
                             type="textarea"
                             format="ed2" 
