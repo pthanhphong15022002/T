@@ -64,7 +64,6 @@ export class ChatContainerComponent implements OnInit {
   }
   // handle box chat
   handleBoxChat(data:any){
-    debugger
     let isOpen = this.lstGroupActive.some(x => x.groupID == data.groupID);
     let index = this.lstGroupCollapse.findIndex(x => x.groupID === data.groupID);
     if(isOpen) return ;
@@ -77,17 +76,11 @@ export class ChatContainerComponent implements OnInit {
       let group = this.lstGroupActive.shift();
       let ele = document.getElementById(group.groupID);
       // get current instance của element trên DOM
+      debugger
       let codxBoxChat = window.ng.getComponent(ele);
-      let item = 
-      {
-        id:codxBoxChat.groupID,
-        online:data.isOnline,
-        message:codxBoxChat.group.message,
-        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+      if(codxBoxChat){
+        this.lstGroupCollapse.push(codxBoxChat.group);
       }
-      this.lstGroupCollapse.push(item);
     }
     this.lstGroupActive.push(data);
     this.dt.detectChanges();
@@ -112,43 +105,37 @@ export class ChatContainerComponent implements OnInit {
     let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
     if(index > -1){
       this.lstGroupActive.splice(index, 1);
-      let item = 
-      {
-        id:codxBoxChat.groupID,
-        groupID:codxBoxChat.groupID,
-        online:data.isOnline,
-        message:codxBoxChat.group.message,
-        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
-      }
-      this.lstGroupCollapse.unshift(item);
+      this.lstGroupCollapse.unshift(codxBoxChat.group);
       window.ng.getHostElement(codxBoxChat)?.remove();
       this.dt.detectChanges();
     }
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    if(this.lstGroupActive.length == 2){
-      let group = this.lstGroupActive.shift();
-      let ele = document.getElementById(group.groupID);
-      let codxBoxChat = window.ng.getComponent(ele)?.group;
-      let item = 
-      {
-        id:codxBoxChat.groupID,
-        online:data.isOnline,
-        groupID:codxBoxChat.groupID,
-        message:codxBoxChat.message,
-        objectID:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.groupType === '1' ? 'AD_Users':'WP_Groups'  
-      }
-      this.lstGroupCollapse.push(item);
-    }
-    this.lstGroupActive.push(data);
-    let index = this.lstGroupCollapse.findIndex(x => x.groupID == data.groupID); 
-    this.lstGroupCollapse.splice(index, 1);
-    this.dt.detectChanges();
+    debugger
+    // if(this.lstGroupActive.length == 2){
+    //   let group = this.lstGroupActive.shift();
+    //   let ele = document.getElementById(group.groupID);
+    //   let codxBoxChat = window.ng.getComponent(ele);
+    //   if(codxBoxChat){
+    //     let item = 
+    //     {
+    //       id:codxBoxChat.groupID,
+    //       online:data.isOnline,
+    //       groupID:codxBoxChat.groupID,
+    //       message:codxBoxChat.message,
+    //       objectID:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+    //       objectName:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+    //       objectType:codxBoxChat.groupType === '1' ? 'AD_Users':'WP_Groups'  
+    //     }
+    //     this.lstGroupCollapse.push(item);
+    //   }
+    // }
+    // this.lstGroupActive.push(data);
+    // let index = this.lstGroupCollapse.findIndex(x => x.groupID == data.groupID); 
+    // this.lstGroupCollapse.splice(index, 1);
+    // this.dt.detectChanges();
+    this.signalRSV.sendData(data,"ActiveGroupAsync");
   }
 
 }

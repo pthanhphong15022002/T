@@ -99,6 +99,7 @@ export class PopupAddPostComponent implements OnInit {
       this.data = this.dialogData.data;
       if(this.status != "edit")
       {
+        this.data.recID = Util.uid();
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
@@ -219,153 +220,136 @@ export class PopupAddPostComponent implements OnInit {
   loaded:boolean = false;
   // submit
   submit(){
-    // if(!this.loaded){
-    //   this.loaded = true;
-    //   switch(this.status){
-    //     case "create":
-    //       this.publishPost();
-    //       break;
-    //     case "edit":
-    //       this.editPost();
-    //       break;
-    //     case "share":
-    //       this.sharePost();
-    //       break;
-    //     default:
-    //       break
-    //   };
-    // }
-    switch(this.status){
-      case "create":
-        this.publishPost();
-        break;
-      case "edit":
-        this.editPost();
-        break;
-      case "share":
-        this.sharePost();
-        break;
-      default:
-        break
-    };
+    if(!this.loaded){
+      switch(this.status){
+        case "create":
+          this.publishPost();
+          break;
+        case "edit":
+          this.editPost();
+          break;
+        case "share":
+          this.sharePost();
+          break;
+        default:
+          break
+      };
+    }
   }
-
+  // insert post
+  insertPost(post:any){
+    return this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "CommentsBusiness",
+      "PublishPostAsync",
+      [post]);
+  }
   // create Post 
   publishPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0) 
     {
+      this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
       this.loaded = false;
-      return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      return;
     }
+    this.loaded = true;
     this.data.category = "1";
     this.data.approveControl = "0";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
-    let _files = this.codxViewFiles.files;
-    if(Array.isArray(_files) && _files.length > 0){
-      this.data.attachments = _files.length;
-      this.data.medias = this.codxViewFiles.medias;
-    }
-    //lưu bài viết
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      "PublishPostAsync",
-      [this.data])
-      .subscribe((res1: any) => {
-        if (res1)
+    this.data.attachments = this.codxViewFiles.files.length;
+    this.data.medias = this.codxViewFiles.medias;
+    this.codxViewFiles.save()
+      .subscribe((res:boolean)=>{
+        if(res)
         {
-          // lưu files
-          this.codxViewFiles.objectID = res1.recID;
-          this.codxViewFiles.save().subscribe((res2)=>{
+          this.insertPost(this.data)
+          .subscribe((res2: any) => {
+            if(res2){
+              this.notifySvr.notifyCode('WP024');
+              this.dialogRef.close(res2);
+            }
+            else
+            {
+              this.notifySvr.notifyCode('WP013');
+            }
             this.loaded = false;
-            this.notifySvr.notifyCode('WP024');
-            this.dialogRef.close(res1);  
           });
         }
-        else
-        {
-          this.loaded = false;
-          this.dialogRef.close(null);  
-          this.notifySvr.notifyCode('WP013');
-        }
+        else this.loaded = false;
       });
   }
   
-
-
   // edit post
   editPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0 && this.data.category != "4") 
     {
       this.loaded = false;
-      return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      return;
     }
-    let _files = this.codxViewFiles.files;
-    if(Array.isArray(_files) && _files.length > 0){
-      this.data.attachments = _files.length;
-      this.data.medias = this.codxViewFiles.medias;
-    }
-    this.api.execSv<any>(
-      'WP',
-      'ERM.Business.WP',
-      'CommentsBusiness',
-      'EditPostAsync',
-      [this.data])
-      .subscribe((res: any) => {
-        if (res) 
-        {
-          this.codxViewFiles.save().subscribe((res2)=>{
-            this.loaded = false;
-            this.notifySvr.notifyCode('WP021');
+    this.loaded = true;
+    this.data.attachments = this.codxViewFiles.files.length;
+    this.data.medias = this.codxViewFiles.medias;
+    this.codxViewFiles.save()
+    .subscribe((res:boolean)=>{
+      if(res){
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'CommentsBusiness',
+          'EditPostAsync',
+          [this.data])
+          .subscribe((res2: any) => {
+            if (res2) 
+              this.notifySvr.notifyCode('WP021');
+            else
+              this.notifySvr.notifyCode('SYS021');
             this.dialogRef.close(this.data);
-          });
-        }
-        else
-        {
-          this.loaded = false;
-          this.dialogRef.close(null);
-          this.notifySvr.notifyCode('SYS021');
-        }
+            this.loaded = false;
+        });
+      }
+      else this.loaded = false;
     });
   }
 
   // share post
   sharePost(){
+    this.loaded = true;
     this.data.category = "4";
     this.data.approveControl = "0"; 
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
-    let _files = this.codxViewFiles.files;
-    if(Array.isArray(_files) && _files.length > 0){
-      this.data.attachments = _files.length;
-      this.data.medias = this.codxViewFiles.medias;
-    }
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      "PublishPostAsync",
-      [this.data])
-      .subscribe((res1: any) =>{
-        if (res1) 
-        {
-          this.codxViewFiles.objectID = res1.recID;
-          this.codxViewFiles.save().subscribe((res2)=>{
+    this.data.attachments = this.codxViewFiles.files.length;
+    this.data.medias = this.codxViewFiles.medias;
+    this.codxViewFiles.save()
+    .subscribe((res:boolean)=>{
+      if(res)
+      {
+        this.api.execSv(
+          "WP",
+          "ERM.Business.WP",
+          "CommentsBusiness",
+          "PublishPostAsync",
+          [this.data])
+          .subscribe((res2: any) =>{
+            if (res2) 
+            {
+              this.notifySvr.notifyCode('WP020');
+              this.dialogRef.close(res2);  
+            }
+            else
+            {
+              this.notifySvr.notifyCode('WP013');
+            }
             this.loaded = false;
-            this.notifySvr.notifyCode('WP020');
-            this.dialogRef.close(res1);  
           });
-        }
-        else
-        {
-          this.loaded = false;
-          this.notifySvr.notifyCode('WP013');
-        }
-      });
+      }
+      else this.loaded = false;
+    });
   }
 
   // add permission share
@@ -475,6 +459,6 @@ export class PopupAddPostComponent implements OnInit {
           if(_param["CopyFormat"] === "1")
             this.copyFormat = 'keepFormat';
         }
-      })
+      });
   }
 }
