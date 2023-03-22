@@ -619,7 +619,7 @@ export class CrmCustomerComponent
       option.FormModel = this.view.formModel;
       option.Width = '800px';
       this.titleAction =
-        this.titleAction + ' ' + this.view?.function.description;
+        this.titleAction + ' ' + this.view?.function.customName;
       var dialog = this.callfc.openSide(
         this.funcID == 'CM0101' || this.funcID == 'CM0103' || this.funcID == 'CM0104'
         ? PopupAddCrmcustomerComponent
@@ -646,7 +646,7 @@ export class CrmCustomerComponent
         option.FormModel = this.view.formModel;
         option.Width = '800px';
         this.titleAction =
-          this.titleAction + ' ' + this.view?.function.description;
+          this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
           this.funcID == 'CM0101' || this.funcID == 'CM0103' || this.funcID == 'CM0104'
           ? PopupAddCrmcustomerComponent
