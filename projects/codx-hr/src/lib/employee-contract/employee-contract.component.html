@@ -140,6 +140,7 @@
     <codx-mfunc
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMf($event, data)"
       [dataItem]="data"
       type="hover"
     >
@@ -214,7 +215,7 @@
         <span
           [innerHTML]="
             data.emp.positionID
-              | formatvalue : view.formModel : 'positionID'
+              | formatvalue : view.formModel : 'PositionID'
               | async
           "
         ></span>

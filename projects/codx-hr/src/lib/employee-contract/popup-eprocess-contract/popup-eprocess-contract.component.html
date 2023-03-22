@@ -10,7 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div *ngIf="actionType == 'add'" class="form-group row">
+    <div *ngIf="actionType == 'add' || actionType == 'copy'" class="form-group row">
         <codx-img
             [width]="35"
             class="me-3 col-3"
