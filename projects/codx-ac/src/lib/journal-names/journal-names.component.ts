@@ -1,14 +1,14 @@
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { UIComponent, ViewModel, ViewType, UrlUtil } from 'codx-core';
 import {
-  Component,
-  OnInit,
-  inject,
-  Injector,
-  ViewChild,
-  TemplateRef,
-} from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+  ButtonModel,
+  SidebarModel,
+  UIComponent,
+  UrlUtil,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
 @Component({
   selector: 'lib-journal-names',
@@ -17,28 +17,23 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class JournalNamesComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   testimg = 'UyNhiemChi.svg';
-  moreFuncName: string = '';
-  button = {
+  button: ButtonModel = {
     id: 'btnAdd',
   };
+  functionName: string;
 
   constructor(inject: Injector, private route: Router) {
     super(inject);
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#region Constructor
 
   //#region Init
   onInit(): void {}
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.smallcard,
@@ -49,12 +44,27 @@ export class JournalNamesComponent extends UIComponent {
         },
       },
     ];
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      this.functionName =
+        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+    });
   }
   //#region Init
 
   //#region Events
   clickMF(e, data) {
-    console.log(e);
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+    }
   }
 
   dbClick(e, data) {
@@ -73,35 +83,58 @@ export class JournalNamesComponent extends UIComponent {
   //#region Events
 
   //#region Method
+  add(e): void {
+    console.log(`${e.text} ${this.functionName}`);
 
-  add(e) {
-    let data = {
-      JournalName: 'Giấy báo có',
-      Description: 'Giấy báo có',
-      PostedLayer: '1',
-      JournalType: '1',
-      AllowEdited: true,
-      InvoiceEdited: true,
-      Approval: '1',
-      CurrencyControl: true,
-      ExchangeRate: 1.0,
-      TransactionText: '1',
-      IsTransfer: true,
-      IsSettlement: true,
-      IsAllocation: true,
-      PeriodControl: true,
-      PostSubControl: true,
-      QtyControl: true,
-      AssetControl: true,
-      LoanControl: true,
-      ProjectControl: true,
-      Stop: false,
-      Owner: '1',
-      CreatedBy: 'THINH',
-      FunctionID: 'ACT0428',
-      Thumbnail: 'GiayBaoCo.JPG',
-    };
+    // let data = {
+    //   JournalName: 'Giấy báo có',
+    //   Description: 'Giấy báo có',
+    //   PostedLayer: '1',
+    //   JournalType: '1',
+    //   AllowEdited: true,
+    //   InvoiceEdited: true,
+    //   Approval: '1',
+    //   CurrencyControl: true,
+    //   ExchangeRate: 1.0,
+    //   TransactionText: '1',
+    //   IsTransfer: true,
+    //   IsSettlement: true,
+    //   IsAllocation: true,
+    //   PeriodControl: true,
+    //   PostSubControl: true,
+    //   QtyControl: true,
+    //   AssetControl: true,
+    //   LoanControl: true,
+    //   ProjectControl: true,
+    //   Stop: false,
+    //   Owner: '1',
+    //   CreatedBy: 'THINH',
+    //   FunctionID: 'ACT0428',
+    //   Thumbnail: 'GiayBaoCo.JPG',
+    // };
     // this.api.exec('AC', 'JournalNamesBusiness', 'AddAsync', data).subscribe();
+    this.view.dataService.addNew().subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+
+      this.callfc.openSide(
+        PopupAddJournalComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
+
+  edit(e, data): void {}
+
+  copy(e, ata): void {}
+
+  delete(data): void {}
   //#region Method
 }
