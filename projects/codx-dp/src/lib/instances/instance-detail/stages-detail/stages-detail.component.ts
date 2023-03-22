@@ -714,15 +714,17 @@ export class StagesDetailComponent implements OnInit {
   openUpdateProgress(data?: any) {
     if(data?.parentID){
       let check = false;
+      let taskName = ''
       let listID = data?.parentID.split(';');
       listID?.forEach(item => {
-        let taskFind = this.taskList?.find(task => {task.refID == item})
+        let taskFind = this.taskList?.find(task => task.refID == item)
         if(taskFind?.progress != 100){
           check = true;
+          taskName = taskFind?.taskName;
         }
       })
       if(check){
-        this.notiService.notifyCode('Bạn phải thực hiện những cong việc khác');
+        this.notiService.notifyCode('DP023',0,taskName);
         return;
       }
     }

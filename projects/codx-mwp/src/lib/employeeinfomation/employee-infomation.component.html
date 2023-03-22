@@ -29,8 +29,13 @@
         >
         </codx-img>
         <div class="d-flex flex-column">
-          <div class="fw-bold text-dark fs-5 mb-1">
-            {{ employeeInfo?.employeeName }}
+          <div class="fw-bold text-dark fs-5 mb-1"
+          [innerHTML]="
+          employeeInfo?.employeeName
+            | formatvalue : employeeInfo : 'employeeName'
+            | async
+        "
+          >
           </div>
           <div
             class="text-dark"
@@ -122,9 +127,13 @@
 
                 <div class="border rounded-2 p-6" *ngIf="employeeInfo">
                   <div class="d-flex align-items-center">
-                    <div class="fs-4 fw-bold text-dark">
-                      {{ employeeInfo?.employeeName }}
-                    </div>
+                    <div class="fs-4 fw-bold text-dark"
+                    [innerHTML]="
+                    employeeInfo?.employeeName
+                      | formatvalue : employeeInfo : 'employeeName'
+                      | async
+                  "
+                    ></div>
                     <div class="user-status d-flex align-items-center ms-3">
                       <span class="icon-check text-primary icon-18 me-1"></span>
                       <span>{{
@@ -134,27 +143,37 @@
                   </div>
 
                   <div class="d-flex align-items-center mt-2">
-                    <span class="fw-bold text-dark">{{
-                      employeeInfo?.positionName
-                    }}</span>
+                    <span class="fw-bold text-dark"
+                    [innerHTML]="
+                    employeeInfo?.positionName
+                      | formatvalue : employeeInfo : 'positionName'
+                      | async
+                  "
+                    ></span>
                     <span
                       class="text-gray-500 mx-3"
                       *ngIf="employeeInfo?.organizationName"
                       >|</span
                     >
-                    <span class="text-dark">{{
-                      employeeInfo?.organizationName
-                    }}</span>
+                    <span class="text-dark"
+                    [innerHTML]="
+                    employeeInfo?.organizationName
+                      | formatvalue : employeeInfo : 'organizationName'
+                      | async
+                  "
+                    ></span>
                     <span
                       class="text-gray-500 mx-3"
                       *ngIf="employeeInfo?.divisionName"
                       >|</span
                     >
-                    <span class="text-dark">{{
-                      employeeInfo?.divisionName != ""
-                        ? employeeInfo?.divisionName
-                        : null
-                    }}</span>
+                    <span class="text-dark"
+                    [innerHTML]="
+                    employeeInfo?.positionName
+                      | formatvalue : employeeInfo : 'positionName'
+                      | async
+                  "
+                    ></span>
                   </div>
                   <div class="text-dark fw-bold text-uppercase mt-6 mb-3">
                     <codx-label
@@ -178,13 +197,10 @@
                         <span
                           #joinedOn
                           [innerHTML]="
-                            employeeInfo.joinedOn
-                              | formatvalue
-                                : view.formModel
-                                : 'joinedOn'
-                                : joinedOn
-                              | async
-                          "
+                          employeeInfo?.joinedOn
+                            | formatvalue : employeeInfo : 'joinedOn'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -201,13 +217,10 @@
                         <span
                           #payGroupID
                           [innerHTML]="
-                            employeeInfo.payGroupID
-                              | formatvalue
-                                : view.formModel
-                                : 'payGroupID'
-                                : payGroupID
-                              | async
-                          "
+                          employeeInfo?.payGroupID
+                            | formatvalue : employeeInfo : 'payGroupID'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -227,13 +240,10 @@
                         <span
                           #hiredOn
                           [innerHTML]="
-                            employeeInfo.hiredOn
-                              | formatvalue
-                                : view.formModel
-                                : 'hiredOn'
-                                : hiredOn
-                              | async
-                          "
+                          employeeInfo?.hiredOn
+                            | formatvalue : employeeInfo : 'hiredOn'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -250,13 +260,10 @@
                         <span
                           #senioritydate
                           [innerHTML]="
-                            employeeInfo.senioritydate
-                              | formatvalue
-                                : view.formModel
-                                : 'senioritydate'
-                                : senioritydate
-                              | async
-                          "
+                          employeeInfo?.senioritydate
+                            | formatvalue : employeeInfo : 'senioritydate'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -276,13 +283,10 @@
                         <span
                           #recritedOn
                           [innerHTML]="
-                            employeeInfo.recritedOn
-                              | formatvalue
-                                : view.formModel
-                                : 'recritedOn'
-                                : recritedOn
-                              | async
-                          "
+                          employeeInfo?.recritedOn
+                            | formatvalue : employeeInfo : 'recritedOn'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -302,23 +306,21 @@
                     <span
                       #phone
                       [innerHTML]="
-                        employeeInfo?.phone
-                          | formatvalue : view.formModel : 'phone' : phone
-                          | async
-                      "
+                      employeeInfo?.phone
+                        | formatvalue : employeeInfo : 'phone'
+                        | async
+                    "
                     ></span>
                     <span class="text-gray-500 mx-3">|</span>
 
                     <span
                       #personalEmail
+
                       [innerHTML]="
-                        employeeInfo.personalEmail
-                          | formatvalue
-                            : view.formModel
-                            : 'personalEmail'
-                            : personalEmail
-                          | async
-                      "
+                      employeeInfo?.personalEmail
+                        | formatvalue : employeeInfo : 'personalEmail'
+                        | async
+                    "
                     ></span>
                     <span class="text-gray-500 mx-3">|</span>
                     <!-- <span class="text-dark" *ngIf="employeeInfo?.street!='---'">{{employeeInfo?.street}}</span>
@@ -326,10 +328,10 @@
                     <span
                       #street
                       [innerHTML]="
-                        employeeInfo.street
-                          | formatvalue : view.formModel : 'street' : street
-                          | async
-                      "
+                      employeeInfo?.street
+                        | formatvalue : employeeInfo : 'street'
+                        | async
+                    "
                     ></span>
                     <!-- <codx-label fiedName="street" formName="Employees" default="Địa chỉ thường trú">
                       </codx-label>
@@ -373,13 +375,10 @@
                         <span
                           #birthday
                           [innerHTML]="
-                            employeeInfo.birthday
-                              | formatvalue
-                                : view.formModel
-                                : 'birthday'
-                                : birthday
-                              | async
-                          "
+                          employeeInfo?.birthday
+                            | formatvalue : employeeInfo : 'birthday'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -397,13 +396,10 @@
                         <span
                           #birthPlaceName
                           [innerHTML]="
-                            employeeInfo.birthPlaceName
-                              | formatvalue
-                                : view.formModel
-                                : 'birthPlaceName'
-                                : birthPlaceName
-                              | async
-                          "
+                          employeeInfo?.birthPlaceName
+                            | formatvalue : employeeInfo : 'birthPlaceName'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -424,13 +420,10 @@
                         <span
                           #idCardNo
                           [innerHTML]="
-                            employeeInfo.idCardNo
-                              | formatvalue
-                                : view.formModel
-                                : 'idCardNo'
-                                : idCardNo
-                              | async
-                          "
+                          employeeInfo?.idCardNo
+                            | formatvalue : employeeInfo : 'idCardNo'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -448,13 +441,10 @@
                         <span
                           #issuedOn
                           [innerHTML]="
-                            employeeInfo.issuedOn
-                              | formatvalue
-                                : view.formModel
-                                : 'issuedOn'
-                                : issuedOn
-                              | async
-                          "
+                          employeeInfo?.issuedOn
+                            | formatvalue : employeeInfo : 'issuedOn'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -473,13 +463,10 @@
                         <span
                           #issuedBy
                           [innerHTML]="
-                            employeeInfo.issuedBy
-                              | formatvalue
-                                : view.formModel
-                                : 'issuedBy'
-                                : issuedBy
-                              | async
-                          "
+                          employeeInfo?.issuedBy
+                            | formatvalue : employeeInfo : 'issuedBy'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -498,13 +485,10 @@
                         <span
                           #religion
                           [innerHTML]="
-                            employeeInfo.religion
-                              | formatvalue
-                                : view.formModel
-                                : 'religion'
-                                : religion
-                              | async
-                          "
+                          employeeInfo?.religion
+                            | formatvalue : employeeInfo : 'religion'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -521,13 +505,10 @@
                         <span
                           #ethnicGroup
                           [innerHTML]="
-                            employeeInfo.ethnicGroup
-                              | formatvalue
-                                : view.formModel
-                                : 'ethnicGroup'
-                                : ethnicGroup
-                              | async
-                          "
+                          employeeInfo?.ethnicGroup
+                            | formatvalue : employeeInfo : 'ethnicGroup'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -544,13 +525,10 @@
                         <span
                           #nationality
                           [innerHTML]="
-                            employeeInfo.nationality
-                              | formatvalue
-                                : view.formModel
-                                : 'nationality'
-                                : nationality
-                              | async
-                          "
+                          employeeInfo?.nationality
+                            | formatvalue : employeeInfo : 'nationality'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -569,13 +547,10 @@
                         <span
                           #education
                           [innerHTML]="
-                            employeeInfo.education
-                              | formatvalue
-                                : view.formModel
-                                : 'education'
-                                : education
-                              | async
-                          "
+                          employeeInfo?.education
+                            | formatvalue : employeeInfo : 'education'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -592,10 +567,10 @@
                         <span
                           #degree
                           [innerHTML]="
-                            employeeInfo.degree
-                              | formatvalue : view.formModel : 'degree' : degree
-                              | async
-                          "
+                          employeeInfo?.degree
+                            | formatvalue : employeeInfo : 'degree'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -618,13 +593,10 @@
                         <span
                           #pitNumber
                           [innerHTML]="
-                            employeeInfo.pitNumber
-                              | formatvalue
-                                : view.formModel
-                                : 'pitNumber'
-                                : pitNumber
-                              | async
-                          "
+                          employeeInfo?.pitNumber
+                            | formatvalue : employeeInfo : 'pitNumber'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -637,9 +609,13 @@
                           default="Cấp ngày:"
                         >
                         </codx-label>
-                        <span class="text-dark">{{
-                          employeeInfo.pitIssuedOn | date : "dd/MM/yyyy"
-                        }}</span>
+                        <span class="text-dark"
+                        [innerHTML]="
+                        employeeInfo?.pitIssuedOn
+                          | formatvalue : employeeInfo : 'pitIssuedOn'
+                          | async
+                      "
+                        ></span>
                         <!-- <span #pitIssuedOn>{{ employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
                         }}</span> -->
                       </div>
@@ -666,13 +642,10 @@
                         <span
                           #siRegisterNo
                           [innerHTML]="
-                            employeeInfo.siRegisterNo
-                              | formatvalue
-                                : view.formModel
-                                : 'siRegisterNo'
-                                : siRegisterNo
-                              | async
-                          "
+                          employeeInfo?.siRegisterNo
+                            | formatvalue : employeeInfo : 'siRegisterNo'
+                            | async
+                        "
                         ></span>
                       </div>
                     </div>
@@ -685,9 +658,13 @@
                           default="Cấp ngày:"
                         >
                         </codx-label>
-                        <span class="text-dark">{{
-                          employeeInfo.siRegisterOn | date : "dd/MM/yyyy"
-                        }}</span>
+                        <span class="text-dark"
+                        [innerHTML]="
+                        employeeInfo?.siRegisterOn
+                          | formatvalue : employeeInfo : 'siRegisterOn'
+                          | async
+                      "
+                        ></span>
                         <!-- <span #siRegisterOn>{{ employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
                         }}</span> -->
                       </div>

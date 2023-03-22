@@ -1,4 +1,4 @@
-<ng-container *ngIf="funcID == 'CM0101';then customers
+<ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0103' || funcID == 'CM0104';then customers
   else contacts">
 </ng-container>
 
@@ -8,7 +8,7 @@
       <div class="d-flex flex-column">
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Tên viết tắt:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Tên viết tắt:"></codx-label>
           </div>
           <div class="col-6">
             LVU
@@ -16,7 +16,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Mã số thuế:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Mã số thuế:"></codx-label>
           </div>
           <div class="col-6">
             123456789
@@ -24,7 +24,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Ngày thành lập:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Ngày thành lập:"></codx-label>
           </div>
           <div class="col-6">
             03/02/1994
@@ -32,23 +32,31 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Website:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Website:"></codx-label>
           </div>
           <div class="col-6">
             facebook.com/phuctdn
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Nguồn khách hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Nguồn khách hàng:"></codx-label>
           </div>
           <div class="col-6">
             Khách hàng tự tìm đến
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Là khách hàng từ:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Là khách hàng từ:"></codx-label>
+          </div>
+          <div class="col-6">
+            30/02/2023
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="funcID == 'CM0103'|| funcID == 'CM0104'">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fiedName="" default="Là đối tác từ:"></codx-label>
           </div>
           <div class="col-6">
             30/02/2023
@@ -58,9 +66,9 @@
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Quy mô nhân sự:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Quy mô nhân sự:"></codx-label>
           </div>
           <div class="col-6">
             Trên 1000
@@ -68,7 +76,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Loại hình:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Loại hình:"></codx-label>
           </div>
           <div class="col-6">
             Doanh nghiệp
@@ -76,7 +84,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Lĩnh vực hoạt động:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Lĩnh vực hoạt động:"></codx-label>
           </div>
           <div class="col-6">
             Dịch vụ
@@ -84,31 +92,31 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Ngành nghề:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Ngành nghề:"></codx-label>
           </div>
           <div class="col-6">
             Dịch vụ cung ứng phần mềm
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Doanh thu:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Doanh thu:"></codx-label>
           </div>
           <div class="col-6">
             3,000,000,000
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Tài khoản ngân hàng:"></codx-label>
           </div>
           <div class="col-6">
             0123456789
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Mở tại ngân hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Mở tại ngân hàng:"></codx-label>
           </div>
           <div class="col-6">
             BIDV
@@ -125,7 +133,7 @@
       <div class="d-flex flex-column">
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Ngày sinh:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Ngày sinh:"></codx-label>
           </div>
           <div class="col-6">
             23/04/19999
@@ -133,7 +141,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Website:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Website:"></codx-label>
           </div>
           <div class="col-6">
             facebook.com/phuctdn
@@ -141,7 +149,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Nguồn khách hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Nguồn khách hàng:"></codx-label>
           </div>
           <div class="col-6">
             Khách hàng tự tìm đến
@@ -149,7 +157,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Không gọi điện:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Không gọi điện:"></codx-label>
           </div>
           <div class="col-6">
             <codx-input class="test-check" type="switch" style="width:100%" [checked]="true" field="full"
@@ -159,7 +167,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Không gửi mail:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Không gửi mail:"></codx-label>
           </div>
           <div class="col-6">
             <codx-input class="test-check" type="switch" style="width:100%" [checked]="false" field="full"
@@ -173,7 +181,7 @@
       <div class="d-flex flex-column">
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Tổ chức:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Tổ chức:"></codx-label>
           </div>
           <div class="col-6">
             Công ty CPTH Lạc Việt
@@ -181,7 +189,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Chức danh:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Chức danh:"></codx-label>
           </div>
           <div class="col-6">
             Trưởng phòng mua hàng
@@ -189,7 +197,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Lĩnh vực hoạt động:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Lĩnh vực hoạt động:"></codx-label>
           </div>
           <div class="col-6">
             Dịch vụ
@@ -197,7 +205,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Ngành nghề:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Ngành nghề:"></codx-label>
           </div>
           <div class="col-6">
             Dịch vụ cung ứng phần mềm
@@ -205,7 +213,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Tài khoản ngân hàng:"></codx-label>
           </div>
           <div class="col-6">
             0123456789
@@ -213,7 +221,7 @@
         </div>
         <div class="form-group row">
           <div class="col-6">
-            <codx-label class="text-gray-300" fieldName="" default="Mở tại ngân hàng:"></codx-label>
+            <codx-label class="text-gray-300" fiedName="" default="Mở tại ngân hàng:"></codx-label>
           </div>
           <div class="col-6">
             BIDV

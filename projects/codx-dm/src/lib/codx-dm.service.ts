@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Injectable, NgModule, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, windowWhen } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, share, Subject, windowWhen } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   DataItem,
@@ -18,6 +18,7 @@ import {
   NotificationsService,
   SidebarModel,
   ApiHttpService,
+  CacheService,
 } from 'codx-core';
 import {
   FileInfo,
@@ -303,8 +304,12 @@ export class CodxDMService {
   public currentDMIndex = new BehaviorSubject<string>(null);
   isCurrentDMIndex = this.currentDMIndex.asObservable();
 
+  public caches = new Map<string, Map<string, any>>();
+  private cachedObservables = new Map<string, Observable<any>>();
+
   constructor(
     private domSanitizer: DomSanitizer,
+    private cache: CacheService,
     private auth: AuthService,
     private folderService: FolderService,
     private fileService: FileService,
@@ -321,6 +326,39 @@ export class CodxDMService {
   }
 
   ngOnInit(): void {}
+
+  //Load GridViewSetup
+  loadGridView(formName:any, gridViewName:any): Observable<any>
+  {
+    let paras = [formName,gridViewName];
+    let keyRoot = formName + gridViewName;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) 
+    {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) return c.get(key);
+    }
+    
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.gridViewSetup(formName,gridViewName)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
 
   getRight(folder: FolderInfo) {
     this.parentCreate = folder.create;
@@ -1305,14 +1343,19 @@ export class CodxDMService {
       this.fileService.getFile(data.recID).subscribe((file) => {
         if(file)
         {
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          var isCopyRight = false;
+          if(file.author) isCopyRight = true;
           this.callfc.openForm(
             EditFileComponent,
             '',
             800,
             800,
             '',
-            ['', file],
-            ''
+            ['', file , isCopyRight],
+            '',
+            option
           );
        
         }

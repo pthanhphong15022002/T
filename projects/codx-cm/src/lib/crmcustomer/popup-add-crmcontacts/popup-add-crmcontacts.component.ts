@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angu
 import { ApiHttpService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment.prod';
-import { PopupAddressComponent } from '../../crmcustomer/popup-address/popup-address.component';
+import { PopupAddressComponent } from '../popup-address/popup-address.component';
 
 @Component({
   selector: 'lib-popup-add-crmcontacts',
