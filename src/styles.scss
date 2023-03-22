@@ -1905,7 +1905,7 @@ codx-header #chat-box{
 
 .instance-select{
   codx-input{
-    width:180px;
+    width:200px;
   }
   .e-input-group{
     border: 0!important;
@@ -1917,5 +1917,6 @@ codx-header #chat-box{
 /// 14/2/2023 
 /// 
 codx-chat-container{
-  height: 5px;
+  height: 7px;
+  z-index: 99;
 }

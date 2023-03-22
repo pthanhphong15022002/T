@@ -235,8 +235,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getOKRModel() {
     this.codxOmService.getOKRModel().subscribe((model:any) => {
       if (model) {
-        this.groupModel=model;
-        this.planModel =model?.planModel;
+        for(let pro in model){ 
+          delete model[pro].recID;
+          delete model[pro].id;
+        }
+        this.groupModel = model;
+        this.planModel = model?.planModel;
         this.okrModel = model?.okrModel;
         this.checkInsModel = model?.checkInsModel;
         this.sharesModel = model?.sharesModel;
