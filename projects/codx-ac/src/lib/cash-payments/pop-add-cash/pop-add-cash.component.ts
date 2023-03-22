@@ -150,11 +150,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  objectChanged(e: any) {
-    this.cashpayment.objectID = '';
-    this.cashpayment[e.field] = e.data;
-    this.cashpaymentline = [];
-  }
+  // objectChanged(e: any) {
+  //   this.cashpayment.objectID = '';
+  //   this.cashpayment[e.field] = e.data;
+  //   this.cashpaymentline = [];
+  // }
 
   changeType(e: any) {
     switch (e.data) {
@@ -171,8 +171,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     if (e.data) {
-      let sArray = ['currencyid', 'voucherdate', 'cashbookid', 'journalno'];
+      let sArray = [
+        'currencyid',
+        'voucherdate',
+        'cashbookid',
+        'journalno',
+        'objectid',
+      ];
       if (sArray.includes(e.field.toLowerCase())) {
+        if (e.field.toLowerCase() === 'objectid') {
+          let data = e.component.itemsSelected[0];
+          this.cashpayment.objectType = data.ObjectType;
+        }
+
         this.api
           .exec<any>('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
             e.field,
@@ -199,6 +210,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.cashpaymentline = res;
             }
           });
+
       if (e.field.toLowerCase() === 'bankaccount')
         this.api
           .exec<any>(
