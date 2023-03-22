@@ -13,16 +13,15 @@ import { SignalRService } from '../../services/signalr.service';
   styleUrls: ['./chat-box.component.scss']
 })
 export class ChatBoxComponent implements OnInit, AfterViewInit{
-  @HostListener('click', ['$event'])
-  onClick(event:any) {
-    this.isChatBox(event.target);
+  @HostListener('click')
+  onClick() {
     this.checkActive(this.groupID);
   }
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
 
   @Input() groupID:any;
-
+  @Input() status:any;
   funcID:string = "WPT11"
   formModel:FormModel = null;
   grdViewSetUp:any = null;
@@ -127,6 +126,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     .subscribe((res:any) => {
       if(res){
         this.group = res;
+        this.group.isOnline = this.status;
         this.data.groupID = this.group.groupID;
       }
     })
@@ -222,27 +222,21 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       }
     }
   }
-  
-  // check tag name 
-  isChatBox(element:HTMLElement){
-    if(element.tagName == "CODX-CHAT-BOX"){
-      if(!element.classList.contains("active"))
-        element.classList.add("active");
-      return;
-    }
-    else
-      this.isChatBox(element.parentElement);
-  }
   // check active
   checkActive(id:string){
     if(id){
-      let _boxChats = document.getElementsByTagName("codx-chat-box");
-      if(_boxChats.length > 0){
-        Array.from(_boxChats).forEach(e => {
-          if(e.id != id && e.classList.contains("active")){
-            e.classList.remove("active");
-          }
-        });
+      let _elementSelected = document.getElementById(id);
+      if(!_elementSelected?.classList.contains("active")){
+        _elementSelected?.classList.add("active");
+        let _arrElement = document.getElementsByTagName("codx-chat-box");
+        if(Array.isArray(_arrElement)){
+          Array.from(_arrElement).forEach(e => {
+            if(e.id !== id && e.classList.contains("active")){
+              e.classList.remove("active");
+              return;
+            }
+          });
+        }
       }
     }
   }
@@ -307,5 +301,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     //     option
     //   );
     // }
+  }
+  //remove file
+  removeFile(index:number){
+    if(index > -1){
+      this.fileUpload.splice(index,1);
+      this.dt.detectChanges();
+    }
   }
 }

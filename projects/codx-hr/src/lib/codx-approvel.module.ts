@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
-import { ApprovelComponent } from './approvel/approvel.component';
+import { ApprovelHrComponent } from './approvel-hr/approvel-hr.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: 'econtracts/:FuncID/:id',
-        component: ApprovelComponent,
+        component: ApprovelHrComponent,
       },
     ],
   }

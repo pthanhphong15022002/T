@@ -11,15 +11,21 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService, Util } from 'codx-core';
-import { convertHtmlAgency, convertHtmlAgency2, extractContent, formatDtDis } from 'projects/codx-od/src/lib/function/default.function';
+import {
+  convertHtmlAgency,
+  convertHtmlAgency2,
+  extractContent,
+  formatDtDis,
+} from 'projects/codx-od/src/lib/function/default.function';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 import { CodxHrService } from '../codx-hr.service';
+
 @Component({
-  selector: 'lib-approvel',
-  templateUrl: './approvel.component.html',
-  styleUrls: ['./approvel.component.css'],
+  selector: 'lib-approvel-hr',
+  templateUrl: './approvel-hr.component.html',
+  styleUrls: ['./approvel-hr.component.css'],
 })
-export class ApprovelComponent implements OnInit, AfterViewInit, OnChanges {
+export class ApprovelHrComponent implements OnInit,  AfterViewInit, OnChanges{
   extractContent = extractContent
     convertHtmlAgency = convertHtmlAgency2
     data:any;
@@ -91,7 +97,6 @@ export class ApprovelComponent implements OnInit, AfterViewInit, OnChanges {
     try {
       switch (type) {
        
-        // Trạng thái RelationType
         case "6":
           {
             var data = this.dvlRelType?.datas.filter(function (el: any) { return el.value == val });
