@@ -1,5 +1,4 @@
 import { FormGroup } from '@angular/forms';
-import { title } from 'process';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -17,12 +16,10 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.component';
 import { Router } from '@angular/router';
-import { AnyAaaaRecord } from 'dns';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -76,8 +73,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   cardDate: any;
   cardNote: any;
   popupDialog: any;
-  selectedCard:any;
-  popupClosed=true;
+  selectedCard: any;
+  popupClosed = true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -158,7 +155,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvEpCards = gv;
           this.columnGrids = [
-            
             {
               field: '',
               headerText: '',
@@ -208,7 +204,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
-                hideMoreFunc:true
+                hideMoreFunc: true,
               },
             },
           ];
@@ -376,8 +372,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-  openPopupCardFunction(template: any, type: number, title: any,data:any) {
-    this.selectedCard=data;
+  openPopupCardFunction(template: any, type: number, title: any, data: any) {
+    this.selectedCard = data;
     let time = new Date();
     this.cardDate = time;
     this.currTrans = type;
@@ -400,24 +396,21 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.cardNote = e.data;
     this.changeDetectorRef.detectChanges();
   }
-  changeDataMF(event, data:any) {
-    if(event!=null && data!=null){
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
       // event.forEach(func => {
       //   func.disabled=true;
       // });
-      if(data.status=='1'){
-        event.forEach(func => {
-          if(func.functionID == "EPS2501" /*MF cấp*/ )
-          {
-            func.disabled=true;
+      if (data.status == '1') {
+        event.forEach((func) => {
+          if (func.functionID == 'EPS2501' /*MF cấp*/) {
+            func.disabled = true;
           }
         });
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPS2502"/*MF trả*/)
-          {
-            func.disabled=true;
+      } else {
+        event.forEach((func) => {
+          if (func.functionID == 'EPS2502' /*MF trả*/) {
+            func.disabled = true;
           }
         });
       }
@@ -440,18 +433,26 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         'ERM.Business.EP',
         'ResourceTransBusiness',
         'AddEPResourceTransAsync',
-        [this.currCardID,this.cardUserID,this.cardDate,this.cardNote,currTrans]
+        [
+          this.currCardID,
+          this.cardUserID,
+          this.cardDate,
+          this.cardNote,
+          currTrans,
+        ]
       )
       .subscribe((res) => {
         if (res) {
-          this.selectedCard.status=currTrans;
-          this.view.dataService.update(this.selectedCard).subscribe((res) => {});
+          this.selectedCard.status = currTrans;
+          this.view.dataService
+            .update(this.selectedCard)
+            .subscribe((res) => {});
           this.popupDialog.close();
           this.notificationsService.notifyCode('SYS034');
         }
-        this.cardUserID=null;
-        this.cardDate=null;
-        this.cardNote=null;
+        this.cardUserID = null;
+        this.cardDate = null;
+        this.cardNote = null;
       });
   }
 }

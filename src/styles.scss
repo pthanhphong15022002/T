@@ -1887,4 +1887,35 @@ codx-header #chat-box{
 .input-circle .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
   border-radius: 26px !important;
 }
+
+.codx-detail-footer.dialog-footer{
+  position: relative;
+}
+.codx-detail-footer.dialog-footer .tab-action {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  z-index: 9999;
+  min-width: 30px;
+}
+.codx-detail-footer.dialog-footer:not(.expand) .py-5.tab-content{
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+}
+
+.instance-select{
+  codx-input{
+    width:180px;
+  }
+  .e-input-group{
+    border: 0!important;
+  }
+  .e-ddl.e-popup-open span{
+    margin-left: -15px;
+  }
+}
 /// 14/2/2023 
+/// 
+codx-chat-container{
+  height: 5px;
+}

@@ -10,13 +10,11 @@ import {
 import {
   ButtonModel,
   CacheService,
-  CodxGridviewComponent,
   DialogRef,
   FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -139,7 +137,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: '15%',
               field: 'companyID',
               template: this.locationCol,
-
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -174,7 +171,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               active: true,
               model: {
                 resources: this.columnGrids,
-                hideMoreFunc:true
+                hideMoreFunc: true,
               },
             },
           ];
@@ -282,7 +279,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => { });
+                this.view.dataService.update(x.event).subscribe((res) => {});
               }
             });
           });
@@ -313,7 +310,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => { });
+                this.view.dataService.update(x.event).subscribe((res) => {});
               }
             });
           });

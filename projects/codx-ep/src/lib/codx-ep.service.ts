@@ -559,11 +559,32 @@ export class CodxEpService {
         processID,
         entityName,
         funcID,
-        '<div>' + booking.title + '</div>',
+        '<div>' + booking.title + '</div>'
       ]
     );
   }
-
+  releaseOwner(
+    booking: any,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    owner: string
+  ): Observable<any> {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        booking?.recID,
+        processID,
+        entityName,
+        funcID,
+        '<div>' + booking.title + '</div>',
+        owner,
+      ]
+    );
+  }
   approve(recID: string, status: string, reasonID: string, comment: string) {
     return this.api.execSv(
       'ES',

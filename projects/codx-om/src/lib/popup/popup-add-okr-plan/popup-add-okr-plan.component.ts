@@ -285,16 +285,20 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   inputValidate(){
     for (let ob of this.dataOKR) {
+      ob.weight= 1/this.dataOKR.length;
       if (ob.okrName == null || ob.okrName == '') {
         this.notificationsService.notify('OM002');
         return;
       } else {
         for (let kr of ob.items) {
+          
+          kr.weight= 1/ob.items.length;
           if (kr.okrName == null || kr.okrName == '') {
             this.notificationsService.notify('OM002');
             return;
-          } else {
+          } else {            
             for (let skr of kr.items) {
+              skr.weight= 1/kr.items.length;
               if (skr.okrName == null || skr.okrName == '') {
                 this.notificationsService.notify('OM002');
                 return;

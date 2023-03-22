@@ -1,8 +1,8 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [className]="className" [method]="method" [views]="views" [button]="showButtonAdd ? button : null"
+  [className]="className" [method]="method" [views]="views" [button]="showButtonAdd ? button:null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField"
   [autoSearch]="true" (selectedChange)="selectedChange($event)" (onLoading)="onLoading($event)" (searchChanged)="searchChanged($event)"
-  (viewChanged)="changeView($event)" [viewActiveType]="viewMode"></codx-views>
+   [viewActiveType]="viewMode"></codx-views>
 
 <!--grid view-->
 <ng-template #itemCustomerName let-data>
@@ -25,6 +25,11 @@
   <div>
     <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
     <span class="text-gray-900">tdnphuck42@gmail.com</span>
+  </div>
+</ng-template>
+<ng-template #itemFields let-data>
+  <div>
+    Thương mại; Dịch vụ
   </div>
 </ng-template>
 <ng-template #itemAddress let-data>
@@ -73,7 +78,12 @@
 </ng-template>
 <!--grid view-->
 
+<!--List view-->
 
+<ng-template #itemViewList let-data>
+  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
+</ng-template>
+<!--List view-->
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
@@ -84,18 +94,22 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div class="d-flex flex-column">
-    <div class="mt-1">
+  <div class="d-flex flex-column" >
+    <div class="mt-1" *ngIf="funcID == 'CM0102'">
       <span class="icon-phone_android text-primary icon-16 me-1"></span>
       <span class="text-gray-900 text-primary">0702411141</span>
     </div>
-    <div class="mt-1">
+    <div class="mt-1" *ngIf="funcID == 'CM0102'">
       <span class="icon-email text-primary icon-16 me-1 text-gray-500"></span>
       <span class="text-gray-900 text-primary">tdnphuck42@gmail.com</span>
     </div>
     <div class="mt-1">
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
       <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+    </div>
+    <div class="mt-1" *ngIf="funcID == 'CM0103'">
+      <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
+      <span>Thương mại, dịch vụ</span>
     </div>
   </div>
 </ng-template>

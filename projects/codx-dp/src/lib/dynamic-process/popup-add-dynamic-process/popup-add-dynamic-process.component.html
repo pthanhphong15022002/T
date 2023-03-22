@@ -1319,7 +1319,7 @@
                 <codx-label
                   fiedName="day"
                   [formModel]="dialog.formModel"
-                  [default]="' ngày '"
+                  [default]="strDay"
                 ></codx-label>
                 <span class="text-gray-700">{{
                   itemStep?.durationHour || 0
@@ -1327,7 +1327,7 @@
                 <codx-label
                 fiedName="hour"
                 [formModel]="dialog.formModel"
-                [default]="' giờ '"
+                [default]="strHour"
               ></codx-label>
               </div>
               <div class="text-gray-500">
@@ -1363,7 +1363,9 @@
               {{stepNameSuccess}}
               </div>
               <div class="text-gray-500">
-                <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
+                <span>
+                    {{noteSuccess}}
+                </span>
               </div>
             </div>
           </div>
@@ -1382,9 +1384,9 @@
                {{stepNameFail}}
               </div>
               <div class="text-gray-500">
-                <codx-label
-                  default="Thất bại ở một giai đoạn bất kỳ"
-                ></codx-label>
+                  <span>
+                    {{noteFail}}
+                  </span>
               </div>
             </div>
           </div>
@@ -1791,7 +1793,7 @@
           [fiedName]="actionStep == 'edit' ? headerStep?.edit[1] : headerStep?.add[1]"
           [formModel]="grvStep"
           [default]="actionStep == 'edit' ? headerStep?.edit[0] : headerStep?.add[0]"
-        ></codx-label>      
+        ></codx-label>
       <span class="icon-close icon-18 cursor-pointer" (click)="popupAddStage.close()"></span>
 
   </div>
@@ -1891,8 +1893,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold">
               <codx-label
-                default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành
-                công:"
+              field="ReasonControl" [default]="gridViewSetupStep['ReasonControl']?.headerText"
               ></codx-label>
             </div>
           </div>
@@ -1937,7 +1938,7 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label default="Quy trình được chuyển đến"></codx-label>
+              <codx-label fiedName="NewProcessID" [default]="gridViewSetupStep['NewProcessID']?.headerText"></codx-label>
             </div>
             <codx-label
               class="text-gray-600"
@@ -2104,7 +2105,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold">
               <codx-label
-                default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thất bại"
+              fiedName="ReasonControl" [default]="gridViewSetupStep['ReasonControl']?.headerText"
               ></codx-label>
             </div>
           </div>
@@ -2143,7 +2144,7 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label default="Quy trình được chuyển đến"></codx-label>
+              <codx-label field="NewProcessID" [default]="gridViewSetupStep['NewProcessID']?.headerText"></codx-label>
             </div>
             <codx-label
               class="text-gray-600"
@@ -2588,7 +2589,7 @@
                     <codx-label
                       fiedName="StepName"
                       [formModel]=""
-                      default="Ngày"
+                      [default]="strDay"
                     ></codx-label>
                   </div>
                 </div>
@@ -2614,7 +2615,7 @@
                     <codx-label
                       fiedName="StepName"
                       [formModel]=""
-                      default="Giờ"
+                      [default]="strHour"
                     ></codx-label>
                   </div>
                 </div>
@@ -2844,7 +2845,7 @@
         <codx-label
           fiedName="ReasonName"
           [formModel]="dialog.formModel"
-          default="Tên lý do"
+          [default]="gridViewSetupStepReason['ReasonName']?.headerText"
         ></codx-label>
       </div>
       <codx-input

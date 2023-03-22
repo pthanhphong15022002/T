@@ -302,6 +302,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               }
             });
           }
+
+          //Loại cấp phát -> duyệt đại diện
+          if(this.data.stepType == 'I'){
+            this.data.approveMode = "3";
+            this.dialogApprovalStep.patchValue({ approveMode: this.data.approveMode });
+            this.currentApproveMode = this.data.approveMode;
+            this.cr.detectChanges();
+          }
           break;
         }
         case 'overdueControl': {

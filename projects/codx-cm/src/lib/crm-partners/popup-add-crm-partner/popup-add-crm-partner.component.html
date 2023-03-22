@@ -1,0 +1,175 @@
+<codx-form [headerText]="headerText" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
+  [data]="partner" [dialog]="dialog" [openMore]="true" #form>
+
+
+  <ng-template #body>
+    <div class="mb-3">
+      <codx-label name="lblGeneral" class="text-dark fw-bold" [formModel]="dialog.formModel" default="Thông tin chung">
+      </codx-label>
+    </div>
+    <div class="row mb-3">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PartnerID" default="Mã khách hàng">
+          </codx-label>
+          <codx-input type="text" [crrValue]="data?.partnerID" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="partnerID">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PartnerName" default="Tên">
+          </codx-label>
+          <codx-input type="text" [crrValue]="data?.partnerName" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="partnerName">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ShortName" default="Tên viết tắt">
+          </codx-label>
+          <codx-input type="text" [crrValue]="data?.shortName" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="shortName">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="" default="Tên người liên liên hệ chính">
+          </codx-label>
+          <codx-input type="text" [crrValue]="" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="" default="Email người liên hệ chính">
+          </codx-label>
+          <codx-input type="text" [crrValue]="" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Website" default="Website">
+          </codx-label>
+          <codx-input type="text" [crrValue]="data?.website" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="website">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PartnerFrom" default="Là đối tác từ">
+          </codx-label>
+          <codx-input type="datetime" style="width:100%" format="d" [crrValue]="data?.partnerFrom"
+            (valueChange)="valueChange($event)" [formModel]="form.formModel" field="partnerFrom">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="memo" default="Mô tả">
+          </codx-label>
+          <codx-input type="textarea" format="ed2" [crrValue]="data?.memo" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="memo">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" name="lblAvatar" default="Ảnh đại diện"></codx-label>
+          <ng-container [ngTemplateOutlet]="avatar"></ng-container>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="TaxCode" default="Mã số thuế">
+          </codx-label>
+          <codx-input type="text" [crrValue]="data?.taxCode" (valueChange)="valueChange($event)" [formModel]="form.formModel"
+            field="TaxCode">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Birthday" default="Ngày thành lập">
+          </codx-label>
+          <codx-input type="datetime" style="width:100%" format="d" [crrValue]="data?.birthday"
+            (valueChange)="valueChange($event)" [formModel]="form.formModel" field="birthday">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Type" default="Loại hình">
+          </codx-label>
+          <codx-input type="valuelist" refValue="CRM002" field="type" [crrValue]="data?.type" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Field" default="Lĩnh vực hoạt động">
+          </codx-label>
+          <codx-input type="valuelist" [crrValue]="data?.field" refValue="CRM001" field="field" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="field">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Career" default="Ngành nghề">
+          </codx-label>
+          <codx-input type="valuelist" [crrValue]="data?.career" refValue="CRM003" (valueChange)="valueChange($event)"
+            [formModel]="form.formModel" field="career">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <div class="mb-2">
+        <codx-label name="lblAddress" class="text-dark fw-bold" [formModel]="dialog.formModel" default="Địa chỉ">
+        </codx-label>
+      </div>
+      <div class="mb-2">
+        <span class="icon-add_location_alt text-primary me-1" (click)="openPopupAddress()"></span>
+      </div>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="row">
+        <div class="col-4">
+          <span class="text-gray-600">Hóa đơn:</span>
+        </div>
+        <div class="col-8">
+          23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <span class="text-gray-600">Giao hàng:</span>
+        </div>
+        <div class="col-8">
+          23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+
+    <div class="d-flex justify-content-end">
+      <div>
+        <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+          <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #subHeader>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]=""
+      (valueChange)="valueChangeTag($event)"></codx-tag>
+  </ng-template>
+
+  <ng-template #partner>
+  </ng-template>
+
+  <ng-template #avatar>
+    <div class="avatar-container">
+      <div class="avatar" (click)="addAvatar()">
+        <ng-container *ngIf="linkAvatar != ''">
+          <img [src]="linkAvatar" alt="">
+        </ng-container>
+        <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
+          <img src="../../../assets/codx/user/avatar.jpg" alt="">
+        </ng-container>
+      </div>
+    </div>
+    <codx-attachment #imageAvatar [objectId]="data?.recID" [objectType]="form.formModel.entityName" hideFolder="1"
+      hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
+      [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
+      displayThumb="full" showMessage="0" category="0">
+    </codx-attachment>
+
+  </ng-template>
