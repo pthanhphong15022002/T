@@ -1,7 +1,7 @@
 <div class="back-info">
-  <div class="header-info">
-    <div class="left">
-      <span class="title" *ngIf="titleDefault">
+  <div class="header-info py-3 px-5 d-flex align-items-center justify-content-between mb-0">
+    <div class="d-flex align-items-center">
+      <span class="fs-" *ngIf="titleDefault">
         <codx-label
           name="titleDefault"
           formName="DPInstancesSteps"
@@ -11,26 +11,24 @@
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
     </div>
-    <div class="right">
+    <div class="d-flex align-items-center justify-content-end">
       <div class="group-button">
-        <button
-          class="button-custom"
+        <button type="button"
+          class="btn btn-icon btn-outline-primary"
           *ngIf="dataStep?.stepStatus < 3 && isUpdate && !isClosed"
         >
-          <span
-            [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"
-            style="font-weight: 500"
+          <i
+            [ngClass]="'icon-edit-one icon-18'"
             (click)="popupCustomField(dataStep.fields)"
-          ></span>
+          ></i>
         </button>
-        <button
-          class="button-custom"
+        <button type="button"
+          class="btn btn-icon btn-outline-primary ms-1"
           (click)="clickShow($event, dataStep.recID)"
         >
-          <span
-            class="icon-expand_less icon-20 text-primary-600 py-2"
-            style="font-weight: 500"
-          ></span>
+          <i
+            class="icon-expand_less icon-18"
+          ></i>
         </button>
       </div>
     </div>
