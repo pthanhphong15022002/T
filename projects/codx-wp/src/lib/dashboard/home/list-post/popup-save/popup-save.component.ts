@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
-
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 @Component({
   selector: 'lib-popup-save',
   templateUrl: './popup-save.component.html',
@@ -12,16 +11,16 @@ export class PopupSavePostComponent implements OnInit {
   headerTextPopup: string = "Thêm mới kho lưu trữ";
   dialogData:any = null;
   dialogRef: DialogRef;
-  data: any;
-  user: any;
-  listStorage: any[] = [];
-  title: string = "";
-  storageType: string = "WP_Comments";
+  data:any;
+  user:any;
+  title:string = "";
   itemSelected: any = null;
   loaded:boolean = true;
   mssgNoData:string = "";
   loading:boolean = false;
-  @ViewChild("fromPopupAdd") popupBody: TemplateRef<any>;
+  @ViewChild("tmpPopupAdd") popupBody: TemplateRef<any>;
+  @ViewChild("listview") codxListView: CodxListviewComponent;
+
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
@@ -41,71 +40,41 @@ export class PopupSavePostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getListStorage();
-    this.cache.message("SYS010").subscribe((mssg:any) => {
+    // this.getListStorage();
+    this.cache.message("SYS010")
+    .subscribe((mssg:any) => {
       if(mssg){
         this.mssgNoData = mssg.defaultName;
       }
     });
   }
-  getListStorage() {
-    this.loaded = true;
-    this.api.execSv("WP", "ERM.Business.WP", "StoragesBusiness", "GetListStorageByUserIDAsync")
-      .subscribe((res: any[]) => {
-        if (res == null || res?.length == 0)
-          this.loaded = false;          
-        else
-        {
-          res[0].isActive = true;
-          this.listStorage = JSON.parse(JSON.stringify(res));
-          this.itemSelected = this.listStorage[0];
-        }
-        this.dt.detectChanges();
-        });
-  }
   //save to storage
   saveToStorage() {
-    if(!this.loading){
+    if(!this.loading && this.itemSelected?.recID && this.data?.recID){
       this.loading = true;
-      if(this.itemSelected && this.data)
-      {
         this.api.execSv(
         "WP",
         "ERM.Business.WP",
         "StoragesBusiness",
-        "InsertIntoStorageAsync",
+        "SaveStorageAsync",
         [this.itemSelected.recID, this.data.recID])
         .subscribe((res:any) => {
-          if (res)
-          {
-            if(this.listStorage.length == 0){
-              res.isActive = true;
-              this.itemSelected = res;
-            }
-            this.listStorage.push(res);
-            this.notifiSV.notifyCode("SYS006");
-            this.dialogRef.close();
-          }
-          else 
-            this.notifiSV.notifyCode("SYS023");
+          this.dialogRef.close();
           this.loading = false;
         });
-      }
     }
   }
   //select item
-  selectItem(item:any,index:number){
-    if(index > -1){
-      this.itemSelected = this.listStorage[index];
-      this.listStorage.map((x: any) => x.isActive = x.recID == item.recID);
-      this.dt.detectChanges();
-    }
+  selectedItem(event:any){
+    event.data.isActive = true;
+    this.itemSelected = JSON.parse(JSON.stringify(event.data));
+    this.dt.detectChanges();
   }
   //create storage
+
   createdStorage(dialogPopup: DialogRef) {
-    if(!this.loading)
-    {
-      if (!this.title) {
+    if(!this.loading){
+      if (this.title.trim() == "") {
         this.cache.message("SYS009").subscribe((mssg:any) =>{
           if(mssg){
             let messageCode = mssg.defaultName;
@@ -117,24 +86,26 @@ export class PopupSavePostComponent implements OnInit {
       else
       {
         this.loading = true;
-        this.api.execSv("WP", "ERM.Business.WP", "StoragesBusiness", "CreateStorageAsync", [this.title,this.storageType])
+        let data = {
+          recID: Util.uid(),
+          title:this.title,
+          storageType:'WP_Comments'
+        }
+        this.api.execSv(
+          "WP",
+          "ERM.Business.WP", 
+          "StoragesBusiness", 
+          "InsertAsync", 
+          [data])
           .subscribe((res: any) => {
             if (res){
-              var storage = {
-                recID: res.recID,
-                title: res.title,
-                isActive: false
-              }
-              if(this.listStorage.length == 0)
-                storage.isActive = true;
-              this.listStorage.push(storage);
-              this.notifiSV.notifyCode("SYS006");
-              dialogPopup.close();
+              (this.codxListView.dataService as CRUDService).add(res).subscribe();
+              this.itemSelected = JSON.parse(JSON.stringify(res));
+              this.dt.detectChanges();
             }
-            else 
-              this.notifiSV.notifyCode("SYS023");
             this.loading = false;
-            this.dt.detectChanges();
+            this.title = "";
+            dialogPopup.close();
           });
       }
     }
@@ -146,7 +117,6 @@ export class PopupSavePostComponent implements OnInit {
   }
   // value change
   valueChange(event: any) {
-    if (!event) return;
     this.title = event.data;
   }
 }

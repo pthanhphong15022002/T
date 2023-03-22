@@ -22,7 +22,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @Output() collapse = new EventEmitter<any>();
 
   @Input() groupID:any;
-
+  @Input() status:any;
   funcID:string = "WPT11"
   formModel:FormModel = null;
   grdViewSetUp:any = null;
@@ -127,6 +127,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     .subscribe((res:any) => {
       if(res){
         this.group = res;
+        this.group.isOnline = this.status;
         this.data.groupID = this.group.groupID;
       }
     })
