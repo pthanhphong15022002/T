@@ -67,6 +67,11 @@ export class CrmcustomerDetailComponent implements OnInit {
         { name: 'Offered', textDefault: 'Sản phẩm cung cấp', icon: 'icon-shopping_cart', isActive: false },
 
       ]
+    }else{
+      this.tabDetail = [
+        { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+        { name: 'Offered', textDefault: 'Sản phẩm cung cấp', icon: 'icon-shopping_cart', isActive: false },
+      ]
     }
   }
 
