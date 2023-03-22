@@ -84,8 +84,8 @@
             </ng-container>
         </div>
         <div class="chat-box-footer border-top bg-body aqua">
-            <div class="footer-emoji" ngbDropdown>
-                <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
+            <div class="footer-emoji me-3" ngbDropdown>
+                <span class="icon-tag_faces icon-22" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
                     <emoji-mart 
                         [set]="emojiMode" 
@@ -97,8 +97,8 @@
                     </emoji-mart>
                 </div>
             </div>
-            <div class="footer-attachments">
-                <span class="icon-photo icon-20" (click)="clickUploadFile()"></span>
+            <div class="footer-attachments me-3">
+                <span class="icon-photo icon-22" (click)="clickUploadFile()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATM 
@@ -115,6 +115,7 @@
                     </codx-attachment>
                 </div>
             </div>
+            <div class="w-100">
             <ng-container *ngIf="fileUpload.length == 0;else tmpUploadFile">
                 <div class="footer-message" (keyup.enter)="sendMessage()">
                     <codx-input 
@@ -127,7 +128,7 @@
                     </codx-input>
                 </div>
             </ng-container>
-            
+            </div>
             <ng-template #tmpUploadFile>
                 <div class="footer-upload min-h-50px">
                     <div class="footer-upload-files">
@@ -171,7 +172,7 @@
                 </div>
             </ng-template>
             <button type="button" class="footer-button btn btn-icon btn-circle btn-primary" (click)="sendMessage()">
-                <span class="icon-send icon-20" ></span>
+                <span class="icon-send icon-18" ></span>
             </button>
             
             
