@@ -105,7 +105,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     }
   }
   ngAfterViewInit(): void {
-    
     //receiver message
     this.signalR.reciverChat.subscribe((res:any) => {
       if(res.groupID === this.groupID)
@@ -169,9 +168,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           {
             let _messgae = res[0];
             this.arrMessages = _messgae.concat(this.arrMessages);
-            this.loading = false;
             this.dt.detectChanges();
           }
+          this.loading = false;
         });
     }
   }
@@ -280,27 +279,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
 
   // click files 
   clickViewFile(file){
-    // if (file) {
-    //   let _data = {
-    //     objectID:file.objectID,
-    //     recID:file.recID,
-    //     referType:file.referType
-    //   };
-    //   let option = new DialogModel();
-    //   option.FormModel = this.formModel;
-    //   option.IsFull = true;
-    //   option.zIndex = 999;
-    //   this.callFC.openForm(
-    //     PopupDetailComponent,
-    //     '',
-    //     0,
-    //     0,
-    //     '',
-    //     _data,
-    //     '',
-    //     option
-    //   );
-    // }
+    
   }
   //remove file
   removeFile(index:number){

@@ -235,27 +235,31 @@ export class PopupAddPostComponent implements OnInit {
     //       break
     //   };
     // }
-    switch(this.status){
-      case "create":
-        this.publishPost();
-        break;
-      case "edit":
-        this.editPost();
-        break;
-      case "share":
-        this.sharePost();
-        break;
-      default:
-        break
-    };
+    if(!this.loaded){
+      switch(this.status){
+        case "create":
+          this.publishPost();
+          break;
+        case "edit":
+          this.editPost();
+          break;
+        case "share":
+          this.sharePost();
+          break;
+        default:
+          break
+      };
+    }
   }
 
   // create Post 
   publishPost(){
+    this.loaded = true
     if (!this.data.content && this.codxViewFiles.files.length == 0) 
     {
+      this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
       this.loaded = false;
-      return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      return;
     }
     this.data.category = "1";
     this.data.approveControl = "0";
@@ -275,8 +279,7 @@ export class PopupAddPostComponent implements OnInit {
       "PublishPostAsync",
       [this.data])
       .subscribe((res1: any) => {
-        if (res1)
-        {
+        if (res1){
           // lưu files
           this.codxViewFiles.objectID = res1.recID;
           this.codxViewFiles.save().subscribe((res2)=>{
