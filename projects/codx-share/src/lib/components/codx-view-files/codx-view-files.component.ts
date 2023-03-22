@@ -211,11 +211,9 @@ export class CodxViewFilesComponent implements OnInit {
             return false;
           }
           return true;
-        }))
+        }));
       }
-      else{
-        return of(true);
-      }
+      else return of(true);
     }
   }
   // format file size
