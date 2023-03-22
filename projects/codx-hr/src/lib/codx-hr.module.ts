@@ -93,6 +93,7 @@ import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.compone
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
+import { ApprovelHrComponent } from './approvel-hr/approvel-hr.component';
 export const routes: Routes = [
   {
     path: '',
@@ -121,14 +122,19 @@ export const routes: Routes = [
           },
         ],
       },
+      
       // {
       //   path:'',
       //   component: LayoutComponent,
       //   children:[
       //     {
-      //       path: 'econtracts/:funcID',
-      //       component: EmployeeContractComponent,
-      //     }
+      //       path: 'approvals/:funcID',
+      //       loadChildren: () =>
+      //         import('projects/codx-hr/src/lib/codx-approvel.module').then(
+      //           (m) => m.CodxApprovelModule
+      //         ),
+      //       data: { noReuse: true },
+      //     },
       //   ]
       // },
       {
@@ -184,6 +190,14 @@ export const routes: Routes = [
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
           // },
+          {
+            path: 'approvals/:funcID',
+            loadChildren: () =>
+              import('projects/codx-hr/src/lib/codx-approvel.module').then(
+                (m) => m.CodxApprovelModule
+              ),
+            data: { noReuse: true },
+          },
 
           {
             path: 'setting',
@@ -243,6 +257,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
+  ApprovelHrComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,

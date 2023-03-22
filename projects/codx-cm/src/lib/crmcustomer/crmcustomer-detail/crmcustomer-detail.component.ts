@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { CRUDService } from 'codx-core';
+import { CallFuncService, CRUDService, DialogModel, FormModel } from 'codx-core';
+import { PopupQuickaddContactComponent } from '../popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'codx-crmcustomer-detail',
@@ -31,6 +32,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   tabDetail = [
   ]
   constructor(
+    private callFc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
@@ -56,7 +58,7 @@ export class CrmcustomerDetailComponent implements OnInit {
     }else if(funcID == 'CM0102'){
       this.tabDetail = [
         { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-        { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+        { name: 'Task', textDefault: 'Công việc', icon: 'icon-format_list_numbered', isActive: false },
         { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
         { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
       ]
@@ -89,5 +91,22 @@ export class CrmcustomerDetailComponent implements OnInit {
     this.clickMoreFunc.emit({e: e, data: data});
   }
 
-
+  clickAddContact(){
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CRMCustomers';
+    dataModel.gridViewName = 'grvCRMCustomers';
+    dataModel.entityName = 'CRM_Customers';
+    opt.FormModel = dataModel;
+    this.callFc.openForm(
+      PopupQuickaddContactComponent,
+      '',
+      500,
+      500,
+      '',
+      '',
+      '',
+      opt
+    );
+  }
 }

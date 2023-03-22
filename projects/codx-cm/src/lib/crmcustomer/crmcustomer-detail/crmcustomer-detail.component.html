@@ -3,7 +3,7 @@
     [footer]="tabs" (clickMF)="clickMF($event, dataSelected)">
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101' || funcID == 'CM0103' || funcID == 'CM0104'">
           <div class="me-3">
             <codx-img [objectId]="dataSelected.recID" [objectName]="dataSelected?.processName" objectType="AD_Users"
               [width]="35">
@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
+        <div *ngIf="funcID != 'CM0104'" [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
           <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
             <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
           </div>
@@ -167,6 +167,11 @@
           </div>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Contact'">
+          <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
+              <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+            </button>
+          </div>
           <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Task'">

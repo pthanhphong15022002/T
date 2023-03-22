@@ -218,17 +218,17 @@ textarea.codx-textarea {
     border-top-color: var(--border-light);
 }
 
-.e-grid .e-table,
-.e-grid .e-gridcontent,
-.e-grid .e-gridheader {
-    background-color: var(--bg-card) !important;
-}
+// .e-grid .e-table,
+// .e-grid .e-gridcontent,
+// .e-grid .e-gridheader {
+//     background-color: var(--bg-card) !important;
+// }
 
-.e-grid .e-gridheader {
-    border-bottom-color: #212529;
-    border-top-color: #dee2e6;
-    color: var(--text-des);
-}
+// .e-grid .e-gridheader {
+//     border-bottom-color: #212529;
+//     border-top-color: #dee2e6;
+//     color: var(--text-des);
+// }
 
 .btn.btn-outline-default {
     border-color: var(--border-gray);
@@ -335,23 +335,23 @@ codx-view-list-detail .codx-detail-footer {
     border-color: var(--border-gray) !important;
 }
 
-.e-grid .e-headercell,
-.e-grid .e-detailheadercell {
-    background-color: var(--primary-darker) !important;
-    color: var(--text-title);
-}
+// .e-grid .e-headercell,
+// .e-grid .e-detailheadercell {
+//     background-color: var(--primary-darker) !important;
+//     color: var(--text-title);
+// }
 
-.e-row:hover .e-rowcell {
-    background-color: var(--primary-darker) !important;
-}
+// .e-row:hover .e-rowcell {
+//     background-color: var(--primary-darker) !important;
+// }
 
-.e-grid .e-rowcell {
-    border-color: var(--border-list) !important;
-}
+// .e-grid .e-rowcell {
+//     border-color: var(--border-list) !important;
+// }
 
-.e-grid .e-content {
-    background-color: var(--bg-card) !important;
-}
+// .e-grid .e-content {
+//     background-color: var(--bg-card) !important;
+// }
 
 .e-pane,
 .e-diagram {
@@ -564,13 +564,13 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
     color: var(--text-title);
 }
 
-.e-grid .e-rowcell {
-    color: var(--text-body) !important;
-}
+// .e-grid .e-rowcell {
+//     color: var(--text-body) !important;
+// }
 
-.e-grid td.e-active {
-    background: var(--primary-lightest);
-}
+// .e-grid td.e-active {
+//     background: var(--primary-lightest);
+// }
 
 .e-row:hover .e-rowcell {
     background-color: var(--primary-lighter) !important;

@@ -40,7 +40,7 @@
 
   <ng-template #listContacts let-data="item">
     <ng-container *ngFor="let item of data; index as i;">
-      <div (click)="changeContacts(i)"
+      <div (click)="changeContacts(i, item)"
         [ngClass]="i == this.currentContact.toString()?'user-nav-active':null"
         class="d-flex justify-content-between has-action-menu-od user-nav-item p-2">
         <div class="col-6">

@@ -146,6 +146,7 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
+
   edit(e, data) {
     this.loadscreen();
     if (data) {
@@ -175,6 +176,7 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
+
   copy(e, data) {
     this.loadscreen();
     if (data) {
