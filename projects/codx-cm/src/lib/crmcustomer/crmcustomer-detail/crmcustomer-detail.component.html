@@ -167,6 +167,11 @@
           </div>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Contact'">
+          <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
+              <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+            </button>
+          </div>
           <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Task'">
