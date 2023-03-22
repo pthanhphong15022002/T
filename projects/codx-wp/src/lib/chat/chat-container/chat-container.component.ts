@@ -64,7 +64,6 @@ export class ChatContainerComponent implements OnInit {
   }
   // handle box chat
   handleBoxChat(data:any){
-    debugger
     let isOpen = this.lstGroupActive.some(x => x.groupID == data.groupID);
     let index = this.lstGroupCollapse.findIndex(x => x.groupID === data.groupID);
     if(isOpen) return ;

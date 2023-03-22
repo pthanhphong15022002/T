@@ -132,7 +132,7 @@
             <ng-template #tmpUploadFile>
                 <div class="footer-upload bg-body mh-100px overflow-auto">
                     <div class="footer-upload-files d-flex flex-wrap">
-                        <ng-container *ngFor="let item of fileUpload">
+                        <ng-container *ngFor="let item of fileUpload;let i = index">
                             <div class="upload-files-item cursor-pointer">
                                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
                                     <codx-temp-full 
@@ -156,6 +156,9 @@
                                         [descLine]="2">
                                     </codx-temp-full>
                                 </ng-container>
+                                <div class="upload-files-item_remove cursor-pointer" (click)="removeFile(i)">
+                                    <i class="icon-close icon-18 text-danger"></i>
+                                </div>
                             </div>
                         </ng-container>
                     </div>

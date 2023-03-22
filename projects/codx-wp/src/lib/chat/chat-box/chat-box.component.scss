@@ -141,4 +141,11 @@ codx-chat-box.active{
     height: 25px;
     margin-right: 5px;
     margin-bottom: 5px;
+    position: relative;
+}
+//lộc css tạm button xóa
+.upload-files-item_remove{
+    position: absolute;
+    top: 0;
+    right: -15px;
 }
