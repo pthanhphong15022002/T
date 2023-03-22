@@ -27,7 +27,7 @@
             <div class="group-infor w-100">
                 <div class="group-infor_name w-100">
                     <div class="fw-bold fs-6">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</div>
-                    <div class="mb-1">
+                    <div class="mt-1">
                         <codx-tag 
                             [isEdit]="false"  
                             [value]="group.tagValue" 
@@ -83,9 +83,9 @@
                 </div>  
             </ng-container>
         </div>
-        <div class="chat-box-footer border-top bg-body aqua">
-            <div class="footer-emoji" ngbDropdown>
-                <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
+        <div class="chat-box-footer border-top bg-body">
+            <div class="footer-emoji me-2" ngbDropdown>
+                <span class="icon-tag_faces icon-22" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
                     <emoji-mart 
                         [set]="emojiMode" 
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="footer-attachments">
-                <span class="icon-photo icon-20" (click)="clickUploadFile()"></span>
+                <span class="icon-photo icon-22" (click)="clickUploadFile()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATM 
@@ -115,23 +115,24 @@
                     </codx-attachment>
                 </div>
             </div>
+            <div class="w-100 px-3">
             <ng-container *ngIf="fileUpload.length == 0;else tmpUploadFile">
                 <div class="footer-message" (keyup.enter)="sendMessage()">
                     <codx-input 
                         type="textarea"
                         format="ed2" 
-                        [rows]="2"
-                        [class]="'border-0 rounded-pill px-4'" 
+                        [rows]="1"
+                        [class]="'rounded-pill'" 
                         [crrValue]="data.message"
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </ng-container>
-            
+            </div>
             <ng-template #tmpUploadFile>
-                <div class="footer-upload min-h-50px">
-                    <div class="footer-upload-files">
-                        <ng-container *ngFor="let item of fileUpload">
+                <div class="footer-upload bg-body mh-100px overflow-auto">
+                    <div class="footer-upload-files d-flex flex-wrap px-2">
+                        <ng-container *ngFor="let item of fileUpload;let i = index">
                             <div class="upload-files-item cursor-pointer">
                                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
                                     <codx-temp-full 
@@ -155,27 +156,27 @@
                                         [descLine]="2">
                                     </codx-temp-full>
                                 </ng-container>
+                                <div class="upload-files-item_remove cursor-pointer" (click)="removeFile(i)">
+                                    <i class="icon-close icon-18 text-danger"></i>
+                                </div>
                             </div>
                         </ng-container>
                     </div>
-                    <div class="footer-upload-text w-150px" (keyup.enter)="sendMessage()">
+                    <div class="footer-upload-text px-2" (keyup.enter)="sendMessage()">
                         <codx-input 
                             type="textarea"
                             format="ed2" 
-                            [rows]="2"
-                            [class]="'border-0 rounded-pill px-4'" 
+                            [rows]="1"
+                            [class]="'rounded-pill px-4'" 
                             [crrValue]="data.message"
                             (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
                 </div>
             </ng-template>
-            <button type="button" class="footer-button btn btn-icon btn-circle btn-primary" (click)="sendMessage()">
-                <span class="icon-send icon-20" ></span>
+            <button type="button" class="footer-button btn btn-icon btn-circle btn-light" (click)="sendMessage()">
+                <span class="icon-send icon-16"></span>
             </button>
-            
-            
         </div>
-        
     </div>
 </ng-container>
