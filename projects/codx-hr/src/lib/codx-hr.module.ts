@@ -88,12 +88,12 @@ import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-b
 import { PopupEbenefitComponent } from './employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
-import { ApprovelComponent } from './approvel/approvel.component';
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
+import { ApprovelHrComponent } from './approvel-hr/approvel-hr.component';
 export const routes: Routes = [
   {
     path: '',
@@ -257,7 +257,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  ApprovelComponent,
+  ApprovelHrComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
