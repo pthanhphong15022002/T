@@ -30,9 +30,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './task-group.component.html',
   styleUrls: ['./task-group.component.css'],
 })
-export class TaskGroupComponent extends UIComponent
-  implements OnInit {
-
+export class TaskGroupComponent extends UIComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
   @ViewChild('itemTaskGroupID', { static: true })
@@ -69,7 +67,7 @@ export class TaskGroupComponent extends UIComponent
   @ViewChild('itemExtendControl', { static: true })
   itemExtendControl: TemplateRef<any>;
   @ViewChild('itemConfirmControl', { static: true })
-  itemConfirmControl: TemplateRef<any>; 
+  itemConfirmControl: TemplateRef<any>;
 
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
@@ -116,7 +114,7 @@ export class TaskGroupComponent extends UIComponent
     fontWeight: 400,
     lineHeight: 1.4,
   };
-  titleAction=''
+  titleAction = '';
 
   onInit(): void {
     this.columnsGrid = [
@@ -158,18 +156,19 @@ export class TaskGroupComponent extends UIComponent
         text: 'more 2',
       },
     ];
-
-
   }
 
   clickMF(e: any, data?: any) {
-    this.titleAction = e?.text
+    this.titleAction = e?.text;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
         break;
       case 'SYS03':
         this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -229,7 +228,7 @@ export class TaskGroupComponent extends UIComponent
 
   //#region Events
   buttonClick(evt: ButtonModel) {
-    this.titleAction = evt?.text
+    this.titleAction = evt?.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -241,6 +240,9 @@ export class TaskGroupComponent extends UIComponent
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -270,32 +272,18 @@ export class TaskGroupComponent extends UIComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopAddTaskgroupComponent,
-        ['add',this.titleAction],
+        ['add', this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-        if (e?.event && e?.event != null) {
-          var objectData = this.view.dataService.data;
-          var object = {};
-          // for(var i=0; i< objectData.length; i++){
-          //   if(objectData[i][i]!==undefined) {
-          //     object[i] = objectData[i][i];
-          //     objectData[i] = object[i];
-          //   }
-          // }
-          this.view.dataService.data = e?.event.concat(
-            objectData
-          );
+        if (e && e.event != null) {
+          this.view.dataService.update(e.event).subscribe();
           this.detectorRef.detectChanges();
         }
+
       });
     });
   }
@@ -311,28 +299,43 @@ export class TaskGroupComponent extends UIComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
+        this.dialog = this.callfc.openSide(
           PopAddTaskgroupComponent,
-          ['edit',this.titleAction],
+          ['edit', this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          // if (e?.event == null)
-          // this.view.dataService.delete(
-          //   [this.view.dataService.dataSelected],
-          //   false
-          // );
           if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
+            this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
           }
-        })
+        });
       });
   }
 
+  copy(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfc.openSide(
+        PopAddTaskgroupComponent,
+        ['copy', this.titleAction],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
+      });
+    });
+  }
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -340,8 +343,8 @@ export class TaskGroupComponent extends UIComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }

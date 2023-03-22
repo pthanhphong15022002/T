@@ -56,7 +56,9 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
     padding-top: 5px;
     clear: both;
 }
-
+.e-dlg-content .listuser-box{
+  max-height: 395px;
+}
 codx-tasks {
   height: 100%;
 }

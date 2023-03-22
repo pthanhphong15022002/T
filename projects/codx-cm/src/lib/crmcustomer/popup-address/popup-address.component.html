@@ -1,13 +1,13 @@
-<div class="p-5">
+<div class="container-body p-5">
   <div class="d-flex justify-content-between mb-4">
-    <div class="h2">
+    <div class="h3">
       <codx-label name="lblAddress" [formModel]="dialog.formModel" default="Thêm địa chỉ"></codx-label>
     </div>
     <div class="d-flex justify-content-end">
       <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
     </div>
   </div>
-  <div class="d-flex flex-column mb-4">
+  <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
     <div class="form-group">
       <codx-label fiedName="AddressType" [formModel]="dialog.formModel" default="Loại địa chỉ"></codx-label>
       <codx-input type="valuelist" [crrValue]="data?.addressType" [formModel]="dialog.formModel" field="addressType">

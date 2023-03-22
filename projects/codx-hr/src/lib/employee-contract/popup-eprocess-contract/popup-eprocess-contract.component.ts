@@ -213,13 +213,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'effectedDate': {
           this.data.effectedDate = event.data;
           this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'signerID': {
@@ -252,10 +252,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     }
   }
 
-  setExpiredDate() {
+  setExpiredDate(month) {
     if (this.data.effectedDate) {
       let date = new Date(this.data.effectedDate);
-      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
       this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
@@ -337,11 +337,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     popupSubContract.closed.subscribe((res) => {
       if (res.event) {
         if(actionType == 'add'){
+          if(!this.lstSubContract){
+            this.lstSubContract = []
+          }
           this.lstSubContract.push(res.event[0]);
           this.df.detectChanges();
         }
         else if(actionType == 'edit'){
-          debugger
           let index = this.lstSubContract.indexOf(data);
           this.lstSubContract[index] = res.event[0];
           this.df.detectChanges();

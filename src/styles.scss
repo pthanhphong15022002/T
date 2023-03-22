@@ -1902,4 +1902,20 @@ codx-header #chat-box{
   padding-top: 0!important;
   padding-bottom: 0!important;
 }
+
+.instance-select{
+  codx-input{
+    width:180px;
+  }
+  .e-input-group{
+    border: 0!important;
+  }
+  .e-ddl.e-popup-open span{
+    margin-left: -15px;
+  }
+}
 /// 14/2/2023 
+/// 
+codx-chat-container{
+  height: 5px;
+}

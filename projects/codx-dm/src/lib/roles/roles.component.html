@@ -21,7 +21,7 @@
                         </codx-temp-full>
                       </ng-template>
                       <ng-template #elsethenAvatar1>
-                        <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                        <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" [imageReferType]="'avt2'"
                           imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
                           [title]="perm.objectName">
                         </codx-temp-full>
@@ -41,8 +41,8 @@
             </ng-container>
           </div>
         </div>
-        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
-          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="(!fileEditing?.assign || propertiesFolder)?'dm-div-disable':null">
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
             (valueChange)="onSaveRole($event)">
           </codx-input>
         </div>

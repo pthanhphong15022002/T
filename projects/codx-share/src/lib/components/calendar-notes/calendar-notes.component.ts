@@ -86,7 +86,7 @@ export class CalendarNotesComponent
   EP_BookingCarsTemp: any = [];
   dataListViewTemp: any;
   dtService: CRUDService;
-
+  curHoverItem;
   //transtype list
   lstTransType: tmpTransType[] = [];
   lstWeekEvents = [];
@@ -1304,5 +1304,12 @@ export class CalendarNotesComponent
       dataValue: item.transID,
     };
     this.codxService.openUrlNewTab(item.functionID, '', query);
+  }
+
+  curPopup;
+  quickInfo(item) {
+    console.log('item', item);
+
+    this.curHoverItem = item;
   }
 }
