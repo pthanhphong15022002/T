@@ -26,7 +26,7 @@
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
       " hideMoreF="0" [permissions]="dispatch?.relations" [addPermissions]="listPermission" [formModel]="formModel" [dataSelected]="dispatch"
-      [idField]="'RecID'">
+      [idField]="'RecID'" [referType]="'source'">
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">

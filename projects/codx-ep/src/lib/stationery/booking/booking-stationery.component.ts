@@ -52,6 +52,7 @@ export class BookingStationeryComponent
   itemDetail;
   popupClosed = true;
   isAdmin: boolean;
+  approvalRule: any;
 
   constructor(
     private injector: Injector,
@@ -82,6 +83,15 @@ export class BookingStationeryComponent
         this.isAdmin = false;
       }
     });
+    this.codxEpService
+      .getEPStationerySetting('4')
+      .subscribe((approvalSetting: any) => {
+        if (approvalSetting) {
+          this.approvalRule = JSON.parse(
+            approvalSetting.dataValue
+          )[0]?.ApprovalRule;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -487,22 +497,53 @@ export class BookingStationeryComponent
   }
 
   allocate(data: any) {
-    if (this.isEmptyGuid(data?.approvalTransRecID)) {
-      this.api
-        .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data.recID])
-        .subscribe((trans: any) => {
-          trans.map((item: any) => {
-            if (item.stepType === 'I') {
-              this.codxEpService
-                .approve(
-                  item.recID, //ApprovelTrans.RecID
-                  '5',
-                  '',
-                  ''
-                )
-                .subscribe();
-            }
+    if (this.approvalRule) {
+      //if (this.isEmptyGuid(data?.recID)) {
+        this.api
+          .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [
+            data?.recID,
+          ])
+          .subscribe((trans: any) => {
+            trans.map((item: any) => {
+              if (item.stepType === 'I') {
+                this.codxEpService
+                  .approve(
+                    item.recID, //ApprovelTrans.RecID
+                    '5',
+                    '',
+                    ''
+                  )
+                  .subscribe((res: any) => {
+                    if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                      this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                      data.issueStatus = '3';
+                      this.view.dataService.update(data).subscribe();
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                    }
+                  });
+              }
+            });
           });
+      //}
+    } else {
+      this.api
+        .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])
+        .subscribe((dataItem: any) => {
+          if (dataItem) {
+            this.codxEpService
+              .getBookingByRecID(dataItem.recID)
+              .subscribe((booking) => {
+                this.view.dataService.update(booking).subscribe((res) => {
+                  if (res) {
+                    this.notificationsService.notifyCode('SYS034');
+                  }
+                });
+              });
+            this.detectorRef.detectChanges();
+          }else{
+            this.notificationsService.notifyCode('SYS001');
+          }
         });
     }
   }

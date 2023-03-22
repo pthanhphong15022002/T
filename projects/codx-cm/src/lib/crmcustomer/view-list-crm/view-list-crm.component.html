@@ -1,10 +1,5 @@
 <div class="pt-3 px-5 rounded-2" *ngIf="dataSelected">
-  <div *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
-    <ng-container [ngTemplateOutlet]="customers"></ng-container>
-  </div>
-  <div *ngIf="funcID == 'CM0102'">
-    <ng-container [ngTemplateOutlet]="contacts"></ng-container>
-  </div>
+  <ng-container [ngTemplateOutlet]="customers"></ng-container>
 </div>
 
 <ng-template #customers>
@@ -12,23 +7,44 @@
     <div class="col-4 justify-content-start">
       <codx-temp-full cardCss="card-template p-3 list-task" [imageId]="dataSelected.recID"
         [imageObjName]="dataSelected?.processName" [imageWidth]="40" imgCss="me-3" imageObjType="AD_Users"
-        [title]="dataSelected.processName" [titleCss]="'fs-6'" [descTmp]="descTmp" [formModel]="formModel"
-        [dataItem]="dataSelected" [hideMF]="true">
+        [titleTmp]="titleTmp" [titleCss]="'fs-6'" [descTmp]="descTmp" [formModel]="formModel" [dataItem]="dataSelected"
+        [hideMF]="true">
       </codx-temp-full>
+      <ng-template #titleTmp>
+        <div class="d-flex align-items-center mb-1 min-w-350px">
+          <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 me-2">
+            Trần Đoàn Tuyết Khanh
+          </div>
+          <div class="d-flex align-items-center" *ngIf="funcID == 'CM0102'">
+            <span class="icon-person_outline text-danger icon-16 me-1"></span>
+          </div>
+        </div>
+      </ng-template>
       <ng-template #descTmp>
         <div class="d-flex flex-column">
+          <div class="d-flex align-items-start me-4 mb-1" *ngIf="funcID == 'CM0102'">
+            <div class="me-3">
+              <span class="icon-phone_android text-primary icon-16 me-1"></span>
+              <span class="text-gray-900">0702411141</span>
+            </div>
+            <div>
+              <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+              <span class="text-gray-900">tdnphuck42@gmail.com</span>
+            </div>
+          </div>
           <div class="">
             <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
             <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
           </div>
-          <div>
+          <div *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
             tag
           </div>
         </div>
       </ng-template>
     </div>
     <div class="col-4 d-flex align-items-center justify-content-center">
-      <div class="d-flex">
+      <div *ngIf="funcID == 'CM0102' || funcID == 'CM0104'">Tag</div>
+      <div class="d-flex" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <div class="me-3">
           <codx-img [objectId]="'ADMIN'" [objectName]="dataSelected?.processName" objectType="AD_Users" [width]="35">
           </codx-img>
@@ -54,84 +70,34 @@
 
     </div>
     <div class="col-4 d-flex align-items-center">
-      <div class="col-8 d-flex justify-content-end">
+      <div class="col-8 d-flex justify-content-end"
+        *ngIf="funcID == 'CM0101'|| funcID == 'CM0102' || funcID == 'CM0103'">
         <span class="icon-18 me-1" [class]="'1' | vll : vllPriority : 'icon' | async" [style.color]="
   '1' | vll : vllPriority : 'textColor' | async
 ">
         </span>
       </div>
-      <div class="col-4 d-flex justify-content-end">
-        <div *ngIf="funcID == 'CM0101'">
-          <span class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
-          <span class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
-          <span class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
-          <span class="icon-shopping_bag icon-18 text-gray-700 me-2">0</span>
-        </div>
-        <div *ngIf="funcID == 'CM0103'">
-          <span class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
-          <span class="icon-shopping_cart icon-18 text-gray-700 me-2">0</span>
-
-        </div>
-        <div class="w-10px min-w-10px">
-          <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, dataSelected)" [isBookMark]="false"
-            [dataItem]="dataSelected" type="hover">
-          </codx-mfunc>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #contacts>
-  <div class="d-flex justify-content-between border-bottom">
-    <div class="col-4 justify-content-start">
-      <codx-temp-full cardCss="card-template p-3 list-task" [imageId]="dataSelected.recID"
-        [imageObjName]="dataSelected?.processName" [imageWidth]="40" imgCss="me-3" imageObjType="AD_Users"
-        [titleTmp]="titleTmp" [titleCss]="'fs-6'" [descTmp]="descTmp" [formModel]="formModel" [dataItem]="dataSelected" [hideMF]="true">
-      </codx-temp-full>
-      <ng-template #titleTmp>
-        <div class="d-flex align-items-center mb-1 min-w-350px">
-          <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 me-2">
-            Trần Đoàn Tuyết Khanh
-          </div>
-          <div class="d-flex align-items-center">
-            <span class="icon-person_outline text-danger icon-16 me-1"></span>
-          </div>
-        </div>
-      </ng-template>
-      <ng-template #descTmp>
-        <div class="d-flex flex-column">
-          <div class="d-flex align-items-start me-4 mb-1">
-            <div class="me-3">
-              <span class="icon-phone_android text-primary icon-16 me-1"></span>
-              <span class="text-gray-900">0702411141</span>
-            </div>
-            <div>
-              <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
-              <span class="text-gray-900">tdnphuck42@gmail.com</span>
-            </div>
-          </div>
-          <div class="">
-            <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-            <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
-          </div>
-        </div>
-      </ng-template>
-    </div>
-    <div class="col-4 d-flex align-items-center justify-content-center">
-      tag
-    </div>
-    <div class="col-4 d-flex align-items-center">
-      <div class="col-8 d-flex justify-content-end">
-        <span class="icon-18 me-1" [class]="'1' | vll : vllPriority : 'icon' | async" [style.color]="
-  '1' | vll : vllPriority : 'textColor' | async
-">
+      <div class="col-8 d-flex justify-content-end"
+        *ngIf="funcID == 'CM0104'">
+        <span class="icon-star icon-18 me-2" >
+        </span>
+        <span class="icon-star_border icon-18" >
         </span>
       </div>
       <div class="col-4 d-flex justify-content-end">
-        <span class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
-        <span class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
-        <span class="icon-shopping_bag icon-18 text-gray-700 me-2">0</span>
+        <div>
+          <span *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+            class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
+          <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+            class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
+          <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+            class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
+          <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+            class="icon-shopping_bag icon-18 text-gray-700 me-2">0</span>
+          <span *ngIf="funcID == 'CM0103' || funcID == 'CM0104'"
+            class="icon-shopping_cart icon-18 text-gray-700 me-2">0</span>
+
+        </div>
         <div class="w-10px min-w-10px">
           <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, dataSelected)" [isBookMark]="false"
             [dataItem]="dataSelected" type="hover">
