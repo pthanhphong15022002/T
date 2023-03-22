@@ -26,6 +26,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { CheckIns } from '../../model/okr.model';
 
 
 @Component({
@@ -61,6 +62,9 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.dialogRef = dialogRef;    
     this.oldDataKR = dialogData.data[0];    
     this.checkIns = dialogData.data[2];    
+    this.checkIns.value = 0;   
+    this.checkIns.cummulated = 0;   
+    this.checkIns.status='1';  
   }
 //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -74,14 +78,10 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.formModel.entityPer = 'OM_OKRs.CheckIns';
     this.formModel.gridViewName = 'grvOKRs.CheckIns';
     this.formModel.formName = 'OKRs.CheckIns';
-    this.fCheckinKR=this.codxService.buildFormGroup(this.formModel.formName,this.formModel.gridViewName);
+    this.fCheckinKR=this.codxService.buildFormGroup(this.formModel.formName,this.formModel.gridViewName);    
     this.fCheckinKR.patchValue(this.checkIns);
     this.getCacheData();
-    // this.codxOmService.getCheckInModel().subscribe(check=>{
-    //   if(check){
-    //     this.checkInData=check;
-    //   }
-    // })
+    
 
   }
   //---------------------------------------------------------------------------------//

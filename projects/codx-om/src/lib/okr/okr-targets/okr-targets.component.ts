@@ -611,7 +611,7 @@ export class OkrTargetsComponent implements OnInit {
       [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res && res?.event.length > 0) {
+      if (res?.event && res?.event.length > 0) {
         this.caculatorPlanInBackground(res?.event);
       }
     });

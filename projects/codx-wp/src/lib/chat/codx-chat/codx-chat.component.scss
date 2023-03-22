@@ -4,17 +4,19 @@
 }
 
 .chat-list{
-    padding: 4px 8px;
+    padding: 5px;
 }
 .chat-list-header{
     border-bottom: 1px var(--gray-150) solid;
     padding-bottom: 5px;
 }
+
 .chat-list-body{
     height: auto !important;
     max-height: 480px;
     overflow: auto;
-    padding-right: 5px;
+    padding-right: 4px;
+    padding-top: 4px;
 }
 .chat-list-header_func{
     margin: 0px;

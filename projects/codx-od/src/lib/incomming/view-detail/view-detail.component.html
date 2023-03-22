@@ -157,8 +157,9 @@
                         }}
                       </div>
                     </div>
+                    <codx-imgs [referType]=""></codx-imgs>
                     <div class="d-flex align-items-center">
-                      <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'" [title]="item?.employeeName"
+                      <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'" [imageReferType]="'avt2'" [title]="item?.employeeName"
                         [subTitle]="item?.positionName" [desc]="
                           getSubTitle(
                             item.relationType,

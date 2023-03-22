@@ -1,0 +1,43 @@
+<ng-container *ngIf="modelShares?.length > 0">
+  <ng-container *ngIf="modelShares[0].objectType === 'U'; else elseBlock">
+    <codx-imgs
+      [width]="30"
+      [objectId]="getIds()"
+      objectType="AD_Users"
+      [numberImages]="4"
+    >
+    </codx-imgs>
+  </ng-container>
+  <ng-template #elseBlock>
+    <div ngbDropdown>
+      <div
+        class="text-truncate hover-effect p-1"
+        role="button"
+        ngbDropdownToggle
+      >
+        <span
+          *ngFor="let c of modelShares"
+          class="badge badge-pill badge-secondary me-2"
+        >
+          {{ c.text }}
+        </span>
+      </div>
+
+      <div ngbDropdownMenu class="p-3">
+        <div class="mb-2">
+          <codx-label
+            field="lblUserGroups"
+            [formModel]="formModel"
+            default="Danh sách nhóm người dùng"
+          ></codx-label>
+          <span class="fw-bold"> ({{ modelShares.length }})</span>
+        </div>
+        <codx-searchbar class="mb-2"></codx-searchbar>
+        <div class="list-view">
+          <ejs-listview id="listview" [dataSource]="modelShares">
+          </ejs-listview>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

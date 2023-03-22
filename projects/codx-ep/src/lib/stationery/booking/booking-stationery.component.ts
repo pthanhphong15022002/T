@@ -498,10 +498,10 @@ export class BookingStationeryComponent
 
   allocate(data: any) {
     if (this.approvalRule) {
-      if (this.isEmptyGuid(data?.approvalTransRecID)) {
+      //if (this.isEmptyGuid(data?.recID)) {
         this.api
           .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [
-            data.recID,
+            data?.recID,
           ])
           .subscribe((trans: any) => {
             trans.map((item: any) => {
@@ -516,7 +516,7 @@ export class BookingStationeryComponent
                   .subscribe((res: any) => {
                     if (res?.msgCodeError == null && res?.rowCount >= 0) {
                       this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                      data.approveStatus = '5';
+                      data.issueStatus = '3';
                       this.view.dataService.update(data).subscribe();
                     } else {
                       this.notificationsService.notifyCode(res?.msgCodeError);
@@ -525,7 +525,7 @@ export class BookingStationeryComponent
               }
             });
           });
-      }
+      //}
     } else {
       this.api
         .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])
