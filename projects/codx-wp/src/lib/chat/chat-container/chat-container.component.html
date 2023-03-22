@@ -2,8 +2,9 @@
     <div class="chat-container-boxchat" id="chat-container-boxchat">
         <ng-container *ngFor="let item of lstGroupActive">
             <codx-chat-box #codxChatBox 
-                [id]="item" 
-                [groupID]="item" 
+                [id]="item.groupID" 
+                [groupID]="item.groupID" 
+                [status]="item.isOnline"
                 (close)="closeBoxChat(item,codxChatBox)"
                 (collapse)="collapseBoxChat(item,codxChatBox)">
             </codx-chat-box>
@@ -18,14 +19,14 @@
                             <span>+{{lstGroupCollapse.length - 6}}</span>
                         </div>
                     </ng-container>
-                    <div class="" (click)="expanseBoxChat(item)" placement="start" [ngbTooltip]="tramchoa">
+                    <div class="" (click)="expanseBoxChat(item)" placement="start" [ngbTooltip]="tooltipMssage">
                         <codx-img
                             [objectId]="item.objectID" 
                             [objectName]="item.objectName" 
                             [objectType]="item.objectType" 
                             [width]="40">
                         </codx-img>
-                        <ng-template #tramchoa>
+                        <ng-template #tooltipMssage>
                             <div class="w-200px p-2 text-start overflow-hidden">
                                 <p class="fw-bolder">{{item.objectName}}</p>
                                 <p class="message ">{{item.message}}</p>

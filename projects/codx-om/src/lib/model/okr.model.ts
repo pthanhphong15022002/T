@@ -77,10 +77,6 @@ export class OKRs {
     status:string;
     comment:string;
     positionName:string;
-    createdOn:Date;
-    createdBy:string;
-    modifiedOn:Date;
-    modifiedBy:string;
   }
   export class Shares{
     
