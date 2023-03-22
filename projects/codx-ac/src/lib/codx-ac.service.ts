@@ -21,12 +21,15 @@ export class CodxAcService {
         });
     });
   }
+
   loadData(assemblyName: any, className: any, methodName: any, data: any) {
     return this.api.exec(assemblyName, className, methodName, data);
   }
+
   addData(assemblyName: any, className: any, methodName: any, data: any) {
     return this.api.exec(assemblyName, className, methodName, data);
   }
+
   checkDataContactAddress(
     assemblyName: any,
     className: any,
@@ -42,12 +45,13 @@ export class CodxAcService {
     let aMemo = [];
 
     if (master.memo) aMemo = master.memo.split('-');
-    if (aMemo.length == 0) return '';
+    if (aMemo.length == 0) return text;
 
     aMemo[idx] = text;
 
     for (let i = 0; i < aMemo.length; i++) {
-      newMemo += aMemo[i] + ' ';
+      if (i == aMemo.length - 1) newMemo += aMemo[i].trim();
+      else newMemo += aMemo[i].trim() + ' - ';
     }
     return newMemo;
   }

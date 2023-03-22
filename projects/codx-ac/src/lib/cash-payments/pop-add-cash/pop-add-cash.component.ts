@@ -73,10 +73,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ];
   constructor(
     private inject: Injector,
-    cache: CacheService,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef,
@@ -149,12 +147,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
-
-  // objectChanged(e: any) {
-  //   this.cashpayment.objectID = '';
-  //   this.cashpayment[e.field] = e.data;
-  //   this.cashpaymentline = [];
-  // }
 
   changeType(e: any) {
     switch (e.data) {
@@ -232,13 +224,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         e.field.toLowerCase() === 'payee'
       ) {
         let idx = 0;
-        let text = e.component.itemsSelected[0].text;
-        if (e.field.toLowerCase() === 'payee') idx = 1;
+        let text = e?.component?.itemsSelected[0]?.TextName;
+        if (e.field.toLowerCase() === 'payee') {
+          idx = 1;
+          text = e.data;
+        }
         this.cashpayment.memo = this.acService.setMemo(
           this.cashpayment,
           text,
           idx
         );
+        this.form.formGroup.patchValue(this.cashpayment);
       }
     }
   }
@@ -460,8 +456,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (e) {
             let field = Util.camelize(e);
             this.grid.rowDataSelected[field] = data[field];
+            this.grid.rowDataSelected = { ...this.grid.rowDataSelected };
             this.grid.rowDataSelected.updateColumns = '';
-            this.grid.gridRef.refreshColumns();
           }
         });
       }
