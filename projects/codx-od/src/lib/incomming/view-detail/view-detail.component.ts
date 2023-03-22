@@ -65,6 +65,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   active = 1;
   checkUserPer: any;
   userID: any;
+  referType = 'source'
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() pfuncID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
@@ -144,7 +145,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
       //this.getDataValuelist();
-      this.getPermission(this.data.recID);
+      if(this.data.recID)
+      {
+        this.getPermission(this.data.recID);
+      }
       this.ref.detectChanges();
     }
     if (
@@ -489,7 +493,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               //this.view.dataService.update(x.event).subscribe();
 
               this.odService
-                .getDetailDispatch(x.event.recID, this.formModel?.entityName)
+                .getDetailDispatch(x.event.recID, this.formModel?.entityName,this.referType)
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
@@ -517,7 +521,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               this.odService
                 .getDetailDispatch(
                   this.view.dataService.data[0].recID,
-                  this.view.formModel.entityName
+                  this.view.formModel.entityName,
+                  this.referType
                 )
                 .subscribe((item) => {
                   this.data = formatDtDis(item);
@@ -830,7 +835,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT5101': {
         if (isData) {
           this.odService
-            .getDetailDispatch(datas.recID, this.formModel.entityName)
+            .getDetailDispatch(datas.recID, this.formModel.entityName,this.referType)
             .subscribe((item) => {
               if (item) {
                 this.documentApproval(item);
@@ -853,7 +858,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
                 this.odService
-                  .getDetailDispatch(datas.recID, this.formModel.entityName)
+                  .getDetailDispatch(datas.recID, this.formModel.entityName,this.referType)
                   .subscribe((item) => {
                     //this.getChildTask(id);
                      //Có thiết lập bước duyệt

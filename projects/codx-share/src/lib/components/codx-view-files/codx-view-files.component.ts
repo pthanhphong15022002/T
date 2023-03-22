@@ -121,9 +121,7 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // add files
   addFiles(files:any[]){
-    debugger
-    if(Array.isArray(files))
-    {
+    if(Array.isArray(files)){
       files.map((f) => {
         if(f.mimeType.includes('image'))
         {
@@ -213,11 +211,9 @@ export class CodxViewFilesComponent implements OnInit {
             return false;
           }
           return true;
-        }))
+        }));
       }
-      else{
-        return of(true);
-      }
+      else return of(true);
     }
   }
   // format file size

@@ -316,7 +316,11 @@ ejs-listview .e-ul>li {
         border-color: var(--border-gray) !important;
     }
 }
-
+.WP_Comments{
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    padding: 4px;
+}
 .wp-contents {
     margin-top: 8px;
     margin-bottom: 8px;
