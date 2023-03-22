@@ -52,6 +52,7 @@ export class BookingStationeryComponent
   itemDetail;
   popupClosed = true;
   isAdmin: boolean;
+  approvalRule: any;
 
   constructor(
     private injector: Injector,
@@ -82,6 +83,15 @@ export class BookingStationeryComponent
         this.isAdmin = false;
       }
     });
+    this.codxEpService
+      .getEPStationerySetting('4')
+      .subscribe((approvalSetting: any) => {
+        if (approvalSetting) {
+          this.approvalRule = JSON.parse(
+            approvalSetting.dataValue
+          )[0]?.ApprovalRule;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -486,51 +496,56 @@ export class BookingStationeryComponent
     }
   }
 
-  allocate(evt: any) {
-    let warehouseID: string = evt.warehouseID;
-    this.codxEpService.getWarehousesOwner(warehouseID).subscribe((res) => {
-      if (
-        res[0] == this.authService.userValue.userID &&
-        !this.authService.userValue.administrator
-      ) {
-        this.codxEpService
-          .approve(
-            evt?.approvalTransRecID, //ApprovelTrans.RecID
-            '5',
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              this.api
-                .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [
-                  evt.recID,
-                ])
-                .subscribe((dataItem: any) => {
-                  if (dataItem) {
-                    this.codxEpService
-                      .getBookingByRecID(dataItem.recID)
-                      .subscribe((booking) => {
-                        this.view.dataService
-                          .update(booking)
-                          .subscribe((res) => {
-                            if (res) {
-                              this.notificationsService.notifyCode('SYS034');
-                            }
-                          });
-                      });
-                    this.detectorRef.detectChanges();
+  allocate(data: any) {
+    if (this.approvalRule) {
+      if (this.isEmptyGuid(data?.approvalTransRecID)) {
+        this.api
+          .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [
+            data.recID,
+          ])
+          .subscribe((trans: any) => {
+            trans.map((item: any) => {
+              if (item.stepType === 'I') {
+                this.codxEpService
+                  .approve(
+                    item.recID, //ApprovelTrans.RecID
+                    '5',
+                    '',
+                    ''
+                  )
+                  .subscribe((res: any) => {
+                    if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                      this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                      data.approveStatus = '5';
+                      this.view.dataService.update(data).subscribe();
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                    }
+                  });
+              }
+            });
+          });
+      }
+    } else {
+      this.api
+        .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])
+        .subscribe((dataItem: any) => {
+          if (dataItem) {
+            this.codxEpService
+              .getBookingByRecID(dataItem.recID)
+              .subscribe((booking) => {
+                this.view.dataService.update(booking).subscribe((res) => {
+                  if (res) {
+                    this.notificationsService.notifyCode('SYS034');
                   }
                 });
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      } else {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
-    });
+              });
+            this.detectorRef.detectChanges();
+          }else{
+            this.notificationsService.notifyCode('SYS001');
+          }
+        });
+    }
   }
 
   release(evt) {
@@ -621,4 +636,8 @@ export class BookingStationeryComponent
   }
 
   closeAddForm(event) {}
+
+  private isEmptyGuid(value: string) {
+    return value === '00000000-0000-0000-0000-000000000000';
+  }
 }

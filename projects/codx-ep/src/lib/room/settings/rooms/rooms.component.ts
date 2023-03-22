@@ -142,7 +142,7 @@ export class RoomsComponent extends UIComponent {
               field: 'equipments',
               template: this.equipmentsCol,
               // headerTextAlign: 'Center',
-              // textAlign: 'Center',
+              textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
@@ -294,7 +294,6 @@ export class RoomsComponent extends UIComponent {
           .copy(this.view.dataService.dataSelected)
           .subscribe((res) => {
             this.popupClosed = false;
-            this.dataSelected = this.view?.dataService?.dataSelected;
             let option = new SidebarModel();
             option.Width = '550px';
             option.DataService = this.view?.dataService;
