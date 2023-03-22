@@ -138,7 +138,7 @@
 </ng-template>
 
 <ng-template #contentTmp let-data>
-  <div>
+  <div (dblclick)="doubleClick(data)">
     <h5 [innerHTML]="
     data.meetingName | formatvalue : view.formModel : 'MeetingName' | async
     ">
