@@ -88,6 +88,7 @@ import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-b
 import { PopupEbenefitComponent } from './employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
+import { ApprovelComponent } from './approvel/approvel.component';
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
@@ -121,14 +122,19 @@ export const routes: Routes = [
           },
         ],
       },
+      
       // {
       //   path:'',
       //   component: LayoutComponent,
       //   children:[
       //     {
-      //       path: 'econtracts/:funcID',
-      //       component: EmployeeContractComponent,
-      //     }
+      //       path: 'approvals/:funcID',
+      //       loadChildren: () =>
+      //         import('projects/codx-hr/src/lib/codx-approvel.module').then(
+      //           (m) => m.CodxApprovelModule
+      //         ),
+      //       data: { noReuse: true },
+      //     },
       //   ]
       // },
       {
@@ -184,6 +190,14 @@ export const routes: Routes = [
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
           // },
+          {
+            path: 'approvals/:funcID',
+            loadChildren: () =>
+              import('projects/codx-hr/src/lib/codx-approvel.module').then(
+                (m) => m.CodxApprovelModule
+              ),
+            data: { noReuse: true },
+          },
 
           {
             path: 'setting',
@@ -243,6 +257,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
+  ApprovelComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,

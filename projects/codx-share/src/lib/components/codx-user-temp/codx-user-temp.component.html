@@ -37,17 +37,13 @@
           <div class="text-dark fw-bold">{{ item.resourceName }}</div>
           <div class="text-gray-700 fs-7">{{ item.positionName }}</div>
           <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
-          <div class="d-flex align-items-center mt-1" *ngIf="item.roleType == 'R'">
+          <div class="d-flex align-items-center justify-content-between mt-1" *ngIf="item.roleType == 'R'">
             <div class="d-flex align-items-end me-2 codx-badge">
-              <span>
-                <codx-vll [name]="'TM004'" [formModel]="formModel" [field]="'Status'" [value]="item?.status"
+              <codx-vll [name]="'TM004'" [formModel]="formModel" [field]="'Status'" [value]="item?.status"
                   [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
                 </codx-vll>
-              </span>
-              <span>
-                <span class="text-gray-700">{{item.dueDate | fmDT}}</span>
-              </span>
             </div>
+            <span class="text-gray-700">{{item.dueDate | fmDT}}</span>
           </div>
         </div>
       </div>

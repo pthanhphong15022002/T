@@ -2273,6 +2273,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.setIndex(this.stepList, 'stepNo');
+    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1; 
+    let end = event.previousIndex > event.currentIndex ? event.previousIndex + 1: event.currentIndex + 1;
+    let listID = this.stepList?.filter(step => step.stepNo >= start && step.stepNo <= end).map(stepFind => {
+      return stepFind.recID
+    });
+    if(listID?.length > 0){
+      listID?.forEach( id => {
+        let checkAdd = this.listStepAdd?.some(idAdd => idAdd == id);
+        let checkEdit = this.listStepEdit?.some(idEdit => idEdit == id);
+        if(!checkAdd && !checkEdit){
+          this.listStepEdit.push(id)
+        }
+      })
+    }
   }
 
   // Common
@@ -2311,6 +2325,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskList = this.step['tasks'];
       this.sumTimeStep();
     }
+  }
+
+  checkSaveNow(){
+    var checkGroup = this.lstGroup.some(
+      (x) => x.groupID == this.process?.groupID
+    );
+    return this.process.processName &&
+      this.process?.groupID &&
+      checkGroup && 
+      this.stepList?.length > 0
+      ? true
+      : false;
   }
 
   checkButtonContinue() {

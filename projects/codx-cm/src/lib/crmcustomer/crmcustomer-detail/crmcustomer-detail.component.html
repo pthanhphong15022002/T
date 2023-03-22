@@ -3,7 +3,7 @@
     [footer]="tabs" (clickMF)="clickMF($event, dataSelected)">
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101' || funcID == 'CM0103' || funcID == 'CM0104'">
           <div class="me-3">
             <codx-img [objectId]="dataSelected.recID" [objectName]="dataSelected?.processName" objectType="AD_Users"
               [width]="35">
@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
+        <div *ngIf="funcID != 'CM0104'" [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
           <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
             <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
           </div>
@@ -131,6 +131,32 @@
                 cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
               </div>
             </div>
+            <div class="mb-3" *ngIf="funcID == 'CM0104'">
+              <div class="mb-3">
+                <codx-label class="text-dark fw-bold" name="lblProsCons" [formModel]="formModel" default="Ưu / Nhược điểm">
+                </codx-label>
+              </div>
+              <div class="row">
+                <div class="col-6 row">
+                  <div class="col-6">
+                    <codx-label class="text-gray-300" fiedName="Advantage" default="Ưu điểm:"></codx-label>
+                  </div>
+                  <div class="col-6">
+                    Giá thành rẻ
+                    Chất lượng tốt
+                  </div>
+                </div>
+                <div class="col-6 row">
+                  <div class="col-6">
+                    <codx-label class="text-gray-300" fiedName="Disadvantage" default="Nhược điểm:"></codx-label>
+                  </div>
+                  <div class="col-6">
+                    Nhân viên khó chịu
+                    Giao hàng lâu
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="mb-3">
               <div class="mb-3">
                 <codx-label class="text-dark fw-bold" name="lblAddress" default="Thông tin địa chỉ">
@@ -141,6 +167,11 @@
           </div>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Contact'">
+          <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
+              <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+            </button>
+          </div>
           <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
         </ng-container>
         <ng-container *ngIf="nameDetail == 'Task'">
@@ -294,5 +325,5 @@
   </div>
 </ng-template>
 <ng-template #task let-data="value">
-  
+
 </ng-template>
