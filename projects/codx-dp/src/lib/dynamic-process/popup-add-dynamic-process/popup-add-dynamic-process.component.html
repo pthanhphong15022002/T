@@ -260,7 +260,7 @@
           <div class="left">
             <button
               type="button"
-              class="btn btn-primary me-3"
+              class="btn btn-outline-primary me-3"
               *ngIf="currentTab != 0"
               (click)="previous(currentTab)"
             >
@@ -273,7 +273,7 @@
             *ngIf="currentTab != 3"
             type="button"
             [ngClass]="checkSaveNow() ? '' : 'disabled'"
-            class="btn btn-primary me-5"
+            class="btn btn-outline-primary me-2"
             (click)="onSave()"
           >
             <codx-label
@@ -858,6 +858,7 @@
               <codx-input
                 field="closeInstanceControl"
                 type="number"
+                [min]="0"
                 [showSpinButton]="false"
                 [placeholder]="
                   gridViewSetup['CloseInstanceControl']?.description
@@ -1267,10 +1268,10 @@
     </h2>
     <button
       type="button"
-      class="btn btn-primary d-flex align-items-center me-2 btn-sm"
+      class="btn btn-sm btn-outline-primary"
        (click)="addTemplet()"
     >
-      <i class="icon-add icon-18"></i>
+      <i class="icon-add icon-14 text-primary ms-n1"></i>
       <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
     </button>
   </div>
@@ -1296,10 +1297,10 @@
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
           <button
             type="button"
-            class="btn btn-primary d-flex align-items-center me-2 btn-sm"
+            class="btn btn-sm btn-outline-primary"
             (click)="openPopupStep('add')"
           >
-            <i class="icon-add icon-18"></i>
+            <i class="icon-add icon-14 text-primary ms-n1"></i>
             <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
           </button>
         </div>
@@ -1445,7 +1446,7 @@
             <!-- more function step -->
           </div>
         </div>
-        <div class="stage-right-main pe-1">
+        <div class="stage-right-main pe-3">
           <ng-container
             [ngTemplateOutlet]="
               viewStepCrr === viewStepCustom
@@ -1847,7 +1848,7 @@
   <div class="d-flex justify-content-end">
     <button
       type="button"
-      class="btn btn-outline-primary me-5"
+      class="btn btn-outline-primary me-2"
       (click)="popupAddStage.close()"
     >
       <codx-label name="lblCancel" formName="Tasks" default="Hủy"></codx-label>
@@ -2878,7 +2879,7 @@
   <div class="d-flex justify-content-end">
     <button
       type="button"
-      class="btn btn-outline-primary me-5"
+      class="btn btn-outline-primary me-2"
       (click)="popupAddReason.close()"
     >
       <codx-label

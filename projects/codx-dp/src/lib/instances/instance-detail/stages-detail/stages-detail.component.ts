@@ -1051,7 +1051,7 @@ export class StagesDetailComponent implements OnInit {
           // giao viẹc
           case 'DP13':
             if (type == 'group') res.disabled = true;
-            if (data?.assignControl == '1') res.isblur = true;
+            if (data?.createTask) res.isblur = true;
             break;
         }
       });

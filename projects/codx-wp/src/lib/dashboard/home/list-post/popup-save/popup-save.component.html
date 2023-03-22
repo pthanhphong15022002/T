@@ -2,17 +2,18 @@
 <ng-template #body>
     <div class="storage-content">
         <div class="list-storage" >
-            <ng-container *ngIf="loaded;else empty">
-                <ng-container *ngIf="listStorage.length > 0;">
-                    <ng-container *ngFor="let item of listStorage;index as index">
-                        <div class="d-flex mb-1 px-3 py-2 rounded-1 bg-gray-100 justify-content-between align-items-center"
-                            (click)="selectItem(item,index)">
-                            <span class="fw-bold text-dark">{{item.title}}</span>
-                            <i class="icon-adjust icon-20" [style.color]="item.isActive?'#3578E5':'#c2c8ca'"></i>
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
+            <codx-listview #listview 
+                [funcId]="'WP'"
+                [service]="'WP'"
+                [assemblyName]="'ERM.Business.WP'" 
+                [className]="'StoragesBusiness'" 
+                [method]="'GetListStorageAsync'"
+                entityName="WP_Storages" 
+                [itemTemplate]="itemTemplate" 
+                [emptyTemplate]="empty"
+                [selectFirst]="true"
+                (onSelectionChanged)="selectedItem($event)">
+            </codx-listview>
         </div>
         <div class="btn-storage">
             <button class="btn btn-sm btn-light-primary" (click)="openPopupAdd()" type="button">
@@ -33,6 +34,12 @@
         </button>
     </div>
 </ng-template>
+<ng-template #itemTemplate let-item>
+    <div class="d-flex mb-1 px-3 py-2 rounded-1 bg-gray-100 justify-content-between align-items-center cursor-pointer">
+        <span class="fw-bold text-dark">{{item.title}}</span>
+        <i class="icon-adjust icon-20" [style.color]="item.recID == itemSelected.recID ?'#3578E5':'#c2c8ca'"></i>
+    </div>
+</ng-template>
 <!-- template empty -->
 <ng-template #empty>
     <div class="list-empty">
@@ -40,14 +47,18 @@
         <span>{{mssgNoData}}</span>
     </div>
 </ng-template>
-<ng-template #fromPopupAdd let-dialog>
+<ng-template #tmpPopupAdd let-dialog>
     <codx-form [body]="popupBody" [footer]="popupFooter" [headerText]="headerTextPopup" [dialog]="dialog"></codx-form>
     <ng-template #popupBody>
         <div class="form-group">
             <codx-label default="Tên kho">
             </codx-label>
-            <codx-input type="text" [placeholder]="'Tên kho lưu trữ'" [crrValue]="title"
-                (valueChange)="valueChange($event)"></codx-input>
+            <codx-input 
+                type="text" 
+                [placeholder]="'Tên kho lưu trữ'" 
+                [crrValue]="title"
+                (valueChange)="valueChange($event)">
+            </codx-input>
         </div>
     </ng-template>
     <ng-template #popupFooter>
