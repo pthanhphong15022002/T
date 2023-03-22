@@ -459,6 +459,6 @@ export class PopupAddPostComponent implements OnInit {
           if(_param["CopyFormat"] === "1")
             this.copyFormat = 'keepFormat';
         }
-      })
+      });
   }
 }
