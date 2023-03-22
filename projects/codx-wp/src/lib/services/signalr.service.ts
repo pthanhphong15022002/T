@@ -47,7 +47,6 @@ export class SignalRService {
     this.hubConnection.on('ReceiveMessage', (res) => {
       switch(res.action){
         case 'onConnected':
-          console.log('onConnected: ',res);
           break;
         case 'newGroup':
           this.newGroup.emit(res.data);
