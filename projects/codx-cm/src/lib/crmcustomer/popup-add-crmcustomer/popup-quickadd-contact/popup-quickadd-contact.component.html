@@ -1,0 +1,118 @@
+<div class="container-body p-5">
+  <div class="d-flex justify-content-between mb-4">
+    <div class="h3">
+      <codx-label name="lblQuickAdd" [formModel]="dialog.formModel" default="Thêm nhanh liên hệ"></codx-label>
+    </div>
+    <div class="d-flex justify-content-end">
+      <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
+    </div>
+  </div>
+  <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
+    <div class="form-group">
+      <codx-label [formModel]="dialog.formModel" fiedName="ContactName" default="Họ và đệm">
+      </codx-label>
+      <codx-input type="text" [crrValue]="data?.contactName" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="contactName">
+      </codx-input>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="dialog.formModel" fiedName="contactName" default="Tên">
+      </codx-label>
+      <codx-input type="text" [crrValue]="data?.contactName" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="contactName">
+      </codx-input>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="dialog.formModel" fiedName="PhoneNumber" default="Điện thoại">
+      </codx-label>
+      <codx-input type="text" [crrValue]="data?.phoneNumber" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="phoneNumber">
+      </codx-input>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="dialog.formModel" fiedName="Email" default="Email">
+      </codx-label>
+      <codx-input type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="email">
+      </codx-input>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+    <div class="form-group">
+      <div class="d-flex justify-content-between">
+        <div>
+          <codx-input type="switch" class="me-2" [crrValue]="data?.allowCall" (valueChange)="valueChange($event)"
+            [formModel]="dialog.formModel" field="allowCall"> </codx-input>
+        </div>
+        <div class="w-100">
+          <codx-label [formModel]="dialog.formModel" fiedName="AllowCall" default="Không điện thoại">
+          </codx-label>
+        </div>
+      </div>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+    <div class="form-group">
+      <div class="d-flex justify-content-between">
+        <div>
+          <codx-input type="switch" class="me-2" [crrValue]="data?.allowEmail" (valueChange)="valueChange($event)"
+            [formModel]="dialog.formModel" field="allowEmail"> </codx-input>
+        </div>
+        <div class="w-100">
+          <codx-label [formModel]="dialog.formModel" fiedName="AllowEmail" default="Không gửi mail">
+          </codx-label>
+        </div>
+      </div>
+      <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="CustomerID"
+        [disabled]="false"
+      >
+      </codx-input> -->
+    </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <div class="me-2">
+      <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
+        <codx-label name="lblCancel" [formModel]="dialog.formModel" default="Hủy"></codx-label>
+      </button>
+    </div>
+    <div class="">
+      <button type="button" (click)="onSave()" class="btn btn-primary">
+        <codx-label name="lblSave" [formModel]="dialog.formModel" default="Đồng ý"></codx-label>
+      </button>
+    </div>
+  </div>
+</div>

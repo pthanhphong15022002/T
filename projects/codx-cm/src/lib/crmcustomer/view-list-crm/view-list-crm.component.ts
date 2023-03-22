@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'codx-view-list-crm',
@@ -10,6 +10,7 @@ export class ViewListCrmComponent implements OnInit {
   @Input() formModel: any;
   @Input() vllPriority = '';
   @Input() funcID = 'CM0101';
+  @Output() clickMoreFunc = new EventEmitter<any>();
   constructor() { }
 
   ngOnInit(): void {
@@ -17,6 +18,6 @@ export class ViewListCrmComponent implements OnInit {
 
 
   clickMF(e, data){
-
+    this.clickMoreFunc.emit({e: e, data: data});
   }
 }

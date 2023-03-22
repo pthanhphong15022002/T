@@ -317,6 +317,8 @@ export class UserComponent extends UIComponent {
   changeDataMF(e: any, data) {
     let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
+    let copyMF = e.filter((x) => x.functionID == 'SYS04');
+    copyMF[0].disabled = true;
     if (data.status == '1') {
       let activeMF = e.find((x) => x.functionID == 'ADS0502');
       if (activeMF) {

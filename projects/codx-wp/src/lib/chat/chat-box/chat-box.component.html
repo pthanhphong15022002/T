@@ -18,45 +18,45 @@
                         [objectType]="'WP_Groups'">
                     </codx-img>
                 </ng-template>
-                <div class="group-avatar_status">
-                    <span class="group-avatar_status-icon"></span>
-                </div>
+                <ng-container *ngIf="group.isOnline">
+                    <div class="group-avatar_status">
+                        <span class="group-avatar_status-icon"></span>
+                    </div>
+                </ng-container>
             </div>
-            <div class="group-infor">
-                <div class="group-infor_name">
-                    <p class="m-0 fw-bolder">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</p>
-                    <p class="m-0">
+            <div class="group-infor w-100">
+                <div class="group-infor_name w-100">
+                    <div class="fw-bold fs-6">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</div>
+                    <div class="mb-1">
                         <codx-tag 
                             [isEdit]="false"  
                             [value]="group.tagValue" 
                             [entityName]="'WP_Groups'">
                         </codx-tag>
-                    </p>
+                    </div>
                 </div>
-                <div class="group-infor_morefc">
-                    <ul class="morefc-list">
-                        <ng-container *ngIf="group.groupType == '2'">
-                            <li class="morefc-list_item">
-                                <span class="icon-group_add"></span>
-                            </li>    
-                        </ng-container>
-                        <li class="morefc-list_item">
-                            <span class="icon-launch"></span>
-                        </li>
-                        <li class="morefc-list_item">
-                            <span class="icon-horizontal_rule" (click)="collapsed()"></span>
-                        </li>
-                        <li class="morefc-list_item" (click)="closeChatBox()">
-                            <span class="icon-close"></span>
-                        </li>
-                    </ul>
+                <div class="d-flex align-items-center morefc-list ms-3">
+                    <ng-container *ngIf="group.groupType == '2'">
+                        <button type="button" class="btn btn-icon btn-sm btn-light">
+                            <span class="icon-group_add icon-16"></span>
+                        </button>    
+                    </ng-container>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                        <span class="icon-launch icon-16"></span>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                        <span class="icon-horizontal_rule icon-16" (click)="collapsed()"></span>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1" (click)="closeChatBox()">
+                        <span class="icon-close icon-16"></span>
+                    </button>
                 </div>   
             </div>
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
                 <div class="codx-message" [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null" [class.justify-content-end]="item.createdBy == user.userID">
-                    <div class="message-img" *ngIf="item.createdBy != user.userID">
+                    <div class="message-img me-3" *ngIf="item.createdBy != user.userID">
                         <codx-img 
                             [objectId]="item.createdBy" 
                             [width]="30"
@@ -64,16 +64,15 @@
                         </codx-img>
                     </div>
                     <ng-container *ngIf="item.messageType == '1'">
-                        <div [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                        <div [class]="item.createdBy == user.userID ? 'my-message text-message':'text-message you-message'">
                             {{item.message}}
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'message-content'">
+                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'you-message'">
                         <div class="codx-message-files">
                             <codx-view-files 
                                 [objectID]="item.recID" 
                                 [objectType]="'WP_Messages'" 
-                                [medias]="1"
                                 [formModel]="formModel"
                                 [format]="'grid'"
                                 (fileClicked)="clickViewFile($event)">
@@ -84,9 +83,9 @@
                 </div>  
             </ng-container>
         </div>
-        <div class="chat-box-footer">
+        <div class="chat-box-footer border-top bg-body aqua">
             <div class="footer-emoji" ngbDropdown>
-                <span class="icon-tag_faces icon-16" ngbDropdownToggle></span>
+                <span class="icon-tag_faces icon-20" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
                     <emoji-mart 
                         [set]="emojiMode" 
@@ -99,7 +98,7 @@
                 </div>
             </div>
             <div class="footer-attachments">
-                <span class="icon-photo icon-16" (click)="clickUploadFile()"></span>
+                <span class="icon-photo icon-20" (click)="clickUploadFile()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATM 
@@ -130,7 +129,7 @@
             </ng-container>
             
             <ng-template #tmpUploadFile>
-                <div class="footer-upload">
+                <div class="footer-upload min-h-50px">
                     <div class="footer-upload-files">
                         <ng-container *ngFor="let item of fileUpload">
                             <div class="upload-files-item cursor-pointer">
@@ -148,14 +147,14 @@
                                         [src]="item.source | safe:'resourceUrl'">
                                     </video>
                                 </ng-container>
-                                <ng-template #fileDocument>
+                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.APPLICATION">
                                     <codx-temp-full 
                                         [imageSrc]="item.extension | avtFile" 
                                         imgCss="w-50px h-50px"
                                         [title]="item.fileName" 
-                                        [descLine]="1">
+                                        [descLine]="2">
                                     </codx-temp-full>
-                                </ng-template>
+                                </ng-container>
                             </div>
                         </ng-container>
                     </div>
@@ -171,9 +170,9 @@
                     </div>
                 </div>
             </ng-template>
-            <div class="footer-button" (click)="sendMessage()">
-                <span class="icon-send icon-16" ></span>
-            </div>
+            <button type="button" class="footer-button btn btn-icon btn-circle btn-primary" (click)="sendMessage()">
+                <span class="icon-send icon-20" ></span>
+            </button>
             
             
         </div>

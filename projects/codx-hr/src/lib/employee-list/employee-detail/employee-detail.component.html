@@ -668,8 +668,13 @@
                   >
                   </codx-label>
                 </div>
-                <div class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.employeeName2 }}
+                <div class="fw-bold text-dark fs-6"
+                [innerHTML]="
+                infoPersonal?.employeeName2
+                  | formatvalue : eInfoFormModel : 'employeeName2'
+                  | async
+              "
+                >
                 </div>
               </div>
               <!-- Tình trạng hôn nhân -->
@@ -810,8 +815,13 @@
                   <codx-label fiedName="IDCardNo" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
-                <div class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.idCardNo }}
+                <div class="fw-bold text-dark fs-6"
+                [innerHTML]="
+                infoPersonal?.idCardNo
+                  | formatvalue : eInfoFormModel : 'idCardNo'
+                  | async
+              "
+                >
                 </div>
               </div>
               <div class="col">
@@ -937,7 +947,13 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="icon-school icon-16 text-gray-600 me-2"></span>
-                  <span class="fw-bold"> {{ infoPersonal?.degreeName }}</span>
+                  <span class="fw-bold"
+                  [innerHTML]="
+                  infoPersonal?.degreeName
+                    | formatvalue : eInfoFormModel : 'degreeName'
+                    | async
+                "
+                  ></span>
                 </div>
               </div>
             </div>
@@ -950,9 +966,14 @@
               </div>
               <div class="d-flex align-items-center">
                 <span class="icon-mood icon-16 text-primary me-2"></span>
-                <span #Achievement class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.achievement }}</span
+                <span #Achievement class="fw-bold text-dark fs-6"
+                [innerHTML]="
+                infoPersonal?.achievement
+                  | formatvalue : eInfoFormModel : 'achievement'
+                  | async
+              "
                 >
+                </span>
               </div>
             </div>
             <!-- Sở trường -->
@@ -963,9 +984,13 @@
               </div>
               <div class="d-flex align-items-center">
                 <span class="icon-spa icon-16 text-success me-2"></span>
-                <span #Forte class="fw-bold text-dark fs-6">{{
-                  infoPersonal?.forte
-                }}</span>
+                <span #Forte class="fw-bold text-dark fs-6"
+                [innerHTML]="
+                infoPersonal?.forte
+                  | formatvalue : eInfoFormModel : 'forte'
+                  | async
+              "
+                ></span>
               </div>
             </div>
             <!-- Sở thích -->
@@ -978,9 +1003,13 @@
                 <span
                   class="icon-favorite_border icon-16 text-danger me-2"
                 ></span>
-                <span #Hobby class="fw-bold text-dark fs-6">{{
-                  infoPersonal?.hobby
-                }}</span>
+                <span #Hobby class="fw-bold text-dark fs-6"
+                [innerHTML]="
+                infoPersonal?.hobby
+                  | formatvalue : eInfoFormModel : 'hobby'
+                  | async
+              "
+                ></span>
               </div>
             </div>
           </div>
@@ -1093,7 +1122,7 @@
                 </div>
               </div>
 
-              <!-- Địa chỉ thường chú -->
+              <!-- Địa chỉ thường trú -->
               <div class="row mb-5">
                 <div class="text-gray-600 pb-1">
                   <codx-label fiedName="Street" [formModel]="eInfoFormModel">
@@ -1101,8 +1130,12 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="icon-place icon-16 text-gray-600 me-2"></span>
-                  <span #street class="fw-bold text-dark fs-6">
-                    {{ infoPersonal?.street ?? infoPersonal?.address }}</span
+                  <span #street class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.street ?? infoPersonal?.address
+                    | formatvalue : eInfoFormModel : (infoPersonal?.street ? 'street' : 'address')
+                    | async
+                "></span
                   >
                 </div>
               </div>
@@ -1114,8 +1147,13 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="icon-place icon-16 text-gray-600 me-2"></span>
-                  <span #pitNumber class="fw-bold">
-                    {{ infoPersonal?.tAddress }}</span
+                  <span #pitNumber class="fw-bold"
+                  [innerHTML]="
+                  infoPersonal?.tAddress
+                    | formatvalue : eInfoFormModel : 'tAddress'
+                    | async
+                "
+                  ></span
                   >
                 </div>
               </div>
@@ -1131,12 +1169,6 @@
             <div class="d-flex align-items-center text-primary">
               <span class="icon-folder_special icon-20 me-2"></span>
               <div class="fs-5 fw-bold text-uppercase mt-1">
-                <!-- <codx-label
-                    [formModel]="eInfoFormModel"
-                    name="lblLegalInfo"
-                    [default]="getFormHeader(ePartyFuncID)"
-                  >
-                  </codx-label> -->
                 {{ getFormHeader(ePartyFuncID) }}
               </div>
             </div>
@@ -1162,8 +1194,13 @@
 
                 <div class="d-flex align-items-center">
                   <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                  <span class="text-dark fw-bold fs-6">
-                    {{ infoPersonal?.yUnionDate | fmDT }}</span
+                  <span class="text-dark fw-bold fs-6"
+                  [innerHTML]="
+                  infoPersonal?.yUnionDate
+                    | formatvalue : eInfoFormModel : 'yUnionDate'
+                    | async
+                "
+                  ></span
                   >
                 </div>
               </div>
@@ -1173,9 +1210,13 @@
                   </codx-label>
                 </div>
                 <div class="d-flex">
-                  <span #yUnionAt class="text-dark fw-bold fs-6">
-                    {{ infoPersonal?.yUnionAt }}
-                  </span>
+                  <span #yUnionAt class="text-dark fw-bold fs-6"
+                  [innerHTML]="
+                  infoPersonal?.yUnionAt
+                    | formatvalue : eInfoFormModel : 'yUnionAt'
+                    | async
+                "
+                  ></span>
                 </div>
               </div>
             </div>
@@ -1187,8 +1228,13 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                  <span #partyDate class="text-dark fw-bold fs-6">
-                    {{ infoPersonal?.partyDate | fmDT }}</span
+                  <span #partyDate class="text-dark fw-bold fs-6"
+                  [innerHTML]="
+                  infoPersonal?.partyDate
+                    | formatvalue : eInfoFormModel : 'partyDate'
+                    | async
+                "
+                  ></span
                   >
                 </div>
               </div>
@@ -1199,8 +1245,11 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span #partyAt class="text-dark fw-bold fs-6"
-                    >{{ infoPersonal?.partyAt }}
-                  </span>
+                  [innerHTML]="
+                  infoPersonal?.partyAt
+                    | formatvalue : eInfoFormModel : 'partyAt'
+                    | async
+                "></span>
                 </div>
               </div>
             </div>
@@ -1449,9 +1498,13 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="fw-bold text-dark fs-6">
-                    {{ infoPersonal?.siRegisterNo }}
-                  </div>
+                  <div class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.siRegisterNo
+                    | formatvalue : eInfoFormModel : 'siRegisterNo'
+                    | async
+                "
+                  ></div>
                 </div>
                 <div class="col-8">
                   <div class="text-gray-600 pb-1">
@@ -1463,9 +1516,13 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                    <span class="fw-bold text-dark fs-6">{{
-                      infoPersonal?.siRegisterOn | fmDT
-                    }}</span>
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.siRegisterOn
+                      | formatvalue : eInfoFormModel : 'siRegisterOn'
+                      | async
+                  "
+                    ></span>
                   </div>
                 </div>
               </div>
@@ -1479,9 +1536,13 @@
                     >
                     </codx-label>
                   </div>
-                  <div #HICardNo class="fw-bold text-dark fs-6">
-                    {{ infoPersonal?.hiCardNo }}
-                  </div>
+                  <div #HICardNo class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.hiCardNo
+                    | formatvalue : eInfoFormModel : 'hiCardNo'
+                    | async
+                "
+                  ></div>
                 </div>
                 <div class="col-8">
                   <div class="text-gray-600 pb-1">
@@ -1494,9 +1555,20 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-16 text-gray-600 me-2"></span>
                     <span class="fw-bold text-dark fs-6"
-                      >{{ infoPersonal?.hiCardFrom | fmDT }} -
-                      {{ infoPersonal?.hiCardTo | fmDT }}</span
-                    >
+                    [innerHTML]="
+                    infoPersonal?.hiCardFrom
+                      | formatvalue : eInfoFormModel : 'hiCardFrom'
+                      | async
+                  "
+                      ></span>
+                      &nbsp;-&nbsp;
+                      <span class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                      infoPersonal?.hiCardTo
+                        | formatvalue : eInfoFormModel : 'hiCardTo'
+                        | async
+                    "
+                        ></span>
                   </div>
                 </div>
               </div>
@@ -1512,8 +1584,13 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                    <span class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.hiDateOf5Years | fmDT }}</span
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.hiDateOf5Years
+                      | formatvalue : eInfoFormModel : 'hiDateOf5Years'
+                      | async
+                  "
+                    ></span
                     >
                   </div>
                 </div>
@@ -1527,9 +1604,13 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark fs-6">{{
-                      infoPersonal?.hiHospitalID
-                    }}</span>
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.hiHospitalID
+                      | formatvalue : eInfoFormModel : 'hiHospitalID'
+                      | async
+                  "
+                    ></span>
                   </div>
                 </div>
               </div>
@@ -1556,8 +1637,13 @@
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
-                  <span class="fw-bold text-dark fs-6">
-                    {{ infoPersonal?.pitNumber }}</span
+                  <span class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.pitNumber
+                    | formatvalue : eInfoFormModel : 'pitNumber'
+                    | async
+                "
+                  ></span
                   >
                 </div>
               </div>
@@ -1571,9 +1657,13 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                  <span class="fw-bold text-dark fs-6">{{
-                    infoPersonal?.pitIssuedOn | fmDT
-                  }}</span>
+                  <span class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.pitIssuedOn
+                    | formatvalue : eInfoFormModel : 'pitIssuedOn'
+                    | async
+                "
+                  ></span>
                 </div>
               </div>
               <div class="col">
@@ -1582,9 +1672,13 @@
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
-                  <span class="fw-bold text-dark fs-6">{{
-                    infoPersonal?.pitPlace
-                  }}</span>
+                  <span class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                  infoPersonal?.pitPlace
+                    | formatvalue : eInfoFormModel : 'pitPlace'
+                    | async
+                "
+                  ></span>
                 </div>
               </div>
             </div>
@@ -1614,9 +1708,13 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.idCardNo }}</span
-                    >
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.idCardNo
+                      | formatvalue : eInfoFormModel : 'idCardNo'
+                      | async
+                  "
+                    ></span>
                   </div>
                 </div>
                 <div class="col-8">
@@ -1628,8 +1726,13 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.accountBankID }}</span
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.accountBankID
+                      | formatvalue : eInfoFormModel : 'accountBankID'
+                      | async
+                  "
+                    ></span
                     >
                   </div>
                 </div>
@@ -1645,8 +1748,13 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.accountName }}</span
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.accountName
+                      | formatvalue : eInfoFormModel : 'accountName'
+                      | async
+                  "
+                    ></span
                     >
                   </div>
                 </div>
@@ -1659,8 +1767,13 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.accountBankBranch }}</span
+                    <span class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                    infoPersonal?.accountBankBranch
+                      | formatvalue : eInfoFormModel : 'accountBankBranch'
+                      | async
+                  "
+                    ></span
                     >
                   </div>
                 </div>
@@ -6568,3 +6681,41 @@
 </ng-template>
 
 <!-- #endregion -->
+
+
+<ng-template
+  #tmpTemp
+>
+  <div class="" *ngIf="ViewAllEContractFlag">
+    <div class="d-flex align-items-center mb-3 mt-5">
+      <span class="icon-i-filter-right icon-20 me-2"></span>
+      <div class="d-flex align-items-center me-3">
+        <codx-label
+          default="Chi tiết"
+          class="fw-bold text-uppercase fs-5 text-gray-600"
+        >
+        </codx-label>
+        <span class="text-gray-500 mx-2"> | </span>
+        <span class="text-gray-500">({{ eContractRowCount }})</span>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <codx-gridview
+        *ngIf="eContractColumnGrid && eContractFormModel"
+        #eContractGridview
+        [formModel]="eContractFormModel"
+        [columnsGrid]="eContractColumnGrid"
+        [service]="'HR'"
+        [assemblyName]="'Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataAsync'"
+        [predicates]="'EmployeeID=@0'"
+        [dataValues]="employeeID"
+        [pageSize]="numPageSizeGridView"
+        [rowHeight]="30"
+        height="auto"
+      ></codx-gridview>
+    </div>
+  </div>
+</ng-template>
