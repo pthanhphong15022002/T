@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApprovelHrComponent } from './approvel-hr.component';
+import { ApprovalHrComponent } from './approval-hr.component';
 
 describe('ApprovelHrComponent', () => {
-  let component: ApprovelHrComponent;
-  let fixture: ComponentFixture<ApprovelHrComponent>;
+  let component: ApprovalHrComponent;
+  let fixture: ComponentFixture<ApprovalHrComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApprovelHrComponent ]
+      declarations: [ ApprovalHrComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ApprovelHrComponent);
+    fixture = TestBed.createComponent(ApprovalHrComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
