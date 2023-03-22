@@ -2278,6 +2278,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let listID = this.stepList?.filter(step => step.stepNo >= start && step.stepNo <= end).map(stepFind => {
       return stepFind.recID
     });
+    if(listID?.length > 0){
+      listID?.forEach( id => {
+        let checkAdd = this.listStepAdd?.some(idAdd => idAdd == id);
+        let checkEdit = this.listStepEdit?.some(idEdit => idEdit == id);
+        if(!checkAdd && !checkEdit){
+          this.listStepEdit.push(id)
+        }
+      })
+    }
   }
 
   // Common
