@@ -36,6 +36,7 @@ export class EmployeeContractComponent extends UIComponent {
   formGroup: FormGroup;
 
   editStatusObj: any;
+  currentEmpObj: any;
   dialogEditStatus: any;
 
 
@@ -61,7 +62,6 @@ export class EmployeeContractComponent extends UIComponent {
     ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
    }
 
   onInit(): void {
@@ -134,6 +134,7 @@ export class EmployeeContractComponent extends UIComponent {
     if(funcID == 'HRT1001A9') data.signStatus = '9';
 
     this.editStatusObj = data;
+    this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
     console.log('edit object', this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
@@ -144,19 +145,30 @@ export class EmployeeContractComponent extends UIComponent {
       null,
       null
     );
-    this.dialogEditStatus.closed.subscribe((e) => {
-      this.detectorRef.detectChanges();
+    this.dialogEditStatus.closed.subscribe((res) => {
+      console.log('res sau khi update status', res);
+      debugger
+      
+      this.view.dataService.update(res.event[0]).subscribe((res) => {
+      })
+      this.df.detectChanges();
     });
   }
 
   onSaveUpdateForm(){
     this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
-      debugger
       if(res != null){
+        debugger
         this.notify.notifyCode('SYS007');
+        res[0].emp = this.currentEmpObj;
         this.dialogEditStatus && this.dialogEditStatus.close(res);
       }
     })
+  }
+  changeDataMf(event, data){
+    console.log('data changedata MF', event);
+    console.log('data di voi mf', data);
+    
   }
 
   clickMF(event, data){
@@ -169,10 +181,12 @@ export class EmployeeContractComponent extends UIComponent {
       this.popupUpdateEContractStatus(event.functionID , oUpdate)
       break;
       case 'HRT1001A1': // de xuat hop dong tiep theo
+      this.HandleEContractInfo(event.text, 'add', data);
       break;
 
       case 'SYS03':
-        this.HandleEContractInfo(event.text, 'edit', data);
+      this.currentEmpObj = data.emp;
+        this.HandleEContractInfo(event.text + ' ' + this.view.function.description, 'edit', data);
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
@@ -197,59 +211,12 @@ export class EmployeeContractComponent extends UIComponent {
       // });
         break;
       case 'SYS04': //copy
+      this.currentEmpObj = data.emp;
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
     }
   }
-
-  copyValue(actionHeaderText, data, flag) {
-    this.hrService
-    .copy(data, this.view.formModel, 'RecID')
-    .subscribe((res) => {
-      if(flag == 'eContract'){
-        this.HandleEContractInfo(actionHeaderText, 'copy', res);
-      }
-    });
-  }
-
-  addContract(evt){
-    if(evt.id == 'btnAdd'){
-      this.HandleEContractInfo(evt.text,'add',null);
-    }
-  }
-
-  // addNew(actionHeaderText, actionType: string, data: any){
-  //   this.view.dataService.addNew().subscribe((res) => {
-  //     this.dataSelected = this.view.dataService.dataSelected;
-  //     let option = new SidebarModel();
-  //     option.Width = '550px';
-  //     option.DataService = this.view?.dataService
-  //     option.FormModel = this.view.formModel;
-  //     let dialogAdd = this.callfc.openSide(
-  //       PopupEProcessContractComponent,
-  //       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
-  //       {
-  //         actionType: actionType,
-  //         dataObj: data,
-  //         headerText:
-  //           actionHeaderText + ' ' + this.view.function.description,
-  //         employeeId: data?.employeeID,
-  //         funcID: this.view.funcID,
-  //       },
-  //       option
-  //     );
-  //     dialogAdd.closed.subscribe((res) => {
-  //       if (res.event) {
-  //         console.log('moi add hop dong xong', res.event[0]);
-  //         this.view.dataService.addNew(res.event[0]).subscribe((res) => {
-  //         });
-  //         this.df.detectChanges();
-  //       }
-  //       if (res?.event) this.view.dataService.clear();
-  //     });
-  //   })
-  // }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
@@ -259,14 +226,17 @@ export class EmployeeContractComponent extends UIComponent {
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
     //   isAppendix = true;
     // }
+    console.log('nguyen cuc data ne', data);
+    
     let dialogAdd = this.callfc.openSide(
       PopupEProcessContractComponent,
       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
       {
         actionType: actionType,
         dataObj: data,
+        empObj: this.currentEmpObj,
         headerText:
-          actionHeaderText + ' ' + this.view.function.description,
+          actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
       },
@@ -280,6 +250,11 @@ export class EmployeeContractComponent extends UIComponent {
           });
           this.df.detectChanges();
         }
+        else if(actionType == 'copy'){
+          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          });
+          this.df.detectChanges();
+        }
         else if(actionType == 'edit'){
           this.view.dataService.update(res.event[0]).subscribe((res) => {
           })
@@ -289,6 +264,23 @@ export class EmployeeContractComponent extends UIComponent {
       if (res?.event) this.view.dataService.clear();
     });
   }
+
+  copyValue(actionHeaderText, data, flag) {
+    this.hrService
+    .copy(data, this.view.formModel, 'RecID')
+    .subscribe((res) => {
+      if(flag == 'eContract'){
+        this.HandleEContractInfo(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
+      }
+    });
+  }
+
+  addContract(evt){
+    if(evt.id == 'btnAdd'){
+      this.HandleEContractInfo(evt.text + ' ' + this.view.function.description,'add',null);
+    }
+  }
+
 
   onMoreMulti(evt){
     console.log('chon nhieu dong', evt);

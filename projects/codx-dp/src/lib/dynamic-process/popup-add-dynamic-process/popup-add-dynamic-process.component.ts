@@ -391,6 +391,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+  async onSaveNow(){
+    let check = await this.checkExitsName();
+    if (check) {
+      this.notiService.notifyCode('DP021');
+      return;
+    } else {
+      this.onSave();
+    }
+  }
+
   async onSave() {
     var check = this.process.permissions.some((x) => x.roleType === 'P');
     if (!check) {
@@ -1792,7 +1802,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['modifiedOn'] = new Date();
       this.stepNew['modifiedBy'] = this.userId;
       if (this.action == 'edit') {
-        this.listStepEdit.push(this.stepNew.recID);
+        let checkAdd = this.listStepAdd?.some(idAdd => idAdd == this.stepNew.recID);
+        let checkEdit = this.listStepEdit?.some(idEdit => idEdit == this.stepNew.recID);
+        if(!checkAdd && !checkEdit){
+          this.listStepEdit.push(this.stepNew.recID);
+        }
+
       }
     }
     this.popupAddStage.close();

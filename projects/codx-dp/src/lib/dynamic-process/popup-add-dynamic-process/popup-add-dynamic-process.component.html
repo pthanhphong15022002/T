@@ -273,8 +273,8 @@
             *ngIf="currentTab != 3"
             type="button"
             [ngClass]="checkSaveNow() ? '' : 'disabled'"
-            class="btn btn-outline-primary me-2"
-            (click)="onSave()"
+            class="btn btn-primary me-5"
+            (click)="onSaveNow()"
           >
             <codx-label
               [name]="'lblSaveNow'"

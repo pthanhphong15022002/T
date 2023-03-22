@@ -213,17 +213,10 @@
     <div class="form-group">
       <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
       <codx-input
-        type="textarea"
-        format="ed2"
-        field="note"
-        [crrValue]="apPostingAccount?.note ?? ''"
-        (valueChange)="handleInputChange($event)"
-      ></codx-input>
-      <!-- <codx-input
         field="note"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-      ></codx-input> -->
+      ></codx-input>
     </div>
   </ng-container>
   <ng-template #other>
