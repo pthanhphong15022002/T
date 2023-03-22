@@ -86,10 +86,10 @@
                 >
                 </codx-vll>
               </span>
-              <span>
-                <span #dueDate>{{
-                  item.dueDate |formatvalue :formModel :"dueDate":dueDate :"Tasks" :"grvTasks" | async 
-                }}</span>
+              <span #dueDate >
+                {{
+                item.dueDate |formatvalue :formModel :"dueDate":dueDate :"Tasks" :"grvTasks" | async 
+              }}
               </span>
             </div>
           </div>
