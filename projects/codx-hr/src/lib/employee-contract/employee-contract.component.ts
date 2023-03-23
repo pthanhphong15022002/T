@@ -166,8 +166,41 @@ export class EmployeeContractComponent extends UIComponent {
     })
   }
   changeDataMf(event, data){
+    debugger
     console.log('data changedata MF', event);
-    console.log('data di voi mf', data);
+    console.log('data di voi mf', data.signStatus);
+    if(data.signStatus == '4' || data.signStatus == '5' || data.signStatus == '9' || data.signStatus == '0'){
+      for(let i = 0; i < event.length; i++){
+        switch(event[i].functionID){
+          case 'HRT1001A7':
+            case 'HRT1001A0':
+              case 'HRT1001A9':
+              case 'HRT1001A3':
+                event[i].disabled = true;
+                break;
+      }
+    }
+  }
+    else if(data.signStatus == '6'){
+      for(let i = 0; i < event.length; i++){
+        switch(event[i].functionID){
+          case 'HRT1001A7':
+            case 'HRT1001A0':
+              case 'HRT1001A9':
+                event[i].disabled = true;
+                break;
+        }
+      }
+    }
+    else if(data.signStatus == '3'){
+      for(let i = 0; i < event.length; i++){
+        if(event[i].functionID == 'HRT1001A3'){
+          debugger
+          event[i].disabled = true;
+        }
+      }
+    }
+    console.log('mf sau khi change', event);
     
   }
 
@@ -220,7 +253,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '550px';
+    option.Width = '850px';
     option.FormModel = this.view.formModel;
     // let isAppendix = false;
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){

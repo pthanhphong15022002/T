@@ -1,15 +1,19 @@
-<codx-form
+<codx-layout-add
   #form
-  [headerText]="headerText"
-  [body]="body"
+  [title]="title"
+  [tabInfo]="tabInfo"
   [formModel]="formModel"
+  [subHeader]=""
   [footer]="footer"
-  [openMore]="'true'"
   [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[contractInfo, workingInfo, empBenefit]"
   [data]="data"
   *ngIf="isAfterRender"
 >
-  <ng-template #body>
+</codx-layout-add>
+
+  <ng-template #contractInfo>
     <div *ngIf="actionType == 'add' || actionType == 'copy'" class="form-group row">
         <codx-img
             [width]="35"
@@ -90,7 +94,7 @@
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
         <codx-input
-          field="SignedDate"
+          field="signedDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -146,7 +150,7 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="OrgUnitID"
+          field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -154,7 +158,7 @@
       <div class="col-6">
         <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="PositionID"
+          field="positionID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -164,7 +168,7 @@
       <div class="col-6">
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="LocationID"
+          field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -194,7 +198,7 @@
         <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
         <div>
           <codx-input
-            field="IsCurrent"
+            field="isCurrent"
             [formModel]="formModel"
             [Group]="formGroup"
           ></codx-input>
@@ -268,25 +272,63 @@
     </div>
 
   </ng-template>
-  <!-- <div class="extend-function" *ngIf="actionType=='edit' && lstSubContract?.length > 0" >
-    <hr />
-    <div class="d-flex justify-content-center">
-      <div class="d-flex align-items-center w-auto extend-title">
-        <span
-          class="text-primary text-hover-primary_darker fw-bold me-1"
-        >
-          <codx-label
-            default="Phụ lục hợp đồng"
-            name="lblSubContract"
-            [formModel]="formModel"
-          ></codx-label>
-        </span>
+
+  <ng-template #workingInfo>
+    <div class="form-group row mt-5">
+        <codx-label fiedName="TimeWork" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="timeWork"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+    </div>
+    <div class="form-group row mt-5">
+      <codx-label fiedName="MainWork" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="mainWork"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </ng-template>
+
+  <ng-template #empBenefit>
+    <div class="form-group row mt-5">
+      <div class="col-6">
+        <codx-label fiedName="MainSalary" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="mainSalary"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="JobSalary" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="jobSalary"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
       </div>
     </div>
-  </div> -->
 
-
-</codx-form>
+    <div class="extend-function">
+      <hr />
+      <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span
+            class="text-primary text-hover-primary_darker fw-bold me-1"
+          >
+            <codx-label
+              default="Phụ cấp được hưởng"
+              name="lblEmpBenefit"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 
 <ng-template #titleTmp let-data>
   <div class="row">

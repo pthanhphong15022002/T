@@ -237,33 +237,17 @@
         <div class="d-flex align-items-center">
           <div class="me-3">
             <codx-img
-              [objectId]="
-                isAddNew
-                  ? user?.userID
-                  : data?.owner
-              "
-              [objectName]="
-                isAddNew
-                  ? user?.userName
-                  : data?.requester
-              "
+              [objectId]="isAddNew ? user?.userID : data?.owner"
+              [objectName]="isAddNew ? user?.userName : data?.requester"
               [objectType]="'AD_Users'"
             ></codx-img>
           </div>
           <div class="me-2">
             <div class="fw-bold text-start">
-              {{
-                isAddNew
-                  ? user?.userName
-                  : data?.requester
-              }}
+              {{ isAddNew ? user?.userName : data?.requester }}
             </div>
             <div class="fw-bold text-black-50">
-              {{
-                isAddNew
-                  ? user?.employee?.positionName
-                  : data?.positionName
-              }}
+              {{ isAddNew ? user?.employee?.positionName : data?.positionName }}
             </div>
           </div>
         </div>
@@ -339,7 +323,7 @@
             >
             </codx-label>
             <codx-input
-              [disabled]="dialogAddBookingStationery?.value.category === '1'"
+              [disabled]="data?.category === '1'"
               type="combobox"
               field="orgUnitID"
               refValue="OrganizationUnits"
@@ -356,7 +340,7 @@
             >
             </codx-label>
             <codx-input
-              [disabled]="dialogAddBookingStationery?.value.category === '1'"
+              [disabled]="data?.category === '1'"
               type="text"
               [crrValue]="qtyEmp"
             >
@@ -422,9 +406,7 @@
               </div>
               <div class="me-2">
                 <div class="d-flex justify-content-start">
-                  <span class="fw-bold">{{
-                    item?.itemName 
-                  }}</span>
+                  <span class="fw-bold">{{ item?.itemName }}</span>
                 </div>
 
                 <div class="d-flex flex-row flex-grow-1 text-gray-600 lh-1">
@@ -447,9 +429,7 @@
                 type="number"
                 field="quantity"
                 [crrValue]="item?.quantity"
-                (valueChange)="
-                  valueChangeQtyStationery($event, item?.itemID)
-                "
+                (valueChange)="valueChangeQtyStationery($event, item?.itemID)"
               >
               </codx-input>
               <div
