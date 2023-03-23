@@ -10,7 +10,7 @@
 <ng-template #tabDescip>
   <div class="form-group">
     <div>
-      <codx-label fiedName="MeetingName" formName="TMMeetings" gridViewName="grvTMMeetings" default="Tên buổi họp">
+      <codx-label fiedName="MeetingName" [formModel]="dialog.formModel">
       </codx-label>
     </div>
     <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName"
@@ -55,7 +55,7 @@
   </div>
   <div *ngIf="!isRoom" class="form-group">
     <div>
-      <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
+      <codx-label fiedName="Location" [formModel]="dialog.formModel">
       </codx-label>
     </div>
     <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location']?.description"
@@ -64,7 +64,7 @@
   </div>
   <div *ngIf="isRoom" class="form-group">
     <div class="d-flex justify-content-between align-items-center">
-      <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
+      <codx-label fiedName="Location" [formModel]="form.formModel">
       </codx-label>
       <!-- <span class="label-status text-primary">{{
         data?.status | vll: "VL003":"text" | async
@@ -72,18 +72,13 @@
     </div>
     <!-- <ejs-combobox id='locationCBB' #locationCBB [dataSource]='listRoom' [fields]='fields'
       [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox> -->
-      <ejs-dropdownlist
-        id='locationCBB'
-        #locationCBB [dataSource]='listRoom'
-        [fields]='fields'
-        [placeholder]="'Phòng họp'"
-        (valueChange)="cbxChange($event)"
-      ></ejs-dropdownlist>
+    <ejs-dropdownlist id='locationCBB' #locationCBB [dataSource]='listRoom' [fields]='fields'
+      [placeholder]="'Phòng họp'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
   </div>
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
       <div class="d-flex me-2">
-        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+        <codx-label fiedName="Memo" [formModel]="form.formModel">
         </codx-label>
       </div>
       <button type="button" (click)="openPopupTemplate(meeting)" class="btn btn-icon btn-light">
@@ -106,12 +101,12 @@
         [disabled]="false" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <span class="fw-bold ms-2"><label for="switchOnl">
-          <codx-label fiedName="IsOnline" default="Họp online" [formModel]="form.formModel"></codx-label>
+          <codx-label fiedName="IsOnline" [formModel]="form.formModel"></codx-label>
         </label></span>
     </div>
     <!--begin: btn-icon-->
     <span class="text-end align-items-end">
-      <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()"
+      <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink(addLink)"
         *ngIf="meeting?.isOnline">
         <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
       </button>
@@ -220,7 +215,7 @@
       </div>
     </div>
     <div class="fw-bold fs-6 text-primary">
-      <codx-label [formModel]="form.formModel" default="Review công việc">
+      <codx-label name="lblReviewTask" [formModel]="form.formModel" default="Review công việc">
       </codx-label>
     </div>
   </div>
@@ -271,7 +266,7 @@
     <div class="form-group">
       <div class="d-flex align-items-end justify-content-between mb-2">
         <div class="d-flex me-2">
-          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở trước cuộc họp(phút)">
+          <codx-label fiedName="Reminder" [formModel]="form.formModel">
           </codx-label>
         </div>
         <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)"
@@ -301,7 +296,7 @@
       <div class="form-group row mt-3">
         <div class="col-6">
           <div>
-            <codx-label fiedName="FromDate" [formModel]="form.formModel" default="Ngày bắt đầu">
+            <codx-label fiedName="FromDate" [formModel]="form.formModel">
             </codx-label>
           </div>
           <codx-input type="datetime" class="test-datetime" (valueChange)="valueDateChange($event)"
@@ -310,7 +305,7 @@
         </div>
         <div class="col-6">
           <div>
-            <codx-label fiedName="ToDate" [formModel]="form.formModel" default="Ngày kết thúc">
+            <codx-label fiedName="ToDate" [formModel]="form.formModel">
             </codx-label>
           </div>
           <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.toDate"
@@ -319,7 +314,7 @@
         </div>
       </div>
       <div class="form-group mt-3">
-        <codx-label fiedName="RefID" [formModel]="form.formModel" default="Dự án">
+        <codx-label fiedName="RefID" [formModel]="form.formModel">
         </codx-label>
         <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
           [crrValue]="meeting.refID" loadFull="true" [disabled]="disabledProject">
@@ -349,22 +344,30 @@
 </ng-template>
 
 <ng-template #addLink let-dialog="dialogPopupLink">
-  <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
-    [dialog]="dialogPopupLink">
-  </codx-form>
-</ng-template>
-<ng-template #bodyFormLink>
-  <div class="form-group mt-3">
-    <codx-label name="lblPath" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-    <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="meeting.link"
-      (valueChange)="changeLink($event)"></codx-input>
+  <div class="container-body p-5">
+    <div class="d-flex justify-content-between mb-4">
+      <div class="h3">
+        <codx-label name="lblLink" [formModel]="form.formModel" default="Link cuộc họp"></codx-label>
+      </div>
+      <div class="d-flex justify-content-end">
+        <i class="icon-close icon-18 text-hover-danger" (click)="dialogPopupLink.close()"></i>
+      </div>
+    </div>
+    <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
+      <div class="form-group">
+        <codx-label name="lblPath" default="Đường dẫn" [formModel]="form.formModel"></codx-label>
+        <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="meeting.link"
+          (valueChange)="changeLink($event)"></codx-input>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="dialogPopupLink.close()">
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+      </button>
+    </div>
   </div>
 </ng-template>
-<ng-template #footerFormLink>
-  <button type="button" class="btn btn-primary" (click)="dialogPopupLink.close()">
-    <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-  </button>
-</ng-template>
+
 
 <ng-template #popoverSelectRoles>
   <div class="d-flex flex-column">
