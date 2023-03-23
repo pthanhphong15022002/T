@@ -1307,6 +1307,7 @@
               *ngFor="let itemStep of stepList; let i = index"
               class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
               [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
+              [style.display]="itemStep.isSuccessStep || itemStep.isFailStep? 'none' : ''"
               (click)="
                 clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
               "
@@ -2810,6 +2811,100 @@
                   field="no"
                   [checked]="!step.leadtimeControl"
                   [crrValue]="step.leadtimeControl"
+                  [label]="titleRadioNo"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-6">
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName=""
+                default="Cho phép người phụ trách cập nhật tiến độ giai đoạn"
+              >
+              </codx-label>
+            </div>
+            <div class="text-gray-600">
+              <codx-label
+                default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà hệ thống tự động cập nhật"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
+                <codx-input
+                  [name]="formLeaTimeCtrl"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [label]="titleRadioYes"
+                  [checked]=""
+                  [crrValue]=""
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                >
+                </codx-input>
+              </div>
+              <div class="me-5">
+                <codx-input
+                  type="radio"
+                  [name]="formLeaTimeCtrl"
+                  field="no"
+                  [checked]=""
+                  [crrValue]=""
+                  [label]="titleRadioNo"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-6">
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName=""
+                default="Cho phép người phụ trách cập nhật tiến độ nhóm công việc"
+              >
+              </codx-label>
+            </div>
+            <div class="text-gray-600">
+              <codx-label
+                default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà hệ thống tự động cập nhật"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
+                <codx-input
+                  [name]="formLeaTimeCtrl"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [label]="titleRadioYes"
+                  [checked]=""
+                  [crrValue]=""
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                >
+                </codx-input>
+              </div>
+              <div class="me-5">
+                <codx-input
+                  type="radio"
+                  [name]="formLeaTimeCtrl"
+                  field="no"
+                  [checked]=""
+                  [crrValue]=""
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
                 >
