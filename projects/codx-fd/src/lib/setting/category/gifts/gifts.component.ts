@@ -100,6 +100,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionList = res;
+        console.log('fc:', res);
       }
     });
   }

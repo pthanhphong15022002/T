@@ -75,7 +75,7 @@
               </div>
             </div> -->
           </div>
-          <div class="d-flex flex-column align-items-start">
+          <div class="d-flex flex-column align-items-start justify-content-end">
             <div class="progress">
               <div
                 class="progress-done"
@@ -150,10 +150,10 @@
             </li>
           </ng-container>
         </ul>
-        <div [ngbNavOutlet]="nav"></div>
+        <div [ngbNavOutlet]="nav" class="instance-content"></div>
       </div>
       <ng-template #tabIns let-viewModelDetail>
-        <div id="viewModeDetail" class="view-step-box">
+        <div id="viewModeDetail-1" class="view-step-box">
           <ng-container *ngIf="viewModelDetail == 'G'">
             <codx-gantt-chart
               [dataSource]="ganttDs"
