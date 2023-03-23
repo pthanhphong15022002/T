@@ -59,21 +59,29 @@
         <span class="text-gray-600"></span><span>70% la cai gi</span>
       </div> -->
       <div class="d-flex justify-content-end">
-        <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
         <span
-          class="fs-7 text-gray-600"
-          #createdOn
-          [innerHTML]="
-            data.createdOn
-              | formatvalue
-                : view.formModel
-                : 'createdOn'
-                : createdOn
-                : 'DPInstances'
-                : 'grvDPInstances'
-              | async
-          "
-        ></span>
+          #pCr="ngbPopover"
+          [ngbPopover]="popperCreatedOn"
+          (mouseenter)="pCr.open()"
+          (mouseleave)="pCr.close()"
+          placement="left right"
+        >
+          <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
+          <span
+            class="fs-7 text-gray-600"
+            #createdOn
+            [innerHTML]="
+              data.createdOn
+                | formatvalue
+                  : view.formModel
+                  : 'createdOn'
+                  : createdOn
+                  : 'DPInstances'
+                  : 'grvDPInstances'
+                | async
+            "
+          ></span>
+        </span>
       </div>
     </div>
   </ng-template>
@@ -87,7 +95,13 @@
           class="badge badge-light badge-md fs-7">
         </codx-vll>
       </ng-container> -->
-      <span>
+      <span
+        #pEd="ngbPopover"
+        [ngbPopover]="popperEndDate"
+        (mouseenter)="pEd.open()"
+        (mouseleave)="pEd.close()"
+        placement="right top botom left"
+      >
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
         <span
           class="fs-7 text-gray-600"
@@ -150,21 +164,29 @@
 <ng-template #descTmp let-data>
   <div class="flex-body">
     <div class="d-flex justify-content-end">
-      <span class="text-gray-600 icon-14 icon-alarm_add me-1"></span>
       <span
-        class="fs-7 text-gray-600"
-        #createdOn
-        [innerHTML]="
-          data.createdOn
-            | formatvalue
-              : formModel
-              : 'createdOn'
-              : createdOn
-              : 'DPInstances'
-              : 'grvDPInstances'
-            | async
-        "
-      ></span>
+        #pCrDT="ngbPopover"
+        [ngbPopover]="popperCreatedOn"
+        (mouseenter)="pCrDT.open()"
+        (mouseleave)="pCrDT.close()"
+        placement="left right"
+      >
+        <span class="text-gray-600 icon-14 icon-alarm_add me-1"></span>
+        <span
+          class="fs-7 text-gray-600"
+          #createdOn
+          [innerHTML]="
+            data.createdOn
+              | formatvalue
+                : formModel
+                : 'createdOn'
+                : createdOn
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
+      </span>
     </div>
   </div>
 </ng-template>
@@ -179,7 +201,14 @@
           </span>
         </div>
       </div>
-      <div class="d-flex align-items-center text-gray-600">
+      <div
+        class="d-flex align-items-center text-gray-600"
+        #pEdDT="ngbPopover"
+        [ngbPopover]="popperEndDate"
+        (mouseenter)="pEdDT.open()"
+        (mouseleave)="pEdDT.close()"
+        placement="right top botom left"
+      >
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
           class="fs-7"
@@ -222,6 +251,28 @@
     [listStepsProcess]="dataProccess.steps"
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
+    [tabInstances]="tabInstances"
   >
   </codx-instance-detail>
+</ng-template>
+
+<ng-template #popperCreatedOn>
+  <span>
+    <codx-label
+      [fiedName]="'CreatedOn'"
+      [formName]="'DPInstances'"
+      [gridViewName]="'grvDPInstances'"
+      [setRequire]="false"
+    ></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperEndDate>
+  <span>
+    <codx-label
+      [fiedName]="'EndDate'"
+      [formName]="'DPInstances'"
+      [gridViewName]="'grvDPInstances'"
+      [setRequire]="false"
+    ></codx-label>
+  </span>
 </ng-template>

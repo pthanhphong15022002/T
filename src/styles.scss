@@ -1925,3 +1925,36 @@ codx-chat-container{
 codx-instance-detail .codx-detail-body.mt-2{
   margin-top: 0!important;
 }
+
+codx-tasks {
+  codx-view-kanban{ 
+  .e-kanban {
+    background: transparent;
+  }
+  .kanban-wrapper {
+    margin-top: -10px;
+    margin-left: -10px;
+  }
+  .e-kanban-content{
+    height: calc(100vh - 150px)!important;
+  }
+  .e-kanban-content > div,
+  .e-kanban-content > div > table,
+  .e-kanban-content .e-card-wrapper{
+    height: 100%!important;
+  }
+  .e-kanban .e-kanban-table {
+    border-spacing: 6px!important;
+    width: 100%;
+  }
+  .e-kanban-header > div{
+    padding-right: 0!important;
+  }
+  .e-kanban .e-kanban-content .e-content-row:not(.e-swimlane-row) .e-content-cells {
+    border: 0;
+  }
+  .e-card-wrapper {
+    height: calc(100vh - 172px) !important;
+  }
+}
+}

@@ -1,32 +1,32 @@
-<div class=" w-100">
+<div class="w-100">
   <div class="d-flex align-items-center" [ngStyle]="style">
-    <div> <codx-label
-      class="fw-bolder"
-      [fiedName]="fiedName"
-      [formModel]="formModel"
-      [default]="default"
-    ></codx-label></div>
     <div>
-      <button class="btn btn-icon btn-light"  (click)="shareUser(controlUser)">
+      <codx-label
+        class="fw-bolder"
+        [fiedName]="fiedName"
+        [formModel]="formModel"
+        [default]="default"
+      ></codx-label>
+    </div>
+    <div>
+      <button class="btn btn-icon btn-light" (click)="shareUser(controlUser)">
         <span class="icon-16" [ngClass]="icon"></span>
       </button>
     </div>
-    
-   
   </div>
   <div>
-    <ng-container *ngIf="isPopupUserCbb">
+    <ng-container  *ngIf=" isPopupUserCbb"> 
       <codx-combobox-popup
       [comboboxName]="'Users'"
       [field]="'cbbUser'"
-      [multiple]="false"
+      [multiple]="multiple"
       [width]="700"
       [height]="600"
       [value]=""
       (clickSave)="applyUser($event, dataSource)"
     >
     </codx-combobox-popup>
-     </ng-container>
+    </ng-container>
     <ng-container
       *ngIf="dataSource.length > 0"
       [ngTemplateOutlet]="showUser"
@@ -73,9 +73,10 @@
 
 <ng-template #controlUser let-dialog>
   <codx-share
-     [dialog]="dialog"
-     [multiple]="false"
-     (eventApply)="applyUser($event, dataSource)"
-     [listName]="'BP021'"
-   ></codx-share>
+    [dialog]="dialog"
+    [multiple]="multiple"
+    [listCombobox]="listCombobox"
+    (eventApply)="applyUser($event, dataSource)"
+    [listName]="vllShare"
+  ></codx-share>
 </ng-template>
