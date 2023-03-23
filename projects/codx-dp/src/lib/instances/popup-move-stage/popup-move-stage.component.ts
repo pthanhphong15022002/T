@@ -24,6 +24,7 @@ import {
 } from '../../models/models';
 import { InstancesComponent } from '../instances.component';
 import moment from 'moment';
+import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-move-stage',

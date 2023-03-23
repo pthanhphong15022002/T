@@ -565,7 +565,7 @@ export class StagesDetailComponent implements OnInit {
         this.taskGroupList.push(taskGroup);
       }
       console.log( this.taskGroupList);
-      
+
       this.taskList = step['tasks'];
     }
   }
@@ -776,7 +776,7 @@ export class StagesDetailComponent implements OnInit {
           }
     }
 
-   
+
   }
 
   updateProgressGroupTask() {
@@ -1006,7 +1006,7 @@ export class StagesDetailComponent implements OnInit {
   changeProgress(e,data){
     data['progress'] = e?.value ?  e?.value : 0;
   }
-   
+
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
   }
@@ -1022,35 +1022,35 @@ export class StagesDetailComponent implements OnInit {
           //xóa
           case 'SYS102':
           case 'SYS02':
-            if (!this.isDelete) res.disabled = true;
+            if (!this.isDelete || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           //EDIT
           //Đính kèm file
           case 'SYS003':
           case 'SYS103':
           case 'SYS03':
-            if (!this.isEdit) res.disabled = true;
+            if (!this.isEdit || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           //copy
           case 'SYS104':
           case 'SYS04':
-            if (!this.isCreate) res.disabled = true;
+            if (!this.isCreate || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           //"Chi tiết nhóm công việc"
           case 'DP12':
-            if (type != 'group') res.disabled = true;
+            if (type != 'group' || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           //Thêm công việc
           case 'DP08':
-            if (type != 'group' && !this.isCreate) res.disabled = true;
+            if (type != 'group' && !this.isCreate || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           //Chi tiết công việc
           case 'DP07':
-            if (type == 'group') res.disabled = true;
+            if (type == 'group' || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             break;
           // giao viẹc
           case 'DP13':
-            if (type == 'group') res.disabled = true;
+            if (type == 'group' || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
             if (data?.createTask) res.isblur = true;
             break;
         }
@@ -1101,7 +1101,6 @@ export class StagesDetailComponent implements OnInit {
     );
   }
   changeReasonMF(e) {
-    console.table(e);
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
