@@ -430,4 +430,7 @@ export class InstanceDetailComponent implements OnInit {
   actionSaveCustomField(e){
     this.isSaving =e ;
   }
+  clickMenu(e){
+     this.viewModelDetail = e
+  }
 }
