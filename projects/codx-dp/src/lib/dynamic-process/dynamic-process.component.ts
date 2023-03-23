@@ -64,7 +64,7 @@ export class DynamicProcessComponent
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
-  @Input() showButtonAdd = false;
+  @Input() showButtonAdd = true; 
   dialog!: DialogRef;
   dialogQuestionCopy: DialogRef;
   // create variables
@@ -155,7 +155,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP0101';
+    //this.showButtonAdd = this.funcID == 'DP0101';
   }
 
   //chang data

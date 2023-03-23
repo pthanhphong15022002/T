@@ -205,8 +205,11 @@
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
               [showColumnControl]="showColumnControl(item.stepID)"
-              [isUpdate]="dataSelect.write"
-              [isClosed]="dataSelect.closed"
+              [isUpdate]="dataSelect.write && !dataSelect.close"
+              [currentRecID]="currentRecID"
+              (inputCustomField)="inputCustomField($event)"
+              [isSaving]="isSaving"
+              (actionSave)="actionSaveCustomField($event)"
             ></codx-field-detail>
           </ng-container>
         </ng-container>
