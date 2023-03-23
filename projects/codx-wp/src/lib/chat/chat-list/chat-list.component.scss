@@ -30,3 +30,18 @@
     margin-right: calc(-0.5 * var(--bs-gutter-x));
     margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
+.group-avatar{
+    position: relative;
+}
+.group-avatar_status{
+    position: absolute;
+    bottom: -5px;
+    right: 2px;
+}
+.group-avatar_status-icon{
+    height: 8px;
+    width: 8px;
+    background-color: greenyellow;
+    border-radius: 50%;
+    display: inline-block;
+}

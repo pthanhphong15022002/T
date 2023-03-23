@@ -30,14 +30,18 @@
         <!--Body-->
         <div class="d-flex flex-column mt-5 w-100">
           <div class="d-flex flex-row">
-            <div class="col-3">
+            <div class="col-3" *ngIf="dataKR?.checkInMode=='1'">
               <codx-label class="fw-bold  mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input *ngIf="dataKR.checkInMode==1" [min]="0" [max]="100" [showSpinButton]="false" ControlName="value" [formModel]="formModel" [Group]="form.formGroup"></codx-input>
-              <codx-input *ngIf="dataKR.checkInMode==2" [min]="0" [max]="100-dataKR.progress" [showSpinButton]="false" ControlName="cummulated" [formModel]="formModel" [Group]="form.formGroup"></codx-input>
+              <!-- <codx-input [min]="0" [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="formModel" [Group]="form.formGroup"></codx-input> -->
+              <codx-input type="number"  [min]="0" [max]="100" [showSpinButton]="false" field="cummulated" (valueChange)="valueChange($event)"  [crrValue]="checkIns?.cummulated"></codx-input>
+            </div>
+            <div class="col-3" *ngIf="dataKR?.checkInMode!='1'">
+              <codx-label class="fw-bold  mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
+              <codx-input type="number" [min]="0" [max]="100-dataKR?.progress" [showSpinButton]="false" field="value"  (valueChange)="valueChange($event)" [crrValue]="checkIns?.value"></codx-input>
             </div>
             <div class="col-5 ms-5">
               <codx-label class="fw-bold mb-1" default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
-              <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR" [crrValue]="checkIns?.status"></codx-input>
+              <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR"></codx-input>
             </div>
 
           </div>
