@@ -87,7 +87,7 @@
             <li [ngbNavItem]="item.viewModelDetail" class="nav-item">
               <a ngbNavLink class="nav-link">
                 <div class="d-flex align-item-center">
-                  <i [ngClass]="item.icon" class="me-2"></i><span>
+                  <i [ngClass]="item.icon + ' '+ (item.viewModelDetail == viewModelDetail ? 'text-primary' : '')" class="me-2"></i><span>
                     <codx-label [name]="'tab' + item.viewModelDetail" [formModel]="'SYS'" [default]="item.textDefault">
                     </codx-label>
                   </span>

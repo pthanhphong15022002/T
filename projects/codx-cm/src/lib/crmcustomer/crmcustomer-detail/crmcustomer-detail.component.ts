@@ -76,7 +76,6 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
   }
