@@ -439,7 +439,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           if (this.returnUrl.indexOf(data.tenant) > 0)
             this.router.navigate([`${this.returnUrl}`]);
           else if (environment.saas == 1) {
-            if (!data.tenant) this.router.navigate(['/tenants']);
+            if (!data.tenant)
+              //this.router.navigate(['/tenants']);
+              window.location.href = '/tenants';
             else
               this.router.navigate([
                 `${this.returnUrl ? this.returnUrl : data.tenant}`,
