@@ -81,7 +81,7 @@ export class PopupCustomFieldComponent implements OnInit {
               this.notiService.notifyCode(
                 'SYS009',
                 0,
-                '"' + errorMessage + '"'
+                '"' + field.title + '"'
               );
             }
           });
@@ -97,7 +97,7 @@ export class PopupCustomFieldComponent implements OnInit {
               this.notiService.notifyCode(
                 'SYS009',
                 0,
-                '"' + errorMessage + '"'
+                '"' + field.title + '"'
               );
             }
           });
