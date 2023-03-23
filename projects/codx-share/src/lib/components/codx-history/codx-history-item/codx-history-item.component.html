@@ -881,40 +881,51 @@
 <!-- template list employeee -->
 <ng-template #tmpViewEmployee let-employees>
   <div ngbDropdown class="symbol-more" [container]="'body'">
-    <div
-      ngbDropdownToggle
-      class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
-      type="button"
-      id="dropdownMenuButton"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-      style="padding: 0 !important ; margin-left: 0 !important; border: none"
-    >
-      <div class="d-flex align-items-center">
-        <div>
-          <codx-img
-            [objectId]="employees[0].objectID"
-            [objectName]="employees[0].objectName"
-            [objectType]="'AD_Users'"
-            [width]="30"
-            [referType]="'avt'"
-            [imageType]="'circle'"
-          >
-          </codx-img>
-        </div>
-        <div
-          *ngIf="employees.length > 1"
-          class="symbol symbol-30px symbol-circle"
-        >
-          <div
-            class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary"
-          >
-            +{{ employees.length - 1 }}
+      <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="padding: 0 !important ; margin-left: 0 !important; border:none">
+          <div class="d-flex align-items-center">
+              <div>
+                  <codx-img 
+                      [objectId]="employees[0].objectID" 
+                      [objectName]="employees[0].objectName"
+                      [objectType]="'AD_Users'" 
+                      [width]="30"
+                      [referType]="'avt'"
+                      [imageType]="'circle'">
+                  </codx-img>
+              </div>
+              <div *ngIf="employees.length > 1" class="symbol symbol-30px symbol-circle ">
+                  <div class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary">+{{(employees.length - 1)}}</div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
+      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+          <div class="py-2">
+              <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+              <span class="fw-bold">{{employees.length}}</span>
+          </div>
+          <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
+          <div class="history-list-employees">
+              <ng-container *ngFor="let employee of employees">
+                  <div class="d-flex align-items-center my-2">
+                      <div class="me-2">
+                          <codx-img 
+                              [objectId]="employee.objectID" 
+                              [objectName]="employee.objectName"
+                              [objectType]="'AD_Users'" 
+                              [width]="30"
+                              [referType]="'avt'"
+                              [imageType]="'circle'">
+                          </codx-img>
+                      </div>
+                      <div>
+                          <span class="fs-6">{{employee.objectName}}</span>
+                      </div>
+                  </div>
+              </ng-container>
+          </div>
+      </div>
   </div>
 </ng-template>
 <ng-template #popupViewDetail let-dialog>

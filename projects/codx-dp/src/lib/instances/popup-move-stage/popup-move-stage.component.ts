@@ -107,7 +107,6 @@ export class PopupMoveStageComponent implements OnInit {
     }
     this.stepIdOld = this.instance.stepID;
 
-    // this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
     this.IdFail =
       this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isFailStep)]
@@ -122,7 +121,6 @@ export class PopupMoveStageComponent implements OnInit {
         this.firstInstance = res;
       }
     });
-    // this.loadListUser(this.instance.permissions);
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;

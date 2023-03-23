@@ -321,10 +321,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
     });
     this.dmSV.isDisableUpload.subscribe((res) => {
-      if (res) {
-        this.button.disabled = res;
-        this.changeDetectorRef.detectChanges();
-      }
+      this.button.disabled = res;
+      this.changeDetectorRef.detectChanges();
     });
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
@@ -965,6 +963,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   onSelectionChanged($data) {
     ScrollComponent.reinitialization();
+    debugger
     this.scrollTop();
     if (!$data || !$data?.data) return
     this.isSearch = false;

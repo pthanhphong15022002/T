@@ -13,13 +13,18 @@
 <ng-template #itemTemplateGroup let-item>
     <div class="d-flex align-items-center p-2 rounded-1 border-bottom" (click)="selectItem(item)">
         <!-- image -->
-        <div class="me-3">
+        <div class="me-3 group-avatar">
             <codx-img 
                 [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
                 [objectName]="item.groupType == '1'? item.groupName2:item.groupName" 
                 [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
                 [width]="30">
             </codx-img>
+            <ng-container *ngIf="item.isOnline">
+                <div class="group-avatar_status">
+                    <span class="group-avatar_status-icon"></span>
+                </div>
+            </ng-container>
         </div>
         <!-- group name - created - seen -->
         <div class="d-flex flex-column w-100">
