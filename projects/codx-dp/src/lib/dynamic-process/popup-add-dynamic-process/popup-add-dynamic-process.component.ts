@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnInit,
   Optional,
@@ -261,6 +262,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
+    this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
@@ -306,16 +308,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // this.process.instanceNoSetting = this.process.processNo;
     }
 
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
@@ -364,7 +357,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    // document.addEventListener("keydown", this.handleKeyDown);
   }
+
+  
+// handleKeyDown(event) {
+//   if (event.code === "F5" || event.code === "Escape") {
+//     event.preventDefault(); 
+//   }
+// }
+
+// ngOnDestroy() {
+//   document.removeEventListener("keydown", this.handleKeyDown);
+// }
 
   ngAfterViewInit(): void {
     this.GetListProcessGroups();
@@ -391,6 +396,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+
   async onSaveNow(){
     let check = await this.checkExitsName();
     if (check) {
@@ -407,12 +413,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.notiService.notifyCode('DP014');
       return;
     }
-    if (
-      (this.stepSuccess.reasons.length === 0 &&
-        this.stepSuccess.reasonControl) ||
-      (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
-    ) {
-      this.notiService.notifyCode('DP005');
+    if(!this.checkValidStepReason()){
       return;
     }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
@@ -473,6 +474,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
+        console.log(this.stepList);
+        
         if (res && res.update) {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -756,26 +759,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         break;
       case 1:
-        if (
-          this.stepSuccess.reasons.length === 0 &&
-            this.stepSuccess.reasonControl
-        ) {
-
-          this.notiService.notifyCode(
-            'DP005',
-            0,
-            '"' + this.stepNameSuccess + '"'
-          );
-          return;
-        }
-        if (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
-         {
-
-          this.notiService.notifyCode(
-            'DP005',
-            0,
-            '"' +this.stepNameFail + '"'
-          );
+        if(!this.checkValidStepReason()) {
           return;
         }
         this.newNode = newNode;
@@ -1802,12 +1786,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['modifiedOn'] = new Date();
       this.stepNew['modifiedBy'] = this.userId;
       if (this.action == 'edit') {
-        let checkAdd = this.listStepAdd?.some(idAdd => idAdd == this.stepNew.recID);
-        let checkEdit = this.listStepEdit?.some(idEdit => idEdit == this.stepNew.recID);
-        if(!checkAdd && !checkEdit){
-          this.listStepEdit.push(this.stepNew.recID);
-        }
-
+        this.listStepEdit.push(this.stepNew.recID);
       }
     }
     this.popupAddStage.close();
@@ -2066,7 +2045,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
-              this.addRole(taskData['roles'][0]);
+              taskData['roles']?.forEach(role => {
+                this.addRole(role);   
+              });
             } else {
               for (const key in taskData) {
                 data[key] = taskData[key];
@@ -2076,7 +2057,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               if (data?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTaskOfTask(data, taskGroupIdOld);
               }
-              this.addRole(data['roles'][0], roleOld[0]);
+              data['roles']?.forEach((role, index) => {
+                this.addRole(data['roles'][index], roleOld[index]);                
+              });
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
             if (!check) {
@@ -2288,7 +2271,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.setIndex(this.stepList, 'stepNo');
-    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1; 
+    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1;
     let end = event.previousIndex > event.currentIndex ? event.previousIndex + 1: event.currentIndex + 1;
     let listID = this.stepList?.filter(step => step.stepNo >= start && step.stepNo <= end).map(stepFind => {
       return stepFind.recID
@@ -2348,7 +2331,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     return this.process.processName &&
       this.process?.groupID &&
-      checkGroup && 
+      checkGroup &&
       this.stepList?.length > 0
       ? true
       : false;
@@ -2367,7 +2350,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else {
         this.checkGroup = true;
       }
-      return this.process.processName &&
+      return (this.process.processName && this.process.processName.trim() != '') &&
         this.process?.groupID &&
         this.checkGroup
         ? true
@@ -2481,6 +2464,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     return sum;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.code === 'F5') {
+      // xử lý sự kiện nhấn F5 ở đây
+      console.log('thuan');
+      
+    }
   }
 
   // add role to permissions process
@@ -2930,7 +2928,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       setTimeout(() => {
         this.isClick = false;
       }, 500);
-      if (this.reasonName === null || this.reasonName === '') {
+      if (this.reasonName === null || this.reasonName?.trim() === '') {
         this.notiService.notifyCode(
         'SYS009',
         0,
@@ -2957,13 +2955,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.step,
           this.process?.recID
         );
-        this.reason.reasonName = this.reasonName;
+        this.reason.reasonName = this.reasonName.trim();
         this.step.reasons.push(this.reason);
         this.step.reasons = [
           ...new Set(this.step.reasons.map((x) => x.recID)),
         ].map((recID) => this.step.reasons.find((x) => x.recID === recID));
       } else if (this.reasonAction === this.formEdit) {
-        this.reason.reasonName = this.reasonName;
+        this.reason.reasonName = this.reasonName.trim();
       }
       this.popupAddReason.close();
       this.changeDetectorRef.detectChanges();
@@ -3176,6 +3174,54 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   LowercaseFirstPipe(value) {
     if (!value) return '';
     return value.charAt(0).toLowerCase() + value.slice(1);
+  }
+
+  ischeckDurationTime(stepList){
+    var findExistDuration = stepList.find(x=> this.isInvalidDuration(x?.durationDay) || this.isInvalidDuration(x?.durationHour));
+    if(findExistDuration){
+      this.notiService.notifyCode(
+        'DP025',
+        0,
+        '"' + this.strTitleDuration(findExistDuration.durationDay) + '"', '"' + findExistDuration.stepName + '"'
+      );
+      return true;
+    }
+    return false;
+  }
+
+  isInvalidDuration(duration) {
+    return (duration === undefined || duration === null || duration < 0 || duration === '');
+  }
+  strTitleDuration(durationDay): string{
+    return this.isInvalidDuration(durationDay) ? this.strDay : this.strHour;
+  }
+  checkValidStepReason() {
+    if (
+      this.stepSuccess.reasons.length === 0 &&
+        this.stepSuccess.reasonControl
+    ) {
+
+      this.notiService.notifyCode(
+        'DP005',
+        0,
+        '"' + this.stepNameSuccess + '"'
+      );
+      return false;
+    }
+    if (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
+     {
+
+      this.notiService.notifyCode(
+        'DP005',
+        0,
+        '"' +this.stepNameFail + '"'
+      );
+      return false;
+    }
+    if(this.ischeckDurationTime(this.stepList)) {
+        return false;
+    }
+    return true;
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion

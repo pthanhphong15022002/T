@@ -247,7 +247,7 @@
                                         [gridViewName]="functionList?.gridViewName"
                                         default='Cho phép đổi 1 xu từ ví nhân viên sang '>
                                     </codx-label>
-                                    {{quantity.ExchangeRateCoins}}
+                                    {{quantity.ExchangeRateCoins?quantity.ExchangeRateCoins : 0}}
                                     <codx-label fiedName="AcceptExchangeCoin" [formName]="functionList?.formName"
                                         [gridViewName]="functionList?.gridViewName"
                                         default='xu quỹ cho để tặng trên phiếu phản hồi'>

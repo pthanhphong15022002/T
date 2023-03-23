@@ -456,6 +456,15 @@ getOKRModel() {
       [kr]
     );
   }
+  editKRTargets(recID: any, targets:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'EditKRTargetsAsync',
+      [recID,targets]
+    );
+  }
   deleteOKR(okr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,

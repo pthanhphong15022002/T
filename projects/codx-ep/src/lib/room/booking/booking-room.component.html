@@ -50,7 +50,7 @@
 <ng-template #subTitleTmp let-data>
   <div class="">
     <div class="">
-      <span [innerHTML]="data?.positionID | formatvalue : formModel : 'positionID' | async"></span>
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="">
       <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
@@ -107,7 +107,7 @@
 </ng-template>
 <ng-template #gridResourceName let-data>
   <div>
-    <span [innerHTML]="data?.resourceID | formatvalue : formModel : 'ResourceID' | async"></span>
+    <span [innerHTML]="data?.resourceName "></span>
   </div>
 </ng-template>
 <ng-template #gridHost let-data>

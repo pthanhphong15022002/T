@@ -145,19 +145,13 @@
                   <div class="d-flex align-items-start">
                     <div class="w-120px me-6">
                       <div class="text-primary d-flex justify-content-center fw-bold fs-4">
-                        {{
-                        (item.date ? item.date : item.createdOn)
-                        | date: "shortTime"
-                        }}
+                        {{(item.date ? item.date : item.createdOn) | date: "shortTime"}}
                       </div>
                       <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">
-                        {{
-                        (item.date ? item.date : item.createdOn)
-                        | date: "dd/MM/yyyy"
-                        }}
+                        {{(item.date ? item.date : item.createdOn) | date: "dd/MM/yyyy"}}
                       </div>
                     </div>
-                    <!-- <codx-imgs [referType]=""></codx-imgs> -->
+                    <codx-imgs ></codx-imgs>
                     <div class="d-flex align-items-center">
                       <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'"  [title]="item?.employeeName"
                         [subTitle]="item?.positionName" [desc]="
@@ -227,7 +221,7 @@
   <ng-template #footer>
     <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"
       [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="data?.recID"
-      [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs> 
+      [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>
