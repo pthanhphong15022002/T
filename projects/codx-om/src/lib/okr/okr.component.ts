@@ -235,8 +235,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getOKRModel() {
     this.codxOmService.getOKRModel().subscribe((model:any) => {
       if (model) {
-        this.groupModel=model;
-        this.planModel =model?.planModel;
+        for(let pro in model){ 
+          delete model[pro].recID;
+          delete model[pro].id;
+        }
+        this.groupModel = model;
+        this.planModel = model?.planModel;
         this.okrModel = model?.okrModel;
         this.checkInsModel = model?.checkInsModel;
         this.sharesModel = model?.sharesModel;
@@ -359,7 +363,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         case OMCONST.MFUNCID.UnReleasePlanDEPT:
           case OMCONST.MFUNCID.UnReleasePlanORG:
             case OMCONST.MFUNCID.UnReleasePlanPER:
-        //this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
+        this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
         break;
       case OMCONST.MFUNCID.SharesPlanCOMP:
         case OMCONST.MFUNCID.SharesPlanDEPT:

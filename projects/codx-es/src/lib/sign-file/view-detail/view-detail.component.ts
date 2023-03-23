@@ -350,6 +350,9 @@ export class ViewDetailComponent implements OnInit {
       case 'EST01104': //unBookmark
         this.unBookmark(datas);
         break;
+      case 'EST01105': //Gửi duyệt
+        this.release();
+        break;
     }
   }
 
@@ -412,6 +415,7 @@ export class ViewDetailComponent implements OnInit {
             this.view.dataService.update(res.event).subscribe();
           }
         }
+        this.esService.setupChange.next(true);
       });
     });
   }
@@ -611,6 +615,43 @@ export class ViewDetailComponent implements OnInit {
           datas.bookmarks = res?.bookmarks;
           this.view.dataService.update(datas).subscribe();
         } else {
+        }
+      });
+  }
+
+  release() {
+    //Gửi duyệt'
+
+    if (this.user.userID != this.itemDetail.owner) {
+      return;
+    }
+    // if (this.itemDetail.eSign == true && this.processTab < 3 && this.currentTab == 3) {
+    //   return;
+    // }
+
+    this.esService
+      .release(
+        this.itemDetail,
+        this.formModel.entityName,
+        this.formModel.funcID
+      )
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          //Gen QR code
+          this.esService
+            .addQRBeforeRelease(this.itemDetail.recID)
+            .subscribe((res) => {});
+          this.esService
+            .getDetailSignFile(this.itemDetail?.recID)
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.update(res).subscribe();
+                this.itemDetail = res;
+                this.df.detectChanges();
+              }
+            });
+          // Notify
+          this.notify.notifyCode('ES007');
         }
       });
   }

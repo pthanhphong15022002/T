@@ -51,6 +51,7 @@ export class InstancesComponent
 {
   @Input() process: any;
   @Input() isCreate: boolean;
+  @Input() tabInstances = [];
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
@@ -263,7 +264,7 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-              option.Width = '850px';
+              option.Width = '800px';
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
               if (!this.process.instanceNoSetting) {
@@ -315,7 +316,7 @@ export class InstancesComponent
                 formMD.entityName = fun.entityName;
                 formMD.formName = fun.formName;
                 formMD.gridViewName = fun.gridViewName;
-                option.Width = '850px';
+                option.Width = '800px';
                 option.zIndex = 1001;
                 if (!this.process.instanceNoSetting) {
                   this.codxDpService
@@ -412,7 +413,7 @@ export class InstancesComponent
                 formMD.formName = fun.formName;
                 formMD.gridViewName = fun.gridViewName;
 
-                option.Width = '850px';
+                option.Width = '800px';
                 option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;

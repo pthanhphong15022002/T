@@ -45,27 +45,27 @@ export class ChatContainerComponent implements OnInit {
     // active new group
     this.signalRSV.activeNewGroup.subscribe((res:any) => {
       if(res){
-        this.handleBoxChat(res.groupID);
+        this.handleBoxChat(res);
       }
     });
     // active group
     this.signalRSV.activeGroup.subscribe((res:any) => {
       if(res)
       {
-        this.handleBoxChat(res.groupID);
+        this.handleBoxChat(res);
       }
     });
     //receiver message
     this.signalRSV.reciverChat.subscribe((res:any) => {
       if(res.groupID){
-        this.handleBoxChat(res.groupID);         
+        this.handleBoxChat(res);         
       }
     });
   }
   // handle box chat
-  handleBoxChat(groupID:any){
-    let isOpen = this.lstGroupActive.some(x=>x == groupID);
-    let index = this.lstGroupCollapse.findIndex(x => x.id === groupID);
+  handleBoxChat(data:any){
+    let isOpen = this.lstGroupActive.some(x => x.groupID == data.groupID);
+    let index = this.lstGroupCollapse.findIndex(x => x.groupID === data.groupID);
     if(isOpen) return ;
     // check collaspe
     if(index > -1)
@@ -73,78 +73,69 @@ export class ChatContainerComponent implements OnInit {
       this.lstGroupCollapse.splice(index,1);
     }
     if(this.lstGroupActive.length == 2){
-      let id = this.lstGroupActive.shift();
-      let ele = document.getElementById(id);
+      let group = this.lstGroupActive.shift();
+      let ele = document.getElementById(group.groupID);
       // get current instance của element trên DOM
+      debugger
       let codxBoxChat = window.ng.getComponent(ele);
-      let item = 
-      {
-        id:codxBoxChat.group.groupID,
-        message:codxBoxChat.group.message,
-        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+      if(codxBoxChat){
+        this.lstGroupCollapse.push(codxBoxChat.group);
       }
-      this.lstGroupCollapse.push(item);
     }
-    this.lstGroupActive.push(groupID);
+    this.lstGroupActive.push(data);
     this.dt.detectChanges();
     
   }
   //close box chat
-  closeBoxChat(id:string,codxBoxChat:ChatBoxComponent){
-    let index = this.lstGroupActive.findIndex(x => x == id); 
+  closeBoxChat(data:any,element:ChatBoxComponent){
+    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
     if(index > -1 ){
       this.lstGroupActive.splice(index, 1);
       if(this.lstGroupCollapse.length > 0){
         let group = this.lstGroupCollapse.pop();
-        if(group?.id){
-          this.lstGroupActive.push(group.id);
-        }
+        this.lstGroupActive.push(group);
       }
       // lấy element hiện tại của component trên DOM
-      window.ng.getHostElement(codxBoxChat)?.remove();
+      window.ng.getHostElement(element)?.remove();
       this.dt.detectChanges();
     }
   }
   // collapse box chat
-  collapseBoxChat(id:string,codxBoxChat:ChatBoxComponent){
-    let index = this.lstGroupActive.findIndex(x => x == id); 
+  collapseBoxChat(data:any,codxBoxChat:ChatBoxComponent){
+    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
     if(index > -1){
       this.lstGroupActive.splice(index, 1);
-      let item = 
-      {
-        id:codxBoxChat.groupID,
-        message:codxBoxChat.group.message,
-        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
-      }
-      this.lstGroupCollapse.unshift(item);
+      this.lstGroupCollapse.unshift(codxBoxChat.group);
       window.ng.getHostElement(codxBoxChat)?.remove();
       this.dt.detectChanges();
     }
   }
   // expanse box chat
-  expanseBoxChat(group:any){
-    if(this.lstGroupActive.length == 2){
-      let id = this.lstGroupActive.shift();
-      let ele = document.getElementById(id);
-      let codxBoxChat = window.ng.getComponent(ele);
-      let item = 
-      {
-        id:codxBoxChat.groupID,
-        message:codxBoxChat.group.message,
-        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
-      }
-      this.lstGroupCollapse.push(item);
-    }
-    this.lstGroupActive.push(group.id);
-    let index = this.lstGroupCollapse.findIndex(x => x.id == group.id); 
-    this.lstGroupCollapse.splice(index, 1);
-    this.dt.detectChanges();
+  expanseBoxChat(data:any){
+    debugger
+    // if(this.lstGroupActive.length == 2){
+    //   let group = this.lstGroupActive.shift();
+    //   let ele = document.getElementById(group.groupID);
+    //   let codxBoxChat = window.ng.getComponent(ele);
+    //   if(codxBoxChat){
+    //     let item = 
+    //     {
+    //       id:codxBoxChat.groupID,
+    //       online:data.isOnline,
+    //       groupID:codxBoxChat.groupID,
+    //       message:codxBoxChat.message,
+    //       objectID:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+    //       objectName:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+    //       objectType:codxBoxChat.groupType === '1' ? 'AD_Users':'WP_Groups'  
+    //     }
+    //     this.lstGroupCollapse.push(item);
+    //   }
+    // }
+    // this.lstGroupActive.push(data);
+    // let index = this.lstGroupCollapse.findIndex(x => x.groupID == data.groupID); 
+    // this.lstGroupCollapse.splice(index, 1);
+    // this.dt.detectChanges();
+    this.signalRSV.sendData(data,"ActiveGroupAsync");
   }
 
 }

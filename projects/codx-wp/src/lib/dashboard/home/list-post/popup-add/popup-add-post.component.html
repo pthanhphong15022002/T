@@ -56,7 +56,7 @@
             <!-- contents -->
             <div class="wp-contents">
                 <codx-input 
-                    format="ed3" 
+                    format="ed" 
                     [class]="'border-none'" 
                     [copyStyle]="copyFormat"
                     type="textarea" 
@@ -210,9 +210,12 @@
     <ng-template #templateSharePost let-post>
         <div class="WP_Comments">
             <div class="pic-feed p-4">
-                <div class="pic-feed-img">
-                    <codx-file [objectID]="post.recID"></codx-file>
-                </div>
+                <codx-view-files 
+                    [formModel]="dialogRef.formModel" 
+                    [objectType]="'WP_Comments'"
+                    [medias]="post.medias"
+                    [objectID]="post.recID">
+                </codx-view-files>
             </div>
             <div class="text-dark text-feed p-4">
                 <p [innerHTML]="post.content"></p>
@@ -287,7 +290,7 @@
 
 <ng-template #footer>
     <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-primary btn-post" (click)="submit()">
+        <button [disabled]="loaded" type="button" class="btn btn-primary btn-post" (click)="submit()">
             <codx-label formName="WP_Comments" name="lblSubmit"
                 [default]="dialogData.status == 'edit'? 'Lưu':'Đăng'">
             </codx-label>

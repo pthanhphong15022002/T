@@ -20,7 +20,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { TestComponetComponent } from './test-componet/test-componet.component';
 import { PopupTaskComponent } from './task/popup-task/popup-task.component';
-import { CrmContactsComponent } from './crmcontacts/crmcontacts.component';
 import { CrmCustomerComponent } from './crmcustomer/crmcustomer.component';
 import { CrmcustomerDetailComponent } from './crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
 import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.component';
@@ -29,13 +28,14 @@ import { CodxTaskComponent } from './task/codx-task/codx-task.component';
 import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
 import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
 import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
-import { PopupAddCrmcontactsComponent } from './crmcontacts/popup-add-crmcontacts/popup-add-crmcontacts.component';
+import { PopupAddCrmcontactsComponent } from './crmcustomer/popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
-import { CrmPartnersComponent } from './crm-partners/crm-partners.component';
-import { CrmPartnersDetailComponent } from './crm-partners/crm-partners-detail/crm-partners-detail.component';
-import { PopupAddCrmPartnerComponent } from './crm-partners/popup-add-crm-partner/popup-add-crm-partner.component';
 import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxTableComponent } from './task/codx-table/codx-table.component';
+import { OpportunityComponent } from './opportunity/opportunity.component';
+import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
+import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
 const routes: Routes = [
   {
     path: '',
@@ -48,6 +48,11 @@ const routes: Routes = [
       {
         path: 'customermanagement/:funcID',
         component: CrmCustomerComponent,
+      },
+      {
+        // gán tạm để làm UI
+        path: 'opportunity/:funcID',
+        component: OpportunityComponent,
       },
       {
         path: '**',
@@ -65,7 +70,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     LayoutComponent,
     TestComponetComponent,
     PopupTaskComponent,
-    CrmContactsComponent,
     CrmCustomerComponent,
     CrmcustomerDetailComponent,
     CodxShowTaskComponent,
@@ -77,9 +81,10 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ViewListCrmComponent,
     PopupListContactsComponent,
     PopupQuickaddContactComponent,
-    CrmPartnersComponent,
-    CrmPartnersDetailComponent,
-    PopupAddCrmPartnerComponent,
+    CodxTableComponent,
+    OpportunityComponent,
+    OpportunityDetailComponent,
+    TabDetailCustomComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

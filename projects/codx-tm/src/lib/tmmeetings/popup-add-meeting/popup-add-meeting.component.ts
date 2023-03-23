@@ -45,7 +45,6 @@ import { CodxTMService } from '../../codx-tm.service';
 })
 export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   @Input() meeting = new CO_Meetings();
-  @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('locationCBB') locationCBB;
 
@@ -216,14 +215,14 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
   }
 
-  loadRoomAvailable(startDate, endDate) {
+  loadRoomAvailable() {
     this.api
       .execSv<any>(
         'EP',
         'EP',
         'ResourcesBusiness',
         'GetListAvailableResourceAsync',
-        ['1', startDate, endDate, this.meeting.recID, false]
+        ['1', this.meeting.startDate, this.meeting.endDate, this.meeting.recID, false]
       )
       .subscribe((res) => {
         if (res) {
@@ -680,44 +679,49 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   setDate() {
-    if (this.startTime) {
-      this.beginHour = parseInt(this.startTime.split(':')[0]);
-      this.beginMinute = parseInt(this.startTime.split(':')[1]);
-      if (this.selectedDate) {
-        if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-          this.startDate = new Date(
-            this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
-          );
-          if (this.startDate) {
-            this.meeting.startDate = this.startDate;
+    if(this.startTime != null && this.endTime != null){
+      if (this.startTime) {
+        this.beginHour = parseInt(this.startTime.split(':')[0]);
+        this.beginMinute = parseInt(this.startTime.split(':')[1]);
+        if (this.selectedDate) {
+          if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
+            this.startDate = new Date(
+              this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
+            );
+            if (this.startDate) {
+              this.meeting.startDate = this.startDate;
+            }
           }
         }
       }
-    }
-    if (this.endTime) {
-      this.endHour = parseInt(this.endTime.split(':')[0]);
-      this.endMinute = parseInt(this.endTime.split(':')[1]);
-      if (this.selectedDate) {
-        if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-          this.endDate = new Date(
-            this.selectedDate.setHours(this.endHour, this.endMinute, 0)
-          );
-          if (this.endDate) {
-            this.meeting.endDate = this.endDate;
+      if (this.endTime) {
+        this.endHour = parseInt(this.endTime.split(':')[0]);
+        this.endMinute = parseInt(this.endTime.split(':')[1]);
+        if (this.selectedDate) {
+          if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
+            this.endDate = new Date(
+              this.selectedDate.setHours(this.endHour, this.endMinute, 0)
+            );
+            if (this.endDate) {
+              this.meeting.endDate = this.endDate;
+            }
           }
         }
       }
+      if (this.isRoom) {
+        this.loadRoomAvailable();
+      }
+      this.changDetec.detectChanges();
     }
-    if (this.isRoom) {
-      this.loadRoomAvailable(this.meeting.startDate, this.meeting.endDate);
-    }
+
   }
 
-  openPopupLink() {
+  openPopupLink(addLink) {
     let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
     option.zIndex = 3000;
     this.dialogPopupLink = this.callFuncService.openForm(
-      this.addLink,
+      addLink,
       '',
       500,
       10,
@@ -1023,6 +1027,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.calendarID = param.CalendarID;
           this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
           this.getTimeWork(new Date());
+          this.loadRoomAvailable();
         }
       });
   }

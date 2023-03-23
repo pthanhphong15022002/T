@@ -3,12 +3,10 @@
 </codx-form>
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-2">
-      <div class="col-12">
-        <codx-input [Group]="form.formGroup" field="voucherType" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
+    <div class="mt-2 col-2">
+      <codx-input [Group]="form.formGroup" field="voucherType" [formModel]="form.formModel"
+        (valueChange)="changeType($event)">
+      </codx-input>
     </div>
   </ng-container>
 </ng-template>
@@ -22,7 +20,7 @@
             <div class="d-flex align-items-top">
               <i class="icon-info icon-18 me-2"></i>
               <div class="fw-bold fs-6 text-uppercase">Thông tin chứng từ</div>
-          </div>
+            </div>
           </ng-template>
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
@@ -31,18 +29,49 @@
       </e-tabitems>
     </ejs-tab>
     <br />
-    <ejs-tab>
+    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event)">
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <span class="fw-bold fs-6 text-uppercase">Chi tiết bút toán</span>                         
-          </div>
+              <span class="fw-bold fs-6 text-uppercase">Chi tiết bút toán</span>
+            </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
+            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+        <!-- Test tab -->
+        <e-tabitem [disabled]="true" aria-hidden="true">
+          <ng-template #headerText>
+            <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <div class="icon-format_list_numbered icon-20"></div>
+              </div>
+              <div class="fw-bold fs-5">Tổng hợp</div>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <codx-gridview-v2
+              #grid
+              formName="EIInvoices"
+              gridViewName="grvEIInvoiceLines"
+              entityName="EI_InvoiceLines"
+              [templateMore]="morefunction"
+              [editSettings]="editSettings"
+              [allowFiltering]="true"
+              [allowSorting]="true"
+              [dataValues]="form.data.recID"
+              [dataSource]="cashpaymentline"
+              service="AC"
+              [height]="gridHeight"
+              [autoLoad]="false"
+              rowHeight="40"
+              (cellChanged)="cellChanged($event)"
+              (created)="gridCreated($event)"
+            ></codx-gridview-v2>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -89,7 +118,7 @@
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
-                  (valueChange)="objectChanged($event)">
+                  (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
             </div>
@@ -174,7 +203,7 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #tabCashPaymentLine>
+<ng-template #tabLine>
   <codx-gridview-v2 #grid [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
     [entityName]="fmCashPaymentsLines.entityName" [templateMore]="morefunction" [editSettings]="editSettings"
     predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID"
@@ -197,7 +226,7 @@
     <div class="col-12">
       <div class="form-group mb-0 row">
         <div class="col-2">
-          <button type="button" class="btn btn-light-primary"  (click)="addRow()">
+          <button type="button" class="btn btn-light-primary" (click)="addRow()">
             <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
           </button>
         </div>
@@ -214,7 +243,9 @@
     <div class="d-flex justify-content-start align-items-center me-2">
       <div class="card-title">
         <div class="d-flex flex-column">
-          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">
+            {{ headerText }}
+          </div>
         </div>
       </div>
       <div class="ms-3 input-circle input-sm">
@@ -240,5 +271,4 @@
       </div>
     </div>
   </div>
-
 </ng-template>

@@ -73,10 +73,10 @@
         align-items: center;
         padding: 0 0 0.5rem 0;
     }
-    .e-splitter .e-split-bar.e-split-bar-horizontal {
-        background: var(--gray-150);
-    }
-   
+    // .e-splitter .e-split-bar.e-split-bar-horizontal {
+    //     background: var(--gray-150);
+    // }
+
 }
 .dp-process-main{
 
@@ -110,3 +110,7 @@
 #viewModeDetail{
     padding-right: 5px;
 }
+
+.dp-process-main .e-splitter .e-split-bar.e-split-bar-horizontal {
+    background: var(--gray-150);
+  }

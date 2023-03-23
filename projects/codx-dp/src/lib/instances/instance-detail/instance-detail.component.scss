@@ -2,8 +2,8 @@
 	background-color: #d8d8d8;
 	border-radius: 16px;
 	position: relative;
-	margin-bottom: 10px;
-	height: 16px;
+	margin-bottom: 5px;
+	height: 15px;
 	width: 150px;
 }
 
@@ -30,7 +30,7 @@
 	color: #666;
 	cursor: default;
 	margin-right: 4px;
-	height: 44px;
+	height: 34px;
 	text-indent: 10px;
 	min-width: 180px;
 	position: relative;
@@ -50,12 +50,12 @@
 	content: " ";
 	position: absolute;
 	top: 0;
-	right: -21px;
+	right: -17px;
 	width: 0;
 	height: 0;
-	border-top: 22px solid transparent;
-	border-bottom: 23px solid transparent;
-	border-left: 22px solid #d9e3f7;
+	border-top: 17px solid transparent;
+	border-bottom: 17px solid transparent;
+	border-left: 17px solid #d9e3f7;
 	z-index: 2;
 	transition: border-color 0.2s ease;
 }
@@ -92,7 +92,7 @@
 .arrow-steps .step:before {
 	right: auto;
 	left: 0;
-	border-left: 22px solid #fff !important;
+	border-left: 17px solid #fff !important;
 	z-index: 0;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .arrow-steps .step.current:after {
-	border-left: 22px solid #3699ff;
+	border-left: 17px solid #3699ff;
 }
 
 .arrow-steps .step.old {
@@ -136,7 +136,7 @@
 }
 
 .arrow-steps .step.old:after {
-	border-left: 22px solid #23468c;
+	border-left: 17px solid #23468c;
 }
 
 
@@ -178,7 +178,6 @@
 
 .view-step-box {
 	overflow: auto;
-	border-top: 1px var(--gray-100) solid;
 	padding-top: 5px;
 	clear: both;
 }
