@@ -1877,7 +1877,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       { taskGroup: taskGroup, differenceTime, step: this.step, form }
     );
     this.popupGroupJob.closed.subscribe((res) => {
-      if (res?.event) {
+      if (res?.event && res?.event?.taskGroupName) {
         this.saveGroupTask(type, taskGroup, data);
         let check = this.listStepEdit.some((id) => id == data?.stepID);
         if (!check) {
@@ -1983,7 +1983,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openTypeJob() {
     this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
-      if (value?.event) {
+      if (value?.event && value?.event['value']) {
         this.jobType = value?.event['value'];
         this.handleTask('add');
       }

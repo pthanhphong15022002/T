@@ -29,20 +29,15 @@
   <div class="card-form">
     <!-- Link group -->
     <div class="form-group">
-      <div class="text-primary mb-1">
+      <div>
         <codx-label
+          class="text-primary"
           fiedName="StepName"
           [formModel]="dialog?.formModel"
-          default="Thuộc giai đoạn/nhóm"
+          default="Thuộc giai đoạn: "
         >
         </codx-label>
-      </div>
-      <div>
         <codx-label [default]="taskName"> </codx-label>
-        <span *ngIf="taskGroupName"> > </span>
-        <span style="font-weight: 500">
-          {{ taskGroupName }}
-        </span>
       </div>
     </div>
     <!--End Link group -->
@@ -324,7 +319,7 @@
         [Group]=""
         format="ed"
         type="text"
-        [height]="'100'"
+        [height]="'150'"
         (valueChange)="valueChangeText($event)"
       >
       </codx-input>
