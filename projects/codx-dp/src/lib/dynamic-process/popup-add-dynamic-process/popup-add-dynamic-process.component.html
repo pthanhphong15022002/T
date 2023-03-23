@@ -1122,7 +1122,7 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field p-2 row">
+                <div class="class-field mx-0 row">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
@@ -1568,7 +1568,7 @@
                     </span>
                     <div class="me-3">
                       <codx-img
-                        [width]="35"
+                        [width]="30"
                         [objectId]="taskList?.roles[0]?.objectID"
                         objectType="AD_Users"
                         [objectName]="taskList?.roles[0]?.objectName"
@@ -1644,14 +1644,14 @@
                               [ngStyle]="getColor(task)"
                             >
                               <span
-                                class="icon-18"
+                                class="icon-16"
                                 [ngClass]="getIconTask(task)"
                               ></span>
                             </div>
                             <!-- avata -->
                             <div class="mx-3">
                               <codx-img
-                                [width]="35"
+                                [width]="30"
                                 [objectId]="task?.roles[0]?.objectID"
                                 objectType="AD_Users"
                                 [objectName]="task?.roles[0]?.objectName"
