@@ -145,16 +145,10 @@
                   <div class="d-flex align-items-start">
                     <div class="w-120px me-6">
                       <div class="text-primary d-flex justify-content-center fw-bold fs-4">
-                        {{
-                        (item.date ? item.date : item.createdOn)
-                        | date: "shortTime"
-                        }}
+                        {{(item.date ? item.date : item.createdOn) | date: "shortTime"}}
                       </div>
                       <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">
-                        {{
-                        (item.date ? item.date : item.createdOn)
-                        | date: "dd/MM/yyyy"
-                        }}
+                        {{(item.date ? item.date : item.createdOn) | date: "dd/MM/yyyy"}}
                       </div>
                     </div>
                     <codx-imgs ></codx-imgs>
