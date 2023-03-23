@@ -1926,7 +1926,8 @@ codx-instance-detail .codx-detail-body.mt-2{
   margin-top: 0!important;
 }
 
-codx-view-kanban{ 
+codx-tasks {
+  codx-view-kanban{ 
   .e-kanban {
     background: transparent;
   }
@@ -1955,4 +1956,5 @@ codx-view-kanban{
   .e-card-wrapper {
     height: calc(100vh - 172px) !important;
   }
+}
 }

@@ -76,7 +76,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -98,7 +98,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       this.parentID,
     ]);
   }
-  add() {
+  add(e) {
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
