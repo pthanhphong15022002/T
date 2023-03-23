@@ -178,7 +178,6 @@
 
 .view-step-box {
 	overflow: auto;
-	border-top: 1px var(--gray-100) solid;
 	padding-top: 5px;
 	clear: both;
 }
@@ -187,5 +186,17 @@ codx-instances codx-detail-tmp .codx-detail-main{
 	padding-bottom: 0!important;
 	background-color: #FF9472;
 }
+.instance-select{
+	a.nav-link {
+		padding: 4px 5px;
+	}
+}
+.instance-content{
+	height: calc(100vh - 296px);
+	overflow: auto;
 
+	#viewModeDetail{
+		max-height: none!important;
+	}
 
+}

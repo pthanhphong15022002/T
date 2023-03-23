@@ -51,6 +51,7 @@ export class InstancesComponent
 {
   @Input() process: any;
   @Input() isCreate: boolean;
+  @Input() tabInstances = [];
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })

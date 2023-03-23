@@ -361,7 +361,6 @@ export class CodxDMService {
   }
 
   getRight(folder: FolderInfo) {
-    debugger
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -673,7 +672,8 @@ export class CodxDMService {
           }
           // this.isBookmark = !this.isBookmark;
           this.listFolder = list;
-          this.ChangeData.next(true);
+          //this.ChangeData.next(true);
+          this.addFile.next(true);
           //that.changeDetectorRef.detectChanges();
         }
       });

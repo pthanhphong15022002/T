@@ -1,5 +1,5 @@
 <div class="back-info">
-  <div class="header-info py-3 px-5 d-flex align-items-center justify-content-between mb-0">
+  <div class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0">
     <div class="d-flex align-items-center">
       <span class="fs-" *ngIf="titleDefault">
         <codx-label
@@ -13,22 +13,22 @@
     </div>
     <div class="d-flex align-items-center justify-content-end">
       <div class="group-button">
-        <button type="button"
+        <button
+          type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate && !isClosed"
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
             (click)="popupCustomField(dataStep.fields)"
           ></i>
         </button>
-        <button type="button"
+        <button
+          type="button"
           class="btn btn-icon btn-outline-primary ms-1"
           (click)="clickShow($event, dataStep.recID)"
         >
-          <i
-            class="icon-expand_less icon-18"
-          ></i>
+          <i class="icon-expand_less icon-18"></i>
         </button>
       </div>
     </div>
@@ -55,98 +55,112 @@
 </div>
 
 <ng-template #viewCustomFields let-data>
-  <div class="text-gray-700 ms-5">
-    {{ data.title }}
-  </div>
-  <div>
-    <span class="place-holder margin-l" *ngIf="!data.dataValue">
+  <div  id="{{data.recID}}" class='show-main'>
+    <div class="fw-bold mb-1">
       {{ data.title }}
-    </span>
-    <ng-container *ngIf="data.dataValue">
-      <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
-        {{ data.dataValue }}
+    </div>
+    <div (dblclick)="clickInput(data.recID,dataStep,true)" class="cursor-pointer">
+      <span class="place-holder margin-l" *ngIf="!data.dataValue">
+        {{ data.title }}
       </span>
+      <ng-container *ngIf="data.dataValue">
+        <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
+          {{ data.dataValue }}
+        </span>
 
-      <span
-        class="text-dark margin-l"
-        *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
-        [innerHTML]="formatNumber(data)"
-      >
-        <span *ngIf="data.dataFormat == 'P'">%</span>
-      </span>
-      <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
         <span
-          *ngIf="
-            data?.dataFormat == '1' ||
-            data?.dataFormat == '2' ||
-            data.dataFormat == '3'
-          "
+          class="text-dark margin-l"
+          *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
+          [innerHTML]="formatNumber(data)"
         >
-          {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
-        >
-        <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
-          {{
-            getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
-          }}</span
-        >
-      </span>
-      <ng-container *ngIf="data.dataType == 'R'">
-        <ngb-rating
-          [rate]="partNum(data.dataValue)"
-          [max]="data?.rank"
-          [readonly]="true"
-          [starTemplate]="temp"
-        >
-          <ng-template #temp let-fill="fill" let-index="index">
-            <span
-              class="rankIcon {{ data?.rankIcon }} filled"
-              [class.filled]="fill === 100"
-              [class.bad]="index < data?.rank"
-            ></span>
-          </ng-template>
-        </ngb-rating>
+          <span *ngIf="data.dataFormat == 'P'">%</span>
+        </span>
+        <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
+          <span
+            *ngIf="
+              data?.dataFormat == '1' ||
+              data?.dataFormat == '2' ||
+              data.dataFormat == '3'
+            "
+          >
+            {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
+          >
+          <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
+            {{
+              getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
+            }}</span
+          >
+        </span>
+        <ng-container *ngIf="data.dataType == 'R'">
+          <ngb-rating
+            [rate]="partNum(data.dataValue)"
+            [max]="data?.rank"
+            [readonly]="true"
+            [starTemplate]="temp"
+          >
+            <ng-template #temp let-fill="fill" let-index="index">
+              <span
+                class="rankIcon {{ data?.rankIcon }} filled"
+                [class.filled]="fill === 100"
+                [class.bad]="index < data?.rank"
+              ></span>
+            </ng-template>
+          </ngb-rating>
+        </ng-container>
+
+        <ng-container *ngIf="data.dataType == 'P'">
+          <codx-imgs
+            [width]="35"
+            [objectId]="data.dataValue"
+            [objectType]="'AD_Users'"
+            [numberImages]="5"
+          ></codx-imgs>
+        </ng-container>
+
+        <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+          <codx-attachment
+            #attachment
+            [objectId]="data.dataValue.split(';')[0]"
+            [objectType]="data.dataValue.split(';')[1]"
+            hideFolder="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            [allowMultiFile]="data.multiple ? '1' : '0'"
+            displayThumb="full"
+            showMessage="0"
+            [hideDelete]="'1'"
+            [hideMoreF]="'0'"
+          >
+          </codx-attachment>
+        </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="data.dataType == 'P'">
-        <codx-imgs
-          [width]="35"
-          [objectId]="data.dataValue"
-          [objectType]="'AD_Users'"
-          [numberImages]="5"
-        ></codx-imgs>
-      </ng-container>
-
-      <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
-        <codx-attachment
-          #attachment
-          [objectId]="data.dataValue.split(';')[0]"
-          [objectType]="data.dataValue.split(';')[1]"
-          hideFolder="1"
-          hideImageUpload="0"
-          hideImageThumb="0"
-          hideUploadBtn="1"
-          hideDes="1"
-          type="inline"
-          [allowMultiFile]="data.multiple ? '1' : '0'"
-          displayThumb="full"
-          showMessage="0"
-          [hideDelete]="'1'"
-          [hideMoreF]="'0'"
+      <!-- <ng-container *ngIf="dataStep?.stepStatus < 3">
+        <codx-mfunc
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="true"
+          [dataItem]="data"
+          [type]="'hover'"
+          (changeDataMF)="changeFieldMF($event)"
         >
-        </codx-attachment>
-      </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="dataStep?.stepStatus < 3">
-      <codx-mfunc
-        [formModel]="formModel"
-        (clickMF)="clickMF($event, data)"
-        [isBookMark]="true"
-        [dataItem]="data"
-        [type]="'hover'"
-        (changeDataMF)="changeFieldMF($event)"
-      >
-      </codx-mfunc>
-    </ng-container>
+        </codx-mfunc> 
+      </ng-container> -->
+    </div>
   </div>
+
+  <ng-container >
+    <div id="fr-{{data.recID}}" class="form-group hidden-main">
+      <codx-input-custom-field
+        [customField]="data"
+        [objectId]="data?.recID"
+        [objectType]="'DP_Instances'"
+        [formModel]="formModelDefault"
+        (valueChangeCustom)="valueChangeCustom($event)"
+      ></codx-input-custom-field>
+    </div>
+  </ng-container>
 </ng-template>

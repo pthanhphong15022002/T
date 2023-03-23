@@ -114,9 +114,10 @@ export class PopupOKRWeightComponent
           totalWeightEdited+=this.okrChild[i]?.weight;
         }
       }
+      let avgWeight=(1-totalWeightEdited)/weightNotChanged.length;
       for(let i=0;i<this.okrChild.length;i++){        
         if(this.okrChild[i]?.weightChanged!=true){
-          this.okrChild[i].weight=(1-totalWeightEdited)/weightNotChanged.length;
+          this.okrChild[i].weight=avgWeight;
         }
       }      
       for(let i=0;i<this.okrChild.length;i++){        
