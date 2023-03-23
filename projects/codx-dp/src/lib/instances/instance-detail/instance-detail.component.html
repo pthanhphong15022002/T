@@ -116,6 +116,7 @@
       </div>
     </ng-template>
     <ng-template #body>
+      <!-- Thảo bỏ vì nó ảnh hưởng đến css ganchart -->
       <!-- <div class="instance-select">
         <ul
           ngbNav
@@ -248,7 +249,14 @@
               (item.viewModelDetail == viewModelDetail ? 'tab-active' : '')
             "
           >
-            <i  [class]="'me-2 ' + item.icon + ' ' + (item.viewModelDetail == viewModelDetail ? 'text-primary': '')"></i
+            <i
+              [class]="
+                'me-2 ' +
+                item.icon +
+                ' ' +
+                (item.viewModelDetail == viewModelDetail ? 'text-primary' : '')
+              "
+            ></i
             ><span>
               <codx-label
                 [name]="'lbl' + item.viewModelDetail"
@@ -260,7 +268,10 @@
           </a>
         </ng-container>
       </div>
-      <div class="w-100 pt-3 bg-gray-100">
+      <div
+        id="viewModeDetail"
+        class="pt-3 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
+      >
         <div class="">
           <div class="">
             <div>
