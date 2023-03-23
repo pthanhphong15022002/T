@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
+import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'codx-user',
@@ -8,6 +8,9 @@ import { CacheService, CallFuncService, FormModel, NotificationsService } from '
 })
 export class UserComponent implements OnInit {
   @Input() dataSource: any = [];
+  @Input() multiple = false;
+  @Input() listCombobox = {};
+  @Input() vllShare = '';
   @Input() formModel: FormModel;
   @Input() default: string;
   @Input() fiedName: string;
@@ -15,8 +18,10 @@ export class UserComponent implements OnInit {
   @Input() title: string;
   @Input() icon: string;
   @Input() style = {};
+  @Input() type = 'all';
   @Output() valueList = new EventEmitter();
   isPopupUserCbb = false;
+  popup: DialogRef;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -24,12 +29,15 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.dataSource);
   }
   
   shareUser(share) {
-    this.isPopupUserCbb = true;
-
-    // this.callfc.openForm(share, '', 500, 500);
+    if(this.type == 'user'){
+      this.isPopupUserCbb = true;
+    }else{
+      this.popup = this.callfc.openForm(share, '', 500, 500);
+    }
   }
 
   onDeleteOwner(objectID, datas) {
@@ -41,15 +49,39 @@ export class UserComponent implements OnInit {
   }
 
   applyUser(event, datas) {
-    this.isPopupUserCbb = false;
+    let listUser = JSON.parse(JSON.stringify(datas));
     if (!event) return;
-    let listUser = event;
-    datas[0] = {
-      objectID: event.id,
-      objectName: event.text || '',
-      objectType: event.objectType || 'U',
-      roleType: event.objectName || '',
-    };
-    this.valueList.emit(datas);
+    let valueUser = [];
+    if(this.type == 'user'){
+      this.isPopupUserCbb = false;
+      valueUser = event.dataSelected;
+    }else{
+      this.popup.close();
+      valueUser = event;
+    }
+    if(this.multiple){
+      valueUser?.forEach(element => {
+        let user = this.convertUser(element,this.type)
+        if(!listUser?.some(item => item.objectID == user.objectID)){
+          listUser.push(user)
+        }
+      });
+    }else{
+      let userInfo = valueUser[0];
+      let user = this.convertUser(userInfo,this.type)
+      listUser[0] = user;
+    }
+    this.valueList.emit(listUser);
   }
+
+  convertUser(user, type){
+    let userConert = {
+      objectID: type == 'user' ? user.UserID : user.id,
+      objectName: type == 'user' ? user.UserName: user.text,
+      objectType: type == 'user' ? 'U' : user.objectType ,
+      roleType: type == 'user' ? user.PositionName : user.objectName,
+    }
+    return userConert;
+  }
+
 }
