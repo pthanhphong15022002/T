@@ -144,13 +144,10 @@ codx-chat-box.active{
     height: 50px;
     margin-right: 5px;
     margin-bottom: 5px;
-    position: relative;
+    display: flex;
 }
 //lộc css tạm button xóa
 .upload-files-item_remove{
-    position: absolute;
-    top: 0;
-    right: -15px;
 }
 
 .group-infor_name{

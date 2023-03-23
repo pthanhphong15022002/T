@@ -38,7 +38,7 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.fiels = dt.data.data;
+    this.fiels = JSON.parse(JSON.stringify(dt.data.data));
     this.dialog = dialog;
   }
 

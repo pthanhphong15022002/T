@@ -238,7 +238,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res?.event?.recID) {
+      if (res?.event) {
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
       }
     });
@@ -267,7 +267,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res?.event?.recID) {
+      if (res?.event) {
         (this.listview.dataService as CRUDService)
         .update(res.event).subscribe();
       }
@@ -302,7 +302,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        if (res?.event?.recID) {
+        if (res?.event) {
           (this.listview.dataService as CRUDService).add(res.event).subscribe();
         }
       });

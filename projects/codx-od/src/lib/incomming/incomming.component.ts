@@ -85,6 +85,7 @@ export class IncommingComponent
   public switchTemplate = 'new';
   public objectIDFile: any;
   public objectType = 'OD_Dispatches';
+  referType = "source"
   dialog!: DialogRef;
   button?: ButtonModel;
   request: ResourceModel;
@@ -439,7 +440,7 @@ export class IncommingComponent
     if (id) {
       this.lstUserID = '';
       this.odService
-        .getDetailDispatch(id, this.view.formModel.entityName)
+        .getDetailDispatch(id, this.view.formModel.entityName , this.referType)
         .subscribe((item) => {
           //this.getChildTask(id);
           if (item) {

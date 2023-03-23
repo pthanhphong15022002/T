@@ -611,8 +611,12 @@ export class OkrTargetsComponent implements OnInit {
       [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res?.event && res?.event.length > 0) {
-        this.caculatorPlanInBackground(res?.event);
+      if (res?.event && res?.event.length !=null) {        
+        this.getOKRPlanForComponent.emit(this.dataOKRPlans);
+        if(res?.event.length>0){
+
+          this.caculatorPlanInBackground(res?.event);
+        }
       }
     });
   }
@@ -621,7 +625,7 @@ export class OkrTargetsComponent implements OnInit {
       this.codxOmService
         .calculatorProgressOfPlan(listPlanRecID)
         .subscribe((listPlan: any) => {
-          if (listPlan != null) {
+          if (listPlan != null) {            
             this.caculatorPlanInBackground(listPlan);
           }
         });

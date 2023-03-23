@@ -435,7 +435,7 @@
               <codx-label fiedName="InvoiceForm" [formModel]="form.formModel">
               </codx-label>
               <codx-input [Group]="form.formGroup" field="invoiceForm" [formModel]="form.formModel"
-                (valueChange)="valueChangeVATLine($event)">
+                (valueChange)="valueChangeVATformPurchase($event)">
               </codx-input>
             </div>
           </div>
@@ -447,7 +447,7 @@
               <codx-label fiedName="InvoiceSeri" [formModel]="form.formModel">
               </codx-label>
               <codx-input [Group]="form.formGroup" field="invoiceSeri" [formModel]="form.formModel"
-                (valueChange)="valueChangeVATLine($event)"></codx-input>
+                (valueChange)="valueChangeVATformPurchase($event)"></codx-input>
             </div>
           </div>
         </div>
@@ -458,7 +458,7 @@
               <codx-label fiedName="InvoiceNo" [formModel]="form.formModel">
               </codx-label>
               <codx-input [Group]="form.formGroup" field="invoiceNo" [formModel]="form.formModel"
-                (valueChange)="valueChangeVATLine($event)">
+                (valueChange)="valueChangeVATformPurchase($event)">
               </codx-input>
             </div>
           </div>
@@ -470,7 +470,7 @@
               <codx-label fiedName="InvoiceDate" [formModel]="form.formModel">
               </codx-label>
               <codx-input [Group]="form.formGroup" field="invoiceDate" [formModel]="form.formModel"
-                (valueChange)="valueChangeVATLine($event)">
+                (valueChange)="valueChangeVATformPurchase($event)">
               </codx-input>
             </div>
           </div>
@@ -486,16 +486,17 @@
     </span>
   </div>
 </ng-template>
-<ng-template #footer>
-  
+<ng-template #footer> 
   <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">
-    <div class="btn btn-white btn-icon tab-action">
+    <div class="btn btn-white btn-icon tab-action" (click)="expandTab()">
       <span class="icon-unfold_more icon-20"></span>
     </div>
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
 </ng-template>
 <ng-template #tabRef>
-  <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
+  <div #tab id="codx-tab">
+    <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
     [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  </div>
 </ng-template>
