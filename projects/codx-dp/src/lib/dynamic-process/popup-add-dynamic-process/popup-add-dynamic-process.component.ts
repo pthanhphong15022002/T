@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnInit,
   Optional,
@@ -356,7 +357,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    // document.addEventListener("keydown", this.handleKeyDown);
   }
+
+  
+// handleKeyDown(event) {
+//   if (event.code === "F5" || event.code === "Escape") {
+//     event.preventDefault(); 
+//   }
+// }
+
+// ngOnDestroy() {
+//   document.removeEventListener("keydown", this.handleKeyDown);
+// }
 
   ngAfterViewInit(): void {
     this.GetListProcessGroups();
@@ -2451,6 +2464,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     return sum;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.code === 'F5') {
+      // xử lý sự kiện nhấn F5 ở đây
+      console.log('thuan');
+      
+    }
   }
 
   // add role to permissions process

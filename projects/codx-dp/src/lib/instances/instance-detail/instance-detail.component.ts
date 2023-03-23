@@ -80,6 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
+  currentRecID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -100,6 +101,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
+  isSaving = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -420,5 +422,12 @@ export class InstanceDetailComponent implements OnInit {
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+
+  inputCustomField(e){
+    this.currentRecID = e ;
+  }
+  actionSaveCustomField(e){
+    this.isSaving =e ;
   }
 }

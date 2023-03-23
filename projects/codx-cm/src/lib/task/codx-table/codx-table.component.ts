@@ -93,7 +93,7 @@ implements OnInit, AfterViewInit {
     //   { field: 'CustomerName', direction: 'Descending' }]
     // };
     this.views = [];
-    
+
     this.crrFuncID = this.funcID;
     let formModel = this.view?.formModel;
     this.columnGrids = [];
@@ -163,14 +163,14 @@ implements OnInit, AfterViewInit {
               hideMoreFunc: true,
             },
           });
-        
+
           this.detectorRef.detectChanges();
         });
-      
-        
+
+
 
     this.detectorRef.detectChanges();
-    
+
   }
   // async ngAfterViewInit(){
   //   let table = await document.getElementsByClassName('e-gridcontent')[0];
@@ -179,8 +179,6 @@ implements OnInit, AfterViewInit {
   //   // console.log(firstTable);
   // }
   ngAfterViewInit(): void {
-    let a = this.view.dataService.data;
-    console.log(a);
   }
 
 }
