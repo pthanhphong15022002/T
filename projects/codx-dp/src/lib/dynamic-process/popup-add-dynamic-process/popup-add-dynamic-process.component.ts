@@ -391,6 +391,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+
   async onSaveNow(){
     let check = await this.checkExitsName();
     if (check) {
@@ -1802,12 +1803,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['modifiedOn'] = new Date();
       this.stepNew['modifiedBy'] = this.userId;
       if (this.action == 'edit') {
-        let checkAdd = this.listStepAdd?.some(idAdd => idAdd == this.stepNew.recID);
-        let checkEdit = this.listStepEdit?.some(idEdit => idEdit == this.stepNew.recID);
-        if(!checkAdd && !checkEdit){
-          this.listStepEdit.push(this.stepNew.recID);
-        }
-
+        this.listStepEdit.push(this.stepNew.recID);
       }
     }
     this.popupAddStage.close();
@@ -2288,7 +2284,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.setIndex(this.stepList, 'stepNo');
-    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1; 
+    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1;
     let end = event.previousIndex > event.currentIndex ? event.previousIndex + 1: event.currentIndex + 1;
     let listID = this.stepList?.filter(step => step.stepNo >= start && step.stepNo <= end).map(stepFind => {
       return stepFind.recID
@@ -2348,7 +2344,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     return this.process.processName &&
       this.process?.groupID &&
-      checkGroup && 
+      checkGroup &&
       this.stepList?.length > 0
       ? true
       : false;
