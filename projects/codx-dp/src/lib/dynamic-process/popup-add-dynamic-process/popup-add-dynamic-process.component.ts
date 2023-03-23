@@ -306,7 +306,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // this.process.instanceNoSetting = this.process.processNo;
     }
 
-
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
@@ -358,16 +367,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
     this.GetListProcessGroups();
   }
 
@@ -392,16 +391,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
-  async onSaveNow(){
-    let check = await this.checkExitsName();
-    if (check) {
-      this.notiService.notifyCode('DP021');
-      return;
-    } else {
-      this.onSave();
-    }
-  }
-
   async onSave() {
     var check = this.process.permissions.some((x) => x.roleType === 'P');
     if (!check) {
