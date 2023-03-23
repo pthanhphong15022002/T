@@ -65,11 +65,8 @@ export class BreadcumbComponent implements OnInit {
   }
 
   getBreadCumList() {
-    if (!this.notTree)
-      return this.breadcumbTree;
-    else
-      return this.breadcumb;
-   
+    if (!this.notTree) return this.breadcumbTree;
+    else return this.breadcumb;
   }
 
   onJump(id) {
@@ -80,7 +77,5 @@ export class BreadcumbComponent implements OnInit {
     var data = {} as any;
     data.recID = this.linkList[id];
     this.dmSV.nodeSelect.next(data);
-    //RefeshData
-    
   }
 }

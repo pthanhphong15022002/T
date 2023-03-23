@@ -363,7 +363,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         case OMCONST.MFUNCID.UnReleasePlanDEPT:
           case OMCONST.MFUNCID.UnReleasePlanORG:
             case OMCONST.MFUNCID.UnReleasePlanPER:
-        //this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
+        this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
         break;
       case OMCONST.MFUNCID.SharesPlanCOMP:
         case OMCONST.MFUNCID.SharesPlanDEPT:

@@ -146,6 +146,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
    // select item search
    selectItemSeach(item: any) {
+    debugger
     if(item.type != 'H'){
       item.type = item.type == 'U' ? '1':'2';
       this.signalRSV.sendData(item,"GetGroupSearch");
