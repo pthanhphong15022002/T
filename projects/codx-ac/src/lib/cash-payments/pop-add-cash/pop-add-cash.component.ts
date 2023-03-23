@@ -151,12 +151,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   changeType(e: any) {
     switch (e.data) {
       case '1':
-        this.tabObj.hideTab(0, true);
-        this.tabObj.hideTab(1, false);
-        break;
-      default:
         this.tabObj.hideTab(0, false);
         this.tabObj.hideTab(1, true);
+        break;
+      default:
+        this.tabObj.hideTab(0, true);
+        this.tabObj.hideTab(1, false);
         break;
     }
   }

@@ -369,8 +369,7 @@ export class CodxDMService {
     this.parentUpload = folder.upload;
     this.parentDelete = folder.delete;
     this.parentAssign = folder.assign;
-    if (folder.revision != null) 
-      this.parentRevision = folder.revision;
+    if (folder.revision != null) this.parentRevision = folder.revision;
     else this.parentRevision = false;
     this.revision = this.parentRevision;
     this.parentApproval = folder.approval;
@@ -380,30 +379,34 @@ export class CodxDMService {
     this.parentRevisionNote = folder.revisionNote;
     this.parentLocation = folder.location;
 
-    if (
-      this.idMenuActive == 'DMT03' ||
-      this.idMenuActive == 'DMT02' ||
-      this.idMenuActive == 'DMT05' ||
-      this.idMenuActive == '7'
-    ) {
-      if (
-        folder.isSystem &&
-        (folder.folderName.trim().toLocaleLowerCase() ==
-          this.FOLDER_NAME.trim().toLocaleLowerCase() ||
-          folder.folderName.trim().toLocaleLowerCase() ==
-            this.user.userID.trim().toLocaleLowerCase()) &&
-        (folder.level == '1' || folder.level == '2')
-      ) {
-        this.disableUpload.next(true);
-        this.disableInput.next(true);
-      } else {
-        this.disableUpload.next(!this.parentUpload);
-        this.disableInput.next(!this.parentCreate);
-      }
-    } else {
-      this.disableUpload.next(true);
-      this.disableInput.next(true);
-    }
+  
+    this.disableUpload.next(!folder.upload);
+    this.disableInput.next(!folder.create);
+ 
+    // if (
+    //   this.idMenuActive == 'DMT03' ||
+    //   this.idMenuActive == 'DMT02' ||
+    //   this.idMenuActive == 'DMT05' ||
+    //   this.idMenuActive == '7'
+    // ) {
+    //   if (
+    //     folder.isSystem &&
+    //     (folder.folderName.trim().toLocaleLowerCase() ==
+    //       this.FOLDER_NAME.trim().toLocaleLowerCase() ||
+    //       folder.folderName.trim().toLocaleLowerCase() ==
+    //         this.user.userID.trim().toLocaleLowerCase()) &&
+    //     (folder.level == '1' || folder.level == '2')
+    //   ) {
+    //     this.disableUpload.next(true);
+    //     this.disableInput.next(true);
+    //   } else {
+    //     this.disableUpload.next(!this.parentUpload);
+    //     this.disableInput.next(!this.parentCreate);
+    //   }
+    // } else {
+    //   this.disableUpload.next(true);
+    //   this.disableInput.next(true);
+    // }
     // this.setRight.next(true);
   }
 

@@ -498,7 +498,6 @@ export class BookingStationeryComponent
 
   allocate(data: any) {
     if (this.approvalRule) {
-      //if (this.isEmptyGuid(data?.recID)) {
         this.api
           .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [
             data?.recID,
@@ -525,7 +524,6 @@ export class BookingStationeryComponent
               }
             });
           });
-      //}
     } else {
       this.api
         .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])

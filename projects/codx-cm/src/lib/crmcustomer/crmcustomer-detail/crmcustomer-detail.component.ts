@@ -27,7 +27,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   ];
   treeTask = [];
 
-  nameDetail = 'Information';
+  name = 'Information';
 
   tabDetail = [
   ]
@@ -43,7 +43,6 @@ export class CrmcustomerDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.listTab(this.funcID);
-    this.nameDetail == 'Information'
   }
 
   listTab(funcID){
@@ -77,15 +76,6 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-  clickMenu(item) {
-    this.nameDetail = item.name;
-    this.tabDetail.forEach((obj) => {
-      if (!obj.isActive && obj.name == this.nameDetail) {
-        obj.isActive = true;
-      } else obj.isActive = false;
-    });
-    this.changeDetectorRef.detectChanges();
-  }
 
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
