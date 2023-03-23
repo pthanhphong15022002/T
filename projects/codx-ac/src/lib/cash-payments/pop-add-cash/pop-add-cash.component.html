@@ -10,6 +10,8 @@
   [subToolbar]="subToolbar"
 >
 </codx-form>
+
+<!-- Start: Sub header -->
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup">
     <div class="row mt-2">
@@ -25,6 +27,9 @@
     </div>
   </ng-container>
 </ng-template>
+<!-- End: Sub header -->
+
+<!-- Start: Body -->
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
     <ejs-tab #cashRef>
@@ -69,24 +74,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <codx-gridview-v2
-              #grid
-              formName="EIInvoices"
-              gridViewName="grvEIInvoiceLines"
-              entityName="EI_InvoiceLines"
-              [templateMore]="morefunction"
-              [editSettings]="editSettings"
-              [allowFiltering]="true"
-              [allowSorting]="true"
-              [dataValues]="form.data.recID"
-              [dataSource]="cashpaymentline"
-              service="AC"
-              [height]="gridHeight"
-              [autoLoad]="false"
-              rowHeight="40"
-              (cellChanged)="cellChanged($event)"
-              (created)="gridCreated($event)"
-            ></codx-gridview-v2>
+            <ng-container *ngTemplateOutlet="tabVoucherLineRefs"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -96,6 +84,9 @@
     </div>
   </div>
 </ng-template>
+<!-- End: Body -->
+
+<!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
     <div class="row mt-6">
@@ -264,9 +255,12 @@
     </div>
   </ng-container>
 </ng-template>
+<!-- End: Tab Basic -->
+
+<!-- Start:CashPaymentLine -->
 <ng-template #tabCashPaymentLine>
   <codx-gridview-v2
-    #grid
+    #gridCashPaymentLine
     [formName]="fmCashPaymentsLines.formName"
     [gridViewName]="fmCashPaymentsLines.gridViewName"
     [entityName]="fmCashPaymentsLines.entityName"
@@ -281,10 +275,36 @@
     [height]="gridHeight"
     [autoLoad]="false"
     rowHeight="40"
-    (cellChanged)="cellChanged($event)"
+    (cellChanged)="cashPaymentLineChanged($event)"
     (created)="gridCreated($event)"
   ></codx-gridview-v2>
 </ng-template>
+<!-- End: CashPaymentLine -->
+
+<!-- Start: VoucherLineRefs -->
+<ng-template #tabVoucherLineRefs>
+  <codx-gridview-v2
+    #gridVoucherLineRefs
+    formName="VoucherLineRefs"
+    gridViewName="grvVoucherLineRefs"
+    entityName="AC_VoucherLineRefs"
+    [templateMore]="morefunction"
+    [editSettings]="editSettings"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [dataValues]="form.data.recID"
+    [dataSource]="voucherLineRefs"
+    service="AC"
+    [height]="gridHeight"
+    [autoLoad]="false"
+    rowHeight="40"
+    (cellChanged)="voucherLineRefsChanged($event)"
+    (created)="gridCreated($event)"
+  ></codx-gridview-v2>
+</ng-template>
+<!-- End: VoucherLineRefs -->
+
+<!-- Start: More function -->
 <ng-template #morefunction let-data>
   <div class="has-action-menu" style="height: 30px">
     <codx-mfunc
@@ -295,11 +315,17 @@
     ></codx-mfunc>
   </div>
 </ng-template>
+<!-- End: More function -->
+
+<!-- Start: Footer -->
 <ng-template #footer>
   <div class="row" *ngIf="cashpayment">
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
 </ng-template>
+<!-- End: Footer -->
+
+<!-- Start: Add line -->
 <ng-template #addLine let-data>
   <div class="form-group mb-0 row">
     <div class="col-12">
@@ -321,6 +347,9 @@
     </div>
   </div>
 </ng-template>
+<!-- End: Add line -->
+
+<!-- Start: Tab Referen -->
 <ng-template #tabRef>
   <codx-tabs
     [entityName]="form.formModel.entityName"
@@ -330,6 +359,9 @@
     [TabControl]="tabInfo"
   ></codx-tabs>
 </ng-template>
+<!-- End: Tab Referen -->
+
+<!-- Start: Sub toolbar -->
 <ng-template #subToolbar>
   <div class="d-flex align-items-center justify-content-between mt-1">
     <div class="d-flex justify-content-start align-items-center me-2">
@@ -387,3 +419,4 @@
     </div>
   </div>
 </ng-template>
+<!-- End: Sub toolbar -->
