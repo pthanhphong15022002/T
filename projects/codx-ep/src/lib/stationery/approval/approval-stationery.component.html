@@ -21,7 +21,7 @@
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.owner | formatvalue : formModel : 'Owner' | async"
-    [subTitle]="data?.positionID | formatvalue : formModel : 'PositionID' | async"
+    [subTitle]="data?.positionName"
     [subTitleCss]="'text-gray-600'"
     [content]="data?.reasonID"
     [icoCss]="

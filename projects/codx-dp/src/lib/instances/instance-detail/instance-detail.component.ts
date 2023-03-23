@@ -48,6 +48,7 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('viewDetailsItem') viewDetailsItem;
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
   totalInSteps: any;
@@ -409,7 +410,7 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
   saveAssign(e) {
-    if (e) { 
+    if (e) {
       this.loadTree(this.listSteps);
       this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
     };

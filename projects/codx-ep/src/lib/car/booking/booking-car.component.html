@@ -9,7 +9,7 @@
   
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
-      <span [innerHTML]="data?.positionID | formatvalue : formModel : 'positionID' | async"></span>
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
       <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
@@ -38,7 +38,7 @@
 
   <div class="" *ngIf="!sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
-      <span [innerHTML]="data?.positionID | formatvalue : formModel : 'positionID' | async"></span>
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
       <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
