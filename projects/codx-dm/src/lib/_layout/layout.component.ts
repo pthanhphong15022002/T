@@ -330,6 +330,7 @@ db.DM_FolderInfo.updateMany(
     if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07") return ;
     var data = {} as any;
     data.recID = '';
+    this.dmSV.folderID = ""
     this.dmSV.isSearchView = false;
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);

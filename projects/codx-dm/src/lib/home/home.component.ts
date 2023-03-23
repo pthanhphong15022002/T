@@ -206,6 +206,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
       this._beginDrapDrop();
     });
+
     this.dmSV.isNodeSelect.subscribe((res) => {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -215,6 +216,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           else tree.getCurrentNode(res);
         
           this.scrollTop();
+
+        
           //this.refeshData();
           // this.getDataFolder(this.dmSV.folderID);
         }
@@ -234,6 +237,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
       
     })
+
     this.dmSV.isRefreshTree.subscribe((res) => {
       if(this.funcID != "DMT02" && this.funcID != "DMT03") return;
       if (res) {
@@ -255,6 +259,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.folderId.next('');
         this.dmSV.folderID = "";
         this.view.dataService.dataSelected = null;
+        this.button.disabled = false;
+        this.dmSV.disableInput.next(false);
         this.scrollTop();
         this.refeshData();
         this.getDataByFuncID(this.funcID);
@@ -268,6 +274,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         //this.data = this.view.dataService.data
       }
     });
+
     this.dmSV.isAddFile.subscribe((item) => {
       if (item) {
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
@@ -275,6 +282,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
+
     this.dmSV.isNodeDeleted.subscribe((res) => {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -320,10 +328,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this._beginDrapDrop();
       }
     });
+
     this.dmSV.isDisableUpload.subscribe((res) => {
       this.button.disabled = res;
       this.changeDetectorRef.detectChanges();
     });
+
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
       if(item)
@@ -352,7 +362,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if(this.fileService.options.favoriteID == "3") this.hideMF = true;
         else this.hideMF = false;
       }
-    })
+    });
+
     this.getParaSetting();
     // this.dmSV.isNodeSelect.subscribe((res) => {
     //   if (res) {
@@ -516,6 +527,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if(item) this.dmSV.paraSetting = JSON.parse(item);
     })
   }
+
   ngAfterViewInit(): void {
     this.cache.valueList('SYS025').subscribe((item) => {
       if (item) {
@@ -646,6 +658,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       item.hide = hide;
     });
   }
+
   //Disable nút tạo mới folder tùy theo funcID
   setDisableAddNewFolder()
   {
@@ -963,7 +976,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   onSelectionChanged($data) {
     ScrollComponent.reinitialization();
-    debugger
     this.scrollTop();
     if (!$data || !$data?.data) return
     this.isSearch = false;
@@ -1373,7 +1385,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     //this.fileService.options.srtDirections = this.sortDirection;
     this.fileService.GetFiles(id).subscribe((res) => {
       if (res && res[0]) {
-        if(res[0].length <=0) this.isScrollFile = false;
+        if(res[0].length <= 0) this.isScrollFile = false;
         else
         {
           this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
@@ -1434,7 +1446,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   getPUser(data)
   {
     var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
-    debugger
     if(item) return item?.objectName;
     return ""
   }
