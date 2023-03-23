@@ -211,7 +211,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               //     let obj = {
               //       keyRequire: keyConvert,
               //       textHeader: res[key]['headerText'],
-              //     };Ngày hết hạn
+              //     };
               //     this.listRequire.push(obj);
               //   }
               //}
