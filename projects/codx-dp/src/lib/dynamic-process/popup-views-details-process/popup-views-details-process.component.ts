@@ -87,7 +87,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
         this.popupGuide,
         '',
         500,
-        150,
+        300,
         '',
         null,
         '',
