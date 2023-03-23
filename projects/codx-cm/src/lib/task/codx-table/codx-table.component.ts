@@ -1,5 +1,5 @@
 import { Targets } from './../../../../../codx-om/src/lib/model/okr.model';
-import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {data} from './data'
 import { CrmcustomerDetailComponent } from '../../crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
 import { ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
@@ -11,6 +11,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CodxTableComponent extends UIComponent
 implements OnInit, AfterViewInit {
+  @Input() isShowPage: boolean = false;
+  @Input() isSort: boolean = false;
+  @Input() isStickyHeader: boolean = false;
+
   data: Object[];
   pageSettings: Object;
   initialSort: Object;

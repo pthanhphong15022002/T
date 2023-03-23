@@ -191,13 +191,14 @@ export class PopupJobComponent implements OnInit {
   }
 
   changeRoler(e, datas, type) {
-    if (!e || e?.data.length == 0) return;
-    let listUser = e?.data;
+    if (!e || e?.length == 0) return;
+    let listUser = e || [];
     listUser.forEach((element) => {
-      if (!datas.some((item) => item.id == element.id)) {
+      if (!datas.some((item) => item.objectID == element.objectID)) {
+        datas?.shift();
         datas.push({
-          objectID: element.id,
-          objectName: element.text,
+          objectID: element.objectID,
+          objectName: element.objectName,
           objectType: element.objectType,
           roleType: type,
           taskID: this.stepsTasks['recID'],
