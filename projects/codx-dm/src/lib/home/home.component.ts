@@ -365,6 +365,19 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     this.getParaSetting();
+
+    this.dmSV.isChangeOneFolder.subscribe(res=>{
+      if(res)
+      {
+        var index  = this.data.findIndex((x) => x.recID == res.recID);
+        if(index >= 0)
+        {
+          this.data[index] = res;
+        }
+      }
+    })
+    
+
     // this.dmSV.isNodeSelect.subscribe((res) => {
     //   if (res) {
     //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
