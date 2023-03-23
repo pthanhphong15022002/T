@@ -391,6 +391,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+
+  async onSaveNow(){
+    let check = await this.checkExitsName();
+    if (check) {
+      this.notiService.notifyCode('DP021');
+      return;
+    } else {
+      this.onSave();
+    }
+  }
+
   async onSave() {
     var check = this.process.permissions.some((x) => x.roleType === 'P');
     if (!check) {
@@ -2273,7 +2284,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.setIndex(this.stepList, 'stepNo');
-    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1; 
+    let start = event.previousIndex < event.currentIndex ? event.previousIndex + 1 : event.currentIndex + 1;
     let end = event.previousIndex > event.currentIndex ? event.previousIndex + 1: event.currentIndex + 1;
     let listID = this.stepList?.filter(step => step.stepNo >= start && step.stepNo <= end).map(stepFind => {
       return stepFind.recID
@@ -2333,7 +2344,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     return this.process.processName &&
       this.process?.groupID &&
-      checkGroup && 
+      checkGroup &&
       this.stepList?.length > 0
       ? true
       : false;

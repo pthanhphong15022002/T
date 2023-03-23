@@ -271,45 +271,7 @@
   </div>
 </ng-template>
 
-<ng-template #product>
-  <div class="row mb-2">
-    <div class="col-4 d-flex">
-      <div class="me-3">
-        <h3>1</h3>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex flex-column">
-            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              Văn phòng ABC
-            </div>
-            <div class="me-4">
-              <span class="text-gray-500">Dịch vụ cho thuê văn phòng</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-4 d-flex flex-column">
-      <div class="">
-        <span class="icon-shopping_bag icon-16 me-2"></span>
-        <codx-label class="text-gray-500" name="lblQuantity" default="Số lượng:
-          "></codx-label>
-        <span class="me-2">12 cái</span>
-      </div>
-    </div>
-    <div class="col-4 d-flex flex-column">
-      <div class="">
-        <span class="icon-attach_money icon-16 me-2"></span>
-        <codx-label class="text-gray-500" name="lblQuantity" default="Doanh thu:
-          "></codx-label>
-        <span class="me-2">50.000.000 VND</span>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <ng-template #task let-data="value">
-  <!-- <div>{{data[0] | json}}</div> -->
   <div *ngFor="let step of data; let i = index">
     <div>
       <span class="h4 me-3 justify-content-center align-items-center" style="
@@ -324,6 +286,6 @@
     <codx-show-task [dataSource]="step"></codx-show-task>
   </div>
 </ng-template>
-<ng-template #task let-data="value">
-
+<ng-template #product let-data="value">
+  <codx-table></codx-table>
 </ng-template>

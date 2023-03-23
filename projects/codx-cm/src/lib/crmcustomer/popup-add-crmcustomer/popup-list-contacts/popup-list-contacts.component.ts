@@ -133,14 +133,14 @@ export class PopupListContactsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.lstContacts != null && this.lstContacts.length > 0) {
-      this.changeContacts(0);
+      this.lstSearch = this.lstContacts;
+      this.changeContacts(0, this.lstSearch[0]);
     }
-    this.lstSearch = this.lstContacts;
   }
 
   onSave() {}
 
-  changeContacts(index) {
+  changeContacts(index, item) {
     this.currentContact = index;
     this.changeDet.detectChanges();
   }

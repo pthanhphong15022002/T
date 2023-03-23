@@ -1,12 +1,29 @@
-import { Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewModel, DialogRef, ButtonModel, CallFuncService, ViewType, FormModel, DialogModel } from 'codx-core';
+import {
+  UIComponent,
+  ViewModel,
+  DialogRef,
+  ButtonModel,
+  CallFuncService,
+  ViewType,
+  FormModel,
+  DialogModel,
+  RequestOption,
+} from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 
 @Component({
   selector: 'lib-purchaseinvoices',
   templateUrl: './purchaseinvoices.component.html',
-  styleUrls: ['./purchaseinvoices.component.css']
+  styleUrls: ['./purchaseinvoices.component.css'],
 })
 export class PurchaseinvoicesComponent extends UIComponent {
   views: Array<ViewModel> = [];
@@ -35,9 +52,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.recID) this.parentID = res.recID;
     });
-   }
+  }
 
-   onInit(): void {
+  onInit(): void {
     this.innerWidth = window.innerWidth;
   }
 
@@ -66,7 +83,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
         this.edit(e, data);
@@ -97,8 +114,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
         this.dialog = this.callfunc.openForm(
           PopAddPurchaseComponent,
           '',
-          this.width,
-          969,
+          null,
+          null,
           this.view.funcID,
           obj,
           '',
@@ -115,7 +132,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: this.funcName,
         };
         let option = new DialogModel();
         option.DataService = this.view.dataService;
@@ -132,5 +149,45 @@ export class PurchaseinvoicesComponent extends UIComponent {
           option
         );
       });
+  }
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec(
+              'ERM.Business.PS',
+              'PurchaseInvoicesLinesBusiness',
+              'DeleteAsync',
+              [data.recID]
+            )
+            .subscribe((res: any) => {
+              if (res) {
+                this.api
+                  .exec(
+                    'ERM.Business.AC',
+                    'VATInvoicesBusiness',
+                    'DeleteAsync',
+                    [data.recID]
+                  )
+                  .subscribe((res: any) => {});
+              }
+            });
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'PurchaseInvoicesBusiness';
+    opt.assemblyName = 'PS';
+    opt.service = 'PS';
+    opt.data = data.recID;
+    return true;
   }
 }

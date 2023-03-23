@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Input } from '@syncfusion/ej2-angular-inputs';
 import { CacheService, Util } from 'codx-core';
 import {
   convertHtmlAgency,
@@ -21,12 +22,14 @@ import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.serv
 import { CodxHrService } from '../codx-hr.service';
 
 @Component({
-  selector: 'lib-approvel-hr',
-  templateUrl: './approvel-hr.component.html',
-  styleUrls: ['./approvel-hr.component.css'],
+  selector: 'lib-approval-hr',
+  templateUrl: './approval-hr.component.html',
+  styleUrls: ['./approval-hr.component.css'],
 })
-export class ApprovelHrComponent implements OnInit,  AfterViewInit, OnChanges{
-  extractContent = extractContent
+
+@ViewChild
+export class ApprovalHrComponent implements OnInit,  AfterViewInit, OnChanges{
+    extractContent = extractContent
     convertHtmlAgency = convertHtmlAgency2
     data:any;
     funcID: any;
@@ -52,6 +55,8 @@ export class ApprovelHrComponent implements OnInit,  AfterViewInit, OnChanges{
       this.funcID = params['FuncID'];
       if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
     });
+    console.log('asdasdasdasd');
+    
    
   }
 
