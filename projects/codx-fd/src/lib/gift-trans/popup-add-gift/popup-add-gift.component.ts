@@ -83,14 +83,23 @@ export class PopupAddGiftComponent implements OnInit {
 
   getDataPattern(cardType: string) {
     if (!cardType) return;
-    this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
-      .subscribe((res: any) => {
-        if (res) {
-          console.log('pattern:', res);
-          this.lstPattern = res;
-          this.dt.detectChanges();
-        }
-      });
+    // this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       console.log('pattern:', res);
+    //       this.lstPattern = res;
+    //       this.dt.detectChanges();
+    //     }
+    //   });
+
+    this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType,]).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.lstPattern = res;
+        let patternDefault = this.lstPattern.find((e: any) => e.isDefault == true);
+        this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0];
+        this.dt.detectChanges();
+      }
+    });
   }
 
   innitForm() {

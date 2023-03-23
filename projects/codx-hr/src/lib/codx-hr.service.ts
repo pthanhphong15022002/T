@@ -36,7 +36,8 @@ export class CodxHrService {
   reportingLineComponent: any;
   positionsComponent: any;
   orgchart: any;
-  expression: RegExp = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+  expression: RegExp =
+    /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   constructor(
     private api: ApiHttpService,
@@ -769,7 +770,7 @@ export class CodxHrService {
     );
   }
 
-  LoadDataEAsset(data){
+  LoadDataEAsset(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1564,7 +1565,7 @@ export class CodxHrService {
     );
   }
 
-  ValidateBeforeSaveAsync
+  ValidateBeforeSaveAsync;
 
   editEContract(data: any) {
     return this.api.execSv<any>(
@@ -1599,7 +1600,7 @@ export class CodxHrService {
     );
   }
 
-  GetIsCurrentBenefitWithBenefitID(employeeID: string, benefitID: string){
+  GetIsCurrentBenefitWithBenefitID(employeeID: string, benefitID: string) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1913,7 +1914,7 @@ export class CodxHrService {
     return obj;
   }
 
-  checkEmail(email: string){
+  checkEmail(email: string) {
     return this.expression.test(email);
   }
 
@@ -1939,7 +1940,6 @@ export class CodxHrService {
     );
   }
 
-  
   getOrgTreeByOrgID(orgID: string, level: number) {
     return this.api.execSv<any>(
       'HR',
@@ -1994,6 +1994,42 @@ export class CodxHrService {
             })
           );
       })
+    );
+  }
+
+  getCategoryByEntityName(entityName: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [entityName]
+    );
+  }
+
+  getSettingValue(formName: string, category: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      [formName, category]
+    );
+  }
+
+  release(
+    recID: string,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    title: string
+  ) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [recID, processID, entityName, funcID, '<div>' + title + '</div>']
     );
   }
 }

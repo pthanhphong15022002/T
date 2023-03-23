@@ -658,7 +658,7 @@ codx-tmmeetings .toolbar {
 
 codx-view-list-detail .nav-tabs .nav-link.active,
 codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 // codx-layout-add .codx-tab .tab-content {
@@ -1903,17 +1903,6 @@ codx-header #chat-box{
   padding-bottom: 0!important;
 }
 
-.instance-select{
-  codx-input{
-    width:200px;
-  }
-  .e-input-group{
-    border: 0!important;
-  }
-  .e-ddl.e-popup-open span{
-    margin-left: -15px;
-  }
-}
 /// 14/2/2023
 ///
 codx-chat-container{
