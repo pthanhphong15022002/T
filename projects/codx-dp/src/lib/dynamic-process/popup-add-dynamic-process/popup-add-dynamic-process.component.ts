@@ -2943,7 +2943,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       if (inxIsExist !== -1) {
         this.notiService.notifyCode(
-          'Tên lý do đã tồn tại, vui lòng nhập tên khác.'
+          'DP026',
+          0,
+          '"' + this.gridViewSetupStepReason['ReasonName']?.headerText + '"'
         );
         return;
       }

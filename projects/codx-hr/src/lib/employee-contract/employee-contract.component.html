@@ -59,11 +59,21 @@
             </div>
           </div>
           <div class="text-gray-700">
-            <span>{{ data?.positionID }}</span>
+            <span
+            [innerHTML]="
+            data?.positionID
+              | formatvalue : view.formModel : 'positionID'
+              | async
+          "
+            ></span>
           </div>
 
           <div class="text-gray-700">
-            <span>{{ data?.orgUnitID }}</span>
+            <span [innerHTML]="
+            data?.orgUnitID
+              | formatvalue : view.formModel : 'orgUnitID'
+              | async
+          "></span>
           </div>
         </div>
       </div>

@@ -174,7 +174,7 @@
 <ng-template #task>
   <div class="back-info">
     <div
-      class="header-info py-3 px-5 d-flex align-items-center justify-content-between mb-0"
+      class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0"
     >
       <div>
         <codx-label
@@ -570,19 +570,20 @@
               type="switch"
               [checked]="dataProgress?.progress == '100' ? true : false"
               field="progress"
-              (valueChange)="checkProgress($event, dataProgress)"
-              [disabled]="disabledProgressCkeck"
+              (valueChange)="checkRadioProgress($event, dataProgress)"
             >
             </codx-input>
             <span class="ms-2">100%</span>
           </div>
         </div>
+        {{disabledProgressInput}}
         <ejs-numerictextbox
           [value]="dataProgress?.progress"
           format="###'%'"
           min="0"
           max="100"
           (change)="changeProgress($event, dataProgress)"
+          [disabled]="disabledProgressCkeck"
         ></ejs-numerictextbox>
       </div>
       <div class="col-6">
@@ -603,6 +604,7 @@
           [crrValue]="dataProgress?.actualEnd"
           format="F"
           type="datetime"
+          [disabled]="dataProgress?.progress == 100 ? false : true"
         >
         </codx-input>
       </div>

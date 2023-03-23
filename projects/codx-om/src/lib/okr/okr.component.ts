@@ -76,7 +76,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Kỳ
   periodID = new Date().getFullYear().toString();
   //Loại
-  interval = '';
+  interval = 'Y';
   //Năm
   year = new Date().getFullYear();
   fromDate: any;
@@ -124,7 +124,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     inject: Injector,
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
-    private notificationsService:NotificationsService,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
@@ -157,7 +157,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.funcIDChanged();
     this.formModelChanged();
     this.setTitle();
-    this.getOKRPlans(this.periodID, this.interval, this.year);
+    if (
+      this.periodID != null &&
+      this.interval != null &&
+      this.year != null &&
+      this.periodID != '' &&
+      this.interval != '' &&
+      this.year != 0
+    ) {
+      this.getOKRPlans(this.periodID, this.interval, this.year);
+    }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -233,9 +242,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
   getOKRModel() {
-    this.codxOmService.getOKRModel().subscribe((model:any) => {
+    this.codxOmService.getOKRModel().subscribe((model: any) => {
       if (model) {
-        for(let pro in model){ 
+        for (let pro in model) {
           delete model[pro].recID;
           delete model[pro].id;
         }
@@ -250,9 +259,18 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   //Lấy OKR Plan
-  getOKRPlanForComponent(event:any) {
-    if(event){
-      this.getOKRPlans(event?.periodID, event?.interval, event?.year)
+  getOKRPlanForComponent(event: any) {
+    if (event) {
+      if (
+        event?.periodID != null &&
+        event?.interval != null &&
+        event?.year != null &&
+        event?.periodID != '' &&
+        event?.interval != '' &&
+        event?.year != 0
+      ) {
+        this.getOKRPlans(event?.periodID, event?.interval, event?.year);
+      }
     }
   }
 
@@ -299,32 +317,32 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.skrFuncID = OMCONST.SKRFUNCID.COMP;
         this.obFuncID = OMCONST.OBFUNCID.COMP;
         this.okrLevel = OMCONST.VLL.OKRLevel.COMP;
-        this.curOrgID= this.curUser?.employee?.companyID;
-        this.curOrgName= this.curUser?.employee?.companyName;
+        this.curOrgID = this.curUser?.employee?.companyID;
+        this.curOrgName = this.curUser?.employee?.companyName;
         break;
       case OMCONST.FUNCID.DEPT:
         this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
         this.krFuncID = OMCONST.KRFUNCID.DEPT;
         this.obFuncID = OMCONST.OBFUNCID.DEPT;
         this.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
-        this.curOrgID= this.curUser?.employee?.departmentID;
-        this.curOrgName= this.curUser?.employee?.departmentName;
+        this.curOrgID = this.curUser?.employee?.departmentID;
+        this.curOrgName = this.curUser?.employee?.departmentName;
         break;
       case OMCONST.FUNCID.ORG:
         this.skrFuncID = OMCONST.SKRFUNCID.ORG;
         this.krFuncID = OMCONST.KRFUNCID.ORG;
         this.obFuncID = OMCONST.OBFUNCID.ORG;
         this.okrLevel = OMCONST.VLL.OKRLevel.ORG;
-        this.curOrgID= this.curUser?.employee?.orgUnitID;
-        this.curOrgName= this.curUser?.employee?.orgUnitName;
+        this.curOrgID = this.curUser?.employee?.orgUnitID;
+        this.curOrgName = this.curUser?.employee?.orgUnitName;
         break;
       case OMCONST.FUNCID.PERS:
         this.skrFuncID = OMCONST.SKRFUNCID.PERS;
         this.krFuncID = OMCONST.KRFUNCID.PERS;
         this.obFuncID = OMCONST.OBFUNCID.PERS;
         this.okrLevel = OMCONST.VLL.OKRLevel.PERS;
-        this.curOrgID= this.curUser?.employee?.employeeID;
-        this.curOrgName= this.curUser?.employee?.employeeName;
+        this.curOrgID = this.curUser?.employee?.employeeID;
+        this.curOrgName = this.curUser?.employee?.employeeName;
         break;
     }
     this.detectorRef.detectChanges();
@@ -342,51 +360,53 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.setTitle();
     this.dataOKRPlans = null;
     this.dataOKR = null;
-    this.getOKRPlans(this.periodID, this.interval, this.year);
+    if(this.periodID !=null && this.interval!=null && this.year!=null && this.periodID !='' && this.interval!='' && this.year!=0){
+
+      this.getOKRPlans(this.periodID, this.interval, this.year);
+    }
     this.detectorRef.detectChanges();
   }
   clickMF(evt: any) {
     switch (evt?.functionID) {
       case OMCONST.MFUNCID.PlanWeightCOMP:
-        case OMCONST.MFUNCID.PlanWeightDEPT:
-          case OMCONST.MFUNCID.PlanWeightORG:
-            case OMCONST.MFUNCID.PlanWeightPER:
+      case OMCONST.MFUNCID.PlanWeightDEPT:
+      case OMCONST.MFUNCID.PlanWeightORG:
+      case OMCONST.MFUNCID.PlanWeightPER:
         this.editPlanWeight(evt?.text);
         break;
       case OMCONST.MFUNCID.ReleasePlanCOMP:
-        case OMCONST.MFUNCID.ReleasePlanDEPT:
-          case OMCONST.MFUNCID.ReleasePlanORG:
-            case OMCONST.MFUNCID.ReleasePlanPER:
+      case OMCONST.MFUNCID.ReleasePlanDEPT:
+      case OMCONST.MFUNCID.ReleasePlanORG:
+      case OMCONST.MFUNCID.ReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
         break;
       case OMCONST.MFUNCID.UnReleasePlanCOMP:
-        case OMCONST.MFUNCID.UnReleasePlanDEPT:
-          case OMCONST.MFUNCID.UnReleasePlanORG:
-            case OMCONST.MFUNCID.UnReleasePlanPER:
+      case OMCONST.MFUNCID.UnReleasePlanDEPT:
+      case OMCONST.MFUNCID.UnReleasePlanORG:
+      case OMCONST.MFUNCID.UnReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
         break;
       case OMCONST.MFUNCID.SharesPlanCOMP:
-        case OMCONST.MFUNCID.SharesPlanDEPT:
-          case OMCONST.MFUNCID.SharesPlanORG:
-            case OMCONST.MFUNCID.SharesPlanPER:
+      case OMCONST.MFUNCID.SharesPlanDEPT:
+      case OMCONST.MFUNCID.SharesPlanORG:
+      case OMCONST.MFUNCID.SharesPlanPER:
         this.sharePlan(evt?.text);
         break;
-
     }
   }
   //Hàm click
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-          this.addOB();
+        this.addOB();
         break;
       }
       case 'btnAddSKR': {
-          this.addSKR();
+        this.addSKR();
         break;
       }
       case 'btnAddKR': {
-          this.addKR();
+        this.addKR();
         break;
       }
       case 'btnAddPlan': {
@@ -394,7 +414,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-          this.addOB();
+        this.addOB();
         break;
       }
       case 'Calendar': {
@@ -424,7 +444,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval = 'M';
     }
     this.setTitle();
-    this.getOKRPlans(this.periodID, this.interval, this.year);
+    if (
+      this.periodID != null &&
+      this.interval != null &&
+      this.year != null &&
+      this.periodID != '' &&
+      this.interval != '' &&
+      this.year != 0
+    ) {
+      this.getOKRPlans(this.periodID, this.interval, this.year);
+    }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
@@ -607,16 +636,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       });
   }
   //Thêm mới bộ mục tiêu
-  addEditOKRPlans(isAdd:boolean) {   
+  addEditOKRPlans(isAdd: boolean) {
     let tmpPlan = this.dataOKRPlans;
-    if(isAdd){
-      tmpPlan= {...this.planModel};
-      tmpPlan.interval= this.interval;
-      tmpPlan.year=this.year;
-      tmpPlan.periodID =this.periodID;
-      tmpPlan.okrLevel= this.okrLevel;
-      tmpPlan.fromDate =this.fromDate;
-      tmpPlan.toDate= this.toDate;
+    if (isAdd) {
+      tmpPlan = { ...this.planModel };
+      tmpPlan.interval = this.interval;
+      tmpPlan.year = this.year;
+      tmpPlan.periodID = this.periodID;
+      tmpPlan.okrLevel = this.okrLevel;
+      tmpPlan.fromDate = this.fromDate;
+      tmpPlan.toDate = this.toDate;
     }
     let curFunc = isAdd ? OMCONST.MFUNCID.Add : OMCONST.MFUNCID.Edit;
     let dialogModel = new DialogModel();
@@ -631,7 +660,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       [
         this.funcID,
         tmpPlan,
-        {...this.okrModel},
+        { ...this.okrModel },
         this.addPlanTitle,
         this.curOrgID,
         this.curOrgName,
@@ -644,7 +673,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     );
     dialogAddPlan.closed.subscribe((item) => {
       if (item.event) {
-        this.getOKRPlans(this.periodID, this.interval, this.year);
+        if (
+          this.periodID != null &&
+          this.interval != null &&
+          this.year != null &&
+          this.periodID != '' &&
+          this.interval != '' &&
+          this.year != 0
+        ) {
+          this.getOKRPlans(this.periodID, this.interval, this.year);
+        }
       }
     });
   }
@@ -695,7 +733,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     );
     dialogEditWeight.closed.subscribe((item) => {
       if (item.event) {
-        this.getOKRPlans(this.periodID, this.interval, this.year);
+        if (
+          this.periodID != null &&
+          this.interval != null &&
+          this.year != null &&
+          this.periodID != '' &&
+          this.interval != '' &&
+          this.year != 0
+        ) {
+          this.getOKRPlans(this.periodID, this.interval, this.year);
+        }
       }
     });
   }
@@ -775,18 +822,18 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   //Chia sẻ bộ mục tiêu
-  sharePlan(popupTitle:any) {
-    let shareFM= new FormModel();
+  sharePlan(popupTitle: any) {
+    let shareFM = new FormModel();
     shareFM.entityName = 'OM_OKRs.Shares';
     shareFM.entityPer = 'OM_OKRs.Shares';
     shareFM.gridViewName = 'grvOKRs.Shares';
     shareFM.formName = 'OKRs.Shares';
-    let dialog = this.callfc.openSide(PopupShareOkrPlanComponent, [      
+    let dialog = this.callfc.openSide(PopupShareOkrPlanComponent, [
       popupTitle,
       this.gridView,
       shareFM,
       this.dataOKRPlans?.recID,
-      {...this.sharesModel},
+      { ...this.sharesModel },
     ]);
   }
 }

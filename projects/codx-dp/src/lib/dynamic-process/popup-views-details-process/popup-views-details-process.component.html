@@ -118,31 +118,28 @@
 </ng-template>
 
 <ng-template #popupGuide>
-  <div class="d-flex justify-content-between m-5">
+  <div class="d-flex justify-content-between py-4 px-7">
+    <span class="text-dark fw-bold fs-3 me-6">
+      <codx-label
+        name="lblGuide"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        default="Các bước hướng dẫn thực hiện quy trình"
+      ></codx-label>
+    </span>
     <div>
-      <span>
-        <span class="text-dark fw-bold fs-3 me-6">
-          <codx-label
-            name="lblGuide"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
-            default="Các bước hướng dẫn thực hiện quy trình"
-          ></codx-label>
-        </span>
-      </span>
-    </div>
-    <div>
-      <button
-        class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+      <button type="button"
+        class="btn btn-icon btn-sm btn-light"
         (click)="dialogGuide.close()"
       >
-        <span class="icon-close icon-18"></span>
+        <span class="icon-close icon-16"></span>
       </button>
     </div>
   </div>
+  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto;">
   <ng-container *ngFor="let item of stepNames; let i = index">
-    <div class="d-flex text-dark fw-bold m-3">
-      <span>
+    <div class="d-flex text-gray-700 pb-1 pt-2">
+      <span class="me-2 fw-bold">
         <codx-label
           name="lblPhase"
           [formName]="'DPProcesses'"
@@ -151,7 +148,8 @@
         ></codx-label>
         {{ i + 1 + ":" }}
       </span>
-      <span class="me-3">{{ item }}</span>
+      <span>{{ item }}</span>
     </div>
   </ng-container>
+</div>
 </ng-template>
