@@ -93,7 +93,7 @@ import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.compone
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
-import { ApprovelHrComponent } from './approvel-hr/approvel-hr.component';
+import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
 export const routes: Routes = [
   {
     path: '',
@@ -257,7 +257,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  ApprovelHrComponent,
+  ApprovalHrComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,

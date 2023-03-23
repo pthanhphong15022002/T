@@ -242,7 +242,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.notifyService
       .alert(
         'Cánh báo',
-        '<span style="color: red">ĐÂY LÀ CHỨC NĂNG NGUY HIỂM!!!! bạn có chắc chắn muốn thực hiện không???</span>'
+        '<span style="color: red">ĐÂY LÀ CHỨC NĂNG NGUY HIỂM!!!! bạn có chắc chắn muốn thực hiện không???</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>'
         //config
       )
       .closed.subscribe((x) => {

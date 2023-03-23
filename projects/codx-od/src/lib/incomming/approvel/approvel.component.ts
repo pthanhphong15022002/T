@@ -37,7 +37,7 @@ export class ODApprovelComponent
     ms020: any;
     ms021: any;
     active = 1;
-   
+    referType = 'source'
   constructor(
     private cache: CacheService,
     private odService: DispatchService,
@@ -78,7 +78,7 @@ export class ODApprovelComponent
     if(id)
     {
 
-      this.odService.getDetailDispatch(id,this.formModel?.entityName,true).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.formModel?.entityName,this.referType,true).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.data = formatDtDis(item);

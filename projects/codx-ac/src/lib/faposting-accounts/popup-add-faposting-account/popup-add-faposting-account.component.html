@@ -143,11 +143,9 @@
     <div class="form-group">
       <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
       <codx-input
-        type="textarea"
-        format="ed2"
         field="note"
-        [crrValue]="faPostingAccount?.note ?? ''"
-        (valueChange)="handleInputChange($event)"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>

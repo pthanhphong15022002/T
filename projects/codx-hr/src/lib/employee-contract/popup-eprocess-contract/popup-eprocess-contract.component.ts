@@ -75,10 +75,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    if(this.actionType == 'edit'){
-      this.employeeObj = this.data.emp
+    if(this.data){
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+      console.log('emp truyen vao ne', this.employeeObj);
     }
-
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
@@ -175,12 +175,44 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
         console.log('result', res);
-        if (res && res[0]) {
-          //code test
-          this.notify.notifyCode('SYS006');
-          res[0].emp = this.employeeObj;
-          this.dialog && this.dialog.close(res);
-          this.data = res;
+        if (res) {
+          if (res[0]) {
+            //code test
+            this.notify.notifyCode('SYS006');
+            res[0].emp = this.employeeObj;
+            this.dialog && this.dialog.close(res);
+            this.data = res;
+          } else if (res[1]) {
+            this.notify.alertCode(res[1]).subscribe((stt) => {
+              console.log('click', res);
+              if (stt?.event.status == 'Y') {
+                if (res[1] == 'HR010') {
+                  this.hrSevice
+                    .addEContract(this.data)
+                    .subscribe((result) => {
+                      if (result && result[0]) {
+                        this.notify.notifyCode('SYS006');
+                        result[0].emp = this.employeeObj;
+                        this.dialog && this.dialog.close(result);
+                      }
+                    });
+                } else if (res[1] == 'HR009') {
+                  this.data.hiredOn = this.data.effectedDate;
+                  this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+
+                  this.hrSevice
+                    .addEContract(this.data)
+                    .subscribe((result) => {
+                      if (result && result[0]) {
+                        this.notify.notifyCode('SYS006');
+                        result[0].emp = this.employeeObj;
+                        this.dialog && this.dialog.close(result);
+                      }
+                    });
+                }
+              }
+            });
+          }
         }
       });
     } else if (this.actionType == 'edit') {
@@ -273,7 +305,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0]
           console.log('employee cua form', this.employeeObj);
-          
         }
       });
     }

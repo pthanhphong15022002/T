@@ -273,8 +273,8 @@
             *ngIf="currentTab != 3"
             type="button"
             [ngClass]="checkSaveNow() ? '' : 'disabled'"
-            class="btn btn-outline-primary me-2"
-            (click)="onSave()"
+            class="btn btn-primary me-5"
+            (click)="onSaveNow()"
           >
             <codx-label
               [name]="'lblSaveNow'"
@@ -369,7 +369,7 @@
               field="groupID"
               type="combobox"
               [placeholder]="gridViewSetup['GroupID']?.description"
-              [crrValue]="process.groupID"
+              [crrValue]="process?.groupID"
               [refValue]="gridViewSetup?.GroupID?.referedValue"
               (valueChange)="valueChange($event)"
             >
@@ -1292,7 +1292,7 @@
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
         <div
-          class="fw-bold fs-4 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
+          class="fw-bold fs-5 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
         >
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
           <button
@@ -1310,103 +1310,100 @@
           (cdkDropListDropped)="dropStep($event)"
         >
           <!-- danh sách giai đoạn -->
-          <div
-            cdkDrag
-            *ngFor="let itemStep of stepList; let i = index"
-            class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-            [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
-            (click)="
-              clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
-            "
-          >
-            <div class="order">{{ i + 1 }}</div>
-            <div class="d-flex flex-column">
-              <div class="fw-bold text-dark line-clamp line-clamp-1">{{ itemStep?.stepName }}</div>
-
-              <div class="text-gray-500">
-                <codx-label
-                  fiedName="durationTime"
-                  [formModel]="dialog.formModel"
-                  [default]="'Thời hạn: '"
-                ></codx-label>
-                <span class="text-gray-700">{{
-                  itemStep?.durationDay || 0
-                }}</span>
-                <codx-label
-                  fiedName="day"
-                  [formModel]="dialog.formModel"
-                  [default]="strDay"
-                ></codx-label>
-                <span class="text-gray-700">{{
-                  itemStep?.durationHour || 0
-                }}</span>
-                <codx-label
-                fiedName="hour"
-                [formModel]="dialog.formModel"
-                [default]="strHour"
-              ></codx-label>
-              </div>
-              <div class="text-gray-500">
-                <codx-label
-                  fiedName="task"
-                  [formModel]="dialog.formModel"
-                  [default]="'Công việc:'"
-                ></codx-label>
-                <span class="text-gray-700">{{ itemStep?.tasks?.length }}</span>
-              </div>
-            </div>
-            <codx-mfunc
-              *ngIf="viewStepCrr == viewStepCustom"
-              [formModel]="grvMoreFunction"
-              (clickMF)="clickMFStep($event, itemStep)"
-              [dataItem]="moreDefaut"
-              [type]="'hover'"
-              (changeDataMF)="changeDataMF($event, 'step')"
+          <div class="stage-scroll">
+            <div
+              cdkDrag
+              *ngFor="let itemStep of stepList; let i = index"
+              class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
+              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
+              (click)="
+                clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
+              "
             >
-            </codx-mfunc>
-          </div>
-          <!-- Step Reason successs -->
-          <div
-            class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
-            [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
-            (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
-          >
-            <div class="order" [ngStyle]="{'background': iconReasonSuccess?.textColor}">
-              <i [class]="iconReasonSuccess?.icon" [ngStyle]="{'color': iconReasonSuccess?.color}"  > </i>
-            </div>
-            <div class="d-flex flex-column">
-              <div class="text-dark fw-bold">
-              {{stepNameSuccess}}
-              </div>
-              <div class="text-gray-500">
-                <span>
-                    {{noteSuccess}}
-                </span>
-              </div>
-            </div>
-          </div>
+              <div class="order">{{ i + 1 }}</div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark line-clamp line-clamp-1">{{ itemStep?.stepName }}</div>
 
-          <!-- Reason fail -->
-          <div
-            class="list-stage cursor-pointer drap-drop"
-            [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
-            (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
-          >
-          <div class="order" [ngStyle]="{'background': iconReasonFail?.textColor}">
-            <i [class]="iconReasonFail?.icon" [ngStyle]="{'color': iconReasonFail?.color}"  > </i>
-          </div>
-            <div class="d-flex flex-column">
-              <div class="text-dark fw-bold">
-               {{stepNameFail}}
+                <div class="text-gray-500 fs-7">
+                  <codx-label
+                    fiedName="durationTime"
+                    [formModel]="dialog.formModel"
+                    [default]="'Thời hạn: '"
+                  ></codx-label>
+                  <span class="text-gray-700">{{
+                    itemStep?.durationDay || 0
+                  }}</span>
+                  <codx-label
+                    fiedName="day"
+                    [formModel]="dialog.formModel"
+                    [default]="strDay"
+                  ></codx-label>
+                  <span class="text-gray-700">{{
+                    itemStep?.durationHour || 0
+                  }}</span>
+                  <codx-label
+                  fiedName="hour"
+                  [formModel]="dialog.formModel"
+                  [default]="strHour"
+                ></codx-label>
+                </div>
+                <div class="text-gray-500 fs-7">
+                  <codx-label
+                    fiedName="task"
+                    [formModel]="dialog.formModel"
+                    [default]="'Công việc:'"
+                  ></codx-label>
+                  <span class="text-gray-700">{{ itemStep?.tasks?.length }}</span>
+                </div>
               </div>
-              <div class="text-gray-500">
-                  <span>
-                    {{noteFail}}
-                  </span>
+              <codx-mfunc
+                *ngIf="viewStepCrr == viewStepCustom"
+                [formModel]="grvMoreFunction"
+                (clickMF)="clickMFStep($event, itemStep)"
+                [dataItem]="moreDefaut"
+                [type]="'hover'"
+                (changeDataMF)="changeDataMF($event, 'step')"
+              >
+              </codx-mfunc>
+            </div>
+          </div>
+          <div class="stage-fix">
+            <!-- Step Reason successs -->
+            <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
+              Kết quả
+            </div>
+            <div
+              class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
+              [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
+              (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
+            >
+              <div class="order" [ngStyle]="{'background': iconReasonSuccess?.textColor}">
+                <i [class]="iconReasonSuccess?.icon" [ngStyle]="{'color': iconReasonSuccess?.color}"  > </i>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="text-dark fw-bold">
+                {{stepNameSuccess}}
+                </div>
+                <div class="text-gray-500 fs-7 line-clamp line-clamp-1">{{noteSuccess}}</div>
+              </div>
+            </div>
+            <!-- Reason fail -->
+            <div
+              class="list-stage cursor-pointer drap-drop"
+              [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
+              (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
+            >
+            <div class="order" [ngStyle]="{'background': iconReasonFail?.textColor}">
+              <i [class]="iconReasonFail?.icon" [ngStyle]="{'color': iconReasonFail?.color}"  > </i>
+            </div>
+              <div class="d-flex flex-column">
+                <div class="text-dark fw-bold">
+                {{stepNameFail}}
+                </div>
+                <div class="text-gray-500 fs-7 line-clamp line-clamp-1">{{noteFail}}</div>
               </div>
             </div>
           </div>
-
           <!--end danh sách giai đoạn -->
         </div>
       </div>
