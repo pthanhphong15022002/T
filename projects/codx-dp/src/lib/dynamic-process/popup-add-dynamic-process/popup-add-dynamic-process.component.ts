@@ -399,7 +399,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       this.onSave();
     }
-  }
+  } 
 
   async onSave() {
     var check = this.process.permissions.some((x) => x.roleType === 'P');
