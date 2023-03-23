@@ -261,6 +261,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
+    this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
@@ -306,16 +307,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // this.process.instanceNoSetting = this.process.processNo;
     }
 
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
@@ -2363,7 +2355,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else {
         this.checkGroup = true;
       }
-      return this.process.processName &&
+      return (this.process.processName && this.process.processName.trim() != '') &&
         this.process?.groupID &&
         this.checkGroup
         ? true

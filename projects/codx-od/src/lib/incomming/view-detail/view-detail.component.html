@@ -157,7 +157,7 @@
                         }}
                       </div>
                     </div>
-                    <codx-imgs [referType]=""></codx-imgs>
+                    <!-- <codx-imgs [referType]=""></codx-imgs> -->
                     <div class="d-flex align-items-center">
                       <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'"  [title]="item?.employeeName"
                         [subTitle]="item?.positionName" [desc]="
@@ -227,7 +227,7 @@
   <ng-template #footer>
     <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"
       [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="data?.recID"
-      [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs> 
+      [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>
