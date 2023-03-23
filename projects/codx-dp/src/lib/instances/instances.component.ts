@@ -51,6 +51,7 @@ export class InstancesComponent
 {
   @Input() process: any;
   @Input() isCreate: boolean;
+  @Input() tabInstances = [];
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
@@ -797,6 +798,7 @@ export class InstancesComponent
               listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
               stepReason: stepReason,
+              headerTitle: dataMore.defaultName,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,

@@ -48,6 +48,7 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('viewDetailsItem') viewDetailsItem;
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
   totalInSteps: any;
@@ -79,6 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
+  currentRecID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -99,6 +101,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
+  isSaving = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -407,7 +410,7 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
   saveAssign(e) {
-    if (e) { 
+    if (e) {
       this.loadTree(this.listSteps);
       this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
     };
@@ -419,5 +422,12 @@ export class InstanceDetailComponent implements OnInit {
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+
+  inputCustomField(e){
+    this.currentRecID = e ;
+  }
+  actionSaveCustomField(e){
+    this.isSaving =e ;
   }
 }

@@ -73,7 +73,7 @@
                     
                 </div>
 
-                <div class="text-gray-800 fw-bold" *ngIf="data.positionName;else positionName">
+                <!-- <div class="text-gray-800 fw-bold" *ngIf="data.positionName;else positionName">
                     {{data.positionName}}
                 </div>
                 <ng-template #positionName >
@@ -81,24 +81,37 @@
                         <codx-label [classList]="'text-gray-400'" [formModel]="view.formModel" fiedName="PositionID" default="Vị trí công việc">
                         </codx-label>
                     </div>
-                </ng-template>
-                <div class="" *ngIf="data.organizationName ; else organizationName">{{data.organizationName}}</div>
-                <ng-template #organizationName>
+                </ng-template> -->
+                <!-- <div class="" *ngIf="data.organizationName || data.orgUnitID ; else organizationName">
+                    {{data.organizationName }}
+                </div> -->
+                <div class="" 
+                    [innerHtml]="data?.positionID | formatvalue : view.formModel : 'positionID' | async">
+                </div>
+                <div class="" 
+                    [innerHtml]="data?.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async">
+                </div>
+
+                <!-- <ng-template #organizationName>
                     <div class="text-gray-400">
                         <codx-label [formModel]="view.formModel" fiedName="OrgUnitID" default="Bộ phận">
                         </codx-label>
                     </div>
-                </ng-template>
+                </ng-template> -->
                 <div>
-                    <span class="fs-7" *ngIf="data.departmentName;else departmentName">{{data.departmentName}} |
+                    <!-- <span class="fs-7" *ngIf="data.departmentName;else departmentName">{{data.departmentName}} |
+                    </span> -->
+                    <span class="fs-7" *ngIf="data.departmentID != data.orgUnitID" [innerHtml]="data?.departmentID | formatvalue : view.formModel : 'departmentID' | async">
                     </span>
-                    <ng-template #departmentName>
+                    <span class="fs-7" *ngIf="data.departmentID != data.orgUnitID"> | </span>
+                    <!-- <ng-template #departmentName>
                         <span class="fs-7 text-gray-400">
                             <codx-label [formModel]="view.formModel" fiedName="DepartmentID" default="Bộ phận">
                             </codx-label>
                         </span>
-                    </ng-template>
-                    <span class="fs-7" *ngIf="data.divisionName;else divisionName">{{data.divisionName}}</span>
+                    </ng-template> -->
+                    <!-- <span class="fs-7" *ngIf="data.divisionName;else divisionName">{{data.divisionName}}</span> -->
+                    <span class="fs-7" [innerHtml]="data?.divisionID | formatvalue : view.formModel : 'divisionID' | async"></span>
                     <ng-template #divisionName>
                         <span class="fs-7 text-gray-400">
                             <codx-label [formModel]="view.formModel" fiedName="DivisionID" default="Khối">
@@ -156,14 +169,14 @@
                 {{data.provinceName}}
             </span>
         </div>
-        <div class="align-items-center">
+        <!-- <div class="align-items-center">
             <span class="text-gray-600 me-2">
                 <codx-label [formModel]="view.formModel" fiedName="Education" default="Trình độ: "></codx-label>
             </span>
             <span class="text-dark">
                 <codx-vll [name]="'HR002'" [value]="data.education" [showText]="true"></codx-vll>
             </span>
-        </div>
+        </div> -->
     </div>
 </ng-template>
 

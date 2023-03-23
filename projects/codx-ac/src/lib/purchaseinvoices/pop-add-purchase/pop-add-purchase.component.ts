@@ -57,6 +57,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   objectName: any;
   detailActive = 1;
   countDetail = 0;
+  elementCodxinput:any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
@@ -284,11 +285,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.loadPurchaseInfo();
     }
     if (e.field == 'itemID') {
-      var element = window.ng.getComponent(document.querySelector('form').querySelectorAll('codx-inplace')[11]);
-      //element.dataService.setPredicates(["UMID=@0"],["100M2"]).subscribe();
-      element.dataService.predicates = 'UMID=@0';
-      element.dataService.dataValues = '100M2'
-      console.log(element.dataService);
+      this.loadItemID(e.value);
     }
     if (e.data?.isAddNew == null) {
       this.api
@@ -332,6 +329,37 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.countDetail++;
       }
     });
+  }
+  loadItemID(value){
+    var element = document.querySelector('.tabLine').querySelectorAll('codx-inplace');
+    let sArray = [
+      'specifications',
+      'styles',
+      'itembatchs',
+      'itemseries',
+      'itemcolors'
+    ];
+    element.forEach(element => {
+      var input = window.ng.getComponent(element) as CodxInplaceComponent;
+      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+        input.predicate = 'ItemID="'+value+'"'; 
+        input.loadSetting();
+      }
+    }); 
+    // if (this.elementCodxinput == null) {
+    //   element = [...[document.querySelector('.tabLine').querySelectorAll('codx-inplace')[1]]];
+    //   this.elementCodxinput = [...element];
+    // }else{
+    //   element = [...this.elementCodxinput];
+    // }
+    // var input = window.ng.getComponent(element[0]) as CodxInplaceComponent;
+    // input.predicate = 'ItemID="'+value+'"'; 
+    // input.loadSetting();
+  }
+  onDoubleClickLine(data){
+    // if (String(data.itemID).match(/^ *$/) == null) {
+    //   this.loadItemID(data.itemID);
+    // }
   }
   addRow() {
     if (this.detailActive == 1) {

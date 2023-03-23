@@ -39,7 +39,7 @@
   <div class="">
     
     <div class="">
-      <span [innerHTML]="data?.positionID | formatvalue : formModel : 'positionID' | async"></span>
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="">
       <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>

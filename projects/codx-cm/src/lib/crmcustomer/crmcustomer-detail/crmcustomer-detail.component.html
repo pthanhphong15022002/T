@@ -24,7 +24,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="funcID != 'CM0104'" [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
+        <div *ngIf="funcID != 'CM0104'"
+          [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
           <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
             <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
           </div>
@@ -73,121 +74,119 @@
               default="Là khách hàng cá nhân: "></codx-label>
           </div>
           <div class="text-dark">
-            <codx-input type="switch" class="me-2" [crrValue]="true" [formModel]="formModel" field="allowEmail">
+            <codx-input type="switch" class="me-2" [crrValue]="true" [disabled]="true" [formModel]="formModel" field="allowEmail">
             </codx-input>
             <span>30/01/2023</span>
           </div>
         </div>
-        <div class="view-details-header bg-body scroll-y me-3 h-100">
-          <div class="d-flex align-items-center justify-content-between mt-3">
-            <div class="d-flex tab-header">
-              <ng-container *ngFor="let item of tabDetail; let i = index">
-                <a [class]="
-                    'tab-item text-dark fw-bold' +
-                    ' ' +
-                    (item.isActive ? 'tab-active' : '')
-                  ">
-                  <span [class]="
-                      item.isActive
-                        ? item.icon +
-                          ' text-primary' +
-                          '
-                    icon-16 me-1 text-gray-800'
-                        : item.icon +
-                          ' icon-16 me-1
-                    text-gray-800'
-                    "></span>
-                  <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                    (click)="clickMenu(item)">
-                  </codx-label>
-                </a>
-              </ng-container>
-            </div>
-          </div>
-        </div>
+
       </div>
     </ng-template>
     <ng-template #body let-data>
-      <div id="viewModeDetail" class="view-step-box">
-        <ng-container *ngIf="nameDetail == 'Information'">
-          <div class="d-flex flex-column">
-            <div class="mb-3">
-              <div class="mb-3">
-                <codx-label class="text-dark fw-bold" name="lblInformation" default="Thông tin chung">
-                </codx-label>
-              </div>
-              <codx-information [funcID]="funcID"></codx-information>
-            </div>
-            <div class="mb-3">
-              <div class="mb-3">
-                <codx-label class="text-dark fw-bold" name="lblMemo" default="Mô
-                  tả">
-                </codx-label>
-              </div>
-              <div>
-                Được biết, anh và 2 người bạn của mình không những mừng 100$ rồi
-                quẩy các kiểu con đà điểu tại đám cưới mà còn ăn no nê, chén chú
-                chén anh “23 zô 23 zô, uống bao nhiêu, uống hết…”, say tới bến
-                cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
-              </div>
-            </div>
-            <div class="mb-3" *ngIf="funcID == 'CM0104'">
-              <div class="mb-3">
-                <codx-label class="text-dark fw-bold" name="lblProsCons" [formModel]="formModel" default="Ưu / Nhược điểm">
-                </codx-label>
-              </div>
-              <div class="row">
-                <div class="col-6 row">
-                  <div class="col-6">
-                    <codx-label class="text-gray-300" fiedName="Advantage" default="Ưu điểm:"></codx-label>
-                  </div>
-                  <div class="col-6">
-                    Giá thành rẻ
-                    Chất lượng tốt
-                  </div>
+      <div class="instance-select">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="name" class="nav nav-tabs">
+          <ng-container *ngFor="let item of tabDetail; let i = index">
+            <li [ngbNavItem]="item.name" class="nav-item">
+              <a ngbNavLink class="nav-link">
+                <div class="d-flex align-item-center">
+                  <i [ngClass]="item.icon + ' ' + (item.name == name ? 'text-primary': '')" class="me-2"></i><span>
+                    <codx-label [name]="'tab' + item.name" [formModel]="'SYS'" [default]="item.textDefault">
+                    </codx-label>
+                  </span>
                 </div>
-                <div class="col-6 row">
-                  <div class="col-6">
-                    <codx-label class="text-gray-300" fiedName="Disadvantage" default="Nhược điểm:"></codx-label>
-                  </div>
-                  <div class="col-6">
-                    Nhân viên khó chịu
-                    Giao hàng lâu
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="mb-3">
-                <codx-label class="text-dark fw-bold" name="lblAddress" default="Thông tin địa chỉ">
-                </codx-label>
-              </div>
-              <div>Dữ liệu thêm sau</div>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="nameDetail == 'Contact'">
-          <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
-            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
-              <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
-            </button>
-          </div>
-          <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
-        </ng-container>
-        <ng-container *ngIf="nameDetail == 'Task'">
-          <ng-container [ngTemplateOutlet]="task" [ngTemplateOutletContext]="{ value: dataSelected.steps }">
+              </a>
+              <ng-template ngbNavContent>
+                <ng-container *ngTemplateOutlet="tabIns; context: { $implicit: item.name }">
+                </ng-container>
+              </ng-template>
+            </li>
           </ng-container>
-        </ng-container>
-        <ng-container *ngIf="nameDetail == 'Opportunity'">
-          <ng-container [ngTemplateOutlet]="opportunity"> </ng-container>
-        </ng-container>
-        <ng-container *ngIf="nameDetail == 'Product'">
-          <ng-container [ngTemplateOutlet]="product"> </ng-container>
-        </ng-container>
-        <ng-container *ngIf="nameDetail == 'Offered'">
-          <ng-container>Sản phẩm cung cấp </ng-container>
-        </ng-container>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="py-5"></div>
       </div>
+      <ng-template #tabIns let-name>
+        <div id="viewModeDetail" class="view-step-box">
+          <ng-container *ngIf="name == 'Information'">
+            <div class="d-flex flex-column">
+              <div class="mb-3">
+                <div class="mb-3">
+                  <codx-label class="text-dark fw-bold" name="lblInformation" default="Thông tin chung">
+                  </codx-label>
+                </div>
+                <codx-information [funcID]="funcID"></codx-information>
+              </div>
+              <div class="mb-3">
+                <div class="mb-3">
+                  <codx-label class="text-dark fw-bold" name="lblMemo" default="Mô
+                  tả">
+                  </codx-label>
+                </div>
+                <div>
+                  Được biết, anh và 2 người bạn của mình không những mừng 100$ rồi
+                  quẩy các kiểu con đà điểu tại đám cưới mà còn ăn no nê, chén chú
+                  chén anh “23 zô 23 zô, uống bao nhiêu, uống hết…”, say tới bến
+                  cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
+                </div>
+              </div>
+              <div class="mb-3" *ngIf="funcID == 'CM0104'">
+                <div class="mb-3">
+                  <codx-label class="text-dark fw-bold" name="lblProsCons" [formModel]="formModel"
+                    default="Ưu / Nhược điểm">
+                  </codx-label>
+                </div>
+                <div class="row">
+                  <div class="col-6 row">
+                    <div class="col-6">
+                      <codx-label class="text-gray-300" fiedName="Advantage" default="Ưu điểm:"></codx-label>
+                    </div>
+                    <div class="col-6">
+                      Giá thành rẻ
+                      Chất lượng tốt
+                    </div>
+                  </div>
+                  <div class="col-6 row">
+                    <div class="col-6">
+                      <codx-label class="text-gray-300" fiedName="Disadvantage" default="Nhược điểm:"></codx-label>
+                    </div>
+                    <div class="col-6">
+                      Nhân viên khó chịu
+                      Giao hàng lâu
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="mb-3">
+                  <codx-label class="text-dark fw-bold" name="lblAddress" default="Thông tin địa chỉ">
+                  </codx-label>
+                </div>
+                <div>Dữ liệu thêm sau</div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="name == 'Contact'">
+            <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="clickAddContact()">
+                <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+              </button>
+            </div>
+            <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Task'">
+            <ng-container [ngTemplateOutlet]="task" [ngTemplateOutletContext]="{ value: dataSelected.steps }">
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Opportunity'">
+            <ng-container [ngTemplateOutlet]="opportunity"> </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Product'">
+            <ng-container [ngTemplateOutlet]="product"> </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Offered'">
+            <ng-container>Sản phẩm cung cấp </ng-container>
+          </ng-container>
+        </div>
+      </ng-template>
     </ng-template>
     <ng-template #tabs let-data>
       <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"

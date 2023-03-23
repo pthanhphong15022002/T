@@ -340,12 +340,27 @@
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
         (valueList)="changeOwner($event)"
+        [multiple]="false"
+        [type]="'user'"
       ></codx-user>
     </div>
 
     <div class="form-group">
-      <div class="d-flex justify-content-between align-item-center">
-        <codx-label
+      <codx-user
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'"
+        [dataSource]="participant"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event, participant, 'P')"
+        [vllShare]="'DP0331'"
+        [multiple]="false"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-user>
+      <!-- <div class="d-flex justify-content-between align-item-center"> -->
+        <!-- <codx-label
           *ngIf="taskType == 'M'"
           fiedName="roles"
           [formModel]="form?.formModel"
@@ -358,15 +373,8 @@
           [formModel]="form?.formModel"
           default="Vai trò/bộ phận thực hiện"
         >
-        </codx-label>
-        <!-- <codx-share
-            [multiple]="false"
-            [listCombobox]="listCombobox"
-            (eventApply)="changeRoler($event, participant, 'P')"
-            [listName]="vllShare"
-          >
-        </codx-share> -->
-        <codx-input
+        </codx-label> -->
+        <!-- <codx-input
           class="w-100"
           type="Share"
           [refValue]="vllShare"
@@ -377,13 +385,13 @@
           [listCombobox]="listCombobox"
           (valueChange)="changeRoler($event, participant, 'P')"
         >
-        </codx-input>
-      </div>
-      <ng-container
+        </codx-input> -->
+      <!-- </div> -->
+      <!-- <ng-container
         *ngIf="participant.length > 0"
         [ngTemplateOutlet]="showUser"
         [ngTemplateOutletContext]="{ users: participant }"
-      ></ng-container>
+      ></ng-container> -->
     </div>
 
     <div class="form-group">
