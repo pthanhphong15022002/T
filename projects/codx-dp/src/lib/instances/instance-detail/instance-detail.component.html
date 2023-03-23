@@ -1,7 +1,15 @@
 <ng-container *ngIf="dataSelect?.recID">
-  <codx-detail-tmp style="height: 100%" [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect"
-    [hideMF]="false" (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)"
-    [footer]="tabs">
+  <codx-detail-tmp
+    style="height: 100%"
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelect"
+    [hideMF]="false"
+    (changeDataMF)="changeDataMF($event, dataSelect)"
+    (clickMF)="clickMF($event, dataSelect)"
+    [footer]="tabs"
+  >
     <ng-template #header>
       <div class="container_detail mt-2">
         <div class="d-flex justify-content-between">
@@ -10,18 +18,31 @@
               {{ dataSelect?.title }}
             </h3>
             <div class="mt-2">
-              <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-                [value]="dataSelect?.tags">
+              <codx-tag
+                [entityName]="formModel.entityName"
+                [disabled]="true"
+                [isEdit]="false"
+                [value]="dataSelect?.tags"
+              >
               </codx-tag>
             </div>
             <div class="d-flex align-items-start" *ngIf="dataSelect.memo">
               <div class="me-2">
-                <codx-label class="text-gray-500 text-nowrap" fiedName="Memo" [formModel]="formModel" default="Mô tả: ">
+                <codx-label
+                  class="text-gray-500 text-nowrap"
+                  fiedName="Memo"
+                  [formModel]="formModel"
+                  default="Mô tả: "
+                >
                 </codx-label>
               </div>
-              <div class="text-dark" *ngIf="dataSelect?.memo" [innerHTML]="
+              <div
+                class="text-dark"
+                *ngIf="dataSelect?.memo"
+                [innerHTML]="
                   sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)
-                "></div>
+                "
+              ></div>
             </div>
             <!-- <div class="mb-6">
               <div class="d-flex align-items-center mb-1">
@@ -56,11 +77,20 @@
           </div>
           <div class="d-flex flex-column align-items-start">
             <div class="progress">
-              <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
-                aria-valuemin="0" aria-valuemax="100">
-                <span [ngStyle]="
+              <div
+                class="progress-done"
+                role="progressbar"
+                [style.width]="progress + '%'"
+                aria-valuenow="50"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <span
+                  [ngStyle]="
                     +progress < 20 ? { position: 'relative', left: '15px' } : {}
-                  ">{{ progress || 0 }}%</span>
+                  "
+                  >{{ progress || 0 }}%</span
+                >
               </div>
             </div>
             <div class="d-flex align-items-top w-100">
@@ -71,8 +101,13 @@
                 </div>
               </div>
               <div class="ms-3">
-                <codx-imgs [isToolTip]="true" [width]="25" [objectId]="dataSelect.owner" ojectType="AD_Users"
-                  [numberImages]="1">
+                <codx-imgs
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="dataSelect.owner"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
                 </codx-imgs>
               </div>
             </div>
@@ -82,19 +117,34 @@
     </ng-template>
     <ng-template #body>
       <div class="instance-select">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="viewModelDetail" class="nav nav-tabs">
+        <ul
+          ngbNav
+          #nav="ngbNav"
+          [(activeId)]="viewModelDetail"
+          class="nav nav-tabs"
+        >
           <ng-container *ngFor="let item of tabInstances; let i = index">
             <li [ngbNavItem]="item.viewModelDetail" class="nav-item">
               <a ngbNavLink class="nav-link">
                 <div class="d-flex align-item-center">
-                  <i [ngClass]="item.icon" class="me-2"></i><span>
-                    <codx-label [name]="'tab' + item.viewModelDetail" [formModel]="'SYS'" [default]="item.textDefault">
+                  <i [ngClass]="item.icon" class="me-2"></i
+                  ><span>
+                    <codx-label
+                      [name]="'tab' + item.viewModelDetail"
+                      [formModel]="'SYS'"
+                      [default]="item.textDefault"
+                    >
                     </codx-label>
                   </span>
                 </div>
               </a>
               <ng-template ngbNavContent>
-                <ng-container *ngTemplateOutlet="tabIns; context: { $implicit: item.viewModelDetail }">
+                <ng-container
+                  *ngTemplateOutlet="
+                    tabIns;
+                    context: { $implicit: item.viewModelDetail }
+                  "
+                >
                 </ng-container>
               </ng-template>
             </li>
@@ -105,16 +155,26 @@
       <ng-template #tabIns let-viewModelDetail>
         <div id="viewModeDetail" class="view-step-box">
           <ng-container *ngIf="viewModelDetail == 'G'">
-            <codx-gantt-chart [dataSource]="ganttDs" [taskFields]="taskFields" [taskbarHeight]="60" [rowHeight]="60"
-              [readOnly]="true" [templateTaskbar]="ganttItems" [toolbar]="[]"></codx-gantt-chart>
+            <codx-gantt-chart
+              [dataSource]="ganttDs"
+              [taskFields]="taskFields"
+              [taskbarHeight]="60"
+              [rowHeight]="60"
+              [readOnly]="true"
+              [templateTaskbar]="ganttItems"
+              [toolbar]="[]"
+            ></codx-gantt-chart>
             <ng-template #ganttItems let-data>
-              <div class="d-flex justify-content-center align-items-center" (click)="clickDetailGanchart(data.recID)"
+              <div
+                class="d-flex justify-content-center align-items-center"
+                (click)="clickDetailGanchart(data.recID)"
                 [ngStyle]="{
-                'background-color': getColor(data.recID),
-                'min-height': '35px',
-                'border-radius': '5px',
-                'min-width': '20px'
-              }">
+                  'background-color': getColor(data.recID),
+                  'min-height': '35px',
+                  'border-radius': '5px',
+                  'min-width': '20px'
+                }"
+              >
                 <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
                   {{ data.name }}
                 </div>
@@ -126,41 +186,72 @@
             </ng-template>
           </ng-container>
           <ng-container *ngIf="viewModelDetail == 'S'">
-            <div class="group-steps" *ngIf="listSteps != null && listSteps.length > 0">
+            <div
+              class="group-steps"
+              *ngIf="listSteps != null && listSteps.length > 0"
+            >
               <div class="d-flex arrow-steps flex-container">
                 <ng-container *ngFor="let item of listSteps; index as i">
-                  <div id="step-click" style="flex-grow: 1; cursor: pointer"
-                    [ngClass]="getColorStepName(item?.stepStatus)" (click)="click(i, item.stepID)">
+                  <div
+                    id="step-click"
+                    style="flex-grow: 1; cursor: pointer"
+                    [ngClass]="getColorStepName(item?.stepStatus)"
+                    (click)="click(i, item.stepID)"
+                  >
                     <span> {{ item.stepName }}</span>
                   </div>
                 </ng-container>
               </div>
             </div>
             <ng-container *ngIf="tmpTeps">
-              <codx-stages-detail [dataStep]="tmpTeps" [showColumnControl]="showColumnControl(tmpTeps.stepID)"
-                [formModel]="formModel" [currentStep]="currentNameStep" [stepID]="dataSelect.stepID"
-                [isDelete]="dataSelect.delete" [isEdit]="dataSelect.edit" [isUpdate]="dataSelect.write"
-                [isCreate]="dataSelect.create" [isClosed]="dataSelect.closed" [titleDefault]="titleDefault"
-                [instance]="instance" [lstIDInvo]="lstInv" [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-                [stepNameEnd]="getStepNameIsComlepte(instance)" [proccesNameMove]="proccesNameMove"
-                (saveAssign)="saveAssign($event)"></codx-stages-detail>
+              <codx-stages-detail
+                [dataStep]="tmpTeps"
+                [showColumnControl]="showColumnControl(tmpTeps.stepID)"
+                [formModel]="formModel"
+                [currentStep]="currentNameStep"
+                [stepID]="dataSelect.stepID"
+                [isDelete]="dataSelect.delete"
+                [isEdit]="dataSelect.edit"
+                [isUpdate]="dataSelect.write"
+                [isCreate]="dataSelect.create"
+                [isClosed]="dataSelect.closed"
+                [titleDefault]="titleDefault"
+                [instance]="instance"
+                [lstIDInvo]="lstInv"
+                [listStepReason]="getReasonByStepId(dataSelect.stepID)"
+                [stepNameEnd]="getStepNameIsComlepte(instance)"
+                [proccesNameMove]="proccesNameMove"
+                (saveAssign)="saveAssign($event)"
+              ></codx-stages-detail>
             </ng-container>
           </ng-container>
           <ng-container *ngIf="viewModelDetail == 'F'">
             <ng-container *ngFor="let item of listSteps">
-              <codx-field-detail *ngIf="item?.fields?.length > 0" [dataStep]="item"
-                [showColumnControl]="showColumnControl(item.stepID)" [isUpdate]="dataSelect.write"
-                [isClosed]="dataSelect.closed"></codx-field-detail>
+              <codx-field-detail
+              *ngIf="item?.fields?.length > 0"
+              [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
+              [isUpdate]="dataSelect.write && !dataSelect.close"
+              [currentRecID]="currentRecID"
+              (inputCustomField)="inputCustomField($event)"
+              [isSaving]="isSaving"
+              (actionSave)="actionSaveCustomField($event)"
+            ></codx-field-detail>
             </ng-container>
           </ng-container>
         </div>
       </ng-template>
-
     </ng-template>
 
     <ng-template #tabs>
-      <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
-        [objectID]="dataSelect.recID" [funcID]="formModel.funcID" [dataTree]="treeTask"></codx-tabs>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelect.recID"
+        [funcID]="formModel.funcID"
+        [dataTree]="treeTask"
+      ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>

@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnInit,
   Optional,
@@ -356,7 +357,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    // document.addEventListener("keydown", this.handleKeyDown);
   }
+
+  
+// handleKeyDown(event) {
+//   if (event.code === "F5" || event.code === "Escape") {
+//     event.preventDefault(); 
+//   }
+// }
+
+// ngOnDestroy() {
+//   document.removeEventListener("keydown", this.handleKeyDown);
+// }
 
   ngAfterViewInit(): void {
     this.GetListProcessGroups();
@@ -461,6 +474,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
+        console.log(this.stepList);
+        
         if (res && res.update) {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -2030,7 +2045,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
-              this.addRole(taskData['roles'][0]);
+              taskData['roles']?.forEach(role => {
+                this.addRole(role);   
+              });
             } else {
               for (const key in taskData) {
                 data[key] = taskData[key];
@@ -2040,7 +2057,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               if (data?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTaskOfTask(data, taskGroupIdOld);
               }
-              this.addRole(data['roles'][0], roleOld[0]);
+              data['roles']?.forEach((role, index) => {
+                this.addRole(data['roles'][index], roleOld[index]);                
+              });
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
             if (!check) {
@@ -2445,6 +2464,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     return sum;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+
+  }
+
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.code === 'F5') {
+      // xử lý sự kiện nhấn F5 ở đây
+      console.log('thuan');
+      
+    }
   }
 
   // add role to permissions process
