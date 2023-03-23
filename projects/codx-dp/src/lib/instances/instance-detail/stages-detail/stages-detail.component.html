@@ -576,14 +576,23 @@
             <span class="ms-2">100%</span>
           </div>
         </div>
-        {{disabledProgressInput}}
         <ejs-numerictextbox
+          *ngIf="!disabledProgressInput"
           [value]="dataProgress?.progress"
           format="###'%'"
           min="0"
           max="100"
           (change)="changeProgress($event, dataProgress)"
-          [disabled]="disabledProgressCkeck"
+          disabled="false"
+        ></ejs-numerictextbox>
+        <ejs-numerictextbox
+          *ngIf="disabledProgressInput"
+          [value]="dataProgress?.progress"
+          format="###'%'"
+          min="0"
+          max="100"
+          (change)="changeProgress($event, dataProgress)"
+          disabled="true"
         ></ejs-numerictextbox>
       </div>
       <div class="col-6">

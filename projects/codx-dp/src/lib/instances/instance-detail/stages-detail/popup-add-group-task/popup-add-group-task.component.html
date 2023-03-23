@@ -38,6 +38,7 @@
         >
         </codx-label>
         <codx-input
+          [disabled]="isEditTime && taskGroup?.isTaskDefault"
           field="startDate"
           (valueChange)="changeValueDate($event, taskGroup)"
           [crrValue]="taskGroup?.startDate"
@@ -54,6 +55,7 @@
         >
         </codx-label>
         <codx-input
+          [disabled]="isEditTime && taskGroup?.isTaskDefault"
           field="endDate"
           (valueChange)="changeValueDate($event, taskGroup)"
           [crrValue]="taskGroup?.endDate"
