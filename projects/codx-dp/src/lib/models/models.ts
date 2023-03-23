@@ -328,7 +328,7 @@ export class DP_Instances_Steps {
   endDate: Date;
   progress: number;
   actualStart: Date;
-  actualEnd: Date;
+  actualEnd: Date = new Date();
   actualHours: number;
   assignControl: string;
   roles: DP_Instances_Steps_Roles[] = []; // objects;
