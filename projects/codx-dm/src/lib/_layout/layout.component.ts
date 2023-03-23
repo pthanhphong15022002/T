@@ -297,7 +297,7 @@ db.DM_FolderInfo.updateMany(
 
   AddFolder() {
     //this.dmSV.openCreateFolder.next(true);
-    this.dmSV.folderID = ""
+    //this.dmSV.folderID = ""
     let option = new SidebarModel();
     option.DataService = this.dmSV.dataService;
     option.FormModel = this.dmSV.formModel;
