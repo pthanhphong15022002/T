@@ -61,10 +61,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.headerText= dialogData?.data[1];
     this.dialogRef = dialogRef;    
     this.oldDataKR = dialogData.data[0];    
-    this.checkIns = dialogData.data[2];    
-    this.checkIns.value = 0;   
-    this.checkIns.cummulated = 0;   
-    this.checkIns.status='1';  
+    this.checkIns = dialogData.data[2];   
   }
 //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -79,7 +76,10 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.formModel.gridViewName = 'grvOKRs.CheckIns';
     this.formModel.formName = 'OKRs.CheckIns';
     this.fCheckinKR=this.codxService.buildFormGroup(this.formModel.formName,this.formModel.gridViewName);    
-    this.fCheckinKR.patchValue(this.checkIns);
+    this.fCheckinKR.patchValue({
+      status:this.checkIns.status,
+      value:this.checkIns.value,
+    });
     this.getCacheData();
     
 
@@ -110,12 +110,12 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
-  // valueChange(evt: any) {
-  //   if (evt && evt?.data) {
-      
-  //   }
-  //   this.detectorRef.detectChanges();
-  // }
+  valueChange(evt: any) {
+    if (evt?.field && evt?.data!=null) {
+      this.checkIns[evt?.field]=evt?.data;
+      this.detectorRef.detectChanges();
+    }
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -135,18 +135,24 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
+    if(this.dataKR.checkInMode=='1'){
+      this.checkIns.value= this.checkIns?.cummulated - this.dataKR?.actual
+    }
+    else{
+      this.checkIns.cummulated= this.checkIns.value + this.dataKR?.actual;
+    }
     this.codxOmService.checkInKR(this.dataKR.recID, this.checkIns).subscribe((res:any)=>{
       if(res){
+        
         this.codxOmService.calculatorProgressOfPlan([this.dataKR?.transID]).subscribe((listPlan:any)=>{
           if(listPlan!=null){
-            this.notificationsService.notifyCode('SYS034');
             this.dialogRef && this.dialogRef.close(listPlan);
           }
           else{
             this.dialogRef && this.dialogRef.close(res);
           }
         })
-
+        this.notificationsService.notifyCode('SYS034');
       }
     })
   }

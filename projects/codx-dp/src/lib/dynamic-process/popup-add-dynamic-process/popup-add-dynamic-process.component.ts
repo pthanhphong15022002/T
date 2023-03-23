@@ -391,6 +391,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+
+  async onSaveNow(){
+    let check = await this.checkExitsName();
+    if (check) {
+      this.notiService.notifyCode('DP021');
+      return;
+    } else {
+      this.onSave();
+    }
+  }
+
   async onSave() {
     var check = this.process.permissions.some((x) => x.roleType === 'P');
     if (!check) {
