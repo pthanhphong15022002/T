@@ -69,8 +69,24 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <div [style.height]="'300px'"></div>
-            aabbccddeeffgghhiijjnnmmooppqqttuuyywwzz
+            <codx-gridview-v2
+              #grid
+              formName="EIInvoices"
+              gridViewName="grvEIInvoiceLines"
+              entityName="EI_InvoiceLines"
+              [templateMore]="morefunction"
+              [editSettings]="editSettings"
+              [allowFiltering]="true"
+              [allowSorting]="true"
+              [dataValues]="form.data.recID"
+              [dataSource]="cashpaymentline"
+              service="AC"
+              [height]="gridHeight"
+              [autoLoad]="false"
+              rowHeight="40"
+              (cellChanged)="cellChanged($event)"
+              (created)="gridCreated($event)"
+            ></codx-gridview-v2>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
