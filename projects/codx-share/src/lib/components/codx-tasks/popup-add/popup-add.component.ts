@@ -211,7 +211,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               //     let obj = {
               //       keyRequire: keyConvert,
               //       textHeader: res[key]['headerText'],
-              //     };
+              //     };Ngày hết hạn
               //     this.listRequire.push(obj);
               //   }
               //}
@@ -938,7 +938,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    var crrRole =this.crrRole 
+    var crrRole =this.crrRole
     this.api
       .execSv<any>(
         'HR',
