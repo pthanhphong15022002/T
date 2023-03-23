@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <codx-label [formModel]="dialog.formModel" name="Receiver" default="Người nhận"></codx-label>
                     <div *ngIf="userReciver" class="mt-2 d-flex align-items-center">
-                        <codx-img [objectId]="userReciver" objectType="AD_Users" referType="image" [width]="35">
+                        <codx-img [objectId]="userReciver" objectType="AD_Users" [width]="35">
                         </codx-img>
                         <span *ngIf="userReciverName" class="ms-3 text-dark font-size-lg">{{userReciverName}}</span>
                     </div>
