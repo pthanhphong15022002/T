@@ -204,28 +204,40 @@ export class DynamicProcessComponent
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      var obj = {
-        action: 'add',
-        processNo: this.processNo,
-        showID: this.showID,
-        instanceNo: this.instanceNo,
-        titleAction: this.titleAction,
-      };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       dialogModel.DataService = this.view?.dataService;
       dialogModel.FormModel = this.view.formModel;
-      this.dialog = this.callfc.openForm(
-        PopupAddDynamicProcessComponent,
-        '',
-        this.widthWin,
-        this.heightWin,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
+      this.cache
+        .gridViewSetup(
+          this.view.formModel.formName,
+          this.view.formModel.gridViewName
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.gridViewSetup = res;
+            var obj = {
+              action: 'add',
+              processNo: this.processNo,
+              showID: this.showID,
+              instanceNo: this.instanceNo,
+              titleAction: this.titleAction,
+              gridViewSetup: this.gridViewSetup,
+            };
+            this.dialog = this.callfc.openForm(
+              PopupAddDynamicProcessComponent,
+              '',
+              this.widthWin,
+              this.heightWin,
+              '',
+              obj,
+              '',
+              dialogModel
+            );
+          }
+        });
+
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
@@ -250,25 +262,36 @@ export class DynamicProcessComponent
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
-        var obj = {
-          action: 'edit',
-          titleAction: this.titleAction,
-        };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
         dialogModel.FormModel = this.view.formModel;
-        this.dialog = this.callfc.openForm(
-          PopupAddDynamicProcessComponent,
-          '',
-          this.widthWin,
-          this.heightWin,
-          '',
-          obj,
-          '',
-          dialogModel
-        );
+        this.cache
+          .gridViewSetup(
+            this.view.formModel.formName,
+            this.view.formModel.gridViewName
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.gridViewSetup = res;
+              var obj = {
+                action: 'edit',
+                titleAction: this.titleAction,
+                gridViewSetup: this.gridViewSetup,
+              };
+              this.dialog = this.callfc.openForm(
+                PopupAddDynamicProcessComponent,
+                '',
+                this.widthWin,
+                this.heightWin,
+                '',
+                obj,
+                '',
+                dialogModel
+              );
+            }
+          });
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
@@ -285,33 +308,43 @@ export class DynamicProcessComponent
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
       }
       this.view.dataService.copy().subscribe((res) => {
-        var obj = {
-          action: 'copy',
-          processNo: this.processNo,
-          showID: this.showID,
-          instanceNo: this.instanceNo,
-          conditionCopy: this.listClickedCoppy,
-          titleAction: this.titleAction,
-          oldIdProccess: this.oldIdProccess,
-          newIdProccess: this.view.dataService.dataSelected.recID,
-          listValueCopy: this.listClickedCoppy.map((x) => x.id),
-        };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
         dialogModel.FormModel = this.view.formModel;
-        var dialogProcessCopy = this.callfc.openForm(
-          PopupAddDynamicProcessComponent,
-          '',
-          this.widthWin,
-          this.heightWin,
-          '',
-          obj,
-          '',
-          dialogModel
-        );
-        dialogProcessCopy.closed.subscribe((e) => {
+        this.cache
+          .gridViewSetup(
+            this.view.formModel.formName,
+            this.view.formModel.gridViewName
+          )
+          .subscribe((res) => {
+            this.gridViewSetup = res;
+            var obj = {
+              action: 'copy',
+              processNo: this.processNo,
+              showID: this.showID,
+              instanceNo: this.instanceNo,
+              conditionCopy: this.listClickedCoppy,
+              titleAction: this.titleAction,
+              oldIdProccess: this.oldIdProccess,
+              newIdProccess: this.view.dataService.dataSelected.recID,
+              listValueCopy: this.listClickedCoppy.map((x) => x.id),
+              gridViewSetup: this.gridViewSetup,
+            };
+            this.dialog = this.callfc.openForm(
+              PopupAddDynamicProcessComponent,
+              '',
+              this.widthWin,
+              this.heightWin,
+              '',
+              obj,
+              '',
+              dialogModel
+            );
+          });
+
+        this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             e.event.totalInstance = this.totalInstance;
@@ -731,41 +764,49 @@ export class DynamicProcessComponent
       this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
       return;
     }
-    if(this.processName.trim() === this.processNameBefore.trim()){
+    if (this.processName.trim() === this.processNameBefore.trim()) {
       this.popupEditName.close();
       this.notificationsService.notifyCode('SYS007');
       return;
     }
-    let check = await this.checkExitsProcessName(this.processName, this.processRename['recID']);
-    if(check){
+    let check = await this.checkExitsProcessName(
+      this.processName,
+      this.processRename['recID']
+    );
+    if (check) {
       this.notificationsService.notifyCode('DP021');
-    }else{
+    } else {
       this.dpService
-      .renameProcess([this.processName, this.processRename['recID']])
-      .subscribe((res) => {
-        if (res) {
-          this.processRename['processName'] = this.processName;
-          this.processRename['modifiedOn'] = res || new Date();
-          this.processRename['modifiedBy'] = this.user?.userID;
-          this.processName = '';
-          this.popupEditName.close();
-          this.notificationsService.notifyCode('SYS007');
-        } else {
-          this.notificationsService.notifyCode('SYS008');
-        }
-      });
+        .renameProcess([this.processName, this.processRename['recID']])
+        .subscribe((res) => {
+          if (res) {
+            this.processRename['processName'] = this.processName;
+            this.processRename['modifiedOn'] = res || new Date();
+            this.processRename['modifiedBy'] = this.user?.userID;
+            this.processName = '';
+            this.popupEditName.close();
+            this.notificationsService.notifyCode('SYS007');
+          } else {
+            this.notificationsService.notifyCode('SYS008');
+          }
+        });
     }
   }
 
-  async checkExitsProcessName(processName, processID){
-    let check =await firstValueFrom(this.dpService.checkExitsName([processName, processID]));
+  async checkExitsProcessName(processName, processID) {
+    let check = await firstValueFrom(
+      this.dpService.checkExitsName([processName, processID])
+    );
     return check;
   }
 
   async restoreProcess(data) {
     console.log(data);
-    let check = await this.checkExitsProcessName(data['processName'], data['recID']);
-    if(check){
+    let check = await this.checkExitsProcessName(
+      data['processName'],
+      data['recID']
+    );
+    if (check) {
       this.notificationsService.notifyCode('DP021');
       return;
     }
