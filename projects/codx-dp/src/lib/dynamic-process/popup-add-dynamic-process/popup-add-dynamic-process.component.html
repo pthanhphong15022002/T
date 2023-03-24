@@ -1302,10 +1302,21 @@
               <ng-container
                 *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']"
               >
-                <div class="order">{{ i + 1 }}</div>
+                <!-- <div 
+                  class="order"
+                  [ngClass]="itemStep?.icon"
+                  [ngStyle]="{ itemStep: stepNew?.iconColor }"
+                ></div> -->
                 <div class="d-flex flex-column">
-                  <div class="fw-bold text-dark line-clamp line-clamp-1">
-                    {{ itemStep?.stepName }}
+                  <div class="d-flex">
+                    <span
+                      class="icon-18 me-2"
+                      [ngClass]="itemStep?.icon"
+                      [ngStyle]="{ itemStep: stepNew?.iconColor }"
+                    ></span>
+                    <span class="fw-bold text-dark line-clamp line-clamp-1">
+                      {{ itemStep?.stepName }}
+                    </span>
                   </div>
 
                   <div class="text-gray-500 fs-7">
@@ -1925,19 +1936,29 @@
       </codx-label>
       <div
         [ngStyle]="{ background: stepNew?.backgroundColor }"
-        style="border: 1px solid gray; height: 40px; border-radius: 3px; flex-grow: 1;"
+        style="
+          border: 1px solid gray;
+          height: 40px;
+          border-radius: 3px;
+          flex-grow: 1;
+        "
         class="d-flex align-items-center"
       >
         <div
           class="circle d-flex align-items-center justify-content-center ms-2"
-          style="border: 1px solid gray; background-color:white"
+          style="border: 1px solid gray; background-color: white"
         >
           <span
             [ngClass]="stepNew?.icon"
             [ngStyle]="{ color: stepNew?.iconColor }"
           ></span>
         </div>
-        <span class="line-clamp line-clamp-1" style="flex-grow: 1;" [ngStyle]="{'color': stepNew?.textColor}">{{ stepName }}</span>
+        <span
+          class="line-clamp line-clamp-1"
+          style="flex-grow: 1"
+          [ngStyle]="{ color: stepNew?.textColor }"
+          >{{ stepName }}</span
+        >
       </div>
     </div>
   </div>
@@ -2466,14 +2487,14 @@
           </div>
         </div>
         <div
-          class="col-6 d-flex flex-wrap"
+          class="col-6 group-permission witdh-roles scroll-user"
           *ngIf="step.roles != null && step.roles?.length > 0"
         >
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'S'"
-              class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-              >
+              class="d-flex align-items-center flex-wrap mb-3 me-3"
+            >
               <div class="me-2">
                 <codx-img
                   class=""
@@ -2484,11 +2505,6 @@
                 </codx-img>
               </div>
               <div class="text-gray-600">{{ perm.objectName }}</div>
-              <ng-container>
-                <div class="action-menu-od" (click)="removeRole(perm.objectID)">
-                  <i class="icon-close text-danger icon-16"></i>
-                </div>
-              </ng-container>
             </div>
           </ng-container>
         </div>
