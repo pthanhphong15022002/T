@@ -240,33 +240,37 @@
       </ng-template> -->
 
       <div class="d-flex tab-header">
-        <ng-container *ngFor="let item of tabInstances; let i = index">
-          <a
-            (click)="clickMenu(item.viewModelDetail)"
-            [class]="
-              'tab-item text-dark fw-bold d-flex align-item-center me-2' +
-              ' ' +
-              (item.viewModelDetail == viewModelDetail ? 'tab-active' : '')
-            "
-          >
-            <i
-              [class]="
-                'me-2 ' +
-                item.icon +
-                ' ' +
-                (item.viewModelDetail == viewModelDetail ? 'text-primary' : '')
-              "
-            ></i
-            ><span>
-              <codx-label
-                [name]="'lbl' + item.viewModelDetail"
-                [formName]="'SYS'"
-                [default]="item.textDefault"
+        <ul class="nav nav-tabs">
+          <ng-container *ngFor="let item of tabInstances; let i = index">
+            <li class="nav-item">
+              <a
+                (click)="clickMenu(item.viewModelDetail)"
+                [class]="
+                  'tab-item text-dark fw-bold d-flex align-item-center' +
+                  ' ' +
+                  (item.viewModelDetail == viewModelDetail ? 'tab-active' : '')
+                "
               >
-              </codx-label>
-            </span>
-          </a>
-        </ng-container>
+                <i
+                  [class]="
+                    'me-2 ' +
+                    item.icon +
+                    ' ' +
+                    (item.viewModelDetail == viewModelDetail ? 'text-primary' : '')
+                  "
+                ></i
+                ><span>
+                  <codx-label
+                    [name]="'lbl' + item.viewModelDetail"
+                    [formName]="'SYS'"
+                    [default]="item.textDefault"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
       </div>
       <div
         id="viewModeDetail"
