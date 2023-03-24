@@ -331,35 +331,21 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     });
   }
   loadItemID(value){
-    var element = document.querySelector('.tabLine').querySelectorAll('codx-inplace');
     let sArray = [
-      'specifications',
-      'styles',
-      'itembatchs',
-      'itemseries',
-      'itemcolors'
+      'idiM0',
+      'idiM1',
+      'idiM2',
+      'idiM3',
+      'idiM6',
+      'idiM7'
     ];
+    var element = this.gridPurchase.visibleColumns;
     element.forEach(element => {
-      var input = window.ng.getComponent(element) as CodxInplaceComponent;
-      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-        input.predicate = 'ItemID="'+value+'"'; 
-        input.loadSetting();
+      if (sArray.includes(element.field.toLowerCase())) {
+        element.predicate = "ItemID=@";
+        element.dataValue = value;
       }
     }); 
-    // if (this.elementCodxinput == null) {
-    //   element = [...[document.querySelector('.tabLine').querySelectorAll('codx-inplace')[1]]];
-    //   this.elementCodxinput = [...element];
-    // }else{
-    //   element = [...this.elementCodxinput];
-    // }
-    // var input = window.ng.getComponent(element[0]) as CodxInplaceComponent;
-    // input.predicate = 'ItemID="'+value+'"'; 
-    // input.loadSetting();
-  }
-  onDoubleClickLine(data){
-    // if (String(data.itemID).match(/^ *$/) == null) {
-    //   this.loadItemID(data.itemID);
-    // }
   }
   addRow() {
     if (this.detailActive == 1) {
