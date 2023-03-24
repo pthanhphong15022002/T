@@ -14,8 +14,8 @@
                     <div class="d-flex justify-content-start flex-column">
                         <div class="d-flex align-items-end flex-row cursor-pointer w-100">
                             <div class="w-70 d-flex justify-content-start align-items-end">
-                                <span class="fa-solid fa-bullseye me-3 mb-3 fs-2 txt-color-0E4C55"></span>
 
+                                <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
                                 <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
                                     <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
                                         [class]="'om-input w-100'" id="om-input-text"
@@ -43,10 +43,8 @@
                         <div class="d-flex justify-content-start flex-column" *ngFor="let kr of ob?.items;let ii=index">
                             <div class="d-flex align-items-end cursor-pointer w-100 ">
                                 <div class="w-70 d-flex align-items-end justify-content-start ps-8">
-                                    <div
-                                        class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-end mb-2 justify-content-between ">
-                                        KR
-                                    </div>
+
+                                    <span class="me-2" [inlineSVG]="okrVll?.kr?.icon"></span>
                                     <div class="d-flex align-items-center w-100">
                                         <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
                                             <codx-inplace type="text" field="okrName" [value]="kr?.okrName"
@@ -89,10 +87,8 @@
                                 *ngFor="let skr of kr?.items;let iii=index">
                                 <div class="d-flex align-items-center cursor-pointer w-100 ">
                                     <div class="w-70 d-flex justify-content-start align-items-end ps-16">
-                                        <div
-                                            class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-end mb-2 justify-content-between ">
-                                            SKR
-                                        </div>
+
+                                        <span class="me-2" [inlineSVG]="okrVll?.skr?.icon"></span>
                                         <div class="d-flex align-items-center w-100">
                                             <!-- <i class="icon-drag_indicator me-3 fs-3"></i>
                                             <span class="fw-bold me-1">SKR{{iii+1}}:</span> -->
@@ -149,7 +145,8 @@
 
                 <div class="w-100 h-100 flex-column d-flex justify-content-start py-3 ">
                     <div class="d-flex align-items-center cursor-pointer om-add-btn w-fit" (click)="addOKR(obType,0,0)">
-                        <i class="fa-solid fa-bullseye me-3 fs-3"></i>
+                        
+                        <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
                         <codx-label class="text-gray-600 om-border-bottom-add fw-bold" default="Thêm mục tiêu"
                             fiedName="lblAddObject"></codx-label>
                     </div>

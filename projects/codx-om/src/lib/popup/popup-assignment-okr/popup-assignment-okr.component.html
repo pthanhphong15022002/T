@@ -29,7 +29,7 @@
                 <ng-template #headerText>
                   <div class="d-flex align-items-center position-sticky h-100">
                     <span class="fa-solid icon-i-diagram-3-fill me-2"></span>
-                    <codx-label default="Cấp trực tiếp" fiedName="lbltaget" class="fw-bold"></codx-label>
+                    <codx-label default="Sơ đồ tổ chức" fiedName="lbltaget" class="fw-bold"></codx-label>
                   </div>
                 </ng-template>
                 <ng-template #content>
@@ -41,16 +41,90 @@
                       (valueChange)="cbxOrgChange($event)"
                     ></codx-input>
                   </div>
-                  <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.orgUnitID!=null">
-                    <div class="d-flex col-8 flex-row " *ngIf="funcID==compFuncID">
+                  <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
+                    <div class="d-flex col-8 flex-row " >
                       <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
                       <div class="d-flex flex-column" >
-                        <span class="ms-4 fw-bold">{{assignmentOKR?.departmentName}}</span>
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.orgUnitName}}</span>
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.positionName}}</span>
                       </div>                     
                     </div>  
-                    <div class="d-flex col-8 flex-row" *ngIf="funcID==deptFuncID">
+                    
+                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-center">
+                    <span class="fa-solid icon-groups me-2"></span>
+                    <codx-label default="Cấp trực tiếp" fiedName="lbltreetaget" class="fw-bold"></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <codx-input
+                      type="combobox"
+                      [refValue]="'Positions'"
+                      placeholder="Tìm kiếm"
+                      (valueChange)="cbxPosChange($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
+                    <div class="d-flex col-8 flex-row ">
+                      <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-person-plus-fill text-primary"></span></span>
+                      <div class="d-flex flex-column" >
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.positionName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
+                      </div>                     
+                    </div>  
+                    
+                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-center">
+                    <span class="fa-solid icon-account_circle me-2"></span>
+                    <codx-label default="Nhân viên " fiedName="lblmeeting" class="fw-bold"></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <codx-input
+                      type="combobox"
+                      [refValue]="'Employees'"
+                      placeholder="Tìm kiếm"
+                      (valueChange)="cbxEmpChange($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
+                    <div class="d-flex col-8 flex-row " >
+                      <codx-img [objectId]="assignmentOKR?.userID" [objectType]="'AD_Users'"></codx-img>
+                      <div class="d-flex flex-column" >
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.employeeName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.positionName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
+                      </div>                     
+                    </div>  
+                    
+                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
+        </div>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+<!-- <div class="d-flex col-8 flex-row" *ngIf="funcID==deptFuncID">
                       <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
                       <div class="d-flex flex-column">
                         <span class="ms-4 fw-bold">{{assignmentOKR?.positionName}}</span>
@@ -65,43 +139,7 @@
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
                       </div>                     
-                    </div>  
-                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
-                  </div>
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-center">
-                    <span class="fa-solid icon-groups me-2"></span>
-                    <codx-label default="Nhóm" fiedName="lbltreetaget" class="fw-bold"></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-    
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-center">
-                    <span class="fa-solid icon-account_circle me-2"></span>
-                    <codx-label default="Nhân viên " fiedName="lblmeeting" class="fw-bold"></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-    
-                </ng-template>
-              </e-tabitem>
-            </e-tabitems>
-          </ejs-tab>
-        </div>
-      </div>
-
-    </div>
-
-
-  </ng-template>
-
+                    </div>   -->
   <ng-template #footer>
     <!--Footer-->
       <div class="d-flex justify-content-center">

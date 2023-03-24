@@ -54,9 +54,6 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   openAccordionAlign = [];
   openAccordionAssign = [];
   dataKR: any;
-  title='';
-  krRecID:any;
-  krParentID:any;
   progressHistory = [];
   krCheckIn = [];
   listAlign=[];
@@ -128,6 +125,10 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   listAssign: any;
   groupModel: any;
   isCollapsed=false;
+  okrFM: any;
+  oldKR: any;
+  popupTitle: any;
+  okrVll: any;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -152,11 +153,10 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    this.krRecID=dialogData.data[0];
-    this.title = dialogData.data[1];
-    this.krParentID = dialogData.data[2];
-    this.headerText = dialogData?.data[3];
-    this.groupModel = dialogData?.data[4];
+    this.oldKR=dialogData.data[0];
+    this.popupTitle = dialogData?.data[1];
+    this.okrFM = dialogData?.data[2];
+    this.okrVll = dialogData?.data[3];
     this.formModel=dialogRef.formModel;
 
     
@@ -197,7 +197,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getKRData(){
     this.codxOmService
-        .getOKRByID(this.krRecID)
+        .getOKRByID(this.oldKR.recID)
         .subscribe((res: any) => {
           if (res) {
             this.dataKR = res;      
@@ -223,7 +223,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Align)
+        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
@@ -232,7 +232,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAssign(){
     this.codxOmService
-        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Assign)
+        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Assign)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           

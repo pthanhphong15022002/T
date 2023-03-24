@@ -1,4 +1,4 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="pb-2 text-center">
-      <codx-label [default]="title" fiedName="titleKR" class="fw-bold fs-2"></codx-label>
+      <span class="fw-bold fs-2" [innerHTML]="dataKR?.okrName | formatvalue : okrFM?.krFM : 'okrName' | async"></span>
     </div>
     <div class="flex-grow-1 overflow-auto">
       <ejs-tab id="om-tab" class="h-100">
@@ -241,7 +241,7 @@
                     <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAlign && listAlign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" ></view-okr>
+                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->
                   <div class="ms-5 ps-5 pt-5">
@@ -249,7 +249,7 @@
                     <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAssign && listAssign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" ></view-okr>
+                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->                  
                 </div>
