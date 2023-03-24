@@ -13,11 +13,14 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { filter, map, Observable } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../interfaces/IJournal.interface';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
+import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
 
 @Component({
   selector: 'lib-popup-add-journal',
@@ -32,7 +35,12 @@ export class PopupAddJournalComponent
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('periodID') periodID: CodxInputComponent;
 
-  journal: IJournal = {} as IJournal;
+  journal: IJournal = {
+    mixedPayment: false,
+    unpostControl: false,
+    postControl: false,
+    approval: false,
+  } as IJournal;
   formTitle: string;
   gvs: any;
   tabInfo: any[] = [
@@ -49,14 +57,12 @@ export class PopupAddJournalComponent
     },
   ];
   fiscalYears: any[] = [];
-  tempInvoice: {
-    invoiceType: string;
-    invoiceForm: string;
-    invoiceSeriNo: string;
-  };
+  isMultiSelectPopupDrHidden: boolean = true;
+  isMultiSelectPopupCrHidden: boolean = true;
 
   constructor(
     private injector: Injector,
+    private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
@@ -112,17 +118,41 @@ export class PopupAddJournalComponent
   }
 
   handleClickSave(): void {
-    console.log(this.journal);
-
-    if (
-      this.journal.journalType == '0102' ||
-      this.journal.journalType == '0302' ||
-      this.journal.journalType == '0304'
-    ) {
-      this.journal.invoiceType = this.tempInvoice.invoiceType;
-      this.journal.invoiceForm = this.tempInvoice.invoiceType;
-      this.journal.invoiceSeriNo = this.tempInvoice.invoiceType;
+    if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
+      return;
     }
+
+    if (!['0102', '0302', '0304'].includes(this.journal.journalType)) {
+      this.journal.invoiceType = null;
+      this.journal.invoiceForm = null;
+      this.journal.invoiceSeriNo = null;
+    }
+
+    let temp: IJournal = { ...this.journal };
+
+    if (this.journal.approval) {
+      temp.postControl = this.journal.postControl ? 1 : 0;
+    } else {
+      temp.postControl = this.journal.postControl ? 2 : 0;
+    }
+
+    console.log(temp);
+
+    this.dialogRef.dataService
+      .save((req: RequestOption) => {
+        req.methodName = 'AddJournalAsync';
+        req.className = 'JournalsBusiness';
+        req.assemblyName = 'ERM.Business.AC';
+        req.service = 'AC';
+        req.data = temp;
+
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save || res.update) {
+          this.dialogRef.close();
+        }
+      });
   }
 
   openInvoiceForm(): void {
@@ -147,12 +177,53 @@ export class PopupAddJournalComponent
       .closed.subscribe(({ event }) => {
         console.log(event);
 
-        this.tempInvoice = event;
+        this.journal.invoiceType = event.invoiceType;
+        this.journal.invoiceForm = event.invoiceType;
+        this.journal.invoiceSeriNo = event.invoiceType;
       });
   }
 
-  hidePopupCombobox(e): void {
+  openSelectPopup(type: string, acctControl: string): void {
+    if (acctControl === '0' || acctControl === '1') {
+      this.callfc
+        .openForm(
+          SingleSelectPopupComponent,
+          'This param is not working',
+          400,
+          500,
+          '',
+          {
+            selectedOption:
+              type === 'dr' ? this.journal.drAcctID : this.journal.crAcctID,
+          }
+        )
+        .closed.subscribe(({ event }) => {
+          console.log(event);
+
+          if (event) {
+            type === 'dr'
+              ? (this.journal.drAcctID = event)
+              : (this.journal.crAcctID = event);
+          }
+        });
+    }
+
+    if (acctControl === '2') {
+      type === 'dr'
+        ? (this.isMultiSelectPopupDrHidden = false)
+        : (this.isMultiSelectPopupCrHidden = false);
+    }
+  }
+
+  hideMultiSelectPopup(e, prop: string): void {
     console.log(e);
+
+    if (e) {
+      this.journal[prop] = e.id;
+    }
+
+    this.isMultiSelectPopupDrHidden = true;
+    this.isMultiSelectPopupCrHidden = true;
   }
   //#endregion
 
@@ -175,6 +246,10 @@ export class PopupAddJournalComponent
   //#region Function
   getDescription(pascalCase: string): string {
     return this.gvs[pascalCase].description;
+  }
+
+  toPascalCase(camelCase: string): string {
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
   //#endregion
 }

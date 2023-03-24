@@ -1291,23 +1291,14 @@
               cdkDrag
               *ngFor="let itemStep of stepList; let i = index"
               class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
-              [style.display]="
-                itemStep.isSuccessStep || itemStep.isFailStep ? 'none' : ''
-              "
-              (click)="
-                clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
-              "
+              [style.display]=" itemStep.isSuccessStep || itemStep.isFailStep ? 'none' : ''"
+              (click)="clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)"
               [ngStyle]="{'background-color': itemStep?.backgroundColor }"
+              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             >
               <ng-container
                 *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']"
               >
-                <!-- <div 
-                  class="order"
-                  [ngClass]="itemStep?.icon"
-                  [ngStyle]="{ itemStep: stepNew?.iconColor }"
-                ></div> -->
                 <div class="d-flex flex-column">
                   <div class="d-flex">
                     <span 
@@ -1316,7 +1307,7 @@
                     [ngClass]="itemStep?.icon"
                     [ngStyle]="{ 'color': itemStep?.iconColor }"
                   ></span>
-                    <span class="fw-bold line-clamp line-clamp-1"  [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <span class="fs-5 fw-bold line-clamp line-clamp-1"  [ngStyle]="{ 'color': itemStep?.textColor}">
                       {{ itemStep?.stepName }}
                     </span>
                   </div>
@@ -1582,7 +1573,7 @@
                         class="btn btn-icon btn-light-primary"
                         (click)="toggleTask($event, taskList?.recID)"
                       >
-                        <i class="icon-add icon-18"></i>
+                        <i class="icon-horizontal_rule icon-18"></i>
                       </button>
                     </span>
                     <div class="me-3">
@@ -1947,8 +1938,7 @@
         class="d-flex align-items-center"
       >
         <div
-          class="circle d-flex align-items-center justify-content-center mx-1"
-          style="border: 1px solid gray; background-color: white"
+          class="d-flex align-items-center justify-content-center mx-1"
         >
           <span
             [ngClass]="stepNew?.icon"
@@ -1957,7 +1947,7 @@
         </div>
         <span
           class="line-clamp line-clamp-1"
-          style="flex-grow: 1; min-width:35px"
+          style="flex-grow: 1;"
           [ngStyle]="{ color: stepNew?.textColor }"
           >
             {{ stepName }}

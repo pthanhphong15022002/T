@@ -30,6 +30,8 @@ import {
 export class OkrTreesComponent implements OnInit, AfterViewInit {
   @Input() funcID:any;
   @Input() planRecID:any;
+  @Input() okrFM:any;
+  @Input() okrVll:any;
   dataTree: any;
   listDistribute: any;
   isAfterRender: boolean;

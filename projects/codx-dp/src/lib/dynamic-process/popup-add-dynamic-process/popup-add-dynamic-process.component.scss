@@ -214,7 +214,9 @@
 }
 
 .click {
-  background-color: var(--primary-lightest) !important;
+  // background-color: var(--primary-lightest) !important;
+  border-left: 3px solid red !important;
+  border-radius: 0;
 }
 
 .task{

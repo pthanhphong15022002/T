@@ -101,7 +101,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.purchaseinvoices = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
+    this.formType = dialogData.data?.formType;    
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.recID) this.parentID = res.recID;
     });
@@ -332,18 +332,18 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
   loadItemID(value){
     let sArray = [
-      'idiM0',
-      'idiM1',
-      'idiM2',
-      'idiM3',
-      'idiM6',
-      'idiM7'
+      'specifications',
+      'styles',
+      'itemcolors',
+      'itembatchs',
+      'itemseries'
     ];
-    var element = this.gridPurchase.visibleColumns;
-    element.forEach(element => {
-      if (sArray.includes(element.field.toLowerCase())) {
-        element.predicate = "ItemID=@";
-        element.dataValue = value;
+    var element = document.querySelector('.tabLine').querySelectorAll('codx-inplace');
+    element.forEach(e => {
+      var input = window.ng.getComponent(e) as CodxInplaceComponent;
+      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+        input.predicate = 'ItemID="'+value+'"';
+        input.loadSetting();
       }
     }); 
   }

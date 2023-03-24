@@ -30,7 +30,7 @@ export interface IJournal {
     vATID: string;
     warehouseIssue: string;
     warehouseReceipt: string;
-    mixedPayment: boolean;
+    mixedPayment: any;
     postSubControl: boolean;
     postSubDetail: string;
     objectControl: string;
@@ -47,7 +47,7 @@ export interface IJournal {
     dIM2: string;
     dIM3: string;
     iDIMControl: string;
-    approval: string;
+    approval: any;
     approver: any;
     approvedBy: string;
     approvedOn: string | null;
@@ -56,7 +56,7 @@ export interface IJournal {
     isTransfer: boolean;
     isSettlement: boolean;
     exported: boolean;
-    postControl: string;
+    postControl: any;
     qtyControl: boolean;
     assetControl: boolean;
     loanControl: boolean;
@@ -83,7 +83,7 @@ export interface IJournal {
     voucherNoRule: string;
     creater: any;
     poster: any;
-    unpostControl: boolean;
+    unpostControl: any;
     unposter: string;
     unpostTime: number | null;
     sharer: string;

@@ -1,4 +1,10 @@
-<codx-views #view [funcID]="funcIDPara" [autoLoad]="false" [views]="views">
+<codx-views
+  #view
+  [funcID]="funcIDPara"
+  [autoLoad]="false"
+  [views]="views"
+  (viewChanged)="viewChanged($event, view)"
+>
 </codx-views>
 <ng-template #template>
   <div class="px-5 roledetail rounded-5 bg-body" id="kt_content">
