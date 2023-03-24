@@ -313,6 +313,15 @@ export class InstanceDetailComponent implements OnInit {
         if (res && res?.length > 0) {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
+          let test = this.ganttDsClone.map(i => {
+            return {
+              name:i.name,
+              start: i.startDate,
+              end: i.endDate,
+            }
+          })
+          console.log("thuan", test);
+          
           this.changeDetec.detectChanges();
         }
       });

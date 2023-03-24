@@ -165,6 +165,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroup: DP_Steps_TaskGroups;
   step: DP_Steps; //data step dc chọn
   stepNew: DP_Steps; //data step dc chọn
+  stepEdit: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
   taskList: DP_Steps_Tasks[] = [];
   taskGroupList: DP_Steps_TaskGroups[] = [];
@@ -1229,8 +1230,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         var i = 0;
         i = this.countRoleSteps(objectID);
         var check = this.lstParticipants.filter((x) => x.objectID == objectID);
-        var indexPerm = this.process.permissions.findIndex(x=> x.objectID == objectID);
-        var index = this.step.roles.findIndex((x) => x.objectID == objectID && x.objectType == 'S');
+        var indexPerm = this.process.permissions.findIndex(x=> x.objectID == objectID && x.roleType == 'P');
+        var index = this.step.roles.findIndex((x) => x.objectID == objectID && x.roleType == 'S');
         if (index > -1) {
           this.step.roles.splice(index, 1);
           if (check.length == 0) {
@@ -1801,7 +1802,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     } else {
-      this.stepNew = step;
+      this.stepNew =JSON.parse(JSON.stringify(step));
+      this.stepEdit = step;
       this.stepName = this.stepNew['stepName'];
     }
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 350);
@@ -1822,9 +1824,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepAdd.push(this.stepNew.recID);
       }
     } else {
-      this.stepNew['stepName'] = this.stepName;
-      this.stepNew['modifiedOn'] = new Date();
-      this.stepNew['modifiedBy'] = this.userId;
+      this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
+      this.stepEdit['textColor'] = this.stepNew['textColor'];
+      this.stepEdit['icon'] = this.stepNew['icon'];
+      this.stepEdit['iconColor'] = this.stepNew['iconColor'];
+      this.stepEdit['stepName'] = this.stepName;
+      this.stepEdit['modifiedOn'] = new Date();
+      this.stepEdit['modifiedBy'] = this.userId;
       if (this.action == 'edit' && this.stepNew.recID) {
         this.listStepEdit.push(this.stepNew.recID);
       }
