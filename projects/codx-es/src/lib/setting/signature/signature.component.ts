@@ -273,7 +273,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   edit(evt?) {
     if (evt) {
       this.viewBase.dataService.dataSelected = evt?.data;
-
+      debugger
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
