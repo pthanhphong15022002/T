@@ -144,7 +144,7 @@ export class StepTaskGroupComponent implements OnInit {
   handleSave() {
     let message = [];
     for (let key of this.REQUIRE) {
-      if (!this.taskGroup[key]) {
+      if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
         message.push(this.view[key]);
       }
     }

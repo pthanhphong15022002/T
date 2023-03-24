@@ -16,7 +16,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
+          *ngIf="(dataStep?.stepStatus < 3 && isUpdate ) && (statusInstance == '1' || statusInstance == '2' )"
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
@@ -147,7 +147,7 @@
           [type]="'hover'"
           (changeDataMF)="changeFieldMF($event)"
         >
-        </codx-mfunc> 
+        </codx-mfunc>
       </ng-container> -->
     </div>
   </div>

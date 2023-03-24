@@ -24,6 +24,7 @@ import {
 } from '../../models/models';
 import { InstancesComponent } from '../instances.component';
 import moment from 'moment';
+import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -133,7 +134,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   ngOnInit(): void {
     this.removeReasonInSteps(this.listStepsCbx,this.isUseReason);
-    this.autoClickedSteps(this.listStepsCbx, this.stepName);
+    (!this.stepIdClick && this.stepIdClick != this.stepIdOld) && this.autoClickedSteps(this.listStepsCbx, this.stepName);
   }
 
   getNameAndPosition(id) {
@@ -216,6 +217,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
+    this.instancesStepOld.owner = this.owner;
     if(this.checkSpaceInStep(this.stepIdClick,this.stepIdOld)) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -233,7 +235,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.notiService.notifyCode(
           'SYS009',
           0,
-          '"' + this.gridViewInstanceStep['owner']?.headerText + '"'
+          '"' + this.gridViewInstanceStep['Owner']?.headerText + '"'
         );
         return;
       }

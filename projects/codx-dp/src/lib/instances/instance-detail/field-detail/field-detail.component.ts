@@ -27,6 +27,7 @@ export class FieldDetailComponent implements OnInit {
   @Output() inputCustomField = new EventEmitter<any>();
   @Input() isSaving = false;
   @Output() actionSave= new EventEmitter<any>();
+  @Input() statusInstance: any;
   currentRate = 0;
   dtFormatDate: any = [];
   formModelDefault: FormModel = {
@@ -285,13 +286,13 @@ export class FieldDetailComponent implements OnInit {
       if (res) {
         if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
         this.notiService.notifyCode('SYS007');
-        this.inputCustomField.emit(null); 
+        this.inputCustomField.emit(null);
         this.clickInput(field.recID);
       } else {
         this.notiService.notifyCode('SYS021');
         if (idx != -1) this.dataStep.fields[idx].dataValue = this.dataValueOld;
       }
-     
+
     });
   }
 }

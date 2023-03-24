@@ -237,7 +237,8 @@
     <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
     </codx-label>
     <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
-    [allowFiltering]="false" [readonly]="true" (valueChange)="cbxChange($event)"></ejs-combobox>
+    [allowFiltering]="true" [readonly]="false" (valueChange)="cbxChange($event)"></ejs-combobox>
+
 
   </div>
 </ng-template>
