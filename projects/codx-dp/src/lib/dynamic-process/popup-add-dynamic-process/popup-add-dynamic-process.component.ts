@@ -184,7 +184,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listStepAdd = [];
   listStepDelete = [];
   listStepEdit = [];
-  listInstancesStepDel = [];
+  listStepDrop = [];
 
   dayStep = 0;
   hourStep = 0;
@@ -443,15 +443,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data = [this.process];
     } else {
       op.methodName = 'UpdateProcessAsync';
+      const listStepDrop = this.convertListStepDrop();
       data = [
         this.process,
         this.listStepAdd || [],
         this.listStepEdit || [],
         this.listStepDelete || [],
-        this.listInstancesStepDel || [],
+        listStepDrop || [],
       ];
     }
     op.data = data;
+  }
+
+  convertListStepDrop(){
+    let listDrop = [];
+    if(this.listStepEdit?.length == 0 && this.listStepDelete?.length == 0) return this.listStepDrop;
+    for(let id of this.listStepDrop){
+      let check = this.listStepEdit.some(idEdit => idEdit === id);
+      let checkDelete = this.listStepDelete.some(idDelete => idDelete === id);
+      if(!check && !checkDelete){
+        listDrop.push(id);
+      }
+    }
+    return listDrop;
   }
 
   onAdd() {
@@ -1811,7 +1825,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
       this.stepNew['modifiedBy'] = this.userId;
-      if (this.action == 'edit') {
+      if (this.action == 'edit' && this.stepNew.recID) {
         this.listStepEdit.push(this.stepNew.recID);
       }
     }
@@ -1826,7 +1840,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (check) {
       this.notiService.alertCode('DP008').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.listInstancesStepDel.push(data.recID);
           this.handelDeleteStep(data);
         } else {
           return;
@@ -1906,7 +1919,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event && res?.event?.taskGroupName) {
         this.saveGroupTask(type, taskGroup, data);
         let check = this.listStepEdit.some((id) => id == data?.stepID);
-        if (!check) {
+        if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
         }
       }
@@ -1985,7 +1998,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
         let check = this.listStepEdit.some((id) => id == data?.stepID);
-        if (!check) {
+        if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
         }
         let checkExistStep = this.checkExistUser(
@@ -2088,7 +2101,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               });
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
-            if (!check) {
+            if (!check && taskData?.stepID) {
               this.listStepEdit.push(taskData?.stepID);
             }
             this.sumTimeStep();
@@ -2118,7 +2131,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
         this.sumTimeStep();
         let check = this.listStepEdit.some((id) => id == task?.stepID);
-        if (!check) {
+        if (!check && task?.stepID) {
           this.listStepEdit.push(task?.stepID);
         }
         let checkExistStep = this.checkExistUser(
@@ -2287,7 +2300,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.setIndex(event.previousContainer.data, 'indexNo');
       this.setIndex(event.container.data, 'indexNo');
       let check = this.listStepEdit.some((id) => id == dataDrop['stepID']);
-      if (!check) {
+      if (!check && dataDrop['stepID']) {
         this.listStepEdit.push(dataDrop['stepID']);
       }
     }
@@ -2310,12 +2323,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .map((stepFind) => {
         return stepFind.recID;
       });
+
     if (listID?.length > 0) {
       listID?.forEach((id) => {
         let checkAdd = this.listStepAdd?.some((idAdd) => idAdd == id);
-        let checkEdit = this.listStepEdit?.some((idEdit) => idEdit == id);
+        let checkEdit = this.listStepDrop?.some((idDrop) => idDrop == id);
         if (!checkAdd && !checkEdit) {
-          this.listStepEdit.push(id);
+          this.listStepDrop.push(id);
         }
       });
     }
