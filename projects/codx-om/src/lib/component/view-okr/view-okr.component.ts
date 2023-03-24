@@ -42,6 +42,8 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   @Input() dataOKR:any;
   @Input() isCollapsedAll=false;
   @Input() isShowBreakLine=false;
+  @Input() okrFM:any;
+  @Input() okrVll:any;
 
   dialogRef: DialogRef;
   formModel: FormModel;
@@ -51,12 +53,6 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private authService: AuthService,
-    private codxOmService: CodxOmService,
-    private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
-    @Optional() dialogData?: DialogData,
-    @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
   
@@ -66,7 +62,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    
+    //this.getCacheData();
   }
 
   //-----------------------End-------------------------------//
@@ -78,7 +74,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
 
   //-----------------------End-------------------------------//
-
+  
   //-----------------------Get Data Func---------------------//
   
   collapeKR(collapsed: boolean) {

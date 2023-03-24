@@ -2667,13 +2667,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
-      children.classList.remove('icon-horizontal_rule');
-      children.classList.add('icon-add');
+      children.classList.remove('icon-add');
+      children.classList.add('icon-horizontal_rule');
     } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
-      children.classList.remove('icon-add');
-      children.classList.add('icon-horizontal_rule');
+      children.classList.remove('icon-horizontal_rule');
+      children.classList.add('icon-add');
     }
   }
 
