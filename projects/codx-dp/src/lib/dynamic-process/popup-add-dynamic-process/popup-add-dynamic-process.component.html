@@ -1310,7 +1310,9 @@
                 ></div> -->
                 <div class="d-flex flex-column">
                   <div class="d-flex">
-                    <span
+                    <span 
+                    *ngIf="itemStep?.icon"
+                    class="me-1 d-flex align-items-center"
                     [ngClass]="itemStep?.icon"
                     [ngStyle]="{ 'color': itemStep?.iconColor }"
                   ></span>
@@ -1945,7 +1947,7 @@
         class="d-flex align-items-center"
       >
         <div
-          class="circle d-flex align-items-center justify-content-center ms-2"
+          class="circle d-flex align-items-center justify-content-center mx-1"
           style="border: 1px solid gray; background-color: white"
         >
           <span
@@ -1955,9 +1957,11 @@
         </div>
         <span
           class="line-clamp line-clamp-1"
-          style="flex-grow: 1"
+          style="flex-grow: 1; min-width:35px"
           [ngStyle]="{ color: stepNew?.textColor }"
-          >{{ stepName }}</span
+          >
+            {{ stepName }}
+          </span
         >
       </div>
     </div>
