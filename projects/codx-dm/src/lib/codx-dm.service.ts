@@ -134,7 +134,7 @@ export class CodxDMService {
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
-
+  
   public ChangeDataView = new BehaviorSubject<boolean>(null);
   isChangeDataView = this.ChangeDataView.asObservable();
 
@@ -143,6 +143,9 @@ export class CodxDMService {
 
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
+
+  public ChangeOneFolder = new BehaviorSubject<any>(null);
+  isChangeOneFolder = this.ChangeOneFolder.asObservable();
 
   public EmptyTrashData = new BehaviorSubject<boolean>(null);
   isEmptyTrashData = this.EmptyTrashData.asObservable();

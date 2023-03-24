@@ -14,10 +14,12 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
+import {
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+} from 'projects/codx-dp/src/lib/models/models';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-
 
 @Component({
   selector: 'lib-popup-add-stask',
@@ -27,7 +29,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 export class PopupAddStaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  REQUIRE = ['taskName','endDate','startDate'];
+  REQUIRE = ['taskName', 'endDate', 'startDate'];
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -56,11 +58,13 @@ export class PopupAddStaskComponent implements OnInit {
   isHaveFile = false;
   funcIDparent: any;
   folderID = '';
-  groupTaskID = ''
+  groupTaskID = '';
   view = [];
-  isSave = true;
+  isSaveTimeTask = true;
+  isSaveTimeGroup = true;
   groupTask;
   leadtimeControl = false;
+  isLoadDate = false;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -83,7 +87,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['taskGroupID'] = dt?.data[7];
       this.stepsTasks['refID'] = Util.uid();
       this.stepsTasks['isTaskDefault'] = false;
-    }else {
+    } else {
       this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
@@ -121,8 +125,10 @@ export class PopupAddStaskComponent implements OnInit {
           (x) => x.key === this.stepsTasks.refID
         );
         this.dataCombobox.splice(index, 1);
-        this.taskGroupName = this.groupTackList?.find(
-          (x) => x.refID === this.stepsTasks.taskGroupID)?.taskGroupName || null;
+        this.taskGroupName =
+          this.groupTackList?.find(
+            (x) => x.refID === this.stepsTasks.taskGroupID
+          )?.taskGroupName || null;
       }
       this.valueInput = this.dataCombobox
         .filter((x) => x.checked)
@@ -153,27 +159,44 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   filterText(value, key) {
-      this.stepsTasks[key] = value;
-      this.groupTask = this.groupTackList.find((x) => x.refID === value);
-      this.taskGroupName = this.groupTask['taskGroupName'] || '';
-      this.stepsTasks['startDate'] = this.groupTask['startDate'] || new Date();
+    this.stepsTasks[key] = value;
+    this.groupTask = this.groupTackList.find((x) => x.refID === value);
+    this.taskGroupName = this.groupTask['taskGroupName'] || '';
+    this.stepsTasks['startDate'] = this.groupTask['startDate'] || new Date();
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
   changeValueDate(event) {
-    this.stepsTasks[event?.field] = event?.data?.fromDate;
-    if(new Date(this.stepsTasks['startDate']) > new Date(this.stepsTasks['endDate'] && this.stepsTasks['endDate'])){
-      this.isSave = false;
-      this.notiService.notifyCode('DP019');
-    }else{
-      this.isSave = true;
-    }    
-    if(new Date(this.stepsTasks['endDate']) > new Date(this.groupTask?.endDate)){
-      this.notiService.notifyCode('DP020');
+    if(this.isLoadDate){
+      this.isLoadDate = !this.isLoadDate;
+      return;
     }
-    if(new Date(this.stepsTasks['startDate']) > new Date(this.groupTask['startDate'])){
+    this.isLoadDate = !this.isLoadDate;
+    this.stepsTasks[event?.field] = event?.data?.fromDate;
+    const startDate =  new Date(this.stepsTasks['startDate']);
+    const endDate = new Date(this.stepsTasks['endDate']);
+
+    if (endDate && startDate > endDate){
+      this.isSaveTimeTask = false;
+      this.notiService.notifyCode('DP019');
+      return;
+    } else {
+      this.isSaveTimeTask = true;
+    }
+
+    if (endDate > new Date(this.groupTask?.endDate)) {
+      this.isSaveTimeGroup = false;
       this.notiService.notifyCode('DP020');
+    }else{
+      this.isSaveTimeGroup = true;
+    }
+
+    if (startDate >new Date(this.groupTask['startDate'])) {
+      this.isSaveTimeGroup = false;
+      this.notiService.notifyCode('DP020');
+    }else{
+      this.isSaveTimeGroup = true;
     }
   }
   applyOwner(e, datas) {
@@ -202,7 +225,12 @@ export class PopupAddStaskComponent implements OnInit {
 
     let message = [];
     for (let key of this.REQUIRE) {
-      if (!this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
+      if (
+        (typeof this.stepsTasks[key] === 'string' &&
+          !this.stepsTasks[key].trim()) ||
+        !this.stepsTasks[key] ||
+        this.stepsTasks[key]?.length === 0
+      ) {
         message.push(this.view[key]);
       }
     }
@@ -211,24 +239,33 @@ export class PopupAddStaskComponent implements OnInit {
     }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
-    }else{
-      if (this.attachment && this.attachment.fileUploadList.length){
-        (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          if (res) {
-            if(this.status === 'copy'){
-              this.stepsTasks['recID'] = Util.uid();
-              this.stepsTasks['refID'] = Util.uid();
-              this.stepsTasks['isTaskDefault'] = false;
-            }
-            this.dialog.close({ data: this.stepsTasks, status: this.status });
+      return;
+    } 
+    if(!this.isSaveTimeTask){
+      this.notiService.notifyCode('DP019');
+      return;
+    }
+    if(!this.isSaveTimeGroup){
+      this.notiService.notifyCode('DP020');
+      return;
+    }
+
+    if (this.attachment && this.attachment.fileUploadList.length) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          if (this.status === 'copy') {
+            this.stepsTasks['recID'] = Util.uid();
+            this.stepsTasks['refID'] = Util.uid();
+            this.stepsTasks['isTaskDefault'] = false;
           }
-        });
-      } else {
-        if(this.status === 'copy'){
-          this.stepsTasks['recID'] = Util.uid();
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
-        this.dialog.close({ data: this.stepsTasks, status: this.status });
-      } 
+      });
+    } else {
+      if (this.status === 'copy') {
+        this.stepsTasks['recID'] = Util.uid();
+      }
+      this.dialog.close({ data: this.stepsTasks, status: this.status });
     }
   }
   handelMail() {

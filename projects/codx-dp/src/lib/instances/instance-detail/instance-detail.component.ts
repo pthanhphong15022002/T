@@ -102,6 +102,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
   isSaving = false;
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
     private callfc: CallFuncService,
@@ -360,8 +361,13 @@ export class InstanceDetailComponent implements OnInit {
       var indexProccess = this.listCbxProccess.findIndex(
         (x) => x.recID === data?.refID
       );
+      if (indexProccess <= -1) {
+        var indexProccess = this.listCbxProccess.findIndex(
+          (x) => x.recID === this.guidEmpty
+        );
+      }
       var proccesMove = this.listCbxProccess[indexProccess];
-      this.proccesNameMove = proccesMove?.processName ?? '';
+      this.proccesNameMove = proccesMove?.processName;
     }
     return reasonStep?.stepName ?? '';
   }
@@ -378,7 +384,7 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     let classViewDetail: any;
-    var heighOut = 20
+    var heighOut = 25
     if ((this.viewType == 'd')) {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
@@ -429,5 +435,8 @@ export class InstanceDetailComponent implements OnInit {
   }
   actionSaveCustomField(e){
     this.isSaving =e ;
+  }
+  clickMenu(e){
+     this.viewModelDetail = e
   }
 }

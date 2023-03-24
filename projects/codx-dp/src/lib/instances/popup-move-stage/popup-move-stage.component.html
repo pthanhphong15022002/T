@@ -24,14 +24,15 @@
           default="Ngày hoàn thành thực tế">
         </codx-label>
       </div>
-
-      <codx-input field="actualEnd" [crrValue]="instancesStepOld?.actualEnd" [Group]="form.formGroup" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-
-      <!-- <codx-input field="actualEnd" format="d" type="datetime" class="test-datetime" [crrValue]="instancesStepOld?.actualEnd"
-      (valueChange)="valueChange($event)">
-    </codx-input> -->
+    <codx-input
+    type="datetime"
+    class="test-datetime"
+    field="actualEnd"
+    format="d"
+    [crrValue]="instancesStepOld.actualEnd"
+    (valueChange)="changeTime($event)"
+  >
+  </codx-input>
     </div>
 
     <div class="form-group">
@@ -58,10 +59,6 @@
           </codx-label>
           </div>
           <div class="ps-2">
-            <!-- <codx-input type="checkbox"  class="rounded-circle" [checked]="true"
-            (valueChange)="checkAllValue($event)">
-
-          </codx-input> -->
             <input
             class="form-check-input rounded-circle"
             type="checkbox"
@@ -240,7 +237,9 @@
     <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
     </codx-label>
     <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
-      (valueChange)="cbxChange($event)"></ejs-combobox>
+    [allowFiltering]="true" [readonly]="false" (valueChange)="cbxChange($event)"></ejs-combobox>
+
+
   </div>
 </ng-template>
 

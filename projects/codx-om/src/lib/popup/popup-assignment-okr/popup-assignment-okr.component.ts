@@ -142,9 +142,11 @@ export class PopupAssignmentOKRComponent
 
   getOKRAssign() {
     this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
-      if (res) {
+      if (res) {        
+        this.dataOKR = res;
         this.codxOmService.getOKRDistributed(this.okrRecID).subscribe((links: any) => {
           if (links && links.length > 0) {
+
             let oldLink = links[0];
             this.assignmentOKR.okrName = oldLink?.okrName;
             this.assignmentOKR.umid = oldLink?.umid;
@@ -178,7 +180,6 @@ export class PopupAssignmentOKRComponent
               
               this.isAfterRender = true;
           } else {
-            this.dataOKR = res;
             this.assignmentOKR.okrName = this.dataOKR?.okrName;
             this.assignmentOKR.umid = this.dataOKR?.umid;
             this.assignmentOKR.isActive = false;
@@ -268,7 +269,7 @@ export class PopupAssignmentOKRComponent
       this.notificationsService.notify('Kế hoạch mục tiêu kỳ ' + this.okrPlan?.periodID +' đang ở tình trạng' + this.statusVLL[this.okrPlan?.status]?.text+' nên không thể thay đổi đối tượng phân công', '2', null);
       return;
     }
-    this.codxOmService.assignmentOKR( this.okrRecID, this.distributeFromType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
+    this.codxOmService.assignmentOKR( this.dataOKR?.recID, this.dataOKR?.okrType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
         if (res) {
           this.notificationsService.notifyCode('SYS034');
           

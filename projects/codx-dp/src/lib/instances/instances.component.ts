@@ -798,6 +798,7 @@ export class InstancesComponent
               listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
               stepReason: stepReason,
+              headerTitle: dataMore.defaultName,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
