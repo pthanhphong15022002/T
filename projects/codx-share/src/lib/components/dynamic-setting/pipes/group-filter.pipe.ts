@@ -7,10 +7,18 @@ export class GroupPipe implements PipeTransform {
     if (!items) return [];
     var dt = [];
     if (!groupName) {
-      dt = items.filter((x) => !x.refLineID && x.lineType === lineType);
+      dt = items.filter(
+        (x) =>
+          !x.refLineID &&
+          x.lineType === lineType &&
+          x.controlType.toLowerCase() !== 'groupcontrol'
+      );
     } else {
       dt = items.filter(
-        (x) => x.refLineID === groupName && x.lineType === lineType
+        (x) =>
+          x.refLineID === groupName &&
+          x.lineType === lineType &&
+          x.controlType.toLowerCase() !== 'groupcontrol'
       );
     }
     if (!dt) dt = [];
