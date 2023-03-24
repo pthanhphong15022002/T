@@ -27,7 +27,7 @@ export class FieldDetailComponent implements OnInit {
   @Output() inputCustomField = new EventEmitter<any>();
   @Input() isSaving = false;
   @Output() actionSave= new EventEmitter<any>();
-  @Input() statusInstance: any;
+
   currentRate = 0;
   dtFormatDate: any = [];
   formModelDefault: FormModel = {

@@ -188,10 +188,9 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if(!!this.autoName){
-      this.title = this.titleAction + ' '+ this.autoName;
-    }
-    else {
+    if (!!this.autoName) {
+      this.title = this.titleAction + ' ' + this.autoName;
+    } else {
       this.title = this.titleAction + ' ' + e;
       this.autoName = e;
     }
@@ -250,7 +249,7 @@ export class PopupAddInstanceComponent implements OnInit {
       option.methodName = 'EditInstanceAsync';
     }
 
-    option.data = [this.instance, this.listStep,this.oldIdInstance];
+    option.data = [this.instance, this.listStep, this.oldIdInstance];
     return true;
   }
   saveInstances() {
@@ -262,15 +261,14 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
+    if (this.instance?.owner === null || this.instance?.owner.trim() === '') {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    }
-    else if (
+    } else if (
       this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
     ) {
       // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
@@ -283,21 +281,21 @@ export class PopupAddInstanceComponent implements OnInit {
       let check = true;
       let checkFormat = true;
       this.listStep.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
+        if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
           var arrField = obj.fields;
           arrField.forEach((f) => {
-            if (
-              f.isRequired &&
-              (!f.dataValue || f.dataValue?.toString().trim() == '')
-            ) {
-              this.notificationsService.notifyCode(
-                'SYS009',
-                0,
-                '"' + f.title + '"'
-              );
-              check = false;
-            }
-            checkFormat = this.checkFormat(f);
+              if (
+                f.isRequired &&
+                (!f.dataValue || f.dataValue?.toString().trim() == '')
+              ) {
+                this.notificationsService.notifyCode(
+                  'SYS009',
+                  0,
+                  '"' + f.title + '"'
+                );
+                check = false;
+              }
+              checkFormat = this.checkFormat(f);
           });
         }
       });
