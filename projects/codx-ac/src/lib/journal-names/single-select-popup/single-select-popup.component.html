@@ -1,0 +1,30 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+>
+</codx-form>
+
+<ng-template #body>
+  <div *ngFor="let a of parentAccounts" class="mb-3">
+    <ejs-radiobutton
+      [label]="a.AccountID + ' - ' + a.AccountName"
+      [value]="a.AccountID"
+      name="account"
+      [(ngModel)]="selectedOption"
+    ></ejs-radiobutton>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

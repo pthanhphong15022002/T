@@ -209,7 +209,7 @@ export class VendorsComponent extends UIComponent {
     opt.className = 'VendorsBusiness';
     opt.assemblyName = 'PS';
     opt.service = 'PS';
-    opt.data = data.vendorID;
+    opt.data = data;
     return true;
   }
   //#endregion
