@@ -1298,6 +1298,7 @@
               (click)="
                 clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
               "
+              [ngStyle]="{'background-color': itemStep?.backgroundColor }"
             >
               <ng-container
                 *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']"
@@ -1310,22 +1311,21 @@
                 <div class="d-flex flex-column">
                   <div class="d-flex">
                     <span
-                      class="icon-18 me-2"
-                      [ngClass]="itemStep?.icon"
-                      [ngStyle]="{ itemStep: stepNew?.iconColor }"
-                    ></span>
-                    <span class="fw-bold text-dark line-clamp line-clamp-1">
+                    [ngClass]="itemStep?.icon"
+                    [ngStyle]="{ 'color': itemStep?.iconColor }"
+                  ></span>
+                    <span class="fw-bold line-clamp line-clamp-1"  [ngStyle]="{ 'color': itemStep?.textColor}">
                       {{ itemStep?.stepName }}
                     </span>
                   </div>
 
-                  <div class="text-gray-500 fs-7">
+                  <div class="fs-7"  [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label
                       fiedName="durationTime"
                       [formModel]="dialog.formModel"
                       [default]="'Thời hạn: '"
                     ></codx-label>
-                    <span class="text-gray-700">{{
+                    <span >{{
                       itemStep?.durationDay || 0
                     }}</span>
                     <codx-label
@@ -1333,7 +1333,7 @@
                       [formModel]="dialog.formModel"
                       [default]="strDay"
                     ></codx-label>
-                    <span class="text-gray-700">{{
+                    <span >{{
                       itemStep?.durationHour || 0
                     }}</span>
                     <codx-label
@@ -1342,13 +1342,13 @@
                       [default]="strHour"
                     ></codx-label>
                   </div>
-                  <div class="text-gray-500 fs-7">
+                  <div class="fs-7"  [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label
                       fiedName="task"
                       [formModel]="dialog.formModel"
                       [default]="'Công việc:'"
                     ></codx-label>
-                    <span class="text-gray-700">{{
+                    <span class="">{{
                       itemStep?.tasks?.length
                     }}</span>
                   </div>
