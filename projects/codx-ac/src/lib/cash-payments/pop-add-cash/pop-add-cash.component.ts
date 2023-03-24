@@ -55,6 +55,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   parentID: string;
   cashpaymentline: Array<CashPaymentLine> = [];
   voucherLineRefs: Array<any> = [];
+  voucherLineRefsDelete: Array<any> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
   tab: number = 0;
   fmCashPaymentsLines: FormModel = {
@@ -312,12 +313,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             e.data,
           ])
           .subscribe((res: any) => {
-            if (res && res) {
-              let field = Util.camelize(e.field);
-              this.gridCashPaymentLine.rowDataSelected = res;
-              this.gridCashPaymentLine.rowDataSelected = {
-                ...this.gridCashPaymentLine.rowDataSelected,
-              };
+            if (res) {
+              this.gridVoucherLineRefs.rowDataSelected[e.field] = res[e.field];
+              this.gridVoucherLineRefs.rowDataSelected = { ...res };
             }
           });
       }
@@ -358,12 +356,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   deleteRow(data) {
-    this.cashpaymentlineDelete.push(data);
-    this.gridCashPaymentLine.deleteRow(data);
+    if (this.cashpayment.voucherType == '1') {
+      this.gridCashPaymentLine.deleteRow(data);
+    }
+    if (this.cashpayment.voucherType == '2') {
+      this.gridVoucherLineRefs.deleteRow(data);
+      this.voucherLineRefsDelete.push(data);
+    }
   }
 
   editRow(data) {
-    this.gridCashPaymentLine.updateRow(data.rowNo, data);
+    if (this.cashpayment.voucherType == '1')
+      this.gridCashPaymentLine.updateRow(data.rowNo, data);
+    if (this.cashpayment.voucherType == '2')
+      this.gridVoucherLineRefs.updateRow(data.rowNo, data);
   }
 
   copyRow(data) {
@@ -497,7 +503,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             let field = Util.camelize(e);
             this.gridCashPaymentLine.rowDataSelected[field] = data[field];
             this.gridCashPaymentLine.rowDataSelected = {
-              ...this.gridCashPaymentLine.rowDataSelected,
+              ...data,
             };
             this.gridCashPaymentLine.rowDataSelected.updateColumns = '';
           }
