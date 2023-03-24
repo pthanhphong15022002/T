@@ -143,8 +143,6 @@
     [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
     [isUpdate]="isUpdate"
-    [isClosed]="isClosed"
-    [statusInstance]="instance.status"
   >
   </codx-field-detail>
   <!-- nvthuan -->
@@ -244,20 +242,16 @@
                       class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
                       style="flex-grow: 1"
                     >
-                      <div
-                        class="d-flex justify-content-center align-items-center cursor-pointer"
-                        (click)="toggleTask('group' + taskList?.recID)"
+                      <!-- show hiden group task -->
+                    <span class="me-4">
+                      <button
+                        type="button"
+                        class="btn btn-icon btn-light-primary"
+                        (click)="toggleTask($event, taskList?.recID)"
                       >
-                        <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
-                        <span class="me-4">
-                          <button
-                            type="button"
-                            class="btn btn-icon btn-light-primary"
-                          >
-                            <i class="icon-add icon-18"></i>
-                          </button>
-                        </span>
-                      </div>
+                        <i class="icon-horizontal_rule icon-18"></i>
+                      </button>
+                    </span>
                       ...
                       <div class="steplist-hearder ms-5">
                         <div class="text-dark fw-bold fs-6">

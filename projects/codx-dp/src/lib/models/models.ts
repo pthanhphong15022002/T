@@ -128,6 +128,10 @@ export class DP_Steps {
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;
+  backgroundColor:	String;
+  textColor:	String;
+  icon:	String;
+  iconColor:	String;
 }
 export class DP_Steps_Roles {
   recID: string = Util.uid();
@@ -350,6 +354,11 @@ export class DP_Instances_Steps {
   isFailStep: boolean = false;
   durationControl: boolean;
   leadtimeControl: boolean;
+  backgroundColor:	String;
+  textColor:	String;
+  icon:	String;
+  iconColor:	String;
+
 }
 
 export class DP_Instances_Steps_Roles {

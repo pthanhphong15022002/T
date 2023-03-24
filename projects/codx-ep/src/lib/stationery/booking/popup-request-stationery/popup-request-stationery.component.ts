@@ -249,12 +249,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
       }
     }
 
-    if (event?.field === 'bUID') {
+    if (event?.field === 'orgUnitID') {
       this.dialogAddBookingStationery.patchValue({ bUID: event?.data });
       this.epService
         .getEmployeeByOrgUnitID(event.data)
         .subscribe((res: any) => {
-          this.qtyEmp = 0;
           if (res) {
             this.qtyEmp = res;
           }
