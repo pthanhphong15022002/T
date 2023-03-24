@@ -2064,18 +2064,17 @@ codx-instance-detail #ganttDefault{
   padding-bottom: 40px;
 }
 
-// lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled
-// codx-header{
-//     box-shadow: none;
-//     border-bottom: 1px var(--gray-150) solid;
-// }
-// codx-wrapper {
-//   padding: 0;
-//   border: 1px red solid;
-//   .container-toolbar + .container-fluid{
-//     padding-left:16px!important;
-//     padding-right:16px!important;
-//     height: calc(100vh - 120px)!important;
-//     border: 1px aqua solid;
-//   }
-// }
+lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
+  codx-header{
+      box-shadow: none;
+      border-bottom: 1px var(--gray-150) solid;
+  }
+  codx-wrapper {
+    padding: 0;
+    .container-toolbar + .container-fluid{
+      padding-left:16px!important;
+      padding-right:16px!important;
+      height: calc(100vh - 120px)!important;
+    }
+  }
+}
