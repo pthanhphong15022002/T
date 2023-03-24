@@ -70,7 +70,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
-  @ViewChild('addStage') addStagePopup: TemplateRef<any>;
+  @ViewChild('addStagePopup') addStagePopup: TemplateRef<any>;
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
   process = new DP_Processes();
@@ -1790,7 +1790,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     }
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 350);
   }
 
   saveStep() {
@@ -2662,6 +2662,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.dpService.checkExitsName([processName, processID])
     );
     return check;
+  }
+
+  chanvalueColor(event, data){
+    if(event?.data && event.field){
+      data[event.field] = event?.data;
+    }
+  }
+
+  changeIcon(event, field,data ){
+    if(event){
+      data[field] = event;
+    }
   }
   //#End stage -- nvthuan
 
