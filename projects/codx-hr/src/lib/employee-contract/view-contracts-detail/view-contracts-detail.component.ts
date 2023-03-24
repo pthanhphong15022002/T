@@ -365,6 +365,7 @@ export class ViewDetailComponent implements OnInit {
       // case 'EST01104': //unBookmark
       //   this.unBookmark(datas);
       //   break;
+      // 11
     }
   }
 
