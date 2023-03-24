@@ -285,6 +285,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   clearCashrecipts() {
     this.cashreceiptslines = [];
   }
+  changeType(e: any) {
+   
+  }
   //#endregion
 
   //#region Method

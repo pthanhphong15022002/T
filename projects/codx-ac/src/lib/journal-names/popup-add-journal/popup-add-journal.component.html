@@ -24,6 +24,18 @@
   <ng-container *ngIf="form.formGroup">
     <div class="form-group">
       <codx-label
+        fiedName="journalNo"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="journalNo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
         fiedName="journalDesc"
         [formModel]="form.formModel"
       ></codx-label>
@@ -242,6 +254,14 @@
             [default]="getDescription('DRAcctControl')"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
+          <span
+            class="badge badge-pill badge-secondary ms-2"
+            *ngIf="
+              ['0', '1'].includes(journal.drAcctControl) && journal.drAcctID
+            "
+          >
+            {{ journal.drAcctID }}
+          </span>
         </div>
 
         <div class="col-5">
@@ -250,21 +270,44 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [placeholder]="' '"
+            (valueChange)="journal.drAcctID = null"
           ></codx-input>
         </div>
 
         <div class="col-1">
-          <ng-container
-            *ngIf="
-              journal.drAcctControl == '0' ||
-              journal.drAcctControl == '1' ||
-              journal.drAcctControl == '2'
-            "
+          <div
+            *ngIf="['0', '1', '2'].includes(journal.drAcctControl)"
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openSelectPopup('dr', journal.drAcctControl)"
           >
-            <div class="d-flex justify-content-end" role="button">
-              <span class="icon-edit-one icon-20 text-primary"></span>
-            </div>
-          </ng-container>
+            <span class="icon-edit-one icon-20 text-primary"></span>
+          </div>
+
+          <codx-combobox-popup
+            *ngIf="!isMultiSelectPopupDrHidden"
+            comboboxName="ParentAccounts"
+            [multiple]="true"
+            [width]="600"
+            [height]="500"
+            [value]="journal.drAcctID"
+            (clickSave)="hideMultiSelectPopup($event, 'drAcctID')"
+          >
+          </codx-combobox-popup>
+        </div>
+
+        <div
+          class="col-11 mt-2"
+          *ngIf="journal.drAcctControl === '2' && journal.drAcctID"
+        >
+          <div class="text-truncate p-1">
+            <span
+              *ngFor="let a of journal.drAcctID?.split(';')"
+              class="badge badge-pill badge-secondary me-2"
+            >
+              {{ a }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -283,6 +326,15 @@
             [default]="getDescription('CRAcctControl')"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
+
+          <span
+            class="badge badge-pill badge-secondary ms-2"
+            *ngIf="
+              ['0', '1'].includes(journal.crAcctControl) && journal.crAcctID
+            "
+          >
+            {{ journal.crAcctID }}
+          </span>
         </div>
 
         <div class="col-5">
@@ -291,33 +343,44 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [placeholder]="' '"
+            (valueChange)="journal.crAcctID = null"
           ></codx-input>
         </div>
 
         <div class="col-1">
-          <ng-container
-            *ngIf="
-              journal.crAcctControl == '0' ||
-              journal.crAcctControl == '1' ||
-              journal.crAcctControl == '2'
-            "
+          <div
+            *ngIf="['0', '1', '2'].includes(journal.crAcctControl)"
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openSelectPopup('cr', journal.crAcctControl)"
           >
-            <div class="d-flex justify-content-end" role="button">
-              <span class="icon-edit-one icon-20 text-primary"></span>
-            </div>
-          </ng-container>
+            <span class="icon-edit-one icon-20 text-primary"></span>
+          </div>
 
-          <ng-container *ngIf="true">
-            <codx-combobox-popup
-              comboboxName="ParentAccounts"
-              field="accounts"
-              [multiple]="true"
-              [width]="600"
-              [height]="500"
-              (clickSave)="hidePopupCombobox($event)"
+          <codx-combobox-popup
+            *ngIf="!isMultiSelectPopupCrHidden"
+            comboboxName="ParentAccounts"
+            [multiple]="true"
+            [width]="600"
+            [height]="500"
+            [value]="journal.crAcctID"
+            (clickSave)="hideMultiSelectPopup($event, 'crAcctID')"
+          >
+          </codx-combobox-popup>
+        </div>
+
+        <div
+          class="col-11 mt-2"
+          *ngIf="journal.crAcctControl === '2' && journal.crAcctID"
+        >
+          <div class="text-truncate p-1">
+            <span
+              *ngFor="let a of journal.crAcctID?.split(';')"
+              class="badge badge-pill badge-secondary me-2"
             >
-            </codx-combobox-popup>
-          </ng-container>
+              {{ a }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -696,8 +759,16 @@
         [Group]="form.formGroup"
       ></codx-input>
       <codx-label
+        *ngIf="journal.approval"
         fiedName="postControl"
         [formModel]="form.formModel"
+        [default]="getDescription('PostControl').split(';')[0]"
+      ></codx-label>
+      <codx-label
+        *ngIf="!journal.approval"
+        fiedName="postControl"
+        [formModel]="form.formModel"
+        [default]="getDescription('PostControl').split(';')[1]"
       ></codx-label>
     </div>
 
