@@ -16,7 +16,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="(dataStep?.stepStatus < 3 && isUpdate ) && (statusInstance == '1' || statusInstance == '2' )"
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate "
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
@@ -55,11 +55,11 @@
 </div>
 
 <ng-template #viewCustomFields let-data>
-  <div  id="{{data.recID}}" class='show-main'>
+  <div  id="{{data.recID}}" class='show-main' (dblclick)="clickInput(data.recID,dataStep,true)">
     <div class="fw-bold mb-1">
       {{ data.title }}
     </div>
-    <div (dblclick)="clickInput(data.recID,dataStep,true)" class="cursor-pointer">
+    <div  class="cursor-pointer">
       <span class="place-holder margin-l" *ngIf="!data.dataValue">
         {{ data.title }}
       </span>
