@@ -628,7 +628,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
-   
+    
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
         this.hideMF = false;
@@ -649,7 +649,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.fileService.options.favoriteID = "1";
           this.folderService.options.favoriteID = "1";
         };
-        if(this.funcID == "DMT03" || this.funcID == "DMT02") {
+        if(this.funcID == "DMT03" || this.funcID == "DMT02" || this.funcID == "DMT00") {
           this.viewActive.model.panelLeftHide = false;
           this.view.viewChange(this.viewActive);
         }
@@ -659,6 +659,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.view.viewChange(this.views[2]);
         }
         else this.view.viewChange(this.viewActive);
+
+        //if(this.funcID == "DMT00") 
       }
     });
     //event.view.model.template2
@@ -988,6 +990,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
+    debugger
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1419,13 +1422,26 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
+        if(this.funcID == "DMT00")
         {
+          debugger
           this.isScrollFolder = false;
-          this.getDataFile(id);
+          var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+          if (treeView) {
+            treeView.setNodeTree(res[0][0]);
+            treeView.getCurrentNode(res[0][0].recID)
+          }
         }
-
-        this._beginDrapDrop();
+        else
+        {
+          if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
+          {
+            this.isScrollFolder = false;
+            this.getDataFile(id);
+          }
+  
+          this._beginDrapDrop();
+        }
       }
       this.detectorRef.detectChanges();
     });
