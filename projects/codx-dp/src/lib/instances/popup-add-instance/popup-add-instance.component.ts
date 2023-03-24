@@ -277,30 +277,31 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if (this.listStep?.length > 0) {
-      let check = true;
-      let checkFormat = true;
-      this.listStep.forEach((obj) => {
-        if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
-          var arrField = obj.fields;
-          arrField.forEach((f) => {
-              if (
-                f.isRequired &&
-                (!f.dataValue || f.dataValue?.toString().trim() == '')
-              ) {
-                this.notificationsService.notifyCode(
-                  'SYS009',
-                  0,
-                  '"' + f.title + '"'
-                );
-                check = false;
-              }
-              checkFormat = this.checkFormat(f);
-          });
-        }
-      });
-      if (!check || !checkFormat) return;
-    }
+    //khong check custom field nua - nhung cấm xóa
+    // if (this.listStep?.length > 0) {
+    //   let check = true;
+    //   let checkFormat = true;
+    //   this.listStep.forEach((obj) => {
+    //     if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
+    //       var arrField = obj.fields;
+    //       arrField.forEach((f) => {
+    //           if (
+    //             f.isRequired &&
+    //             (!f.dataValue || f.dataValue?.toString().trim() == '')
+    //           ) {
+    //             this.notificationsService.notifyCode(
+    //               'SYS009',
+    //               0,
+    //               '"' + f.title + '"'
+    //             );
+    //             check = false;
+    //           }
+    //           checkFormat = this.checkFormat(f);
+    //       });
+    //     }
+    //   });
+    //   if (!check || !checkFormat) return;
+    // }
     if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
     } else if (this.action === 'edit') {
