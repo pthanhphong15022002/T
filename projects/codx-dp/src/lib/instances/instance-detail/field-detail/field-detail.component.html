@@ -16,7 +16,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="(dataStep?.stepStatus < 3 && isUpdate ) && (statusInstance == '1' || statusInstance == '2' )"
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate "
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
