@@ -1056,19 +1056,19 @@ export class StagesDetailComponent implements OnInit {
           //xóa
           case 'SYS102':
           case 'SYS02':
-            if (!this.isDelete || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
+            if (!this.isDelete || (this.instance.status != 1 && this.instance.status != 2) || !this.isUpdate) res.disabled = true;
             break;
           //EDIT
           //Đính kèm file
           case 'SYS003':
           case 'SYS103':
           case 'SYS03':
-            if (!this.isEdit || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
+            if (!this.isEdit || (this.instance.status != 1 && this.instance.status != 2) || !this.isUpdate) res.disabled = true;
             break;
           //copy
           case 'SYS104':
           case 'SYS04':
-            if (!this.isCreate || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
+            if (!this.isCreate || (this.instance.status != 1 && this.instance.status != 2) || !this.isUpdate) res.disabled = true;
             break;
           //"Chi tiết nhóm công việc"
           case 'DP12':
@@ -1076,7 +1076,7 @@ export class StagesDetailComponent implements OnInit {
             break;
           //Thêm công việc
           case 'DP08':
-            if (type != 'group' && !this.isCreate || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
+            if (type != 'group' && !this.isCreate || (this.instance.status != 1 && this.instance.status != 2) || !this.isUpdate) res.disabled = true;
             break;
           //Chi tiết công việc
           case 'DP07':
@@ -1084,7 +1084,7 @@ export class StagesDetailComponent implements OnInit {
             break;
           // giao viẹc
           case 'DP13':
-            if (type == 'group' || (this.instance.status != 1 && this.instance.status != 2)) res.disabled = true;
+            if (type == 'group' || (this.instance.status != 1 && this.instance.status != 2) || !this.isUpdate) res.disabled = true;
             if (!data?.createTask) res.isblur = true;
             break;
         }
