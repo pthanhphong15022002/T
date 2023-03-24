@@ -64,7 +64,7 @@ export class DynamicProcessComponent
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
-  @Input() showButtonAdd = true; 
+  @Input() showButtonAdd = true;
   dialog!: DialogRef;
   dialogQuestionCopy: DialogRef;
   // create variables
@@ -225,7 +225,7 @@ export class DynamicProcessComponent
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
             };
-            this.dialog = this.callfc.openForm(
+            var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
               '',
               this.widthWin,
@@ -235,22 +235,21 @@ export class DynamicProcessComponent
               '',
               dialogModel
             );
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                e.event.totalInstance = this.totalInstance;
+                this.view.dataService.update(e.event).subscribe();
+                this.changeDetectorRef.detectChanges();
+              }
+              // if (e?.event == null)
+              //   this.view.dataService.delete(
+              //     [this.view.dataService.dataSelected],
+              //     false
+              //   );
+            });
           }
         });
-
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        if (e && e.event != null) {
-          e.event.totalInstance = this.totalInstance;
-          this.view.dataService.update(e.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-      });
     });
   }
 
@@ -280,7 +279,7 @@ export class DynamicProcessComponent
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
               };
-              this.dialog = this.callfc.openForm(
+              var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
                 '',
                 this.widthWin,
@@ -290,15 +289,16 @@ export class DynamicProcessComponent
                 '',
                 dialogModel
               );
+              dialog.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
+                if (e && e.event != null) {
+                  this.view.dataService.update(e.event).subscribe();
+                  this.changeDetectorRef.detectChanges();
+                }
+              });
             }
           });
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            this.view.dataService.update(e.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+
       });
   }
   copy(data: any) {
@@ -332,7 +332,7 @@ export class DynamicProcessComponent
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
             };
-            this.dialog = this.callfc.openForm(
+            var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
               '',
               this.widthWin,
@@ -342,16 +342,15 @@ export class DynamicProcessComponent
               '',
               dialogModel
             );
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                e.event.totalInstance = this.totalInstance;
+                this.view.dataService.update(e.event).subscribe();
+                this.changeDetectorRef.detectChanges();
+              }
+            });
           });
-
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            e.event.totalInstance = this.totalInstance;
-            this.view.dataService.update(e.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
       });
     }
     return;
