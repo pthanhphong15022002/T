@@ -100,6 +100,8 @@
       [style]="{'justify-content': ''}"
       [dataSource]="taskGroup?.roles"
       (valueList)="changeUser($event)"
+      [multiple]="false"
+      [type]="'user'"
     ></codx-user>
 
     <div class="form-group">

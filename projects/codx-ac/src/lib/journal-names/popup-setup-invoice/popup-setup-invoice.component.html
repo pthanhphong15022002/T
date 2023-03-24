@@ -1,0 +1,59 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="data"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="form-group">
+    <codx-label
+      fiedName="invoiceType"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      field="invoiceType"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="invoiceForm"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="invoiceForm"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="invoiceSeriNo"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="invoiceSeriNo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

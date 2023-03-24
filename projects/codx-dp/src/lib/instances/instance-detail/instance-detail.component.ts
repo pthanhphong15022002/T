@@ -48,6 +48,7 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('viewDetailsItem') viewDetailsItem;
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
   totalInSteps: any;
@@ -79,6 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
+  currentRecID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -99,6 +101,8 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
+  isSaving = false;
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
     private callfc: CallFuncService,
@@ -357,8 +361,13 @@ export class InstanceDetailComponent implements OnInit {
       var indexProccess = this.listCbxProccess.findIndex(
         (x) => x.recID === data?.refID
       );
+      if (indexProccess <= -1) {
+        var indexProccess = this.listCbxProccess.findIndex(
+          (x) => x.recID === this.guidEmpty
+        );
+      }
       var proccesMove = this.listCbxProccess[indexProccess];
-      this.proccesNameMove = proccesMove?.processName ?? '';
+      this.proccesNameMove = proccesMove?.processName;
     }
     return reasonStep?.stepName ?? '';
   }
@@ -375,7 +384,7 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     let classViewDetail: any;
-    var heighOut = 20
+    var heighOut = 25
     if ((this.viewType == 'd')) {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
@@ -407,7 +416,7 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
   saveAssign(e) {
-    if (e) { 
+    if (e) {
       this.loadTree(this.listSteps);
       this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
     };
@@ -419,5 +428,15 @@ export class InstanceDetailComponent implements OnInit {
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+
+  inputCustomField(e){
+    this.currentRecID = e ;
+  }
+  actionSaveCustomField(e){
+    this.isSaving =e ;
+  }
+  clickMenu(e){
+     this.viewModelDetail = e
   }
 }

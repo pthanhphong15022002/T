@@ -18,6 +18,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   SidebarModel,
   UIComponent,
@@ -45,10 +46,29 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   headerText: string;
   employeeObj: any;
   fmSubContract: FormModel;
-  
+  title = 'Hợp đồng lao động';
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'contractInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Chế độ làm việc',
+      name: 'workingInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Lương & phụ cấp',
+      name: 'empBenefit',
+    },
+  ]
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -75,6 +95,8 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    console.log('data truyen vao ben trong ', this.data);
+    
     if(this.data){
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
       console.log('emp truyen vao ne', this.employeeObj);
@@ -146,7 +168,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         this.hrSevice.loadData('HR', rqSubContract).subscribe((res) => {
           if (res && res[1] > 0) {
             this.lstSubContract = res[0];
-            console.log('aaaaaaaaaaaaaaaaaaaaaaa', res);
           }
         });
       }
@@ -154,10 +175,15 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
       this.isAfterRender = true;
+      
     }
+    console.log('form group ne', this.formGroup);
   }
 
   onSaveForm() {
+    debugger
+    console.log('data chuan bi luu', this.data);
+    
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -305,6 +331,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0]
           console.log('employee cua form', this.employeeObj);
+          this.df.detectChanges();
         }
       });
     }

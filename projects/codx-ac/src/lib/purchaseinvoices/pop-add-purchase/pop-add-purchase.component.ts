@@ -57,6 +57,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   objectName: any;
   detailActive = 1;
   countDetail = 0;
+  elementCodxinput:any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
@@ -284,11 +285,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.loadPurchaseInfo();
     }
     if (e.field == 'itemID') {
-      var element = window.ng.getComponent(document.querySelector('form').querySelectorAll('codx-inplace')[11]);
-      //element.dataService.setPredicates(["UMID=@0"],["100M2"]).subscribe();
-      element.dataService.predicates = 'UMID=@0';
-      element.dataService.dataValues = '100M2'
-      console.log(element.dataService);
+      this.loadItemID(e.value);
     }
     if (e.data?.isAddNew == null) {
       this.api
@@ -332,6 +329,23 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.countDetail++;
       }
     });
+  }
+  loadItemID(value){
+    let sArray = [
+      'idiM0',
+      'idiM1',
+      'idiM2',
+      'idiM3',
+      'idiM6',
+      'idiM7'
+    ];
+    var element = this.gridPurchase.visibleColumns;
+    element.forEach(element => {
+      if (sArray.includes(element.field.toLowerCase())) {
+        element.predicate = "ItemID=@";
+        element.dataValue = value;
+      }
+    }); 
   }
   addRow() {
     if (this.detailActive == 1) {
