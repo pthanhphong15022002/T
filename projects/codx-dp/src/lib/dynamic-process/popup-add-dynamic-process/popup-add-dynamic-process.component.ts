@@ -185,7 +185,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listStepDelete = [];
   listStepEdit = [];
   listStepDrop = [];
-  listInstancesStepDel = [];
 
   dayStep = 0;
   hourStep = 0;
@@ -450,7 +449,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepAdd || [],
         this.listStepEdit || [],
         this.listStepDelete || [],
-        this.listInstancesStepDel || [],
         listStepDrop || [],
       ];
     }
@@ -1842,7 +1840,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (check) {
       this.notiService.alertCode('DP008').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.listInstancesStepDel.push(data.recID);
           this.handelDeleteStep(data);
         } else {
           return;
