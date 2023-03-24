@@ -2385,14 +2385,14 @@
           </div>
         </div>
         <div
-          class="col-6 group-permission witdh-roles scroll-user"
+          class="col-6 d-flex flex-wrap"
           *ngIf="step.roles != null && step.roles?.length > 0"
         >
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'S'"
-              class="d-flex align-items-center flex-wrap mb-3 me-3"
-            >
+              class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+              >
               <div class="me-2">
                 <codx-img
                   class=""
@@ -2403,6 +2403,11 @@
                 </codx-img>
               </div>
               <div class="text-gray-600">{{ perm.objectName }}</div>
+              <ng-container>
+                <div class="action-menu-od" (click)="removeRole(perm.objectID)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>
