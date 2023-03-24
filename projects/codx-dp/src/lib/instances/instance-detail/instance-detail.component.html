@@ -240,7 +240,7 @@
       </ng-template> -->
 
       <div class="d-flex tab-header">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs w-100">
           <ng-container *ngFor="let item of tabInstances; let i = index">
             <li class="nav-item">
               <a
@@ -357,6 +357,7 @@
                     (inputCustomField)="inputCustomField($event)"
                     [isSaving]="isSaving"
                     (actionSave)="actionSaveCustomField($event)"
+                    [titleHeader]="titleDefault"
                   ></codx-field-detail>
                 </ng-container>
               </ng-container>

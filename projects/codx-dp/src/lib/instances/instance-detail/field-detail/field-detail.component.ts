@@ -21,6 +21,7 @@ export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
   @Input() formModel!: FormModel;
   @Input() titleDefault = '';
+  @Input() titleHeader = '';
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
   @Input() currentRecID: any;
@@ -111,7 +112,7 @@ export class FieldDetailComponent implements OnInit {
     } else {
       list.push(data);
     }
-    var obj = { data: list };
+    var obj = { data: list ,titleHeader : this.titleHeader}; //lấy từ funra
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
       formName: 'DPInstancesStepsFields',
@@ -215,10 +216,6 @@ export class FieldDetailComponent implements OnInit {
           result = event.e;
           break;
       }
-      // var index = this.fiels.findIndex((x) => x.recID == field.recID);
-      // if (index != -1) {
-      //    this.fiels[index].dataValue = result;
-      // }
       field.dataValue = result;
       this.saveField(field);
     }
@@ -232,11 +229,12 @@ export class FieldDetailComponent implements OnInit {
           this.cache.message('SYS037').subscribe((res) => {
             if (res) {
               var errorMessage = res.customName || res.defaultName;
-              this.notiService.notifyCode(
-                'SYS009',
-                0,
-                '"' + errorMessage + '"'
-              );
+              this.notiService.notify(errorMessage, '2');
+              // this.notiService.notifyCode(
+              //   'SYS009',
+              //   0,
+              //   '"' + errorMessage + '"'
+              // );
             }
           });
           return false;
@@ -248,11 +246,12 @@ export class FieldDetailComponent implements OnInit {
           this.cache.message('RS030').subscribe((res) => {
             if (res) {
               var errorMessage = res.customName || res.defaultName;
-              this.notiService.notifyCode(
-                'SYS009',
-                0,
-                '"' + errorMessage + '"'
-              );
+              this.notiService.notify(errorMessage, '2');
+              // this.notiService.notifyCode(
+              //   'SYS009',
+              //   0,
+              //   '"' + errorMessage + '"'
+              // );
             }
           });
           return false;
