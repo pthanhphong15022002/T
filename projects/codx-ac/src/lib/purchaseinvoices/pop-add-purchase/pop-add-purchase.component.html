@@ -7,7 +7,7 @@
   </ng-container>
 </ng-template>
 <ng-template #body>
-  <div class="card-add" #cardbodyRef>
+  <div class="card-add mt-5" #cardbodyRef>
     <ejs-tab #cashRef>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
@@ -36,7 +36,6 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <br />
     <ejs-tab>
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
@@ -73,9 +72,9 @@
 <ng-template #subToolbar>
   <div class="d-flex align-items-center justify-content-between pt-2">
     <div class="d-flex justify-content-start me-2">
-      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">    
-            <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-            <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>    
+      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+        <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+        <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
       </div>
       <div class="card-title">
         <div class="d-flex flex-column">
@@ -83,7 +82,7 @@
         </div>
       </div>
       <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-input [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+        <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
         </codx-input>
       </div>
     </div>
@@ -258,30 +257,6 @@
             </div>
           </div>
         </div>
-        <div class="col-2">
-          <div class="form-group">
-            <!-- mẫu số -->
-            <div class="form-group">
-              <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
-              </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
-              </codx-input>
-            </div>
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-group">
-            <!-- mẫu số -->
-            <div class="form-group">
-              <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
-              </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
-              </codx-input>
-            </div>
-          </div>
-        </div>
         <div class="col-1">
           <div class="form-group">
             <!-- ký hiệu -->
@@ -317,9 +292,33 @@
             </div>
           </div>
         </div>
+        <div class="col-4">
+          <div class="form-group">
+            <!-- đối tượng -->
+            <div class="form-group">
+              <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-2">
+          <div class="form-group">
+            <!--hàng hóa dịch vụ -->
+            <div class="form-group">
+              <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
           <div class="form-group">
             <!-- dvt -->
             <div class="form-group">
@@ -345,7 +344,7 @@
         </div>
         <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- đơn giá -->
             <div class="form-group">
               <codx-label fiedName="UnitPrice" [formModel]="fmVATInvoices">
               </codx-label>
@@ -355,9 +354,9 @@
             </div>
           </div>
         </div>
-        <div class="col-2">
+        <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- số tiền -->
             <div class="form-group">
               <codx-label fiedName="TaxBase" [formModel]="fmVATInvoices">
               </codx-label>
@@ -369,7 +368,7 @@
         </div>
         <div class="col-2">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- thuế suất -->
             <div class="form-group">
               <codx-label fiedName="VATID" [formModel]="fmVATInvoices">
               </codx-label>
@@ -381,7 +380,7 @@
         </div>
         <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- tiền thuế -->
             <div class="form-group">
               <codx-label fiedName="TaxAmt" [formModel]="fmVATInvoices">
               </codx-label>
@@ -395,7 +394,7 @@
       <div class="row">
         <div class="col-9">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- ghi chú -->
             <div class="form-group">
               <codx-label fiedName="TaxNote" [formModel]="fmVATInvoices">
               </codx-label>
@@ -410,7 +409,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-  <codx-gridview-v2 class="tabLine" #gridPurchase [formName]="fmPurchaseInvoicesLines.formName"
+  <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
     [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
     [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
@@ -496,7 +495,7 @@
     </span>
   </div>
 </ng-template>
-<ng-template #footer> 
+<ng-template #footer>
   <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">
     <div class="btn btn-white btn-icon tab-action" (click)="expandTab()">
       <span class="icon-unfold_more icon-20"></span>
@@ -507,6 +506,6 @@
 <ng-template #tabRef>
   <div #tab id="codx-tab">
     <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
-    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+      [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </div>
 </ng-template>

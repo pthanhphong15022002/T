@@ -100,7 +100,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
 
   //#region Function
   setTitle(e: any) {
-    this.title = this.headerText;
+    this.title = "";
     this.dt.detectChanges();
   }
   checkValidate() {
