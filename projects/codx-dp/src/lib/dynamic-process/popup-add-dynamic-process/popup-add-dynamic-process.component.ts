@@ -1230,8 +1230,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         var i = 0;
         i = this.countRoleSteps(objectID);
         var check = this.lstParticipants.filter((x) => x.objectID == objectID);
-        var indexPerm = this.process.permissions.findIndex(x=> x.objectID == objectID);
-        var index = this.step.roles.findIndex((x) => x.objectID == objectID && x.objectType == 'S');
+        var indexPerm = this.process.permissions.findIndex(x=> x.objectID == objectID && x.roleType == 'P');
+        var index = this.step.roles.findIndex((x) => x.objectID == objectID && x.roleType == 'S');
         if (index > -1) {
           this.step.roles.splice(index, 1);
           if (check.length == 0) {
