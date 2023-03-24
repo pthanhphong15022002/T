@@ -21,6 +21,7 @@ export class InputCustomFieldComponent implements OnInit {
   @Output() valueChangeCustom = new EventEmitter<any>();
   //file - đặc thù cần hỏi lại sau
   @Input() objectId: any = '';
+  @Input() checkValid = true;
   @Input() objectType: any = '';
   @Input() funID: any = '';
   @Input() formModel: any = null;
@@ -76,90 +77,54 @@ export class InputCustomFieldComponent implements OnInit {
   }
 
   valueChange(e) {
-    if (this.customField.isRequired) {
-      if (!e || !e.data || e.data.toString().trim() == '') {
-        this.cache.message('SYS028').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-          this.showErrMess = true;
-        });
-        return;
-      } else this.showErrMess = false;
-    }
-    switch (this.customField.dataType) {
-      case 'T':
-        if (this.customField.dataFormat == 'E') {
-          let email = e.data;
-          var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-          // var mailformat =
-          //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-          if (!email.toLocaleLowerCase().match(mailformat)) {
-            this.cache.message(this.messCodeEmail).subscribe((res) => {
-              if (res) {
-                this.errorMessage = res.customName || res.defaultName;
-                this.showErrMess = true;
-              }
-              this.changeDef.detectChanges();
-              return;
-            });
-          } else this.showErrMess = false;
-        }
-        //format so dien thoai
-        if (this.customField.dataFormat == 'P') {
-          let phone = e.data;
-          var phonenumberFormat =
-            /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-          // //Thêm trường hợp +84
-          // var phonenumberFormat =
-          //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
-          if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
-            this.cache.message(this.messCodePhoneNum).subscribe((res) => {
-              if (res) {
-                this.errorMessage = res.customName || res.defaultName;
-                this.showErrMess = true;
-              }
-              this.changeDef.detectChanges();
-              return;
-            });
-          } else this.showErrMess = false;
-        }
-        break;
-      // case 'N':
-        // if (isNaN(e.data)) {
-        //   this.cache.message('RS006').subscribe((res) => {
-        //     if (res) {
-        //       this.showErrMess = true;
-        //       this.errorMessage = res.defaultName;
-        //     }
-        //     this.changeDef.detectChanges();
-        //     return;
-        //   });
-        // } else {
-        //   this.showErrMess = false;
-        // }
-        // if (this.customField.dataFormat == 'I') {
-        //   if (!String(e.data).match(/^-?\d+$/)) {
-        //     this.showErrMess = true;
-        //     //Mssg chưa có
-        //     this.errorMessage = 'Vui lòng nhập số nguyên';
-        //     this.changeDef.detectChanges();
-        //     return;
-        //   }
-        // } else {
-        //   this.showErrMess = false;
-        // }
-        // if (this.customField.dataFormat == 'D') {
-        //   if (!String(e.data).match(/^-?\d+\.\d+$/)) {
-        //     this.showErrMess = true;
-        //     //Mssg chưa có
-        //     this.errorMessage = 'Vui lòng nhập số thập phân';
-        //     this.changeDef.detectChanges();
-        //     return;
-        //   }
-        // } else {
-        //   this.showErrMess = false;
-        // }
-        // break;
-    }
+      if (this.customField.isRequired) {
+        if (!e || !e.data || e.data.toString().trim() == '') {
+          this.cache.message('SYS028').subscribe((res) => {
+            if (res) this.errorMessage = res.customName || res.defaultName;
+            this.showErrMess = true;
+          });
+          return;
+        } else this.showErrMess = false;
+      }
+      switch (this.customField.dataType) {
+        case 'T':
+          if (this.customField.dataFormat == 'E') {
+            let email = e.data;
+            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            // var mailformat =
+            //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!email.toLocaleLowerCase().match(mailformat)) {
+              this.cache.message(this.messCodeEmail).subscribe((res) => {
+                if (res) {
+                  this.errorMessage = res.customName || res.defaultName;
+                  this.showErrMess = true;
+                }
+                this.changeDef.detectChanges();
+                return;
+              });
+            } else this.showErrMess = false;
+          }
+          //format so dien thoai
+          if (this.customField.dataFormat == 'P') {
+            let phone = e.data;
+            var phonenumberFormat =
+              /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+            // //Thêm trường hợp +84
+            // var phonenumberFormat =
+            //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
+            if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
+              this.cache.message(this.messCodePhoneNum).subscribe((res) => {
+                if (res) {
+                  this.errorMessage = res.customName || res.defaultName;
+                  this.showErrMess = true;
+                }
+                this.changeDef.detectChanges();
+                return;
+              });
+            } else this.showErrMess = false;
+          }
+          break;
+      }
 
     this.valueChangeCustom.emit({ e: e, data: this.customField });
   }

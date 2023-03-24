@@ -414,7 +414,7 @@
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
     [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
     [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)" (onDoubleClick)="onDoubleClickLine($event)"></codx-gridview-v2>
+    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #tabLineBill>
   <codx-gridview-v2 *ngIf="VATType == '2'" #gridInvoices [formName]="fmVATInvoices.formName"
