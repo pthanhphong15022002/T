@@ -734,6 +734,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.level = res[0][0].level;
         this.dmSV.folderID = res[0][0].recID;
         this.dmSV.folderId.next(res[0][0].recID);
+        
+        var tree = this.codxview?.currentView?.currentComponent?.treeView;
+        debugger
+        console.log(tree)
       }
     });
   }
