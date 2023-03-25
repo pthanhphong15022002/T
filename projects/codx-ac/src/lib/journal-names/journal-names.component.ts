@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
+  RequestOption,
   SidebarModel,
   UIComponent,
   UrlUtil,
@@ -86,33 +87,6 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    // let data = {
-    //   JournalName: 'Giấy báo có',
-    //   Description: 'Giấy báo có',
-    //   PostedLayer: '1',
-    //   JournalType: '1',
-    //   AllowEdited: true,
-    //   InvoiceEdited: true,
-    //   Approval: '1',
-    //   CurrencyControl: true,
-    //   ExchangeRate: 1.0,
-    //   TransactionText: '1',
-    //   IsTransfer: true,
-    //   IsSettlement: true,
-    //   IsAllocation: true,
-    //   PeriodControl: true,
-    //   PostSubControl: true,
-    //   QtyControl: true,
-    //   AssetControl: true,
-    //   LoanControl: true,
-    //   ProjectControl: true,
-    //   Stop: false,
-    //   Owner: '1',
-    //   CreatedBy: 'THINH',
-    //   FunctionID: 'ACT0428',
-    //   Thumbnail: 'GiayBaoCo.JPG',
-    // };
-    // this.api.exec('AC', 'JournalNamesBusiness', 'AddAsync', data).subscribe();
     this.view.dataService.addNew().subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
@@ -135,6 +109,23 @@ export class JournalNamesComponent extends UIComponent {
 
   copy(e, ata): void {}
 
-  delete(data): void {}
+  delete(data): void {
+    this.view.dataService
+      .delete([data], true, (req: RequestOption) => {
+        req.methodName = 'DeleteJournalAsync';
+        req.className = 'JournalsBusiness';
+        req.assemblyName = 'ERM.Business.AC';
+        req.service = 'AC';
+        req.data = data;
+
+        return true;
+      })
+      .subscribe((res: any) => {
+        console.log(res);
+        if (res) {
+          
+        }
+      });
+  }
   //#region Method
 }

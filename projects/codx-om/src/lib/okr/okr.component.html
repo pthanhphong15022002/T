@@ -29,12 +29,12 @@
       </div>
 
       <div class="col-3 d-flex align-items-center justify-content-end">
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="addEditOKRPlans(false)">
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu" >
           <span class="symbol-label bg-om-gray">
             <i class="icon-create text-dark"></i>
           </span>
         </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)">
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
           <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
             <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
           </span>
@@ -64,7 +64,7 @@
             <ng-template #content>
               <div class="h-100" *ngIf="!planNull ; else elseOKR">
                 <div class="h-100" *ngIf="dataOKR != null">
-                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
+                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll" 
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
                     [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel"
                     [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
@@ -106,7 +106,7 @@
             <ng-template #content>
               <div class="px-25">
 
-                <lib-okr-trees [funcID]="funcID" [planRecID]="dataOKRPlans?.recID"></lib-okr-trees>
+                <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [planRecID]="dataOKRPlans?.recID"></lib-okr-trees>
               </div>
             </ng-template>
           </e-tabitem>

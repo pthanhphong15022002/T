@@ -22,6 +22,7 @@ import { agency } from '../../models/agency.model';
 export class AgencyComponent implements OnInit {
   @Input() dialog;
   @Input() data;
+  @Input() formModel;
   agencyForm = new FormGroup({
     agencyName: new FormControl(),
     category: new FormControl(),

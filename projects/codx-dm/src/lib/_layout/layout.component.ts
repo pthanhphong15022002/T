@@ -148,8 +148,9 @@ db.DM_FolderInfo.updateMany(
         this.submenu == 'DMT08' ||
         this.submenu == 'DMT02' ||
         this.submenu == 'DMT03' ||
-        this.submenu == 'DMT04'
-      )
+        this.submenu == 'DMT04' ||
+        this.submenu == 'DMT00'      
+        )
         css = css + ' disabled';
     }
     // console.log(css);
@@ -327,7 +328,7 @@ db.DM_FolderInfo.updateMany(
   }
   onJump() {
     //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
-    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07") return ;
+    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07" || this.dmSV.idMenuActive == "DMT00") return ;
     var data = {} as any;
     data.recID = '';
     this.dmSV.folderID = ""

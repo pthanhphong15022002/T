@@ -91,6 +91,7 @@ export class PopupAddInstanceComponent implements OnInit {
   oldIdInstance: string;
   user: any;
   autoName: string = '';
+  listCustomFile = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -225,8 +226,15 @@ export class PopupAddInstanceComponent implements OnInit {
           let idxField = this.listStep[index].fields.findIndex(
             (x) => x.recID == event.data.recID
           );
-          if (idxField != -1)
+          if (idxField != -1){
             this.listStep[index].fields[idxField].dataValue = result;
+            let idxEdit = this.listCustomFile.findIndex((x) => x.recID == this.listStep[index].fields[idxField].recID);
+            if (idxEdit != -1) {
+              this.listCustomFile[idxEdit] =
+                this.listStep[index].fields[idxField];
+            } else
+              this.listCustomFile.push(this.listStep[index].fields[idxField]);
+          }          
         }
       }
     }
@@ -244,12 +252,13 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
-      // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
+      option.data = [this.instance, this.listStep, this.oldIdInstance];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
     }
 
-    option.data = [this.instance, this.listStep, this.oldIdInstance];
+   
     return true;
   }
   saveInstances() {
