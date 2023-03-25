@@ -71,6 +71,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Output() saveAssign = new EventEmitter<any>();
+  @Input() titleHeaderCF=''
   dateActual: any;
   startDate: any;
   progress: string = '0';
