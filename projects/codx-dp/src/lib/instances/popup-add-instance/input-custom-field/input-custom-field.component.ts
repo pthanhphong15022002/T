@@ -161,12 +161,12 @@ export class InputCustomFieldComponent implements OnInit {
   }
   rateChange(e) {
     //rank
-    if (this.customField.dataFormat == 'R') {
+    // if (this.customField.dataFormat == 'R') {
       this.valueChangeCustom.emit({
         e: e,
         data: this.customField,
       });
-      return;
-    }
+    //  return;
+    //}//
   }
 }
