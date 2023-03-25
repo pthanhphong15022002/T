@@ -1504,7 +1504,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.editCustomField(data, e.text);
         break;
       case 'SYS04':
-        // this.copy(data, e.text);
+        this.copyCustomField(data, e.text);
         break;
     }
   }
@@ -1518,7 +1518,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
-          // this.fieldCrr.rank = 5;
+          this.fieldCrr.rank = 5;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -1528,9 +1528,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
+          let object ={
+            field :this.fieldCrr ,
+            action :'add' ,
+            titleAction: titleAction,
+            stepList : this.stepList,
+            grvSetup: res
+          }
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'add', titleAction, this.stepList],
+            object,
             option
           );
           dialogCustomField.closed.subscribe((e) => {
@@ -1552,13 +1559,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  editCustomField(field, textTitle) {
+  copyCustomField(field,textTitle){
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-          let titleAction = textTitle;
+        
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -1568,9 +1575,60 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
+          let object ={
+            field :this.fieldCrr ,
+            action :'copy',
+            titleAction: textTitle,
+            stepList : this.stepList,
+            grvSetup: res
+          }
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'edit', titleAction, this.stepList],
+            object,
+            option
+          );
+          dialogCustomField.closed.subscribe((e) => {
+            if (e && e.event != null) {
+               //xu ly data đổ về
+               this.fieldCrr = e.event;
+               this.fieldCrr.sorting = this.step.fields.length 
+               this.stepList.forEach((x) => {
+                 if (x.recID == this.fieldCrr.stepID)
+                   x.fields.push(this.fieldCrr);
+               });
+               this.changeDetectorRef.detectChanges();
+            }
+          });
+        });
+    });
+  }
+
+  editCustomField(field, textTitle) {
+    this.fieldCrr = field;
+    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+        .subscribe((res) => {
+
+          let option = new SidebarModel();
+          let formModel = this.dialog?.formModel;
+          formModel.formName = 'DPStepsFields';
+          formModel.gridViewName = 'grvDPStepsFields';
+          formModel.entityName = 'DP_Steps_Fields';
+          formModel.funcID = 'DPT0301';
+          option.FormModel = formModel;
+          option.Width = '550px';
+          option.zIndex = 1010;
+          let object ={
+            field :this.fieldCrr ,
+            action :'edit',
+            titleAction: textTitle,
+            stepList : this.stepList,
+            grvSetup: res
+          }
+          var dialogCustomField = this.callfc.openSide(
+            PopupAddCustomFieldComponent,
+            object,
             option
           );
           dialogCustomField.closed.subscribe((e) => {
