@@ -169,6 +169,7 @@ db.DM_FolderInfo.updateMany(
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
     this.dmSV.dmFavoriteID = "2";
+    this.dmSV.folderID = "";
     this.folderService.options.favoriteID = subid;
     this.fileService.options.favoriteID = subid;
     this.dmSV.refeshData.next(true);
