@@ -21,7 +21,7 @@ export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
   @Input() formModel!: FormModel;
   @Input() titleDefault = '';
-  @Input() titleHeader = '';
+  @Input() titleHeaderCF = '';
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
   @Input() currentRecID: any;
@@ -112,7 +112,7 @@ export class FieldDetailComponent implements OnInit {
     } else {
       list.push(data);
     }
-    var obj = { data: list ,titleHeader : this.titleHeader}; //lấy từ funra
+    var obj = { data: list ,titleHeader : this.titleHeaderCF}; //lấy từ funra
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
       formName: 'DPInstancesStepsFields',
