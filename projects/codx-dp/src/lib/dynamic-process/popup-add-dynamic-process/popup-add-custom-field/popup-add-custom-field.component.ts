@@ -26,7 +26,7 @@ import { DP_Steps_Fields } from '../../../models/models';
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  title = 'Thêm trường tùy chỉnh';
+
   dialog: DialogRef;
   field: DP_Steps_Fields;
   grvSetup: any;

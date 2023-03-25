@@ -230,9 +230,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   tempCrr: any;
   //end data Test
   isShowstage = true;
-  titleAdd = 'Thêm';
+  titleAdd = '';
   objectIDRoles: any;
-  titleDefault = '';
+  titleDefaultCF = '';
   instanceNoSetting = '';
   listClickedCoppy: any;
   titleAction: any;
@@ -316,7 +316,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
     this.cache.functionList('DPT03').subscribe((fun) => {
-      if (fun) this.titleDefault = fun.customName || fun.description;
+      if (fun) this.titleDefaultCF = fun.customName || fun.description;
     });
 
     this.getGrvStep();
@@ -1519,7 +1519,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
           this.fieldCrr.rank = 5;
-          let titleAction = this.titleAdd;
+         
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -1531,7 +1531,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           let object ={
             field :this.fieldCrr ,
             action :'add' ,
-            titleAction: titleAction,
+            titleAction:  this.titleAdd +' ' + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
             stepList : this.stepList,
             grvSetup: res
           }
@@ -1578,7 +1578,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           let object ={
             field :this.fieldCrr ,
             action :'copy',
-            titleAction: textTitle,
+            titleAction: textTitle + ' '  + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
             stepList : this.stepList,
             grvSetup: res
           }
@@ -1622,7 +1622,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           let object ={
             field :this.fieldCrr ,
             action :'edit',
-            titleAction: textTitle,
+            titleAction: textTitle +' ' + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
             stepList : this.stepList,
             grvSetup: res
           }
