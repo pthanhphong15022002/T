@@ -99,9 +99,9 @@ export class AddApproversComponent extends UIComponent {
           });
         }
       }
-      if (this.isTemp) {
-        this.dialog.close(this.master);
-      }
+      // if (this.isTemp) {
+      //   this.dialog.close(this.master);
+      // }
       this.dialog.dataService.clear();
     });
   }
@@ -141,34 +141,7 @@ export class AddApproversComponent extends UIComponent {
           this.members.push(modelShare.dataSelected);
         }
       });
-      console.log(this.members);
     }
-    // if (!this.dialog.dataService.hasSaved && this.action == 'add') {
-    //   this.dialog.dataService
-    //     .save((opt: RequestOption) => this.beforeSave(opt), 0, '', '', false)
-    //     .subscribe((res) => {
-    //       if (res && !res.error) {
-    //         this.master.groupID = this.dialog.dataService.dataSelected.groupID;
-    //         this.dialog.dataService.hasSaved = true;
-    //         this.beforeSaveMember(e.data);
-    //       }
-    //       // else {
-    //       //   this.api
-    //       //     .execSv<any>(
-    //       //       'SYS',
-    //       //       'AD',
-    //       //       'GroupMembersBusiness',
-    //       //       'DeleteAsync',
-    //       //       this.dialog.dataService.dataSelected.groupID
-    //       //     )
-    //       //     .subscribe((res) => {
-    //       //       if (res) {
-    //       //         console.log('del', res);
-    //       //       }
-    //       //     });
-    //       // }
-    //     });
-    // } else this.beforeSaveMember(e.data);
   }
 
   onSave() {
@@ -183,8 +156,7 @@ export class AddApproversComponent extends UIComponent {
         .subscribe((res) => {
           if (res && !res.error) {
             this.master.groupID = this.dialog.dataService.dataSelected.groupID;
-            this.dialog.dataService.hasSaved = false;
-            this.dialog.close(true);
+            this.beforeSaveMember();
           }
         });
     }
@@ -199,138 +171,88 @@ export class AddApproversComponent extends UIComponent {
       curMem.isRemoved = true;
     }
     this.changeDetectorRef.detectChanges();
-    // this.api
-    //   .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'DeleteAsync', [id])
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       let idx = this.members.findIndex((x) => x.recID == id);
-    //       if (idx > -1) {
-    //         this.members.splice(idx, 1);
-    //         let ids = '';
-    //         this.members.forEach((v) => {
-    //           ids += v.memberID + ';';
-    //         });
-    //         this.master['memberIDs'] = ids;
-    //         this.master['members'] = this.members;
-    //         this.dialog.dataService.update(this.master);
-    //       }
-    //     }
-    //   });
   }
   //#endregion
 
   //#region Method
-  saveMember(data: any) {
-    let groupMembers = new Array<GroupMembers>();
-    data?.dataSelected?.forEach((e) => {
-      let member = new GroupMembers();
-      member.groupID = this.master.groupID;
-      member.memberID = e.id;
-      member.memberType = 'U';
-      member.memberName = e.text || e.objectName;
-      member.positionName = e?.dataSelected?.PositionName;
-      member.orgUnitName = e?.dataSelected?.OrgUnitName;
-      groupMembers.push(member);
-    });
-
+  saveMember(groupType) {
     this.api
-      .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddAsync', [
-        groupMembers,
-        this.form?.formGroup?.get('groupType')?.value,
+      .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddUpdateAsync', [
+        this.members,
+        groupType,
         this.lstRoles,
         this.lstChangeFunc,
       ])
       .subscribe((res) => {
-        this.dialog.dataService.hasSaved = true;
-        if (res && res.length == 3) {
-          this.master.memberType = res[0];
-          this.master.memberIDs = this.detailIDs
-            ? this.detailIDs + ';' + res[1]
-            : res[1];
-          this.members = [...this.members, ...res[2]];
-          this.master.members = this.members;
-          //  this.dialog.dataService.update(this.master).subscribe();
+        if (res) {
+          // this.dialog.dataService.hasSaved = true;
+          this.dialog.dataService.hasSaved = false;
+          this.master.members = res[2];
+          this.master.memberIDs = res[1];
+          // this.dialog.dataService.update(this.master).subscribe((res2) => {
+          this.dialog.close(this.master);
+          // });
+        } else {
+          this.dialog.close();
         }
-        // else {
-        //   this.api
-        //     .execSv<any>(
-        //       'SYS',
-        //       'AD',
-        //       'GroupMembersBusiness',
-        //       'DeleteAsync',
-        //       this.dialog.dataService.dataSelected.groupID
-        //     )
-        //     .subscribe((res) => {
-        //       if (res) {
-        //         console.log('del', res);
-        //       }
-        //     });
-        // }
       });
   }
 
-  beforeSaveMember(data: any) {
-    if (data?.dataSelected?.length > 0) {
-      this.adService.checkExistedUserRoles(data.value).subscribe((res) => {
-        if (res != null) {
-          this.notiService.alertCode('AD023', null, res).subscribe((e) => {
-            if (e?.event?.status == 'Y') {
-              this.adService
-                .getListValidOrderForModules(
-                  this.lstChangeFunc,
-                  data?.dataSelected?.length
-                )
-                .subscribe((lstTNMDs: tmpTNMD[]) => {
-                  this.lstChangeFunc = lstTNMDs;
-                  if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                    this.notiService.notifyCode('AD017');
-                  } else {
-                    this.saveMember(data);
-                  }
-                });
-            }
-          });
-        } else {
-          this.adService
-            .getListValidOrderForModules(
-              this.lstChangeFunc,
-              data?.dataSelected?.length
-            )
-            .subscribe((lstTNMDs: tmpTNMD[]) => {
-              this.lstChangeFunc = lstTNMDs;
-              if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                this.notiService.notifyCode('AD017');
-              } else {
-                this.saveMember(data);
+  beforeSaveMember() {
+    let groupType = this.form?.formGroup?.get('groupType')?.value;
+
+    if (this.members?.length > 0) {
+      let lstMemID = [];
+      this.members?.forEach((mem) => {
+        mem.groupID = this.master.groupID;
+        lstMemID.push(mem.memberID);
+      });
+      //co phan quyen
+      if (groupType == '3') {
+        this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
+          if (res != null) {
+            this.notiService.alertCode('AD023', null, res).subscribe((e) => {
+              if (e?.event?.status == 'Y') {
+                this.adService
+                  .getListValidOrderForModules(
+                    this.lstChangeFunc,
+                    this.members?.length
+                  )
+                  .subscribe((lstTNMDs: tmpTNMD[]) => {
+                    this.lstChangeFunc = lstTNMDs;
+                    if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+                      this.notiService.notifyCode('AD017');
+                    } else {
+                      this.saveMember(groupType);
+                    }
+                  });
               }
             });
-        }
-      });
+          } else {
+            this.adService
+              .getListValidOrderForModules(
+                this.lstChangeFunc,
+                this.members?.length
+              )
+              .subscribe((lstTNMDs: tmpTNMD[]) => {
+                this.lstChangeFunc = lstTNMDs;
+                if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+                  this.notiService.notifyCode('AD017');
+                } else {
+                  this.saveMember(groupType);
+                }
+              });
+          }
+        });
+      } else {
+        this.saveMember(groupType);
+      }
     } else {
-      this.saveMember(data);
+      this.saveMember(groupType);
     }
   }
 
   beforeSave(opt: RequestOption) {
-    // if (this.master?.members?.length > 0) {
-
-    // ((lstTNMDs: tmpTNMD[]) => {
-    //   if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-    //     this.notiService.notifyCode('AD017');
-    //     return false;
-    //   } else {
-    //     opt.service = 'SYS';
-    //     opt.assemblyName = 'AD';
-    //     opt.className = 'UserGroupsBusiness';
-
-    //     if (this.action == 'add') opt.methodName = 'AddAsync';
-    //     else opt.methodName = 'UpdateAsync';
-
-    //     opt.data = this.master;
-    //     return true;
-    //   }
-    // });
-    // } else {
     opt.service = 'SYS';
     opt.assemblyName = 'AD';
     opt.className = 'UserGroupsBusiness';
