@@ -26,7 +26,7 @@ export class InputCustomFieldComponent implements OnInit {
   @Input() funID: any = '';
   @Input() formModel: any = null;
   @Input() disable = false;
-  @Input() viewFileName = false;
+  @Input() viewFieldName = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
   errorMessage = '';
   showErrMess = false;
@@ -161,12 +161,12 @@ export class InputCustomFieldComponent implements OnInit {
   }
   rateChange(e) {
     //rank
-    if (this.customField.dataFormat == 'R') {
+    // if (this.customField.dataFormat == 'R') {
       this.valueChangeCustom.emit({
         e: e,
         data: this.customField,
       });
-      return;
-    }
+    //  return;
+    //}//
   }
 }

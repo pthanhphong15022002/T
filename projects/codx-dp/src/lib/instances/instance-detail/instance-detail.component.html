@@ -343,6 +343,7 @@
                     [stepNameEnd]="getStepNameIsComlepte(instance)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
+                    [titleHeaderCF]="titleDefault"
                   ></codx-stages-detail>
                 </ng-container>
               </ng-container>
@@ -357,7 +358,7 @@
                     (inputCustomField)="inputCustomField($event)"
                     [isSaving]="isSaving"
                     (actionSave)="actionSaveCustomField($event)"
-                    [titleHeader]="titleDefault"
+                    [titleHeaderCF]="titleDefault"
                   ></codx-field-detail>
                 </ng-container>
               </ng-container>

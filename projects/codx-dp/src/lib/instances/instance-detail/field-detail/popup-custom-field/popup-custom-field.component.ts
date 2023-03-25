@@ -59,6 +59,7 @@ export class PopupCustomFieldComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
+        case 'R':
         case 'A':
           result = event.e;
           break;

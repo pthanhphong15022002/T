@@ -166,6 +166,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+      //option.isFull = true;
       var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
       // this.dialog.closed.subscribe((e) => {
       //   if (!e?.event) this.view.dataService.clear();
