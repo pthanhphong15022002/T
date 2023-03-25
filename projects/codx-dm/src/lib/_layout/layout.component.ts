@@ -148,8 +148,9 @@ db.DM_FolderInfo.updateMany(
         this.submenu == 'DMT08' ||
         this.submenu == 'DMT02' ||
         this.submenu == 'DMT03' ||
-        this.submenu == 'DMT04'
-      )
+        this.submenu == 'DMT04' ||
+        this.submenu == 'DMT00'      
+        )
         css = css + ' disabled';
     }
     // console.log(css);
