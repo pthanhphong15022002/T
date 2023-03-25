@@ -27,14 +27,16 @@ export class InputCustomFieldComponent implements OnInit {
   @Input() formModel: any = null;
   @Input() disable = false;
   @Input() viewFieldName = false;
+ // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  
   errorMessage = '';
   showErrMess = false;
   //data tesst
   typeControl = 'text';
   currentRate = 1;
   hovered = 0;
-  readonly = false;
+ 
   min = 0;
   max = 9999999;
   formatDate = 'd';
