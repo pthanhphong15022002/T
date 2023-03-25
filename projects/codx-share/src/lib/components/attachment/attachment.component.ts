@@ -458,7 +458,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
+      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'
+      if(this.referType == "source") this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
+      this.dataRequest.predicate += ')'
       this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
