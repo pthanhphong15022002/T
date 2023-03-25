@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrmPartnersDetailComponent } from './crm-partners-detail.component';
+import { SingleSelectPopupComponent } from './single-select-popup.component';
 
-describe('CrmPartnersDetailComponent', () => {
-  let component: CrmPartnersDetailComponent;
-  let fixture: ComponentFixture<CrmPartnersDetailComponent>;
+describe('SingleSelectPopupComponent', () => {
+  let component: SingleSelectPopupComponent;
+  let fixture: ComponentFixture<SingleSelectPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CrmPartnersDetailComponent ]
+      declarations: [ SingleSelectPopupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CrmPartnersDetailComponent);
+    fixture = TestBed.createComponent(SingleSelectPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

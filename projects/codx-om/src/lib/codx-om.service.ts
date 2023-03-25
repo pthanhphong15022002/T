@@ -456,6 +456,15 @@ getOKRModel() {
       [kr]
     );
   }
+  editKRTargets(recID: any, targets:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'EditKRTargetsAsync',
+      [recID,targets]
+    );
+  }
   deleteOKR(okr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -655,6 +664,24 @@ getOKRModel() {
       'OrganizationUnitsBusiness',
       'GetManagerByOrgUnitIDAsync',
       [orgID]
+    );
+  }
+  getEmployeesByEmpID(employeeID: any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmployeeInforAsync',
+      [employeeID]
+    );
+  }
+  getEmployeesByPositionID(positionID: any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'PositionsBusiness',
+      'GetEmployeeListByPositionAsync',
+      [positionID]
     );
   }
 }

@@ -18,6 +18,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   SidebarModel,
   UIComponent,
@@ -45,10 +46,29 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   headerText: string;
   employeeObj: any;
   fmSubContract: FormModel;
-  
+  title = 'Hợp đồng lao động';
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'contractInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Chế độ làm việc',
+      name: 'workingInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Lương & phụ cấp',
+      name: 'empBenefit',
+    },
+  ]
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -75,10 +95,12 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    if(this.actionType == 'edit'){
-      this.employeeObj = this.data.emp
+    console.log('data truyen vao ben trong ', this.data);
+    
+    if(this.data){
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+      console.log('emp truyen vao ne', this.employeeObj);
     }
-
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
@@ -146,7 +168,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         this.hrSevice.loadData('HR', rqSubContract).subscribe((res) => {
           if (res && res[1] > 0) {
             this.lstSubContract = res[0];
-            console.log('aaaaaaaaaaaaaaaaaaaaaaa', res);
           }
         });
       }
@@ -154,10 +175,15 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
       this.isAfterRender = true;
+      
     }
+    console.log('form group ne', this.formGroup);
   }
 
   onSaveForm() {
+    debugger
+    console.log('data chuan bi luu', this.data);
+    
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -175,12 +201,44 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
         console.log('result', res);
-        if (res && res[0]) {
-          //code test
-          this.notify.notifyCode('SYS006');
-          res[0].emp = this.employeeObj;
-          this.dialog && this.dialog.close(res);
-          this.data = res;
+        if (res) {
+          if (res[0]) {
+            //code test
+            this.notify.notifyCode('SYS006');
+            res[0].emp = this.employeeObj;
+            this.dialog && this.dialog.close(res);
+            this.data = res;
+          } else if (res[1]) {
+            this.notify.alertCode(res[1]).subscribe((stt) => {
+              console.log('click', res);
+              if (stt?.event.status == 'Y') {
+                if (res[1] == 'HR010') {
+                  this.hrSevice
+                    .addEContract(this.data)
+                    .subscribe((result) => {
+                      if (result && result[0]) {
+                        this.notify.notifyCode('SYS006');
+                        result[0].emp = this.employeeObj;
+                        this.dialog && this.dialog.close(result);
+                      }
+                    });
+                } else if (res[1] == 'HR009') {
+                  this.data.hiredOn = this.data.effectedDate;
+                  this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+
+                  this.hrSevice
+                    .addEContract(this.data)
+                    .subscribe((result) => {
+                      if (result && result[0]) {
+                        this.notify.notifyCode('SYS006');
+                        result[0].emp = this.employeeObj;
+                        this.dialog && this.dialog.close(result);
+                      }
+                    });
+                }
+              }
+            });
+          }
         }
       });
     } else if (this.actionType == 'edit') {
@@ -213,13 +271,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'effectedDate': {
           this.data.effectedDate = event.data;
           this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'signerID': {
@@ -252,10 +310,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     }
   }
 
-  setExpiredDate() {
+  setExpiredDate(month) {
     if (this.data.effectedDate) {
       let date = new Date(this.data.effectedDate);
-      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
       this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
@@ -273,7 +331,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0]
           console.log('employee cua form', this.employeeObj);
-          
+          this.df.detectChanges();
         }
       });
     }
@@ -337,11 +395,13 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     popupSubContract.closed.subscribe((res) => {
       if (res.event) {
         if(actionType == 'add'){
+          if(!this.lstSubContract){
+            this.lstSubContract = []
+          }
           this.lstSubContract.push(res.event[0]);
           this.df.detectChanges();
         }
         else if(actionType == 'edit'){
-          debugger
           let index = this.lstSubContract.indexOf(data);
           this.lstSubContract[index] = res.event[0];
           this.df.detectChanges();

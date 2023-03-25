@@ -1,0 +1,77 @@
+  <div class="container-body p-5">
+    <div class="d-flex justify-content-between mb-4">
+      <div class="h3">
+        <codx-label name="lblContacts" [formModel]="dialog.formModel" default="Chọn liên hệ"></codx-label>
+      </div>
+      <div class="d-flex justify-content-end">
+        <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
+      </div>
+    </div>
+    <div style="flex-grow: 1; overflow: hidden">
+      <div class="d-flex justify-content-end mb-3">
+        <div class="">
+          <button type="button" (click)="clickAddContact()" class="btn btn-outline-primary">
+            <codx-label name="lblAdd" [formModel]="dialog.formModel" default="+ Thêm"></codx-label>
+          </button>
+        </div>
+      </div>
+      <div class="mb-3">
+        <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
+      </div>
+      <div class="scroll mb-3" *ngIf="lstSearch != null && lstSearch.length > 0">
+        <ng-container [ngTemplateOutlet]="listContacts" [ngTemplateOutletContext]="{ item: lstSearch }">
+        </ng-container>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <div class="me-2">
+        <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
+          <codx-label name="lblCancel" [formModel]="dialog.formModel" default="Hủy"></codx-label>
+        </button>
+      </div>
+      <div class="">
+        <button type="button" (click)="onSave()" class="btn btn-primary">
+          <codx-label name="lblSave" [formModel]="dialog.formModel" default="Đồng ý"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #listContacts let-data="item">
+    <ng-container *ngFor="let item of data; index as i;">
+      <div (click)="changeContacts(i, item)"
+        [ngClass]="i == this.currentContact.toString()?'user-nav-active':null"
+        class="d-flex justify-content-between has-action-menu-od user-nav-item p-2">
+        <div class="col-6">
+          <div class="me-3 d-flex align-items-center">
+            <div class="d-flex align-items-center">
+              <codx-img class="" [width]="25" [objectId]="item.contactID" objectType="AD_Users">
+              </codx-img>
+            </div>
+            <div class="ms-3">
+              <div class="text-dark fw-bold">
+                {{item.contactName}}
+              </div>
+              <div class="text-gray-700">
+                {{item.positionName}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="">
+            <span
+              [ngClass]="item.allowCall == true ? 'icon-phone_android text-primary icon-16 me-1' : 'icon-phonelink_erase icon-16 me-1' "></span>
+            <span [ngClass]="item.allowCall == true ? 'text-primary text-gray-900' : 'text-gray-900'">{{item.phoneNumber}}</span>
+          </div>
+          <div>
+            <span
+              [ngClass]="item.allowEmail == true ? 'icon-email text-primary icon-16 me-1' : 'icon-print_disabled icon-16 me-1'"></span>
+            <span [ngClass]="item.allowEmail == true ? 'text-primary text-gray-900' : 'text-gray-900'">{{item.email}}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </ng-template>

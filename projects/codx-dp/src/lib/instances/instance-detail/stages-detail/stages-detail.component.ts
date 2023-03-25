@@ -69,8 +69,8 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
-  @Input() showColumnControl = 1 ;
-  @Output() saveAssign = new EventEmitter<any>();;
+  @Input() showColumnControl = 1;
+  @Output() saveAssign = new EventEmitter<any>();
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -80,7 +80,8 @@ export class StagesDetailComponent implements OnInit {
   //nvthuan
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
-  // taskGroup: DP_Instances_Steps_TaskGroups;
+  progressOld = 0;
+  actualEndMax: Date;
   grvTaskGroupsForm: FormModel;
   dataProgress: any;
   dataProgressClone: any;
@@ -264,15 +265,20 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
-  toggleTask(id) {
-    let elementGroup = document.getElementById(id);
+  toggleTask(e, id) {
+    let elementGroup = document.getElementById('group' + id.toString());
+    let children = e.currentTarget.children[0];
     let isClose = elementGroup.classList.contains('hiddenTask');
     if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
+      children.classList.remove('icon-add');
+      children.classList.add('icon-horizontal_rule');
     } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
+      children.classList.remove('icon-horizontal_rule');
+      children.classList.add('icon-add');
     }
   }
   getIconTask(task) {
@@ -318,7 +324,7 @@ export class StagesDetailComponent implements OnInit {
   openTypeTask() {
     this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
-      if (value?.event) {
+      if (value?.event && value?.event?.value) {
         this.jobType = value?.event;
         this.handleTask(null, 'add');
       }
@@ -348,7 +354,7 @@ export class StagesDetailComponent implements OnInit {
       this.taskList,
       this.step?.stepName,
       this.groupTaskID,
-      this.step?.leadtimeControl,
+      !this.step?.leadtimeControl,
     ];
     let option = new SidebarModel();
     option.Width = '550px';
@@ -368,6 +374,8 @@ export class StagesDetailComponent implements OnInit {
           this.setRole(role);
           taskData['roles'] = [role];
           taskData['createdOn'] = new Date();
+          taskData['modifiedOn'] = null;
+          taskData['modifiedBy'] = null;
           taskData['indexNo'] = groupTask ? groupTask['task']?.length : 1;
           let progress = await this.calculateProgressTaskGroup(taskData, 'add');
           this.dpService
@@ -413,27 +421,27 @@ export class StagesDetailComponent implements OnInit {
   deleteTask(taskData) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
+        let progress = this.calculateProgressTaskGroup(taskData, 'delete');
+        let value = [
+          taskData?.recID,
+          taskData?.taskGroupID,
+          taskData?.stepID,
+          progress?.average,
+        ];
+        this.dpService.deleteTask(value).subscribe((res) => {
+          if (res) {
+            this.taskGroupList[progress.indexGroup]['progress'] =
+              progress?.average;
+            this.taskGroupList[progress.indexGroup]['task'].splice(
+              progress.indexTask,
+              1
+            );
+            this.saveAssign.emit(true);
+            this.notiService.notifyCode('SYS008');
+            this.calculateProgressStep();
+          }
+        });
       }
-      let progress = this.calculateProgressTaskGroup(taskData, 'delete');
-      let value = [
-        taskData?.recID,
-        taskData?.taskGroupID,
-        taskData?.stepID,
-        progress?.average,
-      ];
-      this.dpService.deleteTask(value).subscribe((res) => {
-        if (res) {
-          this.taskGroupList[progress.indexGroup]['progress'] =
-            progress?.average;
-          this.taskGroupList[progress.indexGroup]['task'].splice(
-            progress.indexTask,
-            1
-          );
-          this.saveAssign.emit(true);
-          this.notiService.notifyCode('SYS008');
-          this.calculateProgressStep();
-        }
-      });
     });
   }
 
@@ -564,8 +572,8 @@ export class StagesDetailComponent implements OnInit {
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
-      console.log( this.taskGroupList);
-      
+      console.log(this.taskGroupList);
+
       this.taskList = step['tasks'];
     }
   }
@@ -617,7 +625,7 @@ export class StagesDetailComponent implements OnInit {
       500,
       500,
       '',
-      taskGroup
+      { taskGroup, isEditTime: !this.step?.leadtimeControl }
     );
     this.popupTaskGroup.closed.subscribe(async (value) => {
       if (value?.event) {
@@ -712,23 +720,33 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   openUpdateProgress(data?: any) {
-    if(data?.parentID){
+    if (data?.parentID) {
+      //check công việc liên kết hoàn thành trước
       let check = false;
+      let taskName = '';
       let listID = data?.parentID.split(';');
-      listID?.forEach(item => {
-        let taskFind = this.taskList?.find(task => {task.refID == item})
-        if(taskFind?.progress != 100){
+      listID?.forEach((item) => {
+        let taskFind = this.taskList?.find((task) => task.refID == item);
+        if (taskFind?.progress != 100) {
           check = true;
+          taskName = taskFind?.taskName;
+        } else {
+          this.actualEndMax =
+            !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
+              ? taskFind?.actualEnd
+              : this.actualEndMax;
         }
-      })
-      if(check){
-        this.notiService.notifyCode('Bạn phải thực hiện những cong việc khác');
+      });
+      if (check) {
+        this.notiService.notifyCode('DP023', 0, taskName);
         return;
       }
     }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
       this.dataProgressClone = data;
+      this.progressOld = data['progress'] == 100 ? 0 : data['progress'];
+      this.disabledProgressInput = data['progress'] == 100 ? true : false;
     }
     this.popupUpdateProgress = this.callfc.openForm(
       this.updateProgress,
@@ -750,6 +768,10 @@ export class StagesDetailComponent implements OnInit {
       this.notiService.notifyCode('SYS009', 0, 'Ngày hoàn thành thực tế');
       return;
     }
+    if (new Date(this.actualEndMax) > new Date(this.dataProgress?.actualEnd)) {
+      this.notiService.notifyCode('Ngày hoàn thành thực tế không phù hợp');
+      return;
+    }
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -763,18 +785,16 @@ export class StagesDetailComponent implements OnInit {
           }
         }
       });
-    }else{
+    } else {
       this.dataProgressClone['progress'] = this.dataProgress['progress'];
-          this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
-          this.dataProgressClone['note'] = this.dataProgress['note'];
-          if (this.dataProgress['taskGroupID'] === undefined) {
-            this.updateProgressGroupTask();
-          } else {
-            this.updateProgressTask();
-          }
+      this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+      this.dataProgressClone['note'] = this.dataProgress['note'];
+      if (this.dataProgress['taskGroupID'] === undefined) {
+        this.updateProgressGroupTask();
+      } else {
+        this.updateProgressTask();
+      }
     }
-
-   
   }
 
   updateProgressGroupTask() {
@@ -805,24 +825,21 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
-  // check checkbox 100%
-  checkProgress(event, data) {
-    if (event?.data) {
-      data[event?.field] = 100;
+
+  checkExitsParentID(taskList, task): boolean {
+    if (task?.isTaskDefault) {
+      return true;
     }
-    this.disabledProgressInput = event?.data;
-  }
-  checkExitsParentID(taskList, task):boolean{
     let check = false;
-    if(task['groupTaskID']){
+    if (task['groupTaskID']) {
       taskList?.forEach((taskItem) => {
-        if(taskItem['parentID']?.includes(task['refID'])){
+        if (taskItem['parentID']?.includes(task['refID'])) {
           check = true;
         }
       });
-    }else{
+    } else {
       this.taskList?.forEach((taskItem) => {
-        if(taskItem['parentID']?.includes(task['refID'])){
+        if (taskItem['parentID']?.includes(task['refID'])) {
           check = true;
         }
       });
@@ -1001,16 +1018,37 @@ export class StagesDetailComponent implements OnInit {
     this.calculateProgressStep();
   }
 
-  changeProgress(e,data){
-    data['progress'] = e?.value ?  e?.value : 0;
+  changeProgress(e, data) {
+    data['progress'] = e?.value ? e?.value : 0;
+    if (data['progress'] < 100) {
+      data['actualEnd'] = null;
+    }
+    if (data['progress'] == 100 && !data['actualEnd']) {
+      data['actualEnd'] = new Date();
+    }
   }
-   
+
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
   }
 
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
+    if (data['progress'] < 100) {
+      data['actualEnd'] = null;
+    }
+  }
+
+  // check checkbox 100%
+  checkRadioProgress(event, data) {
+    if (event?.data) {
+      data[event?.field] = 100;
+      data['actualEnd'] = new Date();
+    } else {
+      data[event?.field] = this.progressOld;
+      data['actualEnd'] = null;
+    }
+    this.disabledProgressInput = event?.data;
   }
 
   async changeDataMF(e, type, data = null) {
@@ -1020,36 +1058,69 @@ export class StagesDetailComponent implements OnInit {
           //xóa
           case 'SYS102':
           case 'SYS02':
-            if (!this.isDelete) res.disabled = true;
+            if (
+              !this.isDelete ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
             break;
           //EDIT
           //Đính kèm file
           case 'SYS003':
           case 'SYS103':
           case 'SYS03':
-            if (!this.isEdit) res.disabled = true;
+            if (
+              !this.isEdit ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
             break;
           //copy
           case 'SYS104':
           case 'SYS04':
-            if (!this.isCreate) res.disabled = true;
+            if (
+              !this.isCreate ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
             break;
           //"Chi tiết nhóm công việc"
           case 'DP12':
-            if (type != 'group') res.disabled = true;
+            if (
+              type != 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2)
+            )
+              res.disabled = true;
             break;
           //Thêm công việc
           case 'DP08':
-            if (type != 'group' && !this.isCreate) res.disabled = true;
+            if (
+              (type != 'group' && !this.isCreate) ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
             break;
           //Chi tiết công việc
           case 'DP07':
-            if (type == 'group') res.disabled = true;
+            if (
+              type == 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2)
+            )
+              res.disabled = true;
             break;
           // giao viẹc
           case 'DP13':
-            if (type == 'group') res.disabled = true;
-            if (data?.assignControl == '1') res.isblur = true;
+            if (
+              type == 'group' ||
+              (this.instance.status != 1 && this.instance.status != 2) ||
+              !this.isUpdate
+            )
+              res.disabled = true;
+            if (!data?.createTask) res.isblur = true;
             break;
         }
       });
@@ -1099,7 +1170,6 @@ export class StagesDetailComponent implements OnInit {
     );
   }
   changeReasonMF(e) {
-    console.table(e);
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {

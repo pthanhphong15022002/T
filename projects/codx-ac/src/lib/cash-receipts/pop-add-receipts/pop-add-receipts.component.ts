@@ -139,9 +139,15 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       'cashbookid',
       'journalno',
       'transactiontext',
+      'objectid',
     ];
 
     if (e.data && sArray.includes(e.field.toLowerCase())) {
+      if (e.field.toLowerCase() === 'objectid') {
+        let data = e.component.itemsSelected[0];
+        this.cashreceipts.objectType = data.ObjectType;
+      }
+
       this.api
         .exec<any>('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
           e.field,
@@ -172,7 +178,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         });
     }
   }
-  objectChanged(e: any) {}
+
   cellChanged(e: any) {
     if ((e.field === 'dr' || e.field === 'rowNo') && !e.value) {
       e.data[e.field] = 0;
@@ -278,6 +284,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   }
   clearCashrecipts() {
     this.cashreceiptslines = [];
+  }
+  changeType(e: any) {
+   
   }
   //#endregion
 

@@ -187,7 +187,7 @@ export class DimensionGroupsComponent extends UIComponent {
     opt.className = 'DimensionGroupsBusiness';
     opt.assemblyName = 'IV';
     opt.service = 'IV';
-    opt.data = data.dimGroupID;
+    opt.data = data;
     return true;
   }
   //#endregion

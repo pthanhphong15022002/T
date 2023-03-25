@@ -27,15 +27,14 @@ import {
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { GridModels } from 'projects/codx-es/src/public-api';
-import { CodxEsService,  } from 'projects/codx-es/src/public-api';
+import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
-
 
 @Component({
   selector: 'lib-view-contracts-detail',
   templateUrl: './view-contracts-detail.component.html',
-  styleUrls: ['./view-contracts-detail.component.css']
+  styleUrls: ['./view-contracts-detail.component.css'],
 })
 export class ViewDetailComponent implements OnInit {
   constructor(
@@ -62,6 +61,8 @@ export class ViewDetailComponent implements OnInit {
   @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
 
+  dataCategory;
+  data: any;
   active = 1;
   openNav = false;
   canRequest;
@@ -91,7 +92,6 @@ export class ViewDetailComponent implements OnInit {
   tabControl: TabModel[] = [];
 
   ngOnInit(): void {
-    
     this.itemDetailStt = 2;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
@@ -240,7 +240,7 @@ export class ViewDetailComponent implements OnInit {
           gridModels.gridViewName = fmApprovalStep.gridViewName;
           // gridModels.pageSize = 20;
           gridModels.pageLoading = false;
-          gridModels.srtColumns = "StepNo";
+          gridModels.srtColumns = 'StepNo';
           gridModels.srtDirections = 'asc';
 
           if (gridModels.dataValue != null) {
@@ -335,27 +335,75 @@ export class ViewDetailComponent implements OnInit {
     }
 
     switch (val?.functionID) {
-      case 'SYS03':
-        this.edit(datas, val);
+      // Gửi duyệt
+      case 'HRT1001A3':
+        let hasApprovalRule = this.checkApprovalRule();
+        if (hasApprovalRule) {
+          this.getApprovalRule();
+        }
+
         break;
-      case 'SYS02':
-        this.delete(datas);
-        break;
-      case 'SYS04':
-        this.copy(datas);
-        break;
-      case 'EST01101': //hủy yeu cau duyệt
-        this.beforeCancel(datas);
-        break;
-      case 'EST01102': //Xem van ban
-        this.viewFile(datas, val);
-        break;
-      case 'EST01103': //bookmark
-        this.bookmark(datas);
-        break;
-      case 'EST01104': //unBookmark
-        this.unBookmark(datas);
-        break;
+      //this.edit(datas, val);
+      //break;
+      // Cập nhật đã ký ( hoàn tất)
+      case 'HRT1001A7':
+      //this.delete(datas);
+      //break;
+      // Hủy
+      case 'HRT1001A0':
+      //this.copy(datas);
+      //break;
+      // case 'EST01101': //hủy yeu cau duyệt
+      //   this.beforeCancel(datas);
+      //   break;
+      // case 'EST01102': //Xem van ban
+      //   this.viewFile(datas, val);
+      //   break;
+      // case 'EST01103': //bookmark
+      //   this.bookmark(datas);
+      //   break;
+      // case 'EST01104': //unBookmark
+      //   this.unBookmark(datas);
+      //   break;
+      // 11
+    }
+  }
+
+  getApprovalRule() {
+    this.hrService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.dataCategory = res;
+          this.hrService
+            .release(
+              this.dataCategory.recID,
+              this.dataCategory.processID,
+              this.formModel.entityName,
+              this.formModel.funcID,
+              'Hợp đồng lao động'
+            )
+            .subscribe((res) => {
+              console.log('rereqweqwrererererer', res);
+            });
+        }
+      });
+  }
+  checkApprovalRule() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      this.data = res;
+    });
+
+    var parsedJSON = JSON.parse(this.data.dataValue);
+    var eContractsObj = parsedJSON[1];
+    console.log('asd123123123123', eContractsObj);
+
+    if (eContractsObj['ApprovalRule'] == '1') {
+      return true;
+    } else {
+      return false;
     }
   }
 

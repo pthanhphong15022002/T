@@ -55,7 +55,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() funcID: any;
   @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
-
+  @Input() okrFM:any;
+  @Input() okrVll:any;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
   isCollapsed = false;
@@ -144,15 +145,16 @@ export class OkrTargetsComponent implements OnInit {
     className: 'OKRBusiness',
     method: 'GetChartData1Async',
   };
-
+  svgOB='';
+  svgKR='';
+  svgSKR=''
   Objs = [];
-  ObjQty = 0;
   Krs = [];
-  KrQty = 0;
   progress: number = 0;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
+  OM_UseSKR=false;
   tree: any;
   button: ButtonModel;
   isAfterRender: boolean;
@@ -170,6 +172,7 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
 
   ngOnInit(): void {
+
     this.createBase();
     this.getCacheData();
     this.getData();
@@ -198,6 +201,7 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   getCacheData() {
+    this.svgOB=OMCONST.ASSET_URL+this.okrVll?.
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -210,11 +214,13 @@ export class OkrTargetsComponent implements OnInit {
             settingVal != null &&
             (settingVal?.UseSubKR == '1' || settingVal?.UseSubKR == true)
           ) {
+            this.OM_UseSKR=true;
             this.button.items.push({
               text: 'Thêm kết quả then chốt cấp con',
               id: 'btnAddSKR',
             });
           }
+          
         }
       });
     this.cache.functionList(this.skrFuncID).subscribe((res) => {
@@ -376,12 +382,14 @@ export class OkrTargetsComponent implements OnInit {
   changeDataKRMF(evt: any, kr: any, isSKR: boolean) {
     if (evt != null && kr != null) {
       if (isSKR) {
+
       } else {
+
       }
       evt.forEach((func) => {
         if (
-          (func.functionID == 'OMT205' /*Checkin KR*/ ||
-            func.functionID == 'OMT304') /*Checkin SKR*/ &&
+          (func.functionID == OMCONST.MFUNCID.KRCheckIn  ||
+            func.functionID == OMCONST.MFUNCID.SKRCheckIn) &&
           kr.assignOKR != null &&
           kr.assignOKR.length > 0
         ) {
@@ -611,8 +619,12 @@ export class OkrTargetsComponent implements OnInit {
       [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res && res?.event.length > 0) {
-        this.caculatorPlanInBackground(res?.event);
+      if (res?.event && res?.event.length !=null) {        
+        this.getOKRPlanForComponent.emit(this.dataOKRPlans);
+        if(res?.event.length>0){
+
+          this.caculatorPlanInBackground(res?.event);
+        }
       }
     });
   }
@@ -621,7 +633,7 @@ export class OkrTargetsComponent implements OnInit {
       this.codxOmService
         .calculatorProgressOfPlan(listPlanRecID)
         .subscribe((listPlan: any) => {
-          if (listPlan != null) {
+          if (listPlan != null) {            
             this.caculatorPlanInBackground(listPlan);
           }
         });
@@ -766,7 +778,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obj.recID, obj.okrName, popupTitle],
+      [obj, popupTitle, this.okrFM,this.okrVll],
       '',
       dModel
     );
@@ -782,7 +794,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.recID, kr.okrName, kr.parentID, popupTitle, this.groupModel],
+      [kr, popupTitle, this.okrFM,this.okrVll],
       '',
       dModel
     );
@@ -806,8 +818,8 @@ export class OkrTargetsComponent implements OnInit {
     let dialogAssgOKR = this.callfunc.openForm(
       PopupAssignmentOKRComponent,
       '',
-      null,
-      450,
+      750,
+      400,
       null,
       [
         okr.okrName,

@@ -5,23 +5,15 @@
 
   .header-info {
     background-color: var(--primary-lighter);
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
+    padding: 10px 15px;
+    border-radius: 4px;
 
-    .left {
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
+    .title {
+      font-weight: 500;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
     }
 
-    .right {
-      display: flex;
-      align-items: center;
-    }
   }
 
   .show-main {
@@ -91,4 +83,8 @@
   //border-radius: 5px;
   //background-color: #f0f8ff;
   border-color: var(--gray-150);
+}
+
+::ng-deep .e-toast-top-right{
+  z-index: 10050 !important;
 }

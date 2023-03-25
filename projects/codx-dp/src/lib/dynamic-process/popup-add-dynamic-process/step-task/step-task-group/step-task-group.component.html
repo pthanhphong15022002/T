@@ -100,6 +100,8 @@
       [style]="{'justify-content': ''}"
       [dataSource]="taskGroup?.roles"
       (valueList)="changeUser($event)"
+      [multiple]="false"
+      [type]="'user'"
     ></codx-user>
 
     <div class="form-group">
@@ -127,7 +129,7 @@
 
 <ng-template #addGroupJobFooter>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary me-5" (click)="close()">
+    <button type="button" class="btn btn-outline-primary me-2" (click)="close()">
       <codx-label
         name="Save"
         formName="Tasks"

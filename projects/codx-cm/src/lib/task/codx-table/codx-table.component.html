@@ -1,0 +1,188 @@
+<div class="control-section position-relative">
+  <ejs-grid
+    class="sortingenabled"
+    [dataSource]="data"
+    allowSorting="true"
+    [sortSettings]="initialSort"
+    [pageSettings]="pageSettings"
+    [enableStickyHeader]="true"
+    [allowPaging]="allowPaging"
+  >
+    <e-columns>
+      <e-column
+        field="index"
+        headerText="STT"
+        width="50"
+        textAlign="left"
+      ></e-column>
+      <e-column
+        field="OrderID"
+        headerText="Order ID"
+        width="150"
+        textAlign="center"
+      ></e-column>
+      <e-column
+        field="CustomerName"
+        headerText="Customer Name"
+        width="170"
+      >
+      <ng-template #template let-data>
+         <div>
+             <div class="empimg">
+               <span class="e-userimg sf-icon-FeMale">thuan</span>
+             </div> 
+             <span id="Emptext">{{data.CustomerName}}</span>
+           </div>                  
+     </ng-template></e-column>
+      <e-column
+        field="OrderDate"
+        headerText="Order Date"
+        format="yMd"
+        width="155"
+        textAlign="center"
+      ></e-column>
+      <e-column
+        field="Freight"
+        headerText="Freight"
+        width="120"
+        format="C2"
+        textAlign="center"
+      ></e-column>
+      <e-column
+        field="ShippedDate"
+        headerText="Shipped Date"
+        format="yMd"
+        width="150"
+        textAlign="center"
+      ></e-column>
+      <e-column
+        field="ShipCountry"
+        headerText="Ship Country"
+        width="150"
+      ></e-column>
+    </e-columns>
+  </ejs-grid>
+  <table
+    class="position-absolute w-100"
+    style="border: 1px solid #dee2e6"
+    [ngStyle]="allowPaging ? { bottom: '55px' } : { bottom: '-30px' }"
+  >
+    <tr>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: left; width: '100px'"
+          >  </span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: left; width: '100px'"
+          >  </span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '150px'"
+          >Tổng cộng</span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '170px'"
+          >100</span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '155px'"
+          >100</span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '120px'"
+          >100</span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '100px'"
+          >100</span
+        >
+      </td>
+      <td style="padding: 6px">
+        <span style="display: inline-block; text-align: center; width: '150px'"
+          >100</span
+        >
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- <codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [button]="button"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  [idField]="idField"
+  [autoSearch]="true"
+  [toolbarDisplay]="false"
+></codx-views>
+
+<ng-template #itemCustomerName let-data>
+  <div>
+    {{ data?.processName }}
+  </div>
+</ng-template>
+<ng-template #itemContactName let-data>
+  <div>
+    {{ data?.processName }}
+  </div>
+</ng-template>
+<ng-template #itemPhone let-data>
+  <div>
+    <span class="icon-phone_android text-primary icon-16 me-1"></span>
+    <span class="text-gray-900 text-primary">0702411141</span>
+  </div>
+</ng-template>
+<ng-template #itemEmail let-data>
+  <div>
+    <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+    <span class="text-gray-900">tdnphuck42@gmail.com</span>
+  </div>
+</ng-template>
+<ng-template #itemFields let-data>
+  <div>Thương mại; Dịch vụ</div>
+</ng-template>
+<ng-template #itemAddress let-data>
+  Xã phú mậu, thành phố Huế, Thừa thiên Huế
+</ng-template>
+<ng-template #itemContact let-data>
+  <div class="d-flex flex-column">
+    <span class="text-dark fw-bold mb-2"> Trương Đặng Ngọc Phúc </span>
+    <div class="mb-2">
+      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+      <span class="text-gray-900 text-primary">0702411141</span>
+    </div>
+    <div class="mb-2">
+      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900">tdnphuck42@gmail.com</span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemCreatedBy let-data>
+  <div>
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="30"
+      [objectId]="data.createdBy"
+      [objectType]="'AD_Users'"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+<ng-template #itemCreatedOn let-data>
+  <span> {{ data?.createdOn | date : "dd/MM/yyyy, hh:mm" }} </span>
+</ng-template> -->

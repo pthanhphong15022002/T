@@ -491,7 +491,7 @@
         </div>
       </div>
     </div>
-    <div
+    <div class="note-quickinfo"
       *ngIf="item?.transType == 'EP_BookingRooms'"
       [ngStyle]="{
         'background-color': EP_BookingRoomsParam?.ShowBackground,
@@ -518,17 +518,17 @@
       <button
         type="button"
         (click)="quickInfo(item)"
-        class="w-150px min-w-150px btn btn-sm btn-light-primary"
+        class="btn btn-sm btn-icon btn-light btn-quickinfo"
         [ngbPopover]="tmpHover"
         #popoverList="ngbPopover"
-        placement="right bottom"
+        placement="left bottom"
         container="body"
         autoClose="outside"
         [openDelay]="500"
       >
-        <codx-label name="lblQuickInfo" default="Xem nhanh"></codx-label>
+        <i class="icon-visibility icon-16"></i>
+        <!-- <codx-label name="lblQuickInfo" default="Xem nhanh"></codx-label> -->
       </button>
-      <div></div>
     </div>
     <div
       *ngIf="item?.transType == 'EP_BookingCars'"

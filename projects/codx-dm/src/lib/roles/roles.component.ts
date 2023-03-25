@@ -240,12 +240,12 @@ export class RolesComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     //   this.read = true;
     this.data = data.data;
     if (this.data[0] == "1") this.modePermission = true;
     else this.modePermission = false;
-    if (this.data[2]) this.codxView = this.data[2];
+    if(this.data[2]) this.codxView = this.data[2];
+    if(this.data[4]) this.propertiesFolder = true;
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName
@@ -356,15 +356,14 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
+
+    if(this.propertiesFolder) return true
+    
     if (!this.isSystem) {
-      if (this.user.administrator)
-        return false;
-      else {
-        return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
-      }
+      if (this.user.administrator) return false;
+      else  return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
     }
-    else {
-      return true;
+    else return true;
       // if (owner) {
       //   if (this.objectType === "7")
       //     return true;
@@ -374,7 +373,7 @@ export class RolesComponent implements OnInit {
       // }
       // else
       //   return true;
-    }
+    //}
   }
 
   checkCurrentRightUpdate1() {
@@ -590,6 +589,7 @@ export class RolesComponent implements OnInit {
     var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.assignRight;
     //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.fileEditing.assign;
     right = true;
+   
     return right;
   }
 
@@ -810,7 +810,7 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRole($event) {
-
+    if(this.propertiesFolder) return
     if ($event.data != undefined) {
       var data = $event.data;
       for (var i = 0; i < data.length; i++) {

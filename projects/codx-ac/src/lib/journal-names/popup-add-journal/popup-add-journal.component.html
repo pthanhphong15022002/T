@@ -1,0 +1,912 @@
+<codx-layout-add
+  #form
+  [title]="formTitle"
+  [tabInfo]="tabInfo"
+  [formModel]="dialogRef.formModel"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [tabContent]="[tabGeneralInfo, tabSettings, tabRoles]"
+  [data]="journal"
+>
+</codx-layout-add>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #tabGeneralInfo>
+  <ng-container *ngIf="form.formGroup">
+    <div class="form-group">
+      <codx-label
+        fiedName="journalNo"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="journalNo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="journalDesc"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="journalDesc"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="journalType"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="journalType"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <ng-container
+        *ngIf="journal.journalType == '0803' || journal.journalType == '0805'"
+      >
+        <codx-label
+          fiedName="cashPaymentType"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="cashPaymentType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </ng-container>
+      <ng-container
+        *ngIf="journal.journalType == '0802' || journal.journalType == '0804'"
+      >
+        <codx-label
+          fiedName="cashPaymentType"
+          [formModel]="form.formModel"
+          default="Loại thu mặc định"
+        ></codx-label>
+        <codx-input
+          type="combobox"
+          field="cashPaymentType"
+          refType="2"
+          refValue="AC065"
+          [crrValue]="journal.cashPaymentType"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <ng-container *ngIf="journal.journalType == '0202'">
+        <codx-label
+          fiedName="vatType"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="vatType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </ng-container>
+    </div>
+
+    <div class="row">
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="fiscalYear"
+          [formModel]="form.formModel"
+          default="Năm tài chính"
+        ></codx-label>
+        <ejs-combobox
+          [dataSource]="fiscalYears"
+          [allowCustom]="false"
+          (change)="handleChange($event)"
+        >
+        </ejs-combobox>
+      </div>
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="periodID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          #periodID
+          field="periodID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="voucherNoRule"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="voucherNoRule"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="voucherNoFormat"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          disabled="true"
+          field="voucherNoFormat"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-2">
+        <div class="d-flex justify-content-end" role="button">
+          <span class="icon-edit-one icon-20 text-primary"></span>
+        </div>
+      </div>
+    </div>
+
+    <ng-container
+      *ngIf="
+        journal.journalType == '0102' ||
+        journal.journalType == '0302' ||
+        journal.journalType == '0304'
+      "
+    >
+      <div class="row">
+        <div class="col-10">
+          <codx-label
+            fiedName="lblUnknown"
+            [formModel]="form.formModel"
+            default="Thiết lập hóa đơn GTGT theo sổ nhật ký"
+            class="fw-bold"
+          ></codx-label>
+          <div>
+            <codx-label
+              fiedName="lblUnknown"
+              [formModel]="form.formModel"
+              default="Cấu hình loại hóa đơn & cách đánh số Hóa đơn GTGT cho hóa đơn bán hàng, phiếu xuất kho, phiếu xuất điều chuyển."
+              class="text-secondary"
+            ></codx-label>
+          </div>
+        </div>
+
+        <div class="col-2">
+          <div
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openInvoiceForm()"
+          >
+            <span class="icon-edit-one icon-20 text-primary"></span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabSettings>
+  <ng-container *ngIf="form.formGroup">
+    <codx-label
+      fiedName="lblCommonSettings"
+      [formModel]="form.formModel"
+      default="Thiết lập chung"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="form-group mt-3">
+      <codx-label
+        fiedName="currencyID"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblCurrencyID"
+            [formModel]="form.formModel"
+            [default]="getDescription('CurrencyID')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="currencyID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="drAcctControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblDRAcctControl"
+            [formModel]="form.formModel"
+            [default]="getDescription('DRAcctControl')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+          <span
+            class="badge badge-pill badge-secondary ms-2"
+            *ngIf="
+              ['0', '1'].includes(journal.drAcctControl) && journal.drAcctID
+            "
+          >
+            {{ journal.drAcctID }}
+          </span>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="drAcctControl"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+            (valueChange)="journal.drAcctID = null"
+          ></codx-input>
+        </div>
+
+        <div class="col-1">
+          <div
+            *ngIf="['0', '1', '2'].includes(journal.drAcctControl)"
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openSelectPopup('dr', journal.drAcctControl)"
+          >
+            <span class="icon-edit-one icon-20 text-primary"></span>
+          </div>
+
+          <codx-combobox-popup
+            *ngIf="!isMultiSelectPopupDrHidden"
+            comboboxName="ParentAccounts"
+            [multiple]="true"
+            [width]="600"
+            [height]="500"
+            [value]="journal.drAcctID"
+            (clickSave)="hideMultiSelectPopup($event, 'drAcctID')"
+          >
+          </codx-combobox-popup>
+        </div>
+
+        <div
+          class="col-11 mt-2"
+          *ngIf="journal.drAcctControl === '2' && journal.drAcctID"
+        >
+          <div class="text-truncate p-1">
+            <span
+              *ngFor="let a of journal.drAcctID?.split(';')"
+              class="badge badge-pill badge-secondary me-2"
+            >
+              {{ a }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="crAcctControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblCRAcctControl"
+            [formModel]="form.formModel"
+            [default]="getDescription('CRAcctControl')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+
+          <span
+            class="badge badge-pill badge-secondary ms-2"
+            *ngIf="
+              ['0', '1'].includes(journal.crAcctControl) && journal.crAcctID
+            "
+          >
+            {{ journal.crAcctID }}
+          </span>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="crAcctControl"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+            (valueChange)="journal.crAcctID = null"
+          ></codx-input>
+        </div>
+
+        <div class="col-1">
+          <div
+            *ngIf="['0', '1', '2'].includes(journal.crAcctControl)"
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openSelectPopup('cr', journal.crAcctControl)"
+          >
+            <span class="icon-edit-one icon-20 text-primary"></span>
+          </div>
+
+          <codx-combobox-popup
+            *ngIf="!isMultiSelectPopupCrHidden"
+            comboboxName="ParentAccounts"
+            [multiple]="true"
+            [width]="600"
+            [height]="500"
+            [value]="journal.crAcctID"
+            (clickSave)="hideMultiSelectPopup($event, 'crAcctID')"
+          >
+          </codx-combobox-popup>
+        </div>
+
+        <div
+          class="col-11 mt-2"
+          *ngIf="journal.crAcctControl === '2' && journal.crAcctID"
+        >
+          <div class="text-truncate p-1">
+            <span
+              *ngFor="let a of journal.crAcctID?.split(';')"
+              class="badge badge-pill badge-secondary me-2"
+            >
+              {{ a }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="diM1Control"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblDIM1Control"
+            [formModel]="form.formModel"
+            [default]="getDescription('DIM1Control')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="diM1Control"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="projectControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblProjectControl"
+            [formModel]="form.formModel"
+            [default]="getDescription('ProjectControl')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="projectControl"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="diM2Control"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblDIM2Control"
+            [formModel]="form.formModel"
+            [default]="getDescription('DIM2Control')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="diM2Control"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="diM3Control"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblDIM3Control"
+            [formModel]="form.formModel"
+            [default]="getDescription('DIM3Control')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="diM3Control"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="assetControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblAssetControl"
+            [formModel]="form.formModel"
+            [default]="getDescription('AssetControl')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="assetControl"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <codx-label
+      fiedName="lblDebtSettings"
+      [formModel]="form.formModel"
+      default="Thiết lập công nợ"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="form-group mt-3">
+      <codx-label
+        fiedName="postSubControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblPostSubControl"
+            [formModel]="form.formModel"
+            [default]="getDescription('PostSubControl')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="postSubControl"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="settlementRule"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblSettlementRule"
+            [formModel]="form.formModel"
+            [default]="getDescription('SettlementRule')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="settlementRule"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+      <codx-input
+        field="mixedPayment"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+      <codx-label
+        fiedName="mixedPayment"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </div>
+
+    <codx-label
+      fiedName="lblDebtSettings"
+      [formModel]="form.formModel"
+      default="Thiết lập công nợ"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="form-group mt-3">
+      <codx-label
+        fiedName="warehouseIssue"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblWarehouseIssue"
+            [formModel]="form.formModel"
+            [default]="getDescription('WarehouseIssue')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="warehouseIssue"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="warehouseReceipt"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblWarehouseReceipt"
+            [formModel]="form.formModel"
+            [default]="getDescription('WarehouseReceipt')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="warehouseReceipt"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [placeholder]="' '"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="idimControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-11"></div>
+
+        <div class="col-1">
+          <div class="col-1">
+            <div class="d-flex justify-content-end" role="button">
+              <span class="icon-edit-one icon-20 text-primary"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabRoles>
+  <ng-container *ngIf="form.formGroup">
+    <div class="form-group">
+      <codx-label fiedName="creater" [formModel]="form.formModel"></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblCreater"
+            [formModel]="form.formModel"
+            [default]="getDescription('Creater')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <lib-dropdown-detail
+            [modelShares]="journal.creater"
+            [formModel]="form.formModel"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-input
+            type="share"
+            field="creater"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="handleInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+      <codx-input
+        field="approval"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+      <codx-label fiedName="approval" [formModel]="form.formModel"></codx-label>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="approver" [formModel]="form.formModel"></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblApprover"
+            [formModel]="form.formModel"
+            [default]="getDescription('Approver')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <lib-dropdown-detail
+            [modelShares]="journal.approver"
+            [formModel]="form.formModel"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-input
+            type="share"
+            field="approver"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="handleInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+      <codx-input
+        field="postControl"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+      <codx-label
+        *ngIf="journal.approval"
+        fiedName="postControl"
+        [formModel]="form.formModel"
+        [default]="getDescription('PostControl').split(';')[0]"
+      ></codx-label>
+      <codx-label
+        *ngIf="!journal.approval"
+        fiedName="postControl"
+        [formModel]="form.formModel"
+        [default]="getDescription('PostControl').split(';')[1]"
+      ></codx-label>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="poster" [formModel]="form.formModel"></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblPoster"
+            [formModel]="form.formModel"
+            [default]="getDescription('Poster')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <lib-dropdown-detail
+            [modelShares]="journal.poster"
+            [formModel]="form.formModel"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-input
+            type="share"
+            field="poster"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="handleInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+      <codx-input
+        field="unpostControl"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+      <codx-label
+        fiedName="unpostControl"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="unposter" [formModel]="form.formModel"></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblUnposter"
+            [formModel]="form.formModel"
+            [default]="getDescription('Unposter')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <lib-dropdown-detail
+            [modelShares]="journal.unposter"
+            [formModel]="form.formModel"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-input
+            type="share"
+            field="unposter"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="handleInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="unpostTime"
+        [formModel]="form.formModel"
+      ></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblUnpostTime"
+            [formModel]="form.formModel"
+            [default]="getDescription('UnpostTime')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <codx-input
+            field="unpostTime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="sharer" [formModel]="form.formModel"></codx-label>
+
+      <div class="row align-items-center">
+        <div class="col-6">
+          <codx-label
+            fiedName="lblSharer"
+            [formModel]="form.formModel"
+            [default]="getDescription('Sharer')"
+            class="text-secondary font-italic fw-normal"
+          ></codx-label>
+        </div>
+
+        <div class="col-5">
+          <lib-dropdown-detail
+            [modelShares]="journal.sharer"
+            [formModel]="form.formModel"
+          ></lib-dropdown-detail>
+        </div>
+
+        <div class="col-1">
+          <codx-input
+            type="share"
+            field="sharer"
+            refValue="AC068"
+            [showInput]="false"
+            (valueChange)="handleInputChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

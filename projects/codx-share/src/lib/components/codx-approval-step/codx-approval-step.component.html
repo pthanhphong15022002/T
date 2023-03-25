@@ -232,12 +232,12 @@
               </div>
               <div class="d-flex flex-wrap">
                 <div class="d-flex mt-1" *ngIf="approver.status == '5'">
-                  <codx-label
+                  <!-- <codx-label
                     fiedName="ApprovedOn"
                     [formModel]="fmApprovalTrans"
-                  ></codx-label>
+                  ></codx-label> -->
                   <div class="d-flex text-dark fs-7 me-4">
-                    : {{ approver.approvedOn | fmDT }}
+                    {{ approver.approvedOn | fmDT }}
                   </div>
                 </div>
 

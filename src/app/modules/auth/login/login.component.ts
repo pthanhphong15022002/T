@@ -422,35 +422,57 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.returnUrl.indexOf('http://') == 0 ||
           this.returnUrl.indexOf('https://') == 0
         ) {
-          this.api
-            .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-            .pipe(
-              map((data: any) => {
-                if (data && data.userID) {
-                  document.location.href =
-                    this.returnUrl + '&token=' + this.auth.get().token;
-                }
+          return (
+            this.api
+              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+              // .pipe(
+              //   map((data: any) => {
+              //     if (data && data.userID) {
+              //       this.router.navigate([`${this.returnUrl + '&token=' + this.auth.get().token}`]);
+              //       document.location.href =
+              //         this.returnUrl + '&token=' + this.auth.get().token;
+              //     }
+              //   })
+              // )
+              .subscribe((data: any) => {
+                if (data && data.userID)
+                  this.router.navigate([
+                    `${this.returnUrl + '&token=' + this.auth.get().token}`,
+                  ]);
               })
-            )
-            .subscribe();
-
-          return;
+          );
         } else {
           if (this.returnUrl.indexOf(data.tenant) > 0)
-            this.router.navigate([`${this.returnUrl}`]);
+            return this.router.navigate([`${this.returnUrl}`]);
+          // window.location.href = this.returnUrl;
           else if (environment.saas == 1) {
-            if (!data.tenant) this.router.navigate(['/tenants']);
-            else this.router.navigate([`${data.tenant}`]);
-          } else this.router.navigate([`${data.tenant}`]);
+            if (!data.tenant) return this.router.navigate(['/tenants']);
+            //window.location.href = '/tenants';
+            // window.location.href = this.returnUrl
+            //   ? this.returnUrl
+            //   : data.tenant;
+            else
+              return this.router.navigate([
+                `${this.returnUrl ? this.returnUrl : data.tenant}`,
+              ]);
+          }
+          // window.location.href = this.returnUrl
+          //   ? this.returnUrl
+          //   : data.tenant;
+          else
+            return this.router.navigate([
+              `${this.returnUrl ? this.returnUrl : data.tenant}`,
+            ]);
         }
       } else {
         // this.alerttext = data.error;
         //$(this.error.nativeElement).html(data.error);
         this.notificationsService.notify(data.error);
-        // alert(data.error);
+        return false;
       }
-      // this.router.navigate([this.returnUrl]);
+      return this.router.navigate([this.returnUrl]);
     }
+    return false;
   }
   //#endregion
 

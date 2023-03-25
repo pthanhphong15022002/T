@@ -7,10 +7,11 @@
 <!--List View-->
 <ng-template #subTitleTmp let-data>
   
-  <div class="">
-    <span [innerHTML]="data?.positionID | formatvalue : formModel : 'positionID' | async"></span>
-  </div>
+ 
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
+    <div class="">
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
+    </div>
     <div class="mb-2">
       <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
@@ -38,7 +39,10 @@
 
   <div class="" *ngIf="!sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
-      <span>{{ data?.title }}</span>
+      <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
+    </div>
+    <div class="mb-2">
+      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
     </div>
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">

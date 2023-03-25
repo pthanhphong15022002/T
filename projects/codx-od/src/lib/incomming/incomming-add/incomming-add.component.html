@@ -26,7 +26,7 @@
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
       " hideMoreF="0" [permissions]="dispatch?.relations" [addPermissions]="listPermission" [formModel]="formModel" [dataSelected]="dispatch"
-      [idField]="'RecID'">
+      [idField]="'RecID'" [referType]="'source'">
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">
@@ -166,7 +166,7 @@
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" field="lblodshare"
+    <codx-label [formModel]="form.formModel" fiedName="lblodshare"
       [default]="'Người được chia sẻ'"></codx-label>
     <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
@@ -205,8 +205,8 @@
   </div>
 </ng-template>
 <ng-template #tmpagency let-dialog>
-  <app-od-agency [dialog]="dialog" [data]="data"></app-od-agency>
+  <app-od-agency [dialog]="dialog" [data]="data" [formModel]="formModel"></app-od-agency>
 </ng-template>
 <ng-template #tmpdept let-dialog>
-  <app-od-department></app-od-department>
+  <app-od-department [dialog]="dialog" [agencyID]="data?.agencyID"></app-od-department>
 </ng-template>

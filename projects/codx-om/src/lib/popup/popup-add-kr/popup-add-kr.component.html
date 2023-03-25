@@ -181,7 +181,7 @@
     </div>
   </ng-template>
 
-  <ng-template #popupTarget let-dialogRef>
+  <ng-template #popupTarget let-dialogTarget>
     <div class=" h-100 d-flex flex-column justify-content-between">
       <div class="modal-header">
         <div class="d-flex flex-column flex-grow-1">
@@ -190,7 +190,7 @@
               <codx-label name="lbl" default="Kế hoạch chỉ tiêu" [formModel]="form.formModel"></codx-label>
             </h2>
             <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-              (click)="dialogRef.close()">
+              (click)="closeEditTargets(dialogTarget)">
               <span class="icon-close icon-20 text-dark text-hover-primary"></span>
             </button>
           </div>
@@ -202,18 +202,19 @@
       </div>
       <div class="modal-body">
         <div class="px-5 d-flex flex-column justify-content-center align-items-center">
-          <div class="d-flex justify-content-between align-items-center w-100 my-2"
+          <div class="d-flex justify-content-between align-items-center w-100" style="min-height: 45px;"
             *ngFor="let item of this.kr?.targets;let i=index">
 
             <div class="col-4 ms-3">
               <codx-label [name]=" this.planVLL[i]?.text"></codx-label>
             </div>
-            <div class="col-7">
-              <codx-input type="number" [min]="0" [showSpinButton]="false" [crrValue]="item.target"
-                (valueChange)="valuePlanTargetChange($event,i)"></codx-input>
+
+            <div class="col-7"  >
+              <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="border-1 border "
+                (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>
             </div>
             <div class="col-1 d-flex justify-content-center align-items-center">
-              <span *ngIf="item.isEdited" class="icon-i-info-circle text-danger"></span>
+              <span *ngIf="item?.edited" class="icon-i-info-circle text-danger"></span>
 
             </div>
           </div>
@@ -225,10 +226,10 @@
           <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
             (click)="calculatorTarget(kr?.plan)">
             <span class="icon-airplay btn-text-primary me-2"></span>
-            <codx-label name="lbl" class="fw-normal" default="Phân bố lại" [formModel]="form.formModel"></codx-label>
+            <codx-label name="lbl" class="fw-normal" default="Phân bố lại"></codx-label>
           </button>
           <button class="btn btn-primary" (click)="onSaveTarget()">
-            <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+            <codx-label name="lblSave" default="Lưu"></codx-label>
           </button>
         </div>
       </div>
