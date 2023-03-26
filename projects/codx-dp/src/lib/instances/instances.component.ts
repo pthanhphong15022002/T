@@ -119,8 +119,9 @@ export class InstancesComponent
   stepFail: any;
   viewType = 'd';
   autoName: string = '';
-
+  processID =  ''
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -132,6 +133,15 @@ export class InstancesComponent
   ) {
     super(inject);
     this.dialog = dialog;
+    //thao tesst
+    // this.router.params.subscribe((param) => {
+    //   this.processID = param["processID"];
+    //   this.funcID = param["funcID"];  
+    //   this.codxDpService.dataProcess.subscribe(res=>{
+    //     this.dataProccess =res
+    //   }) ; 
+    // });
+    //end tesst
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {

@@ -60,12 +60,13 @@ const routes: Routes = [
       },
     ],
   },
+  //thao tesst chuyen popup sang page
   {
-    path: 'instances',
+    path: '',
     component: LayoutNoAsideComponent,
     children: [
         {
-            path: ':funcID/:processID/:recID',
+            path: 'instances/:funcID/:processID',
             component: InstancesComponent,
         },
         // {
