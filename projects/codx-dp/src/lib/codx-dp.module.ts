@@ -61,9 +61,20 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'general/:funcID',
-    component: PopupAddDynamicProcessComponent,
-  },
+    path: 'instances',
+    component: LayoutNoAsideComponent,
+    children: [
+        {
+            path: ':funcID/:processID/:recID',
+            component: InstancesComponent,
+        },
+        // {
+        //   path: '**',
+        //   redirectTo: 'DPT04/home',
+        //   pathMatch: 'full',
+        // },       
+    ]
+  }
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
