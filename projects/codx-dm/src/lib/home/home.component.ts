@@ -354,7 +354,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-          tree.removeNodeTree(res);
+          try
+          {
+            tree.removeNodeTree(res);
+          }
+          catch(e){}
+        
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -403,6 +408,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
+      debugger
       if(item)
       {
         this.data = this.data.filter((x) => x.recID != item);
