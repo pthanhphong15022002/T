@@ -208,6 +208,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     this.dmSV.isNodeSelect.subscribe((res) => {
+      debugger
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
@@ -251,30 +252,31 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         var treeView = this.codxview?.currentView?.currentComponent?.treeView;
         if (treeView) {
-          if(this.funcID != "DMT00")
+          try
           {
             var list = treeView.getBreadCumb(res.recID);
             if(list.length == 0) treeView.setNodeTree(res);
             treeView.getCurrentNode(res.recID)
             this.scrollTop();
           }
-          else
-          {
-            this.folderService.getFolder(res.recID).subscribe((res2) => {
-              if(res)
-              {
-                this.dmSV.folderID = res2.recID
-                this.dmSV.getRight(res2);
-                this.refeshData();
-                this.getDataFolder(res2.recID);
-                var breadcumb = this.dmSV.breadcumb.getValue();
-                breadcumb.push(res2.folderName);
-                this.dmSV.breadcumbLink.push(res2.recID);
-                this.dmSV.breadcumb.next(breadcumb);
-              }
-            });
+          catch(ex){
+            if(this.funcID == "DMT00")
+            {
+              this.folderService.getFolder(res.recID).subscribe((res2) => {
+                if(res)
+                {
+                  this.dmSV.folderID = res2.recID
+                  this.dmSV.getRight(res2);
+                  this.refeshData();
+                  this.getDataFolder(res2.recID);
+                  var breadcumb = this.dmSV.breadcumb.getValue();
+                  breadcumb.push(res2.folderName);
+                  this.dmSV.breadcumbLink.push(res2.recID);
+                  this.dmSV.breadcumb.next(breadcumb);
+                }
+              });
+            }
           }
-        
         }
         else
         {
@@ -359,7 +361,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
             tree.removeNodeTree(res);
           }
           catch(e){}
-        
+          debugger
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -807,10 +809,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.level = res[0][0].level;
         this.dmSV.folderID = res[0][0].recID;
         this.dmSV.folderId.next(res[0][0].recID);
-        
-        var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        debugger
-        console.log(tree)
+      
+        // var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+        // if(treeView)
+        // {
+        //   var list = treeView.getBreadCumb(res.recID);
+        //   if(list.length == 0) treeView.setNodeTree(res);
+        // }
       }
     });
   }
