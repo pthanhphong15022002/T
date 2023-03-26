@@ -2519,6 +2519,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     role['recID'] = Util.uid();
     role['objectName'] = this.user['userName'];
     role['objectID'] = this.user['userID'];
+    role['roleType'] = 'P';
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
     return role;
@@ -2697,6 +2698,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  deleteRoleTypeR(role, step){
+    let check = this.checkExistUser(step, role, 'R');
+    if (check) {
+      this.notiService.notifyCode(role?.objectName + "khong the xoa");
     }
   }
   //test user exists in step

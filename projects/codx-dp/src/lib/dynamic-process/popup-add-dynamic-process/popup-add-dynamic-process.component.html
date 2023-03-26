@@ -2542,6 +2542,7 @@
               *ngIf="perm.roleType == 'R'"
               class="me-4 d-flex align-items-center margin-form mb-4"
             >
+            <div class="roles-step d-flex align-items-center">
               <div class="d-flex align-items-center position-relative">
                 <codx-img
                   class="me-2"
@@ -2552,6 +2553,15 @@
                 </codx-img>
               </div>
               <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+              <span class="mt-1">
+                <a
+                  (click)="deleteRoleTypeR(perm,step)"
+                  style="cursor: pointer"
+                >
+                  <span class="icon-close icon-16 text-danger ms-3"></span>
+                </a>
+              </span>
+            </div>              
             </div>
           </ng-container>
         </div>
