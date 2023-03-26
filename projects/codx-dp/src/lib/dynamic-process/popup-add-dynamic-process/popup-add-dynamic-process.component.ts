@@ -456,13 +456,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     op.data = data;
   }
 
-  convertListStepDrop(){
+  convertListStepDrop() {
     let listDrop = [];
-    if(this.listStepEdit?.length == 0 && this.listStepDelete?.length == 0) return this.listStepDrop;
-    for(let id of this.listStepDrop){
-      let check = this.listStepEdit.some(idEdit => idEdit === id);
-      let checkDelete = this.listStepDelete.some(idDelete => idDelete === id);
-      if(!check && !checkDelete){
+    if (this.listStepEdit?.length == 0 && this.listStepDelete?.length == 0)
+      return this.listStepDrop;
+    for (let id of this.listStepDrop) {
+      let check = this.listStepEdit.some((idEdit) => idEdit === id);
+      let checkDelete = this.listStepDelete.some((idDelete) => idDelete === id);
+      if (!check && !checkDelete) {
         listDrop.push(id);
       }
     }
@@ -1230,13 +1231,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         var i = 0;
         i = this.countRoleSteps(objectID);
         var check = this.lstParticipants.filter((x) => x.objectID == objectID);
-        var indexPerm = this.process.permissions.findIndex(x=> x.objectID == objectID && x.roleType == 'P');
-        var index = this.step.roles.findIndex((x) => x.objectID == objectID && x.roleType == 'S');
+        var indexPerm = this.process.permissions.findIndex(
+          (x) => x.objectID == objectID && x.roleType == 'P'
+        );
+        var index = this.step.roles.findIndex(
+          (x) => x.objectID == objectID && x.roleType == 'S'
+        );
         if (index > -1) {
           this.step.roles.splice(index, 1);
           if (check.length == 0) {
             if (i <= 1) {
-              if(indexPerm != -1){
+              if (indexPerm != -1) {
                 this.process.permissions.splice(indexPerm, 1);
               }
             }
@@ -1519,7 +1524,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
           this.fieldCrr.rank = 5;
-         
+
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -1528,13 +1533,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
-          let object ={
-            field :this.fieldCrr ,
-            action :'add' ,
-            titleAction:  this.titleAdd +' ' + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
-            stepList : this.stepList,
-            grvSetup: res
-          }
+          let object = {
+            field: this.fieldCrr,
+            action: 'add',
+            titleAction:
+              this.titleAdd +
+              ' ' +
+              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+              this.titleDefaultCF.slice(1),
+            stepList: this.stepList,
+            grvSetup: res,
+          };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
             object,
@@ -1551,7 +1560,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID)
                   x.fields.push(this.fieldCrr);
+                if (this.action == 'edit') {
+                  let check = this.listStepEdit.some((id) => id == x?.recID);
+                  if (!check) {
+                    this.listStepEdit.push(x?.recID);
+                  }
+                }
               });
+
               this.changeDetectorRef.detectChanges();
             }
           });
@@ -1559,13 +1575,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  copyCustomField(field,textTitle){
+  copyCustomField(field, textTitle) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-        
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -1575,13 +1590,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
-          let object ={
-            field :this.fieldCrr ,
-            action :'copy',
-            titleAction: textTitle + ' '  + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
-            stepList : this.stepList,
-            grvSetup: res
-          }
+          let object = {
+            field: this.fieldCrr,
+            action: 'copy',
+            titleAction:
+              textTitle +
+              ' ' +
+              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+              this.titleDefaultCF.slice(1),
+            stepList: this.stepList,
+            grvSetup: res,
+          };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
             object,
@@ -1589,14 +1608,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
-               //xu ly data đổ về
-               this.fieldCrr = e.event;
-               this.fieldCrr.sorting = this.step.fields.length 
-               this.stepList.forEach((x) => {
-                 if (x.recID == this.fieldCrr.stepID)
-                   x.fields.push(this.fieldCrr);
-               });
-               this.changeDetectorRef.detectChanges();
+              //xu ly data đổ về
+              this.fieldCrr = e.event;
+              this.fieldCrr.sorting = this.step.fields.length;
+              this.stepList.forEach((x) => {
+                if (x.recID == this.fieldCrr.stepID)
+                  x.fields.push(this.fieldCrr);
+                if (this.action == 'edit') {
+                  let check = this.listStepEdit.some((id) => id == x?.recID);
+                  if (!check) {
+                    this.listStepEdit.push(x?.recID);
+                  }
+                }
+              });
+              this.changeDetectorRef.detectChanges();
             }
           });
         });
@@ -1609,7 +1634,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -1619,13 +1643,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
-          let object ={
-            field :this.fieldCrr ,
-            action :'edit',
-            titleAction: textTitle +' ' + this.titleDefaultCF.charAt(0).toLocaleLowerCase() + this.titleDefaultCF.slice(1),
-            stepList : this.stepList,
-            grvSetup: res
-          }
+          let object = {
+            field: this.fieldCrr,
+            action: 'edit',
+            titleAction:
+              textTitle +
+              ' ' +
+              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+              this.titleDefaultCF.slice(1),
+            stepList: this.stepList,
+            grvSetup: res,
+          };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
             object,
@@ -1651,6 +1679,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   if (index != -1) {
                     obj.fields[index] = this.fieldCrr;
                   }
+                  if (this.action == 'edit') {
+                    let check = this.listStepEdit.some(
+                      (id) => id == obj?.recID
+                    );
+                    if (!check) {
+                      this.listStepEdit.push(obj?.recID);
+                    }
+                  }
                 }
               });
               this.changeDetectorRef.detectChanges();
@@ -1674,6 +1710,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             obj.fields.forEach((x) => {
               if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
             });
+            if (this.action == 'edit') {
+              let check = this.listStepEdit.some((id) => id == obj?.recID);
+              if (!check) {
+                this.listStepEdit.push(obj?.recID);
+              }
+            }
           }
         });
         this.changeDetectorRef.detectChanges();
@@ -1860,7 +1902,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew = step;
       this.stepName = this.stepNew['stepName'];
     } else {
-      this.stepNew =JSON.parse(JSON.stringify(step));
+      this.stepNew = JSON.parse(JSON.stringify(step));
       this.stepEdit = step;
       this.stepName = this.stepNew['stepName'];
     }
@@ -2742,14 +2784,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return check;
   }
 
-  chanvalueColor(event, data){
-    if(event?.data && event.field){
+  chanvalueColor(event, data) {
+    if (event?.data && event.field) {
       data[event.field] = event?.data;
     }
   }
 
-  changeIcon(event, field,data ){
-    if(event){
+  changeIcon(event, field, data) {
+    if (event) {
       data[field] = event;
     }
   }

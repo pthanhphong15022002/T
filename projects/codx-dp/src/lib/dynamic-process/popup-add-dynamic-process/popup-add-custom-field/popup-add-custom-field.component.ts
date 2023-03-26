@@ -163,6 +163,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
+    if (
+      (!this.field.rankIcon && this.field.dataType == 'R') 
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RankIcon']?.headerText + '"'
+      );
+      return;
+    }
 
     this.dialog.close(this.field);
   }
