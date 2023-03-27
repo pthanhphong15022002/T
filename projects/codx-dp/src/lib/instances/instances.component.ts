@@ -919,7 +919,6 @@ export class InstancesComponent
           .subscribe((grvSt) => {
             var newProccessIdReason = isMoveSuccess ? this.stepSuccess.newProcessID: this.stepFail.newProcessID;
             var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-            debugger;
             if(isCheckExist) {
               this.codxDpService.getProcess(newProccessIdReason).subscribe((res) => {
                 if (res) {
