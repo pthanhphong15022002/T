@@ -96,7 +96,7 @@
     </div>
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-1200px h-100">
+      <div class="card shadow-none border-0 rounded-2 mx-auto w-1200px h-100">
         <div class="mt-6 pb-3 tab-pane-header px-9 border-bottom">
           <h2 *ngIf="currentTab != 1 && currentTab != 3" class="h2-title">
             <codx-label *ngIf="currentTab == 0" name="lblGeneral" [formModel]="dialog.formModel"
@@ -790,14 +790,14 @@
               <ng-container *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']">
                 <div class="d-flex flex-column">
                   <div class="d-flex">
-                    <span *ngIf="itemStep?.icon" class="me-1 d-flex align-items-center" [ngClass]="itemStep?.icon"
+                    <span *ngIf="itemStep?.icon" class="me-2 d-flex align-items-center" [ngClass]="itemStep?.icon"
                       [ngStyle]="{ 'color': itemStep?.iconColor }"></span>
-                    <span class="fs-5 fw-bold line-clamp line-clamp-1" [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <span class="text-dark fw-bold line-clamp line-clamp-1" [ngStyle]="{ 'color': itemStep?.textColor}">
                       {{ itemStep?.stepName }}
                     </span>
                   </div>
 
-                  <div class="fs-7" [ngStyle]="{ 'color': itemStep?.textColor}">
+                  <div class="fs-7 text-gray-400" [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label fiedName="durationTime" [formModel]="dialog.formModel" [default]="'Thời hạn: '">
                     </codx-label>
                     <span>{{
@@ -809,9 +809,9 @@
                     }}</span>
                     <codx-label fiedName="hour" [formModel]="dialog.formModel" [default]="strHour"></codx-label>
                   </div>
-                  <div class="fs-7" [ngStyle]="{ 'color': itemStep?.textColor}">
+                  <div class="fs-7 text-gray-700" [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label fiedName="task" [formModel]="dialog.formModel" [default]="'Công việc:'"></codx-label>
-                    <span class="">{{
+                    <span class="fw-bold">{{
                       itemStep?.tasks?.length
                     }}</span>
                   </div>
