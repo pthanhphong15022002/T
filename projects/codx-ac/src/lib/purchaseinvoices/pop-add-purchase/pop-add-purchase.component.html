@@ -73,13 +73,8 @@
   <div class="d-flex align-items-center justify-content-between pt-2">
     <div class="d-flex justify-content-start me-2">
       <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
-<<<<<<< HEAD
             <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
             <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
-=======
-        <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-        <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
->>>>>>> fcde176a96470388b8354b5e5259aa520025729b
       </div>
       <div class="card-title">
         <div class="d-flex flex-column">
@@ -414,7 +409,6 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-<<<<<<< HEAD
   <ng-container *ngIf="form?.formGroup">
     <!-- <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
@@ -469,7 +463,6 @@
     </div>
 
   </ng-container>
-=======
   <div class="h-100 w-100 border">
   <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
@@ -478,7 +471,6 @@
     (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)" [allowTextWrap]="false"></codx-gridview-v2>
   </div>
 
->>>>>>> 57c7a452e3cc34c33c8ad37f5e9d0d79478ec6b5
 </ng-template>
 <ng-template #tabLineBill>
   <codx-gridview-v2 *ngIf="VATType == '2'" #gridInvoices [formName]="fmVATInvoices.formName"
