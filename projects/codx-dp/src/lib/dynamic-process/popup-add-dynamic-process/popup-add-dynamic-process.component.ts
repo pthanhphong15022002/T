@@ -211,6 +211,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     add: ['Thêm Giai Đoạn', 'headerAddStep'],
     edit: ['Sửa giai đoạn', 'headerEditStep'],
   };
+  headerTextStepName = '';
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -356,6 +357,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
+    });
+    console.log("------------",this.grvStep);
+    
+    this.cache
+    .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
+    .subscribe((res) => {
+      this.headerTextStepName = res['StepName']['headerText'];
     });
     // document.addEventListener("keydown", this.handleKeyDown);
   }
@@ -1910,6 +1918,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
+    let isRepeatName = this.checkStepName(this.stepName);
+    if(isRepeatName){
+      this.notiService.notifyCode('DP029', 0, 'Tên giai đoạn');
+      return;
+    }
     this.isSaveStep = true;
     if (!this.stepName.trim()) {
       this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
@@ -1937,6 +1950,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.popupAddStage.close();
     // this.isSaveStep = false;
+  }
+
+  checkStepName(name: string):boolean{
+    let nameCheck = name?.toLocaleLowerCase()?.trim();
+    if(this.stepList?.length > 0 && nameCheck){
+      let check = this.stepList?.some(step => step.stepName?.toLocaleLowerCase()?.trim() == nameCheck);
+      return check;
+    }
+    return false;
   }
 
   async deleteStep(data) {
@@ -2704,28 +2726,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   deleteRoleTypeR(role, step){
     let check = this.checkExistUser(step, role, 'P');
-    if (check>0) {
-      this.notiService.notifyCode(role?.objectName + "khong the xoa");
+    if (check) {
+      this.notiService.notifyCode("DP027", 0, role?.objectName );
     }else{
-      
+      let index = step?.roles?.findIndex(r => r.objectID == role.objectID);
+      if(index >= 0){
+        step?.roles?.splice(index,1);
+      }
     }
   }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string):number {
-    let countExits = 0;
+  checkExistUser(step: any, user: any, type: string):boolean {
     for (let element of step['taskGroups']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType == type
       );
-      countExits = check ? ++countExits : countExits;
+      if(check){
+        return true;
+      }
     }
     for (let element of step['tasks']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType ==type
       );
-      countExits = check ? ++countExits : countExits;
+      if(check){
+        return true;
+      }
     }
-    return countExits;
+    return false;
   }
 
   async getFormModel(functionID) {

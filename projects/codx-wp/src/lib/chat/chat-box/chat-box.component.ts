@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { interval } from 'rxjs';
 import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
 import { WP_Messages } from '../../models/WP_Messages.model';
@@ -217,7 +218,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   // send message
   sendMessage(){
-    debugger
     if(!this.blocked){
       this.blocked = true;
       this.data.recID = Util.uid();
@@ -244,6 +244,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           this.group.messageType = this.data.messageType;
           this.data.message = "";
           this.data.messageType = "";
+          this.replyMssg = false;
+          this.messageReply = null;
           this.blocked = false;
         });
       }
@@ -256,6 +258,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         this.group.messageType = this.data.messageType;
         this.data.message = "";
         this.data.messageType = "";
+        this.replyMssg = false;
+        this.messageReply = null;
         this.blocked = false;
       }
       else this.blocked = false;
@@ -312,14 +316,43 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         else 
           f['referType'] = this.FILE_REFERTYPE.APPLICATION;
       });
-      this.fileUpload = files;
-      this.dt.detectChanges();
+      let id = Util.uid();
+      this.codxATM.objectId = id; 
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res:any) => {
+        if(res){
+          let messgae = new WP_Messages();
+          messgae.recID = id;
+          messgae.groupID = this.groupID;
+          messgae.message = "";
+          messgae.messageType = "2";
+          this.signalR.sendData(JSON.stringify(messgae),"SendMessageToGroup");
+        }
+        else
+        {
+          this.notifiSV.notify("SYS019");
+        }
+      });
     }
   }
 
   // click files 
   clickViewFile(file){
-    
+    debugger
+    let option = new DialogModel();
+      option.FormModel = this.formModel;
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.callFC.openForm(
+        ViewFileDialogComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
   }
   //remove file
   removeFile(index:number){
@@ -350,5 +383,14 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   clickReplyMssg(mssg:any = null){
     this.replyMssg = mssg ? true : false;
     this.messageReply = mssg;
+    if(this.replyMssg){
+      this.data.refID = this.messageReply.recID;
+      this.data.refContent = this.messageReply.message;
+    }
+    else
+    {
+      this.data.refID = "";
+      this.data.refContent = "";
+    }
   }
 }
