@@ -1,14 +1,14 @@
 <div class="w-100">
   <div class="d-flex align-items-center" [ngStyle]="style">
-    <div>
+    <div class="w-100">
       <codx-label
-        class="fw-bolder"
+        class="fw-bold text-dark"
         [fiedName]="fiedName"
         [formModel]="formModel"
         [default]="default"
       ></codx-label>
     </div>
-    <div>
+    <div class="ms-3">
       <button class="btn btn-icon btn-light" (click)="shareUser(controlUser)">
         <span class="icon-16" [ngClass]="icon"></span>
       </button>

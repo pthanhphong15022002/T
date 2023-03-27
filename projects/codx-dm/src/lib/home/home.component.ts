@@ -711,6 +711,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.folderID = '';
         this.dmSV.idMenuActive =  this.funcID;
         this.dmSV.menuIdActive.next(this.funcID);
+        this.folderService.options.funcID = this.funcID
+        this.folderService.options.page = 1;
         this.fileService.options.funcID = this.funcID
         this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
