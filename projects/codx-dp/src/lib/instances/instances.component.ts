@@ -152,9 +152,7 @@ export class InstancesComponent
         else this.haveDataService = false;
         if (res && res.read) {
           this.loadData(res);
-        } else {
-          this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-        }
+        } 
       });
     });
     this.layout.setUrl('dp/dynamicprocess/DP0101');
