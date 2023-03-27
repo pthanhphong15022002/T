@@ -1995,7 +1995,7 @@
               [dataSource]="listCbxProccess"
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="stepSuccess.newProcessID"
+              [value]="moveProccessIsNull(stepSuccess?.newProcessID)"
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>

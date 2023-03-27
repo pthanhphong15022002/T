@@ -207,7 +207,7 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          this.deleteListReason(this.listStepsCbx);
+      //    this.deleteListReason(this.listStepsCbx);
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
@@ -799,6 +799,7 @@ export class InstancesComponent
               stepIdClick: this.stepIdClick,
               stepReason: stepReason,
               headerTitle: dataMore.defaultName,
+              listStepProccess: this.dataProccess.steps
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
@@ -919,10 +920,10 @@ export class InstancesComponent
     return true;
   }
 
-  deleteListReason(listStep: any): void {
-    listStep.pop();
-    listStep.pop();
-  }
+  // deleteListReason(listStep: any): void {
+  //   listStep.pop();
+  //   listStep.pop();
+  // }
 
   getStepNameById(stepId: string): string {
     // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
@@ -954,9 +955,14 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx?.reduce((sum, f) => sum + f?.durationDay, 0);
+   let total = listStepCbx.filter(x=> !x.isSuccessStep && !x.isFailStep)
+   .reduce((sum, f) => sum + f?.durationDay + f?.durationHour + this.setTimeHoliday(f?.excludeDayoff), 0);
     return total;
   }
+  setTimeHoliday(dayOffs: string): number {
+    let listDays= dayOffs.split(';');
+    return listDays.length
+}
 
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {

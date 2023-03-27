@@ -360,10 +360,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  
+
 // handleKeyDown(event) {
 //   if (event.code === "F5" || event.code === "Escape") {
-//     event.preventDefault(); 
+//     event.preventDefault();
 //   }
 // }
 
@@ -475,7 +475,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         console.log(this.stepList);
-        
+
         if (res && res.update) {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -2046,7 +2046,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               }
               this.taskList?.push(taskData);
               taskData['roles']?.forEach(role => {
-                this.addRole(role);   
+                this.addRole(role);
               });
             } else {
               for (const key in taskData) {
@@ -2058,7 +2058,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.changeGroupTaskOfTask(data, taskGroupIdOld);
               }
               data['roles']?.forEach((role, index) => {
-                this.addRole(data['roles'][index], roleOld[index]);                
+                this.addRole(data['roles'][index], roleOld[index]);
               });
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
@@ -2477,7 +2477,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
       console.log('thuan');
-      
+
     }
   }
 
@@ -3224,6 +3224,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         return false;
     }
     return true;
+  }
+  moveProccessIsNull(newProccessID){
+    var index = this.listCbxProccess.findIndex(x=>x.recID == newProccessID);
+    if(index > -1) {
+      return newProccessID;
+    }
+    return this.guidEmpty;
+
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion
