@@ -26,12 +26,13 @@
 
 .arrow-steps .step {
 	font-size: 12px;
+	line-height: 1.2;
 	text-align: center;
 	color: #666;
 	cursor: default;
 	margin-right: 4px;
 	height: 34px;
-	text-indent: 10px;
+	text-indent: 16px;
 	min-width: 180px;
 	position: relative;
 	background-color: #d9e3f7;
@@ -43,6 +44,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding-top: 2px;
 }
 
 .arrow-steps .step:after,
