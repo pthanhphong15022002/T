@@ -2704,28 +2704,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   deleteRoleTypeR(role, step){
     let check = this.checkExistUser(step, role, 'P');
-    if (check>0) {
-      this.notiService.notifyCode(role?.objectName + "khong the xoa");
+    if (check) {
+      this.notiService.notifyCode("DP027", 0, role?.objectName );
     }else{
-      
+      let index = step?.roles?.findIndex(r => r.objectID == role.objectID);
+      if(index >= 0){
+        step?.roles?.splice(index,1);
+      }
     }
   }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string):number {
-    let countExits = 0;
+  checkExistUser(step: any, user: any, type: string):boolean {
     for (let element of step['taskGroups']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType == type
       );
-      countExits = check ? ++countExits : countExits;
+      if(check){
+        return true;
+      }
     }
     for (let element of step['tasks']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType ==type
       );
-      countExits = check ? ++countExits : countExits;
+      if(check){
+        return true;
+      }
     }
-    return countExits;
+    return false;
   }
 
   async getFormModel(functionID) {
