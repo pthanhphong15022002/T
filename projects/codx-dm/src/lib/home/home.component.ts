@@ -703,6 +703,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
+        this.refeshData();
         this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
