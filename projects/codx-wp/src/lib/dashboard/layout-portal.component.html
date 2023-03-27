@@ -31,9 +31,11 @@
   <!-- begin:: TOPBAR -->
   <ng-template #headerRightBar>
     <!-- CHAT -->
-    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
-      <codx-chat></codx-chat>
-    </div>
+    <ng-container *ngIf="showCodxChat">
+      <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+        <codx-chat></codx-chat>
+      </div>
+    </ng-container>
     <!-- NOTES -->
     <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
       <!-- begin::Menu wrapper -->
