@@ -792,12 +792,12 @@
                   <div class="d-flex">
                     <span *ngIf="itemStep?.icon" class="me-2 d-flex align-items-center" [ngClass]="itemStep?.icon"
                       [ngStyle]="{ 'color': itemStep?.iconColor }"></span>
-                    <span class="text-dark fw-bold line-clamp line-clamp-1" [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <span class="fw-bold line-clamp line-clamp-1" [ngStyle]="{ 'color': itemStep?.textColor}">
                       {{ itemStep?.stepName }}
                     </span>
                   </div>
 
-                  <div class="fs-7 text-gray-400" [ngStyle]="{ 'color': itemStep?.textColor}">
+                  <div class="fs-7" [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label fiedName="durationTime" [formModel]="dialog.formModel" [default]="'Thời hạn: '">
                     </codx-label>
                     <span>{{
@@ -809,7 +809,7 @@
                     }}</span>
                     <codx-label fiedName="hour" [formModel]="dialog.formModel" [default]="strHour"></codx-label>
                   </div>
-                  <div class="fs-7 text-gray-700" [ngStyle]="{ 'color': itemStep?.textColor}">
+                  <div class="fs-7" [ngStyle]="{ 'color': itemStep?.textColor}">
                     <codx-label fiedName="task" [formModel]="dialog.formModel" [default]="'Công việc:'"></codx-label>
                     <span class="fw-bold">{{
                       itemStep?.tasks?.length
