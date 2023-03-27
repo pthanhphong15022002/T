@@ -183,32 +183,6 @@ export class InstancesComponent
     //   );
     // }
     // }
-
-    this.cache.valueList('DP034').subscribe((res) => {
-      if (res && res.datas) {
-        var tabIns = [];
-        res.datas.forEach((element) => {
-          var tab = {};
-          tab['viewModelDetail'] = element?.value;
-          tab['textDefault'] = element?.text;
-          tab['icon'] = element?.icon;
-          tabIns.push(tab);
-        });
-        this.tabInstances = tabIns;
-      }
-    });
-    this.layout.setUrl('dp/dynamicprocess/DP0101');
-    this.layout.setLogo(null);
-
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.pageTitle.setSubTitle(f?.customName);
-      this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-        if (res && res.length > 0) {
-          this.moreFuncInstance = res;
-        }
-      });
-    });
-
     this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
       if (ps && ps.read) {
         this.process = ps;
@@ -238,9 +212,35 @@ export class InstancesComponent
         this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
       }
     });
+
+    this.cache.valueList('DP034').subscribe((res) => {
+      if (res && res.datas) {
+        var tabIns = [];
+        res.datas.forEach((element) => {
+          var tab = {};
+          tab['viewModelDetail'] = element?.value;
+          tab['textDefault'] = element?.text;
+          tab['icon'] = element?.icon;
+          tabIns.push(tab);
+        });
+        this.tabInstances = tabIns;
+      }
+    });
+    this.layout.setUrl('dp/dynamicprocess/DP0101');
+    this.layout.setLogo(null);
+
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) this.pageTitle.setSubTitle(f?.customName);
+      this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+        if (res && res.length > 0) {
+          this.moreFuncInstance = res;
+        }
+      });
+    });
+
+   
   }
   ngAfterViewInit(): void {
- //  if (!this.continueLoad) return;
 
     this.views = [
       {
@@ -273,8 +273,8 @@ export class InstancesComponent
     this.button = {
       id: 'btnAdd',
     };
+   
     this.dataObj = {
-      // processID: this.process?.recID ? this.process?.recID : '',
       processID: this.processID,
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
@@ -284,7 +284,6 @@ export class InstancesComponent
         this.isUseFail
       ),
     };
-
     // if(this.process.steps != null && this.process.steps.length > 0){
     //   this.listSteps = this.process.steps;
     //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -331,11 +330,6 @@ export class InstancesComponent
     }
   }
 
-  // progressEvent(event){
-  //   this.progress = event.progress;
-  //   this.stepNameInstance = event.name;
-  //   this.instanceID = event.instanceID;
-  // }
 
   //CRUD
   add() {
