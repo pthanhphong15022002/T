@@ -29,7 +29,8 @@
                     <div class="fw-bold fs-6">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</div>
                     <div class="mt-1">
                         <codx-tag 
-                            [isEdit]="false"  
+                            [isEdit]="false" 
+                            [disabled]="true"  
                             [value]="group.tagValue" 
                             [entityName]="'WP_Groups'">
                         </codx-tag>
@@ -73,13 +74,17 @@
                             <ng-container *ngIf="item.messageType == '1' || item.messageType == '4'">
                                 <div class="message-send-message">
                                     <ng-container *ngIf="item.refContent">
-                                        <div class="message-send_reftContent">
+                                        <div class="message-reft">
                                             <span>{{item.refContent}}</span>
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="item.message">
                                         <div class="message-send_content">
                                             <span>{{item.message}}</span>
+                                            <!-- time -->
+                                            <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                                <span class="d-block">{{item.createdOn | date:'hh:mm'}}</span>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
                                 </div>
@@ -94,6 +99,10 @@
                                         [format]="'grid'"
                                         (fileClicked)="clickViewFile($event)">
                                     </codx-view-files>
+                                    <!-- time -->
+                                    <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                        <div class="d-block">{{item.createdOn | date:'hh:mm'}}</div>
+                                    </ng-container>
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="item.votes">
@@ -135,6 +144,10 @@
                                     <ng-container *ngIf="item.message">
                                         <div class="reciver-message">
                                             <span>{{item.message}}</span>
+                                            <!-- time -->
+                                            <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                                <span class="d-block">{{item.createdOn | date:'hh:mm'}}</span>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
                                 </div>
@@ -148,6 +161,10 @@
                                         [format]="'grid'"
                                         (fileClicked)="clickViewFile($event)">
                                     </codx-view-files>
+                                    <!-- time -->
+                                    <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                        <div class="d-block">{{item.createdOn | date:'hh:mm'}}</div>
+                                    </ng-container>
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="item.votes">
@@ -225,39 +242,6 @@
                                 <span class="icon-close text-danger"></span>
                             </button>
                         </div>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="fileUpload.length > 0">
-                    <div class="footer-upload-files d-flex flex-wrap px-2">
-                        <ng-container *ngFor="let item of fileUpload;let i = index">
-                            <div class="upload-files-item cursor-pointer">
-                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
-                                    <codx-temp-full 
-                                        [imageSrc]="item.source" 
-                                        imgCss="w-50px h-50px">
-                                    </codx-temp-full>
-                                </ng-container>
-                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
-                                    <video 
-                                        width="50"
-                                        height="50"
-                                        [autoplay]="false" 
-                                        [src]="item.source | safe:'resourceUrl'">
-                                    </video>
-                                </ng-container>
-                                <ng-container *ngIf="item.referType == FILE_REFERTYPE.APPLICATION">
-                                    <codx-temp-full 
-                                        [imageSrc]="item.extension | avtFile" 
-                                        imgCss="w-50px h-50px"
-                                        [title]="item.fileName" 
-                                        [descLine]="2">
-                                    </codx-temp-full>
-                                </ng-container>
-                                <div class="upload-files-item_remove cursor-pointer" (click)="removeFile(i)">
-                                    <i class="icon-close icon-18 text-danger"></i>
-                                </div>
-                            </div>
-                        </ng-container>
                     </div>
                 </ng-container>
                 <div class="footer-message-text">

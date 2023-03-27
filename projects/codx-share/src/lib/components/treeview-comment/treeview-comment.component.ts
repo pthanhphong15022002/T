@@ -288,32 +288,32 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // add tree
   addNode(dataNode: any, newNode: any, id: string) {
-      let idx = -1;
-      let node = null;
-      if(dataNode)
+    let idx = -1;
+    let node = null;
+    if(dataNode)
+    {
+      if(!dataNode.listComment || dataNode.listComment.length == 0){
+        dataNode.listComment = [];
+      }
+      else
       {
-        if(!dataNode.listComment || dataNode.listComment.length == 0){
-          dataNode.listComment = [];
-        }
-        else
-        {
-          node =  dataNode.listComment.find((e:any) => {
-            return e["recID"] == id;
-          });
-        }
-        if (node) 
-        {
-          newNode.listComment = node.listComment;
-          dataNode[idx] = newNode;
-        }
-        else 
-        {
-          dataNode.listComment.push(newNode);
-        }
+        node =  dataNode.listComment.find((e:any) => {
+          return e["recID"] == id;
+        });
       }
-      else {
-        this.dataComment.listComment.push(newNode);
+      if (node) 
+      {
+        newNode.listComment = node.listComment;
+        dataNode[idx] = newNode;
       }
+      else 
+      {
+        dataNode.listComment.push(newNode);
+      }
+    }
+    else {
+      this.dataComment.listComment.push(newNode);
+    }
     this.dt.detectChanges();   
   }
   //remove tree
