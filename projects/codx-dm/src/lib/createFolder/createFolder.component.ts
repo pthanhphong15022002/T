@@ -152,6 +152,7 @@ export class CreateFolderComponent implements OnInit {
   approval = false;
   revision = false;
   physical = false;
+  viewThumb = false;
   copyrights: any;
   copyrightsControl: any = false;
   approvers: string;
@@ -366,11 +367,9 @@ export class CreateFolderComponent implements OnInit {
   }
 
   openForm() {
-    var that = this;
     this.showAll = true;
     this.folderService.getFolder(this.id).subscribe(async (res) => {
       if (res) {
-        debugger
         this.setFolderAS(res);
         if (this.edit) {
           this.noeditName = false;
@@ -410,7 +409,8 @@ export class CreateFolderComponent implements OnInit {
           //    this.openFileDialog('dms_folder');
           //this.validate('folderName');
           this.changeDetectorRef.detectChanges();
-        } else {
+        } 
+        else {
           this.noeditName = false;
           //this.folderName = "";
           this.floor = '';
@@ -441,13 +441,14 @@ export class CreateFolderComponent implements OnInit {
         this.noeditName = false;
         //this.folderName = "";
         this.security = false;
-        this.revision = this.dmSV.parentRevision;
-        this.physical = this.dmSV.parentPhysical;
-        this.copyrightsControl = this.dmSV.parentCopyrights;
-        this.approval = this.dmSV.parentApproval;
-        this.location = this.dmSV.parentLocation;
-        this.approvers = this.dmSV.parentApprovers;
-        this.revisionNote = this.dmSV.parentRevisionNote;
+        this.revision =  false;//this.dmSV.parentRevision;
+        this.physical = false;//this.dmSV.parentPhysical;
+        this.copyrightsControl =  false ;//this.dmSV.parentCopyrights;
+        this.approval =  false;//this.dmSV.parentApproval;
+        this.viewThumb = false;
+        this.location = ""; //this.dmSV.parentLocation;
+        this.approvers = ""; //this.dmSV.parentApprovers;
+        this.revisionNote = ""; //this.dmSV.parentRevisionNote;
         this.floor = '';
         this.range = '';
         this.shelf = '';
@@ -473,14 +474,15 @@ export class CreateFolderComponent implements OnInit {
   }
 
   setFolderAS(data: any) {
-    this.revision = data.revision;
-    this.physical = data.physical;
-    this.copyrightsControl = data.copyrights;
-    this.approval = data.approval;
-    this.security = data.checkSecurity;
-    this.location = data.location;
-    this.approvers = data.approvers;
-    this.revisionNote = data.revisionNote;
+    this.revision = data?.revision == null ? false : data?.revision;
+    this.physical = data?.physical == null ? false : data?.physical;
+    this.copyrightsControl = data?.copyrights  == null ? false : data?.copyrights;
+    this.approval = data?.approval == null ? false : data?.approval;
+    this.security = data?.checkSecurity == null ? false : data?.checkSecurity;
+    this.location = data?.location == null ? "" : data?.location;
+    this.approvers = data?.approvers == null ? "" : data?.approvers;
+    this.revisionNote = data?.revisionNote == null ? "" : data?.revisionNote;
+    this.viewThumb = data?.viewThumb == null ? false : data?.viewThumb;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -518,7 +520,7 @@ export class CreateFolderComponent implements OnInit {
         this.assign = value;
         break;
       case 'titleAvatar':
-        this.fileEditing.viewThumb = value;
+        this.viewThumb = value;
         break;
     }
     this.changeDetectorRef.detectChanges();
@@ -616,7 +618,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.revision = this.revision;
     this.fileEditing.physical = this.physical;
     this.fileEditing.copyrightsControl = this.copyrightsControl;
-    this.fileEditing.folderID = this.dmSV.getFolderId();
+    this.fileEditing.folderID = this.dmSV.folderID;
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
@@ -625,6 +627,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
     this.fileEditing.subFolder = this.listSubFolder;
+    this.fileEditing.viewThumb = this.viewThumb;
     var that = this;
     if (!this.edit) {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
