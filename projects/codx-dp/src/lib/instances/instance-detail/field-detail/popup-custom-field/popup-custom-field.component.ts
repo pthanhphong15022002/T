@@ -21,14 +21,14 @@ import { CodxDpService } from 'projects/codx-dp/src/public-api';
 export class PopupCustomFieldComponent implements OnInit {
   fiels = [];
   dialog: any;
-  title = 'Thông tin nhập liệu';
+  titleHeader = '';
   currentRate = 3.5;
   hovered = 0;
   vllShare = '';
   errorMessage = '';
   checkErr = false;
   checkRequired = false;
-  isSaving = false ;
+  isSaving = false;
 
   constructor(
     private dpService: CodxDpService,
@@ -39,6 +39,7 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.fiels = JSON.parse(JSON.stringify(dt.data.data));
+    this.titleHeader = dt.data?.titleHeader;
     this.dialog = dialog;
   }
 
@@ -58,6 +59,7 @@ export class PopupCustomFieldComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
+        case 'R':
         case 'A':
           result = event.e;
           break;
@@ -77,12 +79,13 @@ export class PopupCustomFieldComponent implements OnInit {
         if (!field.dataValue.toLowerCase().match(validEmail)) {
           this.cache.message('SYS037').subscribe((res) => {
             if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notiService.notifyCode(
-                'SYS009',
-                0,
-                '"' + field.title + '"'
-              );
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+              // this.notiService.notifyCode(
+              //   'SYS009',
+              //   0,
+              //   '"' + field.title + '"'
+              // );
             }
           });
           return false;
@@ -93,12 +96,8 @@ export class PopupCustomFieldComponent implements OnInit {
         if (!field.dataValue.toLowerCase().match(validPhone)) {
           this.cache.message('RS030').subscribe((res) => {
             if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notiService.notifyCode(
-                'SYS009',
-                0,
-                '"' + field.title + '"'
-              );
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
             }
           });
           return false;
@@ -123,8 +122,8 @@ export class PopupCustomFieldComponent implements OnInit {
       checkFormat = this.checkFormat(f);
     });
     if (!check || !checkFormat) return;
-    if(this.isSaving) return ;
-    this.isSaving = true ;
+    if (this.isSaving) return;
+    this.isSaving = true;
     var data = [this.fiels[0]?.stepID, this.fiels];
     this.dpService.updateFiels(data).subscribe((res) => {
       if (res) this.dialog.close(this.fiels);

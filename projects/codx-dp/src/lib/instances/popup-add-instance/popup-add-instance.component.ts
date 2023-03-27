@@ -91,6 +91,7 @@ export class PopupAddInstanceComponent implements OnInit {
   oldIdInstance: string;
   user: any;
   autoName: string = '';
+  listCustomFile = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -213,6 +214,7 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
+        case 'R':
         case 'A':
           result = event.e;
           break;
@@ -225,8 +227,15 @@ export class PopupAddInstanceComponent implements OnInit {
           let idxField = this.listStep[index].fields.findIndex(
             (x) => x.recID == event.data.recID
           );
-          if (idxField != -1)
+          if (idxField != -1){
             this.listStep[index].fields[idxField].dataValue = result;
+            let idxEdit = this.listCustomFile.findIndex((x) => x.recID == this.listStep[index].fields[idxField].recID);
+            if (idxEdit != -1) {
+              this.listCustomFile[idxEdit] =
+                this.listStep[index].fields[idxField];
+            } else
+              this.listCustomFile.push(this.listStep[index].fields[idxField]);
+          }          
         }
       }
     }
@@ -244,12 +253,13 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
-      // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
+      option.data = [this.instance, this.listStep, this.oldIdInstance];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
     }
 
-    option.data = [this.instance, this.listStep, this.oldIdInstance];
+   
     return true;
   }
   saveInstances() {
@@ -277,30 +287,31 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if (this.listStep?.length > 0) {
-      let check = true;
-      let checkFormat = true;
-      this.listStep.forEach((obj) => {
-        if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
-          var arrField = obj.fields;
-          arrField.forEach((f) => {
-              if (
-                f.isRequired &&
-                (!f.dataValue || f.dataValue?.toString().trim() == '')
-              ) {
-                this.notificationsService.notifyCode(
-                  'SYS009',
-                  0,
-                  '"' + f.title + '"'
-                );
-                check = false;
-              }
-              checkFormat = this.checkFormat(f);
-          });
-        }
-      });
-      if (!check || !checkFormat) return;
-    }
+    //khong check custom field nua - nhung cấm xóa
+    // if (this.listStep?.length > 0) {
+    //   let check = true;
+    //   let checkFormat = true;
+    //   this.listStep.forEach((obj) => {
+    //     if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
+    //       var arrField = obj.fields;
+    //       arrField.forEach((f) => {
+    //           if (
+    //             f.isRequired &&
+    //             (!f.dataValue || f.dataValue?.toString().trim() == '')
+    //           ) {
+    //             this.notificationsService.notifyCode(
+    //               'SYS009',
+    //               0,
+    //               '"' + f.title + '"'
+    //             );
+    //             check = false;
+    //           }
+    //           checkFormat = this.checkFormat(f);
+    //       });
+    //     }
+    //   });
+    //   if (!check || !checkFormat) return;
+    // }
     if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
     } else if (this.action === 'edit') {

@@ -1,3 +1,4 @@
+import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
@@ -208,7 +209,7 @@ export class DynamicProcessComponent
       dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = this.view.formModel;
+      dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
       this.cache
         .gridViewSetup(
           this.view.formModel.formName,
@@ -265,7 +266,7 @@ export class DynamicProcessComponent
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
-        dialogModel.FormModel = this.view.formModel;
+        dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
         this.cache
           .gridViewSetup(
             this.view.formModel.formName,
@@ -312,7 +313,7 @@ export class DynamicProcessComponent
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
-        dialogModel.FormModel = this.view.formModel;
+        dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
         this.cache
           .gridViewSetup(
             this.view.formModel.formName,
@@ -689,6 +690,11 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
+    //thao test khong dc xoa
+    // this.dpService.dataProcess.next(data);
+    // this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
+
+  
     let isRead = this.checkPermissionRead(data);
     if (!isRead) {
       return;

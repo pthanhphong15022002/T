@@ -172,7 +172,7 @@ export class IncommingAddComponent implements OnInit {
        dialog.close = this.closeDept;
      }); */
     } else {
-      this.callfunc.openForm(this.tmpdept, null, 500, 800);
+      this.callfunc.openForm(this.tmpdept, null, 500, 600);
       /* this.callfc.openForm(AgencyComponent, "Thêm đơn vị nhận", 500, 700, null, null).subscribe((dialog: any) => {
        dialog.close = this.closeAgency;
      }); */

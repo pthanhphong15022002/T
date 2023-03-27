@@ -240,7 +240,7 @@
       </ng-template> -->
 
       <div class="d-flex tab-header">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs w-100">
           <ng-container *ngFor="let item of tabInstances; let i = index">
             <li class="nav-item">
               <a
@@ -343,6 +343,7 @@
                     [stepNameEnd]="getStepNameIsComlepte(instance)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
+                    [titleHeaderCF]="titleDefault"
                   ></codx-stages-detail>
                 </ng-container>
               </ng-container>
@@ -357,6 +358,7 @@
                     (inputCustomField)="inputCustomField($event)"
                     [isSaving]="isSaving"
                     (actionSave)="actionSaveCustomField($event)"
+                    [titleHeaderCF]="titleDefault"
                   ></codx-field-detail>
                 </ng-container>
               </ng-container>

@@ -15,10 +15,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { viewChangeEvent } from '@syncfusion/ej2-angular-documenteditor';
 import {
+  LayoutService,
   NotificationsService,
   ScrollComponent,
   TenantStore,
   UIComponent,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { Subscription } from 'rxjs';
@@ -80,6 +82,7 @@ export class RoleDetailComponent
     private notificationsService: NotificationsService,
     private tenantStore: TenantStore,
     private route: ActivatedRoute,
+    private layout: LayoutService,
     injector: Injector
   ) {
     super(injector);
@@ -369,5 +372,10 @@ export class RoleDetailComponent
           this.asideClick(null, 0, this.myTree[0]);
         }
       });
+  }
+
+  viewChanged(evt: any, view: ViewsComponent) {
+    this.view = view;
+    this.layout.setLogo(null);
   }
 }

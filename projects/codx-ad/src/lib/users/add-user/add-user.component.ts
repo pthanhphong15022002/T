@@ -68,7 +68,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
-  lstChangeModule: tmpTNMD[] = [];
+  // lstChangeModule: tmpTNMD[] = [];
   formModel: FormModel;
   formType: any;
   gridViewSetup: any = [];
@@ -260,7 +260,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
         this.viewChooseRole = e?.event[0];
-        this.lstChangeModule = e.event[1];
+        // this.lstChangeModule = e.event[1];
         this.countListViewChoose();
         this.viewChooseRole.forEach((dt) => {
           dt['module'] = dt.functionID;
@@ -343,7 +343,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         true,
         false,
         false,
-        this.lstChangeModule,
+        // this.lstChangeModule,
         this.saveSuccess,
       ];
     }
@@ -355,7 +355,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.viewChooseRole,
         checkDifference,
         '0',
-        this.lstChangeModule,
+        // this.lstChangeModule,
       ];
     }
     op.data = data;
@@ -372,7 +372,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       false,
       false,
       false,
-      this.lstChangeModule,
+      // this.lstChangeModule,
       this.saveSuccess,
     ];
     op.data = data;
@@ -389,7 +389,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.viewChooseRole,
         checkDifference,
         '0',
-        this.lstChangeModule,
+        // this.lstChangeModule,
       ])
       .subscribe();
   }

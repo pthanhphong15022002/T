@@ -491,7 +491,8 @@
         </div>
       </div>
     </div>
-    <div class="note-quickinfo"
+    <div
+      class="note-quickinfo"
       *ngIf="item?.transType == 'EP_BookingRooms'"
       [ngStyle]="{
         'background-color': EP_BookingRoomsParam?.ShowBackground,
@@ -517,6 +518,7 @@
       </div>
       <button
         type="button"
+        [ngbTooltip]="toolTip"
         (click)="quickInfo(item)"
         class="btn btn-sm btn-icon btn-light btn-quickinfo"
         [ngbPopover]="tmpHover"
@@ -634,4 +636,11 @@
       [recID]="curHoverItem?.transID"
     ></codx-booking-room-schedule-content>
   </div>
+</ng-template>
+<ng-template #toolTip>
+  <codx-label
+    class="w-136px"
+    name="lblQuickInfoCalendar"
+    default="Thông tin nhanh"
+  ></codx-label>
 </ng-template>

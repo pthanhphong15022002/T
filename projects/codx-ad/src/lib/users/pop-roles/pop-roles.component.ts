@@ -88,8 +88,9 @@ export class PopRolesComponent implements OnInit {
           isAddAction: true,
           isOriginal: true,
           isError: false,
-          moduleID: role.functionID,
+          module: role.functionID,
           moduleSales: '',
+          quantity: 1,
         };
         this.lstChangeFunc.push(tmpMD);
       });
@@ -155,7 +156,7 @@ export class PopRolesComponent implements OnInit {
 
   onChange(event, item?: any) {
     let mdIdx = this.lstChangeFunc.findIndex(
-      (x) => x.moduleID == item.functionID
+      (x) => x.module == item.functionID
     );
     if (item.ischeck) {
       event.target.checked = true;
@@ -165,8 +166,9 @@ export class PopRolesComponent implements OnInit {
           isAddAction: true,
           isOriginal: false,
           isError: false,
-          moduleID: item.functionID,
+          module: item.functionID,
           moduleSales: '',
+          quantity: 1,
         };
         this.lstChangeFunc.push(tmpMD);
       } else {
@@ -179,7 +181,7 @@ export class PopRolesComponent implements OnInit {
       //if role is not original
       if (mdIdx == -1) {
         this.lstChangeFunc = this.lstChangeFunc.filter(
-          (tmpTNMD) => tmpTNMD.moduleID != item.functionID
+          (tmpTNMD) => tmpTNMD.module != item.functionID
         );
       }
       //original role
@@ -318,7 +320,7 @@ export class PopRolesComponent implements OnInit {
     }
   }
 
-  onSave(lstTNMDs) {
+  onSave(lstTNMDs: tmpTNMD[]) {
     this.checkRoleIDNull = false;
     if (this.listChooseRole) {
       this.listChooseRole.forEach((res) => {
@@ -331,6 +333,11 @@ export class PopRolesComponent implements OnInit {
           this.checkRoleIDNull = true;
           return;
         }
+        let curTNMD = lstTNMDs?.find((x) => x.module == res.functionID);
+        res.startDate = curTNMD?.startDate;
+        res.endDate = curTNMD?.endDate;
+        res.module = curTNMD?.module;
+        res.moduleSales = curTNMD?.moduleSales;
       });
     }
     if (this.checkRoleIDNull == false) {
