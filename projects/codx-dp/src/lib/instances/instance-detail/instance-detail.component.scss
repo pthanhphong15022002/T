@@ -1,4 +1,6 @@
-$color: #23468c;
+:root {
+	--primary-color: #23468c;
+  }
 
 .progress {
 	background-color: #d8d8d8;
@@ -136,12 +138,12 @@ $color: #23468c;
 //nvthuan
 .arrow-steps .step.old {
 	color: #fff;
-	background-color: $color;
+	background-color: var(--primary-color);
 	// background-color: #23468c;
 }
 
 .arrow-steps .step.old:after {
-	border-left: 17px solid $color;
+	border-left: 17px solid var(--primary-color);
 	// border-left: 17px solid #23468c;
 }
 

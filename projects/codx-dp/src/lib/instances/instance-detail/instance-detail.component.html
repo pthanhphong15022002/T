@@ -318,6 +318,7 @@
                         style="flex-grow: 1; cursor: pointer"
                         [ngClass]="getColorStepName(item?.stepStatus)"
                         (click)="click(i, item.stepID)"
+                        [style]="getbackgroundColor(item)"
                       >
                         <div class="d-flex align-items-center">
                           <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" style="font-size: 18px;"></span>
