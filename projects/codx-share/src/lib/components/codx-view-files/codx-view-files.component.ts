@@ -66,33 +66,39 @@ export class CodxViewFilesComponent implements OnInit {
       'GetFilesByIbjectIDAsync',
       [this.objectID])
       .subscribe((res:any[]) => {
-        if(Array.isArray(res) && res.length > 0)
-        {
+        if(Array.isArray(res) && res.length > 0){
           let _images = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
           this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
           this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
           this.medias = this.fileMedias.length;
-          switch(_images.length)
-          {
-            case 1:
-              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
-              break;
-            case 2:
-              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,450);
-              _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
-              break;
-            case 3:
-              _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
-              _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
-              _images[2]["source"] = this.codxShareSV.getThumbByUrl(_images[2].url,450);
-              break;
-            default:
-              _images.map(f => {
-                f["source"] = this.codxShareSV.getThumbByUrl(f.url,450);
-              })   
-              break
+          if(this.format == "grid"){
+            _images.map((x:any) => {
+              x["source"] = this.codxShareSV.getThumbByUrl(x.url,200);
+            });
           }
-          res.map(f => {
+          else
+          {
+            switch(_images.length){
+              case 1:
+                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
+                break;
+              case 2:
+                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,450);
+                _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
+                break;
+              case 3:
+                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
+                _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
+                _images[2]["source"] = this.codxShareSV.getThumbByUrl(_images[2].url,450);
+                break;
+              default:
+                _images.map(f => {
+                  f["source"] = this.codxShareSV.getThumbByUrl(f.url,450);
+                });   
+                break
+            }
+          }
+          res.map((f:any) => {
             if(f.referType === this.FILE_REFERTYPE.VIDEO){
               f["source"] = `${environment.urlUpload}`+"/"+f.url; 
             }

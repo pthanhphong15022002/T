@@ -1,9 +1,8 @@
-import { DialogRef } from 'codx-core/public-api';
+
 import { Component, OnInit, Injector } from '@angular/core';
-import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import { CacheService, CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { ActivatedRoute } from '@angular/router';
-import { SignalRService } from '../services/signalr.service';
 
 @Component({
   selector: 'lib-layout-portal',
@@ -18,18 +17,26 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   //override asideKeepActive = false;
   override toolbar = false;
   dialog!: DialogRef;
-
+  showCodxChat:boolean = false;
   constructor(
     inject: Injector,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private signalRSV: SignalRService
-  ) {
+    private cache:CacheService
+  ) 
+  {
     super(inject);
   }
 
-  onInit() {}
+  onInit() {
+    this.checkShowCodxChat();
+  }
   onAfterViewInit(): void {}
+  checkShowCodxChat(){
+    this.cache.functionList("WPT11").subscribe((func:any) => {
+      this.showCodxChat = func ? true : false;
+    });
+  }
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
