@@ -25,8 +25,8 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./popup-add-custom-field.component.css'],
 })
 export class PopupAddCustomFieldComponent implements OnInit {
-  @ViewChild('form') form : CodxFormComponent ;
-  title = 'Thêm trường tùy chỉnh';
+  @ViewChild('form') form: CodxFormComponent;
+
   dialog: DialogRef;
   field: DP_Steps_Fields;
   grvSetup: any;
@@ -48,7 +48,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   };
   tooltip: Object = { isVisible: true, placement: 'Before', showOn: 'Hover' };
 
-  fields = { text: 'stepName', value: 'recID' };
+  fieldsResource = { text: 'stepName', value: 'recID' };
   stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
@@ -60,23 +60,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.field = JSON.parse(JSON.stringify(dt?.data[0]));
-    this.action = dt?.data[1];
-    this.titleAction = dt?.data[2];
-    this.stepList = dt?.data[3];
-    this.value = this.field.rank;
-    this.cache
-      .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-        }
-      });
+    this.field = JSON.parse(JSON.stringify(dt?.data?.field));
+    this.action = dt?.data?.action;
+    if (this.action=='add'|| this.action=='copy') this.field.recID = Util.uid();
+    
+    this.titleAction = dt?.data?.titleAction;
+    this.stepList = dt?.data?.stepList;
+    this.grvSetup = dt.data?.grvSetup
+    //this.field.rank = 5;
+    // this.cache
+    //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.grvSetup = res;
+    //     }
+    //   });
   }
 
   ngOnInit(): void {
-    if (!this.field.recID) this.field.recID = Util.uid();
-    this.changdef.detectChanges();
+    // if (!this.field.recID) this.field.recID = Util.uid();
+    // this.changdef.detectChanges();
   }
 
   valueChangeCbx(e) {}
@@ -117,7 +120,21 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveData() {
-    if ((this.field.fieldName == null || this.field.fieldName.trim() == '') && this.grvSetup['FieldName']?.isRequired) {
+    if (
+      (!this.field.title || this.field.title.trim() == '') &&
+      this.grvSetup['Title']?.isRequire
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Title']?.headerText + '"'
+      );
+      return;
+    }
+    if (
+      (!this.field.fieldName || this.field.fieldName.trim() == '') &&
+      this.grvSetup['FieldName']?.isRequire
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -125,7 +142,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.dataType && this.grvSetup['DataType']?.isRequired) {
+    if (!this.field.dataType && this.grvSetup['DataType']?.isRequire) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -146,11 +163,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    if ((this.field.note == null || this.field.note.trim() == '')&& this.grvSetup['Note']?.isRequired) {
+    if (
+      (this.field.note == null || this.field.note.trim() == '') &&
+      this.grvSetup['Note']?.isRequire
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
         '"' + this.grvSetup['Note']?.headerText + '"'
+      );
+      return;
+    }
+    if (
+      (!this.field.rankIcon && this.field.dataType == 'R') 
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RankIcon']?.headerText + '"'
       );
       return;
     }
@@ -159,7 +189,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   removeAccents(str) {
-    var format = str.trim()
+    var format = str
+      .trim()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/đ/g, 'd')

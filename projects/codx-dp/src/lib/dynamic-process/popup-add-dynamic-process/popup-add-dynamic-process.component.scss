@@ -92,7 +92,7 @@
         .list-stage {
           display: flex;
           align-items: start;
-          padding: 6px 3px;
+          padding: 5px 5px 5px 9px;
         }
 
         .list-stage:hover {
@@ -263,8 +263,6 @@
   max-width: 100%;
   min-height: 60px;
   display: block;
-  background: white;
-  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -425,6 +423,12 @@ codx-attachment{
     left: -30px;
     height: 90%;
   }
+}
+
+.roles-step:hover{
+  background: #f4f7ff;
+  border-radius: 39px;
+  padding-right: 10px;
 }
 
 

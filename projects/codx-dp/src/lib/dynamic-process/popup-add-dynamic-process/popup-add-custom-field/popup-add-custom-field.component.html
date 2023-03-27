@@ -1,6 +1,6 @@
 <codx-form
   #form
-  [headerText]="title"
+  [headerText]="titleAction"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
@@ -19,7 +19,7 @@
         </codx-label>
         <ejs-combobox
           [dataSource]="stepList"
-          [fields]="fields"
+          [fields]="fieldsResource"
           [value]="field.stepID"
           [allowFiltering]='true'
           [placeholder]="grvSetup['StepID'].description"
@@ -194,8 +194,8 @@
         ></codx-input>
       </div>
 
-      <div class="form-group row" *ngIf="field.dataType == 'R'">
-        <div class="col-6">
+      <div class="row" *ngIf="field.dataType == 'R'">
+        <div class="form-group col-6">
           <codx-label
             fiedName="RankIcon"
             [formModel]="form.formModel"
@@ -213,7 +213,7 @@
             </codx-valuelist>
           </div>
         </div>
-        <div class="col-6">
+        <div class="form-group col-6">
           <codx-label
             fiedName="rank"
             [formModel]="form.formModel"
@@ -223,7 +223,7 @@
           <div>
             <ejs-slider
               id="slider"
-              [value]="value"
+              [value]="field?.rank"
               [min]="min"
               [max]="max"
               [type]="type"

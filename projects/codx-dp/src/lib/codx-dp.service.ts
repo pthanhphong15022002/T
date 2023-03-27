@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxDpService {
+  dataProcess = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -134,7 +135,7 @@ export class CodxDpService {
     );
   }
 
-  GetStepsByInstanceIDAsync(data){
+  GetStepsByInstanceIDAsync(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -143,7 +144,7 @@ export class CodxDpService {
     );
   }
 
-  getStepsByInstanceIDAndProcessID(data){
+  getStepsByInstanceIDAndProcessID(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -481,11 +482,7 @@ export class CodxDpService {
   }
 
   getListProcessGroups() {
-    return this.api.exec<any>(
-      'DP',
-      'ProcessGroupsBusiness',
-      'GetAsync',
-    );
+    return this.api.exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync');
   }
 
   openOrClosedInstance(recID, check) {
@@ -497,7 +494,7 @@ export class CodxDpService {
     );
   }
 
-  countInstanceByProccessId(data){
+  countInstanceByProccessId(data) {
     return this.api.exec<any>(
       'DP',
       'ProcessesBusiness',
@@ -506,12 +503,21 @@ export class CodxDpService {
     );
   }
 
-  getTree(listRef){
+  getTree(listRef) {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
       'GetListTaskTreeByListRefIDAsync',
       listRef
+    );
+  }
+
+  getProcessByProcessID(processID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessByProcessIDAsync',
+      processID
     );
   }
 }

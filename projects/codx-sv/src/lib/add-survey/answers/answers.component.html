@@ -80,12 +80,12 @@
             <div class="bg-white mt-5 border rounded p-7">
               <div class="d-flex align-items-center justify-content-between mb-5">
                 <span class="fs-4">{{seletedDropDown}}</span>
-                <button class="btn btn-dp-icon border-0 btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="showCollapse()">
+                <button *ngIf="question?.answerType == 'O'" class="btn btn-dp-icon border-0 btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="showCollapse()">
                   <codx-label [default]="'Xem tùy chọn'"></codx-label>
                   <i class="icon-i-chevron-down icon-14 ms-2"></i>
                 </button>
               </div>
-              <div class="collapse" id="collapseExample">
+              <div *ngIf="question?.answerType == 'O'" class="collapse" id="collapseExample">
                 <ng-container *ngIf="question && (question.answers.length > 0)">
                   <div class="d-flex align-items-center py-3" *ngFor="let item of question.answers">
                     <ng-container *ngIf="question?.answerType" [ngSwitch]="question?.answerType">
@@ -98,17 +98,10 @@
                           field="O"
                           ngClass="ip-ans me-7"
                         ></codx-input>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'T'">
-                        <codx-input
-                          type="text"
-                          class="border-0"
-                          [disabled]="true"
-                        >
-                        </codx-input>
+                        <span>{{item.answer}}</span>
                       </ng-container>
                     </ng-container>
-                    <span>{{item.answer}}</span>
+                   
                   </div>
                 </ng-container>
               </div>
@@ -128,17 +121,13 @@
                           ngClass="ip-ans me-7"
                           [checked]="true"
                         ></codx-input>
+                        <span>{{item.answer}}</span>
                       </ng-container>
                       <ng-container *ngSwitchCase="'T'">
-                        <codx-input
-                          type="text"
-                          class="border-0"
-                          [disabled]="true"
-                        >
-                        </codx-input>
+                        {{item.answer}}
                       </ng-container>
                     </ng-container> 
-                    <span>{{item.answer}}</span>
+                 
                   </div>
                   <ng-template #elseAnswer>
                     <div class="border-bottom pb-3"><span class="text-italic">Câu hỏi được để trống</span></div>

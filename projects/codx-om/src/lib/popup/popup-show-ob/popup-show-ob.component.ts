@@ -49,10 +49,9 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   formModelCheckin = new FormModel();
   dtStatus: any;
   dataOKR:any;
-  listAlign=[];
   openAccordionAlign = [];
   openAccordionAssign = [];
-  dataKR: any;
+  dataOB: any;
   progressHistory = [];
   krCheckIn = [];
   obType=OMCONST.VLL.OKRType.Obj;
@@ -123,11 +122,14 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     },
     offset: 0,
   };
-  obRecID: any;
   okrChild= [];
-  title='';
-  listAssign: any;
+  listAlign=[];
+  listAssign=[];
   isCollapsed=true;
+  okrFM: any;
+  oldOB: any;
+  popupTitle='';
+  okrVll: any;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -151,10 +153,11 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.obRecID = dialogData.data[0];    
-    this.title = dialogData.data[1];
+    this.oldOB=dialogData.data[0];
+    this.popupTitle = dialogData?.data[1];
+    this.okrFM = dialogData?.data[2];
+    this.okrVll = dialogData?.data[3];
     this.formModel=dialogRef.formModel;
   
   }
@@ -205,7 +208,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   getObjectData(){
     this.codxOmService
-        .getObjectAndKRChild(this.obRecID)
+        .getObjectAndKRChild(this.oldOB?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.dataOKR = res;
@@ -216,7 +219,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Align)
+        .getListAlignAssign(this.oldOB?.recID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign =res;           
@@ -225,7 +228,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   getListAssign(){
     this.codxOmService
-        .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Assign)
+        .getListAlignAssign(this.oldOB?.recID, OMCONST.VLL.RefType_Link.Assign)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           

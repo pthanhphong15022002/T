@@ -55,7 +55,6 @@ export class PopupAddOKRPlanComponent
   headerText = '';
   modelOKR: any;
   curOrgName = '';
-  listFM: any;
   okrFG: FormGroup;
   listFG: any;
   dataOKR: any;
@@ -66,6 +65,8 @@ export class PopupAddOKRPlanComponent
   funcType: any;
   isAdd = false;
   curOrgID: any;
+  okrFM: any;
+  okrVll: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -80,8 +81,8 @@ export class PopupAddOKRPlanComponent
     this.headerText = dialogData.data[3];
     this.curOrgID = dialogData.data[4];
     this.curOrgName = dialogData.data[5];
-    this.listFM = dialogData.data[6];
-    this.okrFG = dialogData.data[7];
+    this.okrFM = dialogData.data[6];
+    this.okrVll = dialogData.data[7];
     this.funcType = dialogData.data[8];
 
     this.dialogRef = dialogRef;
@@ -117,8 +118,8 @@ export class PopupAddOKRPlanComponent
   getCacheData() {
     this.cache
       .gridViewSetup(
-        this.listFM?.obFM?.formName,
-        this.listFM?.obFM?.gridViewName
+        this.okrFM?.obFM?.formName,
+        this.okrFM?.obFM?.gridViewName
       )
       .subscribe((obGrd) => {
         if (obGrd) {
@@ -128,8 +129,8 @@ export class PopupAddOKRPlanComponent
       });
     this.cache
       .gridViewSetup(
-        this.listFM?.krFM?.formName,
-        this.listFM?.krFM?.gridViewName
+        this.okrFM?.krFM?.formName,
+        this.okrFM?.krFM?.gridViewName
       )
       .subscribe((krGrd) => {
         if (krGrd) {
@@ -138,8 +139,8 @@ export class PopupAddOKRPlanComponent
       });
     this.cache
       .gridViewSetup(
-        this.listFM?.skrFM?.formName,
-        this.listFM?.skrFM?.gridViewName
+        this.okrFM?.skrFM?.formName,
+        this.okrFM?.skrFM?.gridViewName
       )
       .subscribe((skrGrd) => {
         if (skrGrd) {

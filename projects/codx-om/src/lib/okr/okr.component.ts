@@ -83,16 +83,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   toDate: any;
   dataDate = null;
   curUser: any;
-  okrVll: any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelSKR = new FormModel();
   formModelOB = new FormModel();
   formModelPlan = new FormModel();
-  listFormModel = {
+  okrFM = {
     obFM: null,
     krFM: null,
     skrFM: null,
+  };
+  okrVll = {
+    ob: null,
+    kr: null,
+    skr: null,
   };
   obFG: FormGroup;
   krFG: FormGroup;
@@ -181,7 +185,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
-        this.listFormModel.krFM = this.formModelKR;
+        this.okrFM.krFM = this.formModelKR;
 
         this.krFG = this.codxService.buildFormGroup(
           this.formModelPlan?.formName,
@@ -192,7 +196,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
       if (skrFM) {
         this.formModelSKR = skrFM;
-        this.listFormModel.skrFM = this.formModelSKR;
+        this.okrFM.skrFM = this.formModelSKR;
         this.skrFG = this.codxService.buildFormGroup(
           this.formModelSKR?.formName,
           this.formModelSKR?.gridViewName
@@ -202,7 +206,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
-        this.listFormModel.obFM = this.formModelOB;
+        this.okrFM.obFM = this.formModelOB;
         this.obFG = this.codxService.buildFormGroup(
           this.formModelOB?.formName,
           this.formModelOB?.gridViewName
@@ -234,7 +238,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getCacheData() {
     this.cache.valueList('OM004').subscribe((vll) => {
       if (vll) {
-        this.okrVll = vll?.datas;
+
+        this.okrVll.ob=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.Obj)[0];
+        this.okrVll.kr=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.KResult)[0];
+        this.okrVll.skr=vll?.datas.filter((res) => res.value ==OMCONST.VLL.OKRType.SKResult)[0];
+        this.okrVll.ob.icon=OMCONST.ASSET_URL+this.okrVll.ob.icon;
+        this.okrVll.kr.icon=OMCONST.ASSET_URL+this.okrVll.kr.icon;
+        this.okrVll.skr.icon=OMCONST.ASSET_URL+this.okrVll.skr.icon;
       }
     });
   }
@@ -664,8 +674,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.addPlanTitle,
         this.curOrgID,
         this.curOrgName,
-        this.listFormModel,
-        this.obFG,
+        this.okrFM,
+        this.okrVll,
         curFunc,
       ],
       '',
