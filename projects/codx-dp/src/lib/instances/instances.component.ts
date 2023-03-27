@@ -112,7 +112,7 @@ export class InstancesComponent
   listProccessCbx: any;
   sumDaySteps: number;
   lstParticipants = [];
-  listParticipantReason = [] ; // for moveReason
+  listParticipantReason = []; // for moveReason
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
@@ -126,7 +126,7 @@ export class InstancesComponent
   //bien chuyen page
   process: any;
   tabInstances = [];
-  continueLoad = false;
+  haveDataService = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -146,72 +146,19 @@ export class InstancesComponent
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
-      //tam thoi làm vậy đã
-      // this.codxDpService.dataProcess.subscribe((res) => {
-      //   if (res && res.read) {
-      //     this.process = res;
-      //     this.isCreate = this.process.create;
-      //     this.continueLoad = true;
-      //   } else {
-      //     this.continueLoad = false;
-      //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-      //   }
-      // });
-      // let dataProcess = await firstValueFrom(this.codxDpService.getProcessByProcessID(this.processID));
-      // if (!dataProcess || !dataProcess?.read) {
-      //
-    });
-
-    // if (this.continueLoad) {
-    //   //  this.process = dt?.data?.data;
-    //   this.autoName = this.process?.autoName;
-    //   this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
-    //   this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-    //   this.isUseSuccess = this.stepSuccess?.isUsed;
-    //   this.isUseFail = this.stepFail?.isUsed;
-    //   this.showButtonAdd = this.isCreate;
-
-    //   this.viewMode = this.process?.viewMode ?? 6; 
-    //   this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    
-    // if (
-    //   this.process.permissions != null &&
-    //   this.process?.permissions.length > 0
-    // ) {
-    //   this.lstParticipants = this.process?.permissions.filter(
-    //     (x) => x.roleType === 'P'
-    //   );
-    // }
-    // }
-    this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
-      if (ps && ps.read) {
-        this.process = ps;
-        this.isCreate = this.process.create;
-        this.autoName = this.process?.autoName;
-        this.stepSuccess = this.process?.steps?.filter(
-          (x) => x.isSuccessStep
-        )[0];
-        this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-        this.isUseSuccess = this.stepSuccess?.isUsed;
-        this.isUseFail = this.stepFail?.isUsed;
-        this.showButtonAdd = this.isCreate;
-
-        this.viewMode = this.process?.viewMode ?? 6; 
-        this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-
-        if (
-          this.process.permissions != null &&
-          this.process?.permissions.length > 0
-        ) {
-          this.lstParticipants = this.process?.permissions.filter(
-            (x) => x.roleType === 'P'
-          );
+      //data từ service ném qua
+      this.codxDpService.dataProcess.subscribe((res) => {
+        if (res) this.haveDataService = true;
+        else this.haveDataService = false;
+        if (res && res.read) {
+          this.loadData(res);
+        } else {
+          this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
         }
-       // this.continueLoad = true ;
-      } else {
-        this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-      }
+      });
     });
+    this.layout.setUrl('dp/dynamicprocess/DP0101');
+    this.layout.setLogo(null);
 
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
@@ -226,9 +173,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP0101');
-    this.layout.setLogo(null);
-
+   
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -237,11 +182,8 @@ export class InstancesComponent
         }
       });
     });
-
-   
   }
   ngAfterViewInit(): void {
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -269,13 +211,13 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit() {
-  //if (!this.continueLoad) return;
     this.button = {
       id: 'btnAdd',
     };
-   
+
     this.dataObj = {
       processID: this.processID,
+      haveDataService: this.haveDataService ? '1' : '0',
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
@@ -284,12 +226,19 @@ export class InstancesComponent
         this.isUseFail
       ),
     };
-    // if(this.process.steps != null && this.process.steps.length > 0){
-    //   this.listSteps = this.process.steps;
-    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-    //   this.deleteListReason(this.listStepsCbx);
-    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
-    // }
+
+    if (!this.haveDataService) {
+      this.codxDpService
+        .getProcessByProcessID(this.processID)
+        .subscribe((ps) => {
+          if (ps && ps.read) {
+            this.loadData(ps);
+            // this.continueLoad = true ;
+          } else {
+            this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+          }
+        });
+    }
 
     this.codxDpService
       .createListInstancesStepsByProcess(this.processID)
@@ -297,7 +246,6 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          //    this.deleteListReason(this.listStepsCbx);
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
@@ -329,7 +277,6 @@ export class InstancesComponent
         break;
     }
   }
-
 
   //CRUD
   add() {
@@ -954,30 +901,37 @@ export class InstancesComponent
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
-            var newProccessIdReason = isMoveSuccess ? this.stepSuccess.newProcessID: this.stepFail.newProcessID;
+            var newProccessIdReason = isMoveSuccess
+              ? this.stepSuccess.newProcessID
+              : this.stepFail.newProcessID;
             var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-            if(isCheckExist) {
-              this.codxDpService.getProcess(newProccessIdReason).subscribe((res) => {
-                if (res) {
-                  if (res.permissions != null && res.permissions.length > 0) {
-                    this.listParticipantReason = res.permissions.filter(
-                      (x) => x.roleType === 'P'
-                    );
-                    this.openFormReason(data,fun,isMoveSuccess,dataMore,this.listParticipantReason);
+            if (isCheckExist) {
+              this.codxDpService
+                .getProcess(newProccessIdReason)
+                .subscribe((res) => {
+                  if (res) {
+                    if (res.permissions != null && res.permissions.length > 0) {
+                      this.listParticipantReason = res.permissions.filter(
+                        (x) => x.roleType === 'P'
+                      );
+                      this.openFormReason(
+                        data,
+                        fun,
+                        isMoveSuccess,
+                        dataMore,
+                        this.listParticipantReason
+                      );
+                    }
                   }
-                }
-              });
-
+                });
+            } else {
+              this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
             }
-            else {
-              this.openFormReason(data,fun,isMoveSuccess,dataMore,null);
-            }
-
           });
       });
     });
   }
-  openFormReason(data,fun,isMoveSuccess,dataMore,listParticipantReason){
+  openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     // this.codxDpService.get
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
@@ -1082,10 +1036,9 @@ export class InstancesComponent
       });
     });
   }
-  isExistNewProccessId(newProccessId){
+  isExistNewProccessId(newProccessId) {
     return this.listProccessCbx.some((x) => x.recID == newProccessId);
   }
-
 
   getSumDurationDayOfSteps(listStepCbx: any) {
     let total = listStepCbx
@@ -1200,5 +1153,28 @@ export class InstancesComponent
     // }
     //xét duyệt
     // });
+  }
+  //load điều kiện
+  loadData(ps) {
+    this.process = ps;
+    this.isCreate = this.process.create;
+    this.autoName = this.process?.autoName;
+    this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
+    this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+    this.isUseSuccess = this.stepSuccess?.isUsed;
+    this.isUseFail = this.stepFail?.isUsed;
+    this.showButtonAdd = this.isCreate;
+
+    this.viewMode = this.process?.viewMode ?? 6;
+    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+
+    if (
+      this.process?.permissions != null &&
+      this.process?.permissions.length > 0
+    ) {
+      this.lstParticipants = this.process?.permissions.filter(
+        (x) => x.roleType === 'P'
+      );
+    }
   }
 }
