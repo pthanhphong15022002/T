@@ -81,7 +81,10 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    
+    // active group
+    this.signalRSV.activeGroup.subscribe((res:any) => {
+      this.getTotalMessage();
+    });
   }
   // get total message
   getTotalMessage(){

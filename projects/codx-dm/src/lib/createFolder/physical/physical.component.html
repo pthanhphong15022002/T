@@ -2,7 +2,7 @@
     <ng-template #body>
         <form class="pt-5">
             <div class="form-group row">
-                <div class="col-2 col-form-label"><codx-label [default]="titleFloor" [fiedName]="'lblFloor'"></codx-label></div>
+                <div class="col-2 col-form-label"><codx-label [default]="titleFloor" [fiedName]="'lblFloor'" [formName]="'Physical'"></codx-label></div>
                 <div class="col-10">
                     <codx-input placeholder="{{titleFloor}}" class="form-control" type="text" [crrValue]="floor"
                         (valueChange)="changeValue($event, 'floor')"></codx-input>
@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-2 col-form-label"><codx-label [default]="titleRange" [fiedName]="'lblRange'"></codx-label></div>
+                <div class="col-2 col-form-label"><codx-label [default]="titleRange" [fiedName]="'lblRange'" [formName]="'Physical'"></codx-label></div>
                 <div class="col-10">
                     <codx-input placeholder="{{titleRange}}" class="form-control" type="text" [crrValue]="range"
                         (valueChange)="changeValue($event, 'range')"></codx-input>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-2 col-form-label"><codx-label [default]="titleRange" [fiedName]="'lblShelf'"></codx-label></div>
+                <div class="col-2 col-form-label"><codx-label [default]="titleRange" [fiedName]="'lblShelf'" [formName]="'Physical'"></codx-label></div>
                 <div class="col-10">
                     <codx-input placeholder="{{titleShelf}}" class="form-control" type="text" [crrValue]="shelf"
                         (valueChange)="changeValue($event, 'shelf')"></codx-input>
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-2 col-form-label"><codx-label [default]="titleCompartment" [fiedName]="'lblCompartment'"></codx-label></div>
+                <div class="col-2 col-form-label"><codx-label [default]="titleCompartment" [fiedName]="'lblCompartment'" [formName]="'Physical'"></codx-label></div>
                 <div class="col-10">
                     <codx-input placeholder="{{titleCompartment}}" class="form-control" type="text"
                         [crrValue]="compartment" (valueChange)="changeValue($event, 'compartment')"></codx-input>
@@ -41,6 +41,6 @@
     </ng-template>
     <ng-template #footer>
         <button type="button" class="btn btn-primary" [disabled]="viewOnly()"
-            (click)="onSavePhysical()">{{titleSave}}</button>
+            (click)="onSavePhysical()"><codx-label [default]="titleSave" [fiedName]="'lblSave'"  [formName]="'Physical'"></codx-label></button>
     </ng-template>
 </codx-form>

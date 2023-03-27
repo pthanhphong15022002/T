@@ -69,6 +69,7 @@ export class IncommingAddComponent implements OnInit {
   lrelations :any;
   user:any;
   agencyName:any;
+  referType = 'source'
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -391,7 +392,7 @@ export class IncommingAddComponent implements OnInit {
                   per.funcID = this.formModel?.funcID;
                   per.download = true;
                   per.share = true;
-                  this.odService.shareDispatch(per).subscribe(item3=>{
+                  this.odService.shareDispatch(per,this.referType).subscribe(item3=>{
                     if(item3)
                     {
                       item.data.relations = item3?.data[0].relations
@@ -423,7 +424,7 @@ export class IncommingAddComponent implements OnInit {
       
     } else if (this.type == 'edit') {
       this.odService
-        .updateDispatch(this.dispatch,this.formModel?.funcID , false)
+        .updateDispatch(this.dispatch,this.formModel?.funcID , false,this.referType)
         .subscribe(async (item) => {
           if (item.status == 0) {
             if(this.fileDelete && this.fileDelete.length > 0)
