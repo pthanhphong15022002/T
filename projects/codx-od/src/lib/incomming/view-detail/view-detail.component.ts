@@ -113,7 +113,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
     private codxODService: CodxOdService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
