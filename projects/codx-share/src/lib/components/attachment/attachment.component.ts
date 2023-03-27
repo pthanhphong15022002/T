@@ -1480,6 +1480,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       done
         .then((item) => {
           if (item.status == 0) {
+            
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;
@@ -1496,7 +1497,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               files.push(Object.assign({}, res));
             }
             this.dmSV.listFiles = files;
-            if(this.dataFolder?.hasSubFolder)
+            if(this.dataFolder?.hasSubFolder || item.unit == 'isSubFolder')
             {
               this.dmSV.folderID = this.dataFolder.recID
               this.dmSV.refeshData.next(true);
