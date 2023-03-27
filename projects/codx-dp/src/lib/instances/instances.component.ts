@@ -110,6 +110,7 @@ export class InstancesComponent
   dataProccess: any;
   sumDaySteps: number;
   lstParticipants = [];
+  listParticipantReason = [] ; // for moveReason
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
@@ -136,10 +137,10 @@ export class InstancesComponent
     //thao tesst
     // this.router.params.subscribe((param) => {
     //   this.processID = param["processID"];
-    //   this.funcID = param["funcID"];  
+    //   this.funcID = param["funcID"];
     //   this.codxDpService.dataProcess.subscribe(res=>{
     //     this.dataProccess =res
-    //   }) ; 
+    //   }) ;
     // });
     //end tesst
     this.cache.functionList(this.funcID).subscribe((f) => {
@@ -152,9 +153,7 @@ export class InstancesComponent
     });
     this.dataProccess = dt?.data?.data;
     this.autoName = this.dataProccess.autoName;
-    this.stepSuccess = this.dataProccess.steps.filter(
-      (x) => x.isSuccessStep
-    )[0];
+    this.stepSuccess = this.dataProccess.steps.filter((x) => x.isSuccessStep)[0];
     this.stepFail = this.dataProccess.steps.filter((x) => x.isFailStep)[0];
     this.isUseSuccess = this.stepSuccess.isUsed;
     this.isUseFail = this.stepFail.isUsed;
@@ -878,55 +877,79 @@ export class InstancesComponent
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
-            var formMD = new FormModel();
-            formMD.funcID = fun.functionID;
-            formMD.entityName = fun.entityName;
-            formMD.formName = fun.formName;
-            formMD.gridViewName = fun.gridViewName;
-            let reason = isMoveSuccess ? this.stepSuccess : this.stepFail;
-            var obj = {
-              dataMore: dataMore,
-              headerTitle: fun.defaultName,
-              stepName: this.getStepNameById(data.stepID),
-              formModel: formMD,
-              isReason: isMoveSuccess,
-              instance: data,
-              objReason: reason,
-              listProccessCbx: this.listProccessCbx,
-            };
+            var newProccessIdReason = isMoveSuccess ? this.stepSuccess.newProcessID: this.stepFail.newProcessID;
+            var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
+            debugger;
+            if(isCheckExist) {
+              this.codxDpService.getProcess(newProccessIdReason).subscribe((res) => {
+                if (res) {
+                  if (res.permissions != null && res.permissions.length > 0) {
+                    this.listParticipantReason = res.permissions.filter(
+                      (x) => x.roleType === 'P'
+                    );
+                    this.openFormReason(data,fun,isMoveSuccess,dataMore,this.listParticipantReason);
+                  }
+                }
+              });
 
-            var dialogRevision = this.callfc.openForm(
-              PopupMoveReasonComponent,
-              '',
-              800,
-              600,
-              '',
-              obj
-            );
-            dialogRevision.closed.subscribe((e) => {
-              if (!e || !e.event) {
-                data.stepID = this.crrStepID;
-                this.changeDetectorRef.detectChanges();
-              }
-              if (e && e.event != null) {
-                //xu ly data đổ về
-                data = e.event.instance;
-                this.listStepInstances = e.event.listStep;
-                if (data.refID !== this.guidEmpty) {
-                  this.valueListID.emit(data.refID);
-                }
-                if (e.event.isReason != null) {
-                  this.moveReason(null, data, e.event.isReason);
-                }
-                this.dataSelected = data;
-                this.detailViewInstance.dataSelect = this.dataSelected;
-                this.view.dataService.update(data).subscribe();
-                if (this.kanban) this.kanban.updateCard(data);
-                this.detectorRef.detectChanges();
-              }
-            });
+            }
+            else {
+              this.openFormReason(data,fun,isMoveSuccess,dataMore,null);
+            }
+
           });
       });
+    });
+  }
+  openFormReason(data,fun,isMoveSuccess,dataMore,listParticipantReason){
+    // this.codxDpService.get
+    var formMD = new FormModel();
+    formMD.funcID = fun.functionID;
+    formMD.entityName = fun.entityName;
+    formMD.formName = fun.formName;
+    formMD.gridViewName = fun.gridViewName;
+    let reason = isMoveSuccess ? this.stepSuccess : this.stepFail;
+    var obj = {
+      dataMore: dataMore,
+      headerTitle: fun.defaultName,
+      stepName: this.getStepNameById(data.stepID),
+      formModel: formMD,
+      isReason: isMoveSuccess,
+      instance: data,
+      objReason: reason,
+      listProccessCbx: this.listProccessCbx,
+      listParticipantReason: listParticipantReason,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (!e || !e.event) {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
+      if (e && e.event != null) {
+        //xu ly data đổ về
+        data = e.event.instance;
+        this.listStepInstances = e.event.listStep;
+        if (data.refID !== this.guidEmpty) {
+          this.valueListID.emit(data.refID);
+        }
+        if (e.event.isReason != null) {
+          this.moveReason(null, data, e.event.isReason);
+        }
+        this.dataSelected = data;
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.view.dataService.update(data).subscribe();
+        if (this.kanban) this.kanban.updateCard(data);
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
@@ -983,6 +1006,10 @@ export class InstancesComponent
       });
     });
   }
+  isExistNewProccessId(newProccessId){
+    return this.listProccessCbx.some((x) => x.recID == newProccessId);
+  }
+
 
   getSumDurationDayOfSteps(listStepCbx: any) {
    let total = listStepCbx.filter(x=> !x.isSuccessStep && !x.isFailStep)
