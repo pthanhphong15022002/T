@@ -226,6 +226,8 @@ export class AddApproversComponent extends UIComponent {
                       this.saveMember(groupType);
                     }
                   });
+              } else {
+                this.dialog.dataService.hasSaved = true;
               }
             });
           } else {
