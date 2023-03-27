@@ -113,7 +113,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
     private codxODService: CodxOdService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
@@ -1176,7 +1176,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
             //   if(item) that.data.tasks= item;
             // })
-            that.odService.updateDispatch(datas , "", false).subscribe((item) => {
+            that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 that.view.dataService.update(e.data).subscribe();
               } else that.notifySvr.notify(item.message);
@@ -1249,7 +1249,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '0';
-            this.odService.updateDispatch(data , "", false).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1323,7 +1323,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);
@@ -1497,7 +1497,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data , "", false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1581,7 +1581,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);
