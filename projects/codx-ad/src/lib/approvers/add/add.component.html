@@ -11,10 +11,11 @@
     <ng-container *ngIf="form.formGroup">
       <div class="form-group">
         <codx-img
+        class="avata ava-edit"
           [objectId]="item?.recID"
           [objectName]="item?.contactName"
           [objectType]="dialog?.formModel?.entityName"
-          [width]="100"
+          [width]="80"
           [isAllowEdit]="true"
         >
         </codx-img>

@@ -2074,3 +2074,11 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
     }
   }
 }
+
+.ava-edit .symbol{
+  position: relative;
+  .position-absolute{
+    margin-top: -10px;
+    margin-left: -15px;
+  }
+}
