@@ -706,6 +706,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
+        this.dmSV.folderId.next("");
         this.dmSV.idMenuActive =  this.funcID;
         this.dmSV.menuIdActive.next(this.funcID);
         this.folderService.options.funcID = this.funcID
