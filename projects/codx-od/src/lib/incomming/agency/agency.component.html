@@ -22,7 +22,7 @@
         </codx-input>
       </div>
       <div class="form-group mt-3">
-        <codx-label default="Địa chỉ" fiedName="lblAddress"></codx-label>
+        <codx-label default="Địa chỉ" fiedName="lblAddress" [formName]="formModel?.formName"></codx-label>
         <codx-input
           type="text"
           [Group]="agencyForm"
@@ -31,7 +31,7 @@
         </codx-input>
       </div>
       <div class="form-group mt-3">
-        <codx-label [default]="'Người liên hệ'" fiedName="lblContactName" class="fw-bold"></codx-label>
+        <codx-label [default]="'Người liên hệ'" fiedName="lblContactName" [formName]="formModel?.formName" class="fw-bold"></codx-label>
         <codx-input
           type="text"
           [Group]="agencyForm"
@@ -40,7 +40,7 @@
         </codx-input>
       </div>
       <div class="form-group mt-3">
-        <codx-label default="Chức vụ" fiedName="lblJobTitle"></codx-label>
+        <codx-label default="Chức vụ" fiedName="lblJobTitle" [formName]="formModel?.formName"></codx-label>
         <codx-input
           type="text"
           [Group]="agencyForm"
@@ -50,7 +50,7 @@
       </div>
       <div class="form-group row mt-3">
         <div class="col-6">
-          <codx-label default="Điện thoại" fiedName="lblPhone"></codx-label>
+          <codx-label default="Điện thoại" fiedName="lblPhone" [formName]="formModel?.formName"></codx-label>
           <codx-input
             type="text"
             [Group]="agencyForm"
@@ -59,7 +59,7 @@
           </codx-input>
         </div>
         <div class="col-6">
-          <codx-label default="Email" fiedName="lblEmail"></codx-label>
+          <codx-label default="Email" fiedName="lblEmail" [formName]="formModel?.formName"></codx-label>
           <codx-input
             type="text"
             [Group]="agencyForm"
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="form-group mt-3">
-        <codx-label default="Ghi chú" fiedName="lblNote"></codx-label>
+        <codx-label default="Ghi chú" fiedName="lblNote" [formName]="formModel?.formName"></codx-label>
         <codx-input
           type="textarea"
           format="ed2"
@@ -82,7 +82,7 @@
     <ng-template #footer>
         <div class="d-flex justify-content-end">
             <div class="d-flex">
-                <button type="button" class="btn btn-primary" type="submit" (click)="onSave()">Lưu</button>
+                <button type="button" class="btn btn-primary" type="submit" (click)="onSave()"><codx-label default="Lưu" [fiedName]="'lblSave'" [formName]="formModel?.formName"></codx-label></button>
             </div>
         </div>
     </ng-template>

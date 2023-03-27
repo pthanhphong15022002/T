@@ -19,8 +19,8 @@
                     </codx-img>
                 </ng-template>
                 <ng-container *ngIf="group.isOnline">
-                    <div class="group-avatar_status">
-                        <span class="group-avatar_status-icon"></span>
+                    <div class="status">
+                        <span class="icon-online"></span>
                     </div>
                 </ng-container>
             </div>
@@ -37,17 +37,17 @@
                 </div>
                 <div class="d-flex align-items-center morefc-list ms-3">
                     <ng-container *ngIf="group.groupType == '2'">
-                        <button type="button" class="btn btn-icon btn-sm btn-light">
+                        <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-light">
                             <span class="icon-group_add icon-16"></span>
                         </button>    
                     </ng-container>
-                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                    <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-light ms-1">
                         <span class="icon-launch icon-16"></span>
                     </button>
-                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+                    <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-light ms-1">
                         <span class="icon-horizontal_rule icon-16" (click)="collapsed()"></span>
                     </button>
-                    <button type="button" class="btn btn-icon btn-sm btn-light ms-1" (click)="closeChatBox()">
+                    <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-light ms-1" (click)="closeChatBox()">
                         <span class="icon-close icon-16"></span>
                     </button>
                 </div>   
@@ -55,32 +55,128 @@
         </div>
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
-                <div class="codx-message" [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null" [class.justify-content-end]="item.createdBy == user.userID">
-                    <div class="message-img me-3" *ngIf="item.createdBy != user.userID">
-                        <codx-img 
-                            [objectId]="item.createdBy" 
-                            [width]="30"
-                            [objectType]="'AD_Users'">
-                        </codx-img>
-                    </div>
-                    <ng-container *ngIf="item.messageType == '1'">
-                        <div [class]="item.createdBy == user.userID ? 'my-message text-message':'text-message you-message'">
-                            {{item.message}}
+                <div class="message"  [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null">
+                    <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
+                        <div class="message-send">
+                            <div class="message-function">
+                                <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                                <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
+                                <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
+                                (click)="openTooltipEmoji(tooltip1,item)"
+                                #tooltip1="ngbTooltip"
+                                triggers="manual"
+                                placement="top"
+                                [autoClose]="true"
+                                [ngbTooltip]="tooltipEmojiMssg">
+                                </span>
+                            </div>
+                            <ng-container *ngIf="item.messageType == '1' || item.messageType == '4'">
+                                <div class="message-send-message">
+                                    <ng-container *ngIf="item.refContent">
+                                        <div class="message-send_reftContent">
+                                            <span>{{item.refContent}}</span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item.message">
+                                        <div class="message-send_content">
+                                            <span>{{item.message}}</span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                
+                            </ng-container>
+                            <ng-container *ngIf="item.messageType == '2'" >
+                                <div class="message-files">
+                                    <codx-view-files 
+                                        [objectID]="item.recID" 
+                                        [objectType]="'WP_Messages'" 
+                                        [formModel]="formModel"
+                                        [format]="'grid'"
+                                        (fileClicked)="clickViewFile($event)">
+                                    </codx-view-files>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.votes">
+                                <div class="emoji-message message-emoji">
+                                    <div *ngFor="let vote of item.votes">
+                                        <codx-vll 
+                                            [path]="'assets/themes/wp/default/img/'"
+                                            [name]="'L1480'" 
+                                            [value]="vote.voteType" 
+                                            [showIcon]="true" 
+                                            [icoCss]="'w-15px h-15px'">
+                                        </codx-vll>
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="item.messageType == '2'" [class]="item.createdBy == user.userID ? 'my-message':'you-message'">
-                        <div class="codx-message-files">
-                            <codx-view-files 
-                                [objectID]="item.recID" 
-                                [objectType]="'WP_Messages'" 
-                                [formModel]="formModel"
-                                [format]="'grid'"
-                                (fileClicked)="clickViewFile($event)">
-                            </codx-view-files>
+                    <ng-template #reciverMssg>
+                        <div class="message-reciver">
+                            <div class="message-reciver-avatar">
+                                <codx-img 
+                                    [objectId]="item.createdBy" 
+                                    [width]="30"
+                                    [objectType]="'AD_Users'">
+                                </codx-img>
+                                <ng-container *ngIf="item.isOnline">
+                                    <div class="status">
+                                        <span class="icon-online"></span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <ng-container *ngIf="item.messageType == '1' || item.messageType == '4'">
+                                <div class="message-reciver-message">
+                                    <ng-container *ngIf="item.refContent">
+                                        <div class="message-reft">
+                                            <span>{{item.refContent}}</span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item.message">
+                                        <div class="reciver-message">
+                                            <span>{{item.message}}</span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.messageType == '2'">
+                                <div class="message-files">
+                                    <codx-view-files 
+                                        [objectID]="item.recID" 
+                                        [objectType]="'WP_Messages'" 
+                                        [formModel]="formModel"
+                                        [format]="'grid'"
+                                        (fileClicked)="clickViewFile($event)">
+                                    </codx-view-files>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.votes">
+                                <div class="emoji-message message-emoji">
+                                    <div *ngFor="let vote of item.votes">
+                                        <codx-vll 
+                                            [path]="'assets/themes/wp/default/img/'"
+                                            [name]="'L1480'" 
+                                            [value]="vote.voteType" 
+                                            [showIcon]="true" 
+                                            [icoCss]="'w-15px h-15px'">
+                                        </codx-vll>
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
-                    </ng-container>
-                    
-                </div>  
+                        <div class="message-function">
+                            <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
+                                (click)="openTooltipEmoji(tooltip2,item)"
+                                #tooltip2="ngbTooltip"
+                                triggers="manual"
+                                [autoClose]="true"
+                                [ngbTooltip]="tooltipEmojiMssg">
+                            </span>
+                            <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
+                            <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                        </div>
+                    </ng-template>  
+                </div>
             </ng-container>
         </div>
         <div class="chat-box-footer border-top bg-body">
@@ -115,22 +211,23 @@
                     </codx-attachment>
                 </div>
             </div>
-            <div class="w-100 px-3">
-            <ng-container *ngIf="fileUpload.length == 0;else tmpUploadFile">
-                <div class="footer-message" (keyup.enter)="sendMessage()">
-                    <codx-input 
-                        type="textarea"
-                        format="ed2" 
-                        [rows]="1"
-                        [class]="'rounded-pill'" 
-                        [crrValue]="data.message"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
-                </div>
-            </ng-container>
-            </div>
-            <ng-template #tmpUploadFile>
-                <div class="footer-upload bg-body mh-100px overflow-auto">
+            <div class="footer-message">
+                <ng-container *ngIf="replyMssg">
+                    <div class="footer-message-reply">
+                        <div class="reply-content">
+                            <p>
+                                {{'Trả lời tin nhắn của ' + messageReply.createdName}}
+                            </p>
+                            <p>{{messageReply.message}}</p>
+                        </div>
+                        <div class="reply-colse">
+                            <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-light" (click)="clickReplyMssg()">
+                                <span class="icon-close text-danger"></span>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="fileUpload.length > 0">
                     <div class="footer-upload-files d-flex flex-wrap px-2">
                         <ng-container *ngFor="let item of fileUpload;let i = index">
                             <div class="upload-files-item cursor-pointer">
@@ -162,21 +259,36 @@
                             </div>
                         </ng-container>
                     </div>
-                    <div class="footer-upload-text px-2" (keyup.enter)="sendMessage()">
-                        <codx-input 
-                            type="textarea"
-                            format="ed2" 
-                            [rows]="1"
-                            [class]="'rounded-pill px-4'" 
-                            [crrValue]="data.message"
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                    </div>
+                </ng-container>
+                <div class="footer-message-text">
+                    <codx-input 
+                        type="textarea"
+                        format="ed2" 
+                        [rows]="1"
+                        [class]="'rounded-pill'" 
+                        [crrValue]="data.message"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
                 </div>
-            </ng-template>
+            </div>
             <button type="button" class="footer-button btn btn-icon btn-circle btn-light" (click)="sendMessage()">
                 <span class="icon-send icon-16"></span>
             </button>
         </div>
     </div>
 </ng-container>
+<ng-template #tooltipEmojiMssg let-mssg="mssg">
+    <div class="row">
+        <ng-container *ngFor="let item of vllL1480">
+            <div (click)="clickVoteMssg(mssg,item)" class="col cursor-pointer" *ngIf="item.value">
+                <codx-vll 
+                    [path]="'assets/themes/wp/default/img/'"
+                    [name]="'L1480'" 
+                    [value]="item.value" 
+                    [showIcon]="true" 
+                    [icoCss]="'w-15px h-15px'">
+                </codx-vll>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
