@@ -690,6 +690,11 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
+    //thao test khong dc xoa
+    // this.dpService.dataProcess.next(data);
+    // this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
+
+  
     let isRead = this.checkPermissionRead(data);
     if (!isRead) {
       return;

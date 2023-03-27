@@ -208,6 +208,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     this.dmSV.isNodeSelect.subscribe((res) => {
+      debugger
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
@@ -221,6 +222,28 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           //this.refeshData();
           // this.getDataFolder(this.dmSV.folderID);
         }
+        else
+        {
+          if(res.recID)
+          {
+            this.folderService.getFolder(res.recID).subscribe((res2) => {
+              if(res)
+              {
+                this.dmSV.folderID = res2.recID
+                this.dmSV.getRight(res2);
+                this.refeshData();
+                this.getDataFolder(res2.recID);
+              }
+            });
+          }
+          else
+          {
+            this.dmSV.disableUpload.next(true);
+            this.dmSV.disableInput.next(true);
+            this.refeshData();
+            this.getDataFolder(res.recID);
+          }
+        }
       }
     });
 
@@ -229,11 +252,49 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         var treeView = this.codxview?.currentView?.currentComponent?.treeView;
         if (treeView) {
-          var list = treeView.getBreadCumb(res.recID);
-          if(list.length == 0) treeView.setNodeTree(res);
-          treeView.getCurrentNode(res.recID)
-          this.scrollTop();
+          try
+          {
+            var list = treeView.getBreadCumb(res.recID);
+            if(list.length == 0) treeView.setNodeTree(res);
+            treeView.getCurrentNode(res.recID)
+            this.scrollTop();
+          }
+          catch(ex){
+            if(this.funcID == "DMT00")
+            {
+              this.folderService.getFolder(res.recID).subscribe((res2) => {
+                if(res)
+                {
+                  this.dmSV.folderID = res2.recID
+                  this.dmSV.getRight(res2);
+                  this.refeshData();
+                  this.getDataFolder(res2.recID);
+                  var breadcumb = this.dmSV.breadcumb.getValue();
+                  breadcumb.push(res2.folderName);
+                  this.dmSV.breadcumbLink.push(res2.recID);
+                  this.dmSV.breadcumb.next(breadcumb);
+                }
+              });
+            }
+          }
         }
+        else
+        {
+          this.folderService.getFolder(res.recID).subscribe((res2) => {
+            if(res)
+            {
+              this.dmSV.folderID = res2.recID
+              this.dmSV.getRight(res2);
+              this.refeshData();
+              this.getDataFolder(res2.recID);
+              var breadcumb = this.dmSV.breadcumb.getValue();
+              breadcumb.push(res2.folderName);
+              this.dmSV.breadcumbLink.push(res2.recID);
+              this.dmSV.breadcumb.next(breadcumb);
+            }
+          });
+        }
+
       }
       
     })
@@ -259,8 +320,16 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.folderId.next('');
         this.dmSV.folderID = "";
         this.view.dataService.dataSelected = null;
-        this.button.disabled = false;
-        this.dmSV.disableInput.next(false);
+        if(this.funcID != 'DMT03')
+        {
+          this.button.disabled = true;
+          this.dmSV.disableInput.next(true);
+        }
+        else
+        {
+          this.button.disabled = false;
+          this.dmSV.disableInput.next(false);
+        }
         this.scrollTop();
         this.refeshData();
         this.getDataByFuncID(this.funcID);
@@ -287,7 +356,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-          tree.removeNodeTree(res);
+          try
+          {
+            tree.removeNodeTree(res);
+          }
+          catch(e){}
+          debugger
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -336,6 +410,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
+      debugger
       if(item)
       {
         this.data = this.data.filter((x) => x.recID != item);
@@ -643,7 +718,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
-        this.getDataByFuncID(this.funcID);
+        if(this.funcID != "DMT00") this.getDataByFuncID(this.funcID);
+        else this.getDataByFuncID00();
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
           this.fileService.options.favoriteID = "1";
@@ -678,7 +754,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   setDisableAddNewFolder()
   {
     var dis = true;
-    if(this.funcID == "DMT02" || this.funcID == "DMT03") {
+    if(this.funcID == "DMT03") {
       dis = false;
       this.button.disabled = false;
     }
@@ -711,9 +787,39 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     //GetFolder()
     this.refeshData();
     this.getDataFolder(this.dmSV.folderID );
-   
   }
-  
+  getDataByFuncID00()
+  {
+    this.refeshData();
+    this.folderService.options.funcID = this.funcID;
+    this.folderService.getFolders("").subscribe((res) => {
+      if(res && res[0])
+      {
+        this.getDataFolder(res[0][0].recID);
+        var breadcumb = [];
+        var breadcumbLink = [];
+        breadcumb.push(this.dmSV.menuActive.getValue(),res[0][0].folderName);
+        breadcumbLink.push("",res[0][0].recID);
+        this.dmSV.breadcumbLink = breadcumbLink;
+        this.dmSV.breadcumb.next(breadcumb);
+        this.dmSV.getRight(res[0][0]);
+        this.dmSV.folderName = res[0][0].folderName;
+        this.dmSV.parentFolderId = res[0][0].parentId;
+        this.dmSV.parentFolder.next(res[0][0]);
+        this.dmSV.level = res[0][0].level;
+        this.dmSV.folderID = res[0][0].recID;
+        this.dmSV.folderId.next(res[0][0].recID);
+      
+        // var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+        // if(treeView)
+        // {
+        //   var list = treeView.getBreadCumb(res.recID);
+        //   if(list.length == 0) treeView.setNodeTree(res);
+        // }
+      }
+    });
+  }
+
   onScroll(event) {
     const dcScroll = event.srcElement;
     if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
@@ -810,7 +916,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
- 
+
   public trackItem(index: number, item: any) {
     if (item.folderName) return item.folderName;
     return null;
@@ -989,8 +1095,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     }
   }
 
-  onSelectionChanged($data) {
-    debugger
+  onSelectionChanged($data , noTree = false) {
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1036,8 +1141,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.dmSV.breakCumArr = breadcumb;
           this.dmSV.breadcumb.next(breadcumb);
         }
-        if (breadcumb.length == 0) id = '';
+        if (breadcumb.length == 0 && !noTree) id = '';
 
+        if(noTree)
+        {
+          breadcumb = this.dmSV.breadcumb.getValue();
+          breadcumb.push(item.folderName);
+          if(!this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = []
+          this.dmSV.breadcumbLink.push(item.recID);
+        }
         //Chuyển page về 1
         this.folderService.options.page = 1;
         this.fileService.options.page = 1;
@@ -1053,6 +1165,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
+
         this.getDataFolder(id);
         this.changeDetectorRef.detectChanges();
       }
@@ -1073,18 +1186,19 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         var breadcumb = [];
         breadcumb.push(item.customName);
-
+        
         //Tài liệu yêu cầu chia sẻ
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07")
         {
+          
           var x =this.breakCumbArr.filter(x=>x.id == this.funcID)
           breadcumb.push(x[0].sub[0].name);
+          this.dmSV.breadcumbLink = ["",""];
         }
 
         //this.dmSV.breadcumbLink.push(item.customName);
         this.dmSV.menuActive.next(item.customName);
         this.dmSV.breadcumb.next(breadcumb);
-        
       }
     
     })
@@ -1422,26 +1536,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        if(this.funcID == "DMT00")
+        if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
         {
-          debugger
           this.isScrollFolder = false;
-          var treeView = this.codxview?.currentView?.currentComponent?.treeView;
-          if (treeView) {
-            treeView.setNodeTree(res[0][0]);
-            treeView.getCurrentNode(res[0][0].recID)
-          }
+          this.getDataFile(id);
         }
-        else
-        {
-          if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
-          {
-            this.isScrollFolder = false;
-            this.getDataFile(id);
-          }
-  
-          this._beginDrapDrop();
-        }
+
+        this._beginDrapDrop();
       }
       this.detectorRef.detectChanges();
     });

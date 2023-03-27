@@ -458,7 +458,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
+      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'
+      if(this.referType == "source") this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
+      this.dataRequest.predicate += ')'
       this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
@@ -943,7 +945,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         )
         .toPromise()
         .then((res) => {
-          if (res != null) {
+          if (res) {
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -981,7 +983,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                       }
                     }
                   }
-                } else {
+                } 
+                else {
                   let index = files.findIndex(
                     (d) => d.recID.toString() === item.data.recID
                   );
@@ -990,10 +993,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     files[index].recID = item.data.recID;
                   }
                 }
+
                 this.dmSV.listFiles = files;
+
                 this.dmSV.addFile.next(true);
                 //this.dmSV.ChangeData.next(true);
               });
+
+              //Có upload file theo cấp thư mục
+              if(this.dataFolder?.hasSubFolder)
+              {
+                this.dmSV.folderID = this.dataFolder.recID
+                this.dmSV.refeshData.next(true);
+              }
+
               this.notificationsService.notifyCode(
                 'DM061',
                 null,
@@ -1478,7 +1491,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
               files.push(Object.assign({}, res));
             }
             this.dmSV.listFiles = files;
-            this.dmSV.addFile.next(true);
+            if(this.dataFolder?.hasSubFolder)
+            {
+              this.dmSV.folderID = this.dataFolder.recID
+              this.dmSV.refeshData.next(true);
+            }
+            else  this.dmSV.addFile.next(true);
             this.atSV.fileListAdded.push(Object.assign({}, item));
             this.data.push(Object.assign({}, item));
             this.dmSV.updateHDD.next(item.messageHddUsed);
@@ -3068,10 +3086,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
-      if (
-        files[i].size >= this.maxFileSizeUpload &&
-        this.maxFileSizeUpload != 0
-      ) {
+      if ( files[i].size >= this.maxFileSizeUpload && this.maxFileSizeUpload != 0) {
         this.notificationsService.notifyCode(
           'DM057',
           0,

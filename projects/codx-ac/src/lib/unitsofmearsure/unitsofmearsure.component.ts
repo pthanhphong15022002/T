@@ -134,7 +134,7 @@ export class UnitsofmearsureComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+      .copy(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',

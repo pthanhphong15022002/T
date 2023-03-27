@@ -15,7 +15,9 @@ export class ChatContainerComponent implements OnInit {
   @HostBinding('style') get myStyle(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(`
     width: 100%;
+    heigth:0px;
     position: fixed;
+    z-index: 99;
     bottom: 0;
     right: 0;
     left: 0;
@@ -76,7 +78,6 @@ export class ChatContainerComponent implements OnInit {
       let group = this.lstGroupActive.shift();
       let ele = document.getElementById(group.groupID);
       // get current instance của element trên DOM
-      debugger
       let codxBoxChat = window.ng.getComponent(ele);
       if(codxBoxChat){
         this.lstGroupCollapse.push(codxBoxChat.group);
@@ -87,8 +88,8 @@ export class ChatContainerComponent implements OnInit {
     
   }
   //close box chat
-  closeBoxChat(data:any,element:ChatBoxComponent){
-    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
+  closeBoxChat(group:any){
+    let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
     if(index > -1 ){
       this.lstGroupActive.splice(index, 1);
       if(this.lstGroupCollapse.length > 0){
@@ -96,45 +97,27 @@ export class ChatContainerComponent implements OnInit {
         this.lstGroupActive.push(group);
       }
       // lấy element hiện tại của component trên DOM
-      window.ng.getHostElement(element)?.remove();
+      let ele = document.getElementById(group.groupID);
+      ele?.remove();
       this.dt.detectChanges();
     }
   }
   // collapse box chat
-  collapseBoxChat(data:any,codxBoxChat:ChatBoxComponent){
-    let index = this.lstGroupActive.findIndex(x => x.groupID == data.groupID); 
-    if(index > -1){
-      this.lstGroupActive.splice(index, 1);
-      this.lstGroupCollapse.unshift(codxBoxChat.group);
-      window.ng.getHostElement(codxBoxChat)?.remove();
-      this.dt.detectChanges();
+  collapseBoxChat(group:any){
+    let ele = document.getElementById(group.groupID);
+    if(ele){
+      let codxBoxChat =  window.ng.getComponent(ele);
+      let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
+      if(index > -1 && codxBoxChat){
+        this.lstGroupActive.splice(index, 1);
+        this.lstGroupCollapse.unshift(codxBoxChat.group);
+        ele.remove();
+        this.dt.detectChanges();
+      }
     }
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    debugger
-    // if(this.lstGroupActive.length == 2){
-    //   let group = this.lstGroupActive.shift();
-    //   let ele = document.getElementById(group.groupID);
-    //   let codxBoxChat = window.ng.getComponent(ele);
-    //   if(codxBoxChat){
-    //     let item = 
-    //     {
-    //       id:codxBoxChat.groupID,
-    //       online:data.isOnline,
-    //       groupID:codxBoxChat.groupID,
-    //       message:codxBoxChat.message,
-    //       objectID:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
-    //       objectName:codxBoxChat.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
-    //       objectType:codxBoxChat.groupType === '1' ? 'AD_Users':'WP_Groups'  
-    //     }
-    //     this.lstGroupCollapse.push(item);
-    //   }
-    // }
-    // this.lstGroupActive.push(data);
-    // let index = this.lstGroupCollapse.findIndex(x => x.groupID == data.groupID); 
-    // this.lstGroupCollapse.splice(index, 1);
-    // this.dt.detectChanges();
     this.signalRSV.sendData(data,"ActiveGroupAsync");
   }
 
