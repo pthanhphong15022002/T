@@ -1922,10 +1922,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
-    let isRepeatName = this.checkStepName(this.stepName);
-    if(isRepeatName){
-      this.notiService.notifyCode('DP029', 0, 'Tên giai đoạn');
-      return;
+    if(this.actionStep !== 'edit' || this.stepEdit['stepName']?.trim() != this.stepName?.trim()){
+      let isRepeatName = this.checkStepName(this.stepName);
+      if(isRepeatName){
+        this.notiService.notifyCode('DP029', 0, 'Tên giai đoạn');
+        return;
+      }
     }
     this.isSaveStep = true;
     if (!this.stepName.trim()) {
