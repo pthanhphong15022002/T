@@ -1905,10 +1905,6 @@ codx-header #chat-box{
 
 /// 14/2/2023
 ///
-codx-chat-container{
-  height: 7px;
-  z-index: 99;
-}
 
 
 codx-instance-detail .codx-detail-body.mt-2{
@@ -2076,5 +2072,13 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
       padding-right:16px!important;
       height: calc(100vh - 120px)!important;
     }
+  }
+}
+
+.ava-edit .symbol{
+  position: relative;
+  .position-absolute{
+    margin-top: -10px;
+    margin-left: -15px;
   }
 }

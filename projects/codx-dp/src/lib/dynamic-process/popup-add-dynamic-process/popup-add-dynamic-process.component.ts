@@ -2190,7 +2190,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
-              taskData['roles']?.forEach((role) => {
+              taskData['roles']?.forEach(role => {
                 this.addRole(role);
               });
             } else {
@@ -2519,6 +2519,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     role['recID'] = Util.uid();
     role['objectName'] = this.user['userName'];
     role['objectID'] = this.user['userID'];
+    role['roleType'] = 'P';
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
     return role;
@@ -2629,6 +2630,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
       console.log('thuan');
+
     }
   }
 
@@ -2697,6 +2699,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  deleteRoleTypeR(role, step){
+    let check = this.checkExistUser(step, role, 'R');
+    if (check) {
+      this.notiService.notifyCode(role?.objectName + "khong the xoa");
     }
   }
   //test user exists in step
@@ -3384,6 +3393,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return false;
     }
     return true;
+  }
+  moveProccessIsNull(newProccessID){
+    var index = this.listCbxProccess.findIndex(x=>x.recID == newProccessID);
+    if(index > -1) {
+      return newProccessID;
+    }
+    return this.guidEmpty;
+
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion
