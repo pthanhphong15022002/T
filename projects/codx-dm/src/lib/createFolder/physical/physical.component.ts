@@ -16,7 +16,7 @@ export class PhysicalComponent implements OnInit {
   @Input() formModel: any;
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
-  titleDialog = 'Physical Control';    
+  titleDialog = 'Kiểm soát kho';    
   titleFloor = 'Tầng';
   titleRange = 'Dãy';
   titleShelf = 'Kệ';

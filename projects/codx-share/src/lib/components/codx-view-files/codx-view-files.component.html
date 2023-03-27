@@ -3,7 +3,7 @@
         <!-- files image - video -->
         <ng-container *ngIf="fileMedias.length > 0">
             <div class="grid-medias cursor-pointer">
-                <div class="row">
+                <div class="row m-0 p-0">
                     <ng-container *ngFor="let item of fileMedias;let i = index">
                         <div *ngIf="(i>0) && (i%2 == 0)" class="w-100"></div>
                         <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE;else gridVideo">

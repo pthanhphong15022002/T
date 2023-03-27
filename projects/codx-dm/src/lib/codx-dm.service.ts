@@ -364,6 +364,7 @@ export class CodxDMService {
   }
 
   getRight(folder: FolderInfo) {
+    debugger
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;

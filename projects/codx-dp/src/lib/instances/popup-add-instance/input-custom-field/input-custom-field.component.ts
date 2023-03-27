@@ -26,15 +26,17 @@ export class InputCustomFieldComponent implements OnInit {
   @Input() funID: any = '';
   @Input() formModel: any = null;
   @Input() disable = false;
-  @Input() viewFileName = false;
+  @Input() viewFieldName = false;
+ // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  
   errorMessage = '';
   showErrMess = false;
   //data tesst
   typeControl = 'text';
   currentRate = 1;
   hovered = 0;
-  readonly = false;
+ 
   min = 0;
   max = 9999999;
   formatDate = 'd';
@@ -161,12 +163,12 @@ export class InputCustomFieldComponent implements OnInit {
   }
   rateChange(e) {
     //rank
-    if (this.customField.dataFormat == 'R') {
+    // if (this.customField.dataFormat == 'R') {
       this.valueChangeCustom.emit({
         e: e,
         data: this.customField,
       });
-      return;
-    }
+    //  return;
+    //}//
   }
 }

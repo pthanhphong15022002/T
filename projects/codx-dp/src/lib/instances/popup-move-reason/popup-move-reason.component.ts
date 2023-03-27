@@ -17,6 +17,8 @@ export class PopupMoveReasonComponent implements OnInit {
   user:any;
   userId:any;
 
+  ownerMove = '';
+
   headerText: string = '';
   instancesName: string = '';
   viewKanban: string = 'kanban';
@@ -26,6 +28,9 @@ export class PopupMoveReasonComponent implements OnInit {
   stepName: string = '';
   moveProccess: string = '';
   memoStep:string = '';
+
+  lstParticipants = [];
+  listParticipantReason = [];
 
   listReason: DP_Steps_Reasons[]=[];
 
@@ -63,18 +68,17 @@ export class PopupMoveReasonComponent implements OnInit {
     this.viewClick = this.viewKanban;
     this.stepName = dt?.data?.stepName;
     this.reasonStep = dt?.data?.objReason
-    this.listReason = this.reasonStep.reasons;
+    this.listReason = this.reasonStep?.reasons;
     this.user = this.authStore.get();
     this.userId = this.user?.userID
     this.isReason = dt?.data?.isReason;
-
+    this.listParticipantReason = dt?.data?.listParticipantReason;
     this.listCbxProccess = dt?.data?.listProccessCbx;
-    this.moveProccess =  this.listCbxProccess.filter(x=>x.recID === this.reasonStep.newProcessID )[0].recID;
-
+    this.moveProccess =  this.listCbxProccess.filter(x=>x.recID === this.reasonStep?.newProcessID )[0]?.recID ?? this.guidEmpty;
   }
 
   ngOnInit(): void {
-    
+
   }
 
   onSave() {
@@ -83,14 +87,13 @@ export class PopupMoveReasonComponent implements OnInit {
       return;
     }
     // else {
-    
       this.beforeSave();
     // }
 
   }
   beforeSave() {
     this.reasonStep.reasons = this.listReasonClick;
-    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason];
+    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason,this.ownerMove];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
         this.instances = res[0];
@@ -101,7 +104,7 @@ export class PopupMoveReasonComponent implements OnInit {
         };
         this.dialog.close(obj);
         this.notiService.notifyCode('SYS007');
-    
+
 
         this.changeDetectorRef.detectChanges();
       }
@@ -145,7 +148,12 @@ export class PopupMoveReasonComponent implements OnInit {
     if($event){
       this.moveProccess = $event;
     }
+  }
 
+  eventUser(e) {
+    if (e != null) {
+      this.ownerMove = e?.id; // thêm check null cái;
+    }
   }
 }
 

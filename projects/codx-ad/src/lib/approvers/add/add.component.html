@@ -11,10 +11,11 @@
     <ng-container *ngIf="form.formGroup">
       <div class="form-group">
         <codx-img
+        class="avata ava-edit"
           [objectId]="item?.recID"
           [objectName]="item?.contactName"
           [objectType]="dialog?.formModel?.entityName"
-          [width]="100"
+          [width]="80"
           [isAllowEdit]="true"
         >
         </codx-img>
@@ -71,6 +72,7 @@
           [refType]="'P'"
           refValue="Share_Users"
           field="groupmember"
+          [showInput]="false"
           (valueChange)="eventApply($event)"
         >
         </codx-input>
@@ -79,7 +81,7 @@
         <ng-container *ngFor="let item of members">
           <div
             *ngIf="!item.isRemoved"
-            class="py-2 justify-content-between list-title"
+            class="d-flex align-items-top border-bottom py-2 justify-content-between list-title"
           >
             <div class="d-flex align-items-top w-100">
               <codx-img
@@ -101,7 +103,7 @@
                 </div>
               </div>
             </div>
-            <div>
+            <div class="ms-5">
               <a
                 class="btn btn-icon btn-sm btn-light-danger"
                 style="cursor: pointer"

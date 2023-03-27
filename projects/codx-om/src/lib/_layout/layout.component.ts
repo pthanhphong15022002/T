@@ -21,8 +21,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override aside = true;
   // override asideFixed = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
-  override toolbar = false;
-
+  override toolbar = true;
+  override toolbarFixed = false;
   constructor(inject: Injector,
     //private hideToolbar: CodxOdService,
     private callfc: CallFuncService,

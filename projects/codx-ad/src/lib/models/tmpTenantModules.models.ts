@@ -1,6 +1,7 @@
 export class tmpTNMD {
-  moduleID: string;
+  module: string;
   moduleSales: string;
+  quantity: number = 1;
   isAddAction: boolean;
   isOriginal: boolean;
   isError: boolean;

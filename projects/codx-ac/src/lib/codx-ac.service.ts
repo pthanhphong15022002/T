@@ -1,12 +1,21 @@
-import { CashPayment } from './models/CashPayment.model';
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import { FormGroup } from '@angular/forms';
+import {
+  ApiHttpService,
+  CacheService,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxAcService {
-  constructor(private cache: CacheService, private api: ApiHttpService) {}
+  constructor(
+    private cache: CacheService,
+    private api: ApiHttpService,
+    private notiService: NotificationsService
+  ) {}
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
       this.cache.setGridView(formModel.gridViewName, gridView);
@@ -54,5 +63,43 @@ export class CodxAcService {
       else newMemo += aMemo[i].trim() + ' - ';
     }
     return newMemo;
+  }
+
+  validateFormData(
+    formGroup: FormGroup,
+    gridViewSetup: any,
+    irregularFields: string[] = []
+  ): boolean {
+    console.log(formGroup);
+    console.log(gridViewSetup);
+
+    const controls = formGroup.controls;
+    let isValid: boolean = true;
+    for (const propName in controls) {
+      if (controls[propName].invalid) {
+        const gvsPropName =
+          irregularFields.find(
+            (i) => i.toLowerCase() === propName.toLowerCase()
+          ) ?? this.toPascalCase(propName);
+
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          `"${gridViewSetup[gvsPropName]?.headerText}"`
+        );
+
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  toCamelCase(pascalCase: string): string {
+    return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
+  }
+
+  toPascalCase(camelCase: string): string {
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
 }

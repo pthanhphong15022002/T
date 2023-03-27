@@ -155,7 +155,7 @@
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"
-      [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"></codx-label>
+      [default]="dispatch?.dispatchType == '2' ? 'Người gửi' : null"></codx-label>
     <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
         " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
@@ -166,8 +166,7 @@
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" field="lblodshare"
-      [default]="'Người được chia sẻ'"></codx-label>
+    <codx-label fiedName="lblodshare" [default]="'Người được chia sẻ'" [formName]="form.formModel.formName"></codx-label>
     <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
         " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
@@ -201,12 +200,12 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSave()">Lưu</button>
+    <button class="btn btn-primary" (click)="onSave()"><codx-label [formName]="form.formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
   </div>
 </ng-template>
 <ng-template #tmpagency let-dialog>
-  <app-od-agency [dialog]="dialog" [data]="data"></app-od-agency>
+  <app-od-agency [dialog]="dialog" [data]="data" [formModel]="formModel"></app-od-agency>
 </ng-template>
 <ng-template #tmpdept let-dialog>
-  <app-od-department></app-od-department>
+  <app-od-department [dialog]="dialog" [agencyID]="data?.agencyID" [formModel]="formModel"></app-od-department>
 </ng-template>

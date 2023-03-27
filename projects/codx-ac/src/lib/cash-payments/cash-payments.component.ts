@@ -115,7 +115,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+    this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
@@ -149,7 +149,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: this.funcName,
         };
         let option = new DialogModel();
         option.DataService = this.view.dataService;
@@ -177,7 +177,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: this.funcName,
         };
         let option = new DialogModel();
         option.DataService = this.view.dataService;
