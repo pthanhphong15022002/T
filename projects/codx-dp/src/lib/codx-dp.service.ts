@@ -511,4 +511,13 @@ export class CodxDpService {
       listRef
     );
   }
+
+  getProcessByProcessID(processID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessByProcessIDAsync',
+      processID
+    );
+  }
 }

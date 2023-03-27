@@ -1971,7 +1971,7 @@ codx-instances codx-view-list-detail{
     codx-detail-tmp{
       position: relative;
       display: block;
-      height: calc(100vh - 60px)!important;
+      height: calc(100vh - 56px)!important;
       
       overflow: hidden;
 
@@ -2081,4 +2081,9 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
     margin-top: -10px;
     margin-left: -15px;
   }
+}
+
+.e-richtexteditor .e-rte-content .e-content, .e-richtexteditor .e-source-content .e-content {
+  min-height: auto;
+  padding: 10px;
 }

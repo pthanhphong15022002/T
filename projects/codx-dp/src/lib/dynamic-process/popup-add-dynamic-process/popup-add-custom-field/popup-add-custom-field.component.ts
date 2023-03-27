@@ -121,8 +121,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   saveData() {
     if (
-      (this.field.fieldName == null || this.field.fieldName.trim() == '') &&
-      this.grvSetup['FieldName']?.isRequired
+      (!this.field.fieldName || this.field.fieldName.trim() == '') &&
+      this.grvSetup['FieldName']?.isRequire
     ) {
       this.notiService.notifyCode(
         'SYS009',
@@ -131,7 +131,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.dataType && this.grvSetup['DataType']?.isRequired) {
+    if (!this.field.dataType && this.grvSetup['DataType']?.isRequire) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -154,7 +154,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
     if (
       (this.field.note == null || this.field.note.trim() == '') &&
-      this.grvSetup['Note']?.isRequired
+      this.grvSetup['Note']?.isRequire
     ) {
       this.notiService.notifyCode(
         'SYS009',
