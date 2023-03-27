@@ -55,7 +55,7 @@ export class BookingStationeryComponent
   approvalRule: any;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
     private authService: AuthService
@@ -498,34 +498,30 @@ export class BookingStationeryComponent
 
   allocate(data: any) {
     if (this.approvalRule) {
-      //if (this.isEmptyGuid(data?.recID)) {
-        this.api
-          .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [
-            data?.recID,
-          ])
-          .subscribe((trans: any) => {
-            trans.map((item: any) => {
-              if (item.stepType === 'I') {
-                this.codxEpService
-                  .approve(
-                    item.recID, //ApprovelTrans.RecID
-                    '5',
-                    '',
-                    ''
-                  )
-                  .subscribe((res: any) => {
-                    if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                      this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                      data.issueStatus = '3';
-                      this.view.dataService.update(data).subscribe();
-                    } else {
-                      this.notificationsService.notifyCode(res?.msgCodeError);
-                    }
-                  });
-              }
-            });
+      this.api
+        .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
+        .subscribe((trans: any) => {
+          trans.map((item: any) => {
+            if (item.stepType === 'I') {
+              this.codxEpService
+                .approve(
+                  item.recID, //ApprovelTrans.RecID
+                  '5',
+                  '',
+                  ''
+                )
+                .subscribe((res: any) => {
+                  if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                    this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                    data.issueStatus = '3';
+                    this.view.dataService.update(data).subscribe();
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                  }
+                });
+            }
           });
-      //}
+        });
     } else {
       this.api
         .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])
@@ -541,7 +537,7 @@ export class BookingStationeryComponent
                 });
               });
             this.detectorRef.detectChanges();
-          }else{
+          } else {
             this.notificationsService.notifyCode('SYS001');
           }
         });

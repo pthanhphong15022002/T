@@ -69,12 +69,11 @@ export class PopupMoveReasonComponent implements OnInit {
     this.isReason = dt?.data?.isReason;
 
     this.listCbxProccess = dt?.data?.listProccessCbx;
-    this.moveProccess =  this.listCbxProccess.filter(x=>x.recID === this.reasonStep.newProcessID )[0].recID;
-
+    this.moveProccess =  this.listCbxProccess.filter(x=>x.recID === this.reasonStep?.newProcessID )[0]?.recID ?? this.guidEmpty;
   }
 
   ngOnInit(): void {
-    
+
   }
 
   onSave() {
@@ -83,7 +82,7 @@ export class PopupMoveReasonComponent implements OnInit {
       return;
     }
     // else {
-    
+
       this.beforeSave();
     // }
 
@@ -101,7 +100,7 @@ export class PopupMoveReasonComponent implements OnInit {
         };
         this.dialog.close(obj);
         this.notiService.notifyCode('SYS007');
-    
+
 
         this.changeDetectorRef.detectChanges();
       }

@@ -669,7 +669,9 @@ export class CreateFolderComponent implements OnInit {
               folders[index] = item.data;
             }
             that.dmSV.listFolder = folders;
-            that.dmSV.ChangeData.next(true);
+            //that.dmSV.ChangeData.next(true);
+            //that.dmSV.ChangeOneFolder.next(folders[index]);
+            that.dmSV.parentFolder.next(item?.data);
             that.dmSV.nodeChange.next(folders[index]);
             that.changeDetectorRef.detectChanges();
             this.modalService.dismissAll();

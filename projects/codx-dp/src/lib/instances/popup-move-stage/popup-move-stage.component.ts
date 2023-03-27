@@ -23,6 +23,8 @@ import {
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
 import { InstancesComponent } from '../instances.component';
+import moment from 'moment';
+import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -74,10 +76,13 @@ export class PopupMoveStageComponent implements OnInit {
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason:any;
+  gridViewInstanceStep:any;
   isStopData: boolean = true;
   totalRequireCompleted: number = 0;
   totalRequireCompletedChecked: number = 0;
   actionCheck:string = '';
+  isSaving:boolean = false;
+  listStepProccess:any;
 
   readonly oneHundredNumber: number = 100;
   constructor(
@@ -94,8 +99,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.formModel = dt?.data.formModel;
     this.stepName = dt?.data.stepName;
     this.isUseReason = dt?.data.stepReason;
-    this.headerText = 'Chuyển tiếp giai đoạn'; //  gán sau button add
+    this.headerText = dt?.data.headerTitle; //  gán sau button add
     this.viewClick = this.viewKanban;
+    this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
     if (
       this.instance.permissions != null &&
@@ -107,7 +113,6 @@ export class PopupMoveStageComponent implements OnInit {
     }
     this.stepIdOld = this.instance.stepID;
 
-    // this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
     this.IdFail =
       this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isFailStep)]
@@ -122,18 +127,17 @@ export class PopupMoveStageComponent implements OnInit {
         this.firstInstance = res;
       }
     });
-    // this.loadListUser(this.instance.permissions);
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
+    this.getGrvInstanceStep();
   }
 
   ngOnInit(): void {
     this.removeReasonInSteps(this.listStepsCbx,this.isUseReason);
-    this.autoClickedSteps(this.listStepsCbx, this.stepName);
-
+    (!this.stepIdClick && this.stepIdClick != this.stepIdOld) && this.autoClickedSteps(this.listStepsCbx, this.stepName);
   }
 
   getNameAndPosition(id) {
@@ -199,6 +203,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
+    !this.instancesStepOld.actualEnd && this.setToDay();
     this.listTask = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
@@ -215,16 +220,31 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    // if (this.stepIdClick === this.stepIdOld) {
-    //   this.notiService.notifyCode('DP001');
-    //   return;
-    // } else {
-
-    // }
-    if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
-      this.notiService.notifyCode('DP022');
-      return;
+    this.instancesStepOld.owner = this.owner;
+    if(this.checkSpaceInStep(this.stepIdClick,this.stepIdOld)) {
+      if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
+        this.notiService.notifyCode('DP022');
+        return;
+      }
+      if(!this.instancesStepOld.actualEnd) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"'
+        );
+        return;
+      }
+      if(!this.instancesStepOld.owner) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewInstanceStep['Owner']?.headerText + '"'
+        );
+        return;
+      }
     }
+
+
     this.beforeSave();
   }
   beforeSave() {
@@ -271,7 +291,13 @@ export class PopupMoveStageComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  changeTime($event) { }
+  changeTime($event) {
+    if ($event) {
+      this.instancesStepOld[$event.field] = $event.data.fromDate;
+    }
+    this.changeDetectorRef.detectChanges();
+
+  }
 
   autoClickedSteps(listStep: any, stepName: string) {
     let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
@@ -371,19 +397,23 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
     else if ($event && view == 'taskGroup') {
-      $event.target.checked && this.addItem(this.listTaskGroupDone, data);
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data,'taskGroup');
       !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
 
     }
     else if ($event && view == 'task') {
-      $event.target.checked && this.addItem(this.listTaskDone, data);
+      $event.target.checked && this.addItem(this.listTaskDone, data,'task');
       !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
     }
   }
 
-  addItem(list: any, data) {
+  addItem(list: any, data,view) {
     list.push(data)
     this.UpdateRequireCompletedCheck(data,this.totalRequireCompleted,true);
+    if(view == 'taskGroup')
+    {
+      let children = document.getElementById(`${data.recID}`);
+    }
   }
 
   removeItem(list, id) {
@@ -407,14 +437,13 @@ export class PopupMoveStageComponent implements OnInit {
     listNow.forEach(item => {
       if (map.has(item.recID)) {
         item.progress = 100;
-        item.actualEnd = (new Date()).toISOString()
+        item.actualEnd = new Date();
       }
     });
     if (view === 'task') {
       this.instancesStepOld.tasks = listNow;
     }
     else {
-
       this.instancesStepOld.taskGroups = listNow;
     }
 
@@ -444,5 +473,45 @@ export class PopupMoveStageComponent implements OnInit {
     }
     return checkValue??0;
   }
+  setToDay(){
+     this.instancesStepOld.actualEnd = new Date()
+  }
+
+  checkSpaceInStep(stepClick, stepOld){
+    var indexClick = this.listStepsCbx.findIndex(x=> x.recID == stepClick);
+    var indexOld = this.listStepsCbx.findIndex(x=> x.recID == stepOld);
+    var space = indexClick - indexOld;
+    if(space >= 0) {
+      return true;
+    }
+    return false;
+  }
+
+  getGrvInstanceStep() {
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewInstanceStep = res;
+        }
+      });
+  }
+  inputCustomField(e){
+    this.stepIdOld = e ;
+  }
+  actionSaveCustomField(e){
+    this.isSaving =e ;
+  }
+
+  showColumnControl(stepID) {
+    if (this.listStepProccess?.length > 0) {
+      var idx = this.listStepProccess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepProccess[idx]?.showColumnControl;
+    }
+    return 1;
+  }
+
+
 
 }

@@ -66,6 +66,8 @@ import { PurchaseinvoicesComponent } from './purchaseinvoices/purchaseinvoices.c
 import { PopAddPurchaseComponent } from './purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
 import { PopupAddJournalComponent } from './journal-names/popup-add-journal/popup-add-journal.component';
 import { DropdownDetailComponent } from './journal-names/dropdown-detail/dropdown-detail.component';
+import { PopupSetupInvoiceComponent } from './journal-names/popup-setup-invoice/popup-setup-invoice.component';
+import { SingleSelectPopupComponent } from './journal-names/single-select-popup/single-select-popup.component';
 
 export const routes: Routes = [
   {
@@ -208,6 +210,8 @@ export const routes: Routes = [
     PopAddPurchaseComponent,
     PopupAddJournalComponent,
     DropdownDetailComponent,
+    PopupSetupInvoiceComponent,
+    SingleSelectPopupComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

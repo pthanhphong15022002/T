@@ -37,7 +37,7 @@ export class CodxSVAnswerService {
       }
     }
     else {
-      this.caches.set(keyRoot, new Map<string, any>());
+      this.caches.set(keyRoot, new Map<any, any>());
     }
 
     if (this.cachedObservables.has(key)) {

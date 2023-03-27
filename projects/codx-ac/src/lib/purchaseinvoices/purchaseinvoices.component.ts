@@ -76,7 +76,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -98,7 +98,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
       this.parentID,
     ]);
   }
-  add() {
+  add(e) {
+    //const elmnt = document.getElementById("codx-aside");
+    //elmnt.style.width = '40px';
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -110,12 +112,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        //option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
         this.dialog = this.callfunc.openForm(
           PopAddPurchaseComponent,
           '',
-          null,
-          null,
+          1660,
+          969,
           this.view.funcID,
           obj,
           '',

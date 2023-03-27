@@ -353,7 +353,7 @@
 <!-- END TASK -->
 <!-- UPDATE -->
 <ng-template #U>
-  <div class="d-flex align-items-top">
+  <div class="d-flex align-items-top pb-2">
     <div class="me-3">
       <codx-vll
         [value]="data.actionType"
@@ -373,15 +373,15 @@
             [width]="30"
           ></codx-img>
         </div>
-        <div class="">
+        <div class="d-flex flex-column w-100">
           <div class="d-flex align-items-center justify-content-between">
             <span *ngIf="data.description" [innerHTML]="data.description"></span>
             <ng-container *ngIf="data.datas">
-              <button class="btn btn-white btn-icon ">
+              <button class="btn btn-light btn-sm btn-icon ms-5">
                 <span (click)="isCollapsed = !isCollapsed"
                   [attr.aria-expanded]="!isCollapsed"
                   aria-controls="collapseExample"
-                  class="icon-unfold_more icon-20" >
+                  class="icon-unfold_more icon-16" >
                 </span>
               </button>
             </ng-container>
@@ -480,98 +480,93 @@
             </div>
           </ng-container> -->
           <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-            <div class="card">
-              <div class="card-body">
-                <ng-container *ngIf="data.datas">
-                  <div class="row p-4">
-                    <table class="table" style="width: 100%">
-                      <thead class="border-bottom bg-light">
-                        <th scope="col-4">
+            <ng-container *ngIf="data.datas">
+              <div class="w-100 mt-4">
+                <table class="table border" style="width: 100%">
+                  <thead class="border-bottom bg-light">
+                    <th>
+                      <codx-label class="fw-bold text-dark"
+                        [formModel]="formModel"
+                        name="lblFieldName"
+                        [default]="'Thông tin'"
+                      >
+                      </codx-label>
+                    </th>
+                    <th>
+                      <codx-label class="fw-bold text-dark"
+                        [formModel]="formModel"
+                        name="lblOldValue"
+                        [default]="'Giá trị cũ'"
+                      >
+                      </codx-label>
+                    </th>
+                    <th>
+                      <codx-label class="fw-bold text-dark"
+                        [formModel]="formModel"
+                        name="lblNewValue"
+                        [default]="'Giá trị mới'"
+                      >
+                      </codx-label>
+                    </th>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of data.datas">
+                      <tr>
+                        <td>
                           <codx-label
+                            class="px-4"
                             [formModel]="formModel"
-                            name="lblFieldName"
-                            [default]="'Thông tin'"
-                          >
-                          </codx-label>
-                        </th>
-                        <th scope="col-4">
-                          <codx-label
-                            [formModel]="formModel"
-                            name="lblOldValue"
-                            [default]="'Giá trị cũ'"
-                          >
-                          </codx-label>
-                        </th>
-                        <th scope="col-4">
-                          <codx-label
-                            [formModel]="formModel"
-                            name="lblNewValue"
-                            [default]="'Giá trị mới'"
-                          >
-                          </codx-label>
-                        </th>
-                      </thead>
-                      <tbody>
-                        <ng-container *ngFor="let item of data.datas">
-                          <tr class="my-2">
-                            <td scope="col-4">
-                              <codx-label
-                                [formModel]="formModel"
-                                [fiedName]="item.fieldName"
-                              ></codx-label>
-                            </td>
+                            [fiedName]="item.fieldName"
+                          ></codx-label>
+                        </td>
+                        <ng-container
+                          *ngIf="
+                            item.fieldName === 'Permissions';
+                            else primitiveValue
+                          "
+                        >
+                          <td>
                             <ng-container
-                              *ngIf="
-                                item.fieldName === 'Permissions';
-                                else primitiveValue
+                              *ngTemplateOutlet="
+                                tmpViewEmployee;
+                                context: { $implicit: item.oldValue | dJson }
                               "
                             >
-                              <td scope="col-4">
-                                <ng-container
-                                  *ngTemplateOutlet="
-                                    tmpViewEmployee;
-                                    context: { $implicit: item.oldValue | dJson }
-                                  "
-                                >
-                                </ng-container>
-                              </td>
-                              <td scope="col-4">
-                                <ng-container
-                                  *ngTemplateOutlet="
-                                    tmpViewEmployee;
-                                    context: { $implicit: item.newValue | dJson }
-                                  "
-                                >
-                                </ng-container>
-                              </td>
                             </ng-container>
-                            <ng-template #primitiveValue>
-                              <td
-                                scope="col-4"
-                                id="aaaa"
-                                [innerHTML]="
-                                  item.oldValue
-                                    | formatvalue : formModel : item.fieldName
-                                    | async
-                                "
-                              ></td>
-                              <td
-                                scope="col-4"
-                                [innerHTML]="
-                                  item.newValue
-                                    | formatvalue : formModel : item.fieldName
-                                    | async
-                                "
-                              ></td>
-                            </ng-template>
-                          </tr>
+                          </td>
+                          <td>
+                            <ng-container
+                              *ngTemplateOutlet="
+                                tmpViewEmployee;
+                                context: { $implicit: item.newValue | dJson }
+                              "
+                            >
+                            </ng-container>
+                          </td>
                         </ng-container>
-                      </tbody>
-                    </table>
-                  </div>
-                </ng-container>
+                        <ng-template #primitiveValue>
+                          <td
+                            id="aaaa"
+                            [innerHTML]="
+                              item.oldValue
+                                | formatvalue : formModel : item.fieldName
+                                | async
+                            "
+                          ></td>
+                          <td
+                            [innerHTML]="
+                              item.newValue
+                                | formatvalue : formModel : item.fieldName
+                                | async
+                            "
+                          ></td>
+                        </ng-template>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
               </div>
-            </div>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -736,12 +731,12 @@
           ></div>
           <div
             *ngIf="data.createdOn"
-            class="text-gray-400 fw-normal flex-grow-1 fs-7"
+            class="text-gray-700 fw-normal flex-grow-1"
             data-toggle="tooltip"
           >
             {{ data.createdOn | timefrom }}
           </div>
-          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
         </div>
@@ -789,12 +784,12 @@
           ></div>
           <div
             *ngIf="data.createdOn"
-            class="text-gray-400 fw-normal flex-grow-1 fs-7"
+            class="text-gray-700 fw-normal flex-grow-1"
             data-toggle="tooltip"
           >
             {{ data.createdOn | timefrom }}
           </div>
-          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
         </div>
@@ -869,12 +864,12 @@
           ></div>
           <div
             *ngIf="data.createdOn"
-            class="text-gray-400 fw-normal flex-grow-1 fs-7"
+            class="text-gray-700 fw-normal flex-grow-1"
             data-toggle="tooltip"
           >
             {{ data.createdOn | timefrom }}
           </div>
-          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
         </div>

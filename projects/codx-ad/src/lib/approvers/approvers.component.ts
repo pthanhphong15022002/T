@@ -144,10 +144,17 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
               this.view.dataService
                 .delete([this.view.dataService.dataSelected], false)
                 .subscribe();
-              this.view.dataService.hasSaved = false;
             }
-            this.view.dataService.clear();
+          } else {
+            this.view.dataService.dataSelected.members = x.event.members;
+            this.view.dataService.dataSelected.memberIDs = x.event.memberIDs;
+            this.view.dataService
+              .update(this.view.dataService.dataSelected)
+              .subscribe();
           }
+          this.view.dataService.hasSaved = false;
+
+          this.view.dataService.clear();
         });
       }
     });

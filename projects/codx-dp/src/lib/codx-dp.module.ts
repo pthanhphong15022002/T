@@ -60,10 +60,22 @@ const routes: Routes = [
       },
     ],
   },
+  //thao tesst chuyen popup sang page
   {
-    path: 'general/:funcID',
-    component: PopupAddDynamicProcessComponent,
-  },
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+        {
+            path: 'instances/:funcID/:processID',
+            component: InstancesComponent,
+        },
+        // {
+        //   path: '**',
+        //   redirectTo: 'DPT04/home',
+        //   pathMatch: 'full',
+        // },       
+    ]
+  }
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];

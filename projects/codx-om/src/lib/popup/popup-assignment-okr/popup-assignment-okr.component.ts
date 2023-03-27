@@ -142,9 +142,11 @@ export class PopupAssignmentOKRComponent
 
   getOKRAssign() {
     this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
-      if (res) {
+      if (res) {        
+        this.dataOKR = res;
         this.codxOmService.getOKRDistributed(this.okrRecID).subscribe((links: any) => {
           if (links && links.length > 0) {
+
             let oldLink = links[0];
             this.assignmentOKR.okrName = oldLink?.okrName;
             this.assignmentOKR.umid = oldLink?.umid;
@@ -159,18 +161,7 @@ export class PopupAssignmentOKRComponent
               .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
               .subscribe((ownerInfo) => {
                 if (ownerInfo) {
-                  this.owner = ownerInfo;
-                  this.assignmentOKR.owner = this.owner?.userID;
-                  this.assignmentOKR.employeeID = this.owner?.employeeID;
-                  this.assignmentOKR.orgUnitID = this.owner?.orgUnitID;
-                  this.assignmentOKR.departmentID = this.owner?.departmentID;
-                  this.assignmentOKR.companyID = this.owner?.companyID;
-                  this.assignmentOKR.positionID = this.owner?.positionID;
-                  this.assignmentOKR.employeeName = this.owner?.employeeName;
-                  this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
-                  this.assignmentOKR.departmentName = this.owner?.departmentName;
-                  this.assignmentOKR.companyName = this.owner?.companyName;
-                  this.assignmentOKR.positionName = this.owner?.positionName;
+                  this.assignTo(ownerInfo);
                   
                   this.isAfterRender = true;
                 }
@@ -178,7 +169,6 @@ export class PopupAssignmentOKRComponent
               
               this.isAfterRender = true;
           } else {
-            this.dataOKR = res;
             this.assignmentOKR.okrName = this.dataOKR?.okrName;
             this.assignmentOKR.umid = this.dataOKR?.umid;
             this.assignmentOKR.isActive = false;
@@ -225,31 +215,72 @@ export class PopupAssignmentOKRComponent
     //this.assignmentOKR.orgUnitName= null;
     this.detectorRef.detectChanges();
   }
+  orgTypeToObjectType(orgUnitType:string){
+    switch(orgUnitType){
+      case '1': return OMCONST.OBJECT_TYPE.COMP; 
+      case '4': return OMCONST.OBJECT_TYPE.DEPT;
+      case '6': return OMCONST.OBJECT_TYPE.ORG;
+      default : return null;
+    }
+  }
   cbxOrgChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
-      this.assignmentOKR.orgUnitID = evt.data;
-      this.assignmentOKR.orgUnitName = evt.component?.itemsSelected[0]?.OrgUnitName;
       this.assignmentOKR.objectID = evt.data;
-      this.codxOmService .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID).subscribe((ownerInfo) => {
+      this.codxOmService.getManagerByOrgUnitID(this.assignmentOKR?.objectID).subscribe((ownerInfo:any) => {
           if (ownerInfo) {
-            this.owner = ownerInfo;
-            this.assignmentOKR.owner = this.owner?.userID;
-            this.assignmentOKR.employeeID = this.owner?.employeeID;
-            this.assignmentOKR.orgUnitID = this.owner?.orgUnitID;
-            this.assignmentOKR.departmentID = this.owner?.departmentID;
-            this.assignmentOKR.companyID = this.owner?.companyID;
-            this.assignmentOKR.positionID = this.owner?.positionID;
-
-            this.assignmentOKR.employeeName = this.owner?.employeeName;
-            this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
-            this.assignmentOKR.departmentName = this.owner?.departmentName;
-            this.assignmentOKR.companyName = this.owner?.companyName;
-            this.assignmentOKR.positionName = this.owner?.positionName;
+            this.assignTo(ownerInfo);            
+            this.assignmentOKR.objectType=this.orgTypeToObjectType(ownerInfo?.orgUnitType)
           }
         });
 
       this.detectorRef.detectChanges();
     }
+  }
+
+  cbxPosChange(evt: any) {
+    if (evt?.data != null && evt?.data != '') {
+      this.assignmentOKR.objectID = evt.data;
+      this.codxOmService.getEmployeesByPositionID(this.assignmentOKR.objectID).subscribe((res:any) => {
+          if (res) {
+            this.codxOmService.getEmployeesByEmpID(res?.employeeID).subscribe((ownerInfo) => {
+              if (ownerInfo) {
+                this.assignTo(ownerInfo);
+
+                this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
+              }
+            });
+    
+          }
+        });
+        
+      this.detectorRef.detectChanges();
+    }
+  }
+  cbxEmpChange(evt: any) {
+    if (evt?.data != null && evt?.data != '') {
+      this.assignmentOKR.objectID = evt.data;
+      this.codxOmService.getEmployeesByEmpID(this.assignmentOKR?.objectID).subscribe((ownerInfo) => {
+          if (ownerInfo) {
+            this.assignTo(ownerInfo);
+            this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
+          }
+        });
+
+      this.detectorRef.detectChanges();
+    }
+  }
+  assignTo(owner:any){
+    this.assignmentOKR.userID = owner?.userID;
+    this.assignmentOKR.employeeID = owner?.employeeID;
+    this.assignmentOKR.orgUnitID = owner?.orgUnitID;
+    this.assignmentOKR.departmentID = owner?.departmentID;
+    this.assignmentOKR.companyID = owner?.companyID;
+    this.assignmentOKR.positionID = owner?.positionID;
+    this.assignmentOKR.employeeName = owner?.employeeName;
+    this.assignmentOKR.orgUnitName = owner?.orgUnitName;
+    this.assignmentOKR.departmentName = owner?.departmentName;
+    this.assignmentOKR.companyName = owner?.companyName;
+    this.assignmentOKR.positionName = owner?.positionName;
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
@@ -268,7 +299,7 @@ export class PopupAssignmentOKRComponent
       this.notificationsService.notify('Kế hoạch mục tiêu kỳ ' + this.okrPlan?.periodID +' đang ở tình trạng' + this.statusVLL[this.okrPlan?.status]?.text+' nên không thể thay đổi đối tượng phân công', '2', null);
       return;
     }
-    this.codxOmService.assignmentOKR( this.okrRecID, this.distributeFromType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
+    this.codxOmService.assignmentOKR( this.dataOKR?.recID, this.dataOKR?.okrType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
         if (res) {
           this.notificationsService.notifyCode('SYS034');
           
