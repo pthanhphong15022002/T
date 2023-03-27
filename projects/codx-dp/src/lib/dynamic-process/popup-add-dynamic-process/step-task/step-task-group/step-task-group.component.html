@@ -62,7 +62,7 @@
       </div>
       <div class="w-100 ms-2">
         <div class="d-flex justify-content-end">
-          <codx-label
+          <codx-label class="me-2"
             [default]="'Thời gian còn lại: '"
           ></codx-label>
           <span style="color: rgb(255, 1, 1);"> {{days}} ngày {{hours}} giờ</span>
@@ -90,28 +90,27 @@
         </div>
       </div>
     </div>
-    <codx-user
-      [fiedName]="'roles'"
-      [formModel]="formModel"
-      [default]="'Người phụ trách'"
-      [title]="'Nếu không chọn mặc định là người phụ trách chính của nhiệm vụ'"
-      [fiedNameTitle]="'roleMemo'"
-      [icon]="'icon-person_add_alt_1'"
-      [style]="{'justify-content': ''}"
-      [dataSource]="taskGroup?.roles"
-      (valueList)="changeUser($event)"
-      [multiple]="false"
-      [type]="'user'"
-    ></codx-user>
-
+    <div class="mb-4">
+      <codx-user
+        [fiedName]="'roles'"
+        [formModel]="formModel"
+        [default]="'Người phụ trách'"
+        [title]="'Nếu không chọn mặc định là người phụ trách chính của nhiệm vụ'"
+        [fiedNameTitle]="'roleMemo'"
+        [icon]="'icon-person_add_alt_1'"
+        [style]="{'justify-content': ''}"
+        [dataSource]="taskGroup?.roles"
+        (valueList)="changeUser($event)"
+        [multiple]="false"
+        [type]="'user'"
+      ></codx-user>
+    </div>
     <div class="form-group">
-      <div>
-        <codx-label
+      <codx-label
           fiedName="memo"
           [formModel]="formModel"
           default="Ghi chú"
         ></codx-label>
-      </div>
       <codx-input
         field="memo"
         [formModel]="formModel"
