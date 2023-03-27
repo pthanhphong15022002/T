@@ -193,7 +193,7 @@ export class DispatchService implements OnDestroy {
   //Chia sẻ văn bản
   shareDispatch(obj: permissionDis , referType:any)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', obj , referType);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', [obj , referType]);
   }
 
   //Thu hồi quyền chia sẻ của user
