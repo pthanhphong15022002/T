@@ -2110,7 +2110,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           data['roles'][0],
-          'R'
+          ''
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2243,7 +2243,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           task['roles'][0],
-          'R'
+          'P'
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2672,7 +2672,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       if (roleOld) {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
-        let checkExistStep = this.checkExistUser(this.step, roleOld, 'R');
+        let checkExistStep = this.checkExistUser(this.step, roleOld, 'P');
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
             (roleFind) => roleFind.objectID === roleOld['objectID']
@@ -2684,7 +2684,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         let checkExistProgress = false;
         for (let step of this.stepList) {
-          let check = this.checkExistUser(step, roleOld, 'R');
+          let check = this.checkExistUser(step, roleOld, 'P');
           if (check) {
             checkExistProgress = true;
             break;
@@ -2703,26 +2703,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   deleteRoleTypeR(role, step){
-    let check = this.checkExistUser(step, role, 'R');
+    let check = this.checkExistUser(step, role, 'P');
     if (check) {
-      this.notiService.notifyCode(role?.objectName + "khong the xoa");
+      this.notiService.notifyCode("DP027", 0, role?.objectName );
+    }else{
+      let index = step?.roles?.findIndex(r => r.objectID == role.objectID);
+      if(index >= 0){
+        step?.roles?.splice(index,1);
+      }
     }
   }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string) {
+  checkExistUser(step: any, user: any, type: string):boolean {
     for (let element of step['taskGroups']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType == type
       );
-      if (check) {
+      if(check){
         return true;
       }
     }
     for (let element of step['tasks']) {
       let check = element['roles'].some(
-        (x) => x.objectID == user.objectID && x.roleType == type
+        (x) => x.objectID == user.objectID && x.roleType ==type
       );
-      if (check) {
+      if(check){
         return true;
       }
     }

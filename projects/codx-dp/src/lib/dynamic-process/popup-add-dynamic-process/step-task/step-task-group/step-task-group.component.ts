@@ -76,7 +76,10 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    this.taskGroup['roles'] = e;
+    let roles = e?.map(role => {
+      return {...role, roleType:'P'}
+    })
+    this.taskGroup['roles'] = roles || [];
   }
 
   changeValueNumber(event) {
