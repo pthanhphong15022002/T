@@ -358,6 +358,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   deleteRow(data) {
     if (this.cashpayment.voucherType == '1') {
       this.gridCashPaymentLine.deleteRow(data);
+      this.cashpaymentlineDelete.push(data);
     }
     if (this.cashpayment.voucherType == '2') {
       this.gridVoucherLineRefs.deleteRow(data);
@@ -401,22 +402,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [this.cashpayment];
+            opt.data = [
+              this.cashpayment,
+              this.cashpaymentline,
+              this.voucherLineRefs,
+            ];
             return true;
           })
           .subscribe((res) => {
             if (res.save) {
-              this.acService
-                .addData(
-                  'ERM.Business.AC',
-                  'CashPaymentsLinesBusiness',
-                  'AddAsync',
-                  [this.cashpaymentline]
-                )
-                .subscribe((res) => {});
               this.dialog.close();
               this.dt.detectChanges();
-            } else {
             }
           });
       }
@@ -432,17 +428,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res != null) {
-              this.acService
-                .addData(
-                  'ERM.Business.AC',
-                  'CashPaymentsLinesBusiness',
-                  'UpdateAsync',
-                  [this.cashpaymentline, this.cashpaymentlineDelete]
-                )
-                .subscribe((res) => {});
+              if (this.cashpayment.voucherType === '1') {
+                this.acService
+                  .addData(
+                    'ERM.Business.AC',
+                    'CashPaymentsLinesBusiness',
+                    'UpdateAsync',
+                    [this.cashpaymentline, this.cashpaymentlineDelete]
+                  )
+                  .subscribe();
+              }
+
+              if (this.cashpayment.voucherType === '2') {
+                this.acService
+                  .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
+                    this.cashpaymentline,
+                    this.voucherLineRefsDelete,
+                  ])
+                  .subscribe();
+              }
               this.dialog.close();
               this.dt.detectChanges();
-            } else {
             }
           });
       }

@@ -58,7 +58,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabLine"></ng-container>
+            <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
           </ng-template>
         </e-tabitem>
         <!-- Test tab -->
@@ -257,48 +257,52 @@
 
 <!-- Start:CashPaymentLine -->
 <ng-template #tabCashPaymentLine>
-  <codx-gridview-v2
-    #gridCashPaymentLine
-    [formName]="fmCashPaymentsLines.formName"
-    [gridViewName]="fmCashPaymentsLines.gridViewName"
-    [entityName]="fmCashPaymentsLines.entityName"
-    [templateMore]="morefunction"
-    [editSettings]="editSettings"
-    predicates="TransID=@0"
-    [allowFiltering]="true"
-    [allowSorting]="true"
-    [dataValues]="form.data.recID"
-    [dataSource]="cashpaymentline"
-    service="AC"
-    [height]="gridHeight"
-    [autoLoad]="false"
-    rowHeight="40"
-    (cellChanged)="cashPaymentLineChanged($event)"
-    (created)="gridCreated($event)"
-  ></codx-gridview-v2>
+  <div class="h-100" *ngIf="cashpayment.voucherType === '1'">
+    <codx-gridview-v2
+      #gridCashPaymentLine
+      [formName]="fmCashPaymentsLines.formName"
+      [gridViewName]="fmCashPaymentsLines.gridViewName"
+      [entityName]="fmCashPaymentsLines.entityName"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      predicates="TransID=@0"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataValues]="form.data.recID"
+      [dataSource]="cashpaymentline"
+      service="AC"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="cashPaymentLineChanged($event)"
+      (created)="gridCreated($event)"
+    ></codx-gridview-v2>
+  </div>
 </ng-template>
 <!-- End: CashPaymentLine -->
 
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabVoucherLineRefs>
-  <codx-gridview-v2
-    #gridVoucherLineRefs
-    formName="VoucherLineRefs"
-    gridViewName="grvVoucherLineRefs"
-    entityName="AC_VoucherLineRefs"
-    [templateMore]="morefunction"
-    [editSettings]="editSettings"
-    [allowFiltering]="true"
-    [allowSorting]="true"
-    [dataValues]="form.data.recID"
-    [dataSource]="voucherLineRefs"
-    service="AC"
-    [height]="gridHeight"
-    [autoLoad]="false"
-    rowHeight="40"
-    (cellChanged)="voucherLineRefsChanged($event)"
-    (created)="gridCreated($event)"
-  ></codx-gridview-v2>
+  <div class="h-100" *ngIf="cashpayment.voucherType === '2'">
+    <codx-gridview-v2
+      #gridVoucherLineRefs
+      formName="VoucherLineRefs"
+      gridViewName="grvVoucherLineRefs"
+      entityName="AC_VoucherLineRefs"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataValues]="form.data.recID"
+      [dataSource]="voucherLineRefs"
+      service="AC"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="voucherLineRefsChanged($event)"
+      (created)="gridCreated($event)"
+    ></codx-gridview-v2>
+  </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
 
