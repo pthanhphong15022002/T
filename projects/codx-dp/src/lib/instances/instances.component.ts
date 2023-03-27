@@ -212,6 +212,7 @@ export class InstancesComponent
     this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
       if (ps && ps.read) {
         this.process = ps;
+        this.isCreate = this.process.create;
         this.autoName = this.process?.autoName;
         this.stepSuccess = this.process?.steps?.filter(
           (x) => x.isSuccessStep
@@ -232,14 +233,14 @@ export class InstancesComponent
             (x) => x.roleType === 'P'
           );
         }
-        this.continueLoad = true ;
+       // this.continueLoad = true ;
       } else {
         this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
       }
     });
   }
   ngAfterViewInit(): void {
-   if (!this.continueLoad) return;
+ //  if (!this.continueLoad) return;
 
     this.views = [
       {
@@ -268,7 +269,7 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit() {
-  if (!this.continueLoad) return;
+  //if (!this.continueLoad) return;
     this.button = {
       id: 'btnAdd',
     };
@@ -292,7 +293,7 @@ export class InstancesComponent
     // }
 
     this.codxDpService
-      .createListInstancesStepsByProcess(this.process?.recID)
+      .createListInstancesStepsByProcess(this.processID)
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
