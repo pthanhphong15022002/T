@@ -37,6 +37,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { isObservable } from 'rxjs';
 import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
@@ -112,7 +113,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
     private codxODService: CodxOdService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
@@ -212,34 +213,98 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
   getGridViewSetup(funcID: any) {
-    this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      this.funcList = fuc;
+    var funcList = this.codxODService.loadFunctionList(funcID);
+
+    if(isObservable(funcList))
+    {
+      funcList.subscribe((fuc) => {
+        this.funcList = fuc;
+        this.formModels = {
+          entityName:  this.funcList?.entityName,
+          formName:  this.funcList?.formName,
+          funcID: funcID,
+          gridViewName:  this.funcList?.gridViewName,
+        };
+        if (!this.formModel) this.formModel = this.formModels;
+        var gw =  this.codxODService.loadGridView( this.funcList?.formName,  this.funcList?.gridViewName);
+        if(isObservable(gw))
+        {
+          gw.subscribe((grd) => {
+            this.gridViewSetup = grd;
+            this.getDataValuelist();
+          });
+        }
+        else
+        {
+          this.gridViewSetup = gw;
+          this.getDataValuelist();
+        }
+      });
+    }
+    else
+    {
+      this.funcList = funcList;
       this.formModels = {
-        entityName: fuc?.entityName,
-        formName: fuc?.formName,
+        entityName: this.funcList?.entityName,
+        formName: this.funcList?.formName,
         funcID: funcID,
-        gridViewName: fuc?.gridViewName,
+        gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
-      this.codxODService
-        .loadGridView(fuc?.formName, fuc?.gridViewName)
-        .subscribe((grd) => {
+      var gw =  this.codxODService.loadGridView( this.funcList?.formName,  this.funcList?.gridViewName);
+
+      if(isObservable(gw))
+      {
+        gw.subscribe((grd) => {
           this.gridViewSetup = grd;
           this.getDataValuelist();
         });
-    });
-    this.codxODService.loadMessage('OD020').subscribe((item) => {
-      this.ms020 = item;
-    });
-    this.codxODService.loadMessage('OD021').subscribe((item) => {
-      this.ms021 = item;
-    });
-    this.codxODService.loadMessage('OD023').subscribe((item) => {
-      this.ms023 = item;
-    });
-    this.codxODService.loadValuelist('OD008').subscribe((item) => {
-      this.dvlRelType = item;
-    });
+      }
+      else
+      {
+        this.gridViewSetup = gw;
+        this.getDataValuelist();
+      }
+    }
+
+    var ms020 =  this.codxODService.loadMessage('OD020')
+    if(isObservable(ms020))
+    {
+      ms020.subscribe((item) => {
+        this.ms020 = item;
+      });
+    }
+    else this.ms020 = ms020;
+
+    var ms021 =  this.codxODService.loadMessage('OD021')
+    if(isObservable(ms021))
+    {
+      ms021.subscribe((item) => {
+        this.ms021 = item;
+      });
+    }
+    else this.ms021 = ms021;
+
+    var ms023 =  this.codxODService.loadMessage('OD023')
+    if(isObservable(ms023))
+    {
+      ms023.subscribe((item) => {
+        this.ms023 = item;
+      });
+    }
+    else this.ms023 = ms023;
+    
+
+    var dvlRelType =  this.codxODService.loadMessage('OD023')
+    if(isObservable(dvlRelType))
+    {
+      dvlRelType.subscribe((item) => {
+        this.dvlRelType = item;
+      });
+    }
+    else this.dvlRelType = dvlRelType;
+  
+   
   }
   ///////////////Các function format valuelist///////////////////////
   fmTextValuelist(val: any, type: any) {
@@ -304,51 +369,102 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   getDataValuelist() {
     if (this.gridViewSetup['Security']['referedValue'])
-      this.codxODService
-        .loadValuelist(this.gridViewSetup['Security']['referedValue'])
-        .subscribe((item) => {
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Security']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
           this.dvlSecurity = item;
         });
+      }
+      else this.dvlSecurity = vll;
+    }
     if (this.gridViewSetup['Urgency']['referedValue'])
-      this.codxODService
-        .loadValuelist(this.gridViewSetup['Urgency']['referedValue'])
-        .subscribe((item) => {
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Urgency']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
           this.dvlUrgency = item;
-          //this.ref.detectChanges();
         });
+      }
+      else this.dvlUrgency = vll;
+    }
     if (this.gridViewSetup['Status']['referedValue'])
-      this.codxODService
-        .loadValuelist(this.gridViewSetup['Status']['referedValue'])
-        .subscribe((item) => {
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Status']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
           this.dvlStatus = item;
-          console.log(this.dvlStatus);
-          //this.ref.detectChanges();
         });
+      }
+      else this.dvlStatus = vll;
+    }
     if (this.gridViewSetup['Category']['referedValue'])
-      this.codxODService
-        .loadValuelist(this.gridViewSetup['Category']['referedValue'])
-        .subscribe((item) => {
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Category']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
           this.dvlCategory = item;
-          //this.ref.detectChanges();
         });
-    this.codxODService.loadValuelist('OD008').subscribe((item) => {
-      this.dvlRelType = item;
-    });
-    this.codxODService.loadValuelist('OD009').subscribe((item) => {
-      this.dvlStatusRel = item;
-    });
-    this.codxODService.loadValuelist('OD010').subscribe((item) => {
-      this.dvlReCall = item;
-    });
-    this.codxODService.loadValuelist('L0614').subscribe((item) => {
-      this.dvlStatusTM = item;
-    });
-    this.codxODService.loadMessage('OD020').subscribe((item) => {
-      this.ms020 = item;
-    });
-    this.codxODService.loadMessage('OD021').subscribe((item) => {
-      this.ms021 = item;
-    });
+      }
+      else this.dvlCategory = vll;
+    }
+    var vllRelType = this.codxODService.loadValuelist('OD008');
+    if(isObservable(vllRelType))
+    {
+      vllRelType.subscribe((item) => {
+        this.dvlRelType = item;
+      });
+    }
+    else this.dvlRelType = vllRelType;
+
+    var vllStatusRel = this.codxODService.loadValuelist('OD009');
+    if(isObservable(vllStatusRel))
+    {
+      vllStatusRel.subscribe((item) => {
+        this.dvlStatusRel = item;
+      });
+    }
+    else this.dvlStatusRel = vllRelType;
+   
+    var vllReCall = this.codxODService.loadValuelist('OD010');
+    if(isObservable(vllReCall))
+    {
+      vllReCall.subscribe((item) => {
+        this.dvlReCall = item;
+      });
+    }
+    else this.dvlReCall = vllRelType;
+
+    var vllStatusTM  = this.codxODService.loadValuelist('L0614');
+    if(isObservable(vllStatusTM))
+    {
+      vllStatusTM.subscribe((item) => {
+        this.dvlStatusTM = item;
+      });
+    }
+    else this.dvlStatusTM = vllRelType;
+
+    var ms020 =  this.codxODService.loadMessage('OD020')
+    if(isObservable(ms020))
+    {
+      ms020.subscribe((item) => {
+        this.ms020 = item;
+      });
+    }
+    else this.ms020 = ms020;
+
+    var ms021 =  this.codxODService.loadMessage('OD021')
+    if(isObservable(ms021))
+    {
+      ms021.subscribe((item) => {
+        this.ms021 = item;
+      });
+    }
+    else this.ms021 = ms021;
   }
   getTextColor(val: any, type: any) {
     try {
@@ -1060,7 +1176,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
             //   if(item) that.data.tasks= item;
             // })
-            that.odService.updateDispatch(datas , "", false).subscribe((item) => {
+            that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 that.view.dataService.update(e.data).subscribe();
               } else that.notifySvr.notify(item.message);
@@ -1133,7 +1249,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '0';
-            this.odService.updateDispatch(data , "", false).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1207,7 +1323,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);
@@ -1381,7 +1497,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data , "", false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1465,7 +1581,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);

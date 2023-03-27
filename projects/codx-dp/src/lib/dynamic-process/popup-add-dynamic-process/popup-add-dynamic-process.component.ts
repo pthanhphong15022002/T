@@ -2110,7 +2110,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           data['roles'][0],
-          'R'
+          ''
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2190,7 +2190,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
-              taskData['roles']?.forEach((role) => {
+              taskData['roles']?.forEach(role => {
                 this.addRole(role);
               });
             } else {
@@ -2243,7 +2243,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           task['roles'][0],
-          'R'
+          'P'
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2519,6 +2519,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     role['recID'] = Util.uid();
     role['objectName'] = this.user['userName'];
     role['objectID'] = this.user['userID'];
+    role['roleType'] = 'P';
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
     return role;
@@ -2629,6 +2630,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
       console.log('thuan');
+
     }
   }
 
@@ -2670,7 +2672,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       if (roleOld) {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
-        let checkExistStep = this.checkExistUser(this.step, roleOld, 'R');
+        let checkExistStep = this.checkExistUser(this.step, roleOld, 'P');
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
             (roleFind) => roleFind.objectID === roleOld['objectID']
@@ -2682,7 +2684,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         let checkExistProgress = false;
         for (let step of this.stepList) {
-          let check = this.checkExistUser(step, roleOld, 'R');
+          let check = this.checkExistUser(step, roleOld, 'P');
           if (check) {
             checkExistProgress = true;
             break;
@@ -2699,25 +2701,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
   }
+
+  deleteRoleTypeR(role, step){
+    let check = this.checkExistUser(step, role, 'P');
+    if (check>0) {
+      this.notiService.notifyCode(role?.objectName + "khong the xoa");
+    }else{
+      
+    }
+  }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string) {
+  checkExistUser(step: any, user: any, type: string):number {
+    let countExits = 0;
     for (let element of step['taskGroups']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType == type
       );
-      if (check) {
-        return true;
-      }
+      countExits = check ? ++countExits : countExits;
     }
     for (let element of step['tasks']) {
       let check = element['roles'].some(
-        (x) => x.objectID == user.objectID && x.roleType == type
+        (x) => x.objectID == user.objectID && x.roleType ==type
       );
-      if (check) {
-        return true;
-      }
+      countExits = check ? ++countExits : countExits;
     }
-    return false;
+    return countExits;
   }
 
   async getFormModel(functionID) {
@@ -3384,6 +3392,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return false;
     }
     return true;
+  }
+  moveProccessIsNull(newProccessID){
+    var index = this.listCbxProccess.findIndex(x=>x.recID == newProccessID);
+    if(index > -1) {
+      return newProccessID;
+    }
+    return this.guidEmpty;
+
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion

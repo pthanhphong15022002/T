@@ -10,159 +10,79 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <div
-            [ngClass]="
+          <div [ngClass]="
               action == 'add' ? 'stepper-item active' : 'stepper-item approve'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(0)"
-          >
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblGeneral"
-                  [formModel]="dialog.formModel"
-                  default="Thông tin quy trình"
-                ></codx-label>
+              <div class="stepper-label" [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''">
+                <codx-label name="lblGeneral" [formModel]="dialog.formModel" default="Thông tin quy trình"></codx-label>
               </div>
             </div>
           </div>
-          <div
-            [ngClass]="
+          <div [ngClass]="
               action == 'add' ? 'stepper-item' : 'stepper-item approve-disabled'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(1)"
-          >
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblStage"
-                  [formModel]="dialog.formModel"
-                  default="Thiết lập giai đoạn"
-                ></codx-label>
+              <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
+                <codx-label name="lblStage" [formModel]="dialog.formModel" default="Thiết lập giai đoạn"></codx-label>
               </div>
             </div>
           </div>
-          <div
-            [ngClass]="
+          <div [ngClass]="
               action == 'add' ? 'stepper-item' : 'stepper-item approve-disabled'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(2)"
-          >
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblCustom"
-                  [formModel]="dialog.formModel"
-                  default="Trường tùy chỉnh"
-                ></codx-label>
+              <div class="stepper-label" [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : ''">
+                <codx-label name="lblCustom" [formModel]="dialog.formModel" default="Trường tùy chỉnh"></codx-label>
               </div>
             </div>
           </div>
-          <div
-            [ngClass]="
+          <div [ngClass]="
               action == 'add' ? 'stepper-item' : 'stepper-item approve-disabled'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(3)"
-          >
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 3 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblFormTemp"
-                  [formModel]="dialog.formModel"
-                  default="Biểu mẫu"
-                ></codx-label>
+              <div class="stepper-label" [ngClass]="currentTab == 3 ? 'fw-bold text-primary' : ''">
+                <codx-label name="lblFormTemp" [formModel]="dialog.formModel" default="Biểu mẫu"></codx-label>
               </div>
             </div>
           </div>
@@ -170,137 +90,68 @@
       </div>
       <div class="d-flex justify-content-end">
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
-          <i
-            class="icon-close icon-18 text-hover-danger"
-            (click)="closePopup()"
-          ></i>
+          <i class="icon-close icon-18 text-hover-danger" (click)="closePopup()"></i>
         </div>
       </div>
     </div>
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-1200px h-100">
+      <div class="card shadow-none border-0 rounded-2 mx-auto w-1200px h-100">
         <div class="mt-6 pb-3 tab-pane-header px-9 border-bottom">
           <h2 *ngIf="currentTab != 1 && currentTab != 3" class="h2-title">
-            <codx-label
-              *ngIf="currentTab == 0"
-              name="lblGeneral"
-              [formModel]="dialog.formModel"
-              default="Thông tin quy trình"
-            >
+            <codx-label *ngIf="currentTab == 0" name="lblGeneral" [formModel]="dialog.formModel"
+              default="Thông tin quy trình">
             </codx-label>
-            <codx-label
-              *ngIf="currentTab == 2"
-              name="lblDynamicField"
-              [formModel]="dialog.formModel"
-              default="Trường tùy chỉnh"
-            >
+            <codx-label *ngIf="currentTab == 2" name="lblDynamicField" [formModel]="dialog.formModel"
+              default="Trường tùy chỉnh">
             </codx-label>
           </h2>
-          <ng-container
-            *ngIf="currentTab == 1"
-            [ngTemplateOutlet]="stageHeader"
-          ></ng-container>
-          <ng-container
-            *ngIf="currentTab == 3"
-            [ngTemplateOutlet]="headerFormTemp"
-          ></ng-container>
+          <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="stageHeader"></ng-container>
+          <ng-container *ngIf="currentTab == 3" [ngTemplateOutlet]="headerFormTemp"></ng-container>
         </div>
-        <div
-          [ngClass]="
+        <div [ngClass]="
             currentTab == 1 || currentTab == 3 ? 'scroll-stask' : 'scroll-y'
-          "
-          class="dp-step pt-4 px-5 mx-1"
-          data-kt-scroll="true"
-          data-kt-scroll-activate="{default: true}"
-          data-kt-scroll-height="auto"
-          data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
-          data-kt-scroll-wrappers=".stepper-body"
-          data-kt-scroll-offset="0px"
-        >
+          " class="dp-step pt-4 px-5 mx-1" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
           <div class="tab-content">
             <!--Phần thông tin quy trình - Phúc làm-->
-            <div
-              class="tab-pane fade"
-              id="pane_1"
-              [ngClass]="currentTab == 0 ? 'active show' : ''"
-            >
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
               <ng-container [ngTemplateOutlet]="General"></ng-container>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_2"
-              [ngClass]="currentTab == 1 ? 'active show' : ''"
-            >
+            <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
               <!-- Thiet lap giai doan thuan -->
               <ng-container [ngTemplateOutlet]="stage"></ng-container>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_3"
-              [ngClass]="currentTab == 2 ? 'active show' : ''"
-            >
-              <ng-container
-                [ngTemplateOutlet]="dynamicFieldsAllSteps"
-              ></ng-container>
+            <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
+              <ng-container [ngTemplateOutlet]="dynamicFieldsAllSteps"></ng-container>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_4"
-              [ngClass]="currentTab == 3 ? 'active show' : ''"
-            >
+            <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 3 ? 'active show' : ''">
               <ng-container [ngTemplateOutlet]="dynamicFormTemp"></ng-container>
             </div>
           </div>
         </div>
 
-        <div
-          class="d-flex flex-stack justify-content-between card-footer border-top"
-        >
+        <div class="d-flex flex-stack justify-content-between card-footer border-top">
           <div class="left">
-            <button
-              type="button"
-              class="btn btn-outline-primary me-3"
-              *ngIf="currentTab != 0"
-              (click)="previous(currentTab)"
-            >
+            <button type="button" class="btn btn-outline-primary me-3" *ngIf="currentTab != 0"
+              (click)="previous(currentTab)">
               <codx-label name="lblBack" default="Quay lại"> </codx-label>
             </button>
           </div>
           <div *ngIf="currentTab == 0"></div>
           <div>
-            <button
-              *ngIf="currentTab != 3"
-              type="button"
-              [ngClass]="checkSaveNow() ? '' : 'disabled'"
-              class="btn btn-primary me-5"
-              (click)="onSaveNow()"
-            >
-              <codx-label
-                [name]="'lblSaveNow'"
-                [default]="'Lưu ngay'"
-              ></codx-label>
+            <button *ngIf="currentTab != 3" type="button" [ngClass]="checkSaveNow() ? '' : 'disabled'"
+              class="btn btn-primary me-5" (click)="onSaveNow()">
+              <codx-label [name]="'lblSaveNow'" [default]="'Lưu ngay'"></codx-label>
             </button>
 
-            <button
-              *ngIf="currentTab != 3"
-              type="button"
-              [ngClass]="checkButtonContinue() ? '' : 'disabled'"
-              class="btn btn-primary"
-              (click)="continue(currentTab)"
-            >
-              <codx-label
-                [name]="'lblContinue'"
-                [default]="'Tiếp tục'"
-              ></codx-label>
+            <button *ngIf="currentTab != 3" type="button" [ngClass]="checkButtonContinue() ? '' : 'disabled'"
+              class="btn btn-primary" (click)="continue(currentTab)">
+              <codx-label [name]="'lblContinue'" [default]="'Tiếp tục'"></codx-label>
             </button>
 
-            <button
-              *ngIf="currentTab == 3"
-              type="button"
-              class="btn btn-primary"
-              (click)="onSave()"
-            >
+            <button *ngIf="currentTab == 3" type="button" class="btn btn-primary" (click)="onSave()">
               <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
             </button>
           </div>
@@ -316,37 +167,20 @@
 <ng-template #General>
   <!--Thông tin chung-->
   <div class="background">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name="lblGeneral"
-            [formModel]="dialog.formModel"
-            default="Thông tin chung"
-          ></codx-label>
+          <codx-label name="lblGeneral" [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name="lblGeneral"
-            [formModel]="dialog.formModel"
-            default="Thông tin chung của quy trình"
-          >
+          <codx-label name="lblGeneral" [formModel]="dialog.formModel" default="Thông tin chung của quy trình">
           </codx-label>
         </div>
       </div>
       <div class="d-flex justify-content-end">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'general-main')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'general-main')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
@@ -361,20 +195,11 @@
             </div>
             <!-- <codx-input field="groupID" [crrValue]="process.groupID" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input
-              field="groupID"
-              type="combobox"
-              [placeholder]="gridViewSetup['GroupID']?.description"
-              [crrValue]="process?.groupID"
-              [refValue]="gridViewSetup?.GroupID?.referedValue"
-              (valueChange)="valueChange($event)"
-            >
+            <codx-input field="groupID" type="combobox" [placeholder]="gridViewSetup['GroupID']?.description"
+              [crrValue]="process?.groupID" [refValue]="gridViewSetup?.GroupID?.referedValue"
+              (valueChange)="valueChange($event)">
             </codx-input>
-            <div
-              *ngIf="!checkGroup"
-              class="errorMessage text-danger ms-3"
-              data-field=""
-            >
+            <div *ngIf="!checkGroup" class="errorMessage text-danger ms-3" data-field="">
               {{ errorMessage }}
             </div>
           </div>
@@ -385,13 +210,8 @@
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input
-              field="processName"
-              [placeholder]="gridViewSetup['ProcessName']?.description"
-              type="text"
-              [crrValue]="process.processName"
-              (valueChange)="valueChange($event)"
-            >
+            <codx-input field="processName" [placeholder]="gridViewSetup['ProcessName']?.description" type="text"
+              [crrValue]="process.processName" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group margin-form">
@@ -401,13 +221,8 @@
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input
-              field="autoName"
-              type="text"
-              [crrValue]="process.autoName"
-              [placeholder]="gridViewSetup['AutoName']?.description"
-              (valueChange)="valueChange($event)"
-            >
+            <codx-input field="autoName" type="text" [crrValue]="process.autoName"
+              [placeholder]="gridViewSetup['AutoName']?.description" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group margin-form">
@@ -417,14 +232,9 @@
             </div>
             <!-- <codx-input field="applyFor" [crrValue]="process.applyFor" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup">
             </codx-input> -->
-            <codx-input
-              field="applyFor"
-              type="valuelist"
-              [crrValue]="process.applyFor"
-              [refValue]="gridViewSetup?.ApplyFor?.referedValue"
-              (valueChange)="valueChange($event)"
-              [placeholder]="gridViewSetup['ApplyFor']?.description"
-            >
+            <codx-input field="applyFor" type="valuelist" [crrValue]="process.applyFor"
+              [refValue]="gridViewSetup?.ApplyFor?.referedValue" (valueChange)="valueChange($event)"
+              [placeholder]="gridViewSetup['ApplyFor']?.description">
             </codx-input>
           </div>
         </div>
@@ -440,38 +250,22 @@
   </div>
   <!--Các vai trò quy trình-->
   <div class="background">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name="lblPermissions"
-            [formModel]="dialog.formModel"
-            default="Các vai trò trong quy trình"
-          ></codx-label>
+          <codx-label name="lblPermissions" [formModel]="dialog.formModel" default="Các vai trò trong quy trình">
+          </codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name="lblPerm"
-            [formModel]="dialog.formModel"
-            default="Những người liên quan và có thể thực hiện các chức năng
-            trong quy trình"
-          >
+          <codx-label name="lblPerm" [formModel]="dialog.formModel" default="Những người liên quan và có thể thực hiện các chức năng
+            trong quy trình">
           </codx-label>
         </div>
       </div>
       <div class="d-flex justify-content-end">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'role-main')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'role-main')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
@@ -479,53 +273,30 @@
     <div id="role-main" class="main" [ngClass]="'show-main'">
       <div class="d-flex flex-column mb-4">
         <div class="d-flex align-items-center mb-2">
-          <codx-label
-            class="fw-bold fs-4 text-dark me-3"
-            name="lblSupervisor"
-            [formModel]="dialog.formModel"
-            default="Người giám sát"
-          >
+          <codx-label class="fw-bold fs-4 text-dark me-3" name="lblSupervisor" [formModel]="dialog.formModel"
+            default="Người giám sát">
           </codx-label>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="sharePerm(controlShare, 'supervisor')"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'supervisor')">
             <i class="icon-person_add_alt_1 icon-16"></i>
           </button>
 
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="clickRoles()">
             <i class="icon-settings icon-16"></i>
           </button>
         </div>
         <div class="text-gray-500">
-          <codx-label
-            name="lblLocationControl"
-            default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-            viên trong quy trình"
-          >
+          <codx-label name="lblLocationControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+            viên trong quy trình">
           </codx-label>
         </div>
       </div>
-      <div
-        class="d-flex flex-wrap"
-        *ngIf="process.permissions != null && process.permissions?.length > 0"
-      >
+      <div class="d-flex flex-wrap" *ngIf="process.permissions != null && process.permissions?.length > 0">
         <ng-container *ngFor="let perm of process.permissions; index as i">
-          <div
-            *ngIf="perm.roleType == 'O'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-          >
+          <div *ngIf="perm.roleType == 'O'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative">
             <div class="me-2">
-              <codx-img
-                [width]="20"
-                [objectId]="perm.objectName"
-                objectType="AD_Users"
-              >
+              <codx-img [width]="20" [objectId]="perm.objectName" objectType="AD_Users">
               </codx-img>
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
@@ -541,55 +312,31 @@
 
       <div class="d-flex flex-column mb-4">
         <div class="d-flex align-items-center mb-2">
-          <codx-label
-            class="fw-bold fs-5 text-dark me-3"
-            name="lblParticipants"
-            [formModel]="dialog.formModel"
-            default="Thành viên tham gia"
-          >
+          <codx-label class="fw-bold fs-5 text-dark me-3" name="lblParticipants" [formModel]="dialog.formModel"
+            default="Thành viên tham gia">
           </codx-label>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="sharePerm(controlShare, 'participants')"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'participants')">
             <i class="icon-person_add_alt_1 icon-16"></i>
           </button>
 
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="clickRoles()">
             <i class="icon-settings icon-16"></i>
           </button>
         </div>
         <div>
-          <codx-label
-            class="fw-normal text-gray-400"
-            name="lblParticipantControl"
-            [formModel]="dialog.formModel"
-            default="Có quyền tạo nhiệm vụ trong quy trình"
-          >
+          <codx-label class="fw-normal text-gray-400" name="lblParticipantControl" [formModel]="dialog.formModel"
+            default="Có quyền tạo nhiệm vụ trong quy trình">
           </codx-label>
         </div>
       </div>
 
-      <div
-        class="d-flex flex-wrap"
-        *ngIf="process.permissions != null && process.permissions?.length > 0"
-      >
+      <div class="d-flex flex-wrap" *ngIf="process.permissions != null && process.permissions?.length > 0">
         <ng-container *ngFor="let perm of process.permissions; index as i">
-          <div
-            *ngIf="perm.roleType == 'P'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-          >
+          <div *ngIf="perm.roleType == 'P'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative">
             <div class="me-2">
-              <codx-img
-                [width]="20"
-                [objectId]="perm.objectName"
-                objectType="AD_Users"
-              >
+              <codx-img [width]="20" [objectId]="perm.objectName" objectType="AD_Users">
               </codx-img>
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
@@ -605,54 +352,30 @@
       <hr />
       <div class="d-flex flex-column mb-4">
         <div class="d-flex align-items-center mb-2">
-          <codx-label
-            class="fw-bold fs-5 text-dark me-3"
-            name="lblFollowers"
-            [formModel]="dialog.formModel"
-            default="Người theo dõi"
-          >
+          <codx-label class="fw-bold fs-5 text-dark me-3" name="lblFollowers" [formModel]="dialog.formModel"
+            default="Người theo dõi">
           </codx-label>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="sharePerm(controlShare, 'followers')"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'followers')">
             <i class="icon-person_add_alt_1 icon-16"></i>
           </button>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
-          >
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="clickRoles()">
             <i class="icon-settings icon-16"></i>
           </button>
         </div>
         <div>
-          <codx-label
-            class="fw-normal text-gray-400"
-            name="lblFollowerControl"
-            [formModel]="dialog.formModel"
-            default="Có quyền xem các nhiệm vụ trong quy trình"
-          >
+          <codx-label class="fw-normal text-gray-400" name="lblFollowerControl" [formModel]="dialog.formModel"
+            default="Có quyền xem các nhiệm vụ trong quy trình">
           </codx-label>
         </div>
       </div>
 
-      <div
-        class="d-flex flex-wrap"
-        *ngIf="process.permissions != null && process.permissions?.length > 0"
-      >
+      <div class="d-flex flex-wrap" *ngIf="process.permissions != null && process.permissions?.length > 0">
         <ng-container *ngFor="let perm of process.permissions; index as i">
-          <div
-            *ngIf="perm.roleType == 'F'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-          >
+          <div *ngIf="perm.roleType == 'F'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative">
             <div class="me-2">
-              <codx-img
-                [width]="20"
-                [objectId]="perm.objectName"
-                objectType="AD_Users"
-              >
+              <codx-img [width]="20" [objectId]="perm.objectName" objectType="AD_Users">
               </codx-img>
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
@@ -668,37 +391,20 @@
   </div>
   <!--Tùy chỉnh quy trình-->
   <div class="background">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name="lblSetting"
-            [formModel]="dialog.formModel"
-            default="Tùy chỉnh quy trình"
-          ></codx-label>
+          <codx-label name="lblSetting" [formModel]="dialog.formModel" default="Tùy chỉnh quy trình"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name="lblActived"
-            [formModel]="dialog.formModel"
-            default="Cách thức hoạt động của quy trình"
-          >
+          <codx-label name="lblActived" [formModel]="dialog.formModel" default="Cách thức hoạt động của quy trình">
           </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'setting-main')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'setting-main')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
@@ -707,39 +413,21 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label
-              fiedName="InstanceNoSetting"
-              [formModel]="dialog.formModel"
-            >
+            <codx-label fiedName="InstanceNoSetting" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <div class="col-6 row">
             <div #autoNumberSetting class="position-relative col-6">
-              <codx-input
-                type="text"
-                [crrValue]="instanceNoSetting"
+              <codx-input type="text" [crrValue]="instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
-                (valueChange)="valueChangeAutoNoCode($event)"
-                field="instanceNoSetting"
-              >
+                (valueChange)="valueChangeAutoNoCode($event)" field="instanceNoSetting">
               </codx-input>
-              <div
-                class="position-absolute cursor-pointer"
-                style="top: 7px; right: 13px"
-              >
-                <i
-                  class="icon-settings form-control-feedback"
-                  (click)="openAutoNumPopup()"
-                ></i>
+              <div class="position-absolute cursor-pointer" style="top: 7px; right: 13px">
+                <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
               </div>
             </div>
             <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
-              <codx-label
-                class=""
-                name="lblPreview"
-                [formModel]="dialog.formModel"
-                default="Xem trước: "
-              ></codx-label>
+              <codx-label class="" name="lblPreview" [formModel]="dialog.formModel" default="Xem trước: "></codx-label>
               <span class="text-gray-600">{{ instanceNoEx }}</span>
             </div>
           </div>
@@ -753,14 +441,9 @@
           </div>
           <div class="col-6 row">
             <div class="col-6">
-              <codx-input
-                field="viewMode"
-                type="valuelist"
-                [crrValue]="process.viewMode"
-                [refValue]="gridViewSetup?.ViewMode?.referedValue"
-                (valueChange)="valueChange($event)"
-                [placeholder]="gridViewSetup['ViewMode']?.description"
-              >
+              <codx-input field="viewMode" type="valuelist" [crrValue]="process.viewMode"
+                [refValue]="gridViewSetup?.ViewMode?.referedValue" (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['ViewMode']?.description">
               </codx-input>
             </div>
           </div>
@@ -769,22 +452,14 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label
-              fiedName="ViewModeDetail"
-              [formModel]="dialog.formModel"
-            >
+            <codx-label fiedName="ViewModeDetail" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <div class="col-6 row">
             <div class="col-6">
-              <codx-input
-                field="viewModeDetail"
-                type="valuelist"
-                [crrValue]="process.viewModeDetail"
-                [refValue]="gridViewSetup?.ViewModeDetail?.referedValue"
-                (valueChange)="valueChange($event)"
-                [placeholder]="gridViewSetup['ViewModeDetail']?.description"
-              >
+              <codx-input field="viewModeDetail" type="valuelist" [crrValue]="process.viewModeDetail"
+                [refValue]="gridViewSetup?.ViewModeDetail?.referedValue" (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['ViewModeDetail']?.description">
               </codx-input>
             </div>
           </div>
@@ -793,24 +468,15 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label
-              fiedName="ShowInstanceControl"
-              [formModel]="dialog.formModel"
-            >
+            <codx-label fiedName="ShowInstanceControl" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <div class="col-6 row">
             <div class="col-6">
-              <codx-input
-                type="valuelist"
-                [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
-                [placeholder]="
+              <codx-input type="valuelist" [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue" [placeholder]="
                   gridViewSetup['ShowInstanceControl']?.description
-                "
-                [crrValue]="process.showInstanceControl"
-                (valueChange)="valueChange($event)"
-                field="showInstanceControl"
-              >
+                " [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)"
+                field="showInstanceControl">
               </codx-input>
             </div>
             <!-- <codx-input [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)" field="showInstanceControl" [formModel]="formModel" [Group]="formGroup" >
@@ -821,32 +487,18 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label
-              fiedName="CloseInstanceControl"
-              [formModel]="dialog.formModel"
-            >
+            <codx-label fiedName="CloseInstanceControl" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <div class="col-6 row">
             <!-- <codx-input [crrValue]="process.closeInstanceControl" (valueChange)="valueChange($event)" field="closeInstanceControl" [formModel]="formModel" [Group]="formGroup" >
               </codx-input> -->
             <div class="position-relative col-6">
-              <codx-input
-                field="closeInstanceControl"
-                type="number"
-                [min]="0"
-                [showSpinButton]="false"
-                [placeholder]="
+              <codx-input field="closeInstanceControl" type="number" [min]="0" [showSpinButton]="false" [placeholder]="
                   gridViewSetup['CloseInstanceControl']?.description
-                "
-                (valueChange)="valueChange($event)"
-                [crrValue]="process.closeInstanceControl"
-                field="closeInstanceControl"
-              ></codx-input>
-              <div
-                class="position-absolute text-gray-400"
-                style="top: 7px; right: 13px"
-              >
+                " (valueChange)="valueChange($event)" [crrValue]="process.closeInstanceControl"
+                field="closeInstanceControl"></codx-input>
+              <div class="position-absolute text-gray-400" style="top: 7px; right: 13px">
                 <codx-label fiedName="lblDate" default="Ngày"></codx-label>
               </div>
             </div>
@@ -857,39 +509,22 @@
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
   <div class="background">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name="Memo"
-            [formModel]="dialog.formModel"
-            default="Hướng dẫn làm việc với quy trình"
-          >
+          <codx-label name="Memo" [formModel]="dialog.formModel" default="Hướng dẫn làm việc với quy trình">
           </codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name="lblMemo"
-            [formModel]="dialog.formModel"
-            default="Mô tả chi tiết quy trình"
-          >
+          <codx-label name="lblMemo" [formModel]="dialog.formModel" default="Mô tả chi tiết quy trình">
           </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
           <div class="group-button">
-            <button
-              *ngIf="isShowstage"
-              class="button-custom"
-              (click)="clickShow($event, 'memo-main')"
-            >
-              <span
-                class="icon-expand_less icon-20 text-primary-600 py-2"
-                style="font-weight: 500"
-              ></span>
+            <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'memo-main')">
+              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
             </button>
           </div>
         </div>
@@ -897,16 +532,9 @@
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
       <div class="form-group margin-form mb-4">
-        <codx-input
-          field="memo"
-          type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
-          [crrValue]="process?.memo"
-          (valueChange)="valueChange($event)"
-          [placeholder]="gridViewSetup['Memo']?.description"
-        >
+        <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"
+          [crrValue]="process?.memo" (valueChange)="valueChange($event)"
+          [placeholder]="gridViewSetup['Memo']?.description">
         </codx-input>
       </div>
     </div>
@@ -915,10 +543,7 @@
 
 <!--AVT Thông tin chung-->
 <ng-template #avatarProcess>
-  <div
-    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
-    (click)="addAvatar()"
-  >
+  <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column" (click)="addAvatar()">
     <div class="dropzone-msg dz-message needsclick">
       <ng-container *ngIf="linkAvatar != ''">
         <img [src]="linkAvatar" class="image-maxsize" />
@@ -930,47 +555,23 @@
       </ng-container>
     </div>
   </div>
-  <codx-attachment
-    #imageAvatar
-    [objectId]="process.recID"
-    [objectType]="dialog.formModel.entityName"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="1"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="0"
-    [formModel]="dialog.formModel"
-    allowExtensions=".jpg,.png"
-    [isSaveSelected]="0"
-    (fileAdded)="fileImgAdded($event)"
-    displayThumb="full"
-    showMessage="0"
-    category="0"
-  >
+  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="dialog.formModel.entityName" hideFolder="1"
+    hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
+    [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
+    displayThumb="full" showMessage="0" category="0">
   </codx-attachment>
 </ng-template>
 
 <!--Control share-->
 <ng-template #controlShare let-dialogControl>
-  <codx-share
-    [dialog]="dialogControl"
-    [multiple]="multiple"
-    [listCombobox]="listCombobox"
-    (eventApply)="applyShare($event, typeShare)"
-    [listName]="vllShare"
-  >
+  <codx-share [dialog]="dialogControl" [multiple]="multiple" [listCombobox]="listCombobox"
+    (eventApply)="applyShare($event, typeShare)" [listName]="vllShare">
   </codx-share>
 </ng-template>
 
 <ng-template #popupParticipants let-dialogPar>
-  <codx-popup-participants
-    [lstParticipants]="lstParticipants"
-    [dialog]="dialogPar"
-    [isType]="'S'"
-    (eventUser)="eventUser($event)"
-  ></codx-popup-participants>
+  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialogPar" [isType]="'S'"
+    (eventUser)="eventUser($event)"></codx-popup-participants>
 </ng-template>
 <!--End-->
 <!--End-->
@@ -984,41 +585,24 @@
       [ngTemplateOutletContext]="{ $implicit: st }"
     ></ng-container>
   </ng-container> -->
-  <ng-container
-    *ngIf="stepList?.length > 0"
-    [ngTemplateOutlet]="dynamicFields"
-    [ngTemplateOutletContext]="{ $implicit: stepList, haveTitle: false }"
-  >
+  <ng-container *ngIf="stepList?.length > 0" [ngTemplateOutlet]="dynamicFields"
+    [ngTemplateOutletContext]="{ $implicit: stepList, haveTitle: false }">
   </ng-container>
 </ng-template>
 
 <ng-template #dynamicFieldsOneSteps>
-  <ng-container
-    [ngTemplateOutlet]="dynamicFields"
-    [ngTemplateOutletContext]="{ $implicit: [step], haveTitle: true }"
-  >
+  <ng-container [ngTemplateOutlet]="dynamicFields" [ngTemplateOutletContext]="{ $implicit: [step], haveTitle: true }">
   </ng-container>
 </ng-template>
 
 <ng-template #dynamicFields let-datas let-haveTitle="haveTitle">
-  <div
-    cdkDropList
-    class="list"
-    (cdkDropListDropped)="dropCustomFile($event, null)"
-  >
+  <div cdkDropList class="list" (cdkDropListDropped)="dropCustomFile($event, null)">
     <div cdkDropListGroup>
       <ng-container *ngFor="let item of datas">
-        <div
-          *ngIf="!item.isFailStep && !item.isSuccessStep"
-          cdkDrag
-          [cdkDragDisabled]="true"
-          [cdkDragStartDelay]="200"
-          [cdkDragData]="item"
-        >
+        <div *ngIf="!item.isFailStep && !item.isSuccessStep" cdkDrag [cdkDragDisabled]="true" [cdkDragStartDelay]="200"
+          [cdkDragData]="item">
           <div class="background-job mb-5">
-            <div
-              class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-            >
+            <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
               <div class="d-flex flex-column">
                 <div class="title text-primary fs-4 fw-bold">
                   <span class="me-2" *ngIf="haveTitle">{{ titleDefaultCF}}</span>
@@ -1027,72 +611,37 @@
                   }}</span>
                 </div>
                 <div class="text-gray-600">
-                  <codx-label
-                    name="lblExpression"
-                    formName="DPStepsFields"
-                    gridViewName="grvDPStepsFields"
-                    [default]="'Kéo thả để sắp xếp các trường tùy chỉnh'"
-                  >
+                  <codx-label name="lblExpression" formName="DPStepsFields" gridViewName="grvDPStepsFields"
+                    [default]="'Kéo thả để sắp xếp các trường tùy chỉnh'">
                   </codx-label>
                 </div>
               </div>
               <div class="d-flex align-items-center">
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="addCustomField(item.recID, item.processID)"
-                >
+                <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2"
+                  (click)="addCustomField(item.recID, item.processID)">
                   <i class="icon-add icon-18"></i>
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  #p="ngbPopover"
-                  [ngbPopover]="popperHandelSetting"
-                  (mouseenter)="popoverSelectView(p, item)"
-                  placement="bottom right top left"
-                  [popoverClass]=""
-                >
+                <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2" #p="ngbPopover"
+                  [ngbPopover]="popperHandelSetting" (mouseenter)="popoverSelectView(p, item)"
+                  placement="bottom right top left" [popoverClass]="">
                   <i class="icon-settings icon-18"></i>
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="clickShow($event, item.recID)"
-                >
+                <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2"
+                  (click)="clickShow($event, item.recID)">
                   <i class="icon-expand_less icon-18"></i>
                 </button>
               </div>
             </div>
-            <div
-              id="{{ item.recID }}"
-              class="show-main"
-              cdkDropList
-              [cdkDropListData]="item?.fields || []"
-              (cdkDropListDropped)="dropCustomFile($event, item.recID)"
-            >
-              <div
-                *ngIf="!item?.fields || item?.fields?.length == 0"
-                class="position-relative p-9"
-              >
-                <div
-                  class="position-absolute top-50 start-50 translate-middle"
-                  cdkDrag
-                  [cdkDragDisabled]="true"
-                  [cdkDragData]="null"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary"
-                    (click)="addCustomField(item.recID, item.processID)"
-                  >
+            <div id="{{ item.recID }}" class="show-main" cdkDropList [cdkDropListData]="item?.fields || []"
+              (cdkDropListDropped)="dropCustomFile($event, item.recID)">
+              <div *ngIf="!item?.fields || item?.fields?.length == 0" class="position-relative p-9">
+                <div class="position-absolute top-50 start-50 translate-middle" cdkDrag [cdkDragDisabled]="true"
+                  [cdkDragData]="null">
+                  <button type="button" class="btn btn-outline-primary"
+                    (click)="addCustomField(item.recID, item.processID)">
                     <i class="icon-add icon-18 text-primary"></i>
-                    <codx-label
-                      [name]="'lblAddCustomField'"
-                      [formName]="'DPStepsFields'"
-                      [gridViewName]="'grvDPStepsFields'"
-                      [default]="'Thêm trường tùy chỉnh'"
-                    ></codx-label>
+                    <codx-label [name]="'lblAddCustomField'" [formName]="'DPStepsFields'"
+                      [gridViewName]="'grvDPStepsFields'" [default]="'Thêm trường tùy chỉnh'"></codx-label>
                   </button>
                 </div>
               </div>
@@ -1100,14 +649,9 @@
               <div *ngIf="item?.fields?.length > 0">
                 <div class="class-field mx-0 row">
                   <ng-container *ngFor="let item1 of item?.fields">
-                    <div
-                      class="col-{{
+                    <div class="col-{{
                         12 / item.showColumnControl
-                      }} has-action-menu crr-fiels p-3"
-                      cdkDrag
-                      [cdkDragStartDelay]="200"
-                      [cdkDragData]="item1"
-                    >
+                      }} has-action-menu crr-fiels p-3" cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="item1">
                       <!-- <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">
                         {{ item1?.title }} ( {{ item1?.fieldName }} )
                       </div>
@@ -1137,19 +681,11 @@
                         >
                         </codx-input>
                       </div> -->
-                      <codx-input-custom-field
-                        [customField]="item1"
-                        [objectId]="item1.recID"
-                        [disable]="true"
-                        [viewFieldName]="true"
-                      >
+                      <codx-input-custom-field [customField]="item1" [objectId]="item1.recID" [disable]="true"
+                        [viewFieldName]="true">
                       </codx-input-custom-field>
-                      <codx-mfunc
-                        [formModel]="dialog.formModel"
-                        (clickMF)="clickMFFields($event, item1)"
-                        [dataItem]="action != 'edit' ? moreDefaut : item"
-                        [type]="'hover'"
-                      >
+                      <codx-mfunc [formModel]="dialog.formModel" (clickMF)="clickMFFields($event, item1)"
+                        [dataItem]="action != 'edit' ? moreDefaut : item" [type]="'hover'">
                       </codx-mfunc>
                     </div>
                   </ng-container>
@@ -1163,46 +699,24 @@
   </div>
 
   <ng-template #popperHandelSetting>
-    <div
-      class="d-flex m-3 text-hover-primary cursor-pointer"
-      (click)="selectView(1)"
-    >
-      <span class="icon-view_column icon-20"></span
-      ><span>
-        <codx-label
-          name="lblSelectFirst"
-          formName="DPStepsFields"
-          gridViewName="grvDPStepsFields"
-          default="1 cột"
-        ></codx-label>
+    <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(1)">
+      <span class="icon-view_column icon-20"></span><span>
+        <codx-label name="lblSelectFirst" formName="DPStepsFields" gridViewName="grvDPStepsFields" default="1 cột">
+        </codx-label>
       </span>
     </div>
-    <div
-      class="d-flex m-3 text-hover-primary cursor-pointer"
-      (click)="selectView(2)"
-    >
+    <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(2)">
       <span class="icon-view_column icon-20"></span>
       <span>
-        <codx-label
-          name="lblSelectSecond"
-          formName="DPStepsFields"
-          gridViewName="grvDPStepsFields"
-          default="2 cột"
-        ></codx-label>
+        <codx-label name="lblSelectSecond" formName="DPStepsFields" gridViewName="grvDPStepsFields" default="2 cột">
+        </codx-label>
       </span>
     </div>
-    <div
-      class="d-flex m-3 text-hover-primary cursor-pointer"
-      (click)="selectView(3)"
-    >
+    <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(3)">
       <span class="icon-view_column icon-20"></span>
       <span>
-        <codx-label
-          name="lblSelectThree"
-          formName="DPStepsFields"
-          gridViewName="grvDPStepsFields"
-          default="3 cột"
-        ></codx-label>
+        <codx-label name="lblSelectThree" formName="DPStepsFields" gridViewName="grvDPStepsFields" default="3 cột">
+        </codx-label>
       </span>
     </div>
   </ng-template>
@@ -1214,12 +728,9 @@
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
         <div class="example-list stage-body-left-main">
-          <div
-            *ngFor="let itemTemp of listTemp; let i = index"
+          <div *ngFor="let itemTemp of listTemp; let i = index"
             class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-            [ngClass]="itemTemp?.recID === tempCrr?.recID ? 'click' : ''"
-            (click)="clickViewTemp(itemTemp)"
-          >
+            [ngClass]="itemTemp?.recID === tempCrr?.recID ? 'click' : ''" (click)="clickViewTemp(itemTemp)">
             <div class="order">{{ i + 1 }}</div>
             <div class="d-flex flex-column">
               <div class="fw-bold text-dark">
@@ -1236,17 +747,9 @@
 <ng-template #headerFormTemp>
   <div class="d-flex justify-content-between align-items-center">
     <h2 class="h2-title">
-      <codx-label
-        name="lblFormTemp"
-        [formModel]="dialog.formModel"
-        default="Biểu mẫu"
-      ></codx-label>
+      <codx-label name="lblFormTemp" [formModel]="dialog.formModel" default="Biểu mẫu"></codx-label>
     </h2>
-    <button
-      type="button"
-      class="btn btn-sm btn-outline-primary"
-      (click)="addTemplet()"
-    >
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="addTemplet()">
       <i class="icon-add icon-14 text-primary ms-n1"></i>
       <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
     </button>
@@ -1268,92 +771,54 @@
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
         <div
-          class="fw-bold fs-5 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
-        >
+          class="fw-bold fs-5 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between">
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-primary"
-            (click)="openPopupStep('add')"
-          >
+          <button type="button" class="btn btn-sm btn-outline-primary" (click)="openPopupStep('add')">
             <i class="icon-add icon-14 text-primary ms-n1"></i>
             <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
           </button>
         </div>
-        <div
-          class="example-list stage-body-left-main"
-          cdkDropList
-          (cdkDropListDropped)="dropStep($event)"
-        >
+        <div class="example-list stage-body-left-main" cdkDropList (cdkDropListDropped)="dropStep($event)">
           <!-- danh sách giai đoạn -->
           <div class="stage-scroll">
-            <div
-              cdkDrag
-              *ngFor="let itemStep of stepList; let i = index"
+            <div cdkDrag *ngFor="let itemStep of stepList; let i = index"
               class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
               [style.display]=" itemStep.isSuccessStep || itemStep.isFailStep ? 'none' : ''"
               (click)="clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)"
               [ngStyle]="{'background-color': itemStep?.backgroundColor }"
-              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
-            >
-              <ng-container
-                *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']"
-              >
+              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''">
+              <ng-container *ngIf="!itemStep['isSuccessStep'] && !itemStep['isFailStep']">
                 <div class="d-flex flex-column">
                   <div class="d-flex">
-                    <span 
-                    *ngIf="itemStep?.icon"
-                    class="me-1 d-flex align-items-center"
-                    [ngClass]="itemStep?.icon"
-                    [ngStyle]="{ 'color': itemStep?.iconColor }"
-                  ></span>
-                    <span class="fs-5 fw-bold line-clamp line-clamp-1"  [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <span *ngIf="itemStep?.icon" class="me-2 d-flex align-items-center" [ngClass]="itemStep?.icon"
+                      [ngStyle]="{ 'color': itemStep?.iconColor }"></span>
+                    <span class="text-dark fw-bold line-clamp line-clamp-1" [ngStyle]="{ 'color': itemStep?.textColor}">
                       {{ itemStep?.stepName }}
                     </span>
                   </div>
 
-                  <div class="fs-7"  [ngStyle]="{ 'color': itemStep?.textColor}">
-                    <codx-label
-                      fiedName="durationTime"
-                      [formModel]="dialog.formModel"
-                      [default]="'Thời hạn: '"
-                    ></codx-label>
-                    <span >{{
+                  <div class="fs-7 text-gray-400" [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <codx-label fiedName="durationTime" [formModel]="dialog.formModel" [default]="'Thời hạn: '">
+                    </codx-label>
+                    <span>{{
                       itemStep?.durationDay || 0
                     }}</span>
-                    <codx-label
-                      fiedName="day"
-                      [formModel]="dialog.formModel"
-                      [default]="strDay"
-                    ></codx-label>
-                    <span >{{
+                    <codx-label fiedName="day" [formModel]="dialog.formModel" [default]="strDay"></codx-label>
+                    <span>{{
                       itemStep?.durationHour || 0
                     }}</span>
-                    <codx-label
-                      fiedName="hour"
-                      [formModel]="dialog.formModel"
-                      [default]="strHour"
-                    ></codx-label>
+                    <codx-label fiedName="hour" [formModel]="dialog.formModel" [default]="strHour"></codx-label>
                   </div>
-                  <div class="fs-7"  [ngStyle]="{ 'color': itemStep?.textColor}">
-                    <codx-label
-                      fiedName="task"
-                      [formModel]="dialog.formModel"
-                      [default]="'Công việc:'"
-                    ></codx-label>
-                    <span class="">{{
+                  <div class="fs-7 text-gray-700" [ngStyle]="{ 'color': itemStep?.textColor}">
+                    <codx-label fiedName="task" [formModel]="dialog.formModel" [default]="'Công việc:'"></codx-label>
+                    <span class="fw-bold">{{
                       itemStep?.tasks?.length
                     }}</span>
                   </div>
                 </div>
-                <codx-mfunc
-                  *ngIf="viewStepCrr == viewStepCustom"
-                  [formModel]="grvMoreFunction"
-                  (clickMF)="clickMFStep($event, itemStep)"
-                  [dataItem]="moreDefaut"
-                  [type]="'hover'"
-                  (changeDataMF)="changeDataMF($event, 'step')"
-                >
+                <codx-mfunc *ngIf="viewStepCrr == viewStepCustom" [formModel]="grvMoreFunction"
+                  (clickMF)="clickMFStep($event, itemStep)" [dataItem]="moreDefaut" [type]="'hover'"
+                  (changeDataMF)="changeDataMF($event, 'step')">
                 </codx-mfunc>
               </ng-container>
             </div>
@@ -1363,19 +828,11 @@
             <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
               Kết quả
             </div>
-            <div
-              class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
+            <div class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
               [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
-              (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
-            >
-              <div
-                class="order"
-                [ngStyle]="{ background: iconReasonSuccess?.textColor }"
-              >
-                <i
-                  [class]="iconReasonSuccess?.icon"
-                  [ngStyle]="{ color: iconReasonSuccess?.color }"
-                >
+              (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)">
+              <div class="order" [ngStyle]="{ background: iconReasonSuccess?.textColor }">
+                <i [class]="iconReasonSuccess?.icon" [ngStyle]="{ color: iconReasonSuccess?.color }">
                 </i>
               </div>
               <div class="d-flex flex-column">
@@ -1388,19 +845,11 @@
               </div>
             </div>
             <!-- Reason fail -->
-            <div
-              class="list-stage cursor-pointer drap-drop"
+            <div class="list-stage cursor-pointer drap-drop"
               [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
-              (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
-            >
-              <div
-                class="order"
-                [ngStyle]="{ background: iconReasonFail?.textColor }"
-              >
-                <i
-                  [class]="iconReasonFail?.icon"
-                  [ngStyle]="{ color: iconReasonFail?.color }"
-                >
+              (click)="clickViewStep($event, viewStepReasonFail, strEmpty)">
+              <div class="order" [ngStyle]="{ background: iconReasonFail?.textColor }">
+                <i [class]="iconReasonFail?.icon" [ngStyle]="{ color: iconReasonFail?.color }">
                 </i>
               </div>
               <div class="d-flex flex-column">
@@ -1417,51 +866,33 @@
         </div>
       </div>
       <div class="stage-body-right w-100 ps-6">
-        <div
-          class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 border-bottom stage-header"
-        >
+        <div class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 border-bottom stage-header">
           <div class="fw-bold fs-4 text-dark w-100">{{ titleViewStepCrr }}</div>
           <div class="d-flex align-items-center">
-            <div
-              *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess"
-            >
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepSuccess?.isUsed ?? true"
-                [crrValue]="stepSuccess?.isUsed"
-                (valueChange)="turnOnReason($event, viewStepReasonSuccess)"
-              >
+            <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
+              <codx-input class="test-check" type="switch" style="width: 100%" field="isUsed"
+                [checked]="stepSuccess?.isUsed ?? true" [crrValue]="stepSuccess?.isUsed"
+                (valueChange)="turnOnReason($event, viewStepReasonSuccess)">
               </codx-input>
             </div>
             <!-- more function step -->
             <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonFail">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepFail?.isUsed ?? true"
-                [crrValue]="stepFail?.isUsed"
-                (valueChange)="turnOnReason($event, viewStepReasonFail)"
-              >
+              <codx-input class="test-check" type="switch" style="width: 100%" field="isUsed"
+                [checked]="stepFail?.isUsed ?? true" [crrValue]="stepFail?.isUsed"
+                (valueChange)="turnOnReason($event, viewStepReasonFail)">
               </codx-input>
             </div>
             <!-- more function step -->
           </div>
         </div>
         <div class="stage-right-main pe-3">
-          <ng-container
-            [ngTemplateOutlet]="
+          <ng-container [ngTemplateOutlet]="
               viewStepCrr === viewStepCustom
                 ? task
                 : viewStepCrr === viewStepReasonSuccess
                 ? reasonSuccess
                 : reasonFail
-            "
-          ></ng-container>
+            "></ng-container>
         </div>
       </div>
     </div>
@@ -1483,9 +914,7 @@
 <!-- template công việc -->
 <ng-template #job>
   <div class="background-job">
-    <div
-      class="header-job d-flex align-items-center justify-content-between w-100 py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between w-100 py-2 px-5">
       <div class="row w-100">
         <div class="d-flex flex-column col-7">
           <div class="title text-primary fs-4 fw-bold">
@@ -1493,23 +922,16 @@
             </codx-label>
           </div>
           <div class="text-gray-600">
-            <codx-label
-              fiedName="taskMemo"
-              default="Công việc mặc định người phụ trách phải thực hiện trong
-              giai đoạn"
-              [formModel]="dialog.formModel"
-            >
+            <codx-label fiedName="taskMemo" default="Công việc mặc định người phụ trách phải thực hiện trong
+              giai đoạn" [formModel]="dialog.formModel">
             </codx-label>
           </div>
         </div>
         <div class="d-flex align-items-center justify-content-end col-5 pe-0">
           <div class="d-flex justify-content-end flex-column">
             <div class="text-gray-500 fs-7">
-              <codx-label
-                fiedName="taskMemo"
-                default="Thời hạn công việc so với giai đoạn"
-                [formModel]="dialog.formModel"
-              >
+              <codx-label fiedName="taskMemo" default="Thời hạn công việc so với giai đoạn"
+                [formModel]="dialog.formModel">
               </codx-label>
             </div>
             <div class="text-primary">
@@ -1518,25 +940,14 @@
             </div>
           </div>
           <div class="d-flex align-items-center ms-5">
-            <button
-              type="button"
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="openTaskGroup()"
-            >
+            <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openTaskGroup()">
               <i class="icon-add icon-16"></i>
             </button>
-            <button
-              type="button"
-              class="btn btn-icon btn-sm btn-light-primary ms-2"
-              (click)="openTypeJob()"
-            >
+            <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2" (click)="openTypeJob()">
               <i class="icon-add_task icon-16"></i>
             </button>
-            <button
-              type="button"
-              class="btn btn-icon btn-sm btn-light-primary ms-2"
-              (click)="clickShow($event, 'job-main')"
-            >
+            <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2"
+              (click)="clickShow($event, 'job-main')">
               <i class="icon-expand_less icon-16"></i>
             </button>
           </div>
@@ -1547,42 +958,23 @@
     <div id="job-main" class="main-job p-6" [ngClass]="'show-main'">
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList?.length > 0">
-        <div
-          cdkDropList
-          class="list"
-          (cdkDropListDropped)="drop($event, taskGroupList, true)"
-        >
+        <div cdkDropList class="list" (cdkDropListDropped)="drop($event, taskGroupList, true)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div
-                class="card-job-list"
-                cdkDrag
-                [cdkDragData]="taskList"
-                [cdkDragStartDelay]="100"
-                [cdkDragDisabled]="taskList?.recID ? false : true"
-              >
+              <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="100"
+                [cdkDragDisabled]="taskList?.recID ? false : true">
                 <div class="card-job task-main">
-                  <div
-                    *ngIf="taskList?.recID"
-                    class="d-flex align-items-center has-action-menu mb-4 task-groups"
-                  >
+                  <div *ngIf="taskList?.recID" class="d-flex align-items-center has-action-menu mb-4 task-groups">
                     <!-- show hiden group task -->
                     <span class="me-4">
-                      <button
-                        type="button"
-                        class="btn btn-icon btn-light-primary"
-                        (click)="toggleTask($event, taskList?.recID)"
-                      >
+                      <button type="button" class="btn btn-icon btn-light-primary"
+                        (click)="toggleTask($event, taskList?.recID)">
                         <i class="icon-horizontal_rule icon-18"></i>
                       </button>
                     </span>
                     <div class="me-3">
-                      <codx-img
-                        [width]="30"
-                        [objectId]="taskList?.roles[0]?.objectID"
-                        objectType="AD_Users"
-                        [objectName]="taskList?.roles[0]?.objectName"
-                      >
+                      <codx-img [width]="30" [objectId]="taskList?.roles[0]?.objectID" objectType="AD_Users"
+                        [objectName]="taskList?.roles[0]?.objectName">
                       </codx-img>
                     </div>
                     <div class="steplist-hearder">
@@ -1591,11 +983,7 @@
                       </div>
                       <div class="d-flex align-items-center fs-7">
                         <span class="text-gray-600 me-1">
-                          <codx-label
-                            fiedName="StepName"
-                            [formModel]=""
-                            [default]="'Thời hạn'"
-                          >
+                          <codx-label fiedName="StepName" [formModel]="" [default]="'Thời hạn'">
                           </codx-label>
                         </span>
                         <span class="me-1 fw-bold">
@@ -1604,68 +992,33 @@
                               (+taskList?.durationHour || 0)
                           }}
                         </span>
-                        <codx-label
-                          class="text-gray-600"
-                          fiedName="StepName"
-                          [formModel]=""
-                          [default]="'Giờ'"
-                        >
+                        <codx-label class="text-gray-600" fiedName="StepName" [formModel]="" [default]="'Giờ'">
                         </codx-label>
                       </div>
                     </div>
-                    <codx-mfunc
-                      [formModel]="grvMoreFunction"
-                      (clickMF)="clickMFTaskGroup($event, taskList)"
-                      [dataItem]="moreDefaut"
-                      [type]="'hover'"
-                      (changeDataMF)="changeDataMF($event, 'group')"
-                    >
+                    <codx-mfunc [formModel]="grvMoreFunction" (clickMF)="clickMFTaskGroup($event, taskList)"
+                      [dataItem]="moreDefaut" [type]="'hover'" (changeDataMF)="changeDataMF($event, 'group')">
                     </codx-mfunc>
                   </div>
-                  <div
-                    *ngIf="!taskList?.recID"
-                    [ngStyle]="
+                  <div *ngIf="!taskList?.recID" [ngStyle]="
                       taskList?.task?.length == 0 ? { 'min-height': '5px' } : {}
-                    "
-                  ></div>
+                    "></div>
                   <!-- kéo thả ở trong  -->
-                  <div
-                    [id]="'group' + taskList?.recID"
-                    cdkDropList
-                    [cdkDropListData]="taskList?.task || []"
-                    (cdkDropListDropped)="drop($event, taskList, false)"
-                    class="task ps-14"
-                    [ngStyle]="taskList?.recID ? {} : {}"
-                  >
+                  <div [id]="'group' + taskList?.recID" cdkDropList [cdkDropListData]="taskList?.task || []"
+                    (cdkDropListDropped)="drop($event, taskList, false)" class="task ps-14"
+                    [ngStyle]="taskList?.recID ? {} : {}">
                     <ng-container *ngFor="let task of taskList?.task">
-                      <div
-                        cdkDrag
-                        [cdkDragStartDelay]="200"
-                        [cdkDragData]="task"
-                        class="drap-drop"
-                      >
+                      <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="task" class="drap-drop">
                         <div class="has-action-menu">
-                          <div
-                            class="d-flex justify-content-start align-items-center"
-                          >
+                          <div class="d-flex justify-content-start align-items-center">
                             <!-- icon task -->
-                            <div
-                              class="icon-container"
-                              [ngStyle]="getColor(task)"
-                            >
-                              <span
-                                class="icon-16"
-                                [ngClass]="getIconTask(task)"
-                              ></span>
+                            <div class="icon-container" [ngStyle]="getColor(task)">
+                              <span class="icon-16" [ngClass]="getIconTask(task)"></span>
                             </div>
                             <!-- avata -->
                             <div class="mx-3">
-                              <codx-img
-                                [width]="30"
-                                [objectId]="task?.roles[0]?.objectID"
-                                objectType="AD_Users"
-                                [objectName]="task?.roles[0]?.objectName"
-                              >
+                              <codx-img [width]="30" [objectId]="task?.roles[0]?.objectID" objectType="AD_Users"
+                                [objectName]="task?.roles[0]?.objectName">
                               </codx-img>
                             </div>
                             <div class="steplist-hearder">
@@ -1674,11 +1027,7 @@
                               </div>
                               <div class="d-flex align-items-center fs-7">
                                 <span class="text-gray-600 me-1">
-                                  <codx-label
-                                    fiedName="StepName"
-                                    [formModel]=""
-                                    [default]="'Thời hạn'"
-                                  >
+                                  <codx-label fiedName="StepName" [formModel]="" [default]="'Thời hạn'">
                                   </codx-label>
                                 </span>
                                 <span class="me-1 fw-bold">
@@ -1687,67 +1036,32 @@
                                       (+task?.durationHour || 0)
                                   }}
                                 </span>
-                                <codx-label
-                                  class="text-gray-600"
-                                  fiedName="StepName"
-                                  [formModel]=""
-                                  [default]="'Giờ'"
-                                >
+                                <codx-label class="text-gray-600" fiedName="StepName" [formModel]="" [default]="'Giờ'">
                                 </codx-label>
                               </div>
                             </div>
                           </div>
                           <div class="task-att">
-                            <codx-attachment
-                              #attachment
-                              hideFolder="1"
-                              hideImageUpload="0"
-                              hideImageThumb="0"
-                              hideUploadBtn="1"
-                              hideDes="1"
-                              type="inline"
-                              allowMultiFile="1"
-                              displayThumb="full"
-                              showMessage="1"
-                            >
+                            <codx-attachment #attachment hideFolder="1" hideImageUpload="0" hideImageThumb="0"
+                              hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1" displayThumb="full"
+                              showMessage="1">
                             </codx-attachment>
                           </div>
-                          <codx-mfunc
-                            [formModel]="grvMoreFunction"
-                            (clickMF)="
+                          <codx-mfunc [formModel]="grvMoreFunction" (clickMF)="
                               clickMFTask($event, taskList?.task, task)
-                            "
-                            [isBookMark]="true"
-                            [dataItem]="moreDefaut"
-                            [type]="'hover'"
-                            (changeDataMF)="changeDataMF($event, 'task')"
-                          >
+                            " [isBookMark]="true" [dataItem]="moreDefaut" [type]="'hover'"
+                            (changeDataMF)="changeDataMF($event, 'task')">
                           </codx-mfunc>
                         </div>
                         <div class="task-att">
-                          <codx-attachment
-                            #attachment
-                            [objectId]="task?.recID"
-                            hideFolder="1"
-                            hideImageUpload="0"
-                            hideImageThumb="0"
-                            hideUploadBtn="1"
-                            hideDes="1"
-                            type="inline"
-                            allowMultiFile="1"
-                            displayThumb="full"
-                            showMessage="0"
-                            [fdName]="task?.stepID"
-                            [dataSelected]="task"
-                          >
+                          <codx-attachment #attachment [objectId]="task?.recID" hideFolder="1" hideImageUpload="0"
+                            hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+                            displayThumb="full" showMessage="0" [fdName]="task?.stepID" [dataSelected]="task">
                           </codx-attachment>
                         </div>
                       </div>
                     </ng-container>
-                    <div
-                      *ngIf="taskList?.task?.length === 0"
-                      style="height: 20px"
-                    ></div>
+                    <div *ngIf="taskList?.task?.length === 0" style="height: 20px"></div>
                   </div>
                 </div>
               </div>
@@ -1757,31 +1071,15 @@
         </div>
       </div>
       <div class="d-flex justify-content-center mt-3">
-        <button
-          type="button"
-          class="btn btn-outline-primary me-2"
-          (click)="openTaskGroup()"
-        >
+        <button type="button" class="btn btn-outline-primary me-2" (click)="openTaskGroup()">
           <i class="icon-add icon-18 text-primary"></i>
-          <codx-label
-            [name]="'lblAddGroup'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Thêm nhóm công việc'"
-          ></codx-label>
+          <codx-label [name]="'lblAddGroup'" [formName]="'DPStepsFields'" [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm nhóm công việc'"></codx-label>
         </button>
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          (click)="openTypeJob()"
-        >
+        <button type="button" class="btn btn-outline-primary" (click)="openTypeJob()">
           <i class="icon-add_task icon-18 text-primary"></i>
-          <codx-label
-            [name]="'lblAddTask'"
-            [formName]="'DPStepsFields'"
-            [gridViewName]="'grvDPStepsFields'"
-            [default]="'Thêm công việc'"
-          ></codx-label>
+          <codx-label [name]="'lblAddTask'" [formName]="'DPStepsFields'" [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm công việc'"></codx-label>
         </button>
       </div>
     </div>
@@ -1804,155 +1102,75 @@
 
 <ng-template #addStageHeader>
   <div class="d-flex justify-content-between">
-    <codx-label
-      class="h3"
-      [fiedName]="
+    <codx-label class="h3" [fiedName]="
         actionStep == 'edit' ? headerStep?.edit[1] : headerStep?.add[1]
-      "
-      [formModel]="grvStep"
-      [default]="
+      " [formModel]="grvStep" [default]="
         actionStep == 'edit' ? headerStep?.edit[0] : headerStep?.add[0]
-      "
-    ></codx-label>
-    <span
-      class="icon-close icon-18 cursor-pointer"
-      (click)="popupAddStage.close()"
-    ></span>
+      "></codx-label>
+    <span class="icon-close icon-18 cursor-pointer" (click)="popupAddStage.close()"></span>
   </div>
 </ng-template>
 
 <ng-template #addStageBody>
   <div class="form-group mt-5">
     <div class="fw-bold text-dark mb-1">
-      <codx-label
-        fiedName="StepName"
-        [formModel]="grvStep"
-        default="Tên giai đoạn"
-      ></codx-label>
+      <codx-label fiedName="StepName" [formModel]="grvStep" default="Tên giai đoạn"></codx-label>
     </div>
-    <codx-input
-      field="stepName"
-      [formModel]="grvStep"
-      [Group]=""
-      type="text"
-      [crrValue]="stepName"
-      (valueChange)="changeNameStep($event)"
-    >
+    <codx-input field="stepName" [formModel]="grvStep" [Group]="" type="text" [crrValue]="stepName"
+      (valueChange)="changeNameStep($event)">
     </codx-input>
 
     <div class="fs-7 text-gray-600 text-italic mt-2" *ngIf="isAddStage">
-      <codx-label
-        [formModel]="grvStep"
-        default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
-        giai đoạn hoàn tất)"
-      ></codx-label>
+      <codx-label [formModel]="grvStep" default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
+        giai đoạn hoàn tất)"></codx-label>
     </div>
   </div>
 
   <div class="form-group row">
     <div class="col-6 d-flex align-items-center justify-content-between">
-      <codx-label
-        fiedName="backgroundColor"
-        [formModel]="grvStep"
-        default="Màu nền giai đoạn:"
-      >
+      <codx-label fiedName="backgroundColor" [formModel]="grvStep" default="Màu nền giai đoạn:">
       </codx-label>
-      <codx-input
-        class="me-2"
-        type="colorpicker"
-        [showText]="false"
-        [modeSwitcher]="false"
-        field="backgroundColor"
-        [crrValue]="stepNew?.backgroundColor"
-        (valueChange)="chanvalueColor($event, stepNew)"
-      >
+      <codx-input class="me-2" type="colorpicker" [showText]="false" [modeSwitcher]="false" field="backgroundColor"
+        [crrValue]="stepNew?.backgroundColor" (valueChange)="chanvalueColor($event, stepNew)">
       </codx-input>
     </div>
     <div class="col-6 d-flex align-items-center">
-      <codx-label
-        class="me-4"
-        fiedName="textColor"
-        [formModel]="grvStep"
-        default="Màu chữ:"
-      >
+      <codx-label class="me-4" fiedName="textColor" [formModel]="grvStep" default="Màu chữ:">
       </codx-label>
-      <codx-input
-        field="textColor"
-        class="ms-4"
-        type="colorpicker"
-        [showText]="false"
-        [modeSwitcher]="false"
-        [crrValue]="stepNew?.textColor"
-        (valueChange)="chanvalueColor($event, stepNew)"
-      >
+      <codx-input field="textColor" class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
+        [crrValue]="stepNew?.textColor" (valueChange)="chanvalueColor($event, stepNew)">
       </codx-input>
     </div>
   </div>
 
   <div class="form-group row">
     <div class="col-6 d-flex justify-content-between align-items-center">
-      <codx-label
-        fiedName="icon"
-        [formModel]="grvStep"
-        default="Icon hiển thị:"
-      >
+      <codx-label fiedName="icon" [formModel]="grvStep" default="Icon hiển thị:">
       </codx-label>
       <div class="d-flex">
-        <codx-valuelist
-          class="me-4"
-          field="icon"
-          [name]="'Sys008'"
-          [iconOnly]="true"
-          [crrValue]="stepNew?.icon"
-          (valueChange)="changeIcon($event, 'icon', stepNew)"
-        >
+        <codx-valuelist class="me-4" field="icon" [name]="'Sys008'" [iconOnly]="true" [crrValue]="stepNew?.icon"
+          (valueChange)="changeIcon($event, 'icon', stepNew)">
         </codx-valuelist>
-        <codx-input
-          field="iconColor"
-          class="ms-4"
-          type="colorpicker"
-          [showText]="false"
-          [modeSwitcher]="false"
-          [crrValue]="stepNew?.iconColor"
-          (valueChange)="chanvalueColor($event, stepNew)"
-        >
+        <codx-input field="iconColor" class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
+          [crrValue]="stepNew?.iconColor" (valueChange)="chanvalueColor($event, stepNew)">
         </codx-input>
       </div>
     </div>
     <div class="col-6 d-flex justify-content-between align-items-center">
-      <codx-label
-        fiedName="icon"
-        [formModel]="grvStep"
-        default="Demo:"
-        class="me-4"
-      >
+      <codx-label fiedName="icon" [formModel]="grvStep" default="Demo:" class="me-4">
       </codx-label>
-      <div
-        [ngStyle]="{ background: stepNew?.backgroundColor }"
-        style="
+      <div [ngStyle]="{ background: stepNew?.backgroundColor }" style="
           border: 1px solid gray;
           height: 40px;
           border-radius: 3px;
           flex-grow: 1;
-        "
-        class="d-flex align-items-center"
-      >
-        <div
-          class="d-flex align-items-center justify-content-center mx-1"
-        >
-          <span
-            [ngClass]="stepNew?.icon"
-            [ngStyle]="{ color: stepNew?.iconColor }"
-          ></span>
+        " class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-center mx-1">
+          <span [ngClass]="stepNew?.icon" [ngStyle]="{ color: stepNew?.iconColor }"></span>
         </div>
-        <span
-          class="line-clamp line-clamp-1"
-          style="flex-grow: 1;"
-          [ngStyle]="{ color: stepNew?.textColor }"
-          >
-            {{ stepName }}
-          </span
-        >
+        <span class="line-clamp line-clamp-1" style="flex-grow: 1;" [ngStyle]="{ color: stepNew?.textColor }">
+          {{ stepName }}
+        </span>
       </div>
     </div>
   </div>
@@ -1963,24 +1181,11 @@
 
 <ng-template #addStageFooter>
   <div class="d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-outline-primary me-2"
-      (click)="popupAddStage.close()"
-    >
+    <button type="button" class="btn btn-outline-primary me-2" (click)="popupAddStage.close()">
       <codx-label name="lblCancel" formName="Tasks" default="Hủy"></codx-label>
     </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      [disabled]="isSaveStep"
-      (click)="saveStep()"
-    >
-      <codx-label
-        name="lblSuscess"
-        formName="Tasks"
-        default="Đồng ý"
-      ></codx-label>
+    <button type="button" class="btn btn-primary" [disabled]="isSaveStep" (click)="saveStep()">
+      <codx-label name="lblSuscess" formName="Tasks" default="Đồng ý"></codx-label>
     </button>
   </div>
 </ng-template>
@@ -1989,9 +1194,7 @@
 
 <ng-template #reasonSuccess>
   <div class="background-job form-setting-step-success mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
@@ -2002,68 +1205,37 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
-            (click)="clickShow($event, 'setup-step')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" [disabled]="stepSuccess?.isUsed ? false : true"
+            (click)="clickShow($event, 'setup-step')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      class="main-job"
-      id="setup-step"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-6">
         <div class="row mb-5">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                field="ReasonControl"
-                [default]="gridViewSetupStep['ReasonControl']?.headerText"
-              ></codx-label>
+              <codx-label field="ReasonControl" [default]="gridViewSetupStep['ReasonControl']?.headerText"></codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  name="success-radio"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [disabled]="stepSuccess?.isUsed ? false : true"
-                  [checked]="stepSuccess?.reasonControl ?? false"
-                  [crrValue]="stepSuccess?.reasonControl"
-                  (valueChange)="
+                <codx-input name="success-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
+                  [disabled]="stepSuccess?.isUsed ? false : true" [checked]="stepSuccess?.reasonControl ?? false"
+                  [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
-                  "
-                >
+                  ">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  name="success-radio"
-                  type="radio"
-                  style="width: 100%"
-                  field="no"
-                  [label]="titleRadioNo"
-                  [checked]="!stepSuccess?.reasonControl ?? false"
-                  [disabled]="stepSuccess?.isUsed ? false : true"
-                  [crrValue]="stepSuccess?.reasonControl"
-                  (valueChange)="
+                <codx-input name="success-radio" type="radio" style="width: 100%" field="no" [label]="titleRadioNo"
+                  [checked]="!stepSuccess?.reasonControl ?? false" [disabled]="stepSuccess?.isUsed ? false : true"
+                  [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
-                  "
-                  readonly
-                >
+                  " readonly>
                 </codx-input>
               </div>
             </div>
@@ -2072,34 +1244,21 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName="NewProcessID"
-                [default]="gridViewSetupStep['NewProcessID']?.headerText"
-              ></codx-label>
+              <codx-label fiedName="NewProcessID" [default]="gridViewSetupStep['NewProcessID']?.headerText">
+              </codx-label>
             </div>
-            <codx-label
-              class="text-gray-600"
-              default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
-              dấu thành công"
-            ></codx-label>
+            <codx-label class="text-gray-600" default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
+              dấu thành công"></codx-label>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
             <!-- <codx-input field="" type="valuelist" refValue="CRM009"> </codx-input> -->
-            <ejs-combobox
-              id="recID"
-              [dataSource]="listCbxProccess"
-              [fields]="fieldCbxProccess"
+            <ejs-combobox id="recID" [dataSource]="listCbxProccess" [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="stepSuccess.newProcessID"
-              [readonly]="stepSuccess.isUsed ? false : true"
-            >
+              [value]="moveProccessIsNull(stepSuccess?.newProcessID)" [readonly]="stepSuccess.isUsed ? false : true">
             </ejs-combobox>
-            <codx-label
-              class="text-danger fst-italic fs-7"
-              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
-              đối tượng áp dụng"
-            >
+            <codx-label class="text-danger fst-italic fs-7" default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
+              đối tượng áp dụng">
             </codx-label>
           </div>
         </div>
@@ -2108,53 +1267,30 @@
   </div>
 
   <div class="background-job form-reason-success">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            [default]="joinTwoString(stepNameReason, stepNameSuccess)"
-          ></codx-label>
+          <codx-label [default]="joinTwoString(stepNameReason, stepNameSuccess)"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            default="Lý do nhiệm vụ được ghi nhận là thành công"
-          ></codx-label>
+          <codx-label default="Lý do nhiệm vụ được ghi nhận là thành công"></codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
-            (click)="openPopupReason(viewStepReasonSuccess, null, null)"
-          >
-            <span
-              class="icon-add icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button class="button-custom" [disabled]="stepSuccess?.isUsed ? false : true"
+            (click)="openPopupReason(viewStepReasonSuccess, null, null)">
+            <span class="icon-add icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
-            (click)="clickShow($event, 'reason-success')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" [disabled]="stepSuccess?.isUsed ? false : true"
+            (click)="clickShow($event, 'reason-success')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      class="main-job has-actions-menu"
-      id="reason-success"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-      #view
-    >
+    <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
+      #view>
       <div class="main-body p-6">
         <div *ngIf="stepSuccess.reasons?.length > 0">
           <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
@@ -2162,15 +1298,9 @@
               <li>
                 <div *ngIf="stepSuccess.isUsed; else other_content">
                   {{ item?.reasonName }}
-                  <codx-mfunc
-                    [formModel]="dialog.formModel"
-                    (clickMF)="
+                  <codx-mfunc [formModel]="dialog.formModel" (clickMF)="
                       clickMFReason($event, item, viewStepReasonSuccess)
-                    "
-                    (changeDataMF)="changeReasonMF($event)"
-                    [dataItem]="moreDefaut"
-                    [type]="'hover'"
-                  >
+                    " (changeDataMF)="changeReasonMF($event)" [dataItem]="moreDefaut" [type]="'hover'">
                   </codx-mfunc>
                 </div>
               </li>
@@ -2178,13 +1308,9 @@
             <ng-template #other_content>
               <div>
                 {{ item?.reasonName }}
-                <codx-mfunc
-                  [formModel]="dialog.formModel"
-                  (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
-                  (changeDataMF)="changeReasonMF($event)"
-                  [dataItem]="''"
-                  [type]="'hover'"
-                >
+                <codx-mfunc [formModel]="dialog.formModel"
+                  (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)" (changeDataMF)="changeReasonMF($event)"
+                  [dataItem]="''" [type]="'hover'">
                 </codx-mfunc>
               </div>
             </ng-template>
@@ -2192,12 +1318,8 @@
         </div>
 
         <div class="d-flex justify-content-center">
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            [disabled]="stepSuccess?.isUsed ? false : true"
-            (click)="openPopupReason(viewStepReasonSuccess, null, null)"
-          >
+          <button type="button" class="btn btn-outline-primary" [disabled]="stepSuccess?.isUsed ? false : true"
+            (click)="openPopupReason(viewStepReasonSuccess, null, null)">
             <i class="icon-add icon-18 text-primary"> </i>
             <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
           </button>
@@ -2208,9 +1330,7 @@
 </ng-template>
 <ng-template #reasonFail>
   <div class="background-job form-setting-step-fail mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
@@ -2221,62 +1341,36 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            [disabled]="stepFail?.isUsed ? false : true"
-            (click)="clickShow($event, 'setup-step')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" [disabled]="stepFail?.isUsed ? false : true"
+            (click)="clickShow($event, 'setup-step')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      class="main-job"
-      id="setup-step"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-6">
         <div class="row mb-5">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                fiedName="ReasonControl"
-                [default]="gridViewSetupStep['ReasonControl']?.headerText"
-              ></codx-label>
+              <codx-label fiedName="ReasonControl" [default]="gridViewSetupStep['ReasonControl']?.headerText">
+              </codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  name="fail-radio"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [checked]="stepFail?.reasonControl ?? false"
-                  [crrValue]="stepFail?.reasonControl"
+                <codx-input name="fail-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
+                  [checked]="stepFail?.reasonControl ?? false" [crrValue]="stepFail?.reasonControl"
                   [disabled]="stepFail?.isUsed ? false : true"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
-                >
+                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  type="radio"
-                  name="fail-radio"
-                  field="no"
-                  [checked]="!stepFail?.reasonControl"
-                  [crrValue]="stepFail?.reasonControl ?? false"
-                  [label]="titleRadioNo"
+                <codx-input type="radio" name="fail-radio" field="no" [checked]="!stepFail?.reasonControl"
+                  [crrValue]="stepFail?.reasonControl ?? false" [label]="titleRadioNo"
                   [disabled]="stepFail?.isUsed ? false : true"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
-                >
+                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
                 </codx-input>
               </div>
             </div>
@@ -2285,33 +1379,18 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                field="NewProcessID"
-                [default]="gridViewSetupStep['NewProcessID']?.headerText"
-              ></codx-label>
+              <codx-label field="NewProcessID" [default]="gridViewSetupStep['NewProcessID']?.headerText"></codx-label>
             </div>
-            <codx-label
-              class="text-gray-600"
-              default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
-              dấu thất bại"
-            ></codx-label>
+            <codx-label class="text-gray-600" default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
+              dấu thất bại"></codx-label>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <ejs-combobox
-              id="recID"
-              [dataSource]="listCbxProccess"
-              [fields]="fieldCbxProccess"
-              [placeholder]="'Chọn quy trình kìa'"
-              (valueChange)="cbxChange($event, viewStepReasonFail)"
-              [readonly]="stepFail?.isUsed ? false : true"
-              [value]="stepFail?.newProcessID"
-            ></ejs-combobox>
-            <codx-label
-              class="text-danger fst-italic fs-7"
-              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
-              đối tượng áp dụng"
-            >
+            <ejs-combobox id="recID" [dataSource]="listCbxProccess" [fields]="fieldCbxProccess"
+              [placeholder]="'Chọn quy trình kìa'" (valueChange)="cbxChange($event, viewStepReasonFail)"
+              [readonly]="stepFail?.isUsed ? false : true" [value]="stepFail?.newProcessID"></ejs-combobox>
+            <codx-label class="text-danger fst-italic fs-7" default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
+              đối tượng áp dụng">
             </codx-label>
           </div>
         </div>
@@ -2320,66 +1399,38 @@
   </div>
 
   <div class="background-job form-reason-fail">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            [default]="joinTwoString(stepNameReason, stepNameFail)"
-          ></codx-label>
+          <codx-label [default]="joinTwoString(stepNameReason, stepNameFail)"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            default="Lý do nhiệm vụ được ghi nhận là thất bại"
-          ></codx-label>
+          <codx-label default="Lý do nhiệm vụ được ghi nhận là thất bại"></codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            class="button-custom"
-            [disabled]="stepFail?.isUsed ? false : true"
-            (click)="openPopupReason(viewStepReasonFail, null, null)"
-          >
-            <span
-              class="icon-add icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button class="button-custom" [disabled]="stepFail?.isUsed ? false : true"
+            (click)="openPopupReason(viewStepReasonFail, null, null)">
+            <span class="icon-add icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
-          <button
-            *ngIf="isShowstage"
-            [disabled]="stepFail?.isUsed ? false : true"
-            class="button-custom"
-            (click)="clickShow($event, 'reason-success')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" [disabled]="stepFail?.isUsed ? false : true" class="button-custom"
+            (click)="clickShow($event, 'reason-success')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      class="main-job has-actions-menu"
-      id="reason-success"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-      #view
-    >
+    <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
+      #view>
       <div class="main-body p-6">
         <div *ngFor="let item of stepFail?.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
               <div *ngIf="stepFail?.isUsed; else other_fail">
                 {{ item?.reasonName }}
-                <codx-mfunc
-                  [formModel]="dialog.formModel"
-                  (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
-                  (changeDataMF)="changeReasonMF($event)"
-                  [dataItem]="moreDefaut"
-                  [type]="'hover'"
-                >
+                <codx-mfunc [formModel]="dialog.formModel" (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
+                  (changeDataMF)="changeReasonMF($event)" [dataItem]="moreDefaut" [type]="'hover'">
                 </codx-mfunc>
               </div>
             </li>
@@ -2388,24 +1439,15 @@
           <ng-template #other_fail>
             <div>
               {{ item?.reasonName }}
-              <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
-                (changeDataMF)="changeReasonMF($event)"
-                [dataItem]="''"
-                [type]="'hover'"
-              >
+              <codx-mfunc [formModel]="dialog.formModel" (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
+                (changeDataMF)="changeReasonMF($event)" [dataItem]="''" [type]="'hover'">
               </codx-mfunc>
             </div>
           </ng-template>
         </div>
         <div class="d-flex mt-6 justify-content-center">
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            [disabled]="stepFail?.isUsed ? false : true"
-            (click)="openPopupReason(viewStepReasonFail, null, null)"
-          >
+          <button type="button" class="btn btn-outline-primary" [disabled]="stepFail?.isUsed ? false : true"
+            (click)="openPopupReason(viewStepReasonFail, null, null)">
             <i class="icon-add icon-18 text-primary"> </i>
             <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
           </button>
@@ -2417,88 +1459,58 @@
 
 <ng-template #rolesInStep>
   <div class="background-job form-setup-role mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name="lblRoles"
-            default="Các vai trò trong giai đoạn"
-          ></codx-label>
+          <codx-label name="lblRoles" default="Các vai trò trong giai đoạn"></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name="lblRoleControl"
-            default="Những người liên quan đến giai đoạn"
-          >
+          <codx-label name="lblRoleControl" default="Những người liên quan đến giai đoạn">
           </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'role-setup-step')"
-          >
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'role-setup-step')">
             <span class="icon-expand_less icon-20 text-primary-600 py-2"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      id="role-setup-step"
-      class="main-job px-5"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div id="role-setup-step" class="main-job px-5" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="row mt-3">
         <div class="col-6">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
-              <codx-label
-                class="fw-bold fs-6 text-dark me-3"
-                name="lblParticipantRole"
-                default="Người phụ trách giai đoạn"
-              >
+              <codx-label class="fw-bold fs-6 text-dark me-3" name="lblParticipantRole"
+                default="Người phụ trách giai đoạn">
               </codx-label>
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary"
-                (click)="sharePerm(controlShare, 'participants-2')"
-              >
+              <button type="button" class="btn btn-icon btn-sm btn-light-primary"
+                (click)="sharePerm(controlShare, 'participants-2')">
                 <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
             </div>
             <div class="text-gray-600">
-              <codx-label
-                name="lblParticipantRoleControl"
-                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-                viên trong quy trình"
-              >
+              <codx-label name="lblParticipantRoleControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+                viên trong quy trình">
               </codx-label>
             </div>
           </div>
         </div>
-        <div
-          class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="step.roles != null && step.roles?.length > 0"
-        >
+        <div class="col-6 d-flex flex-wrap" *ngIf="step.roles != null && step.roles?.length > 0">
           <ng-container *ngFor="let perm of step.roles; index as i">
-            <div
-              *ngIf="perm.roleType == 'S'"
-              class="d-flex align-items-center flex-wrap mb-3 me-3"
-            >
+            <div *ngIf="perm.roleType == 'S'"
+              class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative">
               <div class="me-2">
-                <codx-img
-                  class=""
-                  [width]="20"
-                  [objectId]="perm.objectName"
-                  objectType="AD_Users"
-                >
+                <codx-img class="" [width]="20" [objectId]="perm.objectName" objectType="AD_Users">
                 </codx-img>
               </div>
               <div class="text-gray-600">{{ perm.objectName }}</div>
+              <ng-container>
+                <div class="action-menu-od" (click)="removeRole(perm.objectID)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -2508,50 +1520,37 @@
         <div class="col-6">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
-              <codx-label
-                class="fw-bold fs-6 text-dark me-3"
-                name="lblInvolved"
-                default="Người liên quan"
-              >
+              <codx-label class="fw-bold fs-6 text-dark me-3" name="lblInvolved" default="Người liên quan">
               </codx-label>
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary"
-                (click)="sharePerm(controlShare, 'involved')"
-              >
+              <button type="button" class="btn btn-icon btn-sm btn-light-primary"
+                (click)="sharePerm(controlShare, 'involved')">
                 <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
             </div>
             <div class="text-gray-600">
-              <codx-label
-                name="lblInvolvedControl"
-                default="Người liên quan có thể cập nhật công việc mà họ đang
+              <codx-label name="lblInvolvedControl" default="Người liên quan có thể cập nhật công việc mà họ đang
                 phụ trách
-                "
-              >
+                ">
               </codx-label>
             </div>
           </div>
         </div>
-        <div
-          class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="step.roles != null && step.roles?.length > 0"
-        >
+        <div class="col-6 group-permission witdh-roles scroll-user"
+          *ngIf="step.roles != null && step.roles?.length > 0">
           <ng-container *ngFor="let perm of step.roles; index as i">
-            <div
-              *ngIf="perm.roleType == 'R'"
-              class="me-4 d-flex align-items-center margin-form mb-4"
-            >
-              <div class="d-flex align-items-center position-relative">
-                <codx-img
-                  class="me-2"
-                  [width]="25"
-                  [objectId]="perm.objectName"
-                  objectType="AD_Users"
-                >
-                </codx-img>
+            <div *ngIf="perm.roleType == 'R'" class="me-4 d-flex align-items-center margin-form mb-4">
+              <div class="roles-step d-flex align-items-center">
+                <div class="d-flex align-items-center position-relative">
+                  <codx-img class="me-2" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
+                  </codx-img>
+                </div>
+                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+                <span class="mt-1">
+                  <a (click)="deleteRoleTypeR(perm,step)" style="cursor: pointer">
+                    <span class="icon-close icon-16 text-danger ms-3"></span>
+                  </a>
+                </span>
               </div>
-              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
             </div>
           </ng-container>
         </div>
@@ -2562,9 +1561,7 @@
 
 <ng-template #setupInStep>
   <div class="background-job form-setup-step mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label name="" default="Tùy chỉnh giai đoạn"></codx-label>
@@ -2576,53 +1573,31 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'step-setup-step')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'step-setup-step')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      id="step-setup-step"
-      class="main-job"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div id="step-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-6">
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName="AssignControl"
-                default="Phân bố người phụ trách cho nhiệm vụ"
-                [formModel]="dialog.formModel"
-              >
+              <codx-label fiedName="AssignControl" default="Phân bố người phụ trách cho nhiệm vụ"
+                [formModel]="dialog.formModel">
               </codx-label>
             </div>
             <div class="text-gray-500">
-              <codx-label
-                default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
-                giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
-              >
+              <codx-label default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
+                giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input
-              field=""
-              type="valuelist"
-              field="AssignControl"
-              refValue="DP019"
-              [crrValue]="step.assignControl"
-              (valueChange)="valueChangeAssignCtrl($event)"
-            >
+            <codx-input field="" type="valuelist" field="AssignControl" refValue="DP019" [crrValue]="step.assignControl"
+              (valueChange)="valueChangeAssignCtrl($event)">
             </codx-input>
           </div>
         </div>
@@ -2630,25 +1605,15 @@
         <div class="row mt-3">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName=""
-                default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
-                khi"
-                [formModel]="dialog.formModel"
-              >
+              <codx-label fiedName="" default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
+                khi" [formModel]="dialog.formModel">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input
-              field="transferControl"
-              crrValue="1"
-              type="valuelist"
-              refValue="DP020"
-              [crrValue]="step.transferControl"
-              (valueChange)="valueChangeTransferCtrl($event)"
-            >
+            <codx-input field="transferControl" crrValue="1" type="valuelist" refValue="DP020"
+              [crrValue]="step.transferControl" (valueChange)="valueChangeTransferCtrl($event)">
             </codx-input>
           </div>
         </div>
@@ -2659,9 +1624,7 @@
 
 <ng-template #durationInStep>
   <div class="background-job form-setup-step mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <!-- chưa có -->
@@ -2669,48 +1632,29 @@
         </div>
         <div class="text-gray-600">
           <!-- chưa có -->
-          <codx-label
-            fiedName=""
-            default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn"
-          >
+          <codx-label fiedName="" default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn">
           </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'duration-setup-step')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'duration-setup-step')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      id="duration-setup-step"
-      class="main-job"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div id="duration-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-6">
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName=""
-                default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
-              >
+              <codx-label fiedName="" default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn">
               </codx-label>
             </div>
             <div class="text-gray-600">
-              <codx-label
-                default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
-                theo"
-              >
+              <codx-label default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
+                theo">
               </codx-label>
             </div>
           </div>
@@ -2718,52 +1662,21 @@
             <div class="row">
               <div class="col-6">
                 <div class="position-relative">
-                  <codx-input
-                    field="DurationDay"
-                    [formModel]=""
-                    [Group]=""
-                    type="text"
-                    [height]="'100'"
-                    [min]="0"
-                    [placeholder]="step?.durationDay"
-                    [crrValue]="step?.durationDay"
-                    (valueChange)="valueChangeDuraDay($event)"
-                  ></codx-input>
-                  <div
-                    class="position-absolute text-muted"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strDay"
-                    ></codx-label>
+                  <codx-input field="DurationDay" [formModel]="" [Group]="" type="text" [height]="'100'" [min]="0"
+                    [placeholder]="step?.durationDay" [crrValue]="step?.durationDay"
+                    (valueChange)="valueChangeDuraDay($event)"></codx-input>
+                  <div class="position-absolute text-muted" style="top: 7px; right: 7px">
+                    <codx-label fiedName="StepName" [formModel]="" [default]="strDay"></codx-label>
                   </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="position-relative">
-                  <codx-input
-                    field="durationHour"
-                    [formModel]=""
-                    [Group]=""
-                    type="text"
-                    [height]="'100'"
-                    [min]="0"
-                    [placeholder]="'00.00'"
-                    [crrValue]="step?.durationHour"
-                    (valueChange)="valueChangeDuraHour($event)"
-                  >
+                  <codx-input field="durationHour" [formModel]="" [Group]="" type="text" [height]="'100'" [min]="0"
+                    [placeholder]="'00.00'" [crrValue]="step?.durationHour" (valueChange)="valueChangeDuraHour($event)">
                   </codx-input>
-                  <div
-                    class="position-absolute text-gray-400"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strHour"
-                    ></codx-label>
+                  <div class="position-absolute text-gray-400" style="top: 7px; right: 7px">
+                    <codx-label fiedName="StepName" [formModel]="" [default]="strHour"></codx-label>
                   </div>
                 </div>
               </div>
@@ -2774,37 +1687,23 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến
-                hạn cho nhiệm vụ trong giai đoạn"
-              >
+              <codx-label default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến
+                hạn cho nhiệm vụ trong giai đoạn">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  [name]="viewSaturday"
-                  type="checkbox"
-                  style="width: 100%"
-                  field="excludeDayoff"
-                  [label]="titleCheckBoxSat"
-                  [checked]="checkedSat"
-                  (valueChange)="valueChangeDayoff($event, viewSaturday, '7')"
-                >
+                <codx-input [name]="viewSaturday" type="checkbox" style="width: 100%" field="excludeDayoff"
+                  [label]="titleCheckBoxSat" [checked]="checkedSat"
+                  (valueChange)="valueChangeDayoff($event, viewSaturday, '7')">
                 </codx-input>
               </div>
               <div class="me-2">
-                <codx-input
-                  type="checkbox"
-                  [name]="viewSunday"
-                  field="excludeDayoff"
-                  style="width: 100%"
-                  [checked]="checkedSun"
-                  [label]="titleCheckBoxSun"
-                  (valueChange)="valueChangeDayoff($event, viewSunday, '8')"
-                >
+                <codx-input type="checkbox" [name]="viewSunday" field="excludeDayoff" style="width: 100%"
+                  [checked]="checkedSun" [label]="titleCheckBoxSun"
+                  (valueChange)="valueChangeDayoff($event, viewSunday, '8')">
                 </codx-input>
               </div>
             </div>
@@ -2814,24 +1713,15 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                fiedName="StartControl"
-                default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong
-                giai đoạn lúc"
-              >
+              <codx-label fiedName="StartControl" default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong
+                giai đoạn lúc">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input
-              field="startControl"
-              [formModel]="dialog.formModel"
-              type="valuelist"
-              refValue="DP021"
-              [crrValue]="step.startControl"
-              (valueChange)="valueChangeStartCtrl($event)"
-            >
+            <codx-input field="startControl" [formModel]="dialog.formModel" type="valuelist" refValue="DP021"
+              [crrValue]="step.startControl" (valueChange)="valueChangeStartCtrl($event)">
             </codx-input>
           </div>
         </div>
@@ -2839,38 +1729,23 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                default="Cho phép người phụ trách chỉnh sửa thời gian hoàn
-                thành giai đoạn thực tế"
-              >
+              <codx-label default="Cho phép người phụ trách chỉnh sửa thời gian hoàn
+                thành giai đoạn thực tế">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  [name]="formDurationCtrl"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [checked]="step.durationControl"
-                  [crrValue]="step.durationControl"
-                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
-                >
+                <codx-input [name]="formDurationCtrl" type="radio" style="width: 100%" field="yes"
+                  [label]="titleRadioYes" [checked]="step.durationControl" [crrValue]="step.durationControl"
+                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  type="radio"
-                  [name]="formDurationCtrl"
-                  field="no"
-                  [checked]="!step.durationControl"
-                  [crrValue]="step.durationControl"
-                  [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
-                >
+                <codx-input type="radio" [name]="formDurationCtrl" field="no" [checked]="!step.durationControl"
+                  [crrValue]="step.durationControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -2880,37 +1755,22 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold">
-              <codx-label
-                default="Cho phép người phụ trách chỉnh sửa thời hạn công việc
-                mặc định"
-              ></codx-label>
+              <codx-label default="Cho phép người phụ trách chỉnh sửa thời hạn công việc
+                mặc định"></codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  [name]="formLeaTimeCtrl"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [checked]="step.leadtimeControl"
-                  [crrValue]="step.leadtimeControl"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
+                  [label]="titleRadioYes" [checked]="step.leadtimeControl" [crrValue]="step.leadtimeControl"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  type="radio"
-                  [name]="formLeaTimeCtrl"
-                  field="no"
-                  [checked]="!step.leadtimeControl"
-                  [crrValue]="step.leadtimeControl"
-                  [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="!step.leadtimeControl"
+                  [crrValue]="step.leadtimeControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -2920,45 +1780,26 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName=""
-                default="Cho phép người phụ trách cập nhật tiến độ giai đoạn"
-              >
+              <codx-label fiedName="" default="Cho phép người phụ trách cập nhật tiến độ giai đoạn">
               </codx-label>
             </div>
             <div class="text-gray-600">
-              <codx-label
-                default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà
-                hệ thống tự động cập nhật"
-              >
+              <codx-label default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà
+                hệ thống tự động cập nhật">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  [name]="formLeaTimeCtrl"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
+                  [label]="titleRadioYes" [checked]="" [crrValue]=""
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  type="radio"
-                  [name]="formLeaTimeCtrl"
-                  field="no"
-                  [checked]=""
-                  [crrValue]=""
-                  [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
+                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -2968,46 +1809,27 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label
-                fiedName=""
-                default="Cho phép người phụ trách cập nhật tiến độ nhóm công
-                việc"
-              >
+              <codx-label fiedName="" default="Cho phép người phụ trách cập nhật tiến độ nhóm công
+                việc">
               </codx-label>
             </div>
             <div class="text-gray-600">
-              <codx-label
-                default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà
-                hệ thống tự động cập nhật"
-              >
+              <codx-label default="Tiến độ người phụ trách cập nhật cần lớn hơn tiến độ mà
+                hệ thống tự động cập nhật">
               </codx-label>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input
-                  [name]="formLeaTimeCtrl"
-                  type="radio"
-                  style="width: 100%"
-                  field="yes"
-                  [label]="titleRadioYes"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
+                  [label]="titleRadioYes" [checked]="" [crrValue]=""
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input
-                  type="radio"
-                  [name]="formLeaTimeCtrl"
-                  field="no"
-                  [checked]=""
-                  [crrValue]=""
-                  [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
-                >
+                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
+                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -3020,84 +1842,48 @@
 
 <ng-template #memoInStep>
   <div class="background-job form-setup-step mb-5">
-    <div
-      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
-    >
+    <div class="header-job d-flex align-items-center justify-content-between py-2 px-5">
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            fiedName="Memo"
-            [formModel]="dialog.formModel"
-            default="Hướng dẫn hoàn thành giai đoạn"
-          ></codx-label>
+          <codx-label fiedName="Memo" [formModel]="dialog.formModel" default="Hướng dẫn hoàn thành giai đoạn">
+          </codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label
-            name=""
-            default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
-            trách"
-          >
+          <codx-label name="" default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
+            trách">
           </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="group-button">
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'memo-setup-step')"
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button *ngIf="isShowstage" class="button-custom" (click)="clickShow($event, 'memo-setup-step')">
+            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
           </button>
         </div>
       </div>
     </div>
-    <div
-      id="memo-setup-step"
-      class="main-job"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
+    <div id="memo-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-6">
-        <codx-input
-          field="memo"
-          type="textarea"
-          [placeholder]=""
-          [crrValue]="step.memo"
-          (valueChange)="valueChangeMemo($event)"
-        >
+        <codx-input field="memo" type="textarea" [placeholder]="" [crrValue]="step.memo"
+          (valueChange)="valueChangeMemo($event)">
         </codx-input>
       </div>
     </div>
   </div>
 </ng-template>
 <ng-template #addReasonPopup>
-  <codx-form
-    [headerText]="headerText"
-    [body]="addReasonContent"
-    [footer]="addReasonFooter"
-    [dialog]="popupAddReason"
-  >
+  <codx-form [headerText]="headerText" [body]="addReasonContent" [footer]="addReasonFooter" [dialog]="popupAddReason">
   </codx-form>
 </ng-template>
 <ng-template #addReasonContent>
   <div class="mt-5">
     <div class="form-group">
       <div>
-        <codx-label
-          fiedName="ReasonName"
-          [formModel]="dialog.formModel"
-          [default]="gridViewSetupStepReason['ReasonName']?.headerText"
-        ></codx-label>
+        <codx-label fiedName="ReasonName" [formModel]="dialog.formModel"
+          [default]="gridViewSetupStepReason['ReasonName']?.headerText"></codx-label>
       </div>
-      <codx-input
-        field="reasonName"
-        type="text"
-        [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event)"
-      >
+      <codx-input field="reasonName" type="text" [crrValue]="reason?.reasonName"
+        (valueChange)="changeValueReaName($event)">
       </codx-input>
     </div>
   </div>
@@ -3105,28 +1891,11 @@
 
 <ng-template #addReasonFooter>
   <div class="d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-outline-primary me-2"
-      (click)="popupAddReason.close()"
-    >
-      <codx-label
-        name=" lblfail"
-        formName="DPStepsReasons"
-        default="Hủy"
-      ></codx-label>
+    <button type="button" class="btn btn-outline-primary me-2" (click)="popupAddReason.close()">
+      <codx-label name=" lblfail" formName="DPStepsReasons" default="Hủy"></codx-label>
     </button>
-    <button
-      type="button"
-      [disabled]="isClick"
-      class="btn btn-primary"
-      (click)="addReason()"
-    >
-      <codx-label
-        name=" lblSuscess"
-        formName="DPStepsReasons"
-        default="Đồng ý"
-      ></codx-label>
+    <button type="button" [disabled]="isClick" class="btn btn-primary" (click)="addReason()">
+      <codx-label name=" lblSuscess" formName="DPStepsReasons" default="Đồng ý"></codx-label>
     </button>
   </div>
 </ng-template>
