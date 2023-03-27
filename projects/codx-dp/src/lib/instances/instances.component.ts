@@ -183,6 +183,35 @@ export class InstancesComponent
     //   );
     // }
     // }
+    this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
+      if (ps && ps.read) {
+        this.process = ps;
+        this.isCreate = this.process.create;
+        this.autoName = this.process?.autoName;
+        this.stepSuccess = this.process?.steps?.filter(
+          (x) => x.isSuccessStep
+        )[0];
+        this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+        this.isUseSuccess = this.stepSuccess?.isUsed;
+        this.isUseFail = this.stepFail?.isUsed;
+        this.showButtonAdd = this.isCreate;
+
+        this.viewMode = this.process?.viewMode ?? 6; 
+        this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+
+        if (
+          this.process.permissions != null &&
+          this.process?.permissions.length > 0
+        ) {
+          this.lstParticipants = this.process?.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+       // this.continueLoad = true ;
+      } else {
+        this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+      }
+    });
 
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
@@ -209,37 +238,9 @@ export class InstancesComponent
       });
     });
 
-    this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
-      if (ps && ps.read) {
-        this.process = ps;
-        this.autoName = this.process?.autoName;
-        this.stepSuccess = this.process?.steps?.filter(
-          (x) => x.isSuccessStep
-        )[0];
-        this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-        this.isUseSuccess = this.stepSuccess?.isUsed;
-        this.isUseFail = this.stepFail?.isUsed;
-        this.showButtonAdd = this.isCreate;
-
-        this.viewMode = this.process?.viewMode ?? 6; 
-        this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-
-        if (
-          this.process.permissions != null &&
-          this.process?.permissions.length > 0
-        ) {
-          this.lstParticipants = this.process?.permissions.filter(
-            (x) => x.roleType === 'P'
-          );
-        }
-        this.continueLoad = true ;
-      } else {
-        this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-      }
-    });
+   
   }
   ngAfterViewInit(): void {
-   if (!this.continueLoad) return;
 
     this.views = [
       {
@@ -268,12 +269,12 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit() {
-  if (!this.continueLoad) return;
+  //if (!this.continueLoad) return;
     this.button = {
       id: 'btnAdd',
     };
+   
     this.dataObj = {
-      // processID: this.process?.recID ? this.process?.recID : '',
       processID: this.processID,
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
@@ -283,7 +284,6 @@ export class InstancesComponent
         this.isUseFail
       ),
     };
-
     // if(this.process.steps != null && this.process.steps.length > 0){
     //   this.listSteps = this.process.steps;
     //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -292,7 +292,7 @@ export class InstancesComponent
     // }
 
     this.codxDpService
-      .createListInstancesStepsByProcess(this.process?.recID)
+      .createListInstancesStepsByProcess(this.processID)
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
@@ -330,11 +330,6 @@ export class InstancesComponent
     }
   }
 
-  // progressEvent(event){
-  //   this.progress = event.progress;
-  //   this.stepNameInstance = event.name;
-  //   this.instanceID = event.instanceID;
-  // }
 
   //CRUD
   add() {
@@ -961,7 +956,6 @@ export class InstancesComponent
           .subscribe((grvSt) => {
             var newProccessIdReason = isMoveSuccess ? this.stepSuccess.newProcessID: this.stepFail.newProcessID;
             var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-            debugger;
             if(isCheckExist) {
               this.codxDpService.getProcess(newProccessIdReason).subscribe((res) => {
                 if (res) {
