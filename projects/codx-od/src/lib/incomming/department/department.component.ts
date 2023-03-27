@@ -18,6 +18,7 @@ export class DepartmentComponent implements OnInit {
   dtAgency = new agency();
   @Input() agencyID;
   @Input() dialog;
+  @Input() formModel;
   constructor(
     private agService: AgencyService , 
     private codxService: CodxService,

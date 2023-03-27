@@ -191,9 +191,9 @@ export class DispatchService implements OnDestroy {
   }
 
   //Chia sẻ văn bản
-  shareDispatch(obj: permissionDis)
+  shareDispatch(obj: permissionDis , referType:any)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', obj);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', obj , referType);
   }
 
   //Thu hồi quyền chia sẻ của user
@@ -223,9 +223,9 @@ export class DispatchService implements OnDestroy {
      return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj]);
    }
     //cập nhật công văn
-    updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean)
+    updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean , referType: string)
     {
-      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj , funcID ,isDlFile]);
+      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj , funcID ,isDlFile,referType]);
     }
 
    //Add link
