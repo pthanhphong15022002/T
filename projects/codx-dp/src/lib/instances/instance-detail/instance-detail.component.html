@@ -319,7 +319,10 @@
                         [ngClass]="getColorStepName(item?.stepStatus)"
                         (click)="click(i, item.stepID)"
                       >
-                        <span> {{ item.stepName }}</span>
+                        <div class="d-flex align-items-center">
+                          <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" style="font-size: 18px;"></span>
+                          <span> {{ item.stepName }}</span>
+                        </div>
                       </div>
                     </ng-container>
                   </div>

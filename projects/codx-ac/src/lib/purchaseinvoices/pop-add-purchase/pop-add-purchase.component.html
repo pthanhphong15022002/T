@@ -73,13 +73,8 @@
   <div class="d-flex align-items-center justify-content-between pt-2">
     <div class="d-flex justify-content-start me-2">
       <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
-<<<<<<< HEAD
             <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
             <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
-=======
-        <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-        <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
->>>>>>> fcde176a96470388b8354b5e5259aa520025729b
       </div>
       <div class="card-title">
         <div class="d-flex flex-column">
@@ -414,6 +409,60 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
+  <ng-container *ngIf="form?.formGroup">
+    <!-- <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
+    [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
+    [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
+    [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
+    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)"></codx-gridview-v2> -->
+    <div class="table-responsive mt-3" style="height: 450px;border-radius: 5px;border: 1px solid #dee2e6;">
+      <table class="table table-hover ">
+        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
+        color: white;">
+          <tr>
+            <th></th>
+            <th style="width: 20%;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;"
+              *ngFor="let item of columnGrids">
+              <div class="d-flex">
+                <!-- <i style="color: white;" class="icon-info icon-20 me-2"></i> -->
+                <span class="fs-5 fw-bold">{{item.headerText}}</span>
+              </div>
+            </th>
+            
+          </tr>
+        </thead>
+        <tbody style="border-bottom: 1px solid #dee2e6;" *ngFor="let item of purchaseInvoicesLines">
+          <tr>
+            <td>
+              <div class="d-flex align-items-center justify-content-end">
+                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1">
+                  <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1">
+                  <i class="icon-delete icon-16"></i>
+                </span>
+              </div>
+            </td>
+            <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
+              <div ngbTooltip="Markasdaaaaaaaaaaaaaaasdasdas"  style="width: 200px;overflow: hidden;text-overflow: ellipsis;">
+                asdsada
+              </div>
+            </td>       
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <button style="border-radius: 49px;display: block;margin-left: auto;margin-right: auto;" type="button"
+          class="btn btn-light-primary mt-2" (click)="addRow()">
+          <div class="d-flex align-items-center">
+            <i class="icon-add_box icon-18"></i>
+            <span class="fs-5">Thêm dòng</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </ng-container>
   <div class="h-100 w-100 border">
   <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
@@ -431,14 +480,6 @@
     (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #addLine let-data>
-  <div class="mt-5 mb-2">
-    <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
-      <div class="d-flex align-items-center">
-        <i class="icon-add_box icon-18"></i>
-        <span class="fs-5">Thêm dòng</span>
-      </div>
-    </button>
-  </div>
   <ng-container *ngIf="form?.formGroup">
     <div *ngIf="countDetail > 0">
       <div class="mt-4 mb-3 text-primary fw-bold fs-5">
