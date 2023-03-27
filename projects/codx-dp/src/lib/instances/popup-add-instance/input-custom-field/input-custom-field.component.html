@@ -6,7 +6,7 @@
     [default]="customField.title"
   >
   </codx-label>
-  <span *ngIf="viewFileName && customField.fieldName">
+  <span *ngIf="viewFieldName && customField.fieldName">
     {{ "(" + customField.fieldName + ")" }}
   </span>
   <span *ngIf="customField.isRequired && checkValid">
@@ -160,7 +160,7 @@
     (rateChange)="rateChange($event)"
     (hover)="hovered = $event"
     (leave)="hovered = currentRate"
-    [readonly]="readonly"
+    [readonly]="disable"
     [starTemplate]="temp"
     [disabled]="disable"
   >

@@ -8,6 +8,10 @@
     <ng-container *ngSwitchCase="'N'">
       <ng-container *ngTemplateOutlet="N"></ng-container>
     </ng-container>
+    <!-- Em copy thêm giúp chị template ‘V’ (Xử lý + UI giống như template ‘N’) của history nha -->
+    <ng-container *ngSwitchCase="'V'">
+      <ng-container *ngTemplateOutlet="V"></ng-container>
+    </ng-container>
     <!-- gửi mail -->
     <ng-container *ngSwitchCase="'E'">
       <ng-container *ngTemplateOutlet="E"></ng-container>
@@ -40,17 +44,21 @@
     <ng-container *ngSwitchCase="'D1'">
       <ng-container *ngTemplateOutlet="D"></ng-container>
     </ng-container>
-    <!-- chỉnh sửa gì đó ai biết -->
+    <!-- chỉnh sửa gì đó -->
     <ng-container *ngSwitchCase="'C1'">
       <ng-container *ngTemplateOutlet="C1"></ng-container>
     </ng-container>
-    <!-- A0  -->
-    <ng-container *ngSwitchCase="'A0'">
-      <ng-container *ngTemplateOutlet="A0"></ng-container>
-    </ng-container>
-    <!-- chỉnh sửa gì đó ai biết -->
+    <!-- chỉnh sửa gì đó -->
     <ng-container *ngSwitchCase="'C2'">
       <ng-container *ngTemplateOutlet="C2"></ng-container>
+    </ng-container>
+    <!-- Copy thêm template ‘C3’ giống với ‘C1’ (dùng cho xử lý ghi nhận thay đổi tình trạng chung của hệ thống) -->
+    <ng-container *ngSwitchCase="'C3'">
+      <ng-container *ngTemplateOutlet="C3"></ng-container>
+    </ng-container>
+    <!-- Copy template của ‘C1’ cho ActionType = ‘A0’ với MssgCode = ‘HIS018’ -->
+    <ng-container *ngSwitchCase="'A0'">
+      <ng-container *ngTemplateOutlet="A0"></ng-container>
     </ng-container>
     <!-- khôi phục -->
     <ng-container *ngSwitchCase="'A1'">
@@ -166,7 +174,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END COMMENT -->
 <!-- NEW -->
 <ng-template #N>
   <div class="d-flex align-items-top">
@@ -201,7 +208,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END NEW -->
 <!-- MAIL -->
 <ng-template #E>
   <div class="d-flex align-items-top">
@@ -243,7 +249,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END MAIL -->
 <!-- TASK -->
 <ng-template #T>
   <div class="d-flex align-items-top">
@@ -288,7 +293,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END TASK -->
 <!-- TASK -->
 <ng-template #RE>
   <div class="d-flex align-items-top">
@@ -350,7 +354,6 @@
     </div>
   </ng-template>
 </ng-template>
-<!-- END TASK -->
 <!-- UPDATE -->
 <ng-template #U>
   <div class="d-flex align-items-top pb-2">
@@ -573,7 +576,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END UPDATE -->
 <!-- ATTACHMENT -->
 <ng-template #A>
   <div class="d-flex align-items-top">
@@ -625,7 +627,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END ATTACHMENT -->
 <!-- SHARE -->
 <ng-template #S>
   <div class="d-flex align-items-top">
@@ -659,7 +660,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END SHARE -->
 <!-- DELETED -->
 <ng-template #D>
   <div class="d-flex align-items-top">
@@ -699,7 +699,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END DELETED -->
 <!-- C1 -->
 <ng-template #C1>
   <div class="d-flex align-items-top">
@@ -744,7 +743,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END C1 -->
 <!-- C2 -->
 <ng-template #C2>
   <div class="d-flex align-items-top">
@@ -797,7 +795,50 @@
     </div>
   </div>
 </ng-template>
-<!-- END C2 -->
+<!-- C3 -->
+<ng-template #C3>
+  <div class="d-flex align-items-top">
+    <div class="me-3">
+      <codx-vll
+        [value]="data.actionType"
+        name="SYS022"
+        [icoCss]="'w-30px iconHistory'"
+        [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"
+      ></codx-vll>
+    </div>
+    <div class="d-flex justify-content-between align-items-top w-100">
+      <div class="d-flex align-items-top w-100">
+        <div class="me-3">
+          <codx-img
+            [objectId]="data.createdBy"
+            [objectName]="data.createdName"
+            objectType="AD_Users"
+            [width]="30"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-wrap w-100">
+          <div
+            *ngIf="data.description"
+            class="w-100"
+            [innerHTML]="data.description"
+          ></div>
+          <div
+            *ngIf="data.createdOn"
+            class="text-gray-700 fw-normal flex-grow-1"
+            data-toggle="tooltip"
+          >
+            {{ data.createdOn | timefrom }}
+          </div>
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
+            <span [innerHTML]="data.comment"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
 <!-- V -->
 <ng-template #V>
   <div class="d-flex align-items-top">
@@ -832,7 +873,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END V -->
 <!-- A0 -->
 <ng-template #A0>
   <div class="d-flex align-items-top">
@@ -877,7 +917,6 @@
     </div>
   </div>
 </ng-template>
-<!-- END A0 -->
 <!-- template list employeee -->
 <ng-template #tmpViewEmployee let-employees>
   <div ngbDropdown class="symbol-more" [container]="'body'">
@@ -926,108 +965,5 @@
               </ng-container>
           </div>
       </div>
-  </div>
-</ng-template>
-<ng-template #popupViewDetail let-dialog>
-  <div class="container">
-    <div class="d-flex align-items-center justify-content-between my-4">
-      <div>
-          <codx-label
-          [className]="'fw-bolder fs-3'"
-          [formModel]="formModel"
-          name="lblHeaderText"
-          [default]="'Thông tin chỉnh sửa'">
-        </codx-label>
-      </div>
-      <div class="cursor-pointer" (click)="clickClosePopup(dialog)">
-        <span class="icon-close text-danger"></span>
-      </div>
-    </div>
-    <div class="row">
-      <table class="table" style="width: 100%">
-        <thead class="border-bottom bg-light">
-          <th scope="col-4">
-            <codx-label
-              [formModel]="formModel"
-              name="lblFieldName"
-              [default]="'Thông tin'"
-            >
-            </codx-label>
-          </th>
-          <th scope="col-4">
-            <codx-label
-              [formModel]="formModel"
-              name="lblOldValue"
-              [default]="'Giá trị cũ'"
-            >
-            </codx-label>
-          </th>
-          <th scope="col-4">
-            <codx-label
-              [formModel]="formModel"
-              name="lblNewValue"
-              [default]="'Giá trị mới'"
-            >
-            </codx-label>
-          </th>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let item of data.datas">
-            <tr class="my-2">
-              <td scope="col-4">
-                <codx-label
-                  [formModel]="formModel"
-                  [fiedName]="item.fieldName"
-                ></codx-label>
-              </td>
-              <ng-container
-                *ngIf="
-                  item.fieldName === 'Permissions';
-                  else primitiveValue
-                "
-              >
-                <td scope="col-4">
-                  <ng-container
-                    *ngTemplateOutlet="
-                      tmpViewEmployee;
-                      context: { $implicit: item.oldValue | dJson }
-                    "
-                  >
-                  </ng-container>
-                </td>
-                <td scope="col-4">
-                  <ng-container
-                    *ngTemplateOutlet="
-                      tmpViewEmployee;
-                      context: { $implicit: item.newValue | dJson }
-                    "
-                  >
-                  </ng-container>
-                </td>
-              </ng-container>
-              <ng-template #primitiveValue>
-                <td
-                  scope="col-4"
-                  id="aaaa"
-                  [innerHTML]="
-                    item.oldValue
-                      | formatvalue : formModel : item.fieldName
-                      | async
-                  "
-                ></td>
-                <td
-                  scope="col-4"
-                  [innerHTML]="
-                    item.newValue
-                      | formatvalue : formModel : item.fieldName
-                      | async
-                  "
-                ></td>
-              </ng-template>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
-    </div>
   </div>
 </ng-template>

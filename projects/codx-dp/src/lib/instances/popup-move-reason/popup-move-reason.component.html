@@ -59,6 +59,16 @@
     </div>
   </div>
 
+  <div class="form-group" *ngIf="listParticipantReason">
+    <div>
+      <codx-label fiedName="owner" [formModel]="form.formModel" default="Người phụ trách ở quy trình chuyển đến">
+      </codx-label>
+    </div>
+    <codx-popup-participants [lstParticipants]="listParticipantReason" [dialog]="dialog" [isType]="'I'"
+    (eventUser)="eventUser($event)" [owner]="ownerMove"></codx-popup-participants>
+  </div>
+
+
   <div>
     <div class="pb-0" style="font-weight: 500 !important">
       <codx-label

@@ -38,8 +38,7 @@
                 *ngTemplateOutlet="
                   template;
                   context: {
-                    $implicit: itemchild,
-                    collapse: item.displayMode === '3'
+                    $implicit: itemchild
                   }
                 "
               >
@@ -51,10 +50,7 @@
       <ng-template #noGroup>
         <ng-container *ngFor="let item of setting">
           <ng-container
-            *ngTemplateOutlet="
-              template;
-              context: { $implicit: item, collapse: item.displayMode === '3' }
-            "
+            *ngTemplateOutlet="template; context: { $implicit: item }"
           >
           </ng-container>
         </ng-container>
@@ -64,7 +60,7 @@
   <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
     <div
       class="list-item bg-hover py-3"
-      [ngClass]="collapse ? ' d-none' : ''"
+      [ngClass]="collapse ? ' d-none ms-5' : ''"
       [attr.data-group]="data.refLineID"
     >
       <div class="d-flex justify-content-between">
@@ -102,10 +98,10 @@
           class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
         >
           <!-- <ng-container
-            *ngIf="data.controlType && data.controlType != 'GroupControl'"
-          >
-           
-          </ng-container> -->
+          *ngIf="data.controlType && data.controlType != 'GroupControl'"
+        >
+         
+        </ng-container> -->
           <ng-container [ngSwitch]="data.category">
             <ng-container *ngSwitchDefault>
               <ng-container
@@ -340,10 +336,10 @@
             <a
               href="javascript:void(0)"
               *ngIf="data.displayMode === '3'"
-              (click)="collapseItem($event, data.recID)"
+              (click)="collapseItem($event, data.recID, data.fieldName)"
               ><span class="w-30px d-flex justify-content-center"
                 ><span
-                  class="icon-keyboard_arrow_right icon-22"
+                  class="button-collapse icon-keyboard_arrow_right icon-22"
                   [attr.data-id]="data.recID"
                 ></span></span
             ></a>
@@ -368,13 +364,13 @@
 
             <ng-container *ngIf="data.displayMode === '6'">
               <!-- <codx-img
-                [updateDirect]="true"
-                [isAllowEdit]="true"
-                [objectId]="data.recID"
-                [funcId]="function.functionID"
-                [objectType]="function.entityName"
-                (dataChanged)="changeLabelImg(data, $event)"
-              ></codx-img> -->
+              [updateDirect]="true"
+              [isAllowEdit]="true"
+              [objectId]="data.recID"
+              [funcId]="function.functionID"
+              [objectType]="function.entityName"
+              (dataChanged)="changeLabelImg(data, $event)"
+            ></codx-img> -->
             </ng-container>
           </div>
         </div>
@@ -400,6 +396,24 @@
         </span>
       </div>
     </div>
+    <ng-container *ngIf="data.displayMode === '3'">
+      <ng-container
+        *ngFor="let itemchild of setting | group : data.recID : '2'"
+      >
+        <ng-container
+          *ngTemplateOutlet="
+            template;
+            context: {
+              $implicit: itemchild,
+              isGroup: false,
+              collapse: true
+            }
+          "
+        >
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
     <hr class="ms-12 my-0" *ngIf="!isGroup" />
   </ng-template>
 </ng-template>

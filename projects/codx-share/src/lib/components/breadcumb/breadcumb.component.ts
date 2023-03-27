@@ -69,13 +69,15 @@ export class BreadcumbComponent implements OnInit {
     else return this.breadcumb;
   }
 
-  onJump(id) {
+  onJump(index:any) {
     this.dmSV.isTree = false;
-    this.dmSV.parentFolderId = this.linkList[id];
+    this.dmSV.parentFolderId = this.linkList[index];
     this.dmSV.currentNode = '';
-    this.dmSV.folderId.next(this.linkList[id]);
+    this.dmSV.folderId.next(this.linkList[index]);
+    this.breadcumb = this.breadcumb.slice(0,index+1)
+    this.dmSV.breadcumb.next( this.breadcumb)
     var data = {} as any;
-    data.recID = this.linkList[id];
+    data.recID = this.linkList[index];
     this.dmSV.nodeSelect.next(data);
   }
 }

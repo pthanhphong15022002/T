@@ -74,6 +74,7 @@ export class CatagoryComponent implements OnInit {
     this.dialog = dialog;
     if (data) {
       this.settingFull = (data.data?.settingFull as []) || [];
+
       this.setting =
         this.settingFull.filter((res) => res.isVisible == true) || [];
       this.valuelist = data.data?.valuelist;
@@ -382,6 +383,7 @@ export class CatagoryComponent implements OnInit {
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
+
     this.setting =
       this.settingFull.filter((res) => res.isVisible == true) || [];
     this.groupSetting = this.setting.filter((x) => {
@@ -412,7 +414,8 @@ export class CatagoryComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  collapseItem(evt: any, recID: string) {
+  collapseItem(evt: any, recID: string, fieldName: string) {
+    if (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) return;
     var eleItem = document.querySelectorAll(
       '.list-item[data-group="' + recID + '"]'
     );

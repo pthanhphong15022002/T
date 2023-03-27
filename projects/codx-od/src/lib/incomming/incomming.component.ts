@@ -47,6 +47,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxOdService } from '../codx-od.service';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-incomming',
@@ -258,19 +259,18 @@ export class IncommingComponent
       if(unbm[0]) unbm[0].disabled = true;
       if(bm[0]) bm[0].disabled = false;
     }
-    if (
-      (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') &&
-      data?.status != '1' &&
-      data?.status != '2' && data?.approveStatus != '2')
-    {
-      var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-      );
-      if(approvel[0]) approvel[0].disabled = true;
-    }
 
-    //Hủy yêu cầu duyệt
-    if (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') {
+    if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
+    {
+      if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
+      {
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+        );
+        if(approvel[0]) approvel[0].disabled = true;
+      }
+
+      //Hủy yêu cầu duyệt
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
       );
@@ -278,21 +278,29 @@ export class IncommingComponent
       {
         approvel[i].disabled = true;
       }
-    }
 
-    if (
-    (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') &&
-      data?.approveStatus == '3' &&
-      data?.createdBy == this.userID
-    ) {
-      var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
-      );
-      for(var i = 0 ; i< approvel.length ; i++)
+      if(data?.approveStatus == '3' && data?.createdBy == this.userID)
       {
-        approvel[i].disabled = false;
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
+        );
+        for(var i = 0 ; i< approvel.length ; i++)
+        {
+          approvel[i].disabled = false;
+        }
+      }
+
+      //Hiện thị chức năng gửi duyệt khi xét duyệt
+      if(data?.approveStatus == '1' && data?.status == '3' )
+      {
+          //Chức năng Gửi duyệt
+          var approvel = e.filter(
+            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+          );
+          if (approvel[0]) approvel[0].disabled = false;
       }
     }
+
     //Từ chối , Bị đóng 
     if(data?.status == "9" || data?.approveStatus == "4")
     {
@@ -366,58 +374,130 @@ export class IncommingComponent
   }
 
   getGridViewSetup(funcID: any) {
-    this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      this.funcList = fuc;
-      this.codxODService
-        .loadGridView(fuc?.formName, fuc?.gridViewName)
-        .subscribe((grd) => {
+    var funcList = this.codxODService.loadFunctionList(funcID);
+    if(isObservable(funcList))
+    {
+      this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
+        this.funcList = fuc;
+        var gw =  this.codxODService.loadGridView(fuc?.formName, fuc?.gridViewName)
+        if(isObservable(gw))
+        {
+          gw.subscribe((grd) => {
+            this.gridViewSetup = grd;
+            this.loadDataFormGridView()
+          });
+        }
+        else
+        {
+          this.gridViewSetup = gw;
+          this.loadDataFormGridView()
+        }
+       
+      });
+    }
+    else
+    {
+      this.funcList = funcList;
+      var gw =  this.codxODService.loadGridView(this.funcList?.formName, this.funcList?.gridViewName)
+      if(isObservable(gw))
+      {
+        gw.subscribe((grd) => {
           this.gridViewSetup = grd;
-          console.log(this.gridViewSetup);
-          if (grd['Security']['referedValue'] != undefined)
-            this.codxODService
-              .loadValuelist(grd['Security']['referedValue'])
-              .subscribe((item) => {
-                this.dvlSecurity = item;
-              });
-          if (grd['Urgency']['referedValue'] != undefined)
-            this.codxODService
-              .loadValuelist(grd['Urgency']['referedValue'])
-              .subscribe((item) => {
-                this.dvlUrgency = item;
-                //this.ref.detectChanges();
-              });
-          if (grd['Status']['referedValue'] != undefined)
-            this.codxODService
-              .loadValuelist(grd['Status']['referedValue'])
-              .subscribe((item) => {
-                this.dvlStatus = item;
-                console.log(this.dvlStatus);
-                //this.ref.detectChanges();
-              });
-          if (grd['Category']['referedValue'] != undefined)
-            this.codxODService
-              .loadValuelist(grd['Category']['referedValue'])
-              .subscribe((item) => {
-                this.dvlCategory = item;
-                //this.ref.detectChanges();
-              });
+          this.loadDataFormGridView()
         });
-    });
-    this.codxODService.loadValuelist('OD008').subscribe((item) => {
-      this.dvlRelType = item;
-    });
-    this.codxODService.loadValuelist('OD009').subscribe((item) => {
-      this.dvlStatusRel = item;
-    });
-    this.codxODService.loadValuelist('OD010').subscribe((item) => {
-      this.dvlReCall = item;
-    });
-    this.codxODService.loadValuelist('L0614').subscribe((item) => {
-      this.dvlStatusTM = item;
-    });
+      }
+      else
+      {
+        this.gridViewSetup = gw;
+        this.loadDataFormGridView()
+      }
+    }
+
+    var vllRelType = this.codxODService.loadValuelist('OD008');
+    if(isObservable(vllRelType))
+    {
+      vllRelType.subscribe((item) => {
+        this.dvlRelType = item;
+      });
+    }
+    else this.dvlRelType = vllRelType;
+
+    var vllStatusRel = this.codxODService.loadValuelist('OD009');
+    if(isObservable(vllStatusRel))
+    {
+      vllStatusRel.subscribe((item) => {
+        this.dvlStatusRel = item;
+      });
+    }
+    else this.dvlStatusRel = vllRelType;
+   
+    var vllReCall = this.codxODService.loadValuelist('OD010');
+    if(isObservable(vllReCall))
+    {
+      vllReCall.subscribe((item) => {
+        this.dvlReCall = item;
+      });
+    }
+    else this.dvlReCall = vllRelType;
+
+    var vllStatusTM  = this.codxODService.loadValuelist('L0614');
+    if(isObservable(vllStatusTM))
+    {
+      vllStatusTM.subscribe((item) => {
+        this.dvlStatusTM = item;
+      });
+    }
+    else this.dvlStatusTM = vllRelType;
     //formName: string, gridName: string
   }
 
+  loadDataFormGridView()
+  {
+    if (this.gridViewSetup['Security']['referedValue'])
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Security']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
+          this.dvlSecurity = item;
+        });
+      }
+      else this.dvlSecurity = vll;
+    }
+    if (this.gridViewSetup['Urgency']['referedValue'])
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Urgency']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
+          this.dvlUrgency = item;
+        });
+      }
+      else this.dvlUrgency = vll;
+    }
+    if (this.gridViewSetup['Status']['referedValue'])
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Status']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
+          this.dvlStatus = item;
+        });
+      }
+      else this.dvlStatus = vll;
+    }
+    if (this.gridViewSetup['Category']['referedValue'])
+    {
+      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Category']['referedValue']);
+      if(isObservable(vll))
+      {
+        vll.subscribe((item) => {
+          this.dvlCategory = item;
+        });
+      }
+      else this.dvlCategory = vll;
+    }
+  }
   //Mở form
   openFormUploadFile() {
     this.attachment.openPopup();

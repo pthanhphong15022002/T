@@ -12,7 +12,7 @@
     <!--Content-->
     <div class="px-25" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
 
-      <view-okr [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
+      <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
       </view-okr>
     </div>
 

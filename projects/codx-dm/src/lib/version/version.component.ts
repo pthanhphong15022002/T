@@ -493,7 +493,7 @@ export class VersionComponent implements OnInit {
             files[index].fileName = res.data.fileName;
             files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
             that.displayThumbnail(res.data);
-            //this.dmSV.ChangeData.next(true);
+            this.dmSV.ChangeOneFolder.next(files[index]);
           }
           var appName = environment.appName; // Tam thoi de hard
           var uploadFile = fileItem.item.rawFile;

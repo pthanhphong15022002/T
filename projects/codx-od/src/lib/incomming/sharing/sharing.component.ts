@@ -19,6 +19,7 @@ export class SharingComponent implements OnInit {
   userTo      : any;
   userCC      : any;
   gridViewSetup     : any;
+  referType = 'source'
   formatBytes = formatBytes
   shareForm = new FormGroup({
     to: new FormControl(),
@@ -73,11 +74,8 @@ export class SharingComponent implements OnInit {
     this.dataDis.toDate = this.shareForm.get('toDate').value == null ? new Date : this.shareForm.get('formDate').value; */
     this.shareForm.value.recID = this.dialog.dataService.dataSelected.recID;
     this.shareForm.value.funcID = this.formModel.funcID;
-    this.odService.shareDispatch(this.shareForm.value).subscribe((item)=>{
-      if(item.status==0)
-      {
-        this.dialog.close(item.data);
-      }
+    this.odService.shareDispatch(this.shareForm.value,this.referType).subscribe((item)=>{
+      if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })
   }
