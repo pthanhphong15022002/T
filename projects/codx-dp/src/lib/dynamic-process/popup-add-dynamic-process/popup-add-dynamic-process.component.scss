@@ -92,7 +92,7 @@
         .list-stage {
           display: flex;
           align-items: start;
-          padding: 6px 3px;
+          padding: 5px 5px 5px 9px;
         }
 
         .list-stage:hover {
@@ -263,8 +263,6 @@
   max-width: 100%;
   min-height: 60px;
   display: block;
-  background: white;
-  border-radius: 4px;
   overflow: hidden;
 }
 

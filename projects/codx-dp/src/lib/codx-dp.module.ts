@@ -18,7 +18,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicProcessComponent } from './dynamic-process/dynamic-process.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-step-task.component';
@@ -53,6 +53,7 @@ const routes: Routes = [
       {
         path: 'dynamicprocess/:funcID',
         component: DynamicProcessComponent,
+        data: { noReuse: true },
       },
       {
         path: '**',
@@ -65,17 +66,18 @@ const routes: Routes = [
     path: '',
     component: LayoutNoAsideComponent,
     children: [
-        {
-            path: 'instances/:funcID/:processID',
-            component: InstancesComponent,
-        },
-        // {
-        //   path: '**',
-        //   redirectTo: 'DPT04/home',
-        //   pathMatch: 'full',
-        // },       
-    ]
-  }
+      {
+        path: 'instances/:funcID/:processID',
+        component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: '**',
+        redirectTo: 'dynamicprocess/DP0101',
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];

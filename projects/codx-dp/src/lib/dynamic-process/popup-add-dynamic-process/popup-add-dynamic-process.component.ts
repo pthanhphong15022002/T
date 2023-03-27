@@ -211,6 +211,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     add: ['Thêm Giai Đoạn', 'headerAddStep'],
     edit: ['Sửa giai đoạn', 'headerEditStep'],
   };
+  headerTextStepName = '';
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -356,6 +357,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
+    });
+    this.cache
+    .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
+    .subscribe((res) => {
+      this.headerTextStepName = res['StepName']['headerText'];
     });
     // document.addEventListener("keydown", this.handleKeyDown);
   }
@@ -1111,12 +1117,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     var count = 0;
     var i = this.lstParticipants.filter(
-      (x) => x.objectID == this.stepRoleOld?.objectID
+      (x) => x.objectID == this.stepRoleOld?.objectID && x.roleType == 'P'
     );
     var check = -1;
-    if (this.stepRoleOld != null)
+    if (this.stepRoleOld != null) {
       count = this.countRoleSteps(this.stepRoleOld?.objectID);
-    check = listPerm.findIndex((x) => x.objectID == this.stepRoleOld?.objectID);
+      check = listPerm.findIndex(
+        (x) => x.objectID == this.stepRoleOld?.objectID && x.roleType == 'P'
+      );
+    }
+
     if (index == -1) {
       if (i.length == 0) {
         if (count == 0) {
@@ -1150,7 +1160,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
         if (this.stepRoleOld)
           indexOld = listPerm.findIndex(
-            (x) => x.objectID == this.stepRoleOld?.objectID
+            (x) => x.objectID == this.stepRoleOld?.objectID && x.roleType == 'S'
           );
       }
     } else {
@@ -1910,9 +1920,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
+    if(this.actionStep !== 'edit' || this.stepEdit['stepName']?.trim() != this.stepName?.trim()){
+      let isRepeatName = this.checkStepName(this.stepName);
+      if(isRepeatName){
+        this.notiService.notifyCode('DP029', 0, this.headerTextStepName);
+        return;
+      }
+    }
     this.isSaveStep = true;
     if (!this.stepName.trim()) {
-      this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+      this.notiService.notifyCode('SYS009', 0, this.headerTextStepName);
       this.isSaveStep = false;
       return;
     }
@@ -1937,6 +1954,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.popupAddStage.close();
     // this.isSaveStep = false;
+  }
+
+  checkStepName(name: string):boolean{
+    let nameCheck = name?.toLocaleLowerCase()?.trim();
+    if(this.stepList?.length > 0 && nameCheck){
+      let check = this.stepList?.some(step => step.stepName?.toLocaleLowerCase()?.trim() == nameCheck);
+      return check;
+    }
+    return false;
   }
 
   async deleteStep(data) {
@@ -2110,7 +2136,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           data['roles'][0],
-          'R'
+          ''
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2190,7 +2216,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
-              taskData['roles']?.forEach(role => {
+              taskData['roles']?.forEach((role) => {
                 this.addRole(role);
               });
             } else {
@@ -2243,7 +2269,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let checkExistStep = this.checkExistUser(
           this.step,
           task['roles'][0],
-          'R'
+          'P'
         );
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
@@ -2630,7 +2656,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
       console.log('thuan');
-
     }
   }
 
@@ -2672,7 +2697,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       if (roleOld) {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
-        let checkExistStep = this.checkExistUser(this.step, roleOld, 'R');
+        let checkExistStep = this.checkExistUser(this.step, roleOld, 'P');
         if (!checkExistStep) {
           let index = this.step?.roles.findIndex(
             (roleFind) => roleFind.objectID === roleOld['objectID']
@@ -2684,7 +2709,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         let checkExistProgress = false;
         for (let step of this.stepList) {
-          let check = this.checkExistUser(step, roleOld, 'R');
+          let check = this.checkExistUser(step, roleOld, 'P');
           if (check) {
             checkExistProgress = true;
             break;
@@ -2702,14 +2727,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  deleteRoleTypeR(role, step){
-    let check = this.checkExistUser(step, role, 'R');
+  deleteRoleTypeR(role, step) {
+    let check = this.checkExistUser(step, role, 'P');
     if (check) {
-      this.notiService.notifyCode(role?.objectName + "khong the xoa");
+      this.notiService.notifyCode('DP027', 0, role?.objectName);
+    } else {
+      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID);
+      if (index >= 0) {
+        step?.roles?.splice(index, 1);
+      }
     }
   }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string) {
+  checkExistUser(step: any, user: any, type: string): boolean {
     for (let element of step['taskGroups']) {
       let check = element['roles'].some(
         (x) => x.objectID == user.objectID && x.roleType == type
@@ -3394,13 +3424,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return true;
   }
-  moveProccessIsNull(newProccessID){
-    var index = this.listCbxProccess.findIndex(x=>x.recID == newProccessID);
-    if(index > -1) {
+  moveProccessIsNull(newProccessID) {
+    var index = this.listCbxProccess.findIndex((x) => x.recID == newProccessID);
+    if (index > -1) {
       return newProccessID;
     }
     return this.guidEmpty;
-
   }
   formDataCopyProccess(listValue: any) {}
   //#endregion

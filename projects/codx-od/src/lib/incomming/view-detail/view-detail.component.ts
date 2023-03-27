@@ -113,7 +113,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
     private codxODService: CodxOdService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
     this.tabControl = [
@@ -978,7 +978,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                   .subscribe((item) => {
                     //this.getChildTask(id);
                      //Có thiết lập bước duyệt
-                      if (item.bsCategory.approval) {
+                      if (item.bsCategory.approval) 
+                      {
                         this.api
                           .execSv(
                             'ES',
@@ -1015,9 +1016,16 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                               this.formModel.entityName]
                                             ).subscribe(res3=>{
                                               if(res3) {
-                                                this.data.approveStatus = '0';
-                                                this.view.dataService.update(this.data).subscribe();
-                                                this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                                this.data.status = '3';
+                                                this.data.approveStatus = '1';
+                                                this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType).subscribe(res4=>{
+                                                  if(res4.status == 0)
+                                                  {
+                                                    this.view.dataService.update(this.data).subscribe();
+                                                    this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                                  }
+                                                  else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
+                                                })
                                               }
                                               else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
                                             })
@@ -1025,6 +1033,19 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                       });
                                     }});
                             } 
+                      else
+                      {
+                        this.data.approveStatus = '1';
+                        this.data.status = '3';
+                        this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType).subscribe(res4=>{
+                          if(res4.status == 0)
+                          {
+                            this.view.dataService.update(this.data).subscribe();
+                            this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                          }
+                          else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
+                        })
+                      }
                      
                 });
             }});
@@ -1176,7 +1197,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
             //   if(item) that.data.tasks= item;
             // })
-            that.odService.updateDispatch(datas , "", false).subscribe((item) => {
+            that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 that.view.dataService.update(e.data).subscribe();
               } else that.notifySvr.notify(item.message);
@@ -1248,8 +1269,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((item) => {
           if (item) {
-            data.approveStatus = '0';
-            this.odService.updateDispatch(data , "", false).subscribe((item) => {
+            data.approveStatus = '1';
+            this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1297,9 +1318,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                 this.formModel.entityName
               )
               .subscribe((item: any) => {
-                if (item) {
-                  this.approvalTrans(item?.processID, datas);
-                }
+                if (item) { this.approvalTrans(item?.processID, datas) }
               });
           }
         });
@@ -1323,7 +1342,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);
@@ -1388,15 +1407,23 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') &&
       data?.status != '1' &&
       data?.status != '2' &&
-      data?.approveStatus != '2'
+      data?.approveStatus != '2' &&
+      (data?.status == '3' && data?.approveStatus != '1')
     ) {
-      //Chức năng Gửi duyệt
-      var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-      );
-      if (approvel[0]) approvel[0].disabled = true;
+     
     }
-    if (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') {
+
+    if((this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51'))
+    {
+      if( data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
+      {
+         //Chức năng Gửi duyệt
+        var approvel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+        );
+        if (approvel[0]) approvel[0].disabled = true;
+      }
+
       //Chức năng hủy yêu cầu duyệt
       var approvel = e.filter(
         (x: { functionID: string }) =>
@@ -1405,21 +1432,29 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       for (var i = 0; i < approvel.length; i++) {
         approvel[i].disabled = true;
       }
-    }
 
-    if (
-      (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') &&
-      data?.approveStatus == '3' &&
-      data?.createdBy == this.userID
-    ) {
-      var approvel = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'ODT212' || x.functionID == 'ODT3012'
-      );
-      for (var i = 0; i < approvel.length; i++) {
-        approvel[i].disabled = false;
+      if(data?.approveStatus == '3' && data?.createdBy == this.userID)
+      {
+        var approvel = e.filter(
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT212' || x.functionID == 'ODT3012'
+        );
+        for (var i = 0; i < approvel.length; i++) {
+          approvel[i].disabled = false;
+        }
+      }
+
+      //Hiện thị chức năng gửi duyệt khi xét duyệt
+      if(data?.approveStatus == '1' && data?.status == '3' )
+      {
+          //Chức năng Gửi duyệt
+          var approvel = e.filter(
+            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+          );
+          if (approvel[0]) approvel[0].disabled = false;
       }
     }
+
     if (data?.status == '7') {
       var completed = e.filter(
         (x: { functionID: string }) =>
@@ -1497,7 +1532,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data , "", false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1539,7 +1574,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       .subscribe((res2: any) => {
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-
         //trình ký
         if (res2?.eSign == true) {
           let signFile = new ES_SignFile();
@@ -1581,7 +1615,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);
