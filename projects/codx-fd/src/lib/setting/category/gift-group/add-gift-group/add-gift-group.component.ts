@@ -42,13 +42,16 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     super(injector);
     this.user = this.authStore.get();
     this.dialog = dialog;
+
     this.dataUpdate = JSON.parse(
       JSON.stringify(dialog.dataService.dataSelected)
     );
+
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
     this.title = dt.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+
       if (res) {
         this.header =
           this.title +
@@ -59,7 +62,7 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   valueChange(e) {
     if (e) {
