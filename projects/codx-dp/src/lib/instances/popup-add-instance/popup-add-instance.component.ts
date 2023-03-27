@@ -124,7 +124,8 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    } else if (this.action === 'add' || this.action === 'copy') {
+    }
+    else if (this.action === 'add' || this.action === 'copy') {
       this.lstParticipants = dt?.data[7];
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         var check = this.lstParticipants.some(
@@ -214,6 +215,7 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
+        case 'R':
         case 'A':
           result = event.e;
           break;
@@ -234,7 +236,7 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listStep[index].fields[idxField];
             } else
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
-          }          
+          }
         }
       }
     }
@@ -258,7 +260,7 @@ export class PopupAddInstanceComponent implements OnInit {
       option.data = [this.instance, this.listCustomFile];
     }
 
-   
+
     return true;
   }
   saveInstances() {
@@ -425,5 +427,34 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
+  }
+
+
+  setTimeHoliday(starDay: Date, endDay: Date, dayOff: string): Date {
+    if (dayOff && (dayOff.includes('7') || dayOff.includes('8'))) {
+        const isSaturday = dayOff.includes('7');
+        const isSunday = dayOff.includes('8');
+        let day = 0;
+
+        for (let currentDate = new Date(starDay); currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
+            if (currentDate.getDay() === 6 && isSaturday) {
+                day++;
+            }
+            if (currentDate.getDay() === 0 && isSunday) {
+                day++;
+            }
+        }
+
+
+        endDay.setDate(endDay.getDate() + day);
+
+        if (endDay.getDay() === 0 && isSunday) {
+            endDay.setDate(endDay.getDate() + 1);
+        }
+
+        return endDay;
+    }
+
+    return endDay;
   }
 }

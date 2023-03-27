@@ -11,6 +11,7 @@ import {
 import { UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-answers',
@@ -72,7 +73,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       this.awserSV.getRespondents(this.recID).subscribe((item:any) =>{
         if(item && item.length>0) {
           this.lstRespondents = item;
-          this.respondents = this.lstRespondents[0];
+          this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
           this.loadDataAnswerID(this.respondents.responds[0].questionID);
           this.setSelectedDropDown(this.respondents.responds[0].question)
           this.awserSV.loadQuestion(this.respondents.responds[0].questionID).subscribe(itemQ =>{
@@ -98,9 +99,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   selectedDropDown(index:any,item:any=null)
   {
-    if(!item) {
-      item = this.respondents.responds[(index - 1)].question;
-    }
+    if(!item) item = this.respondents.responds[(index - 1)].question;
     else
     {
       var e = {data : index + 1 };
@@ -109,9 +108,18 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
     this.setSelectedDropDown(item);
     this.loadDataAnswerID(this.respondents.responds[this.indexQ-1].questionID);
-    this.awserSV.loadQuestion(this.respondents.responds[this.indexQ-1].questionID).subscribe(itemQ =>{
-      if(itemQ) this.question = itemQ;
-    })
+    var o = this.awserSV.loadQuestion(this.respondents.responds[this.indexQ-1].questionID);
+    if(isObservable(o))
+    {
+      o.subscribe(itemQ =>{
+        if(itemQ) {
+          this.question = itemQ;
+          this.detectorRef.detectChanges();
+        }
+      })
+    }
+    else this.question = o;
+
   }
 
   //Thay đổi câu hỏi kế tiếp hoặc câu hỏi trước đó
