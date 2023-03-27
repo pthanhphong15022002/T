@@ -121,6 +121,17 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   saveData() {
     if (
+      (!this.field.title || this.field.title.trim() == '') &&
+      this.grvSetup['Title']?.isRequire
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Title']?.headerText + '"'
+      );
+      return;
+    }
+    if (
       (!this.field.fieldName || this.field.fieldName.trim() == '') &&
       this.grvSetup['FieldName']?.isRequire
     ) {
