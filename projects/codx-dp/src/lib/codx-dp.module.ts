@@ -53,6 +53,7 @@ const routes: Routes = [
       {
         path: 'dynamicprocess/:funcID',
         component: DynamicProcessComponent,
+        data: { noReuse: true },
       },
       {
         path: '**',
@@ -68,12 +69,8 @@ const routes: Routes = [
       {
         path: 'instances/:funcID/:processID',
         component: InstancesComponent,
+        data: { noReuse: true },
       },
-      //danh de vào 1 chi tiết làm sau
-      // {
-      //   path: 'instances/:funcID/:processID/:recID',
-      //   component: InstancesComponent,
-      // },
       {
         path: '**',
         redirectTo: 'dynamicprocess/DP0101',

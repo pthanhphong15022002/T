@@ -1,6 +1,6 @@
 <div class="w-100">
   <div class="d-flex align-items-center" [ngStyle]="style">
-    <div class="w-100">
+    <div class="">
       <codx-label
         class="fw-bold text-dark"
         [fiedName]="fiedName"
@@ -15,7 +15,7 @@
     </div>
   </div>
   <div>
-    <ng-container  *ngIf=" isPopupUserCbb"> 
+    <!-- <ng-container  *ngIf=" isPopupUserCbb"> 
       <codx-combobox-popup
       [comboboxName]="'Users'"
       [field]="'cbbUser'"
@@ -26,7 +26,14 @@
       (clickSave)="applyUser($event, dataSource)"
     >
     </codx-combobox-popup>
-    </ng-container>
+    <codx-input
+      type="combobox"
+      [refValue]="'Users'"
+      [multiple]="false"
+      [showInput]="false"
+    >
+    </codx-input>
+    </ng-container> -->
     <ng-container
       *ngIf="dataSource.length > 0"
       [ngTemplateOutlet]="showUser"
@@ -79,4 +86,18 @@
     (eventApply)="applyUser($event, dataSource)"
     [listName]="vllShare"
   ></codx-share>
+</ng-template>
+
+<ng-template #controlUserOne let-dialog>
+  <codx-combobox-popup
+    *ngIf=" isPopupUserCbb"
+    [comboboxName]="'Users'"
+    [field]="'cbbUser'"
+    [multiple]="multiple"
+    [width]="700"
+    [height]="600"
+    [value]=""
+    (clickSave)="applyUser($event, dataSource)"
+  >
+  </codx-combobox-popup>
 </ng-template>

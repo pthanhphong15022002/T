@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
+import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService, DialogModel } from 'codx-core';
 
 @Component({
   selector: 'codx-user',
@@ -7,6 +8,7 @@ import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsServi
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
+  @ViewChild('controlUserOne') controlUserOne: ComboBoxComponent;
   @Input() dataSource: any = [];
   @Input() multiple = false;
   @Input() listCombobox = {};
@@ -20,6 +22,7 @@ export class UserComponent implements OnInit {
   @Input() style = {};
   @Input() type = 'all';
   @Output() valueList = new EventEmitter();
+
   isPopupUserCbb = false;
   popup: DialogRef;
   constructor(
@@ -35,6 +38,12 @@ export class UserComponent implements OnInit {
   shareUser(share) {
     if(this.type == 'user'){
       this.isPopupUserCbb = true;
+      if(this.controlUserOne){
+        let option = new DialogModel();
+        option.zIndex = 1010;
+        this.popup = this.callfc.openForm(this.controlUserOne, '', 500, 500,'',null,'', option);
+        this.popup.close();
+      }
     }else{
       this.popup = this.callfc.openForm(share, '', 500, 500);
     }
@@ -52,8 +61,9 @@ export class UserComponent implements OnInit {
     let listUser = JSON.parse(JSON.stringify(datas));
     if (!event) return;
     let valueUser = [];
+    this.popup.close();
     if(this.type == 'user'){
-      this.isPopupUserCbb = false;
+      // this.isPopupUserCbb = false;
       valueUser = event.dataSelected;
     }else{
       this.popup.close();

@@ -80,6 +80,8 @@ export class PopupAddGiftComponent implements OnInit {
 
     this.cache.functionList(this.funcID)
       .subscribe((func: any) => {
+        console.log('fun:', func);
+
         if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
           this.title = func.description;
         }

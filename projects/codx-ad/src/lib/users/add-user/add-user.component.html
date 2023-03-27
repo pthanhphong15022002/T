@@ -139,7 +139,7 @@
 </ng-template>
 <ng-template #tabRoles>
   <div class="form-group mt-3">
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end" *ngIf="!adUser.administrator">
       <button
         type="button"
         class="btn btn-primary"
