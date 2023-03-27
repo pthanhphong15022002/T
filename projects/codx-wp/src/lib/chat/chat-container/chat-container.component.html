@@ -4,9 +4,8 @@
             <codx-chat-box #codxChatBox 
                 [id]="item.groupID" 
                 [groupID]="item.groupID" 
-                [status]="item.isOnline"
-                (close)="closeBoxChat(item,codxChatBox)"
-                (collapse)="collapseBoxChat(item,codxChatBox)">
+                (close)="closeBoxChat(item)"
+                (collapse)="collapseBoxChat(item)">
             </codx-chat-box>
         </ng-container>
     </div>
