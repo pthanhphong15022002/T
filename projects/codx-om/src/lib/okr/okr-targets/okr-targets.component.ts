@@ -201,7 +201,6 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   getCacheData() {
-    this.svgOB=OMCONST.ASSET_URL+this.okrVll?.
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
