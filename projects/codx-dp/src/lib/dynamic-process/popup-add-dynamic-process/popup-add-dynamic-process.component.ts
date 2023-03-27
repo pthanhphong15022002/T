@@ -358,8 +358,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-    console.log("------------",this.grvStep);
-    
     this.cache
     .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
     .subscribe((res) => {
@@ -1925,13 +1923,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if(this.actionStep !== 'edit' || this.stepEdit['stepName']?.trim() != this.stepName?.trim()){
       let isRepeatName = this.checkStepName(this.stepName);
       if(isRepeatName){
-        this.notiService.notifyCode('DP029', 0, 'Tên giai đoạn');
+        this.notiService.notifyCode('DP029', 0, this.headerTextStepName);
         return;
       }
     }
     this.isSaveStep = true;
     if (!this.stepName.trim()) {
-      this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+      this.notiService.notifyCode('SYS009', 0, this.headerTextStepName);
       this.isSaveStep = false;
       return;
     }
