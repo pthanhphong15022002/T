@@ -4,7 +4,7 @@
         <div class="form-group">
             <codx-label class="text-dark" fiedName="GiftID" [formModel]="form.formModel" default="Mã quà tặng">
             </codx-label>
-            <codx-input class="form-control" [disabled]="" (valueChange)="valueChange($event)" field="giftID"
+            <codx-input class="form-control" [disabled]="true" (valueChange)="valueChange($event)" field="giftID"
                 [Group]="form.formGroup" [formModel]="form.formModel">
             </codx-input>
         </div>

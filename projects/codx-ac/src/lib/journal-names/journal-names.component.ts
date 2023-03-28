@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
@@ -9,6 +10,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { JournalService } from './journal-names.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
 @Component({
@@ -26,7 +28,12 @@ export class JournalNamesComponent extends UIComponent {
   };
   functionName: string;
 
-  constructor(inject: Injector, private route: Router) {
+  constructor(
+    inject: Injector,
+    private route: Router,
+    private notiService: NotificationsService,
+    private journalService: JournalService
+  ) {
     super(inject);
   }
   //#region Constructor
@@ -87,7 +94,8 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    this.view.dataService.addNew().subscribe(() => {
+    this.view.dataService.addNew().subscribe((res) => {
+      console.log(res);
       const options = new SidebarModel();
       options.Width = '800px';
       options.DataService = this.view.dataService;
@@ -105,11 +113,64 @@ export class JournalNamesComponent extends UIComponent {
     });
   }
 
-  edit(e, data): void {}
+  edit(e, data): void {
+    console.log('edit', { data });
 
-  copy(e, ata): void {}
+    this.api
+      .exec(
+        'ERM.Business.AC',
+        'JournalsBusiness',
+        'IsEditableAsync',
+        data.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.dataSelected = data;
+          this.view.dataService.edit(data).subscribe(() => {
+            const options = new SidebarModel();
+            options.Width = '800px';
+            options.DataService = this.view.dataService;
+            options.FormModel = this.view.formModel;
+
+            this.callfc.openSide(
+              PopupAddJournalComponent,
+              {
+                formType: 'edit',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              options,
+              this.view.funcID
+            );
+          });
+        }
+      });
+  }
+
+  copy(e, data): void {
+    console.log('copy', data);
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+
+      this.callfc.openSide(
+        PopupAddJournalComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
 
   delete(data): void {
+    console.log('delete', data);
+
     this.view.dataService
       .delete([data], true, (req: RequestOption) => {
         req.methodName = 'DeleteJournalAsync';
@@ -122,10 +183,16 @@ export class JournalNamesComponent extends UIComponent {
       })
       .subscribe((res: any) => {
         console.log(res);
+
         if (res) {
-          
+          this.journalService
+            .deleteAutoNumber(data.recID)
+            .subscribe((res) => console.log(res));
         }
       });
   }
   //#region Method
+
+  //#region Function
+  //#endregion
 }

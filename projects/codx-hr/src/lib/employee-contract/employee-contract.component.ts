@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
-import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef } from 'codx-core';
+import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef, FormModel } from 'codx-core';
 import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
@@ -34,12 +34,13 @@ export class EmployeeContractComponent extends UIComponent {
     text: 'Thêm'
   }
   formGroup: FormGroup;
-
   editStatusObj: any;
+
   currentEmpObj: any;
   dialogEditStatus: any;
+  
 
-
+  
   // moreFuncs = [
   //   {
   //     id: 'btnEdit',
@@ -68,7 +69,10 @@ export class EmployeeContractComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+
   }
+
+
 
   ngAfterViewInit(): void {
     this.views = [
@@ -92,7 +96,10 @@ export class EmployeeContractComponent extends UIComponent {
       },
     ]
     console.log('view cua e contract', this.view);
-    this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    if(this.view){
+
+      this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    }
     console.log('data service data', this.view?.formModel.funcID);
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
       this.eContractHeaderText = res;
@@ -147,7 +154,6 @@ export class EmployeeContractComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       console.log('res sau khi update status', res);
-      debugger
       
       this.view.dataService.update(res.event[0]).subscribe((res) => {
       })
@@ -158,7 +164,6 @@ export class EmployeeContractComponent extends UIComponent {
   onSaveUpdateForm(){
     this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
       if(res != null){
-        debugger
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
         this.dialogEditStatus && this.dialogEditStatus.close(res);
@@ -166,7 +171,6 @@ export class EmployeeContractComponent extends UIComponent {
     })
   }
   changeDataMf(event, data){
-    debugger
     console.log('data changedata MF', event);
     console.log('data di voi mf', data.signStatus);
     if(data.signStatus == '4' || data.signStatus == '5' || data.signStatus == '9' || data.signStatus == '0'){
@@ -195,7 +199,6 @@ export class EmployeeContractComponent extends UIComponent {
     else if(data.signStatus == '3'){
       for(let i = 0; i < event.length; i++){
         if(event[i].functionID == 'HRT1001A3'){
-          debugger
           event[i].disabled = true;
         }
       }
@@ -205,7 +208,10 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   clickMF(event, data){
-    debugger
+    console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
+    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
+
+    
     switch (event.functionID) {
       case 'HRT1001A7': // cap nhat da ki
       case 'HRT1001A0': // huy hop dong
@@ -253,7 +259,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '850px';
+    option.Width = '800px';
     option.FormModel = this.view.formModel;
     // let isAppendix = false;
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
@@ -328,13 +334,20 @@ export class EmployeeContractComponent extends UIComponent {
   }
   changeItemDetail(event) {
     this.itemDetail = event?.data;
+    console.log('eventttttttttttttttttt', event);
+    
+    console.log('itemdetail', this.itemDetail);
+
     
   }
   getDetailContract(event, data){
     if(data){
       this.itemDetail = data;
+      console.log('itemdetail', this.itemDetail);
+      
       this.df.detectChanges();
     }
   }
+  
   
 }

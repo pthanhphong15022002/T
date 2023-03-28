@@ -59,9 +59,8 @@ export class InstancesComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
-  @ViewChild('detailViewInstance')
-  detailViewInstance: InstanceDetailComponent;
-  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;InstanceDetailComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
@@ -98,6 +97,7 @@ export class InstancesComponent
   titleAction = '';
   instances = new DP_Instances();
   kanban: any;
+  listdetail: any;
   listStepsCbx: any;
   lstStepInstances = [];
   lstStepCbx = [];
@@ -111,8 +111,9 @@ export class InstancesComponent
   stepIdClick = '';
   listProccessCbx: any;
   sumDaySteps: number;
+  sumHourSteps: number;
   lstParticipants = [];
-  listParticipantReason = [] ; // for moveReason
+  listParticipantReason = []; // for moveReason
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
@@ -126,7 +127,8 @@ export class InstancesComponent
   //bien chuyen page
   process: any;
   tabInstances = [];
-  continueLoad = false;
+  haveDataService = false;
+  listHeader = [];
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -146,43 +148,17 @@ export class InstancesComponent
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
-      //tam thoi làm vậy đã
-      // this.codxDpService.dataProcess.subscribe((res) => {
-      //   if (res && res.read) {
-      //     this.process = res;
-      //     this.isCreate = this.process.create;
-      //     this.continueLoad = true;
-      //   } else {
-      //     this.continueLoad = false;
-      //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-      //   }
-      // });
-      // let dataProcess = await firstValueFrom(this.codxDpService.getProcessByProcessID(this.processID));
-      // if (!dataProcess || !dataProcess?.read) {
-      //
+      //data từ service ném qua
+      this.codxDpService.dataProcess.subscribe((res) => {
+        if (res) this.haveDataService = true;
+        else this.haveDataService = false;
+        if (res && res.read) {
+          this.loadData(res);
+        }
+      });
     });
-
-    // if (this.continueLoad) {
-    //   //  this.process = dt?.data?.data;
-    //   this.autoName = this.process?.autoName;
-    //   this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
-    //   this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-    //   this.isUseSuccess = this.stepSuccess?.isUsed;
-    //   this.isUseFail = this.stepFail?.isUsed;
-    //   this.showButtonAdd = this.isCreate;
-
-    //   this.viewMode = this.process?.viewMode ?? 6; 
-    //   this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    
-    // if (
-    //   this.process.permissions != null &&
-    //   this.process?.permissions.length > 0
-    // ) {
-    //   this.lstParticipants = this.process?.permissions.filter(
-    //     (x) => x.roleType === 'P'
-    //   );
-    // }
-    // }
+    this.layout.setUrl('dp/dynamicprocess/DP0101');
+    this.layout.setLogo(null);
 
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
@@ -197,8 +173,6 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP0101');
-    this.layout.setLogo(null);
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) this.pageTitle.setSubTitle(f?.customName);
@@ -208,39 +182,9 @@ export class InstancesComponent
         }
       });
     });
-
-    this.codxDpService.getProcessByProcessID(this.processID).subscribe((ps) => {
-      if (ps && ps.read) {
-        this.process = ps;
-        this.autoName = this.process?.autoName;
-        this.stepSuccess = this.process?.steps?.filter(
-          (x) => x.isSuccessStep
-        )[0];
-        this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-        this.isUseSuccess = this.stepSuccess?.isUsed;
-        this.isUseFail = this.stepFail?.isUsed;
-        this.showButtonAdd = this.isCreate;
-
-        this.viewMode = this.process?.viewMode ?? 6; 
-        this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-
-        if (
-          this.process.permissions != null &&
-          this.process?.permissions.length > 0
-        ) {
-          this.lstParticipants = this.process?.permissions.filter(
-            (x) => x.roleType === 'P'
-          );
-        }
-        this.continueLoad = true ;
-      } else {
-        this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-      }
-    });
   }
+  
   ngAfterViewInit(): void {
-   if (!this.continueLoad) return;
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -268,13 +212,13 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit() {
-  if (!this.continueLoad) return;
     this.button = {
       id: 'btnAdd',
     };
+
     this.dataObj = {
-      // processID: this.process?.recID ? this.process?.recID : '',
       processID: this.processID,
+      haveDataService: this.haveDataService ? '1' : '0',
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
@@ -284,20 +228,25 @@ export class InstancesComponent
       ),
     };
 
-    // if(this.process.steps != null && this.process.steps.length > 0){
-    //   this.listSteps = this.process.steps;
-    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-    //   this.deleteListReason(this.listStepsCbx);
-    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
-    // }
+    if (!this.haveDataService) {
+      this.codxDpService
+        .getProcessByProcessID(this.processID)
+        .subscribe((ps) => {
+          if (ps && ps.read) {
+            this.loadData(ps);
+            // this.continueLoad = true ;
+          } else {
+            this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+          }
+        });
+    }
 
     this.codxDpService
-      .createListInstancesStepsByProcess(this.process?.recID)
+      .createListInstancesStepsByProcess(this.processID)
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          //    this.deleteListReason(this.listStepsCbx);
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
@@ -329,12 +278,31 @@ export class InstancesComponent
         break;
     }
   }
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+      console.log(dataColumns);
+      
+    return dataColumns;   
+  }
 
-  // progressEvent(event){
-  //   this.progress = event.progress;
-  //   this.stepNameInstance = event.name;
-  //   this.instanceID = event.instanceID;
-  // }
+  getPropertiesHeader(data, type){
+    if(this.listHeader?.length == 0){
+      this.listHeader = this.getPropertyColumn();
+    }
+    let find = this.listHeader?.find(item => item.recID === data.keyField);
+    return find ? find[type] : '';
+  }
+
+
 
   //CRUD
   add() {
@@ -468,10 +436,11 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
+        this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx),
       ],
       option
     );
@@ -922,6 +891,7 @@ export class InstancesComponent
             );
             dialogMoveStage.closed.subscribe((e) => {
               this.isClick = true;
+              this.stepIdClick='';
               if (!e || !e.event) {
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
@@ -934,12 +904,12 @@ export class InstancesComponent
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
                 }
+                this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                this.view.dataService.update(data).subscribe();
-                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -959,31 +929,37 @@ export class InstancesComponent
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
-            var newProccessIdReason = isMoveSuccess ? this.stepSuccess.newProcessID: this.stepFail.newProcessID;
+            var newProccessIdReason = isMoveSuccess
+              ? this.stepSuccess.newProcessID
+              : this.stepFail.newProcessID;
             var isCheckExist = this.isExistNewProccessId(newProccessIdReason);
-            debugger;
-            if(isCheckExist) {
-              this.codxDpService.getProcess(newProccessIdReason).subscribe((res) => {
-                if (res) {
-                  if (res.permissions != null && res.permissions.length > 0) {
-                    this.listParticipantReason = res.permissions.filter(
-                      (x) => x.roleType === 'P'
-                    );
-                    this.openFormReason(data,fun,isMoveSuccess,dataMore,this.listParticipantReason);
+            if (isCheckExist) {
+              this.codxDpService
+                .getProcess(newProccessIdReason)
+                .subscribe((res) => {
+                  if (res) {
+                    if (res.permissions != null && res.permissions.length > 0) {
+                      this.listParticipantReason = res.permissions.filter(
+                        (x) => x.roleType === 'P'
+                      );
+                      this.openFormReason(
+                        data,
+                        fun,
+                        isMoveSuccess,
+                        dataMore,
+                        this.listParticipantReason
+                      );
+                    }
                   }
-                }
-              });
-
+                });
+            } else {
+              this.openFormReason(data, fun, isMoveSuccess, dataMore, null);
             }
-            else {
-              this.openFormReason(data,fun,isMoveSuccess,dataMore,null);
-            }
-
           });
       });
     });
   }
-  openFormReason(data,fun,isMoveSuccess,dataMore,listParticipantReason){
+  openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     // this.codxDpService.get
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
@@ -1026,10 +1002,12 @@ export class InstancesComponent
         if (e.event.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
-        this.dataSelected = data;
-        this.detailViewInstance.dataSelect = this.dataSelected;
         this.view.dataService.update(data).subscribe();
         if (this.kanban) this.kanban.updateCard(data);
+        this.dataSelected = data;
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.instance = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
         this.detectorRef.detectChanges();
       }
     });
@@ -1055,13 +1033,7 @@ export class InstancesComponent
     return true;
   }
 
-  // deleteListReason(listStep: any): void {
-  //   listStep.pop();
-  //   listStep.pop();
-  // }
-
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
@@ -1088,13 +1060,14 @@ export class InstancesComponent
       });
     });
   }
-  isExistNewProccessId(newProccessId){
-    return this.listProccessCbx.some((x) => x.recID == newProccessId);
+  isExistNewProccessId(newProccessId) {
+    return this.listProccessCbx.some(
+      (x) => x.recID == newProccessId && x.recID != this.guidEmpty
+    );
   }
 
-
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx
+    let totalDay = listStepCbx
       .filter((x) => !x.isSuccessStep && !x.isFailStep)
       .reduce(
         (sum, f) =>
@@ -1104,7 +1077,17 @@ export class InstancesComponent
           this.setTimeHoliday(f?.excludeDayoff),
         0
       );
-    return total;
+    return totalDay;
+  }
+  getSumDurationHourOfSteps(listStepCbx: any) {
+      let totalHour = listStepCbx
+      .filter((x) => !x.isSuccessStep && !x.isFailStep)
+      .reduce(
+        (sum, f) =>
+          sum +f?.durationHour ,
+        0
+      );
+    return totalHour;
   }
   setTimeHoliday(dayOffs: string): number {
     let listDays = dayOffs.split(';');
@@ -1206,5 +1189,28 @@ export class InstancesComponent
     // }
     //xét duyệt
     // });
+  }
+  //load điều kiện
+  loadData(ps) {
+    this.process = ps;
+    this.isCreate = this.process.create;
+    this.autoName = this.process?.autoName;
+    this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
+    this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+    this.isUseSuccess = this.stepSuccess?.isUsed;
+    this.isUseFail = this.stepFail?.isUsed;
+    this.showButtonAdd = this.isCreate;
+
+    this.viewMode = this.process?.viewMode ?? 6;
+    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+
+    if (
+      this.process?.permissions != null &&
+      this.process?.permissions.length > 0
+    ) {
+      this.lstParticipants = this.process?.permissions.filter(
+        (x) => x.roleType === 'P'
+      );
+    }
   }
 }

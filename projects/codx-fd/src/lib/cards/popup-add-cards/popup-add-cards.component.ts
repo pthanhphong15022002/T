@@ -246,7 +246,6 @@ export class PopupAddCardsComponent implements OnInit {
           return;
         }
         else if (data > this.gifts[0].availableQty) {
-
           this.form.patchValue({ quantity: this.quantityOld });
           this.notifySV.notify("Vượt quá số dư quà tặng");
           return;

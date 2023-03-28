@@ -207,9 +207,9 @@ export class DispatchService implements OnDestroy {
     return this.api.exec<any>('OD', 'DispatchesBusiness', 'RecallRelationAsync', resID);
   }
   //Chuyển tiếp công văn
-  forwardDispatch(recID:any , obj: forwarDis)
+  forwardDispatch(recID:any , obj: forwarDis , funcID:string)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ForwardDispatchAsync', [recID,obj]);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ForwardDispatchAsync', [recID,obj,funcID]);
   }
 
   //Cập nhật kết quả

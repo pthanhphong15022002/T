@@ -118,10 +118,17 @@ export class WalletComponent extends UIComponent implements OnInit {
       var dt = e.data == true ? '1' : '0';
       this.objectUpdateCoin[e.field] = dt;
       this.fieldUpdateCoin = e.field;
-      if (e.field == 'ActiveCoCoins') {
-        this.disableGroupFund = !e.data;
-      }
       this.handleSaveParameter();
+
+      if (e.field == 'ActiveCoCoins') {
+        if (!e.data) {
+          this.objectUpdateCoin['ExchangeRateCoinsControl'] = false;
+          this.fieldUpdateCoin = 'ExchangeRateCoinsControl';
+        }
+        this.disableGroupFund = !e.data;
+        this.handleSaveParameter();
+      }
+
     }
   }
 

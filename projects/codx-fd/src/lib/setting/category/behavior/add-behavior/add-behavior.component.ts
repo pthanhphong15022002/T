@@ -44,8 +44,13 @@ export class AddBehaviorComponent extends UIComponent implements OnInit {
     this.isModeAdd = dt.data?.isModeAdd;
     this.formModel = dialog.formModel;
     this.title = dt.data?.headerText;
+
+    console.log('md:', this.formModel);
+
+
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       if (res) {
+
         this.header =
           this.title +
           ' ' +

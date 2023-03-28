@@ -2,11 +2,13 @@
   [footer]="footer" [dialog]="dialog" [data]="instancesStepOld"></codx-form>
 
 <ng-template #subHeader>
-  <span>{{ stepName }}</span>
+
 </ng-template>
 <ng-template #body>
-  <div class="title-step pb-12"></div>
-  <div class="content-step">
+  <div class="title-step mt-3">
+    <div class="fs-5 text-primary">{{ stepName }}</div>
+  </div>
+  <div class="content-step mt-2">
     <ng-container [ngTemplateOutlet]="test"></ng-container>
     <div class="form-group">
       <div>
@@ -44,64 +46,38 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-
-    <!-- <div class="form-group" >
-      <div>
-        <div class="d-flex justify-content-end">
-          <div class="me-auto">
-            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Trường tùy chỉnh">
-          </codx-label>
-          </div>
-        </div>
-        <div class="pt-5">
-          <codx-field-detail
-          *ngIf="instancesStepOld?.fields?.length > 0"
-          [dataStep]="instancesStepOld"
-          [showColumnControl]="showColumnControl(instance.stepID)"
-          [isUpdate]="!instance.closed && (instance.status =='1' || instance.status=='2' )"
-          [currentRecID]="stepIdOld"
-          (inputCustomField)="inputCustomField($event)"
-          [isSaving]="isSaving"
-          (actionSave)="actionSaveCustomField($event)"
-        ></codx-field-detail>
-
-        </div>
-      </div>
-    </div> -->
-
-
     <div class="form-group" *ngIf="!!listTree">
       <div>
-        <div class="d-flex justify-content-end">
-          <div class="me-auto">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="w-100">
             <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
             default="Công việc chưa hoàn tất">
           </codx-label>
           </div>
-          <div>
-            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Hoàn thành tất cả">
-          </codx-label>
-          </div>
-          <div class="ps-2">
-            <input
-            class="form-check-input rounded-circle"
-            type="checkbox"
-            [checked]="isCheckAll"
-            (change)="checkAllValue($event,'all','custom')"
+          <div class="ms-6 d-flex align-items-center justify-content-end">
+            <div class="text-nowrap">
+              <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+              default="Hoàn thành tất cả">
+            </codx-label>
+            </div>
+            <div class="ps-2">
+              <input
+              class="form-check-input rounded-circle w-20px h-20px"
+              type="checkbox"
+              [checked]="isCheckAll"
+              (change)="checkAllValue($event,'all','custom')"
 
-            />
+              />
+            </div>
           </div>
         </div>
-        <div class="pt-5">
+        <div class="pt-5 ms-6">
           <div class="accordion" id="accordion1">
             <ng-container *ngFor="let item of listTree; let i = index">
               <div *ngIf="item.taskGroupID === null; else taskGroup">
                 <ol class="list-unstyled" >
                   <li>
-                    <div class="d-flex justify-content-start pb-1">
-
+                    <div class="d-flex justify-content-start">
                       <div
                       class="icon-container"
                       [ngStyle]="getColor(item)"
@@ -133,7 +109,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'task')"
@@ -148,18 +124,20 @@
               <ng-template #taskGroup>
                 <ol class="list-unstyled" >
                   <li>
-                    <div class="d-flex justify-content-start pb-1">
+                    <div class="d-flex align-items-center justify-content-between min-h-40px">
+                      <div class="d-flex align-items-center">
                       <button class="btn btn-outline-secondary btnCustom" style="cursor: pointer;"
                       id="open"
                       type="button"
                       (click)="myFunction($event,i)"
                       ><i [id]="'parent'+i" [class]="item.children.length > 0 ?'icon-remove':'icon-add' " style="padding: 0.35rem;"></i> </button>
-                      <div class="ps-5 mt-1">
+                      <div class="fw-bold fs-6 text-dark ms-4">
                         {{item.taskGroupName}}
 
                       </div>
-                      <div class="ms-auto">
-                        <div class="d-flex justify-content-end">
+                    </div>
+                      <div class="ms-5">
+                        <div class="d-flex justify-content-end align-items-center">
                           <div>
                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                             </codx-imgs>
@@ -176,7 +154,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'taskGroup')"
@@ -186,52 +164,52 @@
                         </div>
                       </div>
                     </div>
-                      <ul class="tree ms-3 show" [id]="'children'+i" >
+                      <ul class="tree ms-4 show" [id]="'children'+i" >
                         <ng-container *ngFor="let task of item.children">
                           <li >
-                            <div class="d-inline-block" style="width: 96%;">
-                                <div class="d-flex justify-content-start">
-                                      <div
-                                      class="icon-container"
-                                      [ngStyle]="getColor(task)"
-                                    >
-                                      <span
-                                        class="icon-18 text-primary-600 py-2"
-                                        [ngClass]="getIconTask(task)"
-                                      ></span>
-                                    </div>
-                                      <div class="ps-5 mt-1"> {{task.taskName}}
-                                        <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
-                                      </div>
-                                      <div class="ms-auto">
-                                        <div class="d-flex justify-content-end">
-                                          <div>
-                                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
-                                            </codx-imgs>
-                                          </div>
-                                          <div class="notify">
-                                            <span class="me-3">
-                                              <codx-attachment-temp [objectID]="task.refID"></codx-attachment-temp>
-                                            </span>
-                                          </div>
-                                          <div class="notify">
-                                            <span class="me-3">
-                                              <codx-comment-temp [objectID]="task.recID"></codx-comment-temp>
-                                            </span>
-                                          </div>
-                                          <div>
-                                            <input
-                                            [id]="item.recID"
-                                            class="form-check-input rounded-circle"
-                                            type="checkbox"
-                                            [checked]="isCheckAll"
-                                            (change)="checkAllValue($event,task,'task')"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
+                            <div class="d-flex align-items-center justify-content-between py-2 stage-item">
+                              <div class="d-flex align-items-center w-100">
+                                <div
+                                class="icon-container me-3"
+                                [ngStyle]="getColor(task)"
+                              >
+                                <span
+                                  class="icon-18 text-primary-600 py-2"
+                                  [ngClass]="getIconTask(task)"
+                                ></span>
+                              </div>
+                                <div class=""> {{task.taskName}}
+                                  <span style="color: red;" *ngIf="task.requireCompleted" >*</span>
                                 </div>
-                            </div>
+                              </div>
+                              <div class="ms-5">
+                                <div class="d-flex justify-content-end align-items-center">
+                                  <div>
+                                    <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
+                                    </codx-imgs>
+                                  </div>
+                                  <div class="notify">
+                                    <span class="me-3">
+                                      <codx-attachment-temp [objectID]="task.refID"></codx-attachment-temp>
+                                    </span>
+                                  </div>
+                                  <div class="notify">
+                                    <span class="me-3">
+                                      <codx-comment-temp [objectID]="task.recID"></codx-comment-temp>
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <input
+                                    [id]="item.recID"
+                                    class="form-check-input rounded-circle w-20px h-20px"
+                                    type="checkbox"
+                                    [checked]="isCheckAll"
+                                    (change)="checkAllValue($event,task,'task')"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
                           </li>
                         </ng-container>
                       </ul>
@@ -243,6 +221,34 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group" >
+      <div>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Trường tùy chỉnh">
+          </codx-label>
+          </div>
+        </div>
+        <div class="pt-5">
+          <ng-container *ngIf="fieldsNull?.length > 0">
+            <ng-container *ngFor="let item of fieldsNull">
+                <codx-input-custom-field
+                  [customField]="item"
+                  [checkValid]="true"
+                  [objectId]="item.recID"
+                  [objectType]="'DP_Instances'"
+                  [formModel]="dialog.formModel"
+                  (valueChangeCustom)="valueChangeCustom($event)"
+                >
+                </codx-input-custom-field>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
   </div>
 </ng-template>
 

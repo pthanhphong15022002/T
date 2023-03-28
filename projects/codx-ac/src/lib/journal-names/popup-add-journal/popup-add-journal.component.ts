@@ -16,9 +16,12 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { filter, map, Observable } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
+import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
+import { JournalService } from '../journal-names.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
 
@@ -59,14 +62,38 @@ export class PopupAddJournalComponent
   fiscalYears: any[] = [];
   isMultiSelectPopupDrHidden: boolean = true;
   isMultiSelectPopupCrHidden: boolean = true;
+  isEdit: boolean = false;
+  tempIDIMControls: any[] = [];
 
   constructor(
     private injector: Injector,
     private acService: CodxAcService,
+    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
     super(injector);
+
+    this.journal = dialogRef.dataService?.dataSelected;
+    this.journal.approval = this.journal.approval == '1' ? true : false;
+    this.journal.postControl = ['1', '2'].includes(this.journal.postControl)
+      ? true
+      : false;
+    this.journal.projectControl = this.journal.projectControl ? '1' : '0';
+    this.journal.assetControl = this.journal.assetControl ? '1' : '0';
+    this.journal.postSubControl = this.journal.postSubControl ? '1' : '0';
+
+    if (dialogData.data.formType === 'edit') {
+      this.isEdit = true;
+      try {
+        this.tempIDIMControls = JSON.parse(this.journal.idimControl);
+        this.journal.creater = JSON.parse(this.journal.creater);
+        this.journal.approver = JSON.parse(this.journal.approver);
+        this.journal.poster = JSON.parse(this.journal.poster);
+        this.journal.unposter = JSON.parse(this.journal.unposter);
+        this.journal.sharer = JSON.parse(this.journal.sharer);
+      } catch {}
+    }
   }
   //#endregion
 
@@ -85,6 +112,16 @@ export class PopupAddJournalComponent
     this.loadComboboxData('FiscalPeriods').subscribe((periods) => {
       console.log(periods);
       this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
+    });
+
+    this.dialogRef.closed.subscribe((res) => {
+      console.log(res);
+
+      if (!res.event) {
+        this.journalService
+          .deleteAutoNumber(this.journal.recID)
+          .subscribe((res) => console.log(res));
+      }
     });
   }
 
@@ -111,6 +148,7 @@ export class PopupAddJournalComponent
   handleChange(e): void {
     console.log(e);
 
+    this.form.formGroup.controls.periodID.reset();
     (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
       ['FiscalYear=@0'],
       [e.itemData.value]
@@ -129,18 +167,29 @@ export class PopupAddJournalComponent
     }
 
     let temp: IJournal = { ...this.journal };
-
     if (this.journal.approval) {
       temp.postControl = this.journal.postControl ? 1 : 0;
+      temp.approval = 1;
     } else {
       temp.postControl = this.journal.postControl ? 2 : 0;
+      temp.approval = 0;
     }
+    temp.projectControl = this.journal.projectControl == '1' ? true : false;
+    temp.assetControl = this.journal.assetControl == '1' ? true : false;
+    temp.postSubControl = this.journal.postSubControl == '1' ? true : false;
+    temp.creater = JSON.stringify(this.journal.creater);
+    temp.approver = JSON.stringify(this.journal.approver);
+    temp.poster = JSON.stringify(this.journal.poster);
+    temp.unposter = JSON.stringify(this.journal.unposter);
+    temp.sharer = JSON.stringify(this.journal.sharer);
 
     console.log(temp);
 
     this.dialogRef.dataService
       .save((req: RequestOption) => {
-        req.methodName = 'AddJournalAsync';
+        req.methodName = !this.isEdit
+          ? 'AddJournalAsync'
+          : 'UpdateJournalAsync';
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
@@ -150,7 +199,7 @@ export class PopupAddJournalComponent
       })
       .subscribe((res) => {
         if (res.save || res.update) {
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         }
       });
   }
@@ -170,7 +219,9 @@ export class PopupAddJournalComponent
         400,
         250,
         '',
-        {},
+        {
+          journal: this.journal,
+        },
         '',
         options
       )
@@ -178,8 +229,8 @@ export class PopupAddJournalComponent
         console.log(event);
 
         this.journal.invoiceType = event.invoiceType;
-        this.journal.invoiceForm = event.invoiceType;
-        this.journal.invoiceSeriNo = event.invoiceType;
+        this.journal.invoiceForm = event.invoiceForm;
+        this.journal.invoiceSeriNo = event.invoiceSeriNo;
       });
   }
 
@@ -225,6 +276,42 @@ export class PopupAddJournalComponent
     this.isMultiSelectPopupDrHidden = true;
     this.isMultiSelectPopupCrHidden = true;
   }
+
+  openCustomizedMultiSelectPopup(): void {
+    this.callfc
+      .openForm(
+        CustomizedMultiSelectPopupComponent,
+        'This param is not working',
+        400,
+        500,
+        '',
+        {
+          selectedOptions: this.journal.idimControl,
+        }
+      )
+      .closed.subscribe(({ event }) => {
+        console.log(event);
+
+        if (event) {
+          this.journal.idimControl = event;
+          this.tempIDIMControls = JSON.parse(event);
+        }
+      });
+  }
+
+  openAutoNumberPopup() {
+    this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      550,
+      (screen.width * 40) / 100,
+      '',
+      {
+        autoNoCode: this.journal.recID,
+        description: this.dialogRef.formModel?.entityName,
+      }
+    );
+  }
   //#endregion
 
   //#region Method
@@ -244,12 +331,5 @@ export class PopupAddJournalComponent
   //#endregion
 
   //#region Function
-  getDescription(pascalCase: string): string {
-    return this.gvs[pascalCase].description;
-  }
-
-  toPascalCase(camelCase: string): string {
-    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-  }
   //#endregion
 }
