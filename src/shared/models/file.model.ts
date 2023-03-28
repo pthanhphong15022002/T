@@ -76,6 +76,7 @@ export class FileInfo {
     relation: string;
     source: string;
     countDownload: any;
+    childID:any
 }
 
 export class ItemInterval {

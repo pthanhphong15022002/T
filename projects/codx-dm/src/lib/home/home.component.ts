@@ -732,7 +732,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.views[2].model.panelLeftHide = true;
           this.view.viewChange(this.views[2]);
         }
-        else this.view.viewChange(this.viewActive);
+        //else this.view.viewChange(this.viewActive);
 
         //if(this.funcID == "DMT00") 
       }
@@ -763,7 +763,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //Set chiều cao view list
   setHeight()
   {
-    this.maxHeightScroll = this.divHome.nativeElement.offsetHeight - 60;
+    //this.maxHeightScroll = this.divHome.nativeElement.offsetHeight - 60;
   }
   //Refesh lại data
   refeshData()
@@ -1509,6 +1509,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     if(!this.isScrollFile) return;
     this.fileService.options.funcID = this.funcID;
+    debugger
     //this.fileService.options.srtColumns = this.sortColumn;
     //this.fileService.options.srtDirections = this.sortDirection;
     this.fileService.GetFiles(id).subscribe((res) => {
