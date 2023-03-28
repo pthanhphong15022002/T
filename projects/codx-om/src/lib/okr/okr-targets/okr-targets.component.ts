@@ -561,8 +561,7 @@ export class OkrTargetsComponent implements OnInit {
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
   editOKRWeight(ob: any, popupTitle: any) {
-    //popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle = 'Tính kết quả thực hiện cho mục tiêu';
+    let subTitle = ob?.okrName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogEditWeightKR = this.callfunc.openForm(
@@ -571,14 +570,13 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [ob.recID, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle],
+      [ob, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle,this.okrVll],
       '',
       dModel
     );
   }
   editSKRWeight(kr: any, popupTitle: any) {
-    //popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle = 'Tính kết quả thực hiện cho mục tiêu';
+    let subTitle = kr?.okrName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogEditWeightSKR = this.callfunc.openForm(
@@ -587,7 +585,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.recID, OMCONST.VLL.OKRType.SKResult, popupTitle, subTitle],
+      [kr, OMCONST.VLL.OKRType.SKResult, popupTitle, subTitle,this.okrVll],
       '',
       dModel
     );
