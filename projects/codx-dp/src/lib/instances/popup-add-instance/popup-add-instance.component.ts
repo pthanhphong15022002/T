@@ -290,7 +290,7 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    //khong check custom field nua - nhung cấm xóa
+    //khong check custom field nua - nhung ko xóa
     // if (this.listStep?.length > 0) {
     //   let check = true;
     //   let checkFormat = true;
@@ -349,32 +349,14 @@ export class PopupAddInstanceComponent implements OnInit {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
-          this.cache.message('SYS037').subscribe((res) => {
-            if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notificationsService.notifyCode(
-                'SYS009',
-                0,
-                '"' + errorMessage + '"'
-              );
-            }
-          });
+          this.notificationsService.notifyCode('SYS037');
           return false;
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
         if (!field.dataValue.toLowerCase().match(validPhone)) {
-          this.cache.message('RS030').subscribe((res) => {
-            if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notificationsService.notifyCode(
-                'SYS009',
-                0,
-                '"' + errorMessage + '"'
-              );
-            }
-          });
+          this.notificationsService.notifyCode('RS030');
           return false;
         }
       }

@@ -109,8 +109,9 @@
               >
                 <codx-input
                   [style]="
-                    data.controlType == 'TextBox' ||
-                    data.controlType == 'Combobox'
+                    data.controlType &&
+                    (data.controlType.toLowerCase() == 'textbox' ||
+                      data.controlType.toLowerCase() == 'combobox')
                       ? 'width: 200px'
                       : ''
                   "
@@ -202,8 +203,9 @@
                       | value : 'FieldName' : data.fieldName : 'ApprovalRule')
                   "
                   [style]="
-                    data.controlType == 'TextBox' ||
-                    data.controlType == 'Combobox'
+                    data.controlType &&
+                    (data.controlType.toLowerCase() == 'textbox' ||
+                      data.controlType.toLowerCase() == 'combobox')
                       ? 'width: 200px'
                       : ''
                   "

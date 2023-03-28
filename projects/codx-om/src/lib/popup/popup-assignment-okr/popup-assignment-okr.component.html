@@ -23,7 +23,7 @@
         </div> -->
         <!--Body-->
         <div class="d-block w-75">
-          <ejs-tab id="om-tab" class="h-100">
+          <ejs-tab id="om-tab" class="h-100" #assignTab>
             <e-tabitems>
               <e-tabitem>
                 <ng-template #headerText>
@@ -86,10 +86,10 @@
                 </ng-template>
               </e-tabitem>
               <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-center">
+                <ng-template #headerText >
+                  <div class="d-flex align-items-center" >
                     <span class="fa-solid icon-account_circle me-2"></span>
-                    <codx-label default="Nhân viên " fiedName="lblmeeting" class="fw-bold"></codx-label>
+                    <codx-label default="Nhân viên" fiedName="lblmeeting" class="fw-bold"></codx-label>
                   </div>
                 </ng-template>
                 <ng-template #content>

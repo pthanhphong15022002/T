@@ -42,8 +42,20 @@
 <ng-template #viewColumKaban let-data>
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    [id]="data?.keyField"
   >
-    <div class="line-colums">{{ data.headerText }}</div>
+    <div class="line-colums d-flex">
+      <span
+        [ngClass]="getPropertiesHeader(data, 'icon')"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+        style="font-size: 18px"
+        class="me-3"
+      >
+      </span>
+      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+        {{ data.headerText }}
+      </span>
+    </div>
   </div>
 </ng-template>
 
@@ -194,11 +206,22 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-primary">
+      <div>
         <div *ngFor="let item of listSteps">
-          <span *ngIf="item.stepID === data.stepID">
-            {{ item.stepName }}
-          </span>
+          <div
+            *ngIf="item.stepID === data.stepID"
+            [ngStyle]="{ 'background-color': item['backgroundColor'] }"
+            class="me-2 badge badge-primary"
+          >
+            <span
+              [ngClass]="item['icon']"
+              [ngStyle]="{ color: item['iconColor'] }"
+              class="me-2"
+            ></span>
+            <span [ngStyle]="{ color: item['textColor'] }">
+              {{ item.stepName }}</span
+            >
+          </div>
         </div>
       </div>
       <div

@@ -166,7 +166,7 @@ export class PopupMoveStageComponent implements OnInit {
         switch (this.assignControl) {
           //Phụ trách giai đoạn hiện tại
           case '0':
-            this.owner = this.stepCurrent?.owner;
+            this.owner = '';
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Phụ trách giai đoạn chuyển tiếp

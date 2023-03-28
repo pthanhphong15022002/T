@@ -33,6 +33,13 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     this.purchaseInvoicesLines = dialogData.data?.data;
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
+    this.cache
+      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   onInit(): void {}
@@ -40,11 +47,43 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseInvoicesLines);
   }
+  
+  valueChange(e){
+    this.purchaseInvoicesLines[e.field] = e.data;
+  }
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.purchaseInvoicesLines);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.purchaseInvoicesLines[keymodel[i]] === null ||
+              String(this.purchaseInvoicesLines[keymodel[i]]).match(/^ *$/) !==
+                null ||
+              this.purchaseInvoicesLines[keymodel[i]] == 0
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
   onSave(){
-    this.purchaseInvoicesLines.itemID = "asd";
-    this.purchaseInvoicesLines.idiM4 = "kho";
-    this.purchaseInvoicesLines.vatid = "thuế";
-    window.localStorage.setItem('dataline', JSON.stringify(this.purchaseInvoicesLines));
-    this.dialog.close();
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      window.localStorage.setItem('dataline', JSON.stringify(this.purchaseInvoicesLines));
+      this.dialog.close();
+    }
   }
 }

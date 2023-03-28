@@ -128,6 +128,7 @@ export class InstancesComponent
   process: any;
   tabInstances = [];
   haveDataService = false;
+  listHeader = [];
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -182,6 +183,7 @@ export class InstancesComponent
       });
     });
   }
+  
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -276,6 +278,31 @@ export class InstancesComponent
         break;
     }
   }
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+      console.log(dataColumns);
+      
+    return dataColumns;   
+  }
+
+  getPropertiesHeader(data, type){
+    if(this.listHeader?.length == 0){
+      this.listHeader = this.getPropertyColumn();
+    }
+    let find = this.listHeader?.find(item => item.recID === data.keyField);
+    return find ? find[type] : '';
+  }
+
+
 
   //CRUD
   add() {
@@ -1034,7 +1061,9 @@ export class InstancesComponent
     });
   }
   isExistNewProccessId(newProccessId) {
-    return this.listProccessCbx.some((x) => x.recID == newProccessId && x.recID != this.guidEmpty);
+    return this.listProccessCbx.some(
+      (x) => x.recID == newProccessId && x.recID != this.guidEmpty
+    );
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {

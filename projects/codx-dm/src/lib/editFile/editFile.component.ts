@@ -315,14 +315,14 @@ export class EditFileComponent implements OnInit {
     //Check bản quyền
     if(this.isCopyRight && this.checkCopyRight()) return
 
-    if (this.id !=undefined &&  this.id != "") {
+    if (this.id) {
       // update file
       // save permisson
       this.fileService.updateFile(this.fileEditing).subscribe(item => {
         if (item.status == 0) {
           let res = item.data;
         //  this.dmSV.fileEditing.next(item.data);
-          if (res != null) {
+          if (res) {
             var files = this.dmSV.listFiles;//.getValue();
             if (files != null) {
               let index = files.findIndex(d => d.recID.toString() === this.id);
@@ -330,7 +330,8 @@ export class EditFileComponent implements OnInit {
                 files[index] = res;
               }
               this.dmSV.listFiles = files;
-              this.dmSV.ChangeData.next(true);
+              //this.dmSV.ChangeData.next(true);
+              this.dmSV.ChangeOneFolder.next(files[index]);
               this.changeDetectorRef.detectChanges();
             }
             // if (modal != null)
@@ -363,8 +364,9 @@ export class EditFileComponent implements OnInit {
                       if (index != -1) {
                         files[index].fileName = res.data.fileName;
                       }
-                      this.dmSV.listFiles = files;                    
-                      this.dmSV.ChangeData.next(true);
+                      this.dmSV.listFiles = files;    
+                      this.dmSV.ChangeOneFolder.next(files[index]);                
+                      //this.dmSV.ChangeData.next(true);
                       // if (modal != null)
                       //   this.modalService.dismissAll();
                       this.changeDetectorRef.detectChanges();

@@ -159,9 +159,21 @@
       </div>
 
       <div class="col-2">
-        <div class="d-flex justify-content-end" role="button">
+        <div class="d-flex justify-content-end" role="button" (click)="openAutoNumberPopup()">
           <span class="icon-edit-one icon-20 text-primary"></span>
         </div>
+      </div>
+
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="duplicateVoucherNo"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="duplicateVoucherNo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
       </div>
     </div>
 
@@ -224,7 +236,7 @@
           <codx-label
             fiedName="lblCurrencyID"
             [formModel]="form.formModel"
-            [default]="getDescription('CurrencyID')"
+            [default]="gvs.CurrencyID.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -251,7 +263,7 @@
           <codx-label
             fiedName="lblDRAcctControl"
             [formModel]="form.formModel"
-            [default]="getDescription('DRAcctControl')"
+            [default]="gvs.DRAcctControl.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
           <span
@@ -323,7 +335,7 @@
           <codx-label
             fiedName="lblCRAcctControl"
             [formModel]="form.formModel"
-            [default]="getDescription('CRAcctControl')"
+            [default]="gvs.CRAcctControl.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
 
@@ -396,7 +408,7 @@
           <codx-label
             fiedName="lblDIM1Control"
             [formModel]="form.formModel"
-            [default]="getDescription('DIM1Control')"
+            [default]="gvs.DIM1Control.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -423,7 +435,7 @@
           <codx-label
             fiedName="lblProjectControl"
             [formModel]="form.formModel"
-            [default]="getDescription('ProjectControl')"
+            [default]="gvs.ProjectControl.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -450,7 +462,7 @@
           <codx-label
             fiedName="lblDIM2Control"
             [formModel]="form.formModel"
-            [default]="getDescription('DIM2Control')"
+            [default]="gvs.DIM2Control.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -477,7 +489,7 @@
           <codx-label
             fiedName="lblDIM3Control"
             [formModel]="form.formModel"
-            [default]="getDescription('DIM3Control')"
+            [default]="gvs.DIM3Control.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -504,7 +516,7 @@
           <codx-label
             fiedName="lblAssetControl"
             [formModel]="form.formModel"
-            [default]="getDescription('AssetControl')"
+            [default]="gvs.AssetControl.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -538,7 +550,7 @@
           <codx-label
             fiedName="lblPostSubControl"
             [formModel]="form.formModel"
-            [default]="getDescription('PostSubControl')"
+            [default]="gvs.PostSubControl.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -565,7 +577,7 @@
           <codx-label
             fiedName="lblSettlementRule"
             [formModel]="form.formModel"
-            [default]="getDescription('SettlementRule')"
+            [default]="gvs.SettlementRule.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -611,7 +623,7 @@
           <codx-label
             fiedName="lblWarehouseIssue"
             [formModel]="form.formModel"
-            [default]="getDescription('WarehouseIssue')"
+            [default]="gvs.WarehouseIssue.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -638,7 +650,7 @@
           <codx-label
             fiedName="lblWarehouseReceipt"
             [formModel]="form.formModel"
-            [default]="getDescription('WarehouseReceipt')"
+            [default]="gvs.WarehouseReceipt.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -664,16 +676,20 @@
         <div class="col-11">
           <div class="text-truncate p-1">
             <span
-              *ngFor="let a of journal.crAcctID?.split(';')"
+              *ngFor="let a of tempIDIMControls"
               class="badge badge-pill badge-secondary me-2"
             >
-              {{ a }}
+              {{ a.text }}
             </span>
           </div>
         </div>
 
         <div class="col-1">
-          <div class="d-flex justify-content-end" role="button" (click)="openCustomizedMultiSelectPopup()">
+          <div
+            class="d-flex justify-content-end"
+            role="button"
+            (click)="openCustomizedMultiSelectPopup()"
+          >
             <span class="icon-edit-one icon-20 text-primary"></span>
           </div>
         </div>
@@ -692,7 +708,7 @@
           <codx-label
             fiedName="lblCreater"
             [formModel]="form.formModel"
-            [default]="getDescription('Creater')"
+            [default]="gvs.Creater.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -734,7 +750,7 @@
           <codx-label
             fiedName="lblApprover"
             [formModel]="form.formModel"
-            [default]="getDescription('Approver')"
+            [default]="gvs.Approver.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -769,13 +785,13 @@
         *ngIf="journal.approval"
         fiedName="postControl"
         [formModel]="form.formModel"
-        [default]="getDescription('PostControl').split(';')[0]"
+        [default]="gvs.PostControl.description.split(';')[0]"
       ></codx-label>
       <codx-label
         *ngIf="!journal.approval"
         fiedName="postControl"
         [formModel]="form.formModel"
-        [default]="getDescription('PostControl').split(';')[1]"
+        [default]="gvs.PostControl.description.split(';')[1]"
       ></codx-label>
     </div>
 
@@ -787,7 +803,7 @@
           <codx-label
             fiedName="lblPoster"
             [formModel]="form.formModel"
-            [default]="getDescription('Poster')"
+            [default]="gvs.Poster.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -832,7 +848,7 @@
           <codx-label
             fiedName="lblUnposter"
             [formModel]="form.formModel"
-            [default]="getDescription('Unposter')"
+            [default]="gvs.Unposter.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -868,7 +884,7 @@
           <codx-label
             fiedName="lblUnpostTime"
             [formModel]="form.formModel"
-            [default]="getDescription('UnpostTime')"
+            [default]="gvs.UnpostTime.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
@@ -891,7 +907,7 @@
           <codx-label
             fiedName="lblSharer"
             [formModel]="form.formModel"
-            [default]="getDescription('Sharer')"
+            [default]="gvs.Sharer.description"
             class="text-secondary font-italic fw-normal"
           ></codx-label>
         </div>
