@@ -102,12 +102,12 @@ export class PopupOKRWeightComponent
   valueChange(evt: any) {
     if (evt.data != null && evt.field != null) {      
       this.okrChild[evt.field].weight = parseFloat(evt.data);
-      this.okrChild[evt.field].weightChanged=true;
+      this.okrChild[evt.field].edited=true;
       this.totalProgress=0;
       let weightNotChanged=[];
       let totalWeightEdited=0;
       for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.weightChanged!=true){
+        if(this.okrChild[i]?.edited!=true){
           weightNotChanged.push(i);
         }
         else{
@@ -116,7 +116,7 @@ export class PopupOKRWeightComponent
       }
       let avgWeight=(1-totalWeightEdited)/weightNotChanged.length;
       for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.weightChanged!=true){
+        if(this.okrChild[i]?.edited!=true){
           this.okrChild[i].weight=avgWeight;
         }
       }      

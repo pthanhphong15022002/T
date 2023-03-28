@@ -1,16 +1,12 @@
-import { Permission } from '@shared/models/file.model';
-import { OKRPlans } from './../../model/okrPlan.model';
+declare var window: any;
 import { CodxOmService } from 'projects/codx-om/src/public-api';
 import { Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Injector,
-  Input,
   Optional,
-  Output,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -18,17 +14,12 @@ import { FormGroup } from '@angular/forms';
 import {
   AuthService,
   CodxFormComponent,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
-  ImageViewerComponent,
   NotificationsService,
-  RequestOption,
   UIComponent,
 } from 'codx-core';
-import { Targets } from '../../model/okr.model';
-import { row } from '@syncfusion/ej2-angular-grids';
 
 //import { CodxEpService } from '../../../codx-ep.service';
 
@@ -245,6 +236,23 @@ export class PopupAddOKRPlanComponent
       }
 
       this.detectorRef.detectChanges();
+      let id='';
+      switch(type){
+        case this.obType:
+          id='ob'+(this.dataOKR.length-1);
+          break;
+        case this.krType:
+          id='ob'+obIndex+'kr'+(this.dataOKR[obIndex].items.length-1);
+          break;
+        case this.skrType:
+          id='ob'+obIndex+'kr'+krIndex+'skr'+(this.dataOKR[obIndex].items[krIndex].items.length-1);
+          break;
+      }
+      let dom=document.getElementById(id);
+      let curInput = window.ng.getComponent(dom);
+      if(curInput){
+        curInput.multiSelectObj.enableEditMode = true;
+      }
     }
   }
   obChange(evt: any, obIndex: number) {
@@ -327,7 +335,9 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
+  onCreated(evt:any){
 
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//

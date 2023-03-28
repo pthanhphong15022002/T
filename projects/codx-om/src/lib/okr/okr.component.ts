@@ -259,12 +259,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           delete model[pro].id;
         }
         this.groupModel = model;
-        this.planModel = model?.planModel;
-        this.okrModel = model?.okrModel;
-        this.checkInsModel = model?.checkInsModel;
-        this.sharesModel = model?.sharesModel;
-        this.linksModel = model?.linksModel;
-        this.targetsModel = model?.targetsModel;
       }
     });
   }

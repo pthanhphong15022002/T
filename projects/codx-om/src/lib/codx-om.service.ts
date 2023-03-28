@@ -478,22 +478,22 @@ getOKRModel() {
   //-----------------------------------OB--------------------------------------------//
   //---------------------------------------------------------------------------------//
 
-  addOB(ob: any, listShares: any) {
+  addOB(ob: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'AddOBAsync',
-      [ob, listShares]
+      [ob]
     );
   }
-  editOB(ob: any, listShares: any) {
+  editOB(ob: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'EditOBAsync',
-      [ob, listShares]
+      [ob]
     );
   }  
   //---------------------------------------------------------------------------------//
