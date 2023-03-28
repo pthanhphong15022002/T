@@ -94,6 +94,12 @@ export class CatagoryComponent implements OnInit {
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
+      // this.setting = this.setting.filter((x) => {
+      //   return (
+      //     x.refLineID == '41a778ab-71cc-ed11-94a1-00155d035517' ||
+      //     x.recID == '41a778ab-71cc-ed11-94a1-00155d035517'
+      //   );
+      // });
       if (this.setting) {
         this.groupSetting = this.setting.filter((x) => {
           return (

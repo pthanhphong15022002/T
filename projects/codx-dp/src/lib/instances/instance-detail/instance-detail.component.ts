@@ -80,7 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
-  currentRecID:any
+  currentElmID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -452,13 +452,15 @@ export class InstanceDetailComponent implements OnInit {
     return 1;
   }
 
-  inputCustomField(e){
-    this.currentRecID = e ;
+  inputElmIDCustomField(e){
+    this.currentElmID = e ;
   }
   actionSaveCustomField(e){
     this.isSaving =e ;
   }
   clickMenu(e){
      this.viewModelDetail = e
+     this.isSaving = false ;
+     this.currentElmID = null ;
   }
 }

@@ -71,7 +71,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Output() saveAssign = new EventEmitter<any>();
-  @Input() titleHeaderCF=''
+ 
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -1252,4 +1252,13 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
+  //detail field
+  // inputElmIDCustomField(e){
+  //   this.currentElmID = e ;
+  //   this.inputElmIDCFStage.emit(e)
+  // }
+  // actionSaveCustomField(e){
+  //   this.isSaving =e ;
+  //   this.actionSaveCFStage.emit(e)
+  // }
 }
