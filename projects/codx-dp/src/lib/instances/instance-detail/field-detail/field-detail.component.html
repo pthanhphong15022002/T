@@ -68,7 +68,7 @@
 <ng-template #viewCustomFields let-data>
   <div
     id="{{ titleDefault ? data.recID : 'v-' + data.recID }}"
-    class="show-main"
+    class="show-main border border-gray-200 rounded px-6 py-4"
     (dblclick)="
       clickInput(titleDefault ? data.recID : 'v-' + data.recID, dataStep, true)
     "
@@ -172,7 +172,7 @@
   <ng-container>
     <div
       id="fr-{{ titleDefault ? data.recID : 'v-' + data.recID }}"
-      class="form-group hidden-main"
+      class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
     >
       <codx-input-custom-field
         [customField]="data"
