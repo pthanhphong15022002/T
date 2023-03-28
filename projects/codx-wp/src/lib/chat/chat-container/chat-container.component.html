@@ -23,12 +23,12 @@
                             [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
                             [objectName]="item.groupType == '1'? item.groupName2:item.groupName" 
                             [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
-                            [width]="40">
+                            [width]="50">
                         </codx-img>
                         <ng-template #tooltipMssage>
-                            <div class="w-200px p-2 text-start overflow-hidden">
-                                <p class="fw-bolder">{{item.objectName}}</p>
-                                <p class="message ">{{item.message}}</p>
+                            <div class="w-200px p-2 text-start overflow-hidden d-flex">
+                                <codx-img [objectId]="item.messageSendBy" [objectType]="'AD_Users'" [width]="30"></codx-img>
+                                <span>{{item.message}}</span>
                             </div>
                         </ng-template>
                     </div>

@@ -63,15 +63,18 @@ export class SignalRService {
           this.reciverChat.emit(res.data);
           break;
         case 'voteMessage':
-          debugger
           this.voteChat.emit(res.data);
+          break;
+        case 'AddMemberToGroup':
+          debugger
         break;
       }
       
     });
   }
   // send to server
-  sendData(data:any, method = null) {
-    this.hubConnection.invoke(method, data);
+  sendData(methodName:string,...args:any[]) {
+    debugger
+    this.hubConnection.invoke(methodName, ...args);
   }
 }
