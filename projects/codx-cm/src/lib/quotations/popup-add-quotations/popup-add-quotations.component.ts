@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CodxFormComponent, DialogRef } from 'codx-core';
 
 @Component({
@@ -10,12 +11,11 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   quotations :any
   dialog: DialogRef;
-  headerText ='Thêm báo giá- test nên thêm cứng'
-  menuGeneralInfo = {
-    icon: 'icon-info',
-    text: 'Thông tin chung',
-  };
-  constructor() { }
+  headerText ='Thêm form test'
+  
+  constructor(public sanitizer: DomSanitizer) { 
+    
+  }
 
   ngOnInit(): void {
   }
