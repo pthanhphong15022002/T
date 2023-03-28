@@ -2008,7 +2008,7 @@ export class CodxHrService {
   }
 
   getSettingValue(formName: string, category: string) {
-    return this.api.execSv(
+    return this.api.execSv<any>(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',

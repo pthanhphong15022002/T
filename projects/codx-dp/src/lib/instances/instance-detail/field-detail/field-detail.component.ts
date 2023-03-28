@@ -21,13 +21,13 @@ export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
   @Input() formModel!: FormModel;
   @Input() titleDefault = '';
-  @Input() titleHeaderCF = '';
+  @Input() titleHeaderFormCF = '';
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
-  @Input() currentRecID: any;
-  @Output() inputCustomField = new EventEmitter<any>();
+  @Input() currentElmID: any;
+  @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
-  @Output() actionSave= new EventEmitter<any>();
+  @Output() actionSaveCF= new EventEmitter<any>();
 
   currentRate = 0;
   dtFormatDate: any = [];
@@ -36,7 +36,7 @@ export class FieldDetailComponent implements OnInit {
     formName: 'DPInstancesStepsFields',
     gridViewName: 'grvDPInstancesStepsFields',
   };
-  recIDCrr: any;
+  elmIDCrr: any;
   dataValueOld: any;
 
   constructor(
@@ -106,13 +106,22 @@ export class FieldDetailComponent implements OnInit {
   }
 
   popupCustomField(data) {
+    if(this.currentElmID && this.currentElmID!= this.elmIDCrr){
+      this.clickInput(this.currentElmID) ;
+    }
+    if(this.elmIDCrr ){
+      this.clickInput(this.elmIDCrr) ;
+    }
+    this.elmIDCrr= this.currentElmID= null;    
+    this.inputElmIDCF.emit(null)
+    if(this.currentElmID)
     var list = [];
     if (data && data.length > 0) {
       list = data;
     } else {
       list.push(data);
     }
-    var obj = { data: list ,titleHeader : this.titleHeaderCF}; //lấy từ funra
+    var obj = { data: list ,titleHeader : this.titleHeaderFormCF}; //lấy từ funra
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
       formName: 'DPInstancesStepsFields',
@@ -161,18 +170,18 @@ export class FieldDetailComponent implements OnInit {
     return Number.parseFloat(dt.dataValue).toFixed(2);
   }
 
-  clickInput(recID, dataStep = null, isClick = false) {
+  clickInput(eleID, dataStep = null, isClick = false) {
     if (this.isSaving) return;
     if (isClick) {
-      if (this.currentRecID && this.currentRecID != this.recIDCrr)
-        this.clickInput(this.currentRecID);
-      if (this.recIDCrr) {
-        this.clickInput(this.recIDCrr);
+      if (this.currentElmID && this.currentElmID != this.elmIDCrr)
+        this.clickInput(this.currentElmID);
+      if (this.elmIDCrr) {
+        this.clickInput(this.elmIDCrr);
       }
     }
     if (dataStep?.stepStatus >= 3 || !this.isUpdate) return;
 
-    let element = document.getElementById(recID);
+    let element = document.getElementById(eleID);
     if (element) {
       let isClose = element.classList.contains('hidden-main');
       let isShow = element.classList.contains('show-main');
@@ -184,7 +193,7 @@ export class FieldDetailComponent implements OnInit {
         element.classList.add('hidden-main');
       }
     }
-    let elementForm = document.getElementById('fr-' + recID);
+    let elementForm = document.getElementById('fr-' + eleID);
     if (elementForm) {
       let isCloseF = elementForm.classList.contains('hidden-main');
       let isShowF = elementForm.classList.contains('show-main');
@@ -197,9 +206,9 @@ export class FieldDetailComponent implements OnInit {
       }
     }
     if (isClick) {
-      this.recIDCrr = recID;
-      this.inputCustomField.emit(this.recIDCrr);
-    } else this.recIDCrr = null;
+      this.elmIDCrr = eleID;
+      this.inputElmIDCF.emit(this.elmIDCrr);      
+    } else this.elmIDCrr = null;
   }
 
   valueChangeCustom(event) {
@@ -277,17 +286,17 @@ export class FieldDetailComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    this.actionSave.emit(true);
+    this.actionSaveCF.emit(true);
     let data = [field.stepID, [field]];
     this.dpService.updateFiels(data).subscribe((res) => {
       let idx = this.dataStep.fields.findIndex((x) => x.recID == field.recID);
       this.isSaving = false;
-      this.actionSave.emit(false);
+      this.actionSaveCF.emit(false);
       if (res) {
         if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
         this.notiService.notifyCode('SYS007');
-        this.inputCustomField.emit(null);
-        this.clickInput(field.recID);
+        this.clickInput(this.elmIDCrr);
+        this.inputElmIDCF.emit(null);      
       } else {
         this.notiService.notifyCode('SYS021');
         if (idx != -1) this.dataStep.fields[idx].dataValue = this.dataValueOld;

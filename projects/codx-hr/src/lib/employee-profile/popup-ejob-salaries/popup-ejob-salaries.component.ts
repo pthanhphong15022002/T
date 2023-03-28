@@ -71,6 +71,9 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   this.currentEJobSalaries = res?.data;
+                  if (this.currentEJobSalaries.effectedDate == '0001-01-01T00:00:00') {
+                    this.currentEJobSalaries.effectedDate = null;
+                  }
                   this.currentEJobSalaries.employeeID = this.employeeId;
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
@@ -80,6 +83,13 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
               });
           } else {
             if (this.actionType === 'edit' || this.actionType === 'copy') {
+              if (this.actionType === 'copy') {
+                if (
+                  this.currentEJobSalaries.effectedDate == '0001-01-01T00:00:00'
+                ) {
+                  this.currentEJobSalaries.effectedDate = null;
+                }
+              }
               this.formGroup.patchValue(this.currentEJobSalaries);
               this.formModel.currentData = this.currentEJobSalaries;
               this.cr.detectChanges();

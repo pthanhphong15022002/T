@@ -117,7 +117,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
       console.log('emp truyen vao ne', this.employeeObj);
       if(this.data.benefits){
-        this.tempBenefitArr = JSON.parse(this.data?.benefits);
+        this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
       }
       console.log('lst benefit', this.tempBenefitArr);
     }
@@ -268,11 +268,14 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
 
   onSaveForm() {
     console.log('data chuan bi luu', this.data);
+    if(this.data.payForm == null) this.data.payForm = '';
+    if(this.data.benefits == null) this.data.benefits = '';
+
     
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
     if (this.data.effectedDate > this.data.expiredDate) {
       this.hrSevice.notifyInvalidFromTo(

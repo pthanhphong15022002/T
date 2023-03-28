@@ -426,7 +426,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     //RefeshData
     this.dmSV.isRefeshData.subscribe(res=>{
-      debugger
       if(res)
       {
         this.refeshData();
@@ -703,15 +702,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
+        this.refeshData();
         this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
+        this.dmSV.folderId.next("");
         this.dmSV.idMenuActive =  this.funcID;
         this.dmSV.menuIdActive.next(this.funcID);
         this.folderService.options.funcID = this.funcID
-        this.folderService.options.page = 1;
         this.fileService.options.funcID = this.funcID
-        this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
         this.view.dataService.dataSelected = null;
         this.views[2].model.panelLeftHide = false;

@@ -34,23 +34,23 @@ export class PopupOKRWeightComponent
   implements AfterViewInit
 {
   views: Array<ViewModel> | any = [];
-  @ViewChild('checkin') checkin: TemplateRef<any>;
-  @ViewChild('alignKR') alignKR: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('editWeightTmp') editWeightTmp: TemplateRef<any>;
   krType = OMCONST.VLL.OKRType.KResult;
-  oType = OMCONST.VLL.OKRType.Obj;
+  obType = OMCONST.VLL.OKRType.Obj;
+  skrType = OMCONST.VLL.OKRType.SKResult;
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
-  okrPlan: any;
+  dataOKR: any;
   totalProgress = 0;
   listWeight = [];
   okrChild: any;
   popupTitle = '';
   subTitle = '';
-  recID: any;
+  oldData: any;
   editWeight: any;
   totalWeight: number;
+  okrVll: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -61,10 +61,11 @@ export class PopupOKRWeightComponent
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    this.recID = dialogData.data[0];
+    this.oldData = dialogData.data[0];
     this.editWeight = dialogData.data[1];
     this.popupTitle = dialogData.data[2];
     this.subTitle = dialogData.data[3];
+    this.okrVll = dialogData.data[4];
   }
 
   //-----------------------Base Func-------------------------//
@@ -76,7 +77,7 @@ export class PopupOKRWeightComponent
         active: true,
         sameData: true,
         model: {
-          panelRightRef: this.alignKR,
+          panelRightRef: this.editWeightTmp,
           contextMenu: '',
         },
       },
@@ -88,7 +89,7 @@ export class PopupOKRWeightComponent
       this.getObjectData();
     }
     if (this.editWeight == OMCONST.VLL.OKRType.Obj) {
-      this.getOKRPlanData();
+      this.getdataOKRData();
     }
   }
 
@@ -102,12 +103,12 @@ export class PopupOKRWeightComponent
   valueChange(evt: any) {
     if (evt.data != null && evt.field != null) {      
       this.okrChild[evt.field].weight = parseFloat(evt.data);
-      this.okrChild[evt.field].weightChanged=true;
+      this.okrChild[evt.field].edited=true;
       this.totalProgress=0;
       let weightNotChanged=[];
       let totalWeightEdited=0;
       for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.weightChanged!=true){
+        if(this.okrChild[i]?.edited!=true){
           weightNotChanged.push(i);
         }
         else{
@@ -116,7 +117,7 @@ export class PopupOKRWeightComponent
       }
       let avgWeight=(1-totalWeightEdited)/weightNotChanged.length;
       for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.weightChanged!=true){
+        if(this.okrChild[i]?.edited!=true){
           this.okrChild[i].weight=avgWeight;
         }
       }      
@@ -133,10 +134,10 @@ export class PopupOKRWeightComponent
   //-----------------------Get Data Func---------------------//
   getObjectData(){
     this.codxOmService
-        .getObjectAndKRChild(this.recID)
+        .getObjectAndKRChild(this.oldData?.recID)
         .subscribe((res: any) => {
           if (res) {
-            this.okrPlan = res;
+            this.dataOKR = res;
             this.okrChild = res.child;
             this.totalProgress = 0;
             Array.from(this.okrChild).forEach((kr: any) => {
@@ -146,14 +147,14 @@ export class PopupOKRWeightComponent
           }
         });
   }
-  getOKRPlanData(){
+  getdataOKRData(){
     this.codxOmService
-        .getOKRPlanAndOChild(this.recID)
+        .getOKRPlanAndOChild(this.oldData?.recID)
         .subscribe((res: any) => {
           if (res) {
-            this.okrPlan = res;
+            this.dataOKR = res;
             this.okrChild = res.child;
-            this.totalProgress = this.okrPlan.progress;
+            this.totalProgress = this.dataOKR.progress;
             this.totalProgress = 0;
             Array.from(this.okrChild).forEach((ob: any) => {
               this.totalProgress += ob?.weight * ob?.progress;
@@ -184,7 +185,7 @@ export class PopupOKRWeightComponent
         return;
       }
       this.codxOmService
-      .editOKRWeight(this.okrPlan.recID, this.editWeight, this.okrChild)
+      .editOKRWeight(this.dataOKR?.recID, this.editWeight, this.okrChild)
       .subscribe((res: any) => {
         if (res) {
           let x = res;          

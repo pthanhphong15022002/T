@@ -1,5 +1,4 @@
 import { Component, Injector, OnInit, Optional } from '@angular/core';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   AuthStore,
   DialogData,
@@ -56,7 +55,9 @@ export class PopActiveAccountComponent extends UIComponent {
       this.authStore.tenant +
       '/' +
       'auth/login?sk=' +
-      this.user.sessionID;
+      this.user.sessionID +
+      '|' +
+      this.user.userID;
 
     navigator.clipboard.writeText(url).then((res) => {
       this.notify.notifyCode('SYS034');

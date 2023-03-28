@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
@@ -26,7 +27,11 @@ export class JournalNamesComponent extends UIComponent {
   };
   functionName: string;
 
-  constructor(inject: Injector, private route: Router) {
+  constructor(
+    inject: Injector,
+    private route: Router,
+    private notiService: NotificationsService
+  ) {
     super(inject);
   }
   //#region Constructor
@@ -105,11 +110,39 @@ export class JournalNamesComponent extends UIComponent {
     });
   }
 
-  edit(e, data): void {}
+  edit(e, data): void {
+    console.log('edit', { data });
+
+    this.api
+      .exec('ERM.Business.AC', 'JournalsBusiness', 'IsEditableAsync', data.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.dataSelected = data;
+          this.view.dataService.edit(data).subscribe(() => {
+            const options = new SidebarModel();
+            options.Width = '800px';
+            options.DataService = this.view.dataService;
+            options.FormModel = this.view.formModel;
+
+            this.callfc.openSide(
+              PopupAddJournalComponent,
+              {
+                formType: 'edit',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              options,
+              this.view.funcID
+            );
+          });
+        }
+      });
+  }
 
   copy(e, ata): void {}
 
   delete(data): void {
+    console.log('delete', data);
+
     this.view.dataService
       .delete([data], true, (req: RequestOption) => {
         req.methodName = 'DeleteJournalAsync';
@@ -122,10 +155,10 @@ export class JournalNamesComponent extends UIComponent {
       })
       .subscribe((res: any) => {
         console.log(res);
-        if (res) {
-          
-        }
       });
   }
   //#region Method
+
+  //#region Function
+  //#endregion
 }
