@@ -1,3 +1,7 @@
+:root {
+	--primary-color: #23468c;
+  }
+
 .progress {
 	background-color: #d8d8d8;
 	border-radius: 16px;
@@ -131,14 +135,16 @@
 .arrow-steps .step.current:after {
 	border-left: 17px solid #3699ff;
 }
-
+//nvthuan
 .arrow-steps .step.old {
 	color: #fff;
-	background-color: #23468c;
+	background-color: var(--primary-color);
+	// background-color: #23468c;
 }
 
 .arrow-steps .step.old:after {
-	border-left: 17px solid #23468c;
+	border-left: 17px solid var(--primary-color);
+	// border-left: 17px solid #23468c;
 }
 
 

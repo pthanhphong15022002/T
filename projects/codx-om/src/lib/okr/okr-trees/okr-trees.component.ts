@@ -135,4 +135,8 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   //_______________________Popup_____________________________//
 
   //-----------------------End-------------------------------//
+  clickTreeNode(evt:any){
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
 }

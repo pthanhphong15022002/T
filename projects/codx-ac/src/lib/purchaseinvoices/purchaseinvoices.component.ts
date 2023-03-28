@@ -99,8 +99,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
     ]);
   }
   add(e) {
-    //const elmnt = document.getElementById("codx-aside");
-    //elmnt.style.width = '40px';
+    const elmnt = document.getElementById("codx-aside");
+    console.log(elmnt.offsetWidth);
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -112,9 +112,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        //option.IsFull = true;
-        option.Position.X = 'right';
-        option.Position.Y = 'top';
+        option.IsFull = true;
         this.dialog = this.callfunc.openForm(
           PopAddPurchaseComponent,
           '',
