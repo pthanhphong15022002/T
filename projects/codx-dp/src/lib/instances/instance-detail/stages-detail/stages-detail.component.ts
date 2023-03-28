@@ -827,21 +827,21 @@ export class StagesDetailComponent implements OnInit {
     });
   }
 
-  checkExitsParentID(taskList, task): boolean {
-    if (task?.isTaskDefault) {
-      return true;
+  checkExitsParentID(taskList, task): string{
+    if (task?.requireCompleted) {
+      return 'text-red';
     }
-    let check = false;
+    let check = 'd-none';
     if (task['groupTaskID']) {
       taskList?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
-          check = true;
+          check = 'text-orange';
         }
       });
     } else {
       this.taskList?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
-          check = true;
+          check = 'text-orange';
         }
       });
     }
