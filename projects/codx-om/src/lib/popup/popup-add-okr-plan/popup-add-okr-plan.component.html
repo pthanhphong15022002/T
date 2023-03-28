@@ -1,12 +1,12 @@
 <codx-form *ngIf="skrGrid && krGrid && obGrid" [headerText]="headerText" [dialog]="dialogRef"
-    [bodyCss]="'bgEDEDED pt-5 px-15 '" [body]="body">
+    [bodyCss]="'bgEDEDED pt-5 px-25 '" [body]="body">
 </codx-form>
 <ng-template #body>
 
     <div class="bg-white d-flex justify-content-between flex-column h-100 w-100 ">
         <div class="d-flex justify-content-between align-items-center pt-10 pb-5 px-15">
             <span class="fs-2 fw-bold">{{curOrgName}}</span>
-            <span>{{okrPlan.periodID}}</span>
+            <span class="fs-4 fw-bold">{{okrPlan.periodID}}</span>
         </div>
         <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
             <div class="flex-column d-flex justify-content-start px-15">

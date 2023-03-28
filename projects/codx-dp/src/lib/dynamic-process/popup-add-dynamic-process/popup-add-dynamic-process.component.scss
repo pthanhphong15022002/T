@@ -435,3 +435,9 @@ codx-attachment{
 #pane_4 .example-list.stage-body-left-main{
   height: calc(100vh - 194px)!important;
 }
+.box-demo{
+  border: 1px var(--gray-150) solid;
+  min-height: 40px;
+  display: flex;
+  align-self: center;
+}

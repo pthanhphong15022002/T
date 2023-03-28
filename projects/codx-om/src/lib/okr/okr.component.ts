@@ -124,6 +124,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   targetsModel: any;
   groupModel: any;
   curOrgName: any;
+  periodName: any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -400,25 +401,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Hàm click
   click(event: any) {
-    switch (event.id) {
-      case 'btnAdd': {
-        this.addOB();
-        break;
-      }
-      case 'btnAddSKR': {
-        this.addSKR();
-        break;
-      }
-      case 'btnAddKR': {
-        this.addKR();
-        break;
-      }
+    switch (event.id) {      
       case 'btnAddPlan': {
         this.addEditOKRPlans(true);
-        break;
-      }
-      case 'btnAddO': {
-        this.addOB();
         break;
       }
       case 'Calendar': {
@@ -439,12 +424,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.toDate = data.toDate;
     if (data.type == 'year') {
       this.periodID = this.year.toString();
+      this.periodName = this.periodID
       this.interval = 'Y';
     } else if (data.type == 'quarter') {
       this.periodID = data.text;
+      this.periodName = this.periodID
       this.interval = 'Q';
     } else if (data.type == 'month') {
       this.periodID = (date.getMonth() + 1).toString();
+      this.periodName = data?.text;
       this.interval = 'M';
     }
     this.setTitle();
@@ -514,7 +502,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.deptPlanNull = this.deptName;
         this.orgPlanNull = this.orgName;
         this.persPlanNull = this.persName;
-        this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodID);
+        this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodName);
         this.compPlanNull = this.notifyPlanNull.replace('{0}', this.compName);
         this.deptPlanNull = this.notifyPlanNull.replace('{0}', this.deptName);
         this.orgPlanNull = this.notifyPlanNull.replace('{0}', this.orgPlanNull);
@@ -541,92 +529,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
     }
     this.notifyPlanNull.replace('{0}', this.curOrg);
-    this.notifyPlanNull.replace('{1}', this.periodID);
+    this.notifyPlanNull.replace('{1}', this.periodName);
   }
 
-  renderOB(ob: any, isAdd: boolean) {
-    if (ob != null) {
-      if (isAdd) {
-        this.dataOKR.push(ob);
-      } else {
-        for (let oldOB of this.dataOKR) {
-          if (oldOB.recID == ob.recID) {
-            let tmpChild = oldOB?.child;
-            oldOB = ob;
-            oldOB.child = tmpChild;
-          }
-        }
-      }
-    }
-  }
-  renderKR(kr: any, isAdd: boolean) {
-    if (kr != null) {
-      if (isAdd) {
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if (ob.child == null) {
-              ob.child = [];
-            }
-            ob.child.push(kr);
-          }
-        }
-      } else {
-        debugger;
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if (ob.child == null) {
-              ob.child = [];
-            }
-            ob.child.forEach((okr) => {
-              if (okr.recID == kr.recID) {
-                for (const field in okr) {
-                  okr[field] = kr[field];
-                }
-              }
-            });
-          }
-        }
-      }
-    }
-  }
-  renderSKR(skr: any, isAdd: boolean) {
-    if (skr != null) {
-      if (isAdd) {
-        for (let ob of this.dataOKR) {
-          if (ob.child != null) {
-            for (let kr of ob.child) {
-              if (kr.recID == skr.parentID) {
-                if (kr.child == null) {
-                  kr.child = [];
-                }
-                kr.child.push(skr);
-              }
-            }
-          }
-        }
-      } else {
-        for (let ob of this.dataOKR) {
-          if (ob.child != null) {
-            for (let kr of ob.child) {
-              if (kr.recID == skr.parentID) {
-                if (kr.child == null) {
-                  kr.child = [];
-                }
-                for (let oldSKR of kr.child) {
-                  if (oldSKR.recID == skr.recID) {
-                    debugger;
-                    for (const field in oldSKR) {
-                      oldSKR[field] = skr[field];
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
@@ -690,39 +595,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  //Chỉnh sửa bộ mục tiêu
-  // editOKRPlans() {
-  //   let dialogModel = new DialogModel();
-  //   dialogModel.IsFull = true;
-  //   dialogModel.FormModel = this.formModelPlan;
-  //   let dialogAddPlan = this.callfc.openForm(
-  //     PopupAddOKRPlanComponent,
-  //     '',
-  //     null,
-  //     null,
-  //     null,
-  //     [
-  //       this.funcID,
-  //       this.dataOKRPlans,
-  //       this.okrModel,
-  //       this.addPlanTitle,
-  //       this.curOrgID,
-  //       this.listFormModel,
-  //       this.obFG,
-  //       OMCONST.MFUNCID.Edit,
-  //     ],
-  //     '',
-  //     dialogModel
-  //   );
-  //   dialogAddPlan.closed.subscribe((item) => {
-  //     if (item.event) {
-  //       this.getOKRPlans(this.periodID, this.interval, this.year);
-  //     }
-  //   });
-  // }
   editPlanWeight(popupTitle: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
-    let subTitle = 'Trọng số & kết quả thực hiện';
+    let subTitle = this.curOrgName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogEditWeight = this.callfc.openForm(
@@ -731,7 +606,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      [this.dataOKRPlans.recID, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle],
+      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll],
       '',
       dModel
     );
@@ -750,81 +625,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  //Thêm mới mục tiêu
-  addOKR() {
-    let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
-    let dialogOB = this.callfc.openSide(
-      OkrAddComponent,
-      [this.gridView, this.formModelOB, 'add', this.dataOKRPlans, null],
-      option
-    );
-    //   "add",
-    //   this.dataOKRPlans,
-    //   null
-    //  ]
-    // );
-  }
-  addOB() {
-    let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
-    let dialogOB = this.callfc.openSide(
-      PopupAddOBComponent,
-      [
-        this.funcID,
-        OMCONST.MFUNCID.Add,
-        'Thêm ' + this.addOBTitle.toLowerCase(),
-        null,
-        this.dataOKRPlans,
-      ],
-      option
-    );
-    dialogOB.closed.subscribe((res) => {
-      if (res && res?.event) {
-        this.dataOKR.push(res?.event);
-      }
-    });
-  }
-  //Thêm mới KR
-  addKR() {
-    let option = new SidebarModel();
-    option.FormModel = this.formModelKR;
-
-    let dialogKR = this.callfc.openSide(
-      PopupAddKRComponent,
-      [
-        this.funcID,
-        OMCONST.MFUNCID.Add,
-        'Thêm ' + this.addKRTitle.toLowerCase(),
-        null,
-        _notSubKR,
-      ],
-      option
-    );
-    dialogKR.closed.subscribe((res) => {
-      this.renderKR(res?.event, _isAdd);
-    });
-  }
-  //Thêm mới SKR
-  addSKR() {
-    let option = new SidebarModel();
-    option.FormModel = this.formModelSKR;
-
-    let dialogSKR = this.callfc.openSide(
-      PopupAddKRComponent,
-      [
-        this.funcID,
-        OMCONST.MFUNCID.Add,
-        'Thêm ' + this.addSKRTitle.toLowerCase(),
-        null,
-        _isSubKR,
-      ],
-      option
-    );
-    dialogSKR.closed.subscribe((res) => {
-      this.renderSKR(res?.event, _isAdd);
-    });
-  }
+  
   //Chia sẻ bộ mục tiêu
   sharePlan(popupTitle: any) {
     let shareFM = new FormModel();

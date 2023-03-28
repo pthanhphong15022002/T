@@ -635,13 +635,13 @@ getOKRModel() {
     );
   }
   //Lấy sơ đồ cây OKR
-  getOrgTreeOKR(planRecID: any, orgUnitID: string, okrLevelChild: string) {
+  getOrgTreeOKR(planRecID: any, orgUnitID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetOrgTreeOKRAsync',
-      [planRecID, orgUnitID, okrLevelChild]
+      [planRecID, orgUnitID]
     );
   }
 
