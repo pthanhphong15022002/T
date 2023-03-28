@@ -89,7 +89,7 @@
             </div>
             <div class="ps-2">
               <input
-              class="form-check-input rounded-circle"
+              class="form-check-input rounded-circle w-20px h-20px"
               type="checkbox"
               [checked]="isCheckAll"
               (change)="checkAllValue($event,'all','custom')"
@@ -136,7 +136,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'task')"
@@ -164,7 +164,7 @@
                       </div>
                     </div>
                       <div class="ms-5">
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end align-items-center">
                           <div>
                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                             </codx-imgs>
@@ -181,7 +181,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'taskGroup')"
@@ -210,7 +210,7 @@
                                 </div>
                               </div>
                               <div class="ms-5">
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content-end align-items-center">
                                   <div>
                                     <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                                     </codx-imgs>
@@ -228,7 +228,7 @@
                                   <div>
                                     <input
                                     [id]="item.recID"
-                                    class="form-check-input rounded-circle"
+                                    class="form-check-input rounded-circle w-20px h-20px"
                                     type="checkbox"
                                     [checked]="isCheckAll"
                                     (change)="checkAllValue($event,task,'task')"
