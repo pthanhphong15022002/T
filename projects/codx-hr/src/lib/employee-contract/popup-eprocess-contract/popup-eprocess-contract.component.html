@@ -1,15 +1,19 @@
-<codx-form
+<codx-layout-add
   #form
-  [headerText]="headerText"
-  [body]="body"
+  [title]="title"
+  [tabInfo]="tabInfo"
   [formModel]="formModel"
+  [subHeader]=""
   [footer]="footer"
-  [openMore]="'true'"
   [dialog]="dialog"
+  [openMore]="true"
+  [tabContent]="[contractInfo, workingInfo, empBenefit]"
   [data]="data"
   *ngIf="isAfterRender"
 >
-  <ng-template #body>
+</codx-layout-add>
+
+  <ng-template #contractInfo>
     <div *ngIf="actionType == 'add' || actionType == 'copy'" class="form-group row">
         <codx-img
             [width]="35"
@@ -83,6 +87,7 @@
         <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
         <codx-input
           field="contractNo"
+          
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -90,7 +95,7 @@
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
         <codx-input
-          field="SignedDate"
+          field="signedDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -146,7 +151,7 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="OrgUnitID"
+          field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -154,7 +159,7 @@
       <div class="col-6">
         <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="PositionID"
+          field="positionID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -164,7 +169,7 @@
       <div class="col-6">
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="LocationID"
+          field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -194,7 +199,7 @@
         <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
         <div>
           <codx-input
-            field="IsCurrent"
+            field="isCurrent"
             [formModel]="formModel"
             [Group]="formGroup"
           ></codx-input>
@@ -268,25 +273,100 @@
     </div>
 
   </ng-template>
-  <!-- <div class="extend-function" *ngIf="actionType=='edit' && lstSubContract?.length > 0" >
-    <hr />
-    <div class="d-flex justify-content-center">
-      <div class="d-flex align-items-center w-auto extend-title">
-        <span
-          class="text-primary text-hover-primary_darker fw-bold me-1"
-        >
-          <codx-label
-            default="Phụ lục hợp đồng"
-            name="lblSubContract"
-            [formModel]="formModel"
-          ></codx-label>
-        </span>
+
+  <ng-template #workingInfo>
+    <div class="form-group row mt-5">
+        <codx-label fiedName="TimeWork" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="timeWork"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+    </div>
+    <div class="form-group row mt-5">
+      <codx-label fiedName="MainWork" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="mainWork"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </ng-template>
+
+  <ng-template #empBenefit>
+    <div class="form-group row mt-5">
+      <div class="col-6">
+        <codx-label fiedName="MainSalary" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="mainSalary"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="JobSalary" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="jobSalary"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
       </div>
     </div>
-  </div> -->
 
+    <div class="extend-function">
+      <hr />
+      <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span
+            class="text-primary text-hover-primary_darker fw-bold me-1"
+          >
+            <codx-label
+              default="Phụ cấp được hưởng"
+              name="lblEmpBenefit"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
+        </div>
+      </div>
+    </div>
 
-</codx-form>
+    <button
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+      (click)="addBenefit()"
+    >
+      <span class="icon-add btn-text-primary me-2"></span>
+      <codx-label
+        name="lblAddBenefit"
+        default="AddNew"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+
+    <div *ngIf="isAfterRender">
+      <div *ngFor="let benefit of tempBenefitArr">
+      <div class="form-group row">
+        <div class="col-6">
+          <span [innerHTML]="
+          benefit?.BenefitID
+            | formatvalue : benefitFormModel : 'benefitID'
+            | async
+        "></span>
+        </div>
+        
+        <div class="col-6">
+          <span>{{ benefit.BenefitAmt }} /</span>  
+          <span class="text-dark fw-bold"
+          [innerHTML]="
+          benefit?.BenefitNorm
+              | formatvalue : benefitFormModel : 'benefitNorm'
+              | async
+          "></span>
+        </div>
+      </div>
+  
+      </div>
+    </div>
+  </ng-template>
 
 <ng-template #titleTmp let-data>
   <div class="row">
@@ -331,3 +411,76 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #tmpAddBenefit let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEBenefit" default="Thêm phụ cấp"></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="close2(dialog1)">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group row">
+          <codx-label fiedName="BenefitID" [formModel]="benefitFormModel"></codx-label>
+          <codx-input
+            field="BenefitID"
+            [formModel]="benefitFormModel"
+            [Group]="benefitFormGroup"
+          ></codx-input>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <codx-label
+                fiedName="BenefitAmt"
+                [formModel]="benefitFormModel"
+              ></codx-label>
+    
+              <codx-input
+                field="BenefitAmt"
+                [formModel]="benefitFormModel"
+                [Group]="benefitFormGroup"
+                [showSpinButton]="false" 
+              ></codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column">
+              <codx-label
+                fiedName="BenefitNorm"
+                [formModel]="benefitFormModel"
+              ></codx-label>
+              <codx-input
+                field="BenefitNorm"
+                [formModel]="benefitFormModel"
+                [Group]="benefitFormGroup"
+              ></codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveBenefitForm(dialog1)">
+          <i class="icon-save"></i>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="benefitFormModel"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template >

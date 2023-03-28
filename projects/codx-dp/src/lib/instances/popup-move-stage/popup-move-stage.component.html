@@ -24,14 +24,15 @@
           default="Ngày hoàn thành thực tế">
         </codx-label>
       </div>
-
-      <codx-input field="actualEnd" [crrValue]="instancesStepOld?.actualEnd" [Group]="form.formGroup" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
-      </codx-input>
-
-      <!-- <codx-input field="actualEnd" format="d" type="datetime" class="test-datetime" [crrValue]="instancesStepOld?.actualEnd"
-      (valueChange)="valueChange($event)">
-    </codx-input> -->
+    <codx-input
+    type="datetime"
+    class="test-datetime"
+    field="actualEnd"
+    format="d"
+    [crrValue]="instancesStepOld.actualEnd"
+    (valueChange)="changeTime($event)"
+  >
+  </codx-input>
     </div>
 
     <div class="form-group">
@@ -44,11 +45,37 @@
       </codx-input>
     </div>
 
+    <!-- <div class="form-group" >
+      <div>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Trường tùy chỉnh">
+          </codx-label>
+          </div>
+        </div>
+        <div class="pt-5">
+          <codx-field-detail
+          *ngIf="instancesStepOld?.fields?.length > 0"
+          [dataStep]="instancesStepOld"
+          [showColumnControl]="showColumnControl(instance.stepID)"
+          [isUpdate]="!instance.closed && (instance.status =='1' || instance.status=='2' )"
+          [currentRecID]="stepIdOld"
+          (inputCustomField)="inputCustomField($event)"
+          [isSaving]="isSaving"
+          (actionSave)="actionSaveCustomField($event)"
+        ></codx-field-detail>
+
+        </div>
+      </div>
+    </div> -->
+
+
     <div class="form-group" *ngIf="!!listTree">
       <div>
         <div class="d-flex justify-content-end">
           <div class="me-auto">
-            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
             default="Công việc chưa hoàn tất">
           </codx-label>
           </div>
@@ -58,10 +85,6 @@
           </codx-label>
           </div>
           <div class="ps-2">
-            <!-- <codx-input type="checkbox"  class="rounded-circle" [checked]="true"
-            (valueChange)="checkAllValue($event)">
-
-          </codx-input> -->
             <input
             class="form-check-input rounded-circle"
             type="checkbox"
@@ -198,6 +221,7 @@
                                           </div>
                                           <div>
                                             <input
+                                            [id]="item.recID"
                                             class="form-check-input rounded-circle"
                                             type="checkbox"
                                             [checked]="isCheckAll"
@@ -213,8 +237,6 @@
                       </ul>
                   </li>
                 </ol>
-
-
               </ng-template>
              </ng-container>
           </div>
@@ -240,7 +262,7 @@
     <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
     </codx-label>
     <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
-      (valueChange)="cbxChange($event)"></ejs-combobox>
+    [allowFiltering]="true" [readonly]="false" (valueChange)="cbxChange($event)"></ejs-combobox>
   </div>
 </ng-template>
 

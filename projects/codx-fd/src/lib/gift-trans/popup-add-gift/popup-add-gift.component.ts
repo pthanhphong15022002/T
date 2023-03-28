@@ -17,6 +17,7 @@ export class PopupAddGiftComponent implements OnInit {
   form: FormGroup = null;
 
   lstPattern: any[] = [];
+  gifts: any[] = [];
 
   isSharePortal: boolean = true;
   showNavigationArrows: boolean = false;
@@ -39,6 +40,10 @@ export class PopupAddGiftComponent implements OnInit {
   amount: number = 0
   maxQuantity: number = 0;
   dg: any;
+  min: number = 0;
+  max: number = 0;
+  quantityOld: number = 0;
+
 
   constructor(
     private api: ApiHttpService,
@@ -75,6 +80,8 @@ export class PopupAddGiftComponent implements OnInit {
 
     this.cache.functionList(this.funcID)
       .subscribe((func: any) => {
+        console.log('fun:', func);
+
         if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
           this.title = func.description;
         }
@@ -83,14 +90,23 @@ export class PopupAddGiftComponent implements OnInit {
 
   getDataPattern(cardType: string) {
     if (!cardType) return;
-    this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
-      .subscribe((res: any) => {
-        if (res) {
-          console.log('pattern:', res);
-          this.lstPattern = res;
-          this.dt.detectChanges();
-        }
-      });
+    // this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       console.log('pattern:', res);
+    //       this.lstPattern = res;
+    //       this.dt.detectChanges();
+    //     }
+    //   });
+
+    this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType,]).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.lstPattern = res;
+        let patternDefault = this.lstPattern.find((e: any) => e.isDefault == true);
+        this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0];
+        this.dt.detectChanges();
+      }
+    });
   }
 
   innitForm() {
@@ -133,12 +149,35 @@ export class PopupAddGiftComponent implements OnInit {
         this.giftTrans.ItemID = data;
         break;
 
+      case "giftID":
+        this.getGiftInfor(data);
+        break;
+
       case 'quantity':
-        if (!this.giftTrans || !this.giftTrans.ItemID) {
+        // if (!this.giftTrans || !this.giftTrans.ItemID) {
+        //   this.notifySV.notify("Vui lòng chọn quà tặng");
+        //   return;
+        // }
+        // this.giftTrans.Quantity = data;
+
+        if (!this.gifts[0] || !this.gifts[0]?.availableQty || !this.gifts[0]?.price) {
+          this.form.patchValue({ quantity: 0 });
           this.notifySV.notify("Vui lòng chọn quà tặng");
           return;
         }
-        this.giftTrans.Quantity = data;
+        else if (data > this.gifts[0].availableQty) {
+
+          this.form.patchValue({ quantity: this.quantityOld });
+          this.notifySV.notify("Vượt quá số dư quà tặng");
+          return;
+        }
+        else {
+          this.quantityOld = data - 1;
+          this.quantity = data;
+          this.amount = this.quantity * this.gifts[0].price;
+          this.form.patchValue({ quantity: data });
+          this.giftTrans.Quantity = data;
+        }
         break;
 
       case 'status':
@@ -207,16 +246,44 @@ export class PopupAddGiftComponent implements OnInit {
       });
   }
 
+  // getGiftInfor(giftID: string) {
+  //   this.api.execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetGiftAsync", [giftID])
+  //     .subscribe((res: any) => {
+  //       if (res) {
+  //         this.gift = res;
+  //         this.maxQuantity = Math.floor(this.myWallet.coins / this.gift.price);
+  //         this.form.patchValue({ giftID: this.gift.giftID });
+  //         this.dt.detectChanges();
+  //       }
+  //     });
+  // }
+
+
+
   getGiftInfor(giftID: string) {
-    this.api.execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetGiftAsync", [giftID])
-      .subscribe((res: any) => {
+    this.min = 0;
+    this.max = 0;
+
+    if (giftID) {
+      this.api.execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetGiftAsync", [giftID]).subscribe((res: any) => {
         if (res) {
-          this.gift = res;
-          this.maxQuantity = Math.floor(this.myWallet.coins / this.gift.price);
-          this.form.patchValue({ giftID: this.gift.giftID });
-          this.dt.detectChanges();
+          if (res.availableQty <= 0) {
+            this.notifySV.notify("Số dư quà tặng không đủ");
+          }
+          else {
+            if (this.gifts.length == 0) {
+              this.gifts = [];
+            }
+            this.gifts.push(res);
+            this.maxQuantity = Math.floor(this.myWallet.coins / res.price);
+            this.form.patchValue({ giftID: giftID });
+            this.max = res.availableQty;
+            this.min = 1;
+            this.giftTrans.ItemID = giftID;
+          }
         }
       });
+    }
   }
 
   selectedPattern(pattern: any) {

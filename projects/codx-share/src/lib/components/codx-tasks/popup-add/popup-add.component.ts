@@ -938,7 +938,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    var crrRole =this.crrRole 
+    var crrRole =this.crrRole
     this.api
       .execSv<any>(
         'HR',

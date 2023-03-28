@@ -7,7 +7,7 @@
   </ng-container>
 </ng-template>
 <ng-template #body>
-  <div class="card-add" #cardbodyRef>
+  <div class="card-add mt-5" #cardbodyRef>
     <ejs-tab #cashRef>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
@@ -36,7 +36,6 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <br />
     <ejs-tab>
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
@@ -73,9 +72,9 @@
 <ng-template #subToolbar>
   <div class="d-flex align-items-center justify-content-between pt-2">
     <div class="d-flex justify-content-start me-2">
-      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">    
+      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
             <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-            <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>    
+            <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
       </div>
       <div class="card-title">
         <div class="d-flex flex-column">
@@ -83,7 +82,7 @@
         </div>
       </div>
       <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-input [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+        <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
         </codx-input>
       </div>
     </div>
@@ -258,30 +257,6 @@
             </div>
           </div>
         </div>
-        <div class="col-2">
-          <div class="form-group">
-            <!-- mẫu số -->
-            <div class="form-group">
-              <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
-              </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
-              </codx-input>
-            </div>
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-group">
-            <!-- mẫu số -->
-            <div class="form-group">
-              <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
-              </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
-              </codx-input>
-            </div>
-          </div>
-        </div>
         <div class="col-1">
           <div class="form-group">
             <!-- ký hiệu -->
@@ -317,9 +292,33 @@
             </div>
           </div>
         </div>
+        <div class="col-4">
+          <div class="form-group">
+            <!-- đối tượng -->
+            <div class="form-group">
+              <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-2">
+          <div class="form-group">
+            <!--hàng hóa dịch vụ -->
+            <div class="form-group">
+              <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
+              </codx-label>
+              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
           <div class="form-group">
             <!-- dvt -->
             <div class="form-group">
@@ -345,7 +344,7 @@
         </div>
         <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- đơn giá -->
             <div class="form-group">
               <codx-label fiedName="UnitPrice" [formModel]="fmVATInvoices">
               </codx-label>
@@ -355,9 +354,9 @@
             </div>
           </div>
         </div>
-        <div class="col-2">
+        <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- số tiền -->
             <div class="form-group">
               <codx-label fiedName="TaxBase" [formModel]="fmVATInvoices">
               </codx-label>
@@ -369,7 +368,7 @@
         </div>
         <div class="col-2">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- thuế suất -->
             <div class="form-group">
               <codx-label fiedName="VATID" [formModel]="fmVATInvoices">
               </codx-label>
@@ -381,7 +380,7 @@
         </div>
         <div class="col-1">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- tiền thuế -->
             <div class="form-group">
               <codx-label fiedName="TaxAmt" [formModel]="fmVATInvoices">
               </codx-label>
@@ -395,7 +394,7 @@
       <div class="row">
         <div class="col-9">
           <div class="form-group">
-            <!-- số lượng -->
+            <!-- ghi chú -->
             <div class="form-group">
               <codx-label fiedName="TaxNote" [formModel]="fmVATInvoices">
               </codx-label>
@@ -410,11 +409,68 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-  <codx-gridview-v2 class="tabLine" #gridPurchase [formName]="fmPurchaseInvoicesLines.formName"
+  <ng-container *ngIf="form?.formGroup">
+    <!-- <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
     [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
     [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
     [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)" (onDoubleClick)="onDoubleClickLine($event)"></codx-gridview-v2>
+    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)"></codx-gridview-v2> -->
+    <div class="table-responsive mt-3" style="height: 450px;border-radius: 5px;border: 1px solid #dee2e6;">
+      <table class="table table-hover ">
+        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
+        color: white;">
+          <tr>
+            <th></th>
+            <th style="width: 20%;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;"
+              *ngFor="let item of columnGrids">
+              <div class="d-flex">
+                <!-- <i style="color: white;" class="icon-info icon-20 me-2"></i> -->
+                <span class="fs-5 fw-bold">{{item.headerText}}</span>
+              </div>
+            </th>
+            
+          </tr>
+        </thead>
+        <tbody style="border-bottom: 1px solid #dee2e6;" *ngFor="let item of purchaseInvoicesLines">
+          <tr>
+            <td>
+              <div class="d-flex align-items-center justify-content-end">
+                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1">
+                  <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1">
+                  <i class="icon-delete icon-16"></i>
+                </span>
+              </div>
+            </td>
+            <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
+              <div ngbTooltip="Markasdaaaaaaaaaaaaaaasdasdas"  style="width: 200px;overflow: hidden;text-overflow: ellipsis;">
+                asdsada
+              </div>
+            </td>       
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <button style="border-radius: 49px;display: block;margin-left: auto;margin-right: auto;" type="button"
+          class="btn btn-light-primary mt-2" (click)="addRow()">
+          <div class="d-flex align-items-center">
+            <i class="icon-add_box icon-18"></i>
+            <span class="fs-5">Thêm dòng</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </ng-container>
+  <div class="h-100 w-100 border">
+  <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
+    [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
+    [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
+    [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
+    (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)" [allowTextWrap]="false"></codx-gridview-v2>
+  </div>
+
 </ng-template>
 <ng-template #tabLineBill>
   <codx-gridview-v2 *ngIf="VATType == '2'" #gridInvoices [formName]="fmVATInvoices.formName"
@@ -424,14 +480,6 @@
     (created)="gridCreated($event)"></codx-gridview-v2>
 </ng-template>
 <ng-template #addLine let-data>
-  <div class="mt-5 mb-2">
-    <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
-      <div class="d-flex align-items-center">
-        <i class="icon-add_box icon-18"></i>
-        <span class="fs-5">Thêm dòng</span>
-      </div>
-    </button>
-  </div>
   <ng-container *ngIf="form?.formGroup">
     <div *ngIf="countDetail > 0">
       <div class="mt-4 mb-3 text-primary fw-bold fs-5">
@@ -496,7 +544,7 @@
     </span>
   </div>
 </ng-template>
-<ng-template #footer> 
+<ng-template #footer>
   <div class="codx-detail-footer dialog-footer" *ngIf="purchaseinvoices">
     <div class="btn btn-white btn-icon tab-action" (click)="expandTab()">
       <span class="icon-unfold_more icon-20"></span>
@@ -507,6 +555,6 @@
 <ng-template #tabRef>
   <div #tab id="codx-tab">
     <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
-    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+      [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </div>
 </ng-template>

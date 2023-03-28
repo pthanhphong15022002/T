@@ -2,6 +2,8 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
+  NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   UrlUtil,
@@ -25,7 +27,11 @@ export class JournalNamesComponent extends UIComponent {
   };
   functionName: string;
 
-  constructor(inject: Injector, private route: Router) {
+  constructor(
+    inject: Injector,
+    private route: Router,
+    private notiService: NotificationsService
+  ) {
     super(inject);
   }
   //#region Constructor
@@ -86,33 +92,6 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    // let data = {
-    //   JournalName: 'Giấy báo có',
-    //   Description: 'Giấy báo có',
-    //   PostedLayer: '1',
-    //   JournalType: '1',
-    //   AllowEdited: true,
-    //   InvoiceEdited: true,
-    //   Approval: '1',
-    //   CurrencyControl: true,
-    //   ExchangeRate: 1.0,
-    //   TransactionText: '1',
-    //   IsTransfer: true,
-    //   IsSettlement: true,
-    //   IsAllocation: true,
-    //   PeriodControl: true,
-    //   PostSubControl: true,
-    //   QtyControl: true,
-    //   AssetControl: true,
-    //   LoanControl: true,
-    //   ProjectControl: true,
-    //   Stop: false,
-    //   Owner: '1',
-    //   CreatedBy: 'THINH',
-    //   FunctionID: 'ACT0428',
-    //   Thumbnail: 'GiayBaoCo.JPG',
-    // };
-    // this.api.exec('AC', 'JournalNamesBusiness', 'AddAsync', data).subscribe();
     this.view.dataService.addNew().subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
@@ -131,10 +110,55 @@ export class JournalNamesComponent extends UIComponent {
     });
   }
 
-  edit(e, data): void {}
+  edit(e, data): void {
+    console.log('edit', { data });
+
+    this.api
+      .exec('ERM.Business.AC', 'JournalsBusiness', 'IsEditableAsync', data.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.dataSelected = data;
+          this.view.dataService.edit(data).subscribe(() => {
+            const options = new SidebarModel();
+            options.Width = '800px';
+            options.DataService = this.view.dataService;
+            options.FormModel = this.view.formModel;
+
+            this.callfc.openSide(
+              PopupAddJournalComponent,
+              {
+                formType: 'edit',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              options,
+              this.view.funcID
+            );
+          });
+        }
+      });
+  }
 
   copy(e, ata): void {}
 
-  delete(data): void {}
+  delete(data): void {
+    console.log('delete', data);
+
+    this.view.dataService
+      .delete([data], true, (req: RequestOption) => {
+        req.methodName = 'DeleteJournalAsync';
+        req.className = 'JournalsBusiness';
+        req.assemblyName = 'ERM.Business.AC';
+        req.service = 'AC';
+        req.data = data;
+
+        return true;
+      })
+      .subscribe((res: any) => {
+        console.log(res);
+      });
+  }
   //#region Method
+
+  //#region Function
+  //#endregion
 }

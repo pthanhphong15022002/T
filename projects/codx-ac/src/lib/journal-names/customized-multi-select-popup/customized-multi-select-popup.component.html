@@ -1,0 +1,25 @@
+<codx-form
+  #form
+  [headerText]="formTitle$ | async"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+>
+</codx-form>
+
+<ng-template #body>
+  <div *ngFor="let c of dimControls$ | async" class="mb-3">
+    <!-- <codx-input type="checkbox"></codx-input> -->
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

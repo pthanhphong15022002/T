@@ -1,4 +1,4 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
@@ -29,7 +29,7 @@
         <!-- <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4">
         </codx-dropdown-calendar> -->
       <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
-          <span class="mx-2">
+          <span class="mx-2" >
             {{dataOKR?.periodID}}
           </span>
         </div> 
@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
-    <div class="pt-5 pb-2 text-center">
-      <codx-label [default]="title" class="fw-bold fs-2"></codx-label>
+    <div class="pb-2 text-center">      
+      <span class="fw-bold fs-2" [innerHTML]="dataOKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
     </div>
     <div class="flex-grow-1 overflow-auto">
       <ejs-tab id="om-tab" class="h-100">
@@ -185,15 +185,15 @@
                     <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAlign && listAlign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" ></view-okr>
+                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->
                   <div class="ms-5 ps-5 pt-5">
                     <span class="icon-i-signpost-2 text-primary"></span>
-                    <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
+                    <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink" ></codx-label>
                   </div>
                   <div *ngIf="listAssign && listAssign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" ></view-okr>
+                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
                   </div>
                     
                   
@@ -357,7 +357,8 @@
           <span class="ob-kr"> {{ item?.okrName }} </span>
           <span class="mx-2">|</span>
           <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
-          <span *ngIf="item?.umid"> {{item?.umid}} </span>
+          
+          <span [innerHTML]="item?.umid | formatvalue : formModel : 'UMID' | async"></span>
         </div>
         <div class="d-flex align-items-center justify-content-end ">
           <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
@@ -417,7 +418,8 @@
           </div>
           <span class="mx-2">|</span>
           <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
-          <span *ngIf="item?.umid"> {{item?.umid}} </span>
+          
+          <span [innerHTML]="item?.umid | formatvalue : formModel : 'UMID' | async"></span>
         </div>
         <div class="d-flex align-items-center justify-content-end ">
           <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">

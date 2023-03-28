@@ -6,6 +6,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -16,11 +17,14 @@ import {
   CRUDService,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   SidebarModel,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
@@ -44,11 +48,43 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   lstSubContract: any;
   headerText: string;
   employeeObj: any;
+
+    //#region EBenefitInfo Declaration
+    benefitFuncID = 'HRTEM0403';
+    benefitObj: any
+    benefitFormModel : FormModel
+    benefitFormGroup: FormGroup
+    dialogAddBenefit: any;
+    editBenefitObj: any;
+    tempBenefitArr: any = [];
+    //#endregion
+
   fmSubContract: FormModel;
-  
+  title = 'Hợp đồng lao động';
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'contractInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Chế độ làm việc',
+      name: 'workingInfo',
+    },
+    {
+      icon: 'icon-info',
+      text: 'Lương & phụ cấp',
+      name: 'empBenefit',
+    },
+  ]
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  @ViewChild('tmpAddBenefit', { static: true })
+  tmpAddBenefit: TemplateRef<any>;
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -75,17 +111,37 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    console.log('data truyen vao ben trong ', this.data);
+    
     if(this.data){
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
       console.log('emp truyen vao ne', this.employeeObj);
+      if(this.data.benefits){
+        this.tempBenefitArr = JSON.parse(this.data?.benefits);
+      }
+      console.log('lst benefit', this.tempBenefitArr);
     }
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
     this.fmSubContract.formName = 'EContracts';
+    //Util.camelizekeyObj()
   }
 
   onInit(): void {
+    this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
+      if (formModel) {
+        this.benefitFormModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.benefitFormGroup = fg;
+              this.initFormAddBenefit();
+            }
+          });
+      }
+    });
     if (!this.formModel)
       this.hrSevice.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
@@ -109,6 +165,58 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
             this.initForm();
           }
         });
+  }
+
+  initFormAddBenefit(){
+    this.hrSevice
+        .getDataDefault(
+          this.benefitFormModel.funcID,
+          this.benefitFormModel.entityName,
+          'RecID'
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.benefitObj = res?.data;
+            this.benefitObj.effectedDate = null;
+            this.benefitObj.expiredDate = null;
+            // this.benefitObj.employeeID = this.employId;
+            this.benefitFormModel.currentData = this.benefitObj;
+            this.benefitFormGroup.patchValue(this.benefitObj);
+          }
+        });
+  }
+
+  addBenefit(){
+        let option = new DialogModel();
+        //option.zIndex = 999;
+        option.FormModel = this.benefitFormModel;
+        this.dialogAddBenefit = this.callfunc.openForm(
+          this.tmpAddBenefit,
+          '',
+          550,
+          350,
+          '',
+          null,
+          '',
+          option
+        );
+        this.dialogAddBenefit.closed.subscribe((res) => {
+          this.tempBenefitArr.push({
+            BenefitID: res.event.benefitID,
+            BenefitAmt: res.event.benefitAmt,
+            BenefitNorm: res.event.benefitNorm
+          });
+          this.data.benefits = JSON.stringify(this.tempBenefitArr);
+          this.df.detectChanges();
+        });
+  }
+
+  onSaveBenefitForm(dialog1){
+    this.dialogAddBenefit && this.dialogAddBenefit.close(dialog1.formModel.currentData);
+  }
+
+  close2(dialog: DialogRef) {
+    dialog.close();
   }
 
   initForm() {
@@ -146,7 +254,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         this.hrSevice.loadData('HR', rqSubContract).subscribe((res) => {
           if (res && res[1] > 0) {
             this.lstSubContract = res[0];
-            console.log('aaaaaaaaaaaaaaaaaaaaaaa', res);
           }
         });
       }
@@ -154,10 +261,14 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
       this.isAfterRender = true;
+      
     }
+    console.log('form group ne', this.formGroup);
   }
 
   onSaveForm() {
+    console.log('data chuan bi luu', this.data);
+    
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -305,6 +416,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0]
           console.log('employee cua form', this.employeeObj);
+          this.df.detectChanges();
         }
       });
     }

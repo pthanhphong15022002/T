@@ -1,3 +1,4 @@
+import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
@@ -64,7 +65,7 @@ export class DynamicProcessComponent
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
-  @Input() showButtonAdd = false;
+  @Input() showButtonAdd = true;
   dialog!: DialogRef;
   dialogQuestionCopy: DialogRef;
   // create variables
@@ -155,7 +156,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP0101';
+    //this.showButtonAdd = this.funcID == 'DP0101';
   }
 
   //chang data
@@ -208,7 +209,7 @@ export class DynamicProcessComponent
       dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = this.view.formModel;
+      dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
       this.cache
         .gridViewSetup(
           this.view.formModel.formName,
@@ -225,7 +226,7 @@ export class DynamicProcessComponent
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
             };
-            this.dialog = this.callfc.openForm(
+            var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
               '',
               this.widthWin,
@@ -235,22 +236,21 @@ export class DynamicProcessComponent
               '',
               dialogModel
             );
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                e.event.totalInstance = this.totalInstance;
+                this.view.dataService.update(e.event).subscribe();
+                this.changeDetectorRef.detectChanges();
+              }
+              // if (e?.event == null)
+              //   this.view.dataService.delete(
+              //     [this.view.dataService.dataSelected],
+              //     false
+              //   );
+            });
           }
         });
-
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        if (e && e.event != null) {
-          e.event.totalInstance = this.totalInstance;
-          this.view.dataService.update(e.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-      });
     });
   }
 
@@ -266,7 +266,7 @@ export class DynamicProcessComponent
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
-        dialogModel.FormModel = this.view.formModel;
+        dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
         this.cache
           .gridViewSetup(
             this.view.formModel.formName,
@@ -280,7 +280,7 @@ export class DynamicProcessComponent
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
               };
-              this.dialog = this.callfc.openForm(
+              var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
                 '',
                 this.widthWin,
@@ -290,15 +290,16 @@ export class DynamicProcessComponent
                 '',
                 dialogModel
               );
+              dialog.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
+                if (e && e.event != null) {
+                  this.view.dataService.update(e.event).subscribe();
+                  this.changeDetectorRef.detectChanges();
+                }
+              });
             }
           });
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            this.view.dataService.update(e.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+
       });
   }
   copy(data: any) {
@@ -312,7 +313,7 @@ export class DynamicProcessComponent
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         dialogModel.DataService = this.view?.dataService;
-        dialogModel.FormModel = this.view.formModel;
+        dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
         this.cache
           .gridViewSetup(
             this.view.formModel.formName,
@@ -332,7 +333,7 @@ export class DynamicProcessComponent
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
             };
-            this.dialog = this.callfc.openForm(
+            var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
               '',
               this.widthWin,
@@ -342,16 +343,15 @@ export class DynamicProcessComponent
               '',
               dialogModel
             );
+            dialog.closed.subscribe((e) => {
+              if (!e?.event) this.view.dataService.clear();
+              if (e && e.event != null) {
+                e.event.totalInstance = this.totalInstance;
+                this.view.dataService.update(e.event).subscribe();
+                this.changeDetectorRef.detectChanges();
+              }
+            });
           });
-
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e && e.event != null) {
-            e.event.totalInstance = this.totalInstance;
-            this.view.dataService.update(e.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
       });
     }
     return;
@@ -690,55 +690,61 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
-    let isRead = this.checkPermissionRead(data);
-    if (!isRead) {
-      return;
-    }
-    let isCreate = data.create ? true : false;
-    let obj = {
-      data: data,
-      nameAppyFor: this.getNameAppyFor(data?.applyFor),
-      isCreate: isCreate,
-    };
+    //thao test khong dc xoa
+    if(!data.read) return
+    this.dpService.dataProcess.next(data);
+    this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
 
-    let dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    dialogModel.zIndex = 999;
-    var dialog = this.callfc.openForm(
-      PopupViewsDetailsProcessComponent,
-      '',
-      this.widthWin,
-      this.heightWin,
-      '',
-      obj,
-      '',
-      dialogModel
-    );
+  
+    // let isRead = this.checkPermissionRead(data);
+    // if (!isRead) {
+    //   return;
+    // }
+    // let isCreate = data.create ? true : false;
+    // let obj = {
+    //   data: data,
+    //   nameAppyFor: this.getNameAppyFor(data?.applyFor),
+    //   isCreate: isCreate,
+    // };
 
-    dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.update(e?.event[0]).subscribe();
-        let totalInstanceById = e?.event[1];
-        if (totalInstanceById.size > 0 && totalInstanceById) {
-          let listProccess = this.view.dataService.data;
-          var index = 0;
-          for (let i = 0; i < listProccess.length; i++) {
-            let value = totalInstanceById.get(listProccess[i].recID);
-            if (value) {
-              listProccess[i].totalInstance =
-                listProccess[i].totalInstance + value;
-              this.view.dataService
-                .update(listProccess[i].totalInstance)
-                .subscribe();
-              index++;
-            }
-            if (index === totalInstanceById.size) {
-              break;
-            }
-          }
-        }
-      }
-    });
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex = 999;
+    // var dialog = this.callfc.openForm(
+    //   PopupViewsDetailsProcessComponent,
+    //   '',
+    //   this.widthWin,
+    //   this.heightWin,
+    //   '',
+    //   obj,
+    //   '',
+    //   dialogModel
+    // );
+
+    // dialog.closed.subscribe((e) => {
+    //   if (e?.event && e?.event != null) {
+    //     this.view.dataService.update(e?.event[0]).subscribe();
+    //     let totalInstanceById = e?.event[1];
+    //     if (totalInstanceById.size > 0 && totalInstanceById) {
+    //       let listProccess = this.view.dataService.data;
+    //       var index = 0;
+    //       for (let i = 0; i < listProccess.length; i++) {
+    //         let value = totalInstanceById.get(listProccess[i].recID);
+    //         if (value) {
+    //           listProccess[i].totalInstance =
+    //             listProccess[i].totalInstance + value;
+    //           this.view.dataService
+    //             .update(listProccess[i].totalInstance)
+    //             .subscribe();
+    //           index++;
+    //         }
+    //         if (index === totalInstanceById.size) {
+    //           break;
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
     this.detectorRef.detectChanges();
   }
 

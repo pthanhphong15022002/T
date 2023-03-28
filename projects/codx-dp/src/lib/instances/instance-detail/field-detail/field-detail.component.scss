@@ -84,3 +84,7 @@
   //background-color: #f0f8ff;
   border-color: var(--gray-150);
 }
+
+::ng-deep .e-toast-top-right{
+  z-index: 10050 !important;
+}

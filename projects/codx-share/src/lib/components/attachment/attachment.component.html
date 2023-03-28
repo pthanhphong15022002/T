@@ -185,7 +185,7 @@
                     </div>
                     <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
                         <div *ngFor="let file of sortBy();  index as i;"
-                            class="d-flex align-items-center mb-3 has-action-menu">
+                            class="d-flex align-items-center  mb-3 has-action-menu">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                             <ng-template #simple>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"

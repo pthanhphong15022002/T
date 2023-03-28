@@ -20,6 +20,7 @@
     height: auto;
     max-height: 400px;
     overflow: auto;
+    min-width: 220px;
 }
 .view-link {
     color: var(--text-primary);

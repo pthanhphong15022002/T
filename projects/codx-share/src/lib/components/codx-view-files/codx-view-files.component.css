@@ -66,6 +66,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    border-radius: 2px;
 }
 .grid-medias-item_video{
     width: 100%;

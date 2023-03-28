@@ -17,6 +17,8 @@ export class SignalRService {
   activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
   reciverChat = new EventEmitter<any>();
+  voteChat = new EventEmitter<any>();
+
 
   constructor(
     private authStore: AuthStore) {
@@ -60,6 +62,10 @@ export class SignalRService {
         case 'sendMessage':
           this.reciverChat.emit(res.data);
           break;
+        case 'voteMessage':
+          debugger
+          this.voteChat.emit(res.data);
+        break;
       }
       
     });

@@ -128,6 +128,12 @@ export class DP_Steps {
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;
+  backgroundColor:	String;
+  textColor:	String;
+  icon:	String;
+  iconColor:	String;
+  progressTaskGroupControl: boolean = false;
+  progressStepControl: boolean = false;
 }
 export class DP_Steps_Roles {
   recID: string = Util.uid();
@@ -328,7 +334,7 @@ export class DP_Instances_Steps {
   endDate: Date;
   progress: number;
   actualStart: Date;
-  actualEnd: Date;
+  actualEnd: Date = new Date();
   actualHours: number;
   assignControl: string;
   roles: DP_Instances_Steps_Roles[] = []; // objects;
@@ -350,6 +356,12 @@ export class DP_Instances_Steps {
   isFailStep: boolean = false;
   durationControl: boolean;
   leadtimeControl: boolean;
+  backgroundColor:	String;
+  textColor:	String;
+  icon:	String;
+  iconColor:	String;
+  progressTaskGroupControl: boolean = false;
+  progressStepControl: boolean = false;
 }
 
 export class DP_Instances_Steps_Roles {

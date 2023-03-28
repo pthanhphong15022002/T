@@ -126,7 +126,7 @@ export class CopyComponent implements OnInit {
             res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
+            that.dmSV.addFile.next(true);
             that.displayThumbnail(res.data);
             this.dialog.close();
             that.notificationsService.notify(res.message);
@@ -242,37 +242,40 @@ export class CopyComponent implements OnInit {
           this.errorshow = true;
         }
 
-        // thu muc da cc 
+        // thu muc da tồn tại 
         if (res.status == 2) {
+          debugger
           that.fullName = res.data.folderName;
           var config = new AlertConfirmInputConfig();
           config.type = "YesNo";
           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-            var id = '';
-            this.folderService.copyFolder(that.id, res.data.folderName, "", 1, 1).subscribe(async item => {
-              if (item.status == 0) {
-                // id = item.data.recID; 
-                that.dmSV.isTree = false;
-                that.dmSV.currentNode = '';
-                that.dmSV.folderId.next(item.data.parentId);
-                var folders = this.dmSV.listFolder;
-                let index = folders.findIndex(d => d.recID.toString() === that.id);
-                if (index > -1) {
-                  folders[index] = item.data;
-                  that.dmSV.nodeChange.next(folders[index]);
+            if(x.event.status == "Y") {
+              this.dialog.close();
+              this.folderService.renameFolder(that.id, res.data.folderName).subscribe(async item => {
+                if (item.status == 0) {
+                  // id = item.data.recID; 
+                  that.dmSV.isTree = false;
+                  that.dmSV.currentNode = '';
+                  that.dmSV.folderId.next(item.data.parentId);
+                  var folders = this.dmSV.listFolder;
+                  let index = folders.findIndex(d => d.recID.toString() === that.id);
+                  if (index > -1) {
+                    folders[index] = item.data;
+                    that.dmSV.nodeChange.next(folders[index]);
+                    that.dmSV.ChangeOneFolder.next(folders[index]);
+                  }
+                  that.dmSV.listFolder = folders;                    
+                //  that.modalService.dismissAll();                      
+                  that.changeDetectorRef.detectChanges();
                 }
-                that.dmSV.listFolder = folders;                    
-                that.dmSV.ChangeData.next(true);
-              //  that.modalService.dismissAll();                      
-                that.changeDetectorRef.detectChanges();
-                this.dialog.close();
-              }
-              else {
-                that.titleMessage = item.message;
-                that.errorshow = true;
-                that.notificationsService.notify(item.message);
-              }
-            });
+                else {
+                  that.titleMessage = item.message;
+                  that.errorshow = true;
+                  that.notificationsService.notify(item.message);
+                }
+              });
+            }
+         
           });
         }
         else {

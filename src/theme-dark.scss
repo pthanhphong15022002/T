@@ -585,7 +585,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-schedule .e-timeline-view .e-date-header-wrap table td,
 .e-schedule .e-timeline-month-view .e-date-header-wrap table td {
-    background-color: var(--bg-card);
+    background-color: var(--bg-card) !important;
     border-color: var(--border-light);
     color: var(--text-body) !important;
 }
@@ -716,9 +716,20 @@ label,
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-month-view .e-work-cells {
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.04) !important;
     border-color: var(--border-list);
     color: inherit;
+}
+
+.e-schedule .e-timeline-view .e-work-cells,
+.e-schedule .e-timeline-year-view .e-work-cells {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--border-list);
+    color: inherit;
+}
+.e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells.e-child-node {
+  background-color: #212529;
+  color: inherit;
 }
 
 .btn {

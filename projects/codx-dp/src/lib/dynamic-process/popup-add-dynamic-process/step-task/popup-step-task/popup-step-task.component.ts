@@ -350,7 +350,7 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
-      if (!this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
+      if((typeof this.stepsTasks[key] === 'string' && !this.stepsTasks[key].trim()) || !this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
         message.push(this.view[key]);
       }
     }

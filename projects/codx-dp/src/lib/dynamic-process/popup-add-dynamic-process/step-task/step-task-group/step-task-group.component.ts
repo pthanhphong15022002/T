@@ -76,7 +76,10 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    this.taskGroup['roles'] = e;
+    let roles = e?.map(role => {
+      return {...role, roleType:'P'}
+    })
+    this.taskGroup['roles'] = roles || [];
   }
 
   changeValueNumber(event) {
@@ -144,7 +147,7 @@ export class StepTaskGroupComponent implements OnInit {
   handleSave() {
     let message = [];
     for (let key of this.REQUIRE) {
-      if (!this.taskGroup[key]) {
+      if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
         message.push(this.view[key]);
       }
     }

@@ -91,6 +91,7 @@ export class PopupAddInstanceComponent implements OnInit {
   oldIdInstance: string;
   user: any;
   autoName: string = '';
+  listCustomFile = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -123,7 +124,8 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    } else if (this.action === 'add' || this.action === 'copy') {
+    }
+    else if (this.action === 'add' || this.action === 'copy') {
       this.lstParticipants = dt?.data[7];
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         var check = this.lstParticipants.some(
@@ -188,10 +190,9 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if(!!this.autoName){
-      this.title = this.titleAction + ' '+ this.autoName;
-    }
-    else {
+    if (!!this.autoName) {
+      this.title = this.titleAction + ' ' + this.autoName;
+    } else {
       this.title = this.titleAction + ' ' + e;
       this.autoName = e;
     }
@@ -214,6 +215,7 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
+        case 'R':
         case 'A':
           result = event.e;
           break;
@@ -226,8 +228,15 @@ export class PopupAddInstanceComponent implements OnInit {
           let idxField = this.listStep[index].fields.findIndex(
             (x) => x.recID == event.data.recID
           );
-          if (idxField != -1)
+          if (idxField != -1){
             this.listStep[index].fields[idxField].dataValue = result;
+            let idxEdit = this.listCustomFile.findIndex((x) => x.recID == this.listStep[index].fields[idxField].recID);
+            if (idxEdit != -1) {
+              this.listCustomFile[idxEdit] =
+                this.listStep[index].fields[idxField];
+            } else
+              this.listCustomFile.push(this.listStep[index].fields[idxField]);
+          }
         }
       }
     }
@@ -245,12 +254,13 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
-      // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
+      option.data = [this.instance, this.listStep, this.oldIdInstance];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
     }
 
-    option.data = [this.instance, this.listStep,this.oldIdInstance];
+
     return true;
   }
   saveInstances() {
@@ -262,15 +272,14 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
+    if (this.instance?.owner === null || this.instance?.owner.trim() === '') {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    }
-    else if (
+    } else if (
       this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
     ) {
       // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
@@ -279,30 +288,31 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if (this.listStep?.length > 0) {
-      let check = true;
-      let checkFormat = true;
-      this.listStep.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
-          var arrField = obj.fields;
-          arrField.forEach((f) => {
-            if (
-              f.isRequired &&
-              (!f.dataValue || f.dataValue?.toString().trim() == '')
-            ) {
-              this.notificationsService.notifyCode(
-                'SYS009',
-                0,
-                '"' + f.title + '"'
-              );
-              check = false;
-            }
-            checkFormat = this.checkFormat(f);
-          });
-        }
-      });
-      if (!check || !checkFormat) return;
-    }
+    //khong check custom field nua - nhung cấm xóa
+    // if (this.listStep?.length > 0) {
+    //   let check = true;
+    //   let checkFormat = true;
+    //   this.listStep.forEach((obj) => {
+    //     if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
+    //       var arrField = obj.fields;
+    //       arrField.forEach((f) => {
+    //           if (
+    //             f.isRequired &&
+    //             (!f.dataValue || f.dataValue?.toString().trim() == '')
+    //           ) {
+    //             this.notificationsService.notifyCode(
+    //               'SYS009',
+    //               0,
+    //               '"' + f.title + '"'
+    //             );
+    //             check = false;
+    //           }
+    //           checkFormat = this.checkFormat(f);
+    //       });
+    //     }
+    //   });
+    //   if (!check || !checkFormat) return;
+    // }
     if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
     } else if (this.action === 'edit') {
@@ -417,5 +427,34 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
+  }
+
+
+  setTimeHoliday(starDay: Date, endDay: Date, dayOff: string): Date {
+    if (dayOff && (dayOff.includes('7') || dayOff.includes('8'))) {
+        const isSaturday = dayOff.includes('7');
+        const isSunday = dayOff.includes('8');
+        let day = 0;
+
+        for (let currentDate = new Date(starDay); currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
+            if (currentDate.getDay() === 6 && isSaturday) {
+                day++;
+            }
+            if (currentDate.getDay() === 0 && isSunday) {
+                day++;
+            }
+        }
+
+
+        endDay.setDate(endDay.getDate() + day);
+
+        if (endDay.getDay() === 0 && isSunday) {
+            endDay.setDate(endDay.getDate() + 1);
+        }
+
+        return endDay;
+    }
+
+    return endDay;
   }
 }

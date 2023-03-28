@@ -80,6 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
+  currentRecID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -100,6 +101,8 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
+  isSaving = false;
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
     private callfc: CallFuncService,
@@ -310,6 +313,15 @@ export class InstanceDetailComponent implements OnInit {
         if (res && res?.length > 0) {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
+          let test = this.ganttDsClone.map(i => {
+            return {
+              name:i.name,
+              start: i.startDate,
+              end: i.endDate,
+            }
+          })
+          console.log("thuan", test);
+          
           this.changeDetec.detectChanges();
         }
       });
@@ -331,6 +343,10 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
+  getbackgroundColor(step){
+    return '--primary-color:' +  step?.backgroundColor;
+  }
+
   getColorStepName(status: string) {
     if (status === '1') {
       return 'step current';
@@ -345,6 +361,7 @@ export class InstanceDetailComponent implements OnInit {
     }
     return 'step';
   }
+  
   getReasonByStepId(stepId: string) {
     var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
     return this.listSteps[idx];
@@ -358,8 +375,13 @@ export class InstanceDetailComponent implements OnInit {
       var indexProccess = this.listCbxProccess.findIndex(
         (x) => x.recID === data?.refID
       );
+      if (indexProccess <= -1) {
+        var indexProccess = this.listCbxProccess.findIndex(
+          (x) => x.recID === this.guidEmpty
+        );
+      }
       var proccesMove = this.listCbxProccess[indexProccess];
-      this.proccesNameMove = proccesMove?.processName ?? '';
+      this.proccesNameMove = proccesMove?.processName;
     }
     return reasonStep?.stepName ?? '';
   }
@@ -376,7 +398,7 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     let classViewDetail: any;
-    var heighOut = 20
+    var heighOut = 25
     if ((this.viewType == 'd')) {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
@@ -420,5 +442,15 @@ export class InstanceDetailComponent implements OnInit {
       return this.listStepsProcess[idx]?.showColumnControl;
     }
     return 1;
+  }
+
+  inputCustomField(e){
+    this.currentRecID = e ;
+  }
+  actionSaveCustomField(e){
+    this.isSaving =e ;
+  }
+  clickMenu(e){
+     this.viewModelDetail = e
   }
 }

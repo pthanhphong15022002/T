@@ -18,8 +18,8 @@
             <div class="d-flex justify-content-beetwen">
                 <ng-container *ngIf="data.reciver">
                     <div class="me-3">
-                        <codx-img [objectId]="data.reciver.domainUser" [objectType]="'AD_Users'" [width]="35"
-                            imageType="circle" referType="image"></codx-img>
+                        <codx-img objectType="AD_Users" objectId="{{data.reciver.domainUser}}" [width]="35"
+                            imageType="circle"></codx-img>
                     </div>
                     <div class="d-flex flex-column">
                         <div class="fw-bold fs-6 mb-1">{{data.reciver.employeeName}}</div>
@@ -29,8 +29,8 @@
             </div>
             <div class="mt-3 d-flex" *ngIf="data.gift">
                 <div class="me-5">
-                    <codx-img [ngClass]="" [objectId]="data.gift.giftID" referType="image" [objectType]="'FD_Gifts'"
-                        imageType="square" [width]="150"></codx-img>
+                    <codx-img [ngClass]="" [objectId]="data.gift.giftID" [objectType]="'FD_Gifts'" imageType="square"
+                        [width]="150"></codx-img>
                 </div>
                 <div class="d-flex flex-column">
                     <div class="fw-bolder">{{data.gift.giftName}}</div>

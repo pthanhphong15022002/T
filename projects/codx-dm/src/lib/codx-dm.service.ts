@@ -134,7 +134,7 @@ export class CodxDMService {
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
-
+  
   public ChangeDataView = new BehaviorSubject<boolean>(null);
   isChangeDataView = this.ChangeDataView.asObservable();
 
@@ -143,6 +143,9 @@ export class CodxDMService {
 
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
+
+  public ChangeOneFolder = new BehaviorSubject<any>(null);
+  isChangeOneFolder = this.ChangeOneFolder.asObservable();
 
   public EmptyTrashData = new BehaviorSubject<boolean>(null);
   isEmptyTrashData = this.EmptyTrashData.asObservable();
@@ -361,6 +364,7 @@ export class CodxDMService {
   }
 
   getRight(folder: FolderInfo) {
+    debugger
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -672,7 +676,8 @@ export class CodxDMService {
           }
           // this.isBookmark = !this.isBookmark;
           this.listFolder = list;
-          this.ChangeData.next(true);
+          //this.ChangeData.next(true);
+          this.addFile.next(true);
           //that.changeDetectorRef.detectChanges();
         }
       });

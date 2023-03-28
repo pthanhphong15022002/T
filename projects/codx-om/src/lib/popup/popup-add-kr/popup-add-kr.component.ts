@@ -1,3 +1,4 @@
+import { Targets } from './../../model/okr.model';
 import { AuthStore, Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
@@ -70,6 +71,8 @@ export class PopupAddKRComponent extends UIComponent {
   curUser: any;
   tempDay='';
   tempTime='';
+  oldPlan: any;
+  unEditedTargets=[];
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -94,7 +97,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.typePlan = this.oldKR.plan;
     }
     this.curUser = authStore.get();
-
+    this.oldPlan=this.kr?.plan;
   }
 
   //---------------------------------------------------------------------------------//
@@ -196,7 +199,7 @@ export class PopupAddKRComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   planChange(evt: any) {
     if (evt?.data != null && this.kr?.target && this.kr?.plan) {
-      if (evt?.data != this.kr.plan) {
+      if (evt?.data != this.oldPlan) {
         this.calculatorTarget(evt?.data);
       }
       this.detectorRef.detectChanges();
@@ -330,23 +333,29 @@ export class PopupAddKRComponent extends UIComponent {
       if (this.planVLL && this.planVLL.length > 0) {
         for (let i = 0; i < this.planVLL.length; i++) {
           let tmpTarget = { ...this.targetModel };
-          tmpTarget.period = this.kr?.periodID;
+          tmpTarget.period = this.kr?.plan == OMCONST.VLL.Plan.Month? (i+1).toString() : 'Q'+(i+1).toString();
           tmpTarget.okrid = this.kr?.recID;
           tmpTarget.target = this.kr.target / this.planVLL.length;
-          tmpTarget.isEdited = false;
+          tmpTarget.edited = false;
           this.kr.targets.push(tmpTarget);
         }
         this.detectorRef.detectChanges();
       }
     }
   }
+  closeEditTargets(dialog:any){    
+    this.kr.targets=[]; 
+    for (let i = 0; i < this.unEditedTargets.length; i++) {
+      this.kr.targets.push({ ...this.unEditedTargets[i] });
+    }
+    dialog.close();
+  }
   // mapDefaultValueToData(kr:any){
   //   kr.frequence=this.defaultFequence;
   //   kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
   // }
   afterOpenAddForm(krModel: any) {
-    this.kr = krModel;
-    
+    this.kr = krModel;    
     if (this.kr?.targets &&  this.kr?.targets !=null && this.kr?.targets.length > 0) {
       this.targetModel = { ...this.kr.targets[0] };
       this.kr.targets = [];
@@ -360,7 +369,7 @@ export class PopupAddKRComponent extends UIComponent {
     if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
       this.planVLL = this.monthVLL?.datas;
     } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
-      this.planVLL = this.quarterVLL.datas;
+      this.planVLL = this.quarterVLL?.datas;
     }   
     
   }
@@ -392,7 +401,7 @@ export class PopupAddKRComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   openPopupFrequence(template: any) {
     if (this.kr?.frequence == null) {
-      this.notificationsService.notify('OM004');
+      this.notificationsService.notify('Tần suất cập nhật cần có giá trị','2');
       return;
     }
 
@@ -411,10 +420,14 @@ export class PopupAddKRComponent extends UIComponent {
       this.kr?.target == null ||
       this.kr?.plan == null
     ) {
-      this.notificationsService.notify('OM003');
+      this.notificationsService.notify('Chỉ tiêu và phân bổ chỉ tiêu cần có giá trị','2');
       return;
     } else if (this.kr.targets == null || this.kr?.targets ==null || this.kr?.targets.length == 0 ) {
       this.calculatorTarget(this.kr?.plan);
+    }
+    this.unEditedTargets=[];
+    for (let i = 0; i < this.kr.targets.length; i++) {
+      this.unEditedTargets.push({ ...this.kr.targets[i] });
     }
     let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 780 : 420;
     this.dialogTargets = this.callfc.openForm(
@@ -427,6 +440,19 @@ export class PopupAddKRComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onSaveTarget() {
+    let sumTargets=0;
+    for(let i=0;i<this.kr.targets.length;i++){
+      sumTargets+= this.kr.targets[i].target;
+    }
+    if(sumTargets!=this.kr.target){
+      
+      this.notificationsService.notify('Tổng chỉ tiêu phân bổ chưa đồng nhất với chỉ tiêu','2');
+      return;
+    }
+    if(this.funcType==OMCONST.MFUNCID.Edit){
+      this.codxOmService.editKRTargets(this.kr?.recID,this.kr?.targets).subscribe(res=>{});
+
+    }
     this.dialogTargets?.close();
     this.dialogTargets = null;
   }
@@ -444,8 +470,37 @@ export class PopupAddKRComponent extends UIComponent {
   valuePlanTargetChange(evt: any, index: number) {
     if (index != null && evt?.data != null) {
       this.kr.targets[index].target = evt.data;
-      this.kr.targets[index].isEdited = evt.data;
+      this.kr.targets[index].edited = true;
+      //Tính lại target tự động
+      let targetsNotChanged=[];
+      let totalTargetsEdited=0;
+
+      for(let i=0;i<this.kr.targets.length;i++){        
+        if(this.kr.targets[i]?.edited!=true){
+          targetsNotChanged.push(i);
+        }
+        else{
+          totalTargetsEdited+=this.kr.targets[i]?.target;
+        }
+      }
+      let avgTarget=(this.kr.target-totalTargetsEdited)/targetsNotChanged.length;
+      for(let i=0;i<this.kr.targets.length;i++){        
+        if(this.kr.targets[i]?.edited!=true){
+          this.kr.targets[i].target=avgTarget;
+        }
+      }     
+
+
     }
-    this.detectorRef.detectChanges();
+  }
+  refreshPlanTargets(){
+    if(this.kr.target && this.kr.targets && this.kr.targets.length>0){
+      let avgTarget= this.kr.target/this.kr.targets.length;
+      for(let i=0;i<this.kr.targets.length;i++){        
+        this.kr.targets[i].target=avgTarget;
+      }
+      this.detectorRef.detectChanges();
+    }
+    
   }
 }
