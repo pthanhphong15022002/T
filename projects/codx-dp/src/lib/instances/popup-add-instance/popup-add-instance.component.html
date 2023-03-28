@@ -58,18 +58,6 @@
     (eventUser)="eventUser($event)" [owner]="owner"></codx-popup-participants>
   </div>
 
-  <!-- <div class="form-group">
-    <codx-label fiedName="StepID" [Group]="form.formGroup" [formModel]="form.formModel" default="Giai đoạn quy trình">
-    </codx-label>
-    <ejs-combobox
-      [dataSource]="listStepCbx"
-      [fields]="fieldCbxStep"
-      [value]="instance.stepID"
-      [readonly]="action === 'edit' ? true : false"
-      (valueChange)="cbxChange($event)"
-    ></ejs-combobox>
-  </div> -->
-
   <div class="form-group">
     <codx-label fiedName="EndDate" [formModel]="form.formModel" [Group]="form.formGroup" default="Ngày đến hạn">
     </codx-label>
@@ -153,7 +141,7 @@
           <div class="form-group">
             <codx-input-custom-field
               [customField]="item"
-              [checkValid]="false"
+              [checkValid]="true"
               [objectId]="item.recID"
               [objectType]="'DP_Instances'"
               [formModel]="dialog.formModel"

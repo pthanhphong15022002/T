@@ -44,33 +44,6 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-
-    <!-- <div class="form-group" >
-      <div>
-        <div class="d-flex justify-content-end">
-          <div class="me-auto">
-            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Trường tùy chỉnh">
-          </codx-label>
-          </div>
-        </div>
-        <div class="pt-5">
-          <codx-field-detail
-          *ngIf="instancesStepOld?.fields?.length > 0"
-          [dataStep]="instancesStepOld"
-          [showColumnControl]="showColumnControl(instance.stepID)"
-          [isUpdate]="!instance.closed && (instance.status =='1' || instance.status=='2' )"
-          [currentRecID]="stepIdOld"
-          (inputCustomField)="inputCustomField($event)"
-          [isSaving]="isSaving"
-          (actionSave)="actionSaveCustomField($event)"
-        ></codx-field-detail>
-
-        </div>
-      </div>
-    </div> -->
-
-
     <div class="form-group" *ngIf="!!listTree">
       <div>
         <div class="d-flex justify-content-end">
@@ -243,6 +216,34 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group" >
+      <div>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Trường tùy chỉnh">
+          </codx-label>
+          </div>
+        </div>
+        <div class="pt-5">
+          <ng-container *ngIf="fieldsNull?.length > 0">
+            <ng-container *ngFor="let item of fieldsNull">
+                <codx-input-custom-field
+                  [customField]="item"
+                  [checkValid]="true"
+                  [objectId]="item.recID"
+                  [objectType]="'DP_Instances'"
+                  [formModel]="dialog.formModel"
+                  (valueChangeCustom)="valueChangeCustom($event)"
+                >
+                </codx-input-custom-field>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
   </div>
 </ng-template>
 
