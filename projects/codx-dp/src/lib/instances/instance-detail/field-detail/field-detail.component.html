@@ -26,14 +26,14 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
-          (click)="clickShow($event, dataStep.recID)"
+          (click)="clickShow($event, titleDefault?dataStep.recID : 'v-'+dataStep.recID)"
         >
           <i class="icon-expand_less icon-18"></i>
         </button>
       </div>
     </div>
   </div>
-  <div id="{{ dataStep.recID }}" class="main" [ngClass]="'show-main'">
+  <div id="{{ titleDefault?dataStep.recID : 'v-'+dataStep.recID}}" class="main" [ngClass]="'show-main'">
     <div
       class="d-flex row class-field m-5"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"

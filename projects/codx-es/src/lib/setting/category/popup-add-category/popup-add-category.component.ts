@@ -28,7 +28,7 @@ import {
   NotificationsService,
   RequestOption,
 } from 'codx-core';
-import { CodxApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-approval-step/codx-approval-step.component';
+import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { SettingAlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
@@ -42,7 +42,7 @@ import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-
 export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
-  @ViewChild('approvalStep') approvalStep: CodxApprovalStepComponent;
+  @ViewChild('approvalStep') approvalStep: CodxViewApprovalStepComponent;
 
   isAfterRender: boolean = false;
   viewAutoNumber = '';

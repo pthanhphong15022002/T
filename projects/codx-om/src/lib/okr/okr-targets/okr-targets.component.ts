@@ -593,6 +593,14 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   checkIn(kr: any, popupTitle: any) {
+    // if (this.dataOKRPlans.status!=OMCONST.VLL.PlanStatus.Ontracking ) {
+    //   this.notificationsService.notify(
+    //     'Bộ mục tiêu chưa được phát hành',
+    //     '3',
+    //     null
+    //   );
+    //   return;
+    // }
     if (kr?.assignOKR && kr?.assignOKR.length > 0) {
       this.notificationsService.notify(
         'Không thể cập nhật tiến độ kết quả đã được phân công',
@@ -644,7 +652,7 @@ export class OkrTargetsComponent implements OnInit {
     option.FormModel = this.formModelOB;
     let dialogOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,this.groupModel],
       option
     );
     dialogOB.closed.subscribe((res) => {
@@ -657,7 +665,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogEditOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, ob, this.dataOKRPlans],
+      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, ob, this.dataOKRPlans,this.groupModel],
       option
     );
     dialogEditOB.closed.subscribe((res) => {
@@ -671,7 +679,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogCopyOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, ob, this.dataOKRPlans],
+      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, ob, this.dataOKRPlans,this.groupModel],
       option
     );
     dialogCopyOB.closed.subscribe((res) => {
@@ -701,7 +709,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,this.groupModel],
       option
     );
     dialogKR.closed.subscribe((res) => {
@@ -719,7 +727,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, kr, isSubKR],
+      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, kr, isSubKR,this.groupModel],
       option
     );
     dialogEditKR.closed.subscribe((res) => {
@@ -737,7 +745,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, kr, isSubKR],
+      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, kr, isSubKR,this.groupModel],
       option
     );
     dialogCopyKR.closed.subscribe((res) => {
@@ -837,8 +845,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
-  clicka(evt:any){
-    debugger
+  clickTreeNode(evt:any){
     evt.stopPropagation();
     evt.preventDefault();
   }

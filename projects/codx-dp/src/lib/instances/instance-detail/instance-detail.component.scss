@@ -1,4 +1,6 @@
-$color: #23468c;
+:root {
+	--primary-color: #23468c;
+  }
 
 .progress {
 	background-color: #d8d8d8;
@@ -34,7 +36,6 @@ $color: #23468c;
 	cursor: default;
 	margin-right: 4px;
 	height: 34px;
-	text-indent: 16px;
 	min-width: 180px;
 	position: relative;
 	background-color: #d9e3f7;
@@ -48,7 +49,9 @@ $color: #23468c;
 	align-items: center;
 	padding-top: 2px;
 }
-
+.step-name{
+	text-align: left;
+}
 .arrow-steps .step:after,
 .arrow-steps .step:before {
 	content: " ";
@@ -136,12 +139,12 @@ $color: #23468c;
 //nvthuan
 .arrow-steps .step.old {
 	color: #fff;
-	background-color: $color;
+	background-color: var(--primary-color);
 	// background-color: #23468c;
 }
 
 .arrow-steps .step.old:after {
-	border-left: 17px solid $color;
+	border-left: 17px solid var(--primary-color);
 	// border-left: 17px solid #23468c;
 }
 

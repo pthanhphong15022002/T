@@ -318,10 +318,11 @@
                         style="flex-grow: 1; cursor: pointer"
                         [ngClass]="getColorStepName(item?.stepStatus)"
                         (click)="click(i, item.stepID)"
+                        [style]="getbackgroundColor(item)"
                       >
-                        <div class="d-flex align-items-center">
-                          <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" style="font-size: 18px;"></span>
-                          <span> {{ item.stepName }}</span>
+                        <div class="d-flex align-items-top ps-6">
+                          <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" class="fs-6 me-2"></span>
+                          <span class="line-clamp line-clamp-2 step-name"> {{ item.stepName }}</span>
                         </div>
                       </div>
                     </ng-container>
