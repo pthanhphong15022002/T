@@ -697,6 +697,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           {
             gridViewSetup: this.gridViewSetup,
             files: this.data?.files,
+            funcID: this.formModel?.funcID
           },
           option
         );
@@ -777,14 +778,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //liên kết văn bản
       case 'ODT106':
       case 'ODT205': {
-        /* if(this.checkOpenForm(funcID))
-          {
-
-          } */
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '550px';
+        option.Width = '850px';
         this.dialog = this.callfunc.openSide(
           AddLinkComponent,
           {
