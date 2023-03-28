@@ -30,6 +30,7 @@ export class PurchaseInvoicesLines {
   faLocationID: any;
   fixedDIMs: any;
   idiMany: any;
+  idiM0: any;
   idiM1: any;
   idiM2: any;
   idiM3: any;
@@ -60,6 +61,7 @@ export class PurchaseInvoicesLines {
   note: any;
   offsetAcctID: any;
   onhand: any;
+  rowNo:any;
   placeInService: any;
   placeInServiceDate: any;
   pmtTermID: any;
