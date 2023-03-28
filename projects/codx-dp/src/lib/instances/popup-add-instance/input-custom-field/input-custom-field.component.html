@@ -9,7 +9,7 @@
   <span *ngIf="viewFieldName && customField.fieldName">
     {{ "(" + customField.fieldName + ")" }}
   </span>
-  <span *ngIf="customField.isRequired">
+  <span *ngIf="customField.isRequired && checkValid">
     <codx-label
       class="text-danger"
       name="attentionIsRequired"
