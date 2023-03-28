@@ -72,11 +72,11 @@ export class PopupAddStaskComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.status = dt?.data[0];
-    this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['value'];
-    this.stepID = dt?.data[2];
-    this.groupTackList = dt?.data[3];
+    this.status = dt?.data?.status;
+    this.title = dt?.data['taskType']['text'];
+    this.stepType = dt?.data['taskType']['value'];
+    this.stepID = dt?.data['stepID'];
+    this.groupTackList = dt?.data['listGroup'];
     this.dialog = dialog;
 
     if (this.status == 'add') {
@@ -84,18 +84,18 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
-      this.stepsTasks['taskGroupID'] = dt?.data[7];
+      this.stepsTasks['taskGroupID'] = dt?.data['groupTaskID'];
       this.stepsTasks['refID'] = Util.uid();
       this.stepsTasks['isTaskDefault'] = false;
     } else {
       this.showLabelAttachment = true;
-      this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
+      this.stepsTasks = dt?.data['stepTaskData'] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
-    this.taskList = dt?.data[5];
-    this.taskName = dt?.data[6];
-    this.groupTaskID = dt?.data[7];
-    this.leadtimeControl = dt?.data[8];
+    this.taskList = dt?.data['taskList'];
+    this.taskName = dt?.data['stepName'];
+    this.groupTaskID = dt?.data['groupTaskID'];
+    this.leadtimeControl = dt?.data['leadtimeControl'];
   }
 
   ngOnInit(): void {
