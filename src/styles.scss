@@ -2098,3 +2098,27 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+codx-input .rte-placeholder{
+  padding: 10px!important;
+}
+.btn.codx-vllicon{
+  display: flex;
+  align-items: center;
+}
+/* calendar */
+.box-day .me-8.mb-4{
+  margin-right: 7px!important;
+  margin-bottom: 7px!important;
+}
+.box-time .me-8.mb-4{
+  margin-right: 10px!important;
+  margin-bottom: 10px!important;
+}
+
+.e-kanban .e-kanban-table .e-header-cells.e-collapsed .e-column-collapse {
+  color: var(--primary-light);
+}
+.e-grid .e-gridheader {
+  border-bottom-color:var(--border-list);
+}

@@ -259,8 +259,8 @@ export class Permission {
     isSystem: boolean = false;
     isParentShare: boolean = false;
     icon: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | any;
+    endDate: Date |any;
     title: any;
     content: any;
     form: string;

@@ -36,6 +36,8 @@ import { CodxTableComponent } from './task/codx-table/codx-table.component';
 import { OpportunityComponent } from './opportunity/opportunity.component';
 import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
 import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
+import { QuotationsComponent } from './quotations/quotations.component';
+import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
 const routes: Routes = [
   {
     path: '',
@@ -85,6 +87,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     OpportunityComponent,
     OpportunityDetailComponent,
     TabDetailCustomComponent,
+    QuotationsComponent,
+    PopupAddQuotationsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

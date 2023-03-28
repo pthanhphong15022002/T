@@ -627,12 +627,12 @@
                   <i class="icon-settings icon-18"></i>
                 </button>
                 <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="clickShow($event, item.recID)">
+                  (click)="clickShow($event, haveTitle? item.recID: 'v-'+item.recID )">
                   <i class="icon-expand_less icon-18"></i>
                 </button>
               </div>
             </div>
-            <div id="{{ item.recID }}" class="show-main" cdkDropList [cdkDropListData]="item?.fields || []"
+            <div id="{{ haveTitle? item.recID: 'v-'+item.recID }}" class="show-main" cdkDropList [cdkDropListData]="item?.fields || []"
               (cdkDropListDropped)="dropCustomFile($event, item.recID)">
               <div *ngIf="!item?.fields || item?.fields?.length == 0" class="position-relative p-9">
                 <div class="position-absolute top-50 start-50 translate-middle" cdkDrag [cdkDragDisabled]="true"
@@ -1120,7 +1120,7 @@
       (valueChange)="changeNameStep($event)">
     </codx-input>
 
-    <div class="fs-7 text-gray-600 text-italic mt-2" *ngIf="isAddStage">
+    <div class="fs-7 text-gray-500 text-italic mt-1" *ngIf="isAddStage">
       <codx-label [formModel]="grvStep" default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
         giai đoạn hoàn tất)"></codx-label>
     </div>
@@ -1156,22 +1156,19 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 d-flex justify-content-between align-items-center">
-      <codx-label fiedName="icon" [formModel]="grvStep" default="Demo:" class="me-4">
-      </codx-label>
-      <div [ngStyle]="{ background: stepNew?.backgroundColor }" style="
-          border: 1px solid gray;
-          height: 40px;
-          border-radius: 3px;
-          flex-grow: 1;
-        " class="d-flex align-items-center">
-        <div class="d-flex align-items-center justify-content-center mx-1">
-          <span [ngClass]="stepNew?.icon" [ngStyle]="{ color: stepNew?.iconColor }"></span>
-        </div>
-        <span class="line-clamp line-clamp-1" style="flex-grow: 1;" [ngStyle]="{ color: stepNew?.textColor }">
-          {{ stepName }}
-        </span>
+    
+  </div>
+
+  <div class="form-group mt-5">
+    <codx-label fiedName="icon" [formModel]="grvStep" default="Demo:" class="me-4">
+    </codx-label>
+    <div [ngStyle]="{ background: stepNew?.backgroundColor }" class="d-flex align-items-center box-demo">
+      <div class="me-2">
+        <span [ngClass]="stepNew?.icon" [ngStyle]="{ color: stepNew?.iconColor }"></span>
       </div>
+      <span class="line-clamp line-clamp-1" style="flex-grow: 1;" [ngStyle]="{ color: stepNew?.textColor }">
+        {{ stepName }}
+      </span>
     </div>
   </div>
 

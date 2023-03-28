@@ -72,7 +72,7 @@
           {{ itemDetail?.createdOn | fmDT }}
         </span>
       </div>
-      <div class="d-flex align-items-center me-5 mb-1">
+      <!-- <div class="d-flex align-items-center me-5 mb-1">
         <codx-label
           fiedName="ExpiredOn"
           [formModel]="formModel"
@@ -81,7 +81,7 @@
         <span class="text-gray-700">
           {{ itemDetail?.permissions?.expiredOn | fmDT }}
         </span>
-      </div>
+      </div> -->
       <div class="d-flex align-items-center me-5 mb-1">
         <codx-label
           fiedName="Priority"
@@ -110,7 +110,7 @@
           {{ itemDetail ? itemDetail?.refNo : "" }}
         </span>
       </div>
-      <div class="d-flex align-items-center me-5">
+      <div class="d-flex align-items-center me-5 mb-1">
         <codx-label
           fiedName="RefDate"
           [formModel]="itemDetailTemplate.formModel"
@@ -211,11 +211,11 @@
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngIf="itemDetailStt === 3; else defaulEmpt">
-              <codx-approval-step
+              <codx-view-approval-step
                 [transID]="transID"
                 [approveStatus]="itemDetail?.approveStatus"
               >
-              </codx-approval-step>
+              </codx-view-approval-step>
             </ng-container>
           </ng-template>
         </li>

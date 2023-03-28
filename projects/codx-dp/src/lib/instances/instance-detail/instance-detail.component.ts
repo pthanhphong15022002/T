@@ -80,7 +80,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
-  currentRecID:any
+  currentElmID:any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -98,6 +98,7 @@ export class InstanceDetailComponent implements OnInit {
   proccesNameMove: string;
   onwer: string;
   lstInv = '';
+  stepValue = {};
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
@@ -163,6 +164,13 @@ export class InstanceDetailComponent implements OnInit {
             this.currentStep = stepNo;
             this.currentNameStep = this.currentStep;
             this.tmpTeps = data;
+            this.stepValue = {
+              textColor: data.textColor,
+              backgroundColor: data.backgroundColor,
+              icon: data.icon,
+              iconColor: data.iconColor,
+            }
+            console.log('--------thuan--------',  this.stepValue);          
           }
           total += data.progress;
           stepNo = i + 1;
@@ -344,7 +352,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getbackgroundColor(step){
-    return '--primary-color:' +  step?.backgroundColor;
+    return step?.backgroundColor ? '--primary-color:' +  step?.backgroundColor : '--primary-color: #23468c';
   }
 
   getColorStepName(status: string) {
@@ -444,13 +452,15 @@ export class InstanceDetailComponent implements OnInit {
     return 1;
   }
 
-  inputCustomField(e){
-    this.currentRecID = e ;
+  inputElmIDCustomField(e){
+    this.currentElmID = e ;
   }
   actionSaveCustomField(e){
     this.isSaving =e ;
   }
   clickMenu(e){
      this.viewModelDetail = e
+     this.isSaving = false ;
+     this.currentElmID = null ;
   }
 }
