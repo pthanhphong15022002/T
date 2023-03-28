@@ -24,6 +24,7 @@ export class AddProposedFieldComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   formModel: any;
   dataUpdate: any;
+  owner: any;
   isModeAdd = true;
   title = '';
 
@@ -63,6 +64,20 @@ export class AddProposedFieldComponent extends UIComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
+      let data = e.data;
+      let field = e.field;
+      if (field == 'owner') {
+        this.owner = null;
+        if (data) {
+          this.api.callSv("SYS", "ERM.Business.AD", "UsersBusiness", "GetAsync", data).subscribe(res => {
+            console.log('ui:', res);
+            if (res.msgBodyData.length) {
+              this.owner = res.msgBodyData[0];
+            }
+          })
+        }
+
+      }
       this.dataUpdate[e.field] = e.data;
     }
   }
