@@ -1,5 +1,7 @@
 <div class="back-info">
-  <div class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0">
+  <div
+    class="header-info py-2 px-4 d-flex align-items-center justify-content-between mb-0"
+  >
     <div class="d-flex align-items-center">
       <span class="fs-" *ngIf="titleDefault">
         <codx-label
@@ -16,7 +18,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate "
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
@@ -26,14 +28,23 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
-          (click)="clickShow($event, titleDefault?dataStep.recID : 'v-'+dataStep.recID)"
+          (click)="
+            clickShow(
+              $event,
+              titleDefault ? dataStep.recID : 'v-' + dataStep.recID
+            )
+          "
         >
           <i class="icon-expand_less icon-18"></i>
         </button>
       </div>
     </div>
   </div>
-  <div id="{{ titleDefault?dataStep.recID : 'v-'+dataStep.recID}}" class="main" [ngClass]="'show-main'">
+  <div
+    id="{{ titleDefault ? dataStep.recID : 'v-' + dataStep.recID }}"
+    class="main"
+    [ngClass]="'show-main'"
+  >
     <div
       class="d-flex row class-field m-5"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
@@ -55,11 +66,17 @@
 </div>
 
 <ng-template #viewCustomFields let-data>
-  <div  id="{{data.recID}}" class='show-main' (dblclick)="clickInput(data.recID,dataStep,true)">
+  <div
+    id="{{ titleDefault ? data.recID : 'v-' + data.recID }}"
+    class="show-main border border-gray-200 rounded px-6 py-4"
+    (dblclick)="
+      clickInput(titleDefault ? data.recID : 'v-' + data.recID, dataStep, true)
+    "
+  >
     <div class="fw-bold mb-1">
       {{ data.title }}
     </div>
-    <div  class="cursor-pointer">
+    <div class="cursor-pointer">
       <span class="place-holder margin-l" *ngIf="!data.dataValue">
         {{ data.title }}
       </span>
@@ -152,8 +169,11 @@
     </div>
   </div>
 
-  <ng-container >
-    <div id="fr-{{data.recID}}" class="form-group hidden-main">
+  <ng-container>
+    <div
+      id="fr-{{ titleDefault ? data.recID : 'v-' + data.recID }}"
+      class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
+    >
       <codx-input-custom-field
         [customField]="data"
         [objectId]="data?.recID"

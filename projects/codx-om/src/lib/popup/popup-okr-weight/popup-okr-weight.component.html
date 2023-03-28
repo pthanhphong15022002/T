@@ -1,57 +1,60 @@
-<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED pt-5 px-20'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED pt-5 px-25'" [body]="editWeightTmp">
 </codx-form>
 
-<ng-template #alignKR>
+<ng-template #editWeightTmp>
   <div class=" w-100 h-100 bg-white d-flex flex-column justify-content-between">
 
-    <div class="mt-3 pb-2 text-center">
-      <codx-label [default]="subTitle" fiedName="" class="fw-bolder fs-2"></codx-label>
+    <div class="mt-5 pb-2 px-15 d-flex align-items-center justify-content-between">
+      <span class="fw-bolder fs-4">{{subTitle}}</span>
+      <span class="fw-bolder fs-4">{{dataOKR?.periodID}}</span>
     </div>
 
     <div class=" d-flex w-98 py-2 px-25 align-items-center">
 
-      <div class="col-8 text-center"><codx-label default="Mục tiêu" name="lbl" class="fs-5 "></codx-label></div>
+      <div class="col-8 text-center">
+        <codx-label *ngIf="dataOKR?.okrType==obType" default="Kết quả chính" name="lblKeyResults" class="fs-5 fw-bold"></codx-label>
+        <codx-label *ngIf="dataOKR?.okrType==krType" default="Kết quả phụ" name="lblSubKeyResults" class="fs-5 fw-bold"></codx-label>
+        <codx-label *ngIf="dataOKR?.okrType!=krType && dataOKR?.okrType!=obType" default="Mục tiêu" name="lblObjectives" class="fs-5 fw-bold"></codx-label>
+      
+      </div>
+      
       <div class="col-4 d-flex align-items-center">
-        <div class="col-4 ms-2 text-center"><codx-label default="Trọng số" name="lbl" class="fs-5"></codx-label>
+        <div class="col-4 ms-2 text-center"><codx-label default="Trọng số" name="lblWeight" class="fs-5 fw-bold"></codx-label>
         </div>
-        <div class="col-4 ms-2 text-center"><codx-label default="Tiến độ" name="lbl" class="fs-5"></codx-label>
+        <div class="col-4 ms-2 text-center"><codx-label default="Tiến độ" name="lblProgress" class="fs-5 fw-bold"></codx-label>
         </div>
-        <div class="col-4 ms-2 text-center"><codx-label default="Tiến độ theo trọng số" name="lbl"
-            class="fs-5 "></codx-label></div>
+        <div class="col-4 ms-2 text-center"><codx-label default="Tiến độ theo trọng số" name="lblProgressByWeight" class="fs-5 fw-bold"></codx-label></div>
       </div>
     </div>
 
-    <div class=" flex-grow-1 d-flex align-items-start justify-content-center w-100 overflow-auto">
+    <div class=" flex-grow-1 d-flex align-items-start flex-column justify-content-start w-100 overflow-auto">
       <div class="d-flex flex-column align-items-start justify-content-start h-auto w-100 px-25 ">
         <div *ngFor="let child of okrChild;let i=index;" class="d-flex flex-column w-100">
           <div class="d-flex w-98 align-items-center mb-2">
             <div class="min-h-table me-2 col-8 d-flex align-items-center border border-2 border-secondary rounded-0">
-              <span *ngIf="child?.okrType==krType"
-                class="col-1 rounded-circle w-h-circle bg-2D3958 fw-bold text-white text-center">KR</span>
-              <span *ngIf="child?.okrType==oType"
-                class="col-1 rounded-circle fa-solid fa-bullseye text-center "></span>
+              <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="ms-3"></span>
+              <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="ms-3"></span>
+              <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="ms-3"></span>
+
               <codx-inplace [type]="'text'" emptyText="" cssClass=" col-11 pe-3 " [disabled]="true"
                 [value]="child?.okrName">
-    
+
               </codx-inplace>
             </div>
             <div class=" col-4 d-flex align-items-center">
-              <div
-                class=" min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
+              <div class=" min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
                 <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
                   [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
                   [value]="child?.weight ">
                 </codx-inplace>
               </div>
-    
-              <div
-                class="min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
+
+              <div class="min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
                 <codx-inplace [type]="'text'" emptyText="" format="0.00" [disabled]="true"
                   cssClass=" text-center w-100 " class="text-center w-100" [value]="child?.progress">
                 </codx-inplace>
               </div>
-              <div
-                class="min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
+              <div class="min-h-table me-2 col-4 border border-2 border-secondary rounded-0 d-flex align-items-center">
                 <codx-inplace [type]="'text'" emptyText="" format="0.00" cssClass=" text-center w-100 "
                   class="text-center w-100" [value]="child?.progress*child?.weight" [disabled]="true">
                 </codx-inplace>
@@ -60,31 +63,27 @@
                 <span *ngIf="child?.edited==true" class="icon-i-info-circle text-danger"></span>
               </div>
             </div>
-    
+
           </div>
-    
+
         </div>
       </div>
-      
+      <div class=" d-flex w-100 px-25 py-2 align-items-center">
+        <div class="col-8 text-center"><codx-label default="Tổng cộng" name="lbl" class="fs-4 fw-bolder"></codx-label>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+          <span class="col-4 text-center"><span class="fs-4 fw-bolder me-4">{{totalProgress}}%</span></span>
+        </div>
+  
+      </div>
     </div>
 
-    <div class=" d-flex w-100 px-25 py-2 align-items-center">
-      <div class="col-8 text-center"><codx-label default="Tổng cộng" name="lbl" class="fs-4 fw-bolder"></codx-label>
-      </div>
-      <div class="col-4 d-flex justify-content-end">
-        <span class="col-4 text-center"><span class="fs-4 fw-bolder me-4">{{totalProgress}}%</span></span>
-      </div>
-      
-    </div>
+    
 
     <div class="d-flex justify-content-end w-100 py-7 px-25 pe-3">
-        <span type="button" (click)="cancel()"
-          class="me-2 btn d-flex py-2 px-4 btn-sm btn-outline btn-outline-primary btn-active-light-primary  rounded justify-content-center">
-          <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3" [formModel]="formModel"></codx-label>
-        </span>
-        <span type="button" (click)="onSaveForm()" class="d-flex py-2 me-5 px-4 bg-color rounded justify-content-center ">
-          <codx-label name="lblSave" class="text-light px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
-        </span>
+      <span type="button" (click)="onSaveForm()" class="d-flex py-2 me-5 px-4 bg-color rounded justify-content-center ">
+        <codx-label name="lblSave" class="text-light px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
+      </span>
 
     </div>
   </div>
