@@ -2,11 +2,13 @@
   [footer]="footer" [dialog]="dialog" [data]="instancesStepOld"></codx-form>
 
 <ng-template #subHeader>
-  <span>{{ stepName }}</span>
-</ng-template>
+  
+</ng-template> 
 <ng-template #body>
-  <div class="title-step pb-12"></div>
-  <div class="content-step">
+  <div class="title-step mt-3">
+    <div class="fs-5 text-primary">{{ stepName }}</div>
+  </div>
+  <div class="content-step mt-2">
     <ng-container [ngTemplateOutlet]="test"></ng-container>
     <div class="form-group">
       <div>
