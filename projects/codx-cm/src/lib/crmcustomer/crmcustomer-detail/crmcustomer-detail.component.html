@@ -3,80 +3,100 @@
     [footer]="tabs" (clickMF)="clickMF($event, dataSelected)">
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101' || funcID == 'CM0103' || funcID == 'CM0104'">
+        <div class="d-flex flex-grow-1 mb-4">
           <div class="me-3">
-            <codx-img [objectId]="dataSelected.recID" [objectName]="dataSelected?.processName" objectType="AD_Users"
-              [width]="35">
+            <codx-img [objectId]="dataSelected.recID" [objectType]="formModel.entityName" [width]="35">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
                 <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  {{ dataSelected?.processName }}
+                  {{ funcID == 'CM0101' ? dataSelected.customerName : funcID == 'CM0102' ? dataSelected.contactName : funcID == 'CM0103' ? dataSelected.partnerName : dataSelected.opponentName}}
+                </div>
+                <div class="d-flex align-items-start me-4 mb-1" *ngIf="funcID == 'CM0102'">
+                  <div class="me-3">
+                    <span
+                      [ngClass]="dataSelected?.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
+                      class=" icon-16 me-1"></span>
+                    <span [ngClass]="dataSelected?.allowCall ? 'text-primary' : ''"
+                      class="text-gray-900">{{dataSelected?.phoneNumber}}</span>
+                  </div>
+                  <div>
+                    <span [ngClass]="dataSelected?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
+                      class="icon-16 me-1 text-gray-900"></span>
+                    <span [ngClass]="dataSelected?.allowEmail ? 'text-primary' : ''"
+                      class="text-gray-900">{{dataSelected?.email}}</span>
+                  </div>
                 </div>
                 <div class="me-4 mb-1">
                   <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
                   <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-start">Tag</div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="funcID != 'CM0104'"
-          [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
-          <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
-            <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
-          </div>
-          <div class="d-flex flex-grow-1 mb-4">
-            <div class="me-3">
-              <codx-img [objectId]="dataSelected.recID" [objectName]="dataSelected?.processName" objectType="AD_Users"
-                [width]="35">
-              </codx-img>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-              <div [ngClass]="
-                  funcID == 'CM0102'
-                    ? 'd-flex
-                justify-content-between'
-                    : ''
-                ">
-                <div class="d-flex flex-column">
-                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                    Trương Đặng Ngọc Phúc
-                  </div>
-                  <div class="d-flex align-items-start me-4 mb-1">
-                    <div class="me-3">
-                      <span class="icon-phone_android text-primary icon-16 me-1"></span>
-                      <span class="text-gray-900">0702411141</span>
-                    </div>
-                    <div>
-                      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
-                      <span class="text-gray-900">tdnphuck42@gmail.com</span>
-                    </div>
-                  </div>
-                  <div class="me-4 mb-1" *ngIf="funcID == 'CM0102'">
-                    <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
-                    <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
-                  </div>
-                </div>
-                <div *ngIf="funcID == 'CM0102'" class="d-flex flex-column align-items-start">
-                  Tag
-                </div>
+              <div class="d-flex flex-column align-items-start">
+                <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+                  [value]="dataSelected?.field">
+                </codx-tag>
               </div>
             </div>
           </div>
         </div>
+        <div *ngIf="funcID != 'CM0104'&& dataSelected?.contacts != null && dataSelected?.contacts.length > 0"
+          [ngClass]="funcID == 'CM0101' || funcID == 'CM0103' ? 'd-flex align-items-start' : ''">
+          <ng-container *ngFor="let item of dataSelected?.contacts">
+            <div *ngIf="item.contactType == '1'" class="d-flex">
+              <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+                <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
+              </div>
+              <div class="d-flex flex-grow-1 mb-4">
+                <div class="me-3">
+                  <codx-img [objectId]="item.recID" [objectType]="formModel.entityName" [width]="35">
+                  </codx-img>
+                </div>
+                <div class="d-flex flex-column flex-grow-1">
+
+                  <div [ngClass]="
+                    funcID == 'CM0102'
+                      ? 'd-flex
+                  justify-content-between'
+                      : ''
+                  ">
+                    <div class="d-flex flex-column">
+                      <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                        {{item?.contactName}}
+                      </div>
+                      <div class="d-flex align-items-start me-4 mb-1">
+                        <div class="me-3">
+                          <span [ngClass]="item.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
+                            class=" icon-16 me-1"></span>
+                          <span [ngClass]="item.allowCall ? 'text-primary' : ''"
+                            class="text-gray-900">{{item.phoneNumber}}</span>
+                        </div>
+                        <div>
+                          <span [ngClass]="item.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
+                            class="icon-16 me-1 text-gray-900"></span>
+                          <span [ngClass]="item.allowEmail ? 'text-primary' : ''"
+                            class="text-gray-900">{{item.email}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
         <div class="d-flex align-items-start" *ngIf="funcID=='CM0102'">
           <div class="me-2">
-            <codx-label class="text-gray-500 text-nowrap" fiedName="Memo" [formModel]="formModel"
+            <codx-label class="text-gray-500 text-nowrap" fiedName="IsCustomer" [formModel]="formModel"
               default="Là khách hàng cá nhân: "></codx-label>
           </div>
           <div class="text-dark">
-            <codx-input type="switch" class="me-2" [crrValue]="true" [disabled]="true" [formModel]="formModel" field="allowEmail">
+            <codx-input class="test-check me-2" type="switch" style="width:100%" [checked]="dataSelected?.isCustomer"
+              field="isCustomer" [disabled]="true">
             </codx-input>
-            <span>30/01/2023</span>
+            <span>{{dataSelected.customerFrom}}</span>
           </div>
         </div>
 
@@ -113,19 +133,17 @@
                   <codx-label class="text-dark fw-bold" name="lblInformation" default="Thông tin chung">
                   </codx-label>
                 </div>
-                <codx-information [funcID]="funcID"></codx-information>
+                <codx-information [funcID]="funcID" [dataSelected]="dataSelected" [formModel]="formModel">
+                </codx-information>
               </div>
               <div class="mb-3">
                 <div class="mb-3">
-                  <codx-label class="text-dark fw-bold" name="lblMemo" default="Mô
+                  <codx-label class="text-dark fw-bold" fiedName="Memo" [formModel]="formModel" default="Mô
                   tả">
                   </codx-label>
                 </div>
                 <div>
-                  Được biết, anh và 2 người bạn của mình không những mừng 100$ rồi
-                  quẩy các kiểu con đà điểu tại đám cưới mà còn ăn no nê, chén chú
-                  chén anh “23 zô 23 zô, uống bao nhiêu, uống hết…”, say tới bến
-                  cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
+                  {{dataSelected?.memo}}
                 </div>
               </div>
               <div class="mb-3" *ngIf="funcID == 'CM0104'">
@@ -137,20 +155,21 @@
                 <div class="row">
                   <div class="col-6 row">
                     <div class="col-6">
-                      <codx-label class="text-gray-300" fiedName="Advantage" default="Ưu điểm:"></codx-label>
+                      <codx-label class="text-gray-300" [formModel]="formModel" fiedName="Advantage" default="Ưu điểm:">
+                      </codx-label>
                     </div>
                     <div class="col-6">
-                      Giá thành rẻ
-                      Chất lượng tốt
+                      {{dataSelected?.advantage}}
                     </div>
                   </div>
                   <div class="col-6 row">
                     <div class="col-6">
-                      <codx-label class="text-gray-300" fiedName="Disadvantage" default="Nhược điểm:"></codx-label>
+                      <codx-label class="text-gray-300" [formModel]="formModel" fiedName="Disadvantage"
+                        default="Nhược điểm:"></codx-label>
                     </div>
                     <div class="col-6">
-                      Nhân viên khó chịu
-                      Giao hàng lâu
+                      {{dataSelected?.disadvantage}}
+
                     </div>
                   </div>
                 </div>
@@ -170,7 +189,12 @@
                 <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
               </button>
             </div>
-            <ng-container [ngTemplateOutlet]="contacts"> </ng-container>
+            <div *ngIf="dataSelected?.contacts != null && dataSelected.contacts.length > 0">
+              <div *ngFor="let item of dataSelected?.contacts">
+                <ng-container [ngTemplateOutlet]="contacts" [ngTemplateOutletContext]="{ $implicit: item }">
+                </ng-container>
+              </div>
+            </div>
           </ng-container>
           <ng-container *ngIf="name == 'Task'">
             <ng-container [ngTemplateOutlet]="task" [ngTemplateOutletContext]="{ value: dataSelected.steps }">
@@ -195,19 +219,18 @@
   </codx-detail-tmp>
 </ng-container>
 
-<ng-template #contacts>
+<ng-template #contacts let-data>
   <div class="row mb-2">
     <div class="col-4 d-flex">
       <div class="me-3">
-        <codx-img [objectId]="dataSelected.recID" [objectName]="dataSelected?.processName" objectType="AD_Users"
-          [width]="35">
+        <codx-img [objectId]="data.recID" [objectType]="formModel" [width]="35">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column">
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              {{ dataSelected?.processName }}
+              {{ data?.contactName }}
             </div>
             <div class="me-4">
               <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
@@ -219,16 +242,18 @@
     </div>
     <div class="col-4 d-flex flex-column">
       <div class="mb-1">
-        <span class="icon-phone_android text-primary icon-16 me-1"></span>
-        <span class="text-gray-900">0702411141</span>
+        <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
+          class=" icon-16 me-1"></span>
+        <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
       </div>
       <div>
-        <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
-        <span class="text-gray-900">tdnphuck42@gmail.com</span>
+        <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
+          class="icon-16 me-1 text-gray-900"></span>
+        <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>
       </div>
     </div>
     <div class="col-4 d-flex flex-column">
-      <div class="mb-1">Liên hệ đặt hàng</div>
+      <div class="mb-1">{{data.contactType}}</div>
     </div>
   </div>
 </ng-template>
