@@ -18,6 +18,7 @@ import {
 } from 'codx-core';
 import { filter, map, Observable } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
+import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
@@ -59,6 +60,7 @@ export class PopupAddJournalComponent
   fiscalYears: any[] = [];
   isMultiSelectPopupDrHidden: boolean = true;
   isMultiSelectPopupCrHidden: boolean = true;
+  isEdit: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -67,6 +69,25 @@ export class PopupAddJournalComponent
     @Optional() private dialogData: DialogData
   ) {
     super(injector);
+
+    if (dialogData.data.formType === 'edit') {
+      this.isEdit = true;
+      this.journal = dialogRef.dataService?.dataSelected;
+      this.journal.approval = this.journal.approval == '1' ? true : false;
+      this.journal.postControl = ['1', '2'].includes(this.journal.postControl)
+        ? true
+        : false;
+      this.journal.projectControl = this.journal.projectControl ? '1' : '0';
+      this.journal.assetControl = this.journal.assetControl ? '1' : '0';
+      this.journal.postSubControl = this.journal.postSubControl ? '1' : '0';
+      try {
+        this.journal.creater = JSON.parse(this.journal.creater);
+        this.journal.approver = JSON.parse(this.journal.approver);
+        this.journal.poster = JSON.parse(this.journal.poster);
+        this.journal.unposter = JSON.parse(this.journal.unposter);
+        this.journal.sharer = JSON.parse(this.journal.sharer);
+      } catch {}
+    }
   }
   //#endregion
 
@@ -129,18 +150,29 @@ export class PopupAddJournalComponent
     }
 
     let temp: IJournal = { ...this.journal };
-
     if (this.journal.approval) {
       temp.postControl = this.journal.postControl ? 1 : 0;
+      temp.approval = 1;
     } else {
       temp.postControl = this.journal.postControl ? 2 : 0;
+      temp.approval = 0;
     }
+    temp.projectControl = this.journal.projectControl == '1' ? true : false;
+    temp.assetControl = this.journal.assetControl == '1' ? true : false;
+    temp.postSubControl = this.journal.postSubControl == '1' ? true : false;
+    temp.creater = JSON.stringify(this.journal.creater);
+    temp.approver = JSON.stringify(this.journal.approver);
+    temp.poster = JSON.stringify(this.journal.poster);
+    temp.unposter = JSON.stringify(this.journal.unposter);
+    temp.sharer = JSON.stringify(this.journal.sharer);
 
     console.log(temp);
 
     this.dialogRef.dataService
       .save((req: RequestOption) => {
-        req.methodName = 'AddJournalAsync';
+        req.methodName = !this.isEdit
+          ? 'AddJournalAsync'
+          : 'UpdateJournalAsync';
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
@@ -170,7 +202,9 @@ export class PopupAddJournalComponent
         400,
         250,
         '',
-        {},
+        {
+          journal: this.journal,
+        },
         '',
         options
       )
@@ -178,8 +212,8 @@ export class PopupAddJournalComponent
         console.log(event);
 
         this.journal.invoiceType = event.invoiceType;
-        this.journal.invoiceForm = event.invoiceType;
-        this.journal.invoiceSeriNo = event.invoiceType;
+        this.journal.invoiceForm = event.invoiceForm;
+        this.journal.invoiceSeriNo = event.invoiceSeriNo;
       });
   }
 
@@ -224,6 +258,27 @@ export class PopupAddJournalComponent
 
     this.isMultiSelectPopupDrHidden = true;
     this.isMultiSelectPopupCrHidden = true;
+  }
+
+  openCustomizedMultiSelectPopup(): void {
+    this.callfc
+      .openForm(
+        CustomizedMultiSelectPopupComponent,
+        'This param is not working',
+        400,
+        500,
+        '',
+        {
+          selectedOptions: this.journal.iDIMControl,
+        }
+      )
+      .closed.subscribe(({ event }) => {
+        console.log(event);
+
+        if (event) {
+          this.journal.iDIMControl = event;
+        }
+      });
   }
   //#endregion
 

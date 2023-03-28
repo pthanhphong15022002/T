@@ -152,7 +152,7 @@ export class InstancesComponent
         else this.haveDataService = false;
         if (res && res.read) {
           this.loadData(res);
-        } 
+        }
       });
     });
     this.layout.setUrl('dp/dynamicprocess/DP0101');
@@ -171,7 +171,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-   
+
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -1001,13 +1001,7 @@ export class InstancesComponent
     return true;
   }
 
-  // deleteListReason(listStep: any): void {
-  //   listStep.pop();
-  //   listStep.pop();
-  // }
-
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
@@ -1035,7 +1029,7 @@ export class InstancesComponent
     });
   }
   isExistNewProccessId(newProccessId) {
-    return this.listProccessCbx.some((x) => x.recID == newProccessId);
+    return this.listProccessCbx.some((x) => x.recID == newProccessId && x.recID != this.guidEmpty);
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {

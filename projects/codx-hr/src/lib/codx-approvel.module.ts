@@ -14,16 +14,11 @@ const routes: Routes = [
         component: ApprovalHrComponent,
       },
     ],
-  }
+  },
 ];
-
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-  ]
+  imports: [CommonModule, RouterModule.forChild(routes)],
 })
-
-export class CodxApprovelModule { }
+export class CodxApprovelModule {}

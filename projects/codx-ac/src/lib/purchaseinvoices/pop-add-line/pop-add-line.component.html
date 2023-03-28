@@ -1,0 +1,124 @@
+<codx-form #form [headerText]="" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" subToolbarCss="text-end" [subToolbar]="subToolbar" [data]="purchaseInvoicesLines">
+</codx-form>
+<ng-template #subToolbar>
+    <div class="d-flex justify-content-start me-2">
+        <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+          <i *ngIf="type == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="type == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+        <div class="row mt-2">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="ItemID"></codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                  field="itemID">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <codx-label [formModel]="form.formModel" default="Tên mặt hàng"></codx-label>
+                <codx-input [disabled]="true" crrValue="" type="text"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                  field="umid">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="IDIM4"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                      field="idiM4">
+                    </codx-input>
+                  </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="Quantity"></codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                  field="quantity">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="UnitPrice"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                      field="unitPrice">
+                    </codx-input>
+                  </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="NetAmt"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                      field="netAmt">
+                    </codx-input>
+                  </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="VATID"></codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                  field="vatid">
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="VATAmt"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                      field="vatAmt">
+                    </codx-input>
+                  </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DiscAmt"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                      field="discAmt">
+                    </codx-input>
+                  </div>
+            </div>
+          </div>
+    </ng-container>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end me-3">
+    <div class="ms-2">
+      <button type="button" class="btn btn-light-primary">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+      </button>
+    </div>
+    <div class="ms-2">
+      <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

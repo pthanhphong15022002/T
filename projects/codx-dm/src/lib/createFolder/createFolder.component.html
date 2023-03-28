@@ -360,11 +360,7 @@
                         class="test-check"
                         type="switch"
                         style="width: 100%"
-                        [checked]="
-                          !this.fileEditing?.viewThumb
-                            ? false
-                            : this.fileEditing?.viewThumb
-                        "
+                        [checked]="viewThumb"
                         field="createSubFolder"
                         [disabled]="
                           this.updateRight == false || this.propertiesFolder

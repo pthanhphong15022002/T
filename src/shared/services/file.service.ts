@@ -271,10 +271,9 @@ export class FileService implements OnDestroy {
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
         this.options.entityName = "DM_FileInfo";      
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
-        var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
+        return this.api.execSv<FileInfo[]>("DM","DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
         // var fileIbfo = data[0]
       //  console.log(data);
-        return data;
     }
 
 

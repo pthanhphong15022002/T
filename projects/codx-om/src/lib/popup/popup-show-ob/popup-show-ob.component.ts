@@ -361,7 +361,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      [obRecID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
+      [this.dataOB, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle,this.okrVll],
       '',
       dModel
     );

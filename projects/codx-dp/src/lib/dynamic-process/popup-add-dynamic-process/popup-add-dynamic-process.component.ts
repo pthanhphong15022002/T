@@ -1916,7 +1916,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepEdit = step;
       this.stepName = this.stepNew['stepName'];
     }
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 350);
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
   }
 
   saveStep() {
