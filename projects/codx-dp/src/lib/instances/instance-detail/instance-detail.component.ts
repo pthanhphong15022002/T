@@ -343,6 +343,10 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
+  getbackgroundColor(step){
+    return '--primary-color:' +  step?.backgroundColor;
+  }
+
   getColorStepName(status: string) {
     if (status === '1') {
       return 'step current';
@@ -357,6 +361,7 @@ export class InstanceDetailComponent implements OnInit {
     }
     return 'step';
   }
+  
   getReasonByStepId(stepId: string) {
     var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
     return this.listSteps[idx];

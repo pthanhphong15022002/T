@@ -108,6 +108,9 @@ export class AddApproversComponent extends UIComponent {
 
   ngAfterViewInit() {
     if (this.form) {
+      if (this.form?.formGroup?.controls['groupType'].value == '3') {
+        this.isGroupType3 = true;
+      }
       this.form?.formGroup?.controls['groupType'].valueChanges.subscribe(
         (crrValue) => {
           this.isGroupType3 = crrValue == '3';
@@ -193,8 +196,12 @@ export class AddApproversComponent extends UIComponent {
           this.dialog.close(this.master);
           // });
         } else {
-          this.dialog.close();
+          this.dialog.dataService.hasSaved = true;
         }
+
+        // else {
+        //   this.dialog.close();
+        // }
       });
   }
 
@@ -208,42 +215,49 @@ export class AddApproversComponent extends UIComponent {
         lstMemID.push(mem.memberID);
       });
       //co phan quyen
+
       if (groupType == '3') {
-        this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
-          if (res != null) {
-            this.notiService.alertCode('AD023', null, res).subscribe((e) => {
-              if (e?.event?.status == 'Y') {
-                this.adService
-                  .getListValidOrderForModules(
-                    this.lstChangeFunc,
-                    this.members?.length
-                  )
-                  .subscribe((lstTNMDs: tmpTNMD[]) => {
-                    this.lstChangeFunc = lstTNMDs;
-                    if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                      this.notiService.notifyCode('AD017');
-                    } else {
-                      this.saveMember(groupType);
-                    }
-                  });
+        if (this.lstChangeFunc.length != 0) {
+          this.adService
+            .getListValidOrderForModules(
+              this.lstChangeFunc,
+              this.members?.length
+            )
+            .subscribe((lstTNMDs: tmpTNMD[]) => {
+              this.lstChangeFunc = lstTNMDs;
+              if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+                this.notiService.notifyCode('AD017');
+                this.dialog.dataService.hasSaved = true;
+              } else {
+                this.saveMember(groupType);
               }
             });
-          } else {
-            this.adService
-              .getListValidOrderForModules(
-                this.lstChangeFunc,
-                this.members?.length
-              )
-              .subscribe((lstTNMDs: tmpTNMD[]) => {
-                this.lstChangeFunc = lstTNMDs;
-                if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                  this.notiService.notifyCode('AD017');
-                } else {
-                  this.saveMember(groupType);
-                }
-              });
-          }
-        });
+        } else {
+          this.saveMember(groupType);
+        }
+        // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
+        //   if (res != null) {
+        //     this.notiService.notifyCode('AD022', null, res);
+        //   } else {
+        //     if (this.lstChangeFunc.length != 0) {
+        //       this.adService
+        //         .getListValidOrderForModules(
+        //           this.lstChangeFunc,
+        //           this.members?.length
+        //         )
+        //         .subscribe((lstTNMDs: tmpTNMD[]) => {
+        //           this.lstChangeFunc = lstTNMDs;
+        //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+        //             this.notiService.notifyCode('AD017');
+        //           } else {
+        //             this.saveMember(groupType);
+        //           }
+        //         });
+        //     } else {
+        //       this.saveMember(groupType);
+        //     }
+        //   }
+        // });
       } else {
         this.saveMember(groupType);
       }
@@ -263,12 +277,6 @@ export class AddApproversComponent extends UIComponent {
     opt.data = this.master;
     return true;
     // }
-  }
-  //#endregion
-
-  //#region Test
-  show() {
-    console.log('form', this.form);
   }
   //#endregion
 

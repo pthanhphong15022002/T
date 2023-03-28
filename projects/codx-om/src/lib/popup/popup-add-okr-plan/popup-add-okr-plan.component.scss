@@ -8,7 +8,7 @@
 }
 
 .om-input:focus {
-    border: solid 1px white;
+    border: solid 1px white  !important;
 }
 
 codx-input {
@@ -20,16 +20,29 @@ input {
 }
 
 .e-input .e-float-input input {
+    border-width: 0px !important;
+}
+.e-input-group, .e-control-wrapper, .e-editable-elements{
+    
+    border: solid 1px white  !important;
+}
+#om-input-text codx-inplace div input {
+    border: solid 1px white !important;
+    border-width: 0px !important;
+}
+#om-input-text {
+    width: 100%;
+    text-align: left;
+}
+.e-input-group ,.e-control-wrapper ,.e-editable-elements{
+    
+    border: solid 1px white !important;
+    border-width: 0px !important;
+}
+.om-input div input {
 
     border-width: 0px !important;
 }
-
-#om-input-text div input {
-
-    border-width: 0px !important;
-}
-
-
 .w-10{
     width: 10%;
 }
