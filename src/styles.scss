@@ -2115,3 +2115,10 @@ codx-input .rte-placeholder{
   margin-right: 10px!important;
   margin-bottom: 10px!important;
 }
+
+.e-kanban .e-kanban-table .e-header-cells.e-collapsed .e-column-collapse {
+  color: var(--primary-light);
+}
+.e-grid .e-gridheader {
+  border-bottom-color:var(--border-list);
+}
