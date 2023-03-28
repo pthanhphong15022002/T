@@ -55,7 +55,7 @@
 </div>
 
 <ng-template #viewCustomFields let-data>
-  <div  id="{{titleDefault?dataStep.recID : 'v-'+data.recID}}" class='show-main' (dblclick)="clickInput(data.recID,dataStep,true)">
+  <div  id="{{data.recID}}" class='show-main' (dblclick)="clickInput(data.recID,dataStep,true)">
     <div class="fw-bold mb-1">
       {{ data.title }}
     </div>
