@@ -36,7 +36,6 @@
 	cursor: default;
 	margin-right: 4px;
 	height: 34px;
-	text-indent: 16px;
 	min-width: 180px;
 	position: relative;
 	background-color: #d9e3f7;
@@ -50,7 +49,9 @@
 	align-items: center;
 	padding-top: 2px;
 }
-
+.step-name{
+	text-align: left;
+}
 .arrow-steps .step:after,
 .arrow-steps .step:before {
 	content: " ";
