@@ -203,7 +203,8 @@ export class FieldDetailComponent implements OnInit {
     }
     if (isClick) {
       this.elmIDCrr = eleID;
-      this.inputElmIDCF.emit(this.elmIDCrr);
+      this.currentElmID = eleID
+      this.inputElmIDCF.emit(this.elmIDCrr);      
     } else this.elmIDCrr = null;
   }
 
