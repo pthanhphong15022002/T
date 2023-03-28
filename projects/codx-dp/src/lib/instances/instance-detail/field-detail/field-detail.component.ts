@@ -106,11 +106,15 @@ export class FieldDetailComponent implements OnInit {
   }
 
   popupCustomField(data) {
-    if(this.currentElmID){
+    if(this.currentElmID && this.currentElmID!= this.elmIDCrr){
       this.clickInput(this.currentElmID) ;
-      this.currentElmID= null;
-      this.inputElmIDCF.emit(null)
     }
+    if(this.elmIDCrr ){
+      this.clickInput(this.elmIDCrr) ;
+    }
+    this.elmIDCrr= this.currentElmID= null;    
+    this.inputElmIDCF.emit(null)
+    if(this.currentElmID)
     var list = [];
     if (data && data.length > 0) {
       list = data;
@@ -203,7 +207,6 @@ export class FieldDetailComponent implements OnInit {
     }
     if (isClick) {
       this.elmIDCrr = eleID;
-      this.currentElmID = eleID
       this.inputElmIDCF.emit(this.elmIDCrr);      
     } else this.elmIDCrr = null;
   }
@@ -292,8 +295,8 @@ export class FieldDetailComponent implements OnInit {
       if (res) {
         if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
         this.notiService.notifyCode('SYS007');
-        this.inputElmIDCF.emit(null);
-        this.clickInput(field.recID);
+        this.clickInput(this.elmIDCrr);
+        this.inputElmIDCF.emit(null);      
       } else {
         this.notiService.notifyCode('SYS021');
         if (idx != -1) this.dataStep.fields[idx].dataValue = this.dataValueOld;
