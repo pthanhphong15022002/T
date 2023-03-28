@@ -52,6 +52,7 @@ export class PopupAddInstanceComponent implements OnInit {
   isApplyFor: string = ''; // this is instance opportunity general
 
   totalDaySteps: number;
+  totalHourSteps: number;
   dateOfDuration: any;
   menuGeneralInfo = {
     icon: 'icon-info',
@@ -112,6 +113,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.listStepCbx = dt?.data[5];
     this.totalDaySteps = dt?.data[6];
     this.autoName = dt?.data[9];
+    this.totalHourSteps = dt?.data[10];
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data[7];
@@ -163,7 +165,7 @@ export class PopupAddInstanceComponent implements OnInit {
   ngOnInit(): void {
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
-      this.handleEndDayInstnace(this.totalDaySteps);
+      this.handleEndDayInstnace(this.totalDaySteps,this.totalHourSteps);
     } else if (this.action === 'edit') {
       this.oldEndDate = this.instance?.endDate;
     }
@@ -338,10 +340,6 @@ export class PopupAddInstanceComponent implements OnInit {
         }
       });
   }
-  deleteListReason(listStep: any): void {
-    listStep.pop();
-    listStep.pop();
-  }
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0]?.stepID;
   }
@@ -365,11 +363,15 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return true;
   }
-  handleEndDayInstnace(durationDay: number) {
+  handleEndDayInstnace(durationDay: any, totalHourSteps:any) {
     this.instance.endDate = new Date();
     this.instance.endDate.setDate(
       this.instance.endDate.getDate() + durationDay
     );
+    this.instance.endDate.setHours(
+      this.instance.endDate.getHours() + totalHourSteps
+    );
+
     this.dateOfDuration = JSON.parse(JSON.stringify(this.instance?.endDate));
   }
   checkEndDayInstance(endDate, durationDay) {
@@ -409,34 +411,5 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
-  }
-
-
-  setTimeHoliday(starDay: Date, endDay: Date, dayOff: string): Date {
-    if (dayOff && (dayOff.includes('7') || dayOff.includes('8'))) {
-        const isSaturday = dayOff.includes('7');
-        const isSunday = dayOff.includes('8');
-        let day = 0;
-
-        for (let currentDate = new Date(starDay); currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
-            if (currentDate.getDay() === 6 && isSaturday) {
-                day++;
-            }
-            if (currentDate.getDay() === 0 && isSunday) {
-                day++;
-            }
-        }
-
-
-        endDay.setDate(endDay.getDate() + day);
-
-        if (endDay.getDay() === 0 && isSunday) {
-            endDay.setDate(endDay.getDate() + 1);
-        }
-
-        return endDay;
-    }
-
-    return endDay;
   }
 }
