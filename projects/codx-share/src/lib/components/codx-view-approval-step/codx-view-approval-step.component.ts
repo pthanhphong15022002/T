@@ -28,11 +28,11 @@ import {
 } from 'projects/codx-es/src/lib/codx-es.service';
 
 @Component({
-  selector: 'codx-approval-step',
-  templateUrl: './codx-approval-step.component.html',
-  styleUrls: ['./codx-approval-step.component.scss'],
+  selector: 'codx-view-approval-step',
+  templateUrl: './codx-view-approval-step.component.html',
+  styleUrls: ['./codx-view-approval-step.component.scss'],
 })
-export class CodxApprovalStepComponent
+export class CodxViewApprovalStepComponent
   implements OnInit, OnChanges, AfterViewInit
 {
   @Input() transID: string = '';

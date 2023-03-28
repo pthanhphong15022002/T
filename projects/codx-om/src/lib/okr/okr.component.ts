@@ -124,6 +124,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   targetsModel: any;
   groupModel: any;
   curOrgName: any;
+  periodName: any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -439,12 +440,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.toDate = data.toDate;
     if (data.type == 'year') {
       this.periodID = this.year.toString();
+      this.periodName = this.periodID
       this.interval = 'Y';
     } else if (data.type == 'quarter') {
       this.periodID = data.text;
+      this.periodName = this.periodID
       this.interval = 'Q';
     } else if (data.type == 'month') {
       this.periodID = (date.getMonth() + 1).toString();
+      this.periodName = data?.text;
       this.interval = 'M';
     }
     this.setTitle();
@@ -514,7 +518,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.deptPlanNull = this.deptName;
         this.orgPlanNull = this.orgName;
         this.persPlanNull = this.persName;
-        this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodID);
+        this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodName);
         this.compPlanNull = this.notifyPlanNull.replace('{0}', this.compName);
         this.deptPlanNull = this.notifyPlanNull.replace('{0}', this.deptName);
         this.orgPlanNull = this.notifyPlanNull.replace('{0}', this.orgPlanNull);
@@ -541,7 +545,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
     }
     this.notifyPlanNull.replace('{0}', this.curOrg);
-    this.notifyPlanNull.replace('{1}', this.periodID);
+    this.notifyPlanNull.replace('{1}', this.periodName);
   }
 
   renderOB(ob: any, isAdd: boolean) {
