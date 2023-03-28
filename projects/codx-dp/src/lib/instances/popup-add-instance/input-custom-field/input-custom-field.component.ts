@@ -27,16 +27,16 @@ export class InputCustomFieldComponent implements OnInit {
   @Input() formModel: any = null;
   @Input() disable = false;
   @Input() viewFieldName = false;
- // @Input() readonly = false;
+  // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  
+
   errorMessage = '';
   showErrMess = false;
   //data tesst
   typeControl = 'text';
   currentRate = 1;
   hovered = 0;
- 
+
   min = 0;
   max = 9999999;
   formatDate = 'd';
@@ -79,54 +79,57 @@ export class InputCustomFieldComponent implements OnInit {
   }
 
   valueChange(e) {
-      if (this.customField.isRequired) {
-        if (!e || !e.data || e.data.toString().trim() == '') {
-          this.cache.message('SYS028').subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
+    let checkNull = !e || !e.data || e.data.toString().trim() == '';
+    if (this.checkValid) {
+      if (this.customField.isRequired && checkNull) {
+        this.cache.message('SYS028').subscribe((res) => {
+          if (res) this.errorMessage = res.customName || res.defaultName;
+          this.showErrMess = true;
+        });
+        return;
+      } else this.showErrMess = false;
+    } else this.showErrMess = false;
+
+    switch (this.customField.dataType) {
+      case 'T':
+        if (this.customField.dataFormat == 'E') {
+          let email = e.data;
+          var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+          // var mailformat =
+          //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+          if (!email.toLocaleLowerCase().match(mailformat)) {
+            this.cache.message(this.messCodeEmail).subscribe((res) => {
+              if (res) {
+                this.errorMessage = res.customName || res.defaultName;
+              }
+              this.changeDef.detectChanges();
+            });
             this.showErrMess = true;
-          });
-          return;
-        } else this.showErrMess = false;
-      }
-      switch (this.customField.dataType) {
-        case 'T':
-          if (this.customField.dataFormat == 'E') {
-            let email = e.data;
-            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            // var mailformat =
-            //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if (!email.toLocaleLowerCase().match(mailformat)) {
-              this.cache.message(this.messCodeEmail).subscribe((res) => {
-                if (res) {
-                  this.errorMessage = res.customName || res.defaultName;
-                  this.showErrMess = true;
-                }
-                this.changeDef.detectChanges();
-                return;
-              });
-            } else this.showErrMess = false;
-          }
-          //format so dien thoai
-          if (this.customField.dataFormat == 'P') {
-            let phone = e.data;
-            var phonenumberFormat =
-              /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-            // //Thêm trường hợp +84
-            // var phonenumberFormat =
-            //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
-            if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
-              this.cache.message(this.messCodePhoneNum).subscribe((res) => {
-                if (res) {
-                  this.errorMessage = res.customName || res.defaultName;
-                  this.showErrMess = true;
-                }
-                this.changeDef.detectChanges();
-                return;
-              });
-            } else this.showErrMess = false;
-          }
-          break;
-      }
+
+            if (!this.checkValid) return;
+          } else this.showErrMess = false;
+        }
+        //format so dien thoai
+        if (this.customField.dataFormat == 'P') {
+          let phone = e.data;
+          var phonenumberFormat =
+            /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+          // //Thêm trường hợp +84
+          // var phonenumberFormat =
+          //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
+          if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
+            this.cache.message(this.messCodePhoneNum).subscribe((res) => {
+              if (res) {
+                this.errorMessage = res.customName || res.defaultName;
+              }
+              this.changeDef.detectChanges();
+            });
+            this.showErrMess = true;
+            if (!this.checkValid) return;
+          } else this.showErrMess = false;
+        }
+        break;
+    }
 
     this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
@@ -164,10 +167,10 @@ export class InputCustomFieldComponent implements OnInit {
   rateChange(e) {
     //rank
     // if (this.customField.dataFormat == 'R') {
-      this.valueChangeCustom.emit({
-        e: e,
-        data: this.customField,
-      });
+    this.valueChangeCustom.emit({
+      e: e,
+      data: this.customField,
+    });
     //  return;
     //}//
   }

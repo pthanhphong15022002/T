@@ -77,29 +77,14 @@ export class PopupCustomFieldComponent implements OnInit {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
-          this.cache.message('SYS037').subscribe((res) => {
-            if (res) {
-              let errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-              // this.notiService.notifyCode(
-              //   'SYS009',
-              //   0,
-              //   '"' + field.title + '"'
-              // );
-            }
-          });
+          this.notiService.notifyCode('SYS037');
           return false;
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
         if (!field.dataValue.toLowerCase().match(validPhone)) {
-          this.cache.message('RS030').subscribe((res) => {
-            if (res) {
-              let errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-            }
-          });
+          this.notiService.notifyCode('RS030');
           return false;
         }
       }

@@ -9,7 +9,7 @@
   <span *ngIf="viewFieldName && customField.fieldName">
     {{ "(" + customField.fieldName + ")" }}
   </span>
-  <span *ngIf="customField.isRequired && checkValid">
+  <span *ngIf="customField.isRequired">
     <codx-label
       class="text-danger"
       name="attentionIsRequired"
@@ -198,6 +198,6 @@
   </codx-attachment>
 </ng-container>
 
-<div *ngIf="showErrMess && checkValid" class="errorMessage text-danger ms-3" data-field="">
+<div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
   {{ errorMessage }}
 </div>
