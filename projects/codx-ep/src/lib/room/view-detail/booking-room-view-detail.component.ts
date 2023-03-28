@@ -186,7 +186,7 @@ export class BookingRoomViewDetailComponent
     }
     if (this.type == '1') {
       this.allowUploadFile = false;
-      for (let u of res.bookingAttendees) {
+      for (let u of res.resources) {
         if (
           res?.createdBy == this.authService?.userValue?.userID ||
           this.authService?.userValue?.userID == u?.userID

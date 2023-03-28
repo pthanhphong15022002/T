@@ -63,7 +63,7 @@ import { CodxCommentsComponent } from './components/codx-comments/codx-comments.
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
-import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { CodxViewApprovalStepComponent } from './components/codx-view-approval-step/codx-view-approval-step.component';
 import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
 import { MessengerDrawerComponent } from './layout/drawers/messenger-drawer/messenger-drawer.component';
 import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner/chat-inner.component';
@@ -188,7 +188,7 @@ const T_Component: Type<any>[] = [
   DynamicSettingComponent,
   DynamicFormComponent,
   ApprovalTabsComponent,
-  CodxApprovalStepComponent,
+  CodxViewApprovalStepComponent,
   CodxApproveStepsComponent,
   NotifyDrawerComponent,
   NotifyDrawerSliderComponent,

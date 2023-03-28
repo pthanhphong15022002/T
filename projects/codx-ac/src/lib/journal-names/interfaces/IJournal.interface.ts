@@ -31,7 +31,7 @@ export interface IJournal {
     warehouseIssue: string;
     warehouseReceipt: string;
     mixedPayment: any;
-    postSubControl: boolean;
+    postSubControl: any;
     postSubDetail: string;
     objectControl: string;
     settlementRule: string;
@@ -58,9 +58,9 @@ export interface IJournal {
     exported: boolean;
     postControl: any;
     qtyControl: boolean;
-    assetControl: boolean;
+    assetControl: any;
     loanControl: boolean;
-    projectControl: boolean;
+    projectControl: any;
     inputControl: string;
     invoiceControl: string;
     productionControl: string;

@@ -101,6 +101,7 @@ export class PopupAddOBComponent extends UIComponent {
   okrRecID: any;
   shareModel: any;
   curUser: any;
+  groupModel: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -116,6 +117,7 @@ export class PopupAddOBComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.oldOB = dialogData.data[3];
     this.okrPlan = dialogData.data[4];
+    this.groupModel = dialogData.data[5];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
     
@@ -240,7 +242,7 @@ export class PopupAddOBComponent extends UIComponent {
     }
   }
   methodAdd(ob:any,listShares:any) {
-    this.codxOmService.addOB(ob,listShares).subscribe((res: any) => {
+    this.codxOmService.addOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
@@ -250,7 +252,7 @@ export class PopupAddOBComponent extends UIComponent {
   }
 
   methodEdit(ob:any,listShares:any) {
-    this.codxOmService.editOB(ob,listShares).subscribe((res: any) => {
+    this.codxOmService.editOB(ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;

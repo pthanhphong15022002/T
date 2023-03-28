@@ -2087,3 +2087,14 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
   min-height: auto;
   padding: 10px;
 }
+.aside-secondary .menu-fit{
+  width: 225px;
+}
+.codx_cardcenter .popover{
+  white-space: nowrap;
+}
+
+.codx-card-custom .stepper-body {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
