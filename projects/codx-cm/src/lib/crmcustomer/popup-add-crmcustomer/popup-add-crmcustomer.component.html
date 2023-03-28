@@ -13,51 +13,25 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0101' ? 'CustomerID' : funcID == 'CM0103' ? 'PartnerID' : 'OpponentID'"
-          [default]="funcID == 'CM0101' ? 'Mã khách hàng' : funcID == 'CM0103' ? 'Mã tối tác' : 'Mã đối thủ'">
+          [fiedName]="funcID == 'CM0101' ? 'CustomerID' : (funcID == 'CM0103' ? 'PartnerID' : 'OpponentID')">
         </codx-label>
-        <codx-input type="text" [crrValue]="data?.employeeID" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel"
-          [field]="funcID == 'CM0101' ? 'customerID' : funcID == 'CM0103' ? 'partnerID' : 'opponentID'">
+        <codx-input [field]="funcID == 'CM0101' ? 'customerID' : funcID == 'CM0103' ? 'partnerID' : 'opponentID'"
+          [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
         <codx-label [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0101' ? 'CustomerName' : funcID == 'CM0103' ? 'PartnerName' : 'OpponentName'"
-          default="Tên">
+          [fiedName]="funcID == 'CM0101' ? 'CustomerName' : funcID == 'CM0103' ? 'PartnerName' : 'OpponentName'">
         </codx-label>
-        <codx-input type="text" [crrValue]="data?.customerName" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel"
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
           [field]="funcID == 'CM0101' ? 'customerName' : funcID == 'CM0103' ? 'partnerName' : 'opponentName'">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="ShortName" default="Tên viết tắt">
+        <codx-label [formModel]="form.formModel" fiedName="ShortName">
         </codx-label>
-        <codx-input type="text" [crrValue]="data?.shortName" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="shortName">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="shortName">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <div class="d-flex justify-content-between">
@@ -82,62 +56,30 @@
         <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Website" default="Website">
+        <codx-label [formModel]="form.formModel" fiedName="Website">
         </codx-label>
-        <codx-input type="text" [crrValue]="data?.website" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="website">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="website">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
-        <codx-label [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0101' ? 'CustomerForm' : 'PartnerForm'"
-          [default]="funcID == 'CM0101' ? 'Là khách hàng từ' : 'Là đối tác từ'">
+        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'">
         </codx-label>
-        <codx-input type="datetime" style="width:100%" format="d" [crrValue]="data?.customerForm"
-          (valueChange)="valueChange($event)" [formModel]="form.formModel" [field]="funcID == 'CM0101' ? 'customerForm' : 'partnerForm'">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
+          [field]="funcID == 'CM0101' ? 'customerFrom' : 'partnerFrom'">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Source" default="Nguồn khách hàng">
+        <codx-label [formModel]="form.formModel" fiedName="Source">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.source" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="source">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="source">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Memo" default="Mô tả">
+        <codx-label [formModel]="form.formModel" fiedName="Memo">
         </codx-label>
-        <codx-input type="textarea" format="ed2" [crrValue]="data?.memo" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="memo">
+
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="memo">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
     </div>
     <div class="col-6">
@@ -146,116 +88,52 @@
         <ng-container [ngTemplateOutlet]="avata"></ng-container>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="TaxCode" default="Mã số thuế">
+        <codx-label [formModel]="form.formModel" fiedName="TaxCode">
         </codx-label>
-        <codx-input type="text" [crrValue]="data?.taxCode" (valueChange)="valueChange($event)" [formModel]="form.formModel"
-          field="taxCode">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="taxCode">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="BirthDay" default="Ngày thành lập">
+        <codx-label [formModel]="form.formModel" fiedName="Birthday">
         </codx-label>
-        <codx-input type="datetime" style="width:100%" format="d" [crrValue]="data?.birthDay"
-          (valueChange)="valueChange($event)" [formModel]="form.formModel" field="birthDay">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="birthday">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Sizing" default="Quy mô nhân sự">
+        <codx-label [formModel]="form.formModel" fiedName="Sizing">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.sizing" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="sizing">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sizing">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Type" default="Loại hình">
+        <codx-label [formModel]="form.formModel" fiedName="Type">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.type" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="type">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="type">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Career" default="Ngành nghề">
+        <codx-label [formModel]="form.formModel" fiedName="Career">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.career" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="career">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="career">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Revenue" default="Doanh thu">
+        <codx-label [formModel]="form.formModel" fiedName="Revenue">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.revenue" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="revenue">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="revenue">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="BankAccount" default="Tài khoản ngân hàng">
+        <codx-label [formModel]="form.formModel" fiedName="BankAccount">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.bankAccount" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="bankAccount">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="bankAccount">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="BankName" default="Mở tại ngân hàng">
+        <codx-label [formModel]="form.formModel" fiedName="BankName">
         </codx-label>
-        <codx-input type="valuelist" [crrValue]="data?.bankName" (valueChange)="valueChange($event)"
-          [formModel]="form.formModel" field="bankName">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="bankName">
         </codx-input>
-        <!-- <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="CustomerID"
-          [disabled]="false"
-        >
-        </codx-input> -->
       </div>
     </div>
   </div>
@@ -269,38 +147,23 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="Advantage" default="Ưu điểm">
           </codx-label>
-          <codx-input type="textarea" format="ed2" [crrValue]="data?.advantage" (valueChange)="valueChange($event)"
-            [formModel]="form.formModel" field="advantage">
+          <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="advantage">
           </codx-input>
-          <!-- <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="CustomerID"
-            [disabled]="false"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="Disadvantage" default="Nhược điểm">
           </codx-label>
-          <codx-input type="textarea" format="ed2" [crrValue]="data?.disadvantage" (valueChange)="valueChange($event)"
-            [formModel]="form.formModel" field="disadvantage">
+          <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="disadvantage">
           </codx-input>
-          <!-- <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="CustomerID"
-            [disabled]="false"
-          >
-          </codx-input> -->
         </div>
-      </div>    </div>
+      </div>
+    </div>
   </div>
   <div class="d-flex justify-content-between">
     <div class="mb-2">
-      <codx-label name="lblAddress" class="text-dark fw-bold" [formModel]="dialog.formModel" default="Địa chỉ">
+      <codx-label fiedName="Address" class="text-dark fw-bold" [formModel]="form.formModel" default="Địa chỉ">
       </codx-label>
     </div>
     <div class="mb-2">

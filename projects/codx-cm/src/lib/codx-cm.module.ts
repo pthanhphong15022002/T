@@ -46,7 +46,7 @@ const routes: Routes = [
         component: TestComponetComponent,
       },
       {
-        path: 'customermanagement/:funcID',
+        path: 'customers/:funcID',
         component: CrmCustomerComponent,
       },
       {
