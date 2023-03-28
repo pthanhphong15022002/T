@@ -27,6 +27,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
   hasInvoice: boolean = false;
+  cashBookName: string = '';
+  cashBookName2: string = '';
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -113,7 +115,17 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Event
   handleInputChange(e, prop: string = 'cashTransfer') {
-    console.log(e);
+    let field = e.field.toLowerCase();
+
+    if (field === 'cashbookid') {
+      let name = e.component.itemsSelected[0].CashBookName;
+      this.cashBookName = name;
+    }
+
+    if (field === 'cashbookid2') {
+      let name = e.component.itemsSelected[0].CashBookName;
+      this.cashBookName2 = name;
+    }
 
     if (e.field) {
       this[prop][e.field] =
@@ -124,7 +136,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     const fields: string[] = ['currencyid', 'cashbookid', 'payamount2'];
 
-    if (fields.includes(e.field.toLowerCase())) {
+    if (fields.includes(field)) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
           e.field,
@@ -286,6 +298,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Function
   getCashBookNameById(id: string): string {
+    console.log('getCashBookNameById', id);
     return this.cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
   }
 

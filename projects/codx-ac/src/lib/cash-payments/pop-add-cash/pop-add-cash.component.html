@@ -16,6 +16,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-2 col-2">
       <codx-input
+        [disabled]="formType === 'edit'"
         [Group]="form.formGroup"
         field="voucherType"
         [formModel]="form.formModel"
@@ -383,6 +384,7 @@
       <div class="ms-3 input-circle input-sm">
         <div *ngIf="form?.formGroup">
           <codx-input
+            [disabled]="true"
             [Group]="form.formGroup"
             field="status"
             [formModel]="form.formModel"
