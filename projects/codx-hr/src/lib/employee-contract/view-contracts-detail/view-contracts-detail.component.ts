@@ -378,8 +378,13 @@ export class ViewDetailComponent implements OnInit {
               this.formModel.funcID,
               'Hợp đồng lao động'
             )
-            .subscribe((res) => {
-              console.log('rereqweqwrererererer', res);
+            .subscribe((result) => {
+              console.log('ok', result);
+              if(result?.msgCodeError == null && result?.rowCount){
+                this.notify.notifyCode('ES007');
+                this.itemDetail.approvalStatus = '3';
+              } else
+                this.notify.notifyCode(result?.msgCodeError);
             });
         }
       });
