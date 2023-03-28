@@ -192,7 +192,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.isSaveTimeGroup = true;
     }
 
-    if (startDate >new Date(this.groupTask['startDate'])) {
+    if (startDate < new Date(this.groupTask['startDate'])) {
       this.isSaveTimeGroup = false;
       this.notiService.notifyCode('DP020');
     }else{

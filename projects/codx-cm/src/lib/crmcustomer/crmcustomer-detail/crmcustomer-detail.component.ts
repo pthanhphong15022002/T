@@ -98,4 +98,16 @@ export class CrmcustomerDetailComponent implements OnInit {
       opt
     );
   }
+
+  getNameCrm(data){
+    if(this.funcID == "CM0101"){
+      return data.customerName;
+    }else if(this.funcID == "CM0102"){
+      return data.contactName;
+    }else if(this.funcID == "CM0103"){
+      return data.partnerName;
+    }else{
+      return data.opponentName;
+    }
+  }
 }
