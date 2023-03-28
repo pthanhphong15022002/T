@@ -3,18 +3,24 @@
     (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
 </codx-treeview>
 <ng-template #templateTreeView let-item>
-    <div class="d-flex flex-row align-items-center">
-        <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px;background:#3699FF">
-            <span class="icon-home justify-content-center align-items-center text-light"></span>
-        </div>        
-        <span class="ps-2 fs-5 fw-bolder">{{item?.orgUnitName}}</span>
-    </div>
-    <!--Content-->
-    <div class="px-25" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
-
-      <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
-      </view-okr>
-    </div>
-
-      <!--Content-->
+    <div (click)="clickTreeNode($event)" class="mb-2">
+        <div class="d-flex flex-row align-items-center">
+            <div *ngIf="item?.orgUnitType=='1'" class="d-flex justify-content-center align-items-center" style="height:30px;width:30px;background:#3699FF">
+                <span class="icon-home justify-content-center align-items-center text-light"></span>
+            </div>       
+            <div *ngIf="item?.orgUnitType=='4'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#ff3636">            
+                <span class="icon-account_balance_wallet justify-content-center align-items-center text-light"></span>
+            </div>  
+            <div *ngIf="item?.orgUnitType=='6'" class="d-flex justify-content-center align-items-center rounded-circle" style="height:30px;width:30px;background:#3699FF">            
+                <span class="icon-groups justify-content-center align-items-center text-light"></span>
+            </div>   
+            <span class="ps-2 fs-5 fw-bolder">{{item?.orgUnitName}}</span>
+        </div>
+        <!--Content-->
+        <div class="" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
+    
+          <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
+          </view-okr>
+        </div>
+    </div>    
 </ng-template>

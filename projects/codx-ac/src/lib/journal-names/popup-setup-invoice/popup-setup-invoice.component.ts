@@ -25,6 +25,8 @@ export class PopupSetupInvoiceComponent extends UIComponent {
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
+
+    this.data = dialogData.data.journal;
   }
   //#endregion
 

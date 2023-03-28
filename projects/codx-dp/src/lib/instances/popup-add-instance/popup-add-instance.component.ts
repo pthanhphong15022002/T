@@ -124,7 +124,8 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    } else if (this.action === 'add' || this.action === 'copy') {
+    }
+    else if (this.action === 'add' || this.action === 'copy') {
       this.lstParticipants = dt?.data[7];
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         var check = this.lstParticipants.some(
@@ -235,7 +236,7 @@ export class PopupAddInstanceComponent implements OnInit {
                 this.listStep[index].fields[idxField];
             } else
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
-          }          
+          }
         }
       }
     }
@@ -259,7 +260,7 @@ export class PopupAddInstanceComponent implements OnInit {
       option.data = [this.instance, this.listCustomFile];
     }
 
-   
+
     return true;
   }
   saveInstances() {

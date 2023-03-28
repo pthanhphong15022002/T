@@ -752,12 +752,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
         return this.fileService
           .addMultiFileObservable(
             this.fileUploadList,
+            this.formModel?.entityName,
             this.isDM,
             this.folder,
             this.fdID,
             this.fdName,
             this.parentID,
-            this.idField
+            this.idField,
           )
           .pipe(
             map((res) => {
@@ -936,6 +937,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var done = this.fileService
         .addMultiFile(
           this.fileUploadList,
+          this.formModel?.entityName,
           this.isDM,
           this.folder,
           this.fdID,
@@ -1061,6 +1063,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         this.fileService
                           .addMultiFile(
                             this.fileUploadList,
+                            this.formModel?.entityName,
                             this.isDM,
                             this.folder,
                             this.fdID,
@@ -1224,6 +1227,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var obj2 = from(this.fileService
               .addFileObservable(
                 fileItem,
+                this.formModel?.entityName,
                 this.isDM,
                 this.folder,
                 this.fdID,
@@ -1253,6 +1257,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     return  this.fileService
                     .addFileObservable(
                       fileItem,
+                      this.formModel?.entityName,
                       this.isDM,
                       this.folder,
                       this.fdID,
@@ -1470,11 +1475,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem, this.isDM , this.folder).toPromise();
+    var done = this.fileService.addFile(fileItem, this.formModel?.entityName, this.isDM , this.folder).toPromise();
     if (done) {
       done
         .then((item) => {
           if (item.status == 0) {
+            
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;
@@ -1491,7 +1497,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               files.push(Object.assign({}, res));
             }
             this.dmSV.listFiles = files;
-            if(this.dataFolder?.hasSubFolder)
+            if(this.dataFolder?.hasSubFolder || item.unit == 'isSubFolder')
             {
               this.dmSV.folderID = this.dataFolder.recID
               this.dmSV.refeshData.next(true);

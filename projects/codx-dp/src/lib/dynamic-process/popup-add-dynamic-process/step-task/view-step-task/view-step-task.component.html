@@ -15,11 +15,11 @@
   <div>
     <div
       [ngStyle]="getColorTile(dataInput)"
-      class="ps-1 d-flex justify-content-between align-items-center py-1"
+      class="d-flex justify-content-between align-items-center py-1"
     >
-      <h3 class="m-0">
+      <div class="fs-4 fw-bold text-dark ms-2 w-100">
         {{ dataInput["name"] }}
-      </h3>
+      </div>
       <div class="d-flex">
         <div class="d-flex align-items-center me-2">
           <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
@@ -62,8 +62,8 @@
             </codx-label>
           </div>
         </div>
-        <div class="d-flex align-items-center me-2">
-          <span class="icon-more_vert icon-18 me-1"></span>
+        <div class="d-flex align-items-center">
+          <span class="icon-more_vert icon-16"></span>
         </div>
       </div>
     </div>
