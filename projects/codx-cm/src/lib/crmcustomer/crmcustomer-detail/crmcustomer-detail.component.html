@@ -5,7 +5,7 @@
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
           <div class="me-3">
-            <codx-img [objectId]="dataSelected.recID" [objectType]="formModel.entityName" [width]="35">
+            <codx-img [objectId]="dataSelected.recID" [objectType]="entityName" [width]="35">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -34,8 +34,8 @@
                   <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-start">
-                <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+              <div class="d-flex flex-column align-items-start" *ngIf="dataSelected?.field">
+                <codx-tag [entityName]="entityName" [disabled]="true" [isEdit]="false"
                   [value]="dataSelected?.field">
                 </codx-tag>
               </div>
@@ -51,7 +51,7 @@
               </div>
               <div class="d-flex flex-grow-1 mb-4">
                 <div class="me-3">
-                  <codx-img [objectId]="item.recID" [objectType]="formModel.entityName" [width]="35">
+                  <codx-img [objectId]="item.recID" [objectType]="entityName" [width]="35">
                   </codx-img>
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
@@ -213,7 +213,7 @@
       </ng-template>
     </ng-template>
     <ng-template #tabs let-data>
-      <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
+      <codx-tabs [entityName]="entityName" [formModel]="formModel" [TabControl]="tabControl"
         [objectID]="dataSelected.recID" [funcID]="formModel.funcID" [dataTree]="treeTask"></codx-tabs>
     </ng-template>
   </codx-detail-tmp>

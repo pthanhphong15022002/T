@@ -16,20 +16,11 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="w-100 d-flex justify-content-between">
       <div class="mt-2 col-2">
-        <!-- <codx-input
-        [disabled]="formType === 'edit'"
-        [Group]="form.formGroup"
-        field="voucherType"
-        [formModel]="form.formModel"
-        (valueChange)="changeType($event)"
-      >
-      </codx-input> -->
         <codx-input
-          type="valuelist"
-          placeholder="Default valuelist"
-          ngDefaultControl
-          refValue="AC063"
+          [disabled]="formType === 'edit'"
+          [Group]="form.formGroup"
           field="voucherType"
+          [formModel]="form.formModel"
           (valueChange)="changeType($event)"
         >
         </codx-input>
