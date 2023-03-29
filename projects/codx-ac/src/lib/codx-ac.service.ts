@@ -5,9 +5,9 @@ import {
   CacheService,
   DataRequest,
   FormModel,
-  NotificationsService,
+  NotificationsService
 } from 'codx-core';
-import { filter, map, Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Transactiontext } from './models/transactiontext.model';
 
 @Injectable({
@@ -77,7 +77,7 @@ export class CodxAcService {
     }
     return newMemo;
   }
-  
+
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
@@ -130,7 +130,6 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        filter((p) => !!p),
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
       );

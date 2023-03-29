@@ -56,7 +56,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
   @Input() okrFM:any;
-  @Input() okrVll:any;
+  @Input() okrVll:any;  
+  @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner 
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
   isCollapsed = false;
@@ -150,6 +151,7 @@ export class OkrTargetsComponent implements OnInit {
   svgSKR=''
   Objs = [];
   Krs = [];
+  defaultOwner:string;
   progress: number = 0;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
@@ -201,6 +203,23 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   getCacheData() {
+    if(this.funcID== OMCONST.FUNCID.PERS){
+
+      this.codxOmService.getEmployeesByEmpID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
+        if (ownerInfo) {
+          this.defaultOwner=ownerInfo?.domainUser;
+        }
+      });
+    }
+    else{
+      this.codxOmService.getManagerByOrgUnitID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
+        if (ownerInfo) {
+          this.defaultOwner=ownerInfo?.domainUser;
+        }
+      });
+    }
+
+    
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -651,10 +670,12 @@ export class OkrTargetsComponent implements OnInit {
   //OBject
   addOB(popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
+    option.FormModel = this.formModelOB;    
+    let baseModel= {...this.groupModel};
+    baseModel.okrModel.owner=this.defaultOwner;
     let dialogOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,this.groupModel],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,baseModel],
       option
     );
     dialogOB.closed.subscribe((res) => {
@@ -706,12 +727,12 @@ export class OkrTargetsComponent implements OnInit {
   //KeyResults && SubKeyResult
   addKR(popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-
-    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;
-
+    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;    
+    let baseModel= {...this.groupModel};
+    baseModel.okrModel.owner=this.defaultOwner;
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,this.groupModel],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel],
       option
     );
     dialogKR.closed.subscribe((res) => {

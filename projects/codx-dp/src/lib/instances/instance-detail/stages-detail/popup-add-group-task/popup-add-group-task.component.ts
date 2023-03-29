@@ -76,13 +76,13 @@ export class PopupAddGroupTaskComponent implements OnInit {
       this.checkShow = !this.checkShow;
       return
     }
-    this.checkShow = !this.checkShow;
     data[event?.field] = event?.data?.fromDate;
     if (
       this.taskGroup['startDate'] > this.taskGroup['endDate'] &&
       this.taskGroup['endDate']
     ) {
       this.isSave = false;
+      this.checkShow = !this.checkShow;
       this.notiService.notifyCode('DP019');
     } else {
       this.isSave = true;
