@@ -169,7 +169,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     dataModel.formName = 'CMContacts';
     dataModel.gridViewName = 'grvCMContacts';
     dataModel.entityName = 'CM_Contacts';
-    dataModel.funcID = this.funcID;
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
     var dialog = this.callFc.openForm(
       PopupListContactsComponent,
@@ -197,7 +197,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     dataModel.formName = 'CMContacts';
     dataModel.gridViewName = 'grvCMContacts';
     dataModel.entityName = 'CM_Contacts';
-    dataModel.funcID = this.funcID;
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
     var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
