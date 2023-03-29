@@ -355,7 +355,7 @@
         [style]="{ 'justify-content': 'space-between' }"
         (valueList)="changeRoler($event, participant, 'P')"
         [vllShare]="'DP0331'"
-        [multiple]="false"
+        [multiple]="taskType == 'M' ? true :false"
         [listCombobox]="listCombobox"
         [type]="'all'"
       ></codx-user>

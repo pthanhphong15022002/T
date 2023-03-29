@@ -494,8 +494,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
-        console.log(this.stepList);
-
         if (res && res.update) {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -2655,7 +2653,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   onKeyDown(event: KeyboardEvent) {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
-      console.log('thuan');
     }
   }
 

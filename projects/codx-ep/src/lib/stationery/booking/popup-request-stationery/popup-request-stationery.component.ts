@@ -1,3 +1,4 @@
+import { mergeMap } from 'rxjs';
 import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
   Component,
@@ -81,7 +82,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   returnData = [];
   nagetivePhysical: string = '';
   totalStationery = 0;
-  saveCheck = false;
   approvalRule: any;
   isPriceVisible: boolean = false;
 
@@ -149,27 +149,26 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
-      this.epService
-        .getBookingItems(this.data?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((item) => {
-              let tmpSta=new BookingItems()
-              tmpSta.itemID= item?.itemID,
-              tmpSta.quantity= item?.quantity,
-              tmpSta.itemName= item?.itemName,
-              tmpSta.umid= item?.umid,
-              tmpSta.umName= item?.umName !=null && item?.umName!=""? item?.umName : item?.umid,
-              tmpSta.objectType='EP_Resources',
-              tmpSta.objectID= item?.resourceRecID,      
+      this.epService.getBookingItems(this.data?.recID).subscribe((res: any) => {
+        if (res) {
+          res.forEach((item) => {
+            let tmpSta = new BookingItems();
+            (tmpSta.itemID = item?.itemID),
+              (tmpSta.quantity = item?.quantity),
+              (tmpSta.itemName = item?.itemName),
+              (tmpSta.umid = item?.umid),
+              (tmpSta.umName =
+                item?.umName != null && item?.umName != ''
+                  ? item?.umName
+                  : item?.umid),
+              (tmpSta.objectType = 'EP_Resources'),
+              (tmpSta.objectID = item?.resourceRecID),
               this.cart.push(tmpSta);
-            });
-            this.changeTab(2);//Lấy xong cart mới chuyển sang tab thông tin khi edit
-            this.detectorRef.detectChanges();
-
-          }
-        });
-      
+          });
+          this.changeTab(2); //Lấy xong cart mới chuyển sang tab thông tin khi edit
+          this.detectorRef.detectChanges();
+        }
+      });
     } else {
       if (this.data?.category == '1') {
         this.radioPersonalCheck = true;
@@ -286,17 +285,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   valueChangeQtyStationery(event: any, itemID: string) {
-    if (event?.data) {
-      this.cart.forEach((item) => {
-        if (item.itemID == itemID) {
-          if (event.data > 0) {
-            item.quantity = event.data;
-          } else {
-            item.quantity = 0;
-          }
+    this.cart.forEach((item) => {
+      if (item.itemID == itemID) {
+        if (event.data > 0) {
+          item.quantity = event.data;
+        } else {
+          item.quantity = 0;
         }
-      });
-    }
+      }
+    });
+
     this.detectorRef.detectChanges();
   }
 
@@ -314,47 +312,70 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, this.lstStationery, this.lstStationery];
+    option.data = [
+      itemData,
+      this.isAddNew,
+      null,
+      this.lstStationery,
+      this.lstStationery,
+    ];
     return true;
   }
 
-  saveClick = false;
+  //#region "Validate function before booking stationery"
+  //Check items of cart
+  isEmptyCart(_cart: any[]): boolean {
+    if (_cart && _cart.length > 0) {
+      return true;
+    }
+    this.notificationsService.notifyCode('EP011');
+    return true;
+  }
+
+  checkCartItems(_cart: any[]) {
+    let isPassed = true;
+    _cart.map((item) => {
+      if (item && item.quantity == 0) {
+        this.notificationsService.notify(
+          'Số lượng yêu cầu VPP phải lớn hơn 0',
+          '3'
+        );
+        isPassed = false;
+      }
+    });
+    return isPassed;
+  }
+  //#endregion "Validate function before booking stationery"
 
   onSaveForm(approval: boolean = false) {
-    if (!this.saveCheck) {
-      if (this.dialogAddBookingStationery.invalid == true) {
-        this.epService.notifyInvalid(
-          this.dialogAddBookingStationery,
-          this.formModel
-        );
-        return;
-      }
-      this.data.approval = this.approvalRule;
-      let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);
-      let tmpDay = new Date();
-      if (
-        bDay <
-        new Date(
-          tmpDay.getFullYear(),
-          tmpDay.getMonth(),
-          tmpDay.getDate(),
-          0,
-          0,
-          0,
-          0
-        )
-      ) {
-        this.notificationsService.notifyCode('TM036');
-        this.saveCheck = false;
-        return;
-      }
+    if (this.dialogAddBookingStationery.invalid == true) {
+      this.epService.notifyInvalid(
+        this.dialogAddBookingStationery,
+        this.formModel
+      );
+      return;
+    }
+    this.data.approval = this.approvalRule;
+    let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);
+    let tmpDay = new Date();
+    if (
+      bDay <
+      new Date(
+        tmpDay.getFullYear(),
+        tmpDay.getMonth(),
+        tmpDay.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
+    ) {
+      this.notificationsService.notifyCode('TM036');
 
-      if (this.cart.length == 0) {
-        this.notificationsService.notifyCode('EP011');
-        this.saveCheck = false;
-        return;
-      }
+      return;
+    }
 
+    if (this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
       this.api
         .exec('EP', 'BookingsBusiness', 'QuotaCheckAsync', [
           this.cart,
@@ -368,15 +389,12 @@ export class PopupRequestStationeryComponent extends UIComponent {
               null,
               unAvailResource
             );
-            this.saveCheck = false;
+
             return;
           } else {
             this.startSave(approval);
           }
         });
-      this.saveCheck = true;
-    } else {
-      return;
     }
   }
 
@@ -482,6 +500,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
           }
         } else {
           this.dialogRef && this.dialogRef.close();
+
           return;
         }
       });
@@ -561,35 +580,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
-  // addCart(event, data) {
-  //   let tmpResource;
-  //   tmpResource = { ...data };
-
-  //   let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
-
-  //   //NagetivePhysical = 0: khong am kho
-  //   if (tmpResource.currentQty <= 0) {
-  //     if (this.nagetivePhysical == '0') {
-  //       //không add
-  //       this.notificationsService.notifyCode('EP013');
-  //       return;
-  //     }
-  //   }
-
-  //   if (isPresent) {
-  //     this.cart.filter((item: any) => {
-  //       if (item.recID == tmpResource.recID) {
-  //         item.quantity = item.quantity + 1;
-  //         item.itemName = item.resourceName;
-  //       }
-  //     });
-  //   } else {
-  //     tmpResource.quantity = 1;
-  //     tmpResource.itemName = tmpResource.resourceName;
-  //     this.cart.push(tmpResource);
-  //   }
-  //   this.detectorRef.detectChanges();
-  // }
 
   addQuota() {
     this.cart.map((item) => {

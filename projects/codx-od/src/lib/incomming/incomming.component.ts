@@ -163,7 +163,9 @@ export class IncommingComponent
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
     this.userID = this.authStore.get().userID;
+   
   }
+ 
  
   ngAfterViewInit(): void {
     this.views = [
@@ -216,7 +218,7 @@ export class IncommingComponent
         IncommingAddComponent,
         {
           gridViewSetup: this.gridViewSetup,
-          headerText: 'Thêm mới ' + (this.funcList?.defaultName).toLowerCase(),
+          headerText: 'Thêm mới ' + (this.funcList?.customName).toLowerCase(),
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
@@ -591,6 +593,8 @@ export class IncommingComponent
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
+    this.button.disabled = false;
+    if(funcID == 'ODT81') this.button.disabled = true;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;
   }

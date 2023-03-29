@@ -461,38 +461,36 @@ export class BookingStationeryComponent
 
   copy(evt: any) {
     if (evt) {
-      if (true) {
-        this.view.dataService.dataSelected = evt;
-        this.view.dataService
-          .copy(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            this.popupClosed = false;
-            let option = new SidebarModel();
-            option.DataService = this.view?.dataService;
-            option.FormModel = this.formModel;
-            let dialogModel = new DialogModel();
-            dialogModel.IsFull = true;
-            this.callfc.openForm(
-              PopupRequestStationeryComponent,
-              this.popupTitle,
-              700,
-              650,
-              this.funcID,
-              {
-                isAddNew: true,
-                formModel: this.formModel,
-                option: option,
-                title: this.popupTitle,
-              },
-              '',
-              dialogModel
-            );
-            this.dialog?.closed.subscribe((returnData) => {
-              this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();
-            });
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .copy(this.view.dataService.dataSelected)
+        .subscribe(() => {
+          this.popupClosed = false;
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          this.callfc.openForm(
+            PopupRequestStationeryComponent,
+            this.popupTitle,
+            700,
+            650,
+            this.funcID,
+            {
+              isAddNew: true,
+              formModel: this.formModel,
+              option: option,
+              title: this.popupTitle,
+            },
+            '',
+            dialogModel
+          );
+          this.dialog?.closed.subscribe((returnData) => {
+            this.popupClosed = true;
+            if (!returnData.event) this.view.dataService.clear();
           });
-      }
+        });
     }
   }
 

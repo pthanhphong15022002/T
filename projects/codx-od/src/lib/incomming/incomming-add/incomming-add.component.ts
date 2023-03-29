@@ -528,4 +528,8 @@ export class IncommingAddComponent implements OnInit {
       this.listPermission.push(p);
     }
   }
+  close()
+  {
+    this.dialog.close();
+  }
 }
