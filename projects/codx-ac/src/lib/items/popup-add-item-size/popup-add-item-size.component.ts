@@ -15,6 +15,7 @@ import {
   UploadFile,
 } from 'codx-core';
 import { combineLatestWith, map } from 'rxjs/operators';
+import { CodxAcService } from '../../codx-ac.service';
 import { ItemSize } from '../interfaces/ItemSize.interface';
 import { ItemsService } from '../items.service';
 
@@ -39,6 +40,7 @@ export class PopupAddItemSizeComponent
   constructor(
     private injector: Injector,
     private itemsService: ItemsService,
+    private acService: CodxAcService,
     private notiService: NotificationsService,
     @Optional() dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
@@ -115,7 +117,7 @@ export class PopupAddItemSizeComponent
     console.log(this.itemSize);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -154,7 +156,7 @@ export class PopupAddItemSizeComponent
     console.log(this.itemSize);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

@@ -30,6 +30,10 @@ import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/po
 import { PopupAddOBComponent } from '../../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupCheckInComponent } from '../../popup/popup-check-in/popup-check-in.component';
+import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -42,6 +46,7 @@ const _notSubKR = false;
 export class OkrTargetsComponent implements OnInit {
   @ViewChild('omTab') omTab: any;
   @ViewChild('treeView') treeView: any;
+  @ViewChild('popupAddTask') popupAddTask: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -399,6 +404,12 @@ export class OkrTargetsComponent implements OnInit {
         this.assignmentOKR(kr, e.text);
         break;
       }
+      //Giao việc
+      case OMCONST.MFUNCID.SKRTask:
+      case OMCONST.MFUNCID.KRTask: {
+        this.addTask(kr, e?.text,e?.data);
+        break;
+      }
     }
   }
   changeDataKRMF(evt: any, kr: any, isSKR: boolean) {
@@ -583,6 +594,45 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  addTask(kr:any,popupTitle:string,mfunc:string){
+
+    var task = new TM_Tasks();
+        task.refID = kr?.recID;
+        task.refType = 'OM_OKRs';
+
+        let option = new SidebarModel();
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM002',
+          title: popupTitle,//val?.data.customName,
+          vllShare: 'TM003',
+          task: task,
+          referedData: kr,
+          referedFunction: mfunc,
+        };
+        //option.DataService = this.view.dataService;
+        option.FormModel = this.formModelKR;
+        option.Width = '550px';
+        let dialog = this.callfunc.openSide(
+          AssignInfoComponent,
+          assignModel,
+          option
+        );
+        // dialog.closed.subscribe((e) => {
+        //   if (e?.event && e?.event[0]) {
+        //     datas.status = '3';
+        //     // debugger;
+        //     // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
+        //     //   if(item) that.data.tasks= item;
+        //     // })
+        //     that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
+        //       if (item.status == 0) {
+        //         that.view.dataService.update(e.data).subscribe();
+        //       } else that.notifySvr.notify(item.message);
+        //     });
+        //   }
+        // });
+    
+  }
   editOKRWeight(ob: any, popupTitle: any) {
     let subTitle = ob?.okrName;
     let dModel = new DialogModel();

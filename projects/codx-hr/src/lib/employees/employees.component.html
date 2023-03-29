@@ -43,7 +43,7 @@
 
 <ng-template #cardTemp let-data>
   <ng-container>
-    <div (dblclick)="doubleClick(data)">
+    <div (dblclick)="doubleClick(data)" class="has-action-menu">
       <codx-card-center
         cardCss="border w-250px h-200"
         [formModel]="view.formModel"
@@ -58,7 +58,7 @@
           placeholder(data.positionName, view.formModel, 'PositionID') | async
         "
         [dataItem]="data"
-        [desc]="
+        [desc]= "
           placeholder(data.birthday | fmDT, view.formModel, 'Birthday') | async
         "
         [footer]="footer"
@@ -93,7 +93,7 @@
   </div>
 </ng-template>
 
-<ng-template #itemAction let-data>
+<!-- <ng-template #itemAction let-data>
   <codx-mfunc
     [formModel]="view.formModel"
     (changeDataMF)="changeDataMF($event)"
@@ -102,7 +102,7 @@
     [typeMF]="'hover'"
   >
   </codx-mfunc>
-</ng-template>
+</ng-template> -->
 
 <ng-template #itemEmployee let-data>
   <div (dblclick)="doubleClick(data)" class="w-100">
@@ -203,7 +203,7 @@
 </ng-template>
 
 <ng-template #itemInfoPersonal let-data>
-  <div (dblclick)="doubleClick(data)" class="w-100">
+  <div (dblclick)="doubleClick(data)" class="w-100 has-action-menu">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex align-items-center">
         <span class="text-gray-600 me-1">
@@ -243,6 +243,15 @@
         ></codx-vll>
       </div>
     </div>
+    <codx-mfunc
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMF($event)"
+      (clickMF)="clickMF($event, data)"
+      [dataItem]="data"
+      [typeMF]="'hover'"
+    >
+    </codx-mfunc>
+
   </div>
 </ng-template>
 

@@ -103,22 +103,25 @@ export class ItemsComponent extends UIComponent {
         sameData: true,
         model: {
           resources: [
-            { width: '35%', headerText: 'Item Header', field: 'itemHeader' },
             {
-              width: '35%',
+              width: '33%',
+              headerTemplate: this.header1,
+              headerText: 'Item Header',
+              field: 'itemHeader',
+            },
+            {
+              width: '33%',
+              headerTemplate: this.header2,
               headerText: 'Inventory Header',
               field: 'inventoryHeader',
             },
             {
-              width: '15%',
-              headerText: 'Unit Conversion Header',
-              field: 'itemHeader',
+              width: '33%',
+              headerTemplate: this.header3,
+              headerText: 'Dim Header',
+              field: 'dimHeader',
             },
-            {
-              width: '15%',
-              headerText: 'Status Header',
-              field: 'statusHeader',
-            },
+            { width: '1%', field: 'statusHeader', headerText: '' },
           ],
           template: this.itemTemplate,
         },
