@@ -3,9 +3,11 @@ import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   CacheService,
+  DataRequest,
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { filter, map, Observable, tap } from 'rxjs';
 import { Transactiontext } from './models/transactiontext.model';
 
 @Injectable({
@@ -75,6 +77,7 @@ export class CodxAcService {
     }
     return newMemo;
   }
+  
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
@@ -111,5 +114,25 @@ export class CodxAcService {
 
   toPascalCase(camelCase: string): string {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  }
+
+  loadComboboxData(comboboxName: string, service: string): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = comboboxName;
+    dataRequest.pageLoading = false;
+    return this.api
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataCbxAsync',
+        [dataRequest]
+      )
+      .pipe(
+        tap((p) => console.log(p)),
+        filter((p) => !!p),
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
+      );
   }
 }
