@@ -9,102 +9,101 @@
   [bodyCss]="'h-100'"
 ></codx-form>
 <ng-template popup adde #body>
-  <div>
-    <div class="d-flex align-items-center mt-2">
-      <div class="radio-list text-dark">
-        <codx-input
-          type="radio"
-          name="radio-dtexport"
-          class="me-4 mb-2"
-          label="Tất cả dữ liệu"
-          [Group]="exportGroup"
-          ControlName="dataExport"
-          crrValue="all"
-          [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
-        >
-        </codx-input>
-      </div>
-      <div class="radio-list text-dark">
-        <codx-input
-          type="radio"
-          name="radio-dtexport"
-          class="me-4 mb-2"
-          label="Trang hiện hành"
-          labelPosition="After"
-          [Group]="exportGroup"
-          ControlName="dataExport"
-          crrValue="page"
-          [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
-        >
-        </codx-input>
-      </div>
-      <div class="radio-list text-dark">
-        <codx-input
-          type="radio"
-          name="radio-dtexport"
-          class="me-4 mb-2"
-          label="Dòng đang chọn"
-          labelPosition="After"
-          crrValue="selected"
-          [Group]="exportGroup"
-          ControlName="dataExport"
-          [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
-        >
-        </codx-input>
-      </div>
+  <div class="d-flex align-items-center mt-2">
+    <div class="radio-list text-dark">
+      <codx-input
+        type="radio"
+        name="radio-dtexport"
+        class="me-4 mb-2"
+        label="Tất cả dữ liệu"
+        [Group]="exportGroup"
+        ControlName="dataExport"
+        crrValue="all"
+        [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
+      >
+      </codx-input>
+    </div>
+    <div class="radio-list text-dark">
+      <codx-input
+        type="radio"
+        name="radio-dtexport"
+        class="me-4 mb-2"
+        label="Trang hiện hành"
+        labelPosition="After"
+        [Group]="exportGroup"
+        ControlName="dataExport"
+        crrValue="page"
+        [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
+      >
+      </codx-input>
+    </div>
+    <div class="radio-list text-dark">
+      <codx-input
+        type="radio"
+        name="radio-dtexport"
+        class="me-4 mb-2"
+        label="Dòng đang chọn"
+        labelPosition="After"
+        crrValue="selected"
+        [Group]="exportGroup"
+        ControlName="dataExport"
+        [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
+      >
+      </codx-input>
     </div>
   </div>
-  <div class="d-flex justify-content-start h-temp py-5">
-  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-export h-100" orientation="vertical" (navChange)="navChanged($event)">
-    <li ngbNavItem="1">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel'" class="fw-bold"></codx-label></div></a>
+  <hr />
+  <div class="d-flex justify-content-start h-temp">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-export h-100 p-0 m-0" orientation="vertical" (navChange)="navChanged($event)">
+    <li class="p-0 m-0" ngbNavItem="1">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-excel fs-2 me-3" style="color:#347442"></i><codx-label [default]="'Excel'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
         <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.excel }"></ng-container>
       </ng-template>
     </li>
-    <li ngbNavItem="2">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-lines fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'PivotTable'" class="fw-bold"></codx-label></div></a>
+    <li class="p-0 m-0" ngbNavItem="2">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-lines fs-2 me-3" style="color:#347442"></i><codx-label [default]="'PivotTable'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
         <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.pivot }"></ng-container>
       </ng-template>
     </li>
-    <li ngbNavItem="3">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-word fs-1 me-2 " style="color:#005DC7"></i><codx-label [default]="'Word'" class="fw-bold"></codx-label></div></a>
+    <li class="p-0 m-0" ngbNavItem="3">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-word fs-2 me-3" style="color:#005DC7"></i><codx-label [default]="'Word'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
         <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.word }"></ng-container>
       </ng-template>
     </li>
-    <li ngbNavItem="4">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-pdf fs-1 me-2 " style="color:#FFAC33"></i><codx-label [default]="'PDF'" class="fw-bold"></codx-label></div></a>
+    <li class="p-0 m-0" ngbNavItem="4">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-pdf fs-2 me-3" style="color:#FFAC33"></i><codx-label [default]="'PDF'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
         <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.pdf }"></ng-container>
       </ng-template>
     </li>
-    <li ngbNavItem="5">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel Template'" class="fw-bold"></codx-label></div></a>
+    <li class="p-0 m-0" ngbNavItem="5">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-excel fs-2 me-3" style="color:#347442"></i><codx-label [default]="'Excel Template'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
-        <div>
+        <div class="mb-4">
           <div>
             <codx-label [default]="'Excel Template'" class="fs-4 fw-bold"></codx-label>
           </div>
-          <div>
+          <div class="fs-7 text-gray-500">
             <codx-label [default]="'Xuất dữ liệu được chọn thành file excel theo template đã định dạng trước'"></codx-label>
           </div>
         </div>
-        <div (scroll)="onScroll($event)"  class="h-scroll overflow-auto my-5">
-          <div class="d-flex align-items-start my-3" *ngFor="let item of dataEx">
-            <div class="w-30px mt-1">
-              <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="'excelTemp_' + item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-              <div class="fs-5">{{ item.templateName }}</div>
-              <div class="codx_des">
-                <i class="text-gray-400 fs-6">{{ item.description }}</i>
+        <div (scroll)="onScroll($event)"  class="export-content mt-3">
+          <div class="d-flex align-items-start justify-content-between py-2 border-bottom" *ngFor="let item of dataEx">
+            <div class="d-flex align-items-top w-100">
+              <div class="w-20px h-20px me-2">
+                <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="'excelTemp_' + item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
+              </div>
+              <div class="d-flex flex-column w-100">
+                <div class="fw-bold text-dark">{{ item.templateName }}</div>
+                <div class="fs-7 text-gray-500 text-italic">{{ item.description }}</div>
               </div>
             </div>
             <div class="d-flex align-items-start ms-6">
-              <button type="button" class="btn btn-outline-secondary" triggers="click" [autoClose]="true" [ngbTooltip]="tool" ngClass="border-0">
-                <span class="icon-more_vert icon-18"></span>
+              <button type="button" class="btn btn-icon btn-sm btn-outline-primary" triggers="click" [autoClose]="true" [ngbTooltip]="tool" ngClass="border-0">
+                <span class="icon-more_vert icon-16"></span>
               </button>
               <ng-template #tool>
                 <ng-container *ngFor="let x of moreFunction">
@@ -119,27 +118,27 @@
         </div>
       </ng-template>
     </li>
-    <li ngbNavItem="6">
-      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-word  fs-1 me-2 " style="color:#005DC7"></i><codx-label [default]="'Word Template'" class="fw-bold"></codx-label></div></a>
+    <li class="p-0 m-0" ngbNavItem="6">
+      <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-word  fs-2 me-3" style="color:#005DC7"></i><codx-label [default]="'Word Template'" class="fw-bold"></codx-label></div></a>
       <ng-template ngbNavContent>
-        <div>
+        <div class="mb-4">
           <div>
             <codx-label [default]="'Word Template'" class="fs-4 fw-bold"></codx-label>
           </div>
-          <div>
+          <div class="fs-7 text-gray-500">
             <codx-label [default]="'Xuất dữ liệu được chọn thành file word theo template đã định dạng trước'"></codx-label>
           </div>
         </div>
-        <div class="h-scroll overflow-auto my-5">
+        <div class="export-content mt-3">
           <ng-container *ngIf="dataWord , else elseWord">
-            <div class="d-flex align-items-start mb-3" *ngFor="let item of dataWord">
-              <div class="w-30px mt-1">
-                <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <div class="codx_title_sub">{{ item.templateName }}</div>
-                <div class="codx_des">
-                  <i class="text-gray-400">{{ item.description }}</i>
+            <div class="d-flex align-items-start justify-content-between py-2 border-bottom" *ngFor="let item of dataWord">
+              <div class="d-flex align-items-top w-100">
+                <div class="w-20px h-20px me-2">
+                  <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
+                </div>
+                <div class="d-flex flex-column w-100">
+                  <div class="fw-bold text-dark">{{ item.templateName }}</div>
+                  <div class="fs-7 text-gray-500 text-italic">{{ item.description }}</div>
                 </div>
               </div>
               <div class="d-flex align-items-start ms-6">
@@ -167,17 +166,15 @@
           </ng-container>
           <ng-template #elseWord>
             <div class="export-container">
-              <div class="list-empty card card-flush h-100">
-                <div class="d-flex flex-column flex-center justify-content-center">
-                  <img
-                    src="../assets/themes/sys/default/img/DataEmpty.svg"
-                    class="w-200px"
-                  />
-                  <div class="fw-bold mt-1 text-center">
-                    <div class="mt-2 text-center">Chưa có dữ liệu word</div>
-                  </div>
-                  <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+              <div class="d-flex flex-column flex-center justify-content-center">
+                <img
+                  src="../assets/themes/sys/default/img/DataEmpty.svg"
+                  class="w-200px"
+                />
+                <div class="fw-bold mt-1 text-center">
+                  <div class="mt-2 text-center">Chưa có dữ liệu word</div>
                 </div>
+                <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
               </div>
             </div>
           </ng-template>
@@ -185,7 +182,7 @@
       </ng-template>
     </li>
   </ul>
-  <div [ngbNavOutlet]="nav" class="tmp-content ms-4 w-100 h-100"></div>
+  <div [ngbNavOutlet]="nav" class="tmp-content ms-4 ps-6 border-start w-100 h-100"></div>
   </div>
 </ng-template>
 <ng-template #footer>
@@ -196,24 +193,24 @@
 </ng-template>
 <ng-template #nodata let-data>
   <div>
-    <div>
-      <codx-label [default]="data?.title" class="fs-4 fw-bold"></codx-label>
-    </div>
-    <div>
-      <codx-label [default]="data?.subTitle"></codx-label>
+    <div class="mb-4">
+      <div class="fs-4 fw-bold">
+        <codx-label [default]="data?.title"></codx-label>
+      </div>
+      <div class="fs-7 text-gray-500">
+        <codx-label [default]="data?.subTitle"></codx-label>
+      </div>
     </div>
     <div class="export-container">
-      <div class="list-empty card card-flush h-100">
-        <div class="d-flex flex-column flex-center justify-content-center">
-          <img
-            src="../assets/themes/sys/default/img/DataEmpty.svg"
-            class="w-200px"
-          />
-          <div class="fw-bold mt-1 text-center">
-            <div class="mt-2 text-center">Chọn <span class="fs-4 fw-bold">Xuất File</span> để tải tập tin về máy</div>
-          </div>
-          <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          <div class="mt-2 text-center">Chọn <span class="fs-4 fw-bold">Xuất File</span> để tải tập tin về máy</div>
         </div>
+        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
       </div>
     </div>
   </div>
