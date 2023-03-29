@@ -36,7 +36,7 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
   templateUrl: './view-contracts-detail.component.html',
   styleUrls: ['./view-contracts-detail.component.css'],
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewContractDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
     private hrService: CodxHrService,

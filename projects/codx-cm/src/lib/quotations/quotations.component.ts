@@ -16,7 +16,7 @@ import {
 } from 'codx-core';
 
 @Component({
-  selector: 'lib-quotations',
+  selector: 'codx-quotations',
   templateUrl: './quotations.component.html',
   styleUrls: ['./quotations.component.css'],
 })

@@ -172,13 +172,13 @@ export class PopupAddStaskComponent implements OnInit {
       this.isLoadDate = !this.isLoadDate;
       return;
     }
-    this.isLoadDate = !this.isLoadDate;
     this.stepsTasks[event?.field] = event?.data?.fromDate;
     const startDate =  new Date(this.stepsTasks['startDate']);
     const endDate = new Date(this.stepsTasks['endDate']);
 
     if (endDate && startDate > endDate){
       this.isSaveTimeTask = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP019');
       return;
     } else {
@@ -187,6 +187,7 @@ export class PopupAddStaskComponent implements OnInit {
 
     if (endDate > new Date(this.groupTask?.endDate)) {
       this.isSaveTimeGroup = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
     }else{
       this.isSaveTimeGroup = true;
@@ -194,9 +195,25 @@ export class PopupAddStaskComponent implements OnInit {
 
     if (startDate < new Date(this.groupTask['startDate'])) {
       this.isSaveTimeGroup = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
     }else{
       this.isSaveTimeGroup = true;
+    }
+    if(this.stepsTasks['startDate'] && this.stepsTasks['endDate']){
+      const endDate = new Date(this.stepsTasks['endDate']);
+      const startDate = new Date(this.stepsTasks['startDate']);
+      if(endDate >= startDate){
+        const duration = endDate.getTime() - startDate.getTime();
+        const time = Math.floor(duration / 60 / 1000/ 60);
+        const hours = time % 24;
+        const days = Math.floor(time / 24);
+        this.stepsTasks['durationHour'] = hours;
+        this.stepsTasks['durationDay'] = days;
+      }
+    }else{
+      this.stepsTasks['durationHour'] = 0;
+      this.stepsTasks['durationDay'] = 0;
     }
   }
   applyOwner(e, datas) {
