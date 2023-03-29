@@ -36,34 +36,34 @@
             </ng-container>
         </div> -->
         <div class="form-group mt-3">
-            <codx-label default="Nội dung chia sẻ" class="text-primary"></codx-label>
-            <codx-input type="textarea"  [Group]="shareForm" ControlName="desc">
+            <codx-label default="Nội dung chia sẻ" [fiedName]="'lblDescPermiss'" [formName]="formModel?.formName" class="text-primary mb-5"></codx-label>
+            <codx-input type="textarea" [height]="'200px'"  [Group]="shareForm" ControlName="desc">
             </codx-input>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
+            <codx-label class="text-dark" [fiedName]="'lblEditPermiss'" [formName]="formModel?.formName" default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="edit">
             </codx-input>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép chia sẻ lại cho người khác"></codx-label>
+            <codx-label class="text-dark" [fiedName]="'lblSharePermiss'" [formName]="formModel?.formName" default="Cho phép chia sẻ lại cho người khác"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="share">
             </codx-input>
         </div>
         <div class="d-flex align-items-center justify-content-between mt-3">
-            <codx-label class="text-dark" default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
+            <codx-label class="text-dark" [fiedName]="'lblDownloadPermiss'" [formName]="formModel?.formName" default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
             <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="download">
             </codx-input>
         </div>
-        <label class="text-primary mt-6">Giới hạn thời gian chia sẻ</label>
+        <codx-label class="text-dark" [fiedName]="'lblLimitTime'" [formName]="formModel?.formName" default="Giới hạn thời gian chia sẻ" class="text-primary mt-6"></codx-label>
         <div class="row">
             <div class="col-6 d-flex align-items-center justify-content-between ">
-                <codx-label default='Từ ngày' class="w-100px"></codx-label>
+                <codx-label [fiedName]="'lblFormDate'" [formName]="formModel?.formName" default='Từ ngày' class="w-100px"></codx-label>
                 <codx-input type="dateTime" format="d"  [Group]="shareForm" ControlName="formDate">
                 </codx-input>
             </div>
             <div class="col-6 d-flex align-items-center justify-content-between">
-                <codx-label default="Đến ngày" class="w-100px"></codx-label>
+                <codx-label [fiedName]="'lblToDate'" [formName]="formModel?.formName" default="Đến ngày" class="w-100px"></codx-label>
                 <codx-input type="dateTime" format="d"  [Group]="shareForm" ControlName="toDate">
                 </codx-input>
             </div>

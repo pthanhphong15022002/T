@@ -10,7 +10,7 @@
   <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
 
     <hr class=" w-100 my-0" *ngIf="isShowBreakLine">
-    <div class="w-100 pt-3 pb-2 ob-background d-flex justify-content-between">
+    <div class="w-100 mt-3 mb-2 ob-background d-flex justify-content-between">
       <div class="d-flex align-items-center flex-row cursor-pointer w-100">
         
         <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
@@ -38,8 +38,8 @@
           <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Kết quả">
             <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
             <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-              [ngClass]="item?.child && item?.child.length >0 ? 'bg-color': 'bg-gray-300'">{{
-              item?.child? item?.child.length :0 }}</span>
+              [ngClass]="item?.items && item?.items.length >0 ? 'bg-color': 'bg-gray-300'">{{
+              item?.items? item?.items.length :0 }}</span>
           </button>
           <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Liên kết">
             <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
@@ -93,8 +93,8 @@
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Kết quả phụ">
           <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
           <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
-            [ngClass]="item?.child  && item?.child.length>0 ? 'bg-color': 'bg-gray-300'">{{
-            item?.child ? item?.child.length : 0 }}</span>
+            [ngClass]="item?.items  && item?.items.length>0 ? 'bg-color': 'bg-gray-300'">{{
+            item?.items ? item?.items.length : 0 }}</span>
         </button>
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Liên kết">
           <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>

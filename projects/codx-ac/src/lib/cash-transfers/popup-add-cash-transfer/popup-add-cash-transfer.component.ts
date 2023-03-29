@@ -1,7 +1,6 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -11,7 +10,8 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 
@@ -44,10 +44,12 @@ export class PopupAddCashTransferComponent extends UIComponent {
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
+  cashBookName1: string;
 
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
+    private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -64,13 +66,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.loadComboboxData('CashBooks').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.cashBooks = JSON.parse(res[0]);
-      }
-    });
-
     this.cache
       .gridViewSetup(
         this.dialogRef.formModel.formName,
@@ -134,6 +129,14 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this[prop] = e.data;
     }
 
+    if (e.field.toLowerCase() === 'cashbookid') {
+      this.cashBookName1 = e.component.itemsSelected[0].CashBookName;
+    }
+
+    if (e.field.toLowerCase() === 'cashbookid2') {
+      this.cashBookName2 = e.component.itemsSelected[0].CashBookName;
+    }
+
     const fields: string[] = ['currencyid', 'cashbookid', 'payamount2'];
 
     if (fields.includes(field)) {
@@ -188,7 +191,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
         this.notiService.notifyCode(
           'SYS009',
           0,
-          `"${this.gvsCashTransfers[this.toPascalCase(propName)]?.headerText}"`
+          `"${
+            this.gvsCashTransfers[this.acService.toPascalCase(propName)]
+              ?.headerText
+          }"`
         );
 
         isValid = false;
@@ -273,20 +279,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
       });
   }
 
-  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.page = 1;
-    dataRequest.pageSize = pageSize;
-    return this.api.execSv(
-      'AC',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      [dataRequest]
-    );
-  }
-
   crudVatInvoice(methodName: string, vatInvoice: IVATInvoice) {
     this.api
       .exec('AC', 'VATInvoicesBusiness', methodName, vatInvoice)
@@ -306,10 +298,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
 
-  toCamelCase(camelCase: string): string {
-    return camelCase.charAt(0).toLowerCase() + camelCase.slice(1);
-  }
-
   validateVATInvoice(gvsVATInvoices, vatInvoice): boolean {
     let isValid = true;
     for (const prop in gvsVATInvoices) {
@@ -317,7 +305,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
         console.log(prop);
         if (
           gvsVATInvoices[prop].datatype === 'String' &&
-          !vatInvoice[this.toCamelCase(prop)]?.trim()
+          !vatInvoice[this.acService.toCamelCase(prop)]?.trim()
         ) {
           this.notiService.notifyCode(
             'SYS009',

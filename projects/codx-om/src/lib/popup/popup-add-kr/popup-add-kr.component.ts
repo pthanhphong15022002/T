@@ -449,7 +449,7 @@ export class PopupAddKRComponent extends UIComponent {
     for (let i = 0; i < this.kr.targets.length; i++) {
       sumTargets += this.kr.targets[i].target;
     }
-    if (sumTargets != this.kr.target) {
+    if (Math.round(sumTargets) !=this.kr.target) {
       this.notificationsService.notify(
         'Tổng chỉ tiêu phân bổ chưa đồng nhất với chỉ tiêu',
         '2'

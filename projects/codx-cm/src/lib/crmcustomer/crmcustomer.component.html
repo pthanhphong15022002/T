@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [className]="className" [method]="method" [views]="views" [button]="showButtonAdd ? button:null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField"
-  [autoSearch]="true" (selectedChange)="selectedChange($event)" (onLoading)="onLoading($event)" (searchChanged)="searchChanged($event)"
+  [autoSearch]="true" (selectedChange)="selectedChange($event)" (viewChanged)="viewChanged($event)" (onLoading)="onLoading($event)" (searchChanged)="searchChanged($event)"
    [viewActiveType]="viewMode"></codx-views>
 
 <!--grid view-->
@@ -87,8 +87,8 @@
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
-    [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="data?.processName" [imageWidth]="35" imgCss="me-3"
-    imageObjType="AD_Users" [title]="data.processName" [titleCss]="'fs-6'" [descTmp]="descTmp"
+    [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imageWidth]="35" imgCss="me-3"
+    imageObjType="AD_Users" [title]="getNameCrm(data)" [titleCss]="'fs-6'" [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'" [formModel]="view.formModel"
     [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
@@ -96,12 +96,12 @@
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column" >
     <div class="mt-1" *ngIf="funcID == 'CM0102'">
-      <span class="icon-phone_android text-primary icon-16 me-1"></span>
-      <span class="text-gray-900 text-primary">0702411141</span>
+      <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'" class=" icon-16 me-1"></span>
+      <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
     </div>
     <div class="mt-1" *ngIf="funcID == 'CM0102'">
-      <span class="icon-email text-primary icon-16 me-1 text-gray-500"></span>
-      <span class="text-gray-900 text-primary">tdnphuck42@gmail.com</span>
+      <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'" class="icon-16 me-1 text-gray-900"></span>
+      <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>
     </div>
     <div class="mt-1">
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
@@ -122,7 +122,7 @@
 </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <div>
-    <span class="icon-14 me-1" [class]="'1' | vll : vllPriority : 'icon' | async" [style.color]="
+    <span class="icon-14 me-1" [class]="data?.priority | vll : vllPriority : 'icon' | async" [style.color]="
     '1' | vll : vllPriority : 'textColor' | async
   ">
     </span>

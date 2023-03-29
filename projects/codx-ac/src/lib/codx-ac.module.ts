@@ -69,6 +69,7 @@ import { DropdownDetailComponent } from './journal-names/dropdown-detail/dropdow
 import { PopupSetupInvoiceComponent } from './journal-names/popup-setup-invoice/popup-setup-invoice.component';
 import { PopAddLineComponent } from './purchaseinvoices/pop-add-line/pop-add-line.component';
 import { SingleSelectPopupComponent } from './journal-names/single-select-popup/single-select-popup.component';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
 import { VoucherComponent } from './popup/voucher/voucher.component';
 
@@ -233,6 +234,7 @@ export const routes: Routes = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
+    NgxUiLoaderModule
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

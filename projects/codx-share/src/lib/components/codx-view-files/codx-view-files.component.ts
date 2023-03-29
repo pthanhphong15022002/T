@@ -24,7 +24,9 @@ export class CodxViewFilesComponent implements OnInit {
   @Input() medias: number = 0;
   @Input() format:string = "";
 
-  @Output() fileClicked = new EventEmitter();
+  @Output() selectFile = new EventEmitter();
+  @Output() fileEmit = new EventEmitter();
+
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   user: any = null;
   files:any[] = [];
@@ -67,42 +69,64 @@ export class CodxViewFilesComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any[]) => {
         if(Array.isArray(res) && res.length > 0){
-          let _images = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
           this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
           this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
-          this.medias = this.fileMedias.length;
+          // view file chat
           if(this.format == "grid"){
-            _images.map((x:any) => {
-              x["source"] = this.codxShareSV.getThumbByUrl(x.url,200);
+            res.forEach((x:any) => {
+              if(x.referType === this.FILE_REFERTYPE.IMAGE){
+                x["source"] = this.codxShareSV.getThumbByUrl(x.url,200);
+              }
+              else if(x.referType === this.FILE_REFERTYPE.VIDEO){
+                x["source"] = `${environment.urlUpload}/${x.url}`; 
+              }
             });
           }
-          else
-          {
-            switch(_images.length){
-              case 1:
-                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
-                break;
-              case 2:
-                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,450);
-                _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
-                break;
-              case 3:
-                _images[0]["source"] = this.codxShareSV.getThumbByUrl(_images[0].url,900);
-                _images[1]["source"] = this.codxShareSV.getThumbByUrl(_images[1].url,450);
-                _images[2]["source"] = this.codxShareSV.getThumbByUrl(_images[2].url,450);
-                break;
-              default:
-                _images.map(f => {
-                  f["source"] = this.codxShareSV.getThumbByUrl(f.url,450);
-                });   
-                break
+          // view file portal
+          else {
+            if(Array.isArray(this.fileMedias))
+            {
+              this.medias = this.fileMedias.length;
+              switch(this.medias){
+                case 1:
+                case 2:
+                  this.fileMedias.forEach(x => {
+                    if(x.referType === this.FILE_REFERTYPE.IMAGE){
+                      x["source"] = this.codxShareSV.getThumbByUrl(x.url,900/this.medias);
+                    }
+                    else
+                    {
+                      x["source"] = `${environment.urlUpload}/${x.url}`;
+                    }
+                  });
+                  break;
+                case 3:
+                  this.fileMedias.forEach((x,index) => {
+                    if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                    {
+                      if(index == 0)
+                        x["source"] = this.codxShareSV.getThumbByUrl(x.url,900);
+                      else
+                        x["source"] = this.codxShareSV.getThumbByUrl(x.url,450);
+                    }
+                    else
+                    {
+                      x["source"] = `${environment.urlUpload}/${x.url}`;
+                    }
+                  });
+                  break;
+                default:
+                  this.fileMedias.forEach(x => {
+                    if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                      x["source"] = this.codxShareSV.getThumbByUrl(x.url,450);
+                    else
+                      x["source"] = `${environment.urlUpload}/${x.url}`;
+                  });   
+                  break
+              }
             }
+            
           }
-          res.map((f:any) => {
-            if(f.referType === this.FILE_REFERTYPE.VIDEO){
-              f["source"] = `${environment.urlUpload}`+"/"+f.url; 
-            }
-          });
           this.files = JSON.parse(JSON.stringify(res));
         }
       });
@@ -111,7 +135,7 @@ export class CodxViewFilesComponent implements OnInit {
 
   // click filed
   clickViewDetail(file: any) {
-    this.fileClicked.emit(file);
+    this.selectFile.emit(file);
   }
   
   // click upload file

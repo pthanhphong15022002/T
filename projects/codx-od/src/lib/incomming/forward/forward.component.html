@@ -24,14 +24,14 @@
             </div>
             <div class="form-group">
                 <codx-label default="Mô tả chi tiết" class="text-primary"></codx-label>
-                <codx-input type="textarea" class="w-100" [Group]="forwardForm" ControlName="comment">
+                <codx-input type="textarea" class="w-100" [height]="" [Group]="forwardForm" ControlName="comment">
                 </codx-input>
             </div>
         </ng-template>
         <ng-template #footer>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit">
-                    Gửi
+                    <codx-label default="Gửi"></codx-label>
                 </button>
             </div>
         </ng-template>
