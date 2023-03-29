@@ -1,5 +1,5 @@
 <codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" [data]="purchaseinvoices" subToolbarCss="text-end" [subToolbar]="subToolbar">
+  [dialog]="dialog" [data]="purchaseinvoices" [customToolbar]="subToolbar" [openMore]="false">
 </codx-form>
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup">
@@ -70,34 +70,41 @@
   </div>
 </ng-template>
 <ng-template #subToolbar>
-  <div class="d-flex align-items-center justify-content-between pt-2">
-    <div class="d-flex justify-content-start me-2">
-      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
-        <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
-        <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
-      </div>
-      <div class="card-title">
-        <div class="d-flex flex-column">
-          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-2">
+      <div class="d-flex justify-content-start me-2">
+        <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+          </div>
+        </div>
+        <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          </codx-input>
         </div>
       </div>
-      <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-        <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
-        </codx-input>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end me-3">
-      <div *ngIf="formType != 'edit'" class="ms-2">
-        <button type="button" class="btn btn-light-primary">
-          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-            [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-        </button>
-      </div>
-      <div class="ms-2">
-        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-            [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-        </button>
+      <div class="d-flex justify-content-end me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+          <button type="button" class="btn btn-light-primary">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2 me-2">
+          <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+          </button>
+        </div>
+        <div class="ms-2">
+          <div class="mt-1 btn btn-icon btn-sm btn-light-primary btn-circle bg" (click)="close()">
+            <i class="icon-close icon-16"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -412,7 +419,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-       Tất cả {{pageCount}}
+        Tất cả {{pageCount}}
       </div>
       <div class="mt-2">
         <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
@@ -437,16 +444,19 @@
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editPopupLine(item)">
+                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
+                  (click)="editPopupLine(item)">
                   <i class="icon-edit_square icon-16"></i>
                 </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(item)">
+                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
+                  (click)="deleteRow(item)">
                   <i class="icon-delete icon-16"></i>
                 </span>
               </div>
             </td>
             <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
-              <div *ngFor="let keymodel of keymodel" style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+              <div *ngFor="let keymodel of keymodel"
+                style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                 <!-- rowno line -->
                 <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
                   <div
