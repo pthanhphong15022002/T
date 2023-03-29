@@ -153,9 +153,10 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   openPopupAddress() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMAddresses';
+    dataModel.gridViewName = 'grvCMAddresses';
+    dataModel.entityName = 'CM_Addresses';
+    dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
     this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', '', '', opt);
   }
@@ -168,6 +169,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     dataModel.formName = 'CMContacts';
     dataModel.gridViewName = 'grvCMContacts';
     dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
     var dialog = this.callFc.openForm(
       PopupListContactsComponent,
@@ -192,9 +194,9 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CMAddresses';
-    dataModel.gridViewName = 'grvCMAddresses';
-    dataModel.entityName = 'CM_Addresses';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
     var dialog = this.callFc.openForm(

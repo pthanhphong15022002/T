@@ -107,9 +107,9 @@
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
       <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
+    <div class="mt-1" *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.field">
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
-      <span>Thương mại, dịch vụ</span>
+      <span>{{data.field}}</span>
     </div>
   </div>
 </ng-template>
@@ -133,6 +133,6 @@
 <!--Detail-->
 <ng-template #templateDetail>
   <codx-crmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
-    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)">
+    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName">
   </codx-crmcustomer-detail>
 </ng-template>
