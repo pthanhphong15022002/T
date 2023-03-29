@@ -1,5 +1,5 @@
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChild, TemplateRef, SimpleChanges } from '@angular/core';
 import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService, DialogModel } from 'codx-core';
 
 @Component({
@@ -33,6 +33,8 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.dataSource);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
   }
   
   shareUser(share) {
