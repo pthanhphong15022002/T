@@ -561,6 +561,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null, isData = false) {
+    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -715,7 +716,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Cập nhật
       case 'ODT103':
-      case 'ODT202': {
+      case 'ODT202':
+      case 'ODT3002': {
         //if(this.checkOpenForm(funcID))
         var option = new DialogModel();
         option.FormModel = this.formModel;
@@ -737,7 +739,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Chia sẻ
       case 'ODT104':
-      case 'ODT203': {
+      case 'ODT203':
+      case 'ODT3003': {
         // if (this.checkOpenForm(funcID)) {
         // }
         let option = new SidebarModel();
@@ -765,7 +768,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Thu hồi
       case 'ODT105':
-      case 'ODT204': {
+      case 'ODT204':
+      case 'ODT3004': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         this.notifySvr
@@ -777,7 +781,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //liên kết văn bản
       case 'ODT106':
-      case 'ODT205': {
+      case 'ODT205':
+      case 'ODT3005': {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
@@ -800,7 +805,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Gia hạn
       case 'ODT107':
-      case 'ODT206': {
+      case 'ODT206':
+      case 'ODT3006': {
         // if (this.checkOpenForm(funcID)) {
         // }
         this.callfunc
@@ -815,14 +821,16 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Quản lý phiên bản
       case 'ODT108':
-      case 'ODT207': {
+      case 'ODT207':
+      case 'ODT3007': {
         // if (this.checkOpenForm(funcID)) {
         // }
         break;
       }
       //Chuyển vào thư mục
       case 'ODT109':
-      case 'ODT208': {
+      case 'ODT208':
+      case 'ODT3008': {
         //  if(this.checkOpenForm(funcID))
         // {
         // this.callfunc.openForm(FolderComponent, null, 600, 400);
@@ -1050,7 +1058,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Hoàn tất
       case 'ODT112':
-      case 'ODT211': {
+      case 'ODT211':
+      case 'ODT3011': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -1165,7 +1174,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Giao việc
       case 'ODT1013':
-      case "ODT52013": {
+      case "ODT52013":
+      case 'ODT3013': {
         var task = new TM_Tasks();
         task.refID = datas?.recID;
         task.refType = this.formModel.entityName;

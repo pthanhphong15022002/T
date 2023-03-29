@@ -193,7 +193,7 @@ export class OkrTargetsComponent implements OnInit {
           id: 'btnAddO',
         },
         {
-          text: 'Thêm kết quả then chốt',
+          text: 'Thêm kết quả chính',
           id: 'btnAddKR',
         },
       ],
@@ -215,13 +215,14 @@ export class OkrTargetsComponent implements OnInit {
           ) {
             this.OM_UseSKR=true;
             this.button.items.push({
-              text: 'Thêm kết quả then chốt cấp con',
+              text: 'Thêm kết quả phụ',
               id: 'btnAddSKR',
             });
           }
           
         }
       });
+      
     this.cache.functionList(this.skrFuncID).subscribe((res) => {
       if (res) {
         this.skrTitle =
@@ -298,6 +299,8 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   clickMF(e: any, ob: any) {
+    console.log(ob);
+    
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -333,6 +336,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   clickKRMF(e: any, kr: any, isSKR: boolean) {
+    
     let tempT = isSKR ? this.skrTitle : this.krTitle;
     let popupTitle = e.text + ' ' + tempT;
     var funcID = e?.functionID;
@@ -399,7 +403,7 @@ export class OkrTargetsComponent implements OnInit {
   }
   selectionChange(parent) {
     if (parent.isItem) {
-      parent.data.items = parent?.data?.child;
+      parent.data.items = parent?.data?.items;
     }
   }
   // valueChange(evt: any) {
@@ -459,22 +463,22 @@ export class OkrTargetsComponent implements OnInit {
       if (isAdd) {
         for (let ob of this.dataOKR) {
           if (ob.recID == kr.parentID) {
-            if (ob.child == null) {
-              ob.child = [];
+            if (ob.items == null) {
+              ob.items = [];
             }
-            ob.child.push(kr);
+            ob.items.push(kr);
             return;
           }
         }
       } else {
         for (let ob of this.dataOKR) {
           if (ob.recID == kr.parentID) {
-            if (ob.child == null) {
-              ob.child = [];
+            if (ob.items == null) {
+              ob.items = [];
             }
-            for(let i=0;i<ob.child.length;i++){
-              if (ob.child[i].recID == kr.recID) {
-                this.editRender(ob.child[i], kr);
+            for(let i=0;i<ob.items.length;i++){
+              if (ob.items[i].recID == kr.recID) {
+                this.editRender(ob.items[i], kr);
                 return;
               }
             }
@@ -497,26 +501,26 @@ export class OkrTargetsComponent implements OnInit {
     if (skr != null) {
       if (isAdd) {
         for (let ob of this.dataOKR) {
-          if (ob.child != null) {
-            for (let kr of ob.child) {
+          if (ob.items != null) {
+            for (let kr of ob.items) {
               if (kr.recID == skr.parentID) {
-                if (kr.child == null) {
-                  kr.child = [];
+                if (kr.items == null) {
+                  kr.items = [];
                 }
-                kr.child.push(skr);
+                kr.items.push(skr);
               }
             }
           }
         }
       } else {
         for (let ob of this.dataOKR) {
-          if (ob.child != null) {
-            for (let kr of ob.child) {
+          if (ob.items != null) {
+            for (let kr of ob.items) {
               if (kr.recID == skr.parentID) {
-                if (kr.child == null) {
-                  kr.child = [];
+                if (kr.items == null) {
+                  kr.items = [];
                 }
-                for (let oldSKR of kr.child) {
+                for (let oldSKR of kr.items) {
                   if (oldSKR.recID == skr.recID) {
                     this.editRender(oldSKR, skr);
                   }
