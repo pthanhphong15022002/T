@@ -170,7 +170,7 @@ const routes: Routes = [
     // PdfViewerAllModule,
     ListViewAllModule,
   ],
-  exports: [CodxEsComponent],
+  exports: [CodxEsComponent], 
   providers: [
     CategoryService,
     DateTimeService,
