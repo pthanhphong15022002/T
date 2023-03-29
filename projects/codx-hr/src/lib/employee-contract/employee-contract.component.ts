@@ -95,16 +95,16 @@ export class EmployeeContractComponent extends UIComponent {
         },
       },
     ]
-    console.log('view cua e contract', this.view);
-    if(this.view){
+    // console.log('view cua e contract', this.view);
+    // // if(this.view){
 
-      this.view.dataService.methodDelete = 'DeleteEContractAsync';
-    }
-    console.log('data service data', this.view?.formModel.funcID);
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
-      this.eContractHeaderText = res;
-      console.log('hed do` text ne',this.eContractHeaderText);
-    })
+    // //   this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    // // }
+    // console.log('data service data', this.view?.formModel.funcID);
+    // this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+    //   this.eContractHeaderText = res;
+    //   console.log('hed do` text ne',this.eContractHeaderText);
+    // })
   }
 
   ngAfterViewChecked(){
