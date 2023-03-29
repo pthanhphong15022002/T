@@ -43,6 +43,8 @@ export class PopupAssignmentOKRComponent
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
 
+  @ViewChild('assignTab') assignTab: any;
+
   dialogRef: DialogRef;
   title = '';
   okrName = '';
@@ -211,8 +213,10 @@ export class PopupAssignmentOKRComponent
     }
   }
   deleteOrg() {
-    this.assignmentOKR.orgUnitID = null;
-    //this.assignmentOKR.orgUnitName= null;
+    this.assignmentOKR.objectID=null;
+    this.assignTab.items[1].disabled=false;
+    this.assignTab.items[2].disabled=false;
+    this.assignTab.items[0].disabled=false;
     this.detectorRef.detectChanges();
   }
   orgTypeToObjectType(orgUnitType:string){
@@ -226,13 +230,15 @@ export class PopupAssignmentOKRComponent
   cbxOrgChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
-      this.codxOmService.getManagerByOrgUnitID(this.assignmentOKR?.objectID).subscribe((ownerInfo:any) => {
+      this.codxOmService.getManagerByOrgUnitID(this.assignmentOKR.objectID).subscribe((ownerInfo:any) => {
           if (ownerInfo) {
             this.assignTo(ownerInfo);            
             this.assignmentOKR.objectType=this.orgTypeToObjectType(ownerInfo?.orgUnitType)
           }
         });
 
+      this.assignTab.items[1].disabled=true;
+      this.assignTab.items[2].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
@@ -253,24 +259,28 @@ export class PopupAssignmentOKRComponent
           }
         });
         
+      this.assignTab.items[0].disabled=true;
+      this.assignTab.items[2].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
   cbxEmpChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.objectID = evt.data;
-      this.codxOmService.getEmployeesByEmpID(this.assignmentOKR?.objectID).subscribe((ownerInfo) => {
+      this.codxOmService.getEmployeesByEmpID(this.assignmentOKR.objectID).subscribe((ownerInfo) => {
           if (ownerInfo) {
             this.assignTo(ownerInfo);
             this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
           }
         });
 
+        this.assignTab.items[1].disabled=true;
+        this.assignTab.items[0].disabled=true;
       this.detectorRef.detectChanges();
     }
   }
   assignTo(owner:any){
-    this.assignmentOKR.userID = owner?.userID;
+    this.assignmentOKR.userID = owner?.domainUser;
     this.assignmentOKR.employeeID = owner?.employeeID;
     this.assignmentOKR.orgUnitID = owner?.orgUnitID;
     this.assignmentOKR.departmentID = owner?.departmentID;

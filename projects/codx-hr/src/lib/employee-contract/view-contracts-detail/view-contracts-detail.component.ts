@@ -36,7 +36,7 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
   templateUrl: './view-contracts-detail.component.html',
   styleUrls: ['./view-contracts-detail.component.css'],
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewContractDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
     private hrService: CodxHrService,
@@ -62,7 +62,6 @@ export class ViewDetailComponent implements OnInit {
   @ViewChild('attachment') attachment;
 
   dataCategory;
-  data: any;
   active = 1;
   openNav = false;
   canRequest;
@@ -337,11 +336,7 @@ export class ViewDetailComponent implements OnInit {
     switch (val?.functionID) {
       // Gửi duyệt
       case 'HRT1001A3':
-        let hasApprovalRule = this.checkApprovalRule();
-        if (hasApprovalRule) {
-          this.getApprovalRule();
-        }
-
+        this.beforeRelease();
         break;
       //this.edit(datas, val);
       //break;
@@ -369,7 +364,7 @@ export class ViewDetailComponent implements OnInit {
     }
   }
 
-  getApprovalRule() {
+  release() {
     this.hrService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res) => {
@@ -377,34 +372,45 @@ export class ViewDetailComponent implements OnInit {
           this.dataCategory = res;
           this.hrService
             .release(
-              this.dataCategory.recID,
+              this.itemDetail.recID,
               this.dataCategory.processID,
               this.formModel.entityName,
               this.formModel.funcID,
               'Hợp đồng lao động'
             )
-            .subscribe((res) => {
-              console.log('rereqweqwrererererer', res);
+            .subscribe((result) => {
+              console.log('ok', result);
+              if(result?.msgCodeError == null && result?.rowCount){
+                this.notify.notifyCode('ES007');
+                this.itemDetail.approvalStatus = '3';
+              } else
+                this.notify.notifyCode(result?.msgCodeError);
             });
         }
       });
   }
-  checkApprovalRule() {
+  
+  beforeRelease() {
     let category = '4';
     let formName = 'HRParameters';
     this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      this.data = res;
+      if(res){
+        debugger;
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(p => p.Category == this.formModel.entityName);
+        if(index > -1){
+          let eContractsObj = parsedJSON[index];
+          if (eContractsObj['ApprovalRule'] == '1') {
+            this.release();
+          }
+          else{
+            //đợi BA mô tả
+          }
+        }
+      }
     });
 
-    var parsedJSON = JSON.parse(this.data.dataValue);
-    var eContractsObj = parsedJSON[1];
-    console.log('asd123123123123', eContractsObj);
-
-    if (eContractsObj['ApprovalRule'] == '1') {
-      return true;
-    } else {
-      return false;
-    }
+    
   }
 
   assign(datas) {

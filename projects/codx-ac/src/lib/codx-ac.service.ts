@@ -3,9 +3,12 @@ import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   CacheService,
+  DataRequest,
   FormModel,
-  NotificationsService,
+  NotificationsService
 } from 'codx-core';
+import { map, Observable, tap } from 'rxjs';
+import { Transactiontext } from './models/transactiontext.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +51,7 @@ export class CodxAcService {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
-  setMemo(master: any, text: string, idx: number) {
+  setMemo2(master: any, text: string, idx: number, transactiontext: any) {
     let newMemo = '';
 
     let aMemo = [];
@@ -61,6 +64,16 @@ export class CodxAcService {
     for (let i = 0; i < aMemo.length; i++) {
       if (i == aMemo.length - 1) newMemo += aMemo[i].trim();
       else newMemo += aMemo[i].trim() + ' - ';
+    }
+    return newMemo;
+  }
+
+  setMemo(master: any, transactiontext: Array<Transactiontext>) {
+    let newMemo = '';
+    let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
+    for (let i = 0; i < sortTrans.length; i++) {
+      if (i == sortTrans.length - 1) newMemo += sortTrans[i].value;
+      else newMemo += sortTrans[i].value + ' - ';
     }
     return newMemo;
   }
@@ -101,5 +114,24 @@ export class CodxAcService {
 
   toPascalCase(camelCase: string): string {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  }
+
+  loadComboboxData(comboboxName: string, service: string): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = comboboxName;
+    dataRequest.pageLoading = false;
+    return this.api
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataCbxAsync',
+        [dataRequest]
+      )
+      .pipe(
+        tap((p) => console.log(p)),
+        map((p) => JSON.parse(p[0])),
+        tap((p) => console.log(p))
+      );
   }
 }

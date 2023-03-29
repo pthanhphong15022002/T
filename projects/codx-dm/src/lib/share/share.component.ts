@@ -284,8 +284,9 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      this.fileEditing.toPermission[i].startDate = this.startDate;
-      this.fileEditing.toPermission[i].endDate = this.endDate;
+      debugger
+      this.fileEditing.toPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
+      this.fileEditing.toPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
       if (!this.isShare) {
         if (this.shareGroup.value.per == 'modified') {
           this.fileEditing.toPermission[i].create = true;
@@ -392,10 +393,10 @@ export class ShareComponent implements OnInit {
         this.download = $event.data;
         break;
       case "startDate":
-        this.startDate = $event.data;
+        this.startDate = $event.data?.fromDate;
         break;
       case "endDate":
-        this.endDate = $event.data;
+        this.endDate = $event.data?.fromDate;
         break;
       case "sentemail":
         this.sentEmail = $event.data;

@@ -71,7 +71,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Output() saveAssign = new EventEmitter<any>();
-  @Input() titleHeaderCF=''
+ 
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -346,17 +346,17 @@ export class StagesDetailComponent implements OnInit {
     }
     let dataTransmit =
       status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
-    let listData = [
+    let listData = {
       status,
-      this.jobType,
-      this.step?.recID,
-      this.taskGroupList,
-      dataTransmit || {},
-      this.taskList,
-      this.step?.stepName,
-      this.groupTaskID,
-      !this.step?.leadtimeControl,
-    ];
+      taskType: this.jobType,
+      stepID: this.step?.recID,
+      listGroup: this.taskGroupList,
+      stepTaskData: dataTransmit || {},
+      taskList: this.taskList,
+      stepName: this.step?.stepName,
+      groupTaskID:this.groupTaskID,
+      leadtimeControl:!this.step?.leadtimeControl,
+    };
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1011;
@@ -573,8 +573,6 @@ export class StagesDetailComponent implements OnInit {
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
-      console.log(this.taskGroupList);
-
       this.taskList = step['tasks'];
     }
   }
@@ -591,7 +589,7 @@ export class StagesDetailComponent implements OnInit {
         this.openPopupTaskGroup(data, 'copy');
         break;
       case 'DP08':
-        this.groupTaskID = data?.recID;
+        this.groupTaskID = data?.refID;
         this.openTypeTask();
         break;
       case 'DP12':
@@ -827,21 +825,21 @@ export class StagesDetailComponent implements OnInit {
     });
   }
 
-  checkExitsParentID(taskList, task): boolean {
-    if (task?.isTaskDefault) {
-      return true;
+  checkExitsParentID(taskList, task): string{
+    if (task?.requireCompleted) {
+      return 'text-red';
     }
-    let check = false;
+    let check = 'd-none';
     if (task['groupTaskID']) {
       taskList?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
-          check = true;
+          check = 'text-orange';
         }
       });
     } else {
       this.taskList?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
-          check = true;
+          check = 'text-orange';
         }
       });
     }
@@ -1252,4 +1250,13 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
+  //detail field
+  // inputElmIDCustomField(e){
+  //   this.currentElmID = e ;
+  //   this.inputElmIDCFStage.emit(e)
+  // }
+  // actionSaveCustomField(e){
+  //   this.isSaving =e ;
+  //   this.actionSaveCFStage.emit(e)
+  // }
 }

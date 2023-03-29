@@ -140,15 +140,16 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
    //select goup chat
    selectItem(group: any){
+    debugger
     group.isRead = true;
     group.messageMissed = 0;
-    this.signalRSV.sendData(group,"ActiveGroupAsync");
+    this.signalRSV.sendData("ActiveGroupAsync",group);
   }
    // select item search
    selectItemSeach(item: any) {
     if(item.type != 'H'){
       item.type = item.type == 'U' ? '1':'2';
-      this.signalRSV.sendData(item,"GetGroupSearch");
+      this.signalRSV.sendData("GetGroupSearch",item);
     }
   }
   

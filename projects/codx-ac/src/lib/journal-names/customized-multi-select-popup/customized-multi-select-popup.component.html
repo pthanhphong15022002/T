@@ -1,0 +1,33 @@
+<codx-form
+  #form
+  [headerText]="formTitle$ | async"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+>
+</codx-form>
+
+<ng-template #body>
+  <div *ngFor="let d of dimControls$ | async" class="mb-3">
+    <codx-input
+      type="checkbox"
+      class="check-circle"
+      [label]="d.text"
+      [checked]="d.checked"
+      [disabled]="d.disabled"
+      field="dim"
+      (valueChange)="handleChange($event, d)"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

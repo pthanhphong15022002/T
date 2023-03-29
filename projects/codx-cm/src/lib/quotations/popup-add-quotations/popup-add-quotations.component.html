@@ -1,0 +1,289 @@
+<codx-form
+  #form
+  [body]="body"
+  [formModel]="dialog?.formModel"
+  [dialog]="dialog"
+  [data]="quotations"
+  subToolbarCss="text-end"
+  [subToolbar]="subToolbar"
+>
+</codx-form>
+
+<!-- Start: Body -->
+<ng-template #body>
+  <div class="card-add mt-5" #cardbodyGeneral>
+    <ejs-tab #cashGeneral>
+      <e-tabitems>
+        <!-- Tab thông tin chung  -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-info icon-18 me-2"></i>
+              <div class="fw-bold fs-6 text-uppercase">
+                <codx-label
+                  name="lbl"
+                  [formName]=""
+                  [default]="'Thông tin chung'"
+                >
+                </codx-label>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabBasicGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event)">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2">
+              <i class="icon-format_list_numbered icon-18 me-2"></i>
+              <span class="fw-bold fs-6 text-uppercase">
+                <codx-label
+                  name="detailProducts"
+                  [formName]=""
+                  [default]="'Chi tiết mặt hàng'"
+                >
+                </codx-label
+              ></span>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabDetaildProduct"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <div class="row mb-2">
+      <ng-container *ngTemplateOutlet="addLine"></ng-container>
+    </div>
+  </div>
+</ng-template>
+<!-- End: Body -->
+
+<!-- Start: Thông tin chung -->
+<ng-template #tabBasicGeneral>
+  <div class="m-5">
+    <div class="row">
+      <div class="col-6 row">
+        <div class="form-group col-7">
+          <codx-label default="Tên báo giá"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+        <div class="form-group col-2">
+          <codx-label default="Phiên bản"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+        <div class="form-group col-3">
+          <codx-label default="Ngày hết hạn"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+      </div>
+      <div class="col-6 row">
+        <div class="col-6"></div>
+        <div class="col-6 row">
+          <div class="form-group col-6">
+            <codx-label default="Số báo giá"></codx-label>
+            <codx-input
+              type="text"
+              placeholder="test thôi dung la"
+            ></codx-input>
+          </div>
+          <div class="form-group col-6">
+            <codx-label default="Ngày báo giá"></codx-label>
+            <codx-input
+              type="text"
+              placeholder="test thôi dung la"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 row">
+        <div class="form-group">
+          <codx-label default="Cơ hội"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+      </div>
+      <div class="col-6 row">
+        <div class="col-6"></div>
+        <div class="col-6 row">
+          <div class="form-group">
+            <codx-label default="Tình trạng báo giá"></codx-label>
+            <codx-input
+              type="text"
+              placeholder="test thôi dung la"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 row">
+        <div class="form-group col-6">
+          <codx-label default="Khách hàng"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label default="Liên hệ"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+        </div>
+      </div>
+      <div class="col-6 row">
+        <div class="col-6"></div>
+        <div class="col-6 row">
+          <div class="form-group col-6">
+            <codx-label default="Tiền tệ"></codx-label>
+            <codx-input
+              type="text"
+              placeholder="test thôi dung la"
+            ></codx-input>
+          </div>
+          <div class="form-group col-6">
+            <codx-label default="Tỷ giá"></codx-label>
+            <codx-input
+              type="text"
+              placeholder="test thôi dung la"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!--  End:thêm sản phẩm -->
+
+<!-- Start: Chi tiết sản phẩm -->
+<ng-template #tabDetaildProduct>
+  <div class="h-100">
+    <codx-gridview-v2
+      #gridProductsLine
+      [formName]="fmProcductsLines.formName"
+      [gridViewName]="fmProcductsLines.gridViewName"
+      [entityName]="fmProcductsLines.entityName"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      predicates="TransID=@0"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataValues]="form.data.recID"
+      [dataSource]="productsLine"
+      service="AC"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="productsLineChanged($event)"
+      (created)="gridCreated($event)"
+    ></codx-gridview-v2>
+  </div>
+</ng-template>
+<!-- End: Chi tiết sản phẩm -->
+
+<!--  Start:thêm sản phẩm -->
+<ng-template #addLine>
+  <div>
+    <div>
+      <button class="btn btn-primary" (click)="addRow()">
+        <codx-label name="SaveProduct" default="Thêm sản phẩm"></codx-label>
+      </button>
+    </div>
+    <div #tabsNote class="row">
+      <div class="form-group col-8">
+        <codx-label default="Diễn giải"></codx-label>
+        <codx-input
+          type="textarea"
+          format="ed2"
+          placeholder="test thôi dung la"
+        ></codx-input>
+      </div>
+      <div
+        class="col-4 fw-bolder fs-5"
+        style="padding-left: 100px; padding-right: 250px"
+      >
+        <div class="d-flex justify-content-between">
+          <div class="">
+            <codx-label default="Thành tiền"></codx-label>
+          </div>
+          <div>23.000.000</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div><codx-label default="Tổng chiết khấu"></codx-label></div>
+          <div>2.300.000</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div><codx-label default="Tiền thuế"></codx-label></div>
+          <div>2.300.000</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div><codx-label default="Tổng cộng"></codx-label></div>
+          <div class="text-danger">23.000.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!--  End:thêm sản phẩm -->
+
+<!-- Start: Sub toolbar -->
+<ng-template #subToolbar>
+  <div class="d-flex align-items-center justify-content-between pt-2">
+    <div class="d-flex justify-content-start me-2">
+      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+        <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
+        <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
+      </div>
+      <div class="card-title">
+        <div class="d-flex flex-column">
+          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">
+            {{ headerText }}
+          </div>
+        </div>
+      </div>
+      <div class="ms-3 input-circle input-sm">
+        <div *ngIf="form?.formGroup">
+          <codx-input
+            [Group]="form.formGroup"
+            field="status"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end me-3">
+      <div class="ms-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          style="min-width: 60px"
+          (click)="onSave()"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- End: Sub toolbar -->
+
+<!-- Start: More function -->
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dialog.formModel"
+      type="hover"
+      (clickMF)="clickMF($event, data)"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+<!-- End: More function -->

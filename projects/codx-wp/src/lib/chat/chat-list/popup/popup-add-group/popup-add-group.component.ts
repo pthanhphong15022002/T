@@ -55,7 +55,7 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
           if(res2){
             this.notifiSV.notify("Tạo nhóm chat thành công");
           }
-          this.signalRSV.sendData(res,"ActiveNewGroup");
+          this.signalRSV.sendData("ActiveNewGroup",res);
           this.dialogRef.close(res);
         });
       }
@@ -159,7 +159,7 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
       }
       this.group.groupType = "2";
       let data = JSON.stringify(this.group);
-      this.signalRSV.sendData(data,"NewGroup");
+      this.signalRSV.sendData("NewGroup",data);
     }
     
   }

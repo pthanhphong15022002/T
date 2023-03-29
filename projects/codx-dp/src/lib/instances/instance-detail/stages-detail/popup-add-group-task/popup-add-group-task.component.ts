@@ -76,16 +76,31 @@ export class PopupAddGroupTaskComponent implements OnInit {
       this.checkShow = !this.checkShow;
       return
     }
-    this.checkShow = !this.checkShow;
     data[event?.field] = event?.data?.fromDate;
     if (
       this.taskGroup['startDate'] > this.taskGroup['endDate'] &&
       this.taskGroup['endDate']
     ) {
       this.isSave = false;
+      this.checkShow = !this.checkShow;
       this.notiService.notifyCode('DP019');
+      this.taskGroup['durationHour'] = 0;
+      this.taskGroup['durationDay'] = 0;
+      return;
     } else {
       this.isSave = true;
+    }
+    if(this.taskGroup['startDate'] && this.taskGroup['endDate']){
+      const endDate = new Date(this.taskGroup['endDate']);
+      const startDate = new Date(this.taskGroup['startDate']);
+      if(endDate >= startDate){
+        const duration = endDate.getTime() - startDate.getTime();
+        const time = Math.floor(duration / 60 / 1000/ 60);
+        const hours = time % 24;
+        const days = Math.floor(time / 24);
+        this.taskGroup['durationHour'] = hours;
+        this.taskGroup['durationDay'] = days;
+      }
     }
   }
   handleSave() {
@@ -95,9 +110,9 @@ export class PopupAddGroupTaskComponent implements OnInit {
         message.push(this.view[key]);
       }
     }
-    if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
-      message.push(this.view['durationDay']);
-    }
+    // if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
+    //   message.push(this.view['durationDay']);
+    // }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else if (!this.isSave) {

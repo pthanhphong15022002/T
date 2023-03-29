@@ -59,9 +59,8 @@ export class InstancesComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
-  @ViewChild('detailViewInstance')
-  detailViewInstance: InstanceDetailComponent;
-  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;InstanceDetailComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
@@ -98,6 +97,7 @@ export class InstancesComponent
   titleAction = '';
   instances = new DP_Instances();
   kanban: any;
+  listdetail: any;
   listStepsCbx: any;
   lstStepInstances = [];
   lstStepCbx = [];
@@ -111,6 +111,7 @@ export class InstancesComponent
   stepIdClick = '';
   listProccessCbx: any;
   sumDaySteps: number;
+  sumHourSteps: number;
   lstParticipants = [];
   listParticipantReason = []; // for moveReason
   oldIdInstance: any;
@@ -127,6 +128,7 @@ export class InstancesComponent
   process: any;
   tabInstances = [];
   haveDataService = false;
+  listHeader = [];
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -152,7 +154,7 @@ export class InstancesComponent
         else this.haveDataService = false;
         if (res && res.read) {
           this.loadData(res);
-        } 
+        }
       });
     });
     this.layout.setUrl('dp/dynamicprocess/DP0101');
@@ -171,7 +173,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-   
+
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -181,6 +183,7 @@ export class InstancesComponent
       });
     });
   }
+  
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -275,6 +278,31 @@ export class InstancesComponent
         break;
     }
   }
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+      console.log(dataColumns);
+      
+    return dataColumns;   
+  }
+
+  getPropertiesHeader(data, type){
+    if(this.listHeader?.length == 0){
+      this.listHeader = this.getPropertyColumn();
+    }
+    let find = this.listHeader?.find(item => item.recID === data.keyField);
+    return find ? find[type] : '';
+  }
+
+
 
   //CRUD
   add() {
@@ -408,10 +436,11 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
+        this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx),
       ],
       option
     );
@@ -862,6 +891,7 @@ export class InstancesComponent
             );
             dialogMoveStage.closed.subscribe((e) => {
               this.isClick = true;
+              this.stepIdClick='';
               if (!e || !e.event) {
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
@@ -874,12 +904,12 @@ export class InstancesComponent
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
                 }
+                this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                this.view.dataService.update(data).subscribe();
-                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -972,10 +1002,12 @@ export class InstancesComponent
         if (e.event.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
-        this.dataSelected = data;
-        this.detailViewInstance.dataSelect = this.dataSelected;
         this.view.dataService.update(data).subscribe();
         if (this.kanban) this.kanban.updateCard(data);
+        this.dataSelected = data;
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.instance = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
         this.detectorRef.detectChanges();
       }
     });
@@ -1001,13 +1033,7 @@ export class InstancesComponent
     return true;
   }
 
-  // deleteListReason(listStep: any): void {
-  //   listStep.pop();
-  //   listStep.pop();
-  // }
-
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
@@ -1035,11 +1061,13 @@ export class InstancesComponent
     });
   }
   isExistNewProccessId(newProccessId) {
-    return this.listProccessCbx.some((x) => x.recID == newProccessId);
+    return this.listProccessCbx.some(
+      (x) => x.recID == newProccessId && x.recID != this.guidEmpty
+    );
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx
+    let totalDay = listStepCbx
       .filter((x) => !x.isSuccessStep && !x.isFailStep)
       .reduce(
         (sum, f) =>
@@ -1049,7 +1077,17 @@ export class InstancesComponent
           this.setTimeHoliday(f?.excludeDayoff),
         0
       );
-    return total;
+    return totalDay;
+  }
+  getSumDurationHourOfSteps(listStepCbx: any) {
+      let totalHour = listStepCbx
+      .filter((x) => !x.isSuccessStep && !x.isFailStep)
+      .reduce(
+        (sum, f) =>
+          sum +f?.durationHour ,
+        0
+      );
+    return totalHour;
   }
   setTimeHoliday(dayOffs: string): number {
     let listDays = dayOffs.split(';');

@@ -76,6 +76,7 @@ export class FileInfo {
     relation: string;
     source: string;
     countDownload: any;
+    childID:any
 }
 
 export class ItemInterval {
@@ -259,8 +260,8 @@ export class Permission {
     isSystem: boolean = false;
     isParentShare: boolean = false;
     icon: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | any;
+    endDate: Date |any;
     title: any;
     content: any;
     form: string;
