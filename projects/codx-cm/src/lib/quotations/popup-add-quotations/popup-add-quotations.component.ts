@@ -9,6 +9,7 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CM_Products, CM_Quotations } from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -22,7 +23,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('cashGeneral') cashGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  quotations: any = {recID: '0000-0000-0000-0000'};
+  quotations : CM_Quotations
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
@@ -38,7 +39,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  productsLine = []; //mang san pham
+  productsLine :Array<CM_Products> = []; //mang san pham
 
   constructor(public sanitizer: DomSanitizer) {
     //tesst
