@@ -10,7 +10,7 @@
         </div>
         <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
             <div class="flex-column d-flex justify-content-start px-15">
-                <div class="d-flex justify-content-start flex-column" *ngFor="let ob of dataOKR;let i=index">
+                <div class="d-flex justify-content-start flex-column pb-5" *ngFor="let ob of dataOKR;let i=index">
                     <div class="d-flex justify-content-start flex-column">
                         <div class="d-flex align-items-end flex-row cursor-pointer w-100">
                             <div class="w-70 d-flex justify-content-start align-items-end">
@@ -78,7 +78,7 @@
                                     </div>
 
                                     <div class="w-10 d-flex align-items-end justify-content-center mb-3">
-                                        <span class="icon-post_add cursor-pointer text-gray-600 w-fit"
+                                        <span class="icon-post_add cursor-pointer text-gray-600 w-fit" ngbTooltip="Thêm kết quả phụ"
                                             (click)="addOKR(skrType,i,ii)"></span>
                                     </div>
                                 </div>

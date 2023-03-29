@@ -71,6 +71,7 @@ import { PopAddLineComponent } from './purchaseinvoices/pop-add-line/pop-add-lin
 import { SingleSelectPopupComponent } from './journal-names/single-select-popup/single-select-popup.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
+import { VoucherComponent } from './popup/voucher/voucher.component';
 
 export const routes: Routes = [
   {
@@ -217,6 +218,7 @@ export const routes: Routes = [
     PopAddLineComponent,
     SingleSelectPopupComponent,
     CustomizedMultiSelectPopupComponent,
+    VoucherComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
