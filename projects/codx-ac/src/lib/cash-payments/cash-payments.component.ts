@@ -15,6 +15,7 @@ import {
   DialogRef,
   FormModel,
   RequestOption,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -63,8 +64,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -123,19 +123,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'add',
           headerText: this.headerText,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }
@@ -151,19 +147,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'edit',
           headerText: this.funcName,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }
@@ -179,19 +171,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'copy',
           headerText: this.funcName,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }

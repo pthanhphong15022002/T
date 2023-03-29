@@ -6,6 +6,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { Transactiontext } from './models/transactiontext.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +49,7 @@ export class CodxAcService {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
-  setMemo(master: any, text: string, idx: number) {
+  setMemo2(master: any, text: string, idx: number, transactiontext: any) {
     let newMemo = '';
 
     let aMemo = [];
@@ -65,6 +66,15 @@ export class CodxAcService {
     return newMemo;
   }
 
+  setMemo(master: any, transactiontext: Array<Transactiontext>) {
+    let newMemo = '';
+    let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
+    for (let i = 0; i < sortTrans.length; i++) {
+      if (i == sortTrans.length - 1) newMemo += sortTrans[i].value;
+      else newMemo += sortTrans[i].value + ' - ';
+    }
+    return newMemo;
+  }
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
