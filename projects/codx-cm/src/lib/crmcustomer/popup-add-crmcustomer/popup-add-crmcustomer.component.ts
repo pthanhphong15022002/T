@@ -49,9 +49,11 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     this.title = dt.data[1];
     if (this.action != 'add') {
       this.getAvatar(this.data);
-    }else{
-      if(this.data.contacts != null && this.data.contacts.length > 0)
+      if (this.data.contacts != null && this.data.contacts.length > 0) {
         this.contacts = this.data.contacts;
+        var check = this.contacts.filter((x) => x.contactType == '1')[0];
+        if (check != null) this.contactsPerson = check;
+      }
     }
   }
 
@@ -66,21 +68,22 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     if (this.action === 'add') {
       op.method = 'AddCrmAsync';
       op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.dialog.formModel.formName,
-        this.funcID,
-        this.dialog.formModel.entityName,
-      ];
-    }
-    if(this.contactsPerson != null){
-      if (this.contacts != null && this.contacts.length > 0) {
-        this.contacts.forEach((el) => {
-          el.contactType = '2';
-        });
+      if (this.contactsPerson != null) {
+        if (this.contacts != null && this.contacts.length > 0) {
+          this.contacts.forEach((el) => {
+            el.contactType = '2';
+          });
+        }
+        this.contacts.push(this.contactsPerson);
+        this.data.contacts = this.contacts;
+        data = [
+          this.data,
+          this.dialog.formModel.formName,
+          this.funcID,
+          this.dialog.formModel.entityName,
+          this.contactsPerson.recID,
+        ];
       }
-      this.contacts.push(this.contactsPerson);
-      this.data.contacts = this.contacts;
     }
     op.data = data;
     return true;
@@ -97,8 +100,17 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       });
   }
 
-  onSave() {
-    this.onAdd();
+  async onSave() {
+    if (this.imageAvatar?.fileUploadList?.length > 0) {
+      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+        // save file
+        if (res) {
+          this.onAdd();
+        }
+      });
+    } else {
+      this.onAdd();
+    }
   }
 
   addAvatar() {
@@ -138,14 +150,14 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       });
   }
 
-  getNameCrm(data){
-    if(this.funcID == "CM0101"){
+  getNameCrm(data) {
+    if (this.funcID == 'CM0101') {
       return data.customerName;
-    }else if(this.funcID == "CM0102"){
+    } else if (this.funcID == 'CM0102') {
       return data.contactName;
-    }else if(this.funcID == "CM0103"){
+    } else if (this.funcID == 'CM0103') {
       return data.partnerName;
-    }else{
+    } else {
       return data.opponentName;
     }
   }

@@ -88,7 +88,7 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
     [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imageWidth]="35" imgCss="me-3"
-    imageObjType="AD_Users" [title]="getNameCrm(data)" [titleCss]="'fs-6'" [descTmp]="descTmp"
+    [imageObjType]="entityName" [title]="getNameCrm(data)" [titleCss]="'fs-6'" [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'" [formModel]="view.formModel"
     [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
