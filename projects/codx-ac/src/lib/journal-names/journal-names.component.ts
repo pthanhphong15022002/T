@@ -177,7 +177,7 @@ export class JournalNamesComponent extends UIComponent {
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
-        req.data = data;
+        req.data = data.recID;
 
         return true;
       })

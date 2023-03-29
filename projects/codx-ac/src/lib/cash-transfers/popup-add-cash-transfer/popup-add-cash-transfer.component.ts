@@ -27,7 +27,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
   hasInvoice: boolean = false;
-  cashBookName: string = '';
+  cashBookName1: string = '';
   cashBookName2: string = '';
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
@@ -44,7 +44,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
-  cashBookName1: string;
 
   constructor(
     private injector: Injector,
@@ -66,6 +65,21 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.acService
+      .loadComboboxData('CashBooks', 'AC')
+      .subscribe((cashBooks) => {
+        if (cashBooks) {
+          this.cashBookName1 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID
+          );
+          this.cashBookName2 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID2
+          );
+        }
+      });
+
     this.cache
       .gridViewSetup(
         this.dialogRef.formModel.formName,
@@ -111,16 +125,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
   //#region Event
   handleInputChange(e, prop: string = 'cashTransfer') {
     let field = e.field.toLowerCase();
-
-    if (field === 'cashbookid') {
-      let name = e.component.itemsSelected[0].CashBookName;
-      this.cashBookName = name;
-    }
-
-    if (field === 'cashbookid2') {
-      let name = e.component.itemsSelected[0].CashBookName;
-      this.cashBookName2 = name;
-    }
 
     if (e.field) {
       this[prop][e.field] =
@@ -183,25 +187,12 @@ export class PopupAddCashTransferComponent extends UIComponent {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
 
-    // validate data
-    let isValid = true;
-    const controls = this.form.formGroup.controls;
-    for (const propName in controls) {
-      if (controls[propName].invalid) {
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          `"${
-            this.gvsCashTransfers[this.acService.toPascalCase(propName)]
-              ?.headerText
-          }"`
-        );
-
-        isValid = false;
-      }
-    }
-
-    if (!isValid) {
+    if (
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gvsCashTransfers
+      )
+    ) {
       return;
     }
 
@@ -289,13 +280,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  getCashBookNameById(id: string): string {
-    console.log('getCashBookNameById', id);
-    return this.cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
-  }
-
-  toPascalCase(camelCase: string): string {
-    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  getCashBookNameById(cashBooks: any[], id: string): string {
+    return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
   }
 
   validateVATInvoice(gvsVATInvoices, vatInvoice): boolean {
