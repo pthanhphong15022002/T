@@ -98,7 +98,6 @@ export class PopupAddGroupTaskComponent implements OnInit {
         const time = Math.floor(duration / 60 / 1000/ 60);
         const hours = time % 24;
         const days = Math.floor(time / 24);
-        console.log('thuan',hours,"xx",days);
         this.taskGroup['durationHour'] = hours;
         this.taskGroup['durationDay'] = days;
       }
