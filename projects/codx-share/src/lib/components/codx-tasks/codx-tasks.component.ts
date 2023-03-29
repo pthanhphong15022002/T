@@ -64,6 +64,8 @@ export class CodxTasksComponent
   @Input() calendarID: string;
   @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() predicate?: any;
+  @Input() dataValue?: any;
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
