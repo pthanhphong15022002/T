@@ -220,15 +220,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             });
         }
       });
-      // this.api
-      // .exec<any>('PS', 'PurchaseInvoicesLinesBusiness', 'SetDefaultAsync', [
-      //   this.purchaseinvoices.recID,
-      // ])
-      // .subscribe((res) => {
-      //   if (res) {
-      //     this.keymodel = Object.keys(res);
-      //   }
-      // });
     if (this.formType == 'edit') {
       this.api
         .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
