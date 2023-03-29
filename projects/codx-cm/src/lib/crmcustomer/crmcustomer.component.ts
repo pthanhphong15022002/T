@@ -429,7 +429,7 @@ export class CrmCustomerComponent
             this.funcID == 'CM0104'
             ? PopupAddCrmcustomerComponent
             : PopupAddCrmcontactsComponent,
-          ['edit', this.titleAction],
+          ['add', this.titleAction],
           option
         );
         dialog.closed.subscribe((e) => {

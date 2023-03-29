@@ -24,6 +24,11 @@
     position: relative;
     margin-right: 2px;
 }
+.message-reciver-message{
+    border-radius: 6px;
+    background-color: var(--gray-150);
+    padding: 4px;
+}
 .status{
     position: absolute;
     bottom: -5px;
@@ -95,14 +100,12 @@
     line-break: anywhere;
 }
 
-.message-reciver-message{
-}
 .reciver-message{
     position: relative;
-    background-color:var(--gray-100);
+    background-color:var(--gray-150);
     max-width: 250px;
-    border-radius: 20px;
-    padding: 4px 10px;
+    border-radius: 6px;
+    padding: 4px;
 }
 
 .message-send{
@@ -114,18 +117,15 @@
     position: relative;
 }
 .message-send_content{
-    background-color: blue;
-    color: #ffffff;
     text-align: right;
     max-width: 250px;
-    border-radius: 20px;
-    padding: 4px 10px;
+    padding: 4px;
 }
 .message-reft{
     background-color: rgb(196, 207, 218);
     max-width: 250px;
-    border-radius: 20px;
-    padding: 4px 10px;
+    border-radius: 2px;
+    padding: 4px;
 }
 .message-send{
     display: flex;
@@ -238,19 +238,23 @@ codx-chat-box.active{
 }
 .footer-message-reply{
     width: 100%;
-    display:  flex;
+    display: flex;
     justify-content: space-between;
+    background-color: #e7e8e9;
+    border-radius: 4px;
 }
 .reply-content{
     width: 90%;
     line-break: anywhere;
 }
-.reply{
-}
+
 .reply-content{
-    background-color: rgb(231, 232, 233);
     max-width: 250px;
-    border-radius: 20px;
     padding: 4px 10px;
+}
+.message-send-message{
+    border-radius: 6px;
+    background-color: rgb(115, 212, 250);
+    padding: 4px;
 }
 

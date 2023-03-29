@@ -26,6 +26,7 @@ import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashReceipts } from '../../models/CashReceipts.model';
 import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
+import { Transactiontext } from '../../models/transactiontext.model';
 
 @Component({
   selector: 'lib-pop-add-receipts',
@@ -44,6 +45,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   cashreceipts: CashReceipts;
   cashreceiptslines: Array<CashReceiptsLines> = [];
   cashreceiptslinesDelete: Array<CashReceiptsLines> = [];
+  transactiontext: Array<Transactiontext> = [];
   dialog!: DialogRef;
   formType: any;
   gridViewSetup: any;
@@ -129,9 +131,10 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         break;
     }
   }
+
   valueChange(e: any) {
-    if (e.field.toLowerCase() === 'voucherdate' && e.data)
-      this.cashreceipts[e.field] = e.data;
+    let field = e.field.toLowerCase();
+    if (field === 'voucherdate' && e.data) this.cashreceipts[e.field] = e.data;
     else this.cashreceipts[e.field] = e.data;
     let sArray = [
       'currencyid',
@@ -142,10 +145,12 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       'objectid',
     ];
 
-    if (e.data && sArray.includes(e.field.toLowerCase())) {
-      if (e.field.toLowerCase() === 'objectid') {
+    if (e.data && sArray.includes(field)) {
+      if (field === 'objectid') {
         let data = e.component.itemsSelected[0];
         this.cashreceipts.objectType = data.ObjectType;
+        this.cashreceipts.payor = data['ObjectName'];
+        this.setTransaction('payee', data['ObjectName'], 1);
       }
 
       this.api
@@ -161,7 +166,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         });
     }
 
-    if (e.data && e.field.toLowerCase() === 'bankaccount') {
+    if (e.data && field === 'bankaccount') {
       this.api
         .exec<any>(
           'BS',
@@ -176,6 +181,18 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
             this.form.formGroup.patchValue(this.cashreceipts);
           }
         });
+    }
+
+    if (field === 'transactiontext' || field === 'payee') {
+      let idx = 0;
+      let text = e?.component?.itemsSelected[0]?.TextName;
+
+      if (field === 'payee') {
+        idx = 1;
+        text = e.data;
+      }
+
+      this.setTransaction(field, text, idx);
     }
   }
 
@@ -211,6 +228,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         });
     }
   }
+
   gridCreated(e) {
     let hBody, hTab, hNote;
     if (this.cardbodyRef)
@@ -218,8 +236,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
-    this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
+    this.gridHeight = hBody - (hTab + hNote + 120);
   }
+
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
@@ -240,6 +259,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   deleteRow(data) {
     this.cashreceiptslinesDelete.push(data);
     this.grid.deleteRow();
@@ -285,9 +305,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   clearCashrecipts() {
     this.cashreceiptslines = [];
   }
-  changeType(e: any) {
-   
-  }
+  changeType(e: any) {}
   //#endregion
 
   //#region Method
@@ -393,6 +411,34 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           });
       }
     }
+  }
+  //#endregion
+
+  //#region Function
+  setTransaction(field, text, idx) {
+    if (!this.transactiontext.some((x) => x.field == field)) {
+      let transText = new Transactiontext();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.transactiontext.push(transText);
+    } else {
+      let iTrans = this.transactiontext.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.cashreceipts.memo = this.acService.setMemo(
+      this.cashreceipts,
+      this.transactiontext
+    );
+    this.form.formGroup.patchValue(this.cashreceipts);
+  }
+
+  clearCashpayment() {
+    this.cashreceiptslines = [];
+    this.cashreceiptslinesDelete = [];
+    // this.voucherLineRefsDelete = [];
+    this.transactiontext = [];
   }
   //#endregion
 }
