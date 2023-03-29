@@ -54,7 +54,31 @@ export class PopupAddCrmcustomerComponent implements OnInit {
 
   valueChange(e) {}
 
-  onSave() {}
+  beforeSave(op) {
+    var data = [];
+    if(this.action === 'add'){
+      op.method = 'AddCrmAsync';
+      op.className = 'CustomersBusiness';
+      data = [this.data, this.dialog.formModel.formName, this.funcID, this.dialog.formModel.entityName]
+    }
+    op.data = data;
+    return true;
+  }
+
+  onAdd() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option), 0)
+      .subscribe((res) => {
+        this.imageAvatar.clearData();
+        if (res) {
+          this.dialog.close([res.save]);
+        } else this.dialog.close();
+      });
+  }
+
+  onSave() {
+    this.onAdd();
+  }
 
   addAvatar() {
     this.imageAvatar.referType = 'avt';
