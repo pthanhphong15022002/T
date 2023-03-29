@@ -129,6 +129,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   oldKR: any;
   popupTitle: any;
   okrVll: any;
+  isHiddenChart=false;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -241,9 +242,9 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getItemOKRAlign(i: any, recID: any) {
     this.openAccordionAlign[i] = !this.openAccordionAlign[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    // if(this.dataOKR[i].items && this.dataOKR[i].items.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
+    //     if(item) this.dataOKR[i].items = item
     //   });
   }
   getItemOKRAssign(i: any, recID: any) {
@@ -432,6 +433,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
       option
     );
   }
+
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//
@@ -439,7 +441,10 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-
+hiddenChartClick(evt: any) {
+    this.isHiddenChart = evt;
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//

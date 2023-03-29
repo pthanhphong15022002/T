@@ -1,3 +1,5 @@
+import { VoucherComponent } from './../../popup/voucher/voucher.component';
+import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +19,7 @@ import {
   CodxGridviewV2Component,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -28,6 +31,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
+import { Transactiontext } from '../../models/transactiontext.model';
 
 @Component({
   selector: 'lib-pop-add-cash',
@@ -58,6 +62,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   voucherLineRefsDelete: Array<any> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
   tab: number = 0;
+  transactiontext: Array<Transactiontext> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -82,6 +87,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
+    private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -129,6 +135,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Event
+  close() {
+    this.dialog?.close();
+  }
+
   created(e) {
     this.tabObj.hideTab(1, true);
   }
@@ -166,9 +176,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.voucherLineRefs = [];
         break;
     }
+    this.cashpayment.voucherType = e.data;
   }
 
   valueChange(e: any) {
+    let field = e.field.toLowerCase();
     if (e.data) {
       let sArray = [
         'currencyid',
@@ -177,10 +189,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         'journalno',
         'objectid',
       ];
-      if (sArray.includes(e.field.toLowerCase())) {
-        if (e.field.toLowerCase() === 'objectid') {
+      if (sArray.includes(field)) {
+        if (field === 'objectid') {
           let data = e.component.itemsSelected[0];
-          this.cashpayment.objectType = data.ObjectType;
+          this.cashpayment.objectType = data['ObjectType'];
+          this.cashpayment.payee = data['ObjectName'];
+          this.setTransaction('payee', data['ObjectName'], 1);
         }
 
         this.api
@@ -195,7 +209,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
       }
 
-      if (e.field.toLowerCase() === 'exchangerate')
+      if (field === 'exchangerate')
         this.api
           .exec<any>(
             'AC',
@@ -210,7 +224,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
 
-      if (e.field.toLowerCase() === 'bankaccount')
+      if (field === 'bankaccount')
         this.api
           .exec<any>(
             'BS',
@@ -226,22 +240,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
 
-      if (
-        e.field.toLowerCase() === 'transactiontext' ||
-        e.field.toLowerCase() === 'payee'
-      ) {
+      if (field === 'transactiontext' || field === 'payee') {
         let idx = 0;
         let text = e?.component?.itemsSelected[0]?.TextName;
-        if (e.field.toLowerCase() === 'payee') {
+
+        if (field === 'payee') {
           idx = 1;
           text = e.data;
         }
-        this.cashpayment.memo = this.acService.setMemo(
-          this.cashpayment,
-          text,
-          idx
-        );
-        this.form.formGroup.patchValue(this.cashpayment);
+
+        this.setTransaction(field, text, idx);
       }
     }
   }
@@ -319,6 +327,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
       }
+    }
+  }
+
+  voucherLineRefsCellClick(e: any) {
+    if (e.field.toLowerCase() === 'invoiceno') {
+      let voucherDialog = this.callfc.openForm(
+        VoucherComponent,
+        '',
+        1000,
+        600,
+        '',
+        e.component.setting,
+        ''
+      );
     }
   }
 
@@ -454,6 +476,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   onSaveAdd() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -517,6 +540,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
+
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
@@ -541,8 +565,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  setTransaction(field, text, idx) {
+    if (!this.transactiontext.some((x) => x.field == field)) {
+      let transText = new Transactiontext();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.transactiontext.push(transText);
+    } else {
+      let iTrans = this.transactiontext.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.cashpayment.memo = this.acService.setMemo(
+      this.cashpayment,
+      this.transactiontext
+    );
+    this.form.formGroup.patchValue(this.cashpayment);
+  }
+
   clearCashpayment() {
     this.cashpaymentline = [];
+    this.cashpaymentlineDelete = [];
+    this.voucherLineRefsDelete = [];
+    this.transactiontext = [];
   }
   //#endregion
 }

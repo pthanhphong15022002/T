@@ -1,14 +1,15 @@
 import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit, Output, EventEmitter, OnDestroy, ApplicationRef, TemplateRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { content } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { interval } from 'rxjs';
 import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
-
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -19,10 +20,11 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   onClick() {
     this.checkActive(this.groupID);
   }
+  @Input() groupID:any;
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
 
-  @Input() groupID:any;
+
   funcID:string = "WPT11"
   formModel:FormModel = null;
   grdViewSetUp:any = null;
@@ -35,22 +37,30 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   pageIndex:number = 0;
   group:any = null;
   blocked:boolean = false;
-  fileUpload:Array<any> = [];
   loading:boolean = false;
-
+  MESSAGETYPE = {
+    TEXT:'1',
+    ATTACHMENTS:'2',
+    SYSTEM:'3',
+    REPLY:'4',
+    DELTED:'5'
+  }
   emojiMode: 'native' | 'apple' |'facebook' | 'google' | 'twitter' = 'facebook';
   emojiPerLine:number = 7;
   emojiMaxFrequentRows:number = 4;
   emojiReview:boolean = false;
   vllL1480:Array<any> = [];
-
+  isReply:boolean = false;
+  mssgReply:any = null;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
     APPLICATION: 'application',
   };
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
+  @ViewChild("codxATMImages") codxATMImages:AttachmentComponent;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
+
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   constructor
@@ -62,7 +72,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     private cache:CacheService,
     private callFC:CallFuncService,
     private sanitizer: DomSanitizer,
-    private applicationRef: ApplicationRef,
+    private codxShareSV:CodxShareService,
     private dt:ChangeDetectorRef,
   ) 
   {
@@ -117,8 +127,10 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     this.signalR.reciverChat.subscribe((res:any) => {
       if(res.groupID === this.groupID)
       {
-        let data = JSON.parse(JSON.stringify(res));
-        this.arrMessages.push(data);
+        this.arrMessages.push(res);
+        this.group.lastMssgID = res.recID; 
+        this.group.message = res.message; 
+        this.group.messageType = res.messageType;
         setTimeout(()=>{
           this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
         },100)
@@ -221,45 +233,14 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     if(!this.blocked){
       this.blocked = true;
       this.data.recID = Util.uid();
-      if(this.messageReply){
-        this.data.refID = this.messageReply.recID;
-        this.data.refContent = this.messageReply.message;
-      }
-      if(this.fileUpload.length > 0){
-        this.codxATM.objectId = this.data.recID; 
-        this.codxATM.saveFilesMulObservable()
-        .subscribe((res:any) => {
-          if(res)
-          {
-            this.data.messageType = "2";
-            this.signalR.sendData(JSON.stringify(this.data),"SendMessageToGroup");
-          }
-          else
-          {
-            this.notifiSV.notify("SYS019");
-          }
-          this.fileUpload = [];
-          this.group.lastMssgID = this.data.recID; 
-          this.group.message = this.data.message; 
-          this.group.messageType = this.data.messageType;
-          this.data.message = "";
-          this.data.messageType = "";
-          this.replyMssg = false;
-          this.messageReply = null;
-          this.blocked = false;
-        });
-      }
-      else if(this.data.message && this.data.message.trim())
+      if(this.data.message?.trim())
       {
-        this.data.messageType = "1";
-        this.signalR.sendData(JSON.stringify(this.data),"SendMessageToGroup");
-        this.group.lastMssgID = this.data.recID; 
-        this.group.message = this.data.message; 
-        this.group.messageType = this.data.messageType;
+        this.data.messageType = this.data.refID ? "4" : "1";
+        this.signalR.sendData("SendMessageToGroup",JSON.stringify(this.data));
         this.data.message = "";
         this.data.messageType = "";
-        this.replyMssg = false;
-        this.messageReply = null;
+        this.isReply = false;
+        this.mssgReply = null;
         this.blocked = false;
       }
       else this.blocked = false;
@@ -293,52 +274,92 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
 
   // click upload files
-  clickUploadFile(){
+  clickUploadFiles(){
     if(this.codxATM){
       this.codxATM.uploadFile();
     }
   }
-  // attachment return files
+
+  // click upload images
+  clickUploadImages(){
+    if(this.codxATMImages)
+    {
+      this.codxATMImages.uploadFile();
+    }
+  }
+  // add files
   addFiles(event:any){
-    let files = event.data;
-    if(Array.isArray(files)){
-      files.map((f) => {
-        if(f.mimeType.includes('image'))
-        {
-          f["source"] = f.avatar;
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
+    if(Array.isArray(event?.data)){
+      let files = Array.from<any>(event.data);
+      files.map((x) => {
+        x['objectID'] = Util.uid();
+        if(x.mimeType.includes('image')){
+          x["source"] = x.avatar;
+          x['referType'] = this.FILE_REFERTYPE.IMAGE;
         }
-        else if(f.mimeType.includes('video'))
-        {
-          f['source'] = f.data.changingThisBreaksApplicationSecurity;
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        else if(x.mimeType.includes('video')){
+          x['source'] = x.data.changingThisBreaksApplicationSecurity;
+          x['referType'] = this.FILE_REFERTYPE.VIDEO;
         }
-        else 
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        else{
+          x['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        }
       });
-      let id = Util.uid();
-      this.codxATM.objectId = id; 
       this.codxATM.saveFilesMulObservable()
-      .subscribe((res:any) => {
+      .subscribe((res:any)=>{
         if(res){
-          let messgae = new WP_Messages();
-          messgae.recID = id;
-          messgae.groupID = this.groupID;
-          messgae.message = "";
-          messgae.messageType = "2";
-          this.signalR.sendData(JSON.stringify(messgae),"SendMessageToGroup");
+          let message = new WP_Messages();
+          message.groupID = this.groupID;
+          message.message = "";
+          message.messageType = "2";
+          files.forEach(x => {
+            message.recID = x.objectID;
+            message.fileName = x.fileName;
+            message.fileSize = x.fileSize;
+            message.fileType = x.referType;
+            this.signalR.sendData("SendMessageToGroup",JSON.stringify(message));
+          });
         }
         else
-        {
           this.notifiSV.notify("SYS019");
-        }
+      })
+    }
+  }
+  // add files image
+  addFileImages(event:any){
+    if(Array.isArray(event?.data)){
+      let images = Array.from<any>(event.data);
+      let message = new WP_Messages();
+      message.recID = Util.uid();
+      message.groupID = this.groupID;
+      message.message = "";
+      message.messageType = "2";
+      images.forEach((f) => {
+        f["source"] = f.avatar;
+        f['referType'] = this.FILE_REFERTYPE.IMAGE;
+      });
+      if(images.length == 1){
+        message.fileName = images[0].fileName;
+        message.fileSize = images[0].fileSize;
+        message.fileType = images[0].referType;
+      }
+      else
+      {
+        // 'm' không cho reply vì multi files
+        message.refType = 'm';
+      }
+      this.codxATMImages.objectId = message.recID; 
+      this.codxATMImages.saveFilesMulObservable()
+      .subscribe((res:any) => {
+        if(res)
+          this.signalR.sendData("SendMessageToGroup",JSON.stringify(message));
+        else
+          this.notifiSV.notify("SYS019");
       });
     }
   }
-
   // click files 
   clickViewFile(file){
-    debugger
     let option = new DialogModel();
       option.FormModel = this.formModel;
       option.IsFull = true;
@@ -354,13 +375,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         option
       );
   }
-  //remove file
-  removeFile(index:number){
-    if(index > -1){
-      this.fileUpload.splice(index,1);
-      this.dt.detectChanges();
-    }
-  }
 
   // handle tooltip emoji mssg
   openTooltipEmoji(tooltip:any,mssg:any){
@@ -373,24 +387,72 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   // click vote mssg
   clickVoteMssg(mssg:any,vote:any){
     let data = {groupID: this.groupID, mssgID:mssg.recID, voteType:vote.value};
-    this.signalR.sendData(JSON.stringify(data),"VoteMessage");
+    this.signalR.sendData("VoteMessage",JSON.stringify(data));
     this.dt.detectChanges();
   }
 
-  replyMssg:boolean = false;
-  messageReply:any = null;
+  replyTo:string = "";
   // reply message
   clickReplyMssg(mssg:any = null){
-    this.replyMssg = mssg ? true : false;
-    this.messageReply = mssg;
-    if(this.replyMssg){
-      this.data.refID = this.messageReply.recID;
-      this.data.refContent = this.messageReply.message;
+    this.isReply = mssg ? true : false;
+    this.mssgReply = mssg;
+    if(mssg){
+      this.data.refID = this.mssgReply.recID;
+      this.data.refContent = {
+        type:this.mssgReply.messageType,
+        content:this.mssgReply.message,
+        createdName:this.mssgReply.createdName
+      } 
+      if(this.mssgReply.messageType == "2"){
+        this.data.fileName = this.mssgReply.fileName;
+        this.data.fileSize = this.mssgReply.fileSize;
+        this.data.fileType = this.mssgReply.fileType;
+      }
+      this.replyTo = 'Đang trả lời ';
+      if(mssg.createdBy != this.user.userID)
+      {
+        this.replyTo += mssg.createdName;
+      }
     }
     else
     {
       this.data.refID = "";
-      this.data.refContent = "";
+      this.data.refContent = null;
     }
+  }
+  // format file size 
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  //
+  checkDate(index:number){
+
+  }
+
+  //
+  showCBB:boolean = false;
+  width:number = 720;
+  height:number = window.innerHeight;
+  memeber:string = "PMNHI;ADMIN";
+  addMemeber(event:any){
+    debugger
+    let lstUserID = event.id.split(";");
+    let lstUserName = event.text.split(";");
+    let lstMember = lstUserID.map((x,index) => { return {userID:x,userName:lstUserName[index]}});
+    let data = {
+      groupID:this.groupID,
+      members:lstMember
+    }
+    this.showCBB = false;
+    this.signalR.sendData("AddMemberToGroup",this.groupID,JSON.stringify(lstMember));
+  }
+  clickAddMemeber(){
+    this.showCBB = !this.showCBB;
   }
 }

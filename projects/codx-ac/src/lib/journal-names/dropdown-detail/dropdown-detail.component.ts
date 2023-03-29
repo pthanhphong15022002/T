@@ -20,7 +20,7 @@ export class DropdownDetailComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.ids = this.modelShares.map((d) => d.id).join(';');
+    this.ids = this.modelShares?.map((d) => d.id).join(';');
   }
   //#endregion
 

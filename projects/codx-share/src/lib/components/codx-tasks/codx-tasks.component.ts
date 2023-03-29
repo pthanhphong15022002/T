@@ -301,7 +301,7 @@ export class CodxTasksComponent
         break;
       case 'TMT0203':
       case 'MWP0062':
-      case 'OMT013':
+      case 'OMT014':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
         break;
@@ -1706,7 +1706,7 @@ export class CodxTasksComponent
     if (
       this.funcID == 'TMT0203' ||
       this.funcID == 'MWP0062' ||
-      this.funcID == 'OMT013'
+      this.funcID == 'OMT014'
     )
       this.isAssignTask = true;
     else this.isAssignTask = false;

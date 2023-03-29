@@ -343,6 +343,7 @@ export class CrmCustomerComponent
     //       this.detectorRef.detectChanges();
     //     });
     // }
+    this.view.dataService.methodSave = 'AddCrmAsync';
 
     this.detectorRef.detectChanges();
   }
@@ -429,7 +430,7 @@ export class CrmCustomerComponent
             this.funcID == 'CM0104'
             ? PopupAddCrmcustomerComponent
             : PopupAddCrmcontactsComponent,
-          ['edit', this.titleAction],
+          ['add', this.titleAction],
           option
         );
         dialog.closed.subscribe((e) => {
