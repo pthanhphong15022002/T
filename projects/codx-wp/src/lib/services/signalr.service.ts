@@ -1,4 +1,11 @@
-import { ApplicationRef, ComponentFactoryResolver, EventEmitter, Injectable, Injector, TemplateRef } from '@angular/core';
+import {
+  ApplicationRef,
+  ComponentFactoryResolver,
+  EventEmitter,
+  Injectable,
+  Injector,
+  TemplateRef,
+} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -11,7 +18,7 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
 
-  templateChatBox:TemplateRef<any> = null;
+  templateChatBox: TemplateRef<any> = null;
   userConnect = new EventEmitter<any>();
   newGroup = new EventEmitter<any>();
   activeNewGroup = new EventEmitter<any>();
@@ -19,9 +26,7 @@ export class SignalRService {
   reciverChat = new EventEmitter<any>();
   voteChat = new EventEmitter<any>();
 
-
-  constructor(
-    private authStore: AuthStore) {
+  constructor(private authStore: AuthStore) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -30,7 +35,9 @@ export class SignalRService {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/serverHub', {
         skipNegotiation: true,
-        accessTokenFactory: async () => {return this.authStore.get().token},
+        accessTokenFactory: async () => {
+          return this.authStore.get().token;
+        },
         transport: signalR.HttpTransportType.WebSockets,
       })
       .build();
@@ -47,7 +54,7 @@ export class SignalRService {
       this.userConnect.emit(data);
     });
     this.hubConnection.on('ReceiveMessage', (res) => {
-      switch(res.action){
+      switch (res.action) {
         case 'onConnected':
           break;
         case 'newGroup':
@@ -63,15 +70,13 @@ export class SignalRService {
           this.reciverChat.emit(res.data);
           break;
         case 'voteMessage':
-          debugger
           this.voteChat.emit(res.data);
-        break;
+          break;
       }
-      
     });
   }
   // send to server
-  sendData(data:any, method = null) {
+  sendData(data: any, method = null) {
     this.hubConnection.invoke(method, data);
   }
 }

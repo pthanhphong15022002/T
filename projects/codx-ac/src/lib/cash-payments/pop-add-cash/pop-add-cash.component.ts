@@ -1,3 +1,5 @@
+import { VoucherComponent } from './../../popup/voucher/voucher.component';
+import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +19,7 @@ import {
   CodxGridviewV2Component,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -84,6 +87,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
+    private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -131,6 +135,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Event
+  close() {
+    this.dialog?.close();
+  }
+
   created(e) {
     this.tabObj.hideTab(1, true);
   }
@@ -168,6 +176,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.voucherLineRefs = [];
         break;
     }
+    this.cashpayment.voucherType = e.data;
   }
 
   valueChange(e: any) {
@@ -318,6 +327,19 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
       }
+    }
+  }
+
+  voucherLineRefsCellClick(e: any) {
+    if (e.field.toLowerCase() === 'invoiceno') {
+      let voucherDialog = this.callfc.openForm(
+        VoucherComponent,
+        '',
+        null,
+        null,
+        '',
+        e.component.setting
+      );
     }
   }
 
