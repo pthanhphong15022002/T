@@ -213,9 +213,6 @@
             <div class="codx-files-documents cursor-pointer">
                 <ng-container *ngFor="let item of fileDocuments">
                     <div class="d-flex align-items-center my-1" (click)="clickFileDocument(item)">
-                        <!-- <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                            title="{{item.fileName}}" [descLine]="1" >
-                        </codx-temp-full> -->
                         <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
                             title="{{item.fileName}} ({{formatBytes(item.fileSize)}})" [descLine]="1">
                         </codx-temp-full>
@@ -256,7 +253,7 @@
 
 <!-- template video -->
 <ng-template #video let-file>
-    <div class="position-relative w-100 h-100 p-0">
+    <div class="position-relative w-100 h-100 p-0"> 
         <video 
             (click)="clickViewDetail(file)" 
             [autoplay]="false" 

@@ -346,17 +346,17 @@ export class StagesDetailComponent implements OnInit {
     }
     let dataTransmit =
       status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
-    let listData = [
+    let listData = {
       status,
-      this.jobType,
-      this.step?.recID,
-      this.taskGroupList,
-      dataTransmit || {},
-      this.taskList,
-      this.step?.stepName,
-      this.groupTaskID,
-      !this.step?.leadtimeControl,
-    ];
+      taskType: this.jobType,
+      stepID: this.step?.recID,
+      listGroup: this.taskGroupList,
+      stepTaskData: dataTransmit || {},
+      taskList: this.taskList,
+      stepName: this.step?.stepName,
+      groupTaskID:this.groupTaskID,
+      leadtimeControl:!this.step?.leadtimeControl,
+    };
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1011;
@@ -591,7 +591,7 @@ export class StagesDetailComponent implements OnInit {
         this.openPopupTaskGroup(data, 'copy');
         break;
       case 'DP08':
-        this.groupTaskID = data?.recID;
+        this.groupTaskID = data?.refID;
         this.openTypeTask();
         break;
       case 'DP12':

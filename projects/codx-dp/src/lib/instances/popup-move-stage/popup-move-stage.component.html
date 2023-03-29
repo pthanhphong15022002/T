@@ -2,8 +2,8 @@
   [footer]="footer" [dialog]="dialog" [data]="instancesStepOld"></codx-form>
 
 <ng-template #subHeader>
-  
-</ng-template> 
+
+</ng-template>
 <ng-template #body>
   <div class="title-step mt-3">
     <div class="fs-5 text-primary">{{ stepName }}</div>
@@ -46,34 +46,7 @@
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-
-    <!-- <div class="form-group" >
-      <div>
-        <div class="d-flex justify-content-end">
-          <div class="me-auto">
-            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Trường tùy chỉnh">
-          </codx-label>
-          </div>
-        </div>
-        <div class="pt-5">
-          <codx-field-detail
-          *ngIf="instancesStepOld?.fields?.length > 0"
-          [dataStep]="instancesStepOld"
-          [showColumnControl]="showColumnControl(instance.stepID)"
-          [isUpdate]="!instance.closed && (instance.status =='1' || instance.status=='2' )"
-          [currentRecID]="stepIdOld"
-          (inputCustomField)="inputCustomField($event)"
-          [isSaving]="isSaving"
-          (actionSave)="actionSaveCustomField($event)"
-        ></codx-field-detail>
-
-        </div>
-      </div>
-    </div> -->
-
-
-    <div class="list-tree" *ngIf="!!listTree">
+    <div class="form-group" *ngIf="!!listTree">
       <div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="w-100">
@@ -89,7 +62,7 @@
             </div>
             <div class="ps-2">
               <input
-              class="form-check-input rounded-circle"
+              class="form-check-input rounded-circle w-20px h-20px"
               type="checkbox"
               [checked]="isCheckAll"
               (change)="checkAllValue($event,'all','custom')"
@@ -136,7 +109,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'task')"
@@ -164,7 +137,7 @@
                       </div>
                     </div>
                       <div class="ms-5">
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end align-items-center">
                           <div>
                            <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="item?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                             </codx-imgs>
@@ -181,7 +154,7 @@
                           </div>
                           <div>
                             <input
-                            class="form-check-input rounded-circle"
+                            class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,'taskGroup')"
@@ -210,7 +183,7 @@
                                 </div>
                               </div>
                               <div class="ms-5">
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content-end align-items-center">
                                   <div>
                                     <codx-imgs [isToolTip]="true" [width]="25"   [objectId]="task?.roles[0]?.objectID" ojectType="AD_Users" [numberImages]="1">
                                     </codx-imgs>
@@ -228,7 +201,7 @@
                                   <div>
                                     <input
                                     [id]="item.recID"
-                                    class="form-check-input rounded-circle"
+                                    class="form-check-input rounded-circle w-20px h-20px"
                                     type="checkbox"
                                     [checked]="isCheckAll"
                                     (change)="checkAllValue($event,task,'task')"
@@ -248,6 +221,34 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group" >
+      <div>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Trường tùy chỉnh">
+          </codx-label>
+          </div>
+        </div>
+        <div class="pt-5">
+          <ng-container *ngIf="fieldsNull?.length > 0">
+            <ng-container *ngFor="let item of fieldsNull">
+                <codx-input-custom-field
+                  [customField]="item"
+                  [checkValid]="true"
+                  [objectId]="item.recID"
+                  [objectType]="'DP_Instances'"
+                  [formModel]="dialog.formModel"
+                  (valueChangeCustom)="valueChangeCustom($event)"
+                >
+                </codx-input-custom-field>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
   </div>
 </ng-template>
 
