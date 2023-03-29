@@ -636,7 +636,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
               this.popupClosed = false;
               let option = new SidebarModel();
               option.Width = '800px';
-              this.view.dataService.dataSelected = booking;
+              this.view.dataService.dataSelected = res;
               option.DataService = this.view?.dataService;
               option.FormModel = this.formModel;
               this.dialog = this.callFuncService.openSide(

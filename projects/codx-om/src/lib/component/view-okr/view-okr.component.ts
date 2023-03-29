@@ -1,36 +1,16 @@
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
   Injector,
   Input,
-  Optional,
-  TemplateRef,
-  ViewChild,
 } from '@angular/core';
-import {
-  CircularGaugeComponent,
-  GaugeTheme,
-  IAxisLabelRenderEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge';
 
 import {
-  AuthService,
-  CallFuncService,
-  DialogData,
-  DialogModel,
   DialogRef,
   FormModel,
-  NotificationsService,
   UIComponent,
-  ViewModel,
-  ViewType,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { OMCONST } from '../../codx-om.constant';
-import { CodxOmService } from '../../codx-om.service';
-import { ChartSettings } from '../../model/chart.model';
 
 @Component({
   selector: 'view-okr',
@@ -96,7 +76,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   
   selectionChange(parent) {
     if (parent.isItem) {
-      parent.data.items= parent?.data?.child;
+      parent.data.items= parent?.data?.items;
     }
   }
 }
