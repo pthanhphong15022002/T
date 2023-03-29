@@ -36,7 +36,7 @@
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <div class="d-flex justify-content-between">
           <div class="d-flex align-items-center">
-            <codx-label [formModel]="form.formModel" fiedName="Contacts" default="Liên hệ chính">
+            <codx-label [formModel]="form.formModel" fiedName="Contacts">
             </codx-label>
           </div>
           <div class="d-flex justify-content-end">
@@ -221,21 +221,25 @@
     <ng-container *ngIf="contactsPerson != null">
       <div class="d-flex">
         <div class="me-3">
-          <codx-img [objectId]="'ADMIN'" [objectName]="'Trần Đoàn Tuyết Khanh'" objectType="AD_Users" [width]="35">
+          <codx-img [objectId]="contactsPerson.recID" [objectName]="contactsPerson.contactName" objectType="CM_Contacts"
+            [width]="35">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-grow-1">
           <div class="d-flex flex-column">
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
-              Trương Đặng Ngọc Phúc
+              {{contactsPerson.contactName}}
             </div>
             <div class="mb-1">
-              <span class="icon-phone_android text-primary icon-16 me-1"></span>
-              <span class="text-gray-900">0702411141</span>
+              <span [ngClass]="contactsPerson.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
+                class=" icon-16 me-1"></span>
+              <span [ngClass]="contactsPerson.allowCall ? 'text-primary' : ''"
+                class="text-gray-900">{{contactsPerson.phoneNumber}}</span>
             </div>
             <div>
-              <span class="icon-email icon-16 me-1 text-primary"></span>
-              <span class="text-gray-900">tdnphuck42@gmail.com</span>
+              <span [ngClass]="contactsPerson.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
+                class="icon-16 me-1 text-gray-900"></span>
+              <span [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{contactsPerson.email}}</span>
             </div>
           </div>
         </div>

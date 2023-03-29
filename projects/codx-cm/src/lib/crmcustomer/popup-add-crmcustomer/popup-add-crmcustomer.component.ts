@@ -1,3 +1,4 @@
+import { CM_Contacts } from './../../models/tmpCrm.model';
 import {
   Component,
   OnInit,
@@ -32,7 +33,8 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   action: any;
   linkAvatar = '';
   funcID = '';
-  contactsPerson: any;
+  contacts = [];
+  contactsPerson: CM_Contacts;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -46,20 +48,39 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     this.action = dt.data[0];
     this.title = dt.data[1];
     if (this.action != 'add') {
-      this.getAvatar(this.data.recID);
+      this.getAvatar(this.data);
+    }else{
+      if(this.data.contacts != null && this.data.contacts.length > 0)
+        this.contacts = this.data.contacts;
     }
   }
 
   ngOnInit(): void {}
 
-  valueChange(e) {}
+  valueChange(e) {
+    this.data.field = e.data;
+  }
 
   beforeSave(op) {
     var data = [];
-    if(this.action === 'add'){
+    if (this.action === 'add') {
       op.method = 'AddCrmAsync';
       op.className = 'CustomersBusiness';
-      data = [this.data, this.dialog.formModel.formName, this.funcID, this.dialog.formModel.entityName]
+      data = [
+        this.data,
+        this.dialog.formModel.formName,
+        this.funcID,
+        this.dialog.formModel.entityName,
+      ];
+    }
+    if(this.contactsPerson != null){
+      if (this.contacts != null && this.contacts.length > 0) {
+        this.contacts.forEach((el) => {
+          el.contactType = '2';
+        });
+      }
+      this.contacts.push(this.contactsPerson);
+      this.data.contacts = this.contacts;
     }
     op.data = data;
     return true;
@@ -94,15 +115,15 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     }
   }
 
-  getAvatar(process) {
+  getAvatar(data) {
     let avatar = [
       '',
       this.funcID,
-      process?.recID,
-      'BP_Processes',
+      data.recID,
+      this.dialog.formModel.entityName,
       'inline',
       1000,
-      process?.processName,
+      this.getNameCrm(data),
       'avt',
       false,
     ];
@@ -115,6 +136,18 @@ export class PopupAddCrmcustomerComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
+  }
+
+  getNameCrm(data){
+    if(this.funcID == "CM0101"){
+      return data.customerName;
+    }else if(this.funcID == "CM0102"){
+      return data.contactName;
+    }else if(this.funcID == "CM0103"){
+      return data.partnerName;
+    }else{
+      return data.opponentName;
+    }
   }
 
   openPopupAddress() {
@@ -132,11 +165,11 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   clickPopupContacts() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupListContactsComponent,
       '',
       500,
@@ -146,17 +179,25 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        //gán tạm thời để xử lí liên hệ chính
+        this.contactsPerson = e.event;
+        this.contactsPerson.contactType = '1';
+      }
+    });
   }
 
   //Open popup add contacts
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMAddresses';
+    dataModel.gridViewName = 'grvCMAddresses';
+    dataModel.entityName = 'CM_Addresses';
+    dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
@@ -166,6 +207,13 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        //gán tạm thời để xử lí liên hệ chính
+        this.contactsPerson = e.event;
+        this.contactsPerson.contactType = '1';
+      }
+    });
   }
   //#endregion
 }
