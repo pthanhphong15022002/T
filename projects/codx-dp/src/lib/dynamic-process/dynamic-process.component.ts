@@ -793,7 +793,7 @@ export class DynamicProcessComponent
             this.popupEditName.close();
             this.notificationsService.notifyCode('SYS007');
           } else {
-            this.notificationsService.notifyCode('SYS008');
+            this.notificationsService.notifyCode('DP003');
           }
         });
     }
