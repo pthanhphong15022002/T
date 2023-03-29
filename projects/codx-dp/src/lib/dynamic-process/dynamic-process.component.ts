@@ -807,7 +807,6 @@ export class DynamicProcessComponent
   }
 
   async restoreProcess(data) {
-    console.log(data);
     let check = await this.checkExitsProcessName(
       data['processName'],
       data['recID']

@@ -9,8 +9,9 @@
             <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="dataOKRPlans?.progress + '%'" aria-valuenow="50"
               aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
-            {{ dataOKRPlans?.progress }}%
+          <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">         
+            
+            <span [innerHTML]="(dataOKRPlans?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
           </div>
         </div>
       </div>
@@ -88,7 +89,7 @@
   
               <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
               <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-                <span>{{item?.progress}}%</span>
+                <span [innerHTML]="(item?.progress | formatvalue : formModelOB : 'progress' | async )+'%'"></span>
                 <div class="h-7px w-100 bg-gray-200 rounded-4">
                   <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -141,7 +142,8 @@
           <div class="d-flex align-items-center justify-content-end ">
             <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
             <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-              <span>{{item?.progress}}%</span>
+              
+              <span [innerHTML]="(item?.progress | formatvalue : formModelKR : 'progress' | async )+'%'"></span>
               <div class="h-7px w-100 bg-gray-200 rounded-4">
                 <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
                   aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -193,7 +195,8 @@
           <div class="d-flex align-items-center justify-content-end ">
             <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
             <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-              <span>{{item?.progress}}%</span>
+              
+              <span [innerHTML]="(item?.progress | formatvalue : formModelSKR : 'progress' | async )+'%'"></span>
               <div class="h-7px w-100 bg-gray-200 rounded-4">
                 <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
                   aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>

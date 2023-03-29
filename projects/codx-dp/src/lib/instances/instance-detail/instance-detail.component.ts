@@ -169,8 +169,7 @@ export class InstanceDetailComponent implements OnInit {
               backgroundColor: data.backgroundColor,
               icon: data.icon,
               iconColor: data.iconColor,
-            }
-            console.log('--------thuan--------',  this.stepValue);          
+            }      
           }
           total += data.progress;
           stepNo = i + 1;

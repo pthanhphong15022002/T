@@ -3,25 +3,25 @@
 
 <ng-template #alignKR>
   <div class="w-100 h-100 bg-white d-flex flex-column">
-    <div class="d-flex align-items-center justify-content-end pt-2 me-5">
+    <div class="d-flex align-items-center justify-content-end pt-5 me-5">
       <div class="d-flex align-items-center">
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
+        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
           <span class="symbol-label bg-om-gray">
             <i class="icon-create"></i>
           </span>
+        </div> -->
+
+        <div  class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
+          <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
+            <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
+          </span>
         </div>
 
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
-          <span class="symbol-label bg-om-gray">
-            <i class="icon-bar_chart"></i>
-          </span>
-        </div>       
-
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-2" ngbTooltip="Kì hiện hành">
           <span class="mx-2">
             {{dataKR?.periodID}}
           </span>
-        </div> 
+        </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
           <span class="symbol-label bg-om-gray">
             <i class="fas fa-ellipsis-h"></i>
@@ -45,7 +45,7 @@
             <ng-template #content>
               <div class="d-flex flex-column container">
                 <ng-container>
-                  <div class="d-flex justify-content-center align-items-center">
+                  <div class="d-flex justify-content-center align-items-center" *ngIf="!isHiddenChart">
                     <div style="width: 650px; height: 200px">
                       <ejs-circulargauge style="display: block" background="transparent" (load)="load($event)"
                         class="position-absolute" style="top: -10%">
@@ -94,7 +94,7 @@
                       <codx-label  class="text-light"  fiedName="lbl" default="Chỉnh sửa"></codx-label>
                     </span> -->
                   </div>
-                  <div class="container w-50">
+                  <div class="container w-50"  *ngIf="!isHiddenChart">
                     <codx-chart [title]="" [enableCrossHair]="true" [legendSettings]="{ visible: false }"
                       [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
                       [seriesSetting]="chartSettings?.seriesSetting" [dataSource]="chartData.data"></codx-chart>
@@ -241,7 +241,8 @@
                     <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAlign && listAlign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
+                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM"
+                      [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->
                   <div class="ms-5 ps-5 pt-5">
@@ -249,9 +250,10 @@
                     <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAssign && listAssign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
+                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"
+                      [okrVll]="okrVll"></view-okr>
                   </div>
-                  <!--Content-->                  
+                  <!--Content-->
                 </div>
               </div>
             </ng-template>
@@ -265,7 +267,7 @@
             </ng-template>
             <ng-template #content>
               <div class="d-flex justify-content-center">
-               Công việc
+                Công việc
               </div>
             </ng-template>
           </e-tabitem>

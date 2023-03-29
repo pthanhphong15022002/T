@@ -88,4 +88,5 @@ export interface IJournal {
     unpostTime: number | null;
     sharer: string;
     duplicateVoucherNo: string;
+    dataValue: string;
 }

@@ -304,29 +304,21 @@ implements OnInit, AfterViewInit {
 
   //#region CRUD
   add() {
-    switch(this.funcID) {
-      case 'CM0101': {
-         //statements;
-         break;
-      }
-      case 'CM0102': {
-         //statements;
-         break;
-      }
-      case 'CM0103': {
-        this.addPartner(this.funcID);
-        //statements;
-        break;
-     }
-     case 'CM0104': {
-      //statements;
-      break;
-   }
-    default: {
-         //statements;
-         break;
-      }
-   }
+  //   switch(this.funcID) {
+  //     case 'CM0101': {
+  //        //statements;
+  //        break;
+  //     }
+  //    case 'CM0104': {
+  //     //statements;
+  //     break;
+  //  }
+  //   default: {
+  //        //statements;
+  //        break;
+  //     }
+  //  }
+
   }
 
   changeDataMF($event, data){
