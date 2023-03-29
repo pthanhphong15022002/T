@@ -331,7 +331,6 @@ export class PopupJobComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    console.log(e);
   }
 
   getfileCount(e) {

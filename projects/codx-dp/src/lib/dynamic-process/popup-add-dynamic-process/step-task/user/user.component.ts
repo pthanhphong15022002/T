@@ -32,7 +32,6 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.dataSource);
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
