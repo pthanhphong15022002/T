@@ -195,14 +195,14 @@
       </div>
 
       <div class="row" *ngIf="field.dataType == 'R'">
-        <div class="form-group col-6">
+        <div class="form-group col-4">
           <codx-label
             fiedName="RankIcon"
             [formModel]="form.formModel"
             default="Loại icon hiển thị"
           >
           </codx-label>
-          <div>
+          <div class="mt-1">
             <codx-valuelist
               field="rankIcon"
               [name]="'L1470'"
@@ -213,14 +213,14 @@
             </codx-valuelist>
           </div>
         </div>
-        <div class="form-group col-6">
+        <div class="form-group col-8">
           <codx-label
             fiedName="rank"
             [formModel]="form.formModel"
             default="Điểm tối đa"
           >
           </codx-label>
-          <div>
+          <div class="mt-1">
             <ejs-slider
               id="slider"
               [value]="field?.rank"

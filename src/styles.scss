@@ -2122,3 +2122,8 @@ codx-input .rte-placeholder{
 .e-grid .e-gridheader {
   border-bottom-color:var(--border-list);
 }
+codx-valuelist .btn.select-icon{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
