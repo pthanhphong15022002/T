@@ -236,6 +236,7 @@
                 [crrValue]="stepsTasks?.durationDay"
                 type="text"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -247,6 +248,7 @@
                 type="text"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>

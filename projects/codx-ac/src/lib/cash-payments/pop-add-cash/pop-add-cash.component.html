@@ -13,6 +13,10 @@
         <!-- <codx-input
           type="valuelist"
           refValue="AC063"
+      <div class="mt-2 col-2">
+        <codx-input
+          [disabled]="formType === 'edit'"
+          [Group]="form.formGroup"
           field="voucherType"
           [formModel]="form.formModel"
           (valueChange)="changeType($event)"

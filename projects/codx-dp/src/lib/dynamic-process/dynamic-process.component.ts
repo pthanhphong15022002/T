@@ -793,7 +793,7 @@ export class DynamicProcessComponent
             this.popupEditName.close();
             this.notificationsService.notifyCode('SYS007');
           } else {
-            this.notificationsService.notifyCode('SYS008');
+            this.notificationsService.notifyCode('DP003');
           }
         });
     }
@@ -807,7 +807,6 @@ export class DynamicProcessComponent
   }
 
   async restoreProcess(data) {
-    console.log(data);
     let check = await this.checkExitsProcessName(
       data['processName'],
       data['recID']

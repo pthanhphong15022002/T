@@ -38,6 +38,7 @@ import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opp
 import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
+import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
 const routes: Routes = [
   {
     path: '',
@@ -53,7 +54,7 @@ const routes: Routes = [
       },
       {
         // gán tạm để làm UI
-        path: 'opportunity/:funcID',
+        path: 'sales/:funcID',
         component: OpportunityComponent,
       },
       {
@@ -89,6 +90,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     TabDetailCustomComponent,
     QuotationsComponent,
     PopupAddQuotationsComponent,
+    PopupAddOpportunityComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

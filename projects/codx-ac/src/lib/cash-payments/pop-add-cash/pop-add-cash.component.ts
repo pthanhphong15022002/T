@@ -431,10 +431,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       let voucherDialog = this.callfc.openForm(
         VoucherComponent,
         '',
-        null,
-        null,
+        1000,
+        600,
         '',
-        e.component.setting
+        e.component.setting,
+        ''
       );
     }
   }

@@ -3,7 +3,7 @@
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
-        <codx-label [default]="item.headerText " class="fw-bold text-dark"></codx-label>
+        <codx-label [default]="item.headerText" [fiedName]="item?.fieldName" [formName]="'SearchFullText'" class="fw-bold text-dark"></codx-label>
         <ng-container [ngSwitch]="item?.dataType">
           <ng-container *ngSwitchCase="'String'">
             <div class="w-100">
