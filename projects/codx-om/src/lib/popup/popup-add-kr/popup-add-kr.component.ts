@@ -237,8 +237,6 @@ export class PopupAddKRComponent extends UIComponent {
         ? OMCONST.VLL.OKRType.SKResult
         : OMCONST.VLL.OKRType.KResult;
       this.OKRLevel();
-    } else {
-      this.kr.edited = true;
     }
     //---------------------------------------
     this.fGroupAddKR = this.form?.formGroup;

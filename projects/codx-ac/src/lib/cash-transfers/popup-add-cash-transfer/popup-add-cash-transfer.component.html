@@ -59,7 +59,7 @@
                     field="cashBookName"
                     [disabled]="true"
                     [formModel]="form.formModel"
-                    [crrValue]="cashBookName1"
+                    [crrValue]="cashBookName"
                   ></codx-input>
                 </div>
                 <div class="col-2 form-group">
@@ -314,7 +314,8 @@
                     ></codx-label>
                     <codx-input
                       field="invoiceDate"
-                      [formModel]="fmVATInvoice"
+                      type="datetime"
+                      format="F"
                       [crrValue]="vatInvoice?.invoiceDate"
                       (valueChange)="handleInputChange($event, 'vatInvoice')"
                       [disabled]="!hasInvoice"
