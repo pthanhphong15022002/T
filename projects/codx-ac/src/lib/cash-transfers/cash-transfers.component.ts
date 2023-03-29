@@ -3,9 +3,14 @@ import {
   Component,
   Injector,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType
+} from 'codx-core';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
 
 @Component({
@@ -84,29 +89,24 @@ export class CashTransfersComponent
       .subscribe((res: any) => {
         console.log({ res });
 
-        let options = new DialogModel();
+        let options = new SidebarModel();
         options.DataService = this.view.dataService;
         options.FormModel = this.view.formModel;
-        options.IsFull = true;
-        options.IsModal = true;
+        options.isFull = true;
 
         this.cache
           .gridViewSetup('VATInvoices', 'grvVATInvoices')
           .subscribe((res) => {
             if (res) {
-              this.callfc.openForm(
+              this.callfc.openSide(
                 PopupAddCashTransferComponent,
-                'This param is not working',
-                null,
-                null,
-                this.view.funcID,
                 {
                   formType: 'add',
                   parentID: this.parentID,
                   formTitle: `${e.text} ${this.functionName}`,
                 },
-                '',
-                options
+                options,
+                this.view.funcID
               );
             }
           });
@@ -120,28 +120,23 @@ export class CashTransfersComponent
     this.view.dataService.edit(data).subscribe((res: any) => {
       console.log({ res });
 
-      let options = new DialogModel();
+      let options = new SidebarModel();
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
-      options.IsFull = true;
-      options.IsModal = true;
+      options.isFull = true;
 
       this.cache
         .gridViewSetup('VATInvoices', 'grvVATInvoices')
         .subscribe((res) => {
           if (res) {
-            this.callfc.openForm(
+            this.callfc.openSide(
               PopupAddCashTransferComponent,
-              'This param is not working',
-              null,
-              null,
-              this.view.funcID,
               {
                 formType: 'edit',
                 formTitle: `${e.text} ${this.functionName}`,
               },
-              '',
-              options
+              options,
+              this.view.funcID
             );
           }
         });
@@ -155,28 +150,23 @@ export class CashTransfersComponent
     this.view.dataService.copy().subscribe((res) => {
       console.log(res);
 
-      let options = new DialogModel();
+      let options = new SidebarModel();
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
-      options.IsFull = true;
-      options.IsModal = true;
+      options.isFull = true;
 
       this.cache
         .gridViewSetup('VATInvoices', 'grvVATInvoices')
         .subscribe((res) => {
           if (res) {
-            this.callfc.openForm(
+            this.callfc.openSide(
               PopupAddCashTransferComponent,
-              'This param is not working',
-              null,
-              null,
-              this.view.funcID,
               {
                 formType: 'add',
                 formTitle: `${e.text} ${this.functionName}`,
               },
-              '',
-              options
+              options,
+              this.view.funcID
             );
           }
         });

@@ -27,7 +27,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   dialog: DialogRef;
   headerText = 'Thêm form test';
   fmProcductsLines: FormModel = {
-    formName: 'grvCMProducts',
+    formName: 'CMProducts',
     gridViewName: 'grvCMProducts',
     entityName: 'CM_Products',
   };
