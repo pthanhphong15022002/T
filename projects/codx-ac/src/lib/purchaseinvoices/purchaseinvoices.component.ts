@@ -17,6 +17,7 @@ import {
   FormModel,
   DialogModel,
   RequestOption,
+  SidebarModel,
 } from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 
@@ -99,8 +100,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     ]);
   }
   add(e) {
-    const elmnt = document.getElementById("codx-aside");
-    console.log(elmnt.offsetWidth);
     this.headerText = this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -109,19 +108,15 @@ export class PurchaseinvoicesComponent extends UIComponent {
           formType: 'add',
           headerText: this.headerText,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddPurchaseComponent,
-          '',
-          1660,
-          969,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }

@@ -68,22 +68,26 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     if (this.action === 'add') {
       op.method = 'AddCrmAsync';
       op.className = 'CustomersBusiness';
-      if (this.contactsPerson != null) {
-        if (this.contacts != null && this.contacts.length > 0) {
-          this.contacts.forEach((el) => {
-            el.contactType = '2';
-          });
+      if(this.funcID != 'CM0104'){
+        if (this.contactsPerson != null) {
+          if (this.contacts != null && this.contacts.length > 0) {
+            this.contacts.forEach((el) => {
+              el.contactType = '2';
+            });
+          }
+          this.contacts.push(this.contactsPerson);
+          this.data.contacts = this.contacts;
+
         }
-        this.contacts.push(this.contactsPerson);
-        this.data.contacts = this.contacts;
-        data = [
-          this.data,
-          this.dialog.formModel.formName,
-          this.funcID,
-          this.dialog.formModel.entityName,
-          this.contactsPerson.recID,
-        ];
       }
+
+      data = [
+        this.data,
+        this.dialog.formModel.formName,
+        this.funcID,
+        this.dialog.formModel.entityName,
+        this.contactsPerson?.recID,
+      ];
     }
     op.data = data;
     return true;
