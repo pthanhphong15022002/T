@@ -222,6 +222,7 @@ export class OkrTargetsComponent implements OnInit {
           
         }
       });
+      
     this.cache.functionList(this.skrFuncID).subscribe((res) => {
       if (res) {
         this.skrTitle =
@@ -298,6 +299,8 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   clickMF(e: any, ob: any) {
+    console.log(ob);
+    
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -333,6 +336,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   clickKRMF(e: any, kr: any, isSKR: boolean) {
+    
     let tempT = isSKR ? this.skrTitle : this.krTitle;
     let popupTitle = e.text + ' ' + tempT;
     var funcID = e?.functionID;
