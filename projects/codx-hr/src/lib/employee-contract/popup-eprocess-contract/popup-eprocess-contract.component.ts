@@ -112,10 +112,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data truyen vao ben trong ', this.data);
+    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    console.log('emp truyen vao ne', this.employeeObj);
     
     if(this.data){
-      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
-      console.log('emp truyen vao ne', this.employeeObj);
       if(this.data.benefits){
         this.tempBenefitArr = JSON.parse(this.data?.benefits);
       }
@@ -201,13 +201,15 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
           option
         );
         this.dialogAddBenefit.closed.subscribe((res) => {
-          this.tempBenefitArr.push({
-            BenefitID: res.event.benefitID,
-            BenefitAmt: res.event.benefitAmt,
-            BenefitNorm: res.event.benefitNorm
-          });
-          this.data.benefits = JSON.stringify(this.tempBenefitArr);
-          this.df.detectChanges();
+          if(res?.event){
+            this.tempBenefitArr.push({
+              BenefitID: res.event.benefitID,
+              BenefitAmt: res.event.benefitAmt,
+              BenefitNorm: res.event.benefitNorm
+            });
+            this.data.benefits = JSON.stringify(this.tempBenefitArr);
+            this.df.detectChanges();
+          }
         });
   }
 

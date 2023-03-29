@@ -72,6 +72,8 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
                 if (res) {
                   this.currentEJobSalaries = res?.data;
                   this.currentEJobSalaries.employeeID = this.employeeId;
+                  this.currentEJobSalaries.effectedDate = null;
+                  this.currentEJobSalaries.expiredDate = null;
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
                   this.cr.detectChanges();

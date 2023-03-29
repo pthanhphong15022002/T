@@ -150,12 +150,12 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.familyMemberObj.registerFrom = this.fromdateVal;
     this.familyMemberObj.registerTo = this.todateVal;
 
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
-    if (this.familyMemberObj.birthday >= today) {
+    if (this.familyMemberObj.birthday >= today.toJSON()) {
       this.notify.notifyCode('HR004');
       return;
     }

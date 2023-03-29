@@ -61,7 +61,7 @@ export class EmployeesComponent extends UIComponent {
   itemInfoPersonal: TemplateRef<any>;
   @ViewChild('itemStatusName', { static: true })
   itemStatusName: TemplateRef<any>;
-  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
+  //@ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
@@ -110,12 +110,12 @@ export class EmployeesComponent extends UIComponent {
         width: 200,
         template: this.itemInfoPersonal,
       },
-      {
-        field: '',
-        headerText: '',
-        width: 30,
-        template: this.itemAction,
-      },
+      // {
+      //   field: '',
+      //   headerText: '',
+      //   width: 30,
+      //   template: this.itemAction,
+      // },
     ];
     this.views = [
       {

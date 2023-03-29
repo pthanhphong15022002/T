@@ -1885,6 +1885,7 @@
                 [pageSize]="numPageSizeGridView"
                 [rowHeight]="40"
                 height="auto"
+                [sort]="[visaSortModel]"
               ></codx-gridview>
               <!-- [height]="
                     passportRowCount > numPageSizeGridView
@@ -1943,6 +1944,7 @@
                 [pageSize]="numPageSizeGridView"
                 [rowHeight]="40"
                 height="auto"
+                [sort]="[workPermitSortModel]"
               ></codx-gridview>
               <!-- [height]="
                     passportRowCount > numPageSizeGridView
@@ -5105,9 +5107,11 @@
   <div #benefitNorm>
     {{ data?.benefitAmt }}
     /
-    {{
-      data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
-    }}
+    <span [innerHTML]="
+    data?.benefitNorm | formatvalue : benefitFormodel : 'benefitNorm' | async
+    ">
+
+    </span>
   </div>
 </ng-template>
 
@@ -5430,12 +5434,10 @@
       class="badge border-0 mb-1 badge-primary"
       [style.background]="getAssetBackgroundColor(data.assetCategory)"
       [style.color]="getAssetFontColor(data.assetCategory)"
+      [innerHTML]="data?.assetCategory
+      | formatvalue : eAssetFormModel : 'assetCategory'
+      | async"
     >
-      {{
-        data?.assetCategory
-          | formatvalue : eAssetFormModel : "assetCategory"
-          | async
-      }}
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-class icon-16 me-1 text-primary"></i>
@@ -5570,11 +5572,11 @@
     <div class="d-flex align-items-center">
       <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
-        <span>{{
-          data?.issuedPlace
-            | formatvalue : eVisaFormModel : "issuedPlace"
-            | async
-        }}</span>
+        <span 
+        [innerHTML]="
+        data?.issuedPlace | formatvalue : eVisaFormModel : 'issuedPlace' | async
+      "
+        ></span>
       </span>
     </div>
   </div>
@@ -6289,13 +6291,14 @@
       data?.awardID | formatvalue : awardFormModel : 'awardID' | async
     "
   ></div>
-  <div class="text-primary">
-    <i></i>
-    {{
-      data?.awardFormCategory
-        | formatvalue : awardFormModel : "awardFormCategory"
-        | async
-    }}
+  <div class="text-primary" 
+    [innerHTML]="
+    data?.awardFormCategory
+    | formatvalue : awardFormModel : 'awardFormCategory'
+    | async
+    "
+  >
+
   </div>
 </ng-template>
 

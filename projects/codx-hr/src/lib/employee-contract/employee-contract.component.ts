@@ -36,7 +36,7 @@ export class EmployeeContractComponent extends UIComponent {
   formGroup: FormGroup;
   editStatusObj: any;
 
-  currentEmpObj: any;
+  currentEmpObj: any = null;
   dialogEditStatus: any;
   
 
@@ -266,7 +266,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         actionType: actionType,
         dataObj: data,
-        empObj: this.currentEmpObj,
+        empObj: actionType == 'add' ? null: this.currentEmpObj,
         headerText:
           actionHeaderText,
         employeeId: data?.employeeID,
