@@ -2508,7 +2508,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var checkGroup = this.lstGroup.some(
       (x) => x.groupID == this.process?.groupID
     );
-    return this.process.processName &&
+    return this.process.processName?.trim() &&
       this.process?.groupID &&
       checkGroup &&
       this.stepList?.length > 0
