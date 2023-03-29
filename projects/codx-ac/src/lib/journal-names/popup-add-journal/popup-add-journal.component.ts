@@ -115,7 +115,6 @@ export class PopupAddJournalComponent
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
       .subscribe((periods) => {
-        console.log(periods);
         this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
       });
 

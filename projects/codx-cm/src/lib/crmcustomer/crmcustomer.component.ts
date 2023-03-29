@@ -343,6 +343,7 @@ export class CrmCustomerComponent
     //       this.detectorRef.detectChanges();
     //     });
     // }
+    this.view.dataService.methodSave = 'AddCrmAsync';
 
     this.detectorRef.detectChanges();
   }
