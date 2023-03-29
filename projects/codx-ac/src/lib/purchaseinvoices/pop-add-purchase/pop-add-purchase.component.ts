@@ -42,6 +42,7 @@ declare var window: any;
   styleUrls: ['./pop-add-purchase.component.css'],
 })
 export class PopAddPurchaseComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('gridPurchase') public gridPurchase: CodxGridviewV2Component;
   @ViewChild('gridInvoices') public gridInvoices: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -62,7 +63,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   objectName: any;
   detailActive = 1;
   countDetail = 0;
-  paginationLimit = 5;
   pageCount: any;
   elementCodxinput: any;
   purchaseinvoices: PurchaseInvoices;
@@ -238,7 +238,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
     }
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
 
   ngAfterViewInit() {
@@ -246,6 +248,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.form.formGroup.patchValue(this.purchaseinvoices);
     this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
   }
+  //#endregion
+
+  //#region Event
   valueChange(e: any) {
     if (e.field.toLowerCase() === 'voucherdate' && e.data)
       this.purchaseinvoices[e.field] = e.data;
@@ -349,32 +354,46 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
     }
   }
-  loadPurchaseInfo() {
-    this.countDetail = 0;
-    this.purchaseInvoicesLines.forEach((element) => {
-      if (element.vatid != null) {
-        this.countDetail++;
-      }
-    });
-  }
-  loadItemID(value) {
-    let sArray = [
-      'specifications',
-      'styles',
-      'itemcolors',
-      'itembatchs',
-      'itemseries',
-    ];
-    var element = document
-      .querySelector('.tabLine')
-      .querySelectorAll('codx-inplace');
-    element.forEach((e) => {
-      var input = window.ng.getComponent(e) as CodxInplaceComponent;
-      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-        input.predicate = 'ItemID="' + value + '"';
-        input.loadSetting();
-      }
-    });
+  openPopupLine(data) {
+    var obj = {
+      headerText: this.headerText,
+      data: data,
+      type: 'add',
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'PurchaseInvoicesLines';
+    dataModel.gridViewName = 'grvPurchaseInvoicesLines';
+    dataModel.entityName = 'PS_PurchaseInvoicesLines';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+      .subscribe((res) => {
+        if (res) {
+          var dialogs = this.callfc.openForm(
+            PopAddLineComponent,
+            '',
+            650,
+            900,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogs.closed.subscribe((x) => {
+            var dataline = JSON.parse(localStorage.getItem('dataline'));
+            if (dataline != null) {
+              this.purchaseInvoicesLines.push(dataline);
+              this.keymodel = Object.keys(dataline);
+              this.loadPageCount();
+              if (dataline.vatid != null) {
+                this.loadPurchaseInfo();
+              }
+            }
+            window.localStorage.removeItem('dataline');
+          });
+        }
+      });
   }
   addRow() {
     let idx = this.purchaseInvoicesLines.length;
@@ -414,6 +433,39 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       });
   }
+  close() {
+    this.dialog.close();
+  }
+  //#endregion
+
+  //#region Function
+  loadPurchaseInfo() {
+    this.countDetail = 0;
+    this.purchaseInvoicesLines.forEach((element) => {
+      if (element.vatid != null) {
+        this.countDetail++;
+      }
+    });
+  }
+  loadItemID(value) {
+    let sArray = [
+      'specifications',
+      'styles',
+      'itemcolors',
+      'itembatchs',
+      'itemseries',
+    ];
+    var element = document
+      .querySelector('.tabLine')
+      .querySelectorAll('codx-inplace');
+    element.forEach((e) => {
+      var input = window.ng.getComponent(e) as CodxInplaceComponent;
+      if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
+        input.predicate = 'ItemID="' + value + '"';
+        input.loadSetting();
+      }
+    });
+  }
   searchName(e) {
     var filter, table, tr, td, i, txtValue, mySearch, myBtn;
     filter = e.toUpperCase();
@@ -450,48 +502,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         }
       }
     }
-  }
-  openPopupLine(data) {
-    var obj = {
-      headerText: this.headerText,
-      data: data,
-      type: 'add',
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'PurchaseInvoicesLines';
-    dataModel.gridViewName = 'grvPurchaseInvoicesLines';
-    dataModel.entityName = 'PS_PurchaseInvoicesLines';
-    opt.FormModel = dataModel;
-    opt.Resizeable = false;
-    this.cache
-      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
-      .subscribe((res) => {
-        if (res) {
-          var dialogs = this.callfc.openForm(
-            PopAddLineComponent,
-            '',
-            650,
-            900,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogs.closed.subscribe((x) => {
-            var dataline = JSON.parse(localStorage.getItem('dataline'));
-            if (dataline != null) {
-              this.purchaseInvoicesLines.push(dataline);
-              this.keymodel = Object.keys(dataline);
-              this.loadPageCount();
-              if (dataline.vatid != null) {
-                this.loadPurchaseInfo();
-              }
-            }
-            window.localStorage.removeItem('dataline');
-          });
-        }
-      });
   }
   editPopupLine(data) {
     let index = this.purchaseInvoicesLines.findIndex(
@@ -673,6 +683,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   detaiClick(e) {
     this.detailActive = e;
   }
+  //#endregion
+
+  //#region Method
   saveVAT() {
     if (this.VATType == '1') {
       this.api
@@ -768,4 +781,5 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       }
     }
   }
+  //#endregion
 }
