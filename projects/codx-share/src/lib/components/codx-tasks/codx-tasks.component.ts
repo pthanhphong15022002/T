@@ -64,8 +64,8 @@ export class CodxTasksComponent
   @Input() calendarID: string;
   @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
-  @Input() predicate?: any;
-  @Input() dataValue?: any;
+  @Input() predicate?: string ;  //truyen predicate dạng 'Status==@0 && Priority=@1'
+  @Input() dataValue?: string ; //truyen dataValue dạng  "90;1"
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
@@ -223,7 +223,7 @@ export class CodxTasksComponent
       };
       this.dataObj = Object.assign({}, this.dataObj, object);
     }
-    debugger;
+   
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
