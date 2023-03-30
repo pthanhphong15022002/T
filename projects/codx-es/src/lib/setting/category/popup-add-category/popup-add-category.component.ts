@@ -479,7 +479,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
-    if (this.isAdd && !this.isSaved) {
+    if ((this.isAdd || this.type == 'copy') && !this.isSaved) {
       this.esService.addNewCategory(this.data).subscribe((res) => {
         if (res) {
           //update data

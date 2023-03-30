@@ -128,7 +128,7 @@ export class InstanceDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
-      if (changes['dataSelect'].currentValue.recID != null) {
+      if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.dataSelect = changes['dataSelect'].currentValue;
         // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
@@ -170,7 +170,6 @@ export class InstanceDetailComponent implements OnInit {
               icon: data.icon,
               iconColor: data.iconColor,
             }
-            console.log('--------thuan--------',  this.stepValue);          
           }
           total += data.progress;
           stepNo = i + 1;
@@ -329,7 +328,7 @@ export class InstanceDetailComponent implements OnInit {
             }
           })
           console.log("thuan", test);
-          
+
           this.changeDetec.detectChanges();
         }
       });
@@ -369,7 +368,7 @@ export class InstanceDetailComponent implements OnInit {
     }
     return 'step';
   }
-  
+
   getReasonByStepId(stepId: string) {
     var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
     return this.listSteps[idx];

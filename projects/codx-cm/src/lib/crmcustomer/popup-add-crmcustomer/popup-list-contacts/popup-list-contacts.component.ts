@@ -1,3 +1,5 @@
+import { CM_Contacts } from './../../../models/tmpCrm.model';
+import { CodxCmService } from './../../../codx-cm.service';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
   CallFuncService,
@@ -17,114 +19,15 @@ export class PopupListContactsComponent implements OnInit {
   dialog: any;
   data: any;
 
-  lstContacts = [
-    {
-      contactID: 'ID1',
-      contactName: 'Trương Đặng Ngọc Phúc',
-      positionName: 'Giám đốc',
-      phoneNumber: '0702411141',
-      email: 'tdnphuck42@gmail.com',
-      allowCall: true,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID2',
-      contactName: 'Trương Đặng Ngọc Thiên',
-      positionName: 'Trưởng phòng',
-      phoneNumber: '0702411141',
-      email: 'tdnphuck422@gmail.com',
-      allowCall: true,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID3',
-      contactName: 'Phạm Thị Anh Tú',
-      positionName: 'Giám đốc chi nhánh',
-      phoneNumber: '0702411141',
-      email: 'tdnphucck42@gmail.com',
-      allowCall: false,
-      allowEmail: false,
-    },
-    {
-      contactID: 'ID4',
-      contactName: 'Trương Đặng Ngọc Minh',
-      positionName: 'Giám đốc sở',
-      phoneNumber: '0702411141',
-      email: 'tdnphuc1k42@gmail.com',
-      allowCall: false,
-      allowEmail: false,
-    },
-    {
-      contactID: 'ID5',
-      contactName: 'Trương Đặng Ngọc Đại',
-      positionName: 'Giám đốc',
-      phoneNumber: '0702411141',
-      email: 'tdnphuc22k42@gmail.com',
-      allowCall: true,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID6',
-      contactName: 'Trương Đặng Ngọc Thắng',
-      positionName: 'Nhân viên',
-      phoneNumber: '0702411141',
-      email: 'tdnphu33ck42@gmail.com',
-      allowCall: true,
-      allowEmail: false,
-    },
-    {
-      contactID: 'ID7',
-      contactName: 'Trương Đặng Ngọc Hoàng',
-      positionName: 'Thực tập',
-      phoneNumber: '0702411141',
-      email: 'tdnph44uck42@gmail.com',
-      allowCall: true,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID8',
-      contactName: 'Nguyễn Văn Thuận',
-      positionName: 'Phó phòng',
-      phoneNumber: '0702411141',
-      email: 'tdnphu1ck42@gmail.com',
-      allowCall: false,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID9',
-      contactName: 'Võ Thảo',
-      positionName: 'Leader',
-      phoneNumber: '0702411141',
-      email: 'tdn2phuck42@gmail.com',
-      allowCall: false,
-      allowEmail: false,
-    },
-    {
-      contactID: 'ID10',
-      contactName: 'Trần Đoàn Tuyết Khanh',
-      positionName: 'BA',
-      phoneNumber: '0702411141',
-      email: 'tdnphu3ck42@gmail.com',
-      allowCall: true,
-      allowEmail: true,
-    },
-    {
-      contactID: 'ID11',
-      contactName: 'Nguyễn Văn Huy',
-      positionName: 'Giám đốc',
-      phoneNumber: '0702411141',
-      email: 'tdnph5uck42@gmail.com',
-      allowCall: true,
-      allowEmail: false,
-    },
-  ];
+  lstContacts = [];
   currentContact = 0;
 
-  contact: any;
+  contact: CM_Contacts;
   lstSearch = [];
   constructor(
     private callFc: CallFuncService,
     private changeDet: ChangeDetectorRef,
+    private cmSv: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -132,27 +35,35 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.lstContacts != null && this.lstContacts.length > 0) {
-      this.lstSearch = this.lstContacts;
-      this.changeContacts(0, this.lstSearch[0]);
-    }
+    this.cmSv.getContacts().subscribe((res) => {
+      if (res != null && res.length > 0) {
+        this.lstContacts = res;
+        this.lstSearch = this.lstContacts;
+        this.changeContacts(0, this.lstSearch[0]);
+      }
+    });
   }
 
-  onSave() {}
+  onSave() {
+    if (this.contact != null) this.dialog.close(this.contact);
+    else return;
+  }
 
   changeContacts(index, item) {
     this.currentContact = index;
+    this.contact = item;
     this.changeDet.detectChanges();
   }
 
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
@@ -162,20 +73,43 @@ export class PopupListContactsComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        //gán tạm thời để xử lí liên hệ chính
+        this.contact = e.event;
+        this.lstContacts.push(this.contact);
+        this.lstSearch = this.lstContacts;
+        var index = this.lstSearch.findIndex(
+          (x) => x.recID == this.contact.recID
+        );
+        if (index > -1) {
+          this.changeContacts(index, this.contact);
+        } else {
+          this.changeContacts(0, this.lstSearch[0]);
+        }
+        this.changeDet.detectChanges()
+      }
+    });
   }
 
   searchName(searchTerm) {
     var search = [];
-    if(searchTerm.trim() == ''){
+    if (searchTerm.trim() == '' || searchTerm == null) {
       this.lstSearch = this.lstContacts;
+      this.changeContacts(0, this.lstSearch[0]);
       return;
     }
-    search = this.lstContacts.filter(contact =>
-      contact.contactID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    this.lstSearch = search;
+
+    this.cmSv.searchContacts(searchTerm).subscribe((res) => {
+      if (res && res.length > 0) {
+        search = res;
+        this.lstSearch = search;
+      } else {
+        this.lstSearch = [];
+        this.contact = null;
+      }
+      this.changeDet.detectChanges()
+
+    });
   }
 }

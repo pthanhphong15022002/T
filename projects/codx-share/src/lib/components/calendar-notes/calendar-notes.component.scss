@@ -77,7 +77,7 @@ app-notes-home {
 }
 
 .active [class*="icon-"] {
-  color: #0078ff;
+  color: var(--primary);
 }
 
 .note-content .active {

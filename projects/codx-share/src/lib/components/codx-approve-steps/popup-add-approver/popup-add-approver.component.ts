@@ -18,6 +18,7 @@ export class PopupAddApproverComponent implements OnInit {
   isAfterRender: boolean = false;
   headerText = 'Thông tin đối tác';
   subHeaderText = '';
+  cbxEmail = 'SignatureParners';
 
   constructor(
     private cr: ChangeDetectorRef,

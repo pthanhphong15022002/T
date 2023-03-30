@@ -64,6 +64,8 @@ export class CodxTasksComponent
   @Input() calendarID: string;
   @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() predicate?: string ;  //truyen predicate dạng 'Status==@0 && Priority=@1'
+  @Input() dataValue?: string ; //truyen dataValue dạng  "90;1"
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
@@ -212,6 +214,16 @@ export class CodxTasksComponent
     this.afterLoad();
     //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
+
+    //them prdicate vao loc
+    if (this.predicate && this.dataValue) {
+      let object = {
+        predicate: this.predicate,
+        dataValue: this.dataValue,
+      };
+      this.dataObj = Object.assign({}, this.dataObj, object);
+    }
+    debugger;
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
@@ -301,7 +313,7 @@ export class CodxTasksComponent
         break;
       case 'TMT0203':
       case 'MWP0062':
-      case 'OMT013':
+      case 'OMT014':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
         break;
@@ -1706,7 +1718,7 @@ export class CodxTasksComponent
     if (
       this.funcID == 'TMT0203' ||
       this.funcID == 'MWP0062' ||
-      this.funcID == 'OMT013'
+      this.funcID == 'OMT014'
     )
       this.isAssignTask = true;
     else this.isAssignTask = false;
@@ -1898,9 +1910,9 @@ export class CodxTasksComponent
       .subscribe((res) => {
         if (res) {
           this.dayoff = res;
-        //  res.forEach((ele) => {
-         //   this.dayoff = res;
-         // });
+          //  res.forEach((ele) => {
+          //   this.dayoff = res;
+          // });
         }
       });
   }

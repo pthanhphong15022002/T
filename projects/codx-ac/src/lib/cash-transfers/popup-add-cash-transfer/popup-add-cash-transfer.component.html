@@ -314,7 +314,8 @@
                     ></codx-label>
                     <codx-input
                       field="invoiceDate"
-                      [formModel]="fmVATInvoice"
+                      type="datetime"
+                      format="F"
                       [crrValue]="vatInvoice?.invoiceDate"
                       (valueChange)="handleInputChange($event, 'vatInvoice')"
                       [disabled]="!hasInvoice"

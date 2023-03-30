@@ -1,9 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { DataRequest } from './../../../../../../src/shared/models/data.request';
-import {
-  CO_MeetingTemplates,
-  CO_Content,
-} from './../../models/CO_MeetingTemplates.model';
+
 import { Component, Injector, Input, OnInit, Optional } from '@angular/core';
 import {
   DialogData,
@@ -12,7 +8,9 @@ import {
   UIComponent,
   AlertConfirmInputConfig,
   NotificationsService,
+  DataRequest,
 } from 'codx-core';
+import { CO_Content, CO_MeetingTemplates } from '../models/CO_MeetingTemplates.model';
 
 @Component({
   selector: 'lib-template',

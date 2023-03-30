@@ -65,6 +65,9 @@ export class PopupAddJournalComponent
   isEdit: boolean = false;
   tempIDIMControls: any[] = [];
 
+  vllDateFormat: any;
+  vllStringFormat: any;
+
   constructor(
     private injector: Injector,
     private acService: CodxAcService,
@@ -109,20 +112,39 @@ export class PopupAddJournalComponent
         this.gvs = res;
       });
 
-    this.loadComboboxData('FiscalPeriods').subscribe((periods) => {
-      console.log(periods);
-      this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
-    });
+    this.acService
+      .loadComboboxData('FiscalPeriods', 'AC')
+      .subscribe((periods) => {
+        this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
+      });
 
     this.dialogRef.closed.subscribe((res) => {
       console.log(res);
 
-      if (!res.event) {
+      if (!res.event && !this.isEdit) {
         this.journalService
           .deleteAutoNumber(this.journal.recID)
           .subscribe((res) => console.log(res));
       }
     });
+
+    this.cache
+      .gridViewSetup('ESCategories', 'grvESCategories')
+      .subscribe((gv) => {
+        if (gv) {
+          this.cache
+            .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
+            .subscribe((vllDFormat) => {
+              this.vllDateFormat = vllDFormat.datas;
+            });
+
+          this.cache
+            .valueList(gv['StringFormat']?.referedValue ?? 'L0089')
+            .subscribe((vllSFormat) => {
+              this.vllStringFormat = vllSFormat.datas;
+            });
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -156,6 +178,8 @@ export class PopupAddJournalComponent
   }
 
   handleClickSave(): void {
+    console.log(this.journal);
+
     if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
       return;
     }
@@ -177,11 +201,11 @@ export class PopupAddJournalComponent
     temp.projectControl = this.journal.projectControl == '1' ? true : false;
     temp.assetControl = this.journal.assetControl == '1' ? true : false;
     temp.postSubControl = this.journal.postSubControl == '1' ? true : false;
-    temp.creater = JSON.stringify(this.journal.creater);
-    temp.approver = JSON.stringify(this.journal.approver);
-    temp.poster = JSON.stringify(this.journal.poster);
-    temp.unposter = JSON.stringify(this.journal.unposter);
-    temp.sharer = JSON.stringify(this.journal.sharer);
+    temp.creater = this.journal.creater ? JSON.stringify(this.journal.creater) : this.journal.creater;
+    temp.approver = this.journal.approver ? JSON.stringify(this.journal.approver) : this.journal.approver;
+    temp.poster = this.journal.poster ? JSON.stringify(this.journal.poster) : this.journal.poster;
+    temp.unposter = this.journal.unposter ? JSON.stringify(this.journal.unposter) : this.journal.unposter;
+    temp.sharer = this.journal.sharer ? JSON.stringify(this.journal.sharer) : this.journal.sharer;
 
     console.log(temp);
 
@@ -300,36 +324,148 @@ export class PopupAddJournalComponent
   }
 
   openAutoNumberPopup() {
-    this.callfc.openForm(
-      PopupAddAutoNumberComponent,
-      '',
-      550,
-      (screen.width * 40) / 100,
-      '',
-      {
-        autoNoCode: this.journal.recID,
-        description: this.dialogRef.formModel?.entityName,
-      }
-    );
+    this.callfc
+      .openForm(
+        PopupAddAutoNumberComponent,
+        '',
+        550,
+        (screen.width * 40) / 100,
+        '',
+        {
+          autoNoCode: this.journal.recID,
+          description: this.dialogRef.formModel?.entityName,
+        }
+      )
+      .closed.subscribe((res) => {
+        console.log(res);
+
+        if (res.event) {
+          this.form.formGroup.patchValue({
+            voucherNoFormat: this.getAutoNumberFormat(res.event),
+          });
+        }
+      });
   }
   //#endregion
 
   //#region Method
-  loadComboboxData(name: string): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.pageLoading = false;
-    return this.api
-      .execSv('AC', 'ERM.Business.Core', 'DataBusiness', 'LoadDataCbxAsync', [
-        dataRequest,
-      ])
-      .pipe(
-        filter((p) => !!p),
-        map((p) => JSON.parse(p[0]))
-      );
-  }
   //#endregion
 
   //#region Function
+  getAutoNumberFormat(autoNumber): string {
+    let autoNumberFormat: string = '';
+
+    let dateFormat = '';
+    if (autoNumber?.dateFormat != '0') {
+      dateFormat =
+        this.vllDateFormat.filter((p) => p.value == autoNumber?.dateFormat)[0]
+          ?.text ?? '';
+    }
+
+    let lengthNumber;
+    let strNumber = '';
+
+    switch (autoNumber?.stringFormat) {
+      // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+      case '0': {
+        autoNumberFormat =
+          autoNumber?.fixedString + dateFormat + autoNumber?.separator;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat =
+          autoNumber?.fixedString +
+          dateFormat +
+          autoNumber?.separator +
+          strNumber;
+        break;
+      }
+      // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+      case '1': {
+        autoNumberFormat =
+          autoNumber?.fixedString + autoNumber?.separator + dateFormat;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat =
+          autoNumber?.fixedString +
+          strNumber +
+          autoNumber?.separator +
+          dateFormat;
+        break;
+      }
+      // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+      case '2': {
+        autoNumberFormat =
+          autoNumber?.fixedString + autoNumber?.separator + dateFormat;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat =
+          strNumber +
+          autoNumber?.separator +
+          autoNumber?.fixedString +
+          dateFormat;
+        break;
+      }
+      // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+      case '3': {
+        autoNumberFormat =
+          autoNumber?.fixedString + autoNumber?.separator + dateFormat;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat =
+          strNumber +
+          autoNumber?.separator +
+          dateFormat +
+          autoNumber?.fixedString;
+        break;
+      }
+      // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+      case '4': {
+        autoNumberFormat =
+          autoNumber?.fixedString + autoNumber?.separator + dateFormat;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat =
+          dateFormat +
+          autoNumber?.separator +
+          strNumber +
+          autoNumber?.fixedString;
+        break;
+      }
+      // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+      case '5': {
+        autoNumberFormat = autoNumber?.fixedString + dateFormat;
+        lengthNumber = autoNumber?.maxLength - autoNumberFormat.length;
+        if (lengthNumber > 0) {
+          strNumber = '#'.repeat(lengthNumber);
+        }
+        autoNumberFormat = dateFormat + autoNumber?.fixedString + strNumber;
+        break;
+      }
+      // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+      case '6': {
+        autoNumberFormat =
+          autoNumber?.fixedString + autoNumber?.separator + dateFormat;
+        break;
+      }
+      // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+      case '7': {
+        autoNumberFormat =
+          dateFormat + autoNumber?.separator + autoNumber?.fixedString;
+        break;
+      }
+    }
+
+    return autoNumberFormat.substring(0, autoNumber?.maxLength);
+  }
   //#endregion
 }

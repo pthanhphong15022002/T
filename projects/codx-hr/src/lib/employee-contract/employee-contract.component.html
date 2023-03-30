@@ -83,7 +83,7 @@
       <div class="d-flex flex-column">
         <div class="text-gray-700">
           <span
-            [title]="eContractHeaderText['ContractTypeID']"
+            [title]="eContractHeaderText ? eContractHeaderText['ContractTypeID'] : ''"
             [innerHTML]="
               data?.contractTypeID
                 | formatvalue : view.formModel : 'contractTypeID'
@@ -93,21 +93,21 @@
         </div>
 
         <div class="text-gray-700">
-          <span [title]="eContractHeaderText['EffectedDate']">{{
+          <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">{{
             data?.effectedDate | fmDT
           }}</span>
           <span> - </span>
-          <span [title]="eContractHeaderText['ExpiredDate']">{{
+          <span [title]="eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''">{{
             data?.expiredDate | fmDT
           }}</span>
         </div>
 
         <div class="text-gray-700">
-          <span [title]="eContractHeaderText['ContractNo']">
+          <span [title]="eContractHeaderText ? eContractHeaderText['ContractNo'] : ''">
             {{ data?.contractNo }}</span
           >
           <span> - </span>
-          <span [title]="eContractHeaderText['SignedDate']">{{
+          <span [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : '' ">{{
             data?.signedDate | fmDT
           }}</span>
         </div>

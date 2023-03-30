@@ -64,6 +64,7 @@ import { PopupEContractComponent } from '../../employee-profile/popup-econtract/
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 
 @Component({
   selector: 'lib-employee-detail',
@@ -142,8 +143,8 @@ export class EmployeeDetailComponent extends UIComponent {
 
   onSectionChange(data: any, index: number = -1) {
     if (index > -1 && this.isClick == false) {
-      let element = document.getElementById(this.active[index]);
-      element.blur();
+      // let element = document.getElementById(this.active[index]);
+      // element.blur();
       this.active[index] = data;
       this.detectorRef.detectChanges();
     }
@@ -231,6 +232,8 @@ export class EmployeeDetailComponent extends UIComponent {
   businessTravelSortModel: SortModel;
   benefitSortModel: SortModel;
   passportSortModel: SortModel;
+  workPermitSortModel: SortModel;
+  visaSortModel: SortModel;
   skillIDSortModel: SortModel;
   skillGradeSortModel: SortModel;
   appointionSortModel: SortModel;
@@ -455,8 +458,8 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region RowCount
   eDegreeRowCount;
   passportRowCount: number;
-  visaRowCount: number;
-  workPermitRowCount: number;
+  visaRowCount: Number;
+  workPermitRowCount: Number;
   eExperienceRowCount;
   eCertificateRowCount;
   eBenefitRowCount: number = 0;
@@ -608,21 +611,21 @@ export class EmployeeDetailComponent extends UIComponent {
         if (res) this.lstFamily = res[0];
       });
 
-      let opPassport = new DataRequest();
-      opPassport.gridViewName = 'grvEPassports';
-      opPassport.entityName = 'HR_EPassports';
-      opPassport.predicates = 'EmployeeID=@0';
-      opPassport.dataValues = this.employeeID;
-      opPassport.srtColumns = 'IssuedDate';
-      opPassport.srtDirections = 'desc';
-      (opPassport.page = 1),
-        this.hrService.loadData('HR', opPassport).subscribe((res) => {
-          if (res) this.lstPassport = res[0];
-          if (this.lstPassport.length > 0) {
-            this.crrPassport = this.lstPassport[0];
-            console.log('Current value', this.crrPassport);
-          }
-        });
+      // let opPassport = new DataRequest();
+      // opPassport.gridViewName = 'grvEPassports';
+      // opPassport.entityName = 'HR_EPassports';
+      // opPassport.predicates = 'EmployeeID=@0';
+      // opPassport.dataValues = this.employeeID;
+      // opPassport.srtColumns = 'IssuedDate';
+      // opPassport.srtDirections = 'desc';
+      // (opPassport.page = 1),
+      //   this.hrService.loadData('HR', opPassport).subscribe((res) => {
+      //     if (res) this.lstPassport = res[0];
+      //     if (this.lstPassport.length > 0) {
+      //       this.crrPassport = this.lstPassport[0];
+      //       console.log('Current value', this.crrPassport);
+      //     }
+      //   });
     }
   }
 
@@ -1171,6 +1174,9 @@ export class EmployeeDetailComponent extends UIComponent {
             if (res) {
               if (res.type == 'loaded') {
                 t.visaRowCount = res['data'].length;
+                // if(res['data'].length > 0){
+                //   this.crrVisa = res.data[0]
+                // }
               }
             }
           });
@@ -1212,6 +1218,9 @@ export class EmployeeDetailComponent extends UIComponent {
             if (res) {
               if (res.type == 'loaded') {
                 t.passportRowCount = res['data'].length;
+                if(res['data'].length > 0){
+                  this.crrPassport = res.data[0]
+                }
               }
             }
           });
@@ -1275,7 +1284,8 @@ export class EmployeeDetailComponent extends UIComponent {
           (p) => p.parentID == this.selfInfoFuncID
         );
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd.splice(0, 2);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        //this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
@@ -1413,9 +1423,18 @@ export class EmployeeDetailComponent extends UIComponent {
     this.benefitSortModel.field = 'EffectedDate';
     this.benefitSortModel.dir = 'desc';
 
+    this.visaSortModel = new SortModel();
+    this.visaSortModel.field = 'IssuedDate';
+    this.visaSortModel.dir = 'desc';
+
+    this.workPermitSortModel = new SortModel();
+    this.workPermitSortModel.field = 'IssuedDate';
+    this.workPermitSortModel.dir = 'desc';
+
     this.passportSortModel = new SortModel();
     this.passportSortModel.field = 'IssuedDate';
     this.passportSortModel.dir = 'desc';
+
     this.skillIDSortModel = new SortModel();
     this.skillIDSortModel.field = 'SkillID';
     this.skillIDSortModel.dir = 'asc';
@@ -2302,7 +2321,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.passportRowCount += this.updateGridView(this.passportGridview, 'delete', data);
+                    this.updateGridView(this.passportGridview, 'delete', data);
                     // let i = this.lstPassport.indexOf(data);
                     // if (i != -1) {
                     //   this.lstPassport.splice(i, 1);
@@ -2318,7 +2337,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.workPermitRowCount += this.updateGridView(this.workPermitGridview, 'delete', data);
+                    this.updateGridView(this.passportGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2330,7 +2349,12 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.visaRowCount += this.updateGridView(this.visaGridview, 'delete', data);
+                    // let i = this.lstVisa.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstVisa.splice(i, 1);
+                    //   console.log('delete visa', this.lstVisa);
+                    // }
+                    this.updateGridView(this.visaGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2981,15 +3005,18 @@ export class EmployeeDetailComponent extends UIComponent {
     switch (this.crrFuncTab) {
       case this.selfInfoFuncID:
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd.splice(0, 2);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd.splice(0, 2);
         break;
       case this.legalInfoFuncID:
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
-        this.lstBtnAdd.splice(0, 1);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd.splice(0, 1);
         break;
       case this.jobInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncTaskInfo;
-        this.lstBtnAdd = null;
+        this.lstBtnAdd = this.lstFuncTaskInfo;
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd = null;
         break;
       case this.benefitInfoFuncID:
         this.lstBtnAdd = this.lstFuncSalary;
@@ -3275,7 +3302,7 @@ export class EmployeeDetailComponent extends UIComponent {
       if (!res?.event)
         (this.jobSalaryGridview?.dataService as CRUDService)?.clear();
       else {
-        this.eJobSalaryRowCount += this.updateGridView(
+        this.eJobSalaryRowCount = this.updateGridView(
           this.jobSalaryGridview,
           actionType,
           res.event[0]
@@ -3477,9 +3504,7 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.workPermitGridview.dataService as CRUDService).clear();
-      else {
-        this.workPermitRowCount += this.updateGridView(this.workPermitGridview, actionType, res?.event);
-      }
+      else this.updateGridView(this.workPermitGridview, actionType, data);
       this.df.detectChanges();
     });
   }
@@ -3503,9 +3528,7 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.visaGridview.dataService as CRUDService).clear();
-      else{
-        this.visaRowCount += this.updateGridView(this.visaGridview, actionType, res.event);
-      } 
+      else this.updateGridView(this.visaGridview, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -3850,7 +3873,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '550px';
+    option.Width = '850px';
     option.FormModel = this.eContractFormModel;
     let isAppendix = false;
 
@@ -3861,10 +3884,11 @@ export class EmployeeDetailComponent extends UIComponent {
       isAppendix = true;
     }
     let dialogAdd = this.callfunc.openSide(
-      isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
+      isAppendix ? PopupSubEContractComponent : PopupEProcessContractComponent,
       {
         actionType: actionType,
         dataObj: data,
+        empObj: this.infoPersonal,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eContractFuncID),
         employeeId: this.employeeID,
@@ -4657,15 +4681,18 @@ export class EmployeeDetailComponent extends UIComponent {
   ) {
     if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
+      let returnVal = 0;
       if (actionType == 'add' || actionType == 'copy') {
         (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
-        return 1;
+        returnVal = 1;
       } else if (actionType == 'edit') {
         (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
       } else if ((actionType = 'delete')) {
         (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
-        return -1;
+        returnVal = -1;
       }
+
+      return returnVal;
     }
     return 0;
   }

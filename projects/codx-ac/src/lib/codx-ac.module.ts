@@ -34,7 +34,7 @@ import { CashPaymentsComponent } from './cash-payments/cash-payments.component';
 import { NoSubAsideComponent } from 'projects/codx-ad/src/lib/_noSubAside/_noSubAside.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { PopAddCashComponent } from './cash-payments/pop-add-cash/pop-add-cash.component';
-import { ItemsComponent } from './items/items.component';
+import { ItemsComponent, NameByIdPipe } from './items/items.component';
 import { PopupAddItemComponent } from './items/popup-add-item/popup-add-item.component';
 import { PopupAddItemSizeComponent } from './items/popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from './items/popup-add-item-style/popup-add-item-style.component';
@@ -71,6 +71,8 @@ import { PopAddLineComponent } from './purchaseinvoices/pop-add-line/pop-add-lin
 import { SingleSelectPopupComponent } from './journal-names/single-select-popup/single-select-popup.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
+import { VoucherComponent } from './popup/voucher/voucher.component';
+import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
 
 export const routes: Routes = [
   {
@@ -217,6 +219,9 @@ export const routes: Routes = [
     PopAddLineComponent,
     SingleSelectPopupComponent,
     CustomizedMultiSelectPopupComponent,
+    VoucherComponent,
+    PopAddLinecashComponent,
+    NameByIdPipe,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -232,7 +237,7 @@ export const routes: Routes = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

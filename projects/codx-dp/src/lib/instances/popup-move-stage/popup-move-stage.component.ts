@@ -265,7 +265,6 @@ export class PopupMoveStageComponent implements OnInit {
             break;
           }
         }
-
       }
       if (!ischeck) {
         this.notiService.notifyCode('SYS009', 0, '"' + title + '"');
@@ -577,8 +576,14 @@ export class PopupMoveStageComponent implements OnInit {
       let index = this.instancesStepOld.fields.findIndex(
         (x) => x.recID == field.recID
       );
+      let indexView = this.fieldsNull.findIndex(
+        (x) => x.recID == field.recID
+      );
       if (index != -1) {
         this.instancesStepOld.fields[index].dataValue = result;
+        if (indexView != -1) {
+          this.fieldsNull[index].dataValue = result;
+        }
       }
     }
   }

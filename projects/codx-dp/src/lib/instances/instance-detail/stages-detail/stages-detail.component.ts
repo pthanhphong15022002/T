@@ -346,17 +346,17 @@ export class StagesDetailComponent implements OnInit {
     }
     let dataTransmit =
       status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
-    let listData = [
+    let listData = {
       status,
-      this.jobType,
-      this.step?.recID,
-      this.taskGroupList,
-      dataTransmit || {},
-      this.taskList,
-      this.step?.stepName,
-      this.groupTaskID,
-      !this.step?.leadtimeControl,
-    ];
+      taskType: this.jobType,
+      stepID: this.step?.recID,
+      listGroup: this.taskGroupList,
+      stepTaskData: dataTransmit || {},
+      taskList: this.taskList,
+      stepName: this.step?.stepName,
+      groupTaskID:this.groupTaskID,
+      leadtimeControl:!this.step?.leadtimeControl,
+    };
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1011;
@@ -478,6 +478,9 @@ export class StagesDetailComponent implements OnInit {
       case 'DP13':
         this.assignTask(e.data, task);
         break;
+      case 'DP20':
+        this.openUpdateProgress(task);
+        break;
     }
   }
   //giao viec
@@ -560,9 +563,10 @@ export class StagesDetailComponent implements OnInit {
         return group;
       }, {});
       const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+        let task = taskGroupList[taskGroup['recID']] ?? [];
         return {
           ...taskGroup,
-          task: taskGroupList[taskGroup['refID']] ?? [],
+          task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
         };
       });
       step['taskGroups'] = taskGroupConvert;
@@ -573,8 +577,6 @@ export class StagesDetailComponent implements OnInit {
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
-      console.log(this.taskGroupList);
-
       this.taskList = step['tasks'];
     }
   }
@@ -591,11 +593,14 @@ export class StagesDetailComponent implements OnInit {
         this.openPopupTaskGroup(data, 'copy');
         break;
       case 'DP08':
-        this.groupTaskID = data?.recID;
+        this.groupTaskID = data?.refID;
         this.openTypeTask();
         break;
       case 'DP12':
         this.viewTask(data, 'G');
+        break;
+      case 'DP20':
+        this.openUpdateProgress(data);
         break;
     }
   }
@@ -1099,7 +1104,7 @@ export class StagesDetailComponent implements OnInit {
           //Thêm công việc
           case 'DP08':
             if (
-              (type != 'group' && !this.isCreate) ||
+              (type != 'group') ||
               (this.instance.status != 1 && this.instance.status != 2) ||
               !this.isUpdate
             )

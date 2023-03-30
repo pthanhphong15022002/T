@@ -343,6 +343,7 @@ export class CrmCustomerComponent
     //       this.detectorRef.detectChanges();
     //     });
     // }
+    this.view.dataService.methodSave = 'AddCrmAsync';
 
     this.detectorRef.detectChanges();
   }
@@ -424,12 +425,8 @@ export class CrmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
-          this.funcID == 'CM0101' ||
-            this.funcID == 'CM0103' ||
-            this.funcID == 'CM0104'
-            ? PopupAddCrmcustomerComponent
-            : PopupAddCrmcontactsComponent,
-          ['edit', this.titleAction],
+          PopupAddCrmcustomerComponent,
+          ['add', this.titleAction],
           option
         );
         dialog.closed.subscribe((e) => {
@@ -459,11 +456,7 @@ export class CrmCustomerComponent
           this.titleAction =
             this.titleAction + ' ' + this.view?.function.customName;
           var dialog = this.callfc.openSide(
-            this.funcID == 'CM0101' ||
-              this.funcID == 'CM0103' ||
-              this.funcID == 'CM0104'
-              ? PopupAddCrmcustomerComponent
-              : PopupAddCrmcontactsComponent,
+            PopupAddCrmcustomerComponent,
             ['edit', this.titleAction],
             option
           );
@@ -481,16 +474,15 @@ export class CrmCustomerComponent
   }
   //#endregion
 
-  getNameCrm(data){
-    if(this.funcID == "CM0101"){
+  getNameCrm(data) {
+    if (this.funcID == 'CM0101') {
       return data.customerName;
-    }else if(this.funcID == "CM0102"){
+    } else if (this.funcID == 'CM0102') {
       return data.contactName;
-    }else if(this.funcID == "CM0103"){
+    } else if (this.funcID == 'CM0103') {
       return data.partnerName;
-    }else{
+    } else {
       return data.opponentName;
     }
   }
-
 }

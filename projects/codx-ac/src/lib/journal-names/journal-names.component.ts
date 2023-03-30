@@ -22,7 +22,6 @@ export class JournalNamesComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  testimg = 'UyNhiemChi.svg';
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -125,6 +124,10 @@ export class JournalNamesComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
+          if (data.dataValue) {
+            data = { ...data, ...JSON.parse(data.dataValue) };
+          }
+
           this.view.dataService.dataSelected = data;
           this.view.dataService.edit(data).subscribe(() => {
             const options = new SidebarModel();
@@ -148,6 +151,10 @@ export class JournalNamesComponent extends UIComponent {
 
   copy(e, data): void {
     console.log('copy', data);
+
+    if (data.dataValue) {
+      data = { ...data, ...JSON.parse(data.dataValue) };
+    }
 
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe(() => {
@@ -177,7 +184,7 @@ export class JournalNamesComponent extends UIComponent {
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
-        req.data = data;
+        req.data = data.recID;
 
         return true;
       })

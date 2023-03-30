@@ -58,7 +58,7 @@ export class CodxEpService {
   //temp environment
   environment = {
     SureMeet: {
-      baseUrl: '/suremeet/',
+      baseUrl: 'http://localhost:8011/suremeet/',
       tokenUrl: 'api/auth/token',
       addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
       connectMettingUrl: 'PublicMeeting/Verify',
@@ -342,7 +342,7 @@ export class CodxEpService {
     );
   }
 
-  rescheduleBooking(data: any, note: any,) {
+  rescheduleBooking(data: any, note: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -430,12 +430,12 @@ export class CodxEpService {
       recID
     );
   }
-  getApproveByRecID(recID: string) {
+  getApproveByRecID(approvalRecID: string) {
     return this.api.exec<any>(
       'EP',
       'BookingsBusiness',
       'GetApprovalBookingByIDAsync',
-      recID
+      approvalRecID
     );
   }
 
@@ -559,7 +559,7 @@ export class CodxEpService {
         processID,
         entityName,
         funcID,
-        '<div>' + booking.title + '</div>'
+        '<div>' + booking.title + '</div>',
       ]
     );
   }
@@ -635,14 +635,14 @@ export class CodxEpService {
     );
   }
 
-  checkRole(curUser: any, owner: string, isAdmin: boolean,host:string ='' ) {
+  checkRole(curUser: any, owner: string, isAdmin: boolean, host: string = '') {
     return (
       curUser?.userID == owner ||
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
       curUser?.administrator ||
-      isAdmin == true ||      
-      curUser?.userID == host 
+      isAdmin == true ||
+      curUser?.userID == host
     );
   }
   checkRoleHost(curUser: any, host: string, isAdmin: boolean) {
@@ -689,8 +689,8 @@ export class CodxEpService {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
-      'BookingItemsBusiness',
-      'GetAsync',
+      'BookingsBusiness',
+      'GetBookingByIDAsync',
       [recID]
     );
   }
@@ -750,15 +750,15 @@ export class CodxEpService {
       data
     );
   }
-  
-  getListUserIDByListGroupID(listGroupID){
+
+  getListUserIDByListGroupID(listGroupID) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
       'GroupMembersBusiness',
       'GetListUserIDByListGroupIDAsync',
       listGroupID
-    );  
+    );
   }
 
   getListUserIDByListPositionsID(listPositionID) {

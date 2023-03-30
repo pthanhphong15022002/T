@@ -494,7 +494,6 @@ a:link {
 .aqua {
   border: 1px aqua solid;
 }
-
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
 }
@@ -2070,7 +2069,7 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
     .container-toolbar + .container-fluid{
       padding-left:16px!important;
       padding-right:16px!important;
-      height: calc(100vh - 120px)!important;
+     // height: calc(100vh - 120px)!important;
     }
   }
 }
@@ -2121,4 +2120,12 @@ codx-input .rte-placeholder{
 }
 .e-grid .e-gridheader {
   border-bottom-color:var(--border-list);
+}
+codx-valuelist .btn.select-icon{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ejs-richtexteditor.codx-textarea .e-content{
+height: 80px!important;
 }

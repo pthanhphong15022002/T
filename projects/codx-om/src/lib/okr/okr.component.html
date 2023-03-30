@@ -66,7 +66,7 @@
                 <div class="h-100" *ngIf="dataOKR != null">
                     <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll" 
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
-                    [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel"
+                    [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel" [curOrgUnitID]="curOrgID"
                     [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
                   
                   
@@ -128,7 +128,8 @@
                 <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content><lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+            <ng-template #content>
+              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
