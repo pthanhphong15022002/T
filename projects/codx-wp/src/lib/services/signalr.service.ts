@@ -25,8 +25,9 @@ export class SignalRService {
   activeGroup = new EventEmitter<any>();
   reciverChat = new EventEmitter<any>();
   voteChat = new EventEmitter<any>();
-
-  constructor(private authStore: AuthStore) {
+  addMember = new EventEmitter<any>();
+  constructor(
+    private authStore: AuthStore) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -73,13 +74,15 @@ export class SignalRService {
           this.voteChat.emit(res.data);
           break;
         case 'AddMemberToGroup':
-          break;
+          debugger
+          this.addMember.emit(res.data);
+          this.activeGroup.emit(res.data);
+        break;
       }
     });
   }
   // send to server
   sendData(methodName: string, ...args: any[]) {
-    debugger;
     this.hubConnection.invoke(methodName, ...args);
   }
 }

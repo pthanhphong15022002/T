@@ -194,19 +194,6 @@ codx-chat-box.active{
 
 }
 
-    
-
-.upload-files-item{
-    width: 50px;
-    height: 50px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    display: flex;
-}
-//lộc css tạm button xóa
-.upload-files-item_remove{
-
-}
 
 .group-infor_name{
     position: relative;
@@ -257,4 +244,10 @@ codx-chat-box.active{
     background-color: rgb(115, 212, 250);
     padding: 4px;
 }
-
+.message-system{
+    width: 100%;
+    margin: 10px 0px;
+    text-align: center;
+    font-style: italic;
+    font-weight: 400;
+}

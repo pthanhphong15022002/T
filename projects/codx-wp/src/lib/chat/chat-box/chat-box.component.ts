@@ -125,7 +125,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(): void {
     //receiver message
     this.signalR.reciverChat.subscribe((res:any) => {
-      if(res.groupID === this.groupID)
+      if(res)
       {
         this.arrMessages.push(res);
         this.group.lastMssgID = res.recID; 
@@ -137,7 +137,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         this.dt.detectChanges();
       }
     });
-
     //vote message
     this.signalR.voteChat.subscribe((res:any) => {
       if(res.groupID === this.groupID){
@@ -160,6 +159,19 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           mssg.votes.push(res);
           this.dt.detectChanges();
         }
+      }
+    });
+    //add member to group
+    this.signalR.addMember.subscribe((res:any) => {
+      if(res.message){
+        this.arrMessages = res.message
+        this.group.lastMssgID = res.message.recID; 
+        this.group.message = res.message.message; 
+        this.group.messageType = "3";
+        setTimeout(()=>{
+          this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+        },100)
+        this.dt.detectChanges();
       }
     });
   }
@@ -441,18 +453,26 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   height:number = window.innerHeight;
   memeber:string = "PMNHI;ADMIN";
   addMemeber(event:any){
-    debugger
-    let lstUserID = event.id.split(";");
-    let lstUserName = event.text.split(";");
-    let lstMember = lstUserID.map((x,index) => { return {userID:x,userName:lstUserName[index]}});
-    let data = {
-      groupID:this.groupID,
-      members:lstMember
+    if(event.id && event.text){
+      let userIDs = event.id.split(";");
+      let userNames = event.text.split(";");
+      if(Array.isArray(userIDs) && Array.isArray(userNames)){
+        let length = userIDs.length;
+        let members = [];
+        for (let i = 0; i < length; i++) {
+          members[i] = {userID:userIDs[i], userName:userNames[i] };
+        }
+        this.signalR.sendData("AddMemberToGroup",this.groupID,JSON.stringify(members));
+      }
     }
     this.showCBB = false;
-    this.signalR.sendData("AddMemberToGroup",this.groupID,JSON.stringify(lstMember));
   }
   clickAddMemeber(){
     this.showCBB = !this.showCBB;
+  }
+  //
+  click(item){
+    console.log(item);
+    ;
   }
 }

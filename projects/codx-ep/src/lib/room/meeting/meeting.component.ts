@@ -64,8 +64,6 @@ export class MeetingComponent extends UIComponent {
   curHost;
   onInit(): void {
     this.cache.valueList('EP021').subscribe((res) => {
-      console.log(res);
-
       this.vllImgUrl = res.datas;
       this.curHost = this.vllImgUrl[0];
     });
@@ -94,7 +92,6 @@ export class MeetingComponent extends UIComponent {
 
   changeHost(imgUrl) {
     this.curHost = imgUrl;
-    console.log('curHost', imgUrl);
   }
   urlChange(evt:any){
     if(evt && evt?.data !=null){
