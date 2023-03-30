@@ -7,7 +7,7 @@
     z-index: 99;
     top: 8px;
     right: 10px;
-    color: #36c536;
+    color: var(--primary-light);
     font-size: 22px !important;
 }
 
@@ -65,7 +65,7 @@
     height: 100%;
 }
 .fd-shareuser img{
-    width: 16px;
+    width: 15px;
     height: auto;
     margin-right: 5px;
 }
