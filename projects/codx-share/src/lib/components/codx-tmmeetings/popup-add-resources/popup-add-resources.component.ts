@@ -1,9 +1,4 @@
-import { CodxTMService } from './../../codx-tm.service';
-import {
-  CO_Meetings,
-  CO_Permissions,
-  EP_BookingAttendees,
-} from './../../models/CO_Meetings.model';
+
 import {
   CacheService,
   DialogData,
@@ -20,8 +15,9 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { CO_Resources } from '../../models/CO_Meetings.model';
 import { FormsModule } from '@angular/forms';
+import { CO_Meetings, CO_Permissions, EP_BookingAttendees } from '../models/CO_Meetings.model';
+import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 
 @Component({
   selector: 'lib-popup-add-resources',

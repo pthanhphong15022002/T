@@ -48,26 +48,20 @@ import { FormsModule } from '@angular/forms';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
-import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
-import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
-import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
-import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/popup-status-meeting.component';
 import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
-import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
-import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
+
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
 import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
+import { MeetingDetailComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/meeting-detail/meeting-detail.component';
 
 export const routes: Routes = [
   {
@@ -222,18 +216,12 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   TMDashboardComponent,
   TMMeetingsComponent,
-  PopupAddMeetingComponent,
-  ViewListMeetComponent,
-  MeetingDetailComponent,
+
   TaskExtendsComponent,
-  TemplateComponent,
   SprintDetailsComponent,
-  ViewWorkComponent,
   DashboardComponent,
-  PopupStatusMeetingComponent,
   PopupTabsViewsDetailsComponent,
-  PopupRescheduleMeetingComponent,
-  PopupAddResourcesComponent,
+
   LayoutNoToolbarComponent,
   DashboardContentComponent,
 ];
