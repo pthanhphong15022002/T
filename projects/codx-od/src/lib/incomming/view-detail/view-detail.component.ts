@@ -31,6 +31,7 @@ import {
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -294,8 +295,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
     else this.ms023 = ms023;
     
-
-    var dvlRelType =  this.codxODService.loadMessage('OD023')
+    var dvlRelType =  this.codxODService.loadValuelist('OD008')
     if(isObservable(dvlRelType))
     {
       dvlRelType.subscribe((item) => {
@@ -412,6 +412,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       else this.dvlCategory = vll;
     }
+
     var vllRelType = this.codxODService.loadValuelist('OD008');
     if(isObservable(vllRelType))
     {
@@ -428,7 +429,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlStatusRel = item;
       });
     }
-    else this.dvlStatusRel = vllRelType;
+    else this.dvlStatusRel = vllStatusRel;
    
     var vllReCall = this.codxODService.loadValuelist('OD010');
     if(isObservable(vllReCall))
@@ -437,7 +438,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlReCall = item;
       });
     }
-    else this.dvlReCall = vllRelType;
+    else this.dvlReCall = vllReCall;
 
     var vllStatusTM  = this.codxODService.loadValuelist('L0614');
     if(isObservable(vllStatusTM))
@@ -446,7 +447,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlStatusTM = item;
       });
     }
-    else this.dvlStatusTM = vllRelType;
+    else this.dvlStatusTM = vllStatusTM;
 
     var ms020 =  this.codxODService.loadMessage('OD020')
     if(isObservable(ms020))
@@ -561,7 +562,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null, isData = false) {
-    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -593,8 +593,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText:
-                'Chỉnh sửa ' + (this.funcList?.defaultName).toLowerCase(),
+              headerText: val?.data?.customName + ' ' + (this.funcList?.customName).toLowerCase(),
               formModel: this.formModel,
               type: 'edit',
               data: datas,
@@ -664,8 +663,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText:
-                'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
+              headerText: val?.data?.customName + ' ' + (this.funcList?.customName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
             },
@@ -685,7 +683,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Chuyển
-      case 'ODT101': {
+      case 'ODT101':
+      case 'ODT5213': {
         /* if(this.checkOpenForm(funcID))
           {
             /*
@@ -717,7 +716,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Cập nhật
       case 'ODT103':
       case 'ODT202':
-      case 'ODT3002': {
+      case 'ODT3002':
+      case 'ODT5102':
+      case 'ODT5203': {
         //if(this.checkOpenForm(funcID))
         var option = new DialogModel();
         option.FormModel = this.formModel;
@@ -740,7 +741,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Chia sẻ
       case 'ODT104':
       case 'ODT203':
-      case 'ODT3003': {
+      case 'ODT3003':
+      case 'ODT5103':
+      case 'ODT5204': {
         // if (this.checkOpenForm(funcID)) {
         // }
         let option = new SidebarModel();
@@ -769,7 +772,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Thu hồi
       case 'ODT105':
       case 'ODT204':
-      case 'ODT3004': {
+      case 'ODT3004':
+      case 'ODT5104':
+      case 'ODT5205': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         this.notifySvr
@@ -782,7 +787,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //liên kết văn bản
       case 'ODT106':
       case 'ODT205':
-      case 'ODT3005': {
+      case 'ODT3005':
+      case 'ODT5105':
+      case 'ODT5206': {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
@@ -790,8 +797,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog = this.callfunc.openSide(
           AddLinkComponent,
           {
+            headerText: val?.data?.customName,
             gridViewSetup: this.gridViewSetup,
             option: option,
+            data:datas,
           },
           option
         );
@@ -806,7 +815,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Gia hạn
       case 'ODT107':
       case 'ODT206':
-      case 'ODT3006': {
+      case 'ODT3006':{
         // if (this.checkOpenForm(funcID)) {
         // }
         this.callfunc
@@ -822,7 +831,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Quản lý phiên bản
       case 'ODT108':
       case 'ODT207':
-      case 'ODT3007': {
+      case 'ODT3007':
+      case 'ODT5107':
+      case 'ODT5208':
+         {
         // if (this.checkOpenForm(funcID)) {
         // }
         break;
@@ -830,7 +842,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Chuyển vào thư mục
       case 'ODT109':
       case 'ODT208':
-      case 'ODT3008': {
+      case 'ODT3008':
+      case 'ODT5108':
+      case 'ODT5209':  {
         //  if(this.checkOpenForm(funcID))
         // {
         // this.callfunc.openForm(FolderComponent, null, 600, 400);
@@ -844,7 +858,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT111':
       case 'ODT210':
       case 'ODT3009':
-      case 'ODT3010': {
+      case 'ODT3010':
+      case 'ODT5109':
+      case 'ODT5210':
+      case 'ODT5110':
+      case 'ODT5211':  {
         this.odService.bookMark(datas.recID).subscribe((item) => {
           if (item.status == 0) {
             this.view.dataService.onAction.next({
@@ -861,14 +879,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Gửi email
       case 'SYS004': {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          SendEmailComponent,
-          {
-            gridViewSetup: this.gridViewSetup,
-          },
-          option
+        // let option = new SidebarModel();
+        // option.DataService = this.view?.currentView?.dataService;
+        this.dialog = this.callfunc.openForm(
+          CodxEmailComponent,
+          "",
+          900,
+          800
         );
         this.dialog.closed.subscribe((x) => {
           if (x.event != null) {
@@ -1059,7 +1076,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Hoàn tất
       case 'ODT112':
       case 'ODT211':
-      case 'ODT3011': {
+      case 'ODT3011':
+      case 'ODT5111':
+      case 'ODT5212': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -1082,7 +1101,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Trả lại
-      case 'ODT113': {
+      case 'ODT113':
+      case 'ODT5213': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -1108,7 +1128,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Chuyển lại
-      case 'ODT114': {
+      case 'ODT114':
+      case 'ODT5214': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -1158,15 +1179,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.dialog.closed.subscribe((x) => {
             if (x.event) {
               this.odService.addLink(datas.recID , x.event.recID, "","").subscribe(item2=>{
-                // if(item2) this.notifySvr.notifyCode("OD025");
-                // else this.notifySvr.notifyCode("OD026");
               });
-              // this.view.dataService.add(x.event, 0).subscribe((item) => {
-              //   this.view.dataService.onAction.next({
-              //     type: 'update',
-              //     data: x.event,
-              //   });
-              // });
             }
           });
         });
@@ -1175,7 +1188,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Giao việc
       case 'ODT1013':
       case "ODT52013":
-      case 'ODT3013': {
+      case 'ODT3013':
+      case 'ODT52013': {
         var task = new TM_Tasks();
         task.refID = datas?.recID;
         task.refType = this.formModel.entityName;
@@ -1200,10 +1214,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         dialog.closed.subscribe((e) => {
           if (e?.event && e?.event[0]) {
             datas.status = '3';
-            // debugger;
-            // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
-            //   if(item) that.data.tasks= item;
-            // })
             that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
               if (item.status == 0) {
                 that.view.dataService.update(e.data).subscribe();
@@ -1376,10 +1386,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         return 'Gửi đến ' + agencyName;
       }
     }
+    
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
-      shareBy
+      shareBy 
     );
   }
   updateNotCallFuntion(data: any) {
@@ -1392,17 +1403,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT110' ||
-        x.functionID == 'ODT209' ||
-        x.functionID == 'ODT3009'
+        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
     );
     //Unbookmark
     var unbm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT111' ||
-        x.functionID == 'ODT210' ||
-        x.functionID == 'ODT3010'
+        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
     );
+   
     if (data?.isBookmark) {
       if (bm[0]) bm[0].disabled = true;
       if (unbm[0]) unbm[0].disabled = false;
@@ -1504,13 +1512,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
     }
     var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114'
+      (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
     );
     if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
     if (data?.status == '4') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113'
+        (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
       );
       if (approvel[0]) approvel[0].disabled = true;
       if (approvelCL[0]) approvelCL[0].disabled = false;

@@ -1,7 +1,6 @@
 .fd-card-detail-background{
     position: relative;
-    max-width: 70%;
-    height: 500px;
+    margin-bottom: 30px;
 }
 
 .fd-card-detail-background > codx-img > div > img
@@ -13,4 +12,8 @@
     min-width: 30%;
     width: 30%;
     height: 500px;
+}
+.viewcard-indetail{
+    background-color: var(--gray-150);
+    border-radius: 8px;
 }

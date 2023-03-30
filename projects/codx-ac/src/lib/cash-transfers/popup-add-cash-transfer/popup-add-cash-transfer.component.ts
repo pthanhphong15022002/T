@@ -44,6 +44,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
+  isEdit: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -55,6 +56,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     super(injector);
 
     this.formTitle = dialogData.data.formTitle;
+    this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
 
     this.cashTransfer.feeControl = Boolean(
@@ -96,7 +98,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
         this.gvsVATInvoices = res;
       });
 
-    if (this.dialogData.data.formType === 'edit') {
+    if (this.isEdit) {
       // load vatInvoice
       const options = new DataRequest();
       options.entityName = 'AC_VATInvoices';
@@ -180,6 +182,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
         }
       });
   }
+
+  close() {
+    this.dialogRef.close();
+  }
   //#endregion
 
   //#region Method
@@ -211,10 +217,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     this.dialogRef.dataService
       .save((req: RequestOption) => {
-        req.methodName =
-          this.dialogData.data.formType === 'add'
-            ? 'AddCashTransferAsync'
-            : 'UpdateCashTransferAsync';
+        req.methodName = !this.isEdit
+          ? 'AddCashTransferAsync'
+          : 'UpdateCashTransferAsync';
         req.className = 'CashTranfersBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';

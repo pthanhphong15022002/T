@@ -336,10 +336,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPassed = true;
     _cart.map((item) => {
       if (item && item.quantity == 0) {
-        this.notificationsService.notify(
-          'Số lượng yêu cầu VPP phải lớn hơn 0',
-          '3'
-        );
+        this.notificationsService.notifyCode('EP021');
         isPassed = false;
       }
     });

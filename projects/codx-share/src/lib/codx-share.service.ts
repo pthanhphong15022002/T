@@ -297,6 +297,16 @@ export class CodxShareService {
     );
   }
 
+  sendEmail(emailTemplate: any, sendToList: any){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'SendAsync',
+      [emailTemplate, sendToList]
+    );
+  }
+
   getDataDefault() {
     return this.api.execSv<any>(
       'SYS',

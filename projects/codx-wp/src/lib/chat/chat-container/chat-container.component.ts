@@ -56,8 +56,8 @@ export class ChatContainerComponent implements OnInit {
       }
     });
     //receiver message
-    this.signalRSV.reciverChat.subscribe((res:any) => {
-      if(res.groupID){
+    this.signalRSV.chat.subscribe((res:any) => {
+      if(res){
         this.handleBoxChat(res);         
       }
     });

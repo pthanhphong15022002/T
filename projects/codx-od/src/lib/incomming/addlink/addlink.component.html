@@ -1,50 +1,39 @@
-<codx-form [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template #subHeader>
+<codx-layout-add
+  #form
+  [title]="headerText"
+  [tabInfo]="tabInfo"
+  [footer]="footer"
+  [formModel]="formModel"
+  [dialog]="dialog"
+  [tabContent]="[tabDescription, tabRoles]"
+>
+</codx-layout-add>
+
+<ng-template #tabDescription>
+    <div id="ejsTabAddLink" class="h-100">
         <codx-searchbar (searchEvent)="searchText($event)"></codx-searchbar>
-    </ng-template>
-    <ng-template popup adde #body>
         <div class="card-title w-100 px-10 py-2">
             <div class="d-flex justify-content-center mt-2" *ngIf="isFilter">
-                <!-- <codx-combobox
-                    refValue="Agencies"
-                    placeholder="Đơn vị"
-                    ngDefaultControl
-                    style="width:100px"
-                  >
-                </codx-combobox>
-                <codx-valuelist 
-                    type="valuelist" 
-                    [placeholder]="'Phân loại'" 
-                    [name]="gridViewSetup['Category']['referedValue']" 
-                    style="width:100px">
-                </codx-valuelist>
-                <codx-valuelist 
-                    [placeholder]="'nguồn'" 
-                    [name]="gridViewSetup['Source']['referedValue']" 
-                    style="width:100px">
-                </codx-valuelist> -->
             </div>
         </div>
-
         <div class="pb-2">
             <span class="fs-6 text-muted">Khoảng {{count}} kết quả được tìm thấy</span>
         </div>
-        <ng-container *ngIf="data && data[0]">
-            <ng-container *ngFor="let data of data[0]">
-                <codx-temp-full [content]="extractContent(data.title)"
-                    [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
-                    [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
-                    cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
-                    [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
-                    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
-                    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-                    [bookmark]="data.isBookmark" [titleLine]="2" [baseHeaderRightTmp]="headerRight" [dataItem]="data">
-                </codx-temp-full>
-                <!-- [icoDateCss]="'icon-access_alarm'" -->
-                <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
-
+        <div id="h-scroll" class="h-scroll">
+            <ng-container *ngIf="data && data[0]">
+                <ng-container *ngFor="let data of data[0]">
+                    <codx-temp-full [content]="extractContent(data.title)"
+                        [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
+                        [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+                        cardCss="card-template border-bottom  py-3" [resources]="getIdUser(data.createdBy,data.owner)"
+                        [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+                        [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
+                        [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+                        [bookmark]="data.isBookmark" [titleLine]="2" [baseHeaderRightTmp]="headerRight" [dataItem]="data">
+                    </codx-temp-full>
+                </ng-container>
             </ng-container>
-        </ng-container>
+        </div>
         <div *ngIf="!isFilter" class="d-flex flex-wrap py-2" style="position:absolute; bottom:0">
             <a class="btn btn-icon btn-xs btn-light me-2 my-1">
                 <i class="icon-keyboard_arrow_left icon-18"></i>
@@ -58,6 +47,67 @@
                 <i class="icon-keyboard_arrow_right icon-18"></i>
             </a>
         </div>
+    </div>
+</ng-template>
+<ng-template #tabRoles>
+    <ng-container *ngIf="dataLink && dataLink.length > 0">
+        <div *ngFor="let item of dataLink">
+            <codx-temp-full [content]="extractContent(item.oDis.title)"
+            [desc]="convertHtmlAgency(item.oDis.agencyName, gridViewSetup?.AgencyName?.headerText)"
+            [status]="item.oDis.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="item.oDis.createdOn"
+            cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(item.oDis.createdBy,item.oDis.owner)"
+            [resourceObjType]="'AD_Users'" [icoStatus]="item.oDis?.urgency"
+            [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+            [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+            [bookmark]="item.oDis.isBookmark" [titleLine]="2" [dataItem]="data">
+        </codx-temp-full>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="submit" (click)="onSave()">
+            Gửi
+        </button>
+    </div>
+</ng-template>
+<ng-template #headerRight let-data>
+    <div class="position-absolute top-0 end-0" style="margin-right: 30px;">
+        <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" [Group]="addLinkForm" ControlName="recID">
+        </codx-input>
+    </div>
+   
+</ng-template>
+
+
+<!-- <codx-form [headerText]="headerText"  [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup adde #body>
+        <ejs-tab id="ejsTabAddLink" [headerPlacement]="'Left'" #tab height="100%">
+            <e-tabitems>
+
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <div class="fw-bold fs-6"><codx-label default="Liên kết" [fiedName]="'lbl'" [formName]=""></codx-label></div>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2 py-5">
+                    <div class="fw-bold fs-6"><codx-label default="Văn bản đã liên kết" [fiedName]="" [formName]=""></codx-label></div>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
+       
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">
@@ -67,7 +117,4 @@
         </div>
     </ng-template>
 </codx-form>
-<ng-template #headerRight let-data>
-    <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" [Group]="addLinkForm" ControlName="recID">
-    </codx-input>
-</ng-template>
+ -->
