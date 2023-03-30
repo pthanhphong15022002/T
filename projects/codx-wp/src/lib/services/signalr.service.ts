@@ -18,8 +18,7 @@ export class SignalRService {
   activeGroup = new EventEmitter<any>();
   reciverChat = new EventEmitter<any>();
   voteChat = new EventEmitter<any>();
-
-
+  addMember = new EventEmitter<any>();
   constructor(
     private authStore: AuthStore) {
     this.createConnection();
@@ -67,6 +66,8 @@ export class SignalRService {
           break;
         case 'AddMemberToGroup':
           debugger
+          this.addMember.emit(res.data);
+          this.activeGroup.emit(res.data);
         break;
       }
       
@@ -74,7 +75,6 @@ export class SignalRService {
   }
   // send to server
   sendData(methodName:string,...args:any[]) {
-    debugger
     this.hubConnection.invoke(methodName, ...args);
   }
 }
