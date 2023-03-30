@@ -439,7 +439,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  //
+  // group by tin nhắn theo ngày
   checkDate(index:number){
 
   }
@@ -467,9 +467,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   clickAddMemeber(){
     this.showCBB = !this.showCBB;
   }
-  //
-  click(item){
-    console.log(item);
-    ;
+  deleteMessage(index:number){
+    if(index != -1){
+      let data = this.arrMessages.splice(index,1);
+      this.api.execSv("WP","ERN.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
+      .subscribe();
+
+    }
   }
 }
