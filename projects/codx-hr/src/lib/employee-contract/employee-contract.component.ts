@@ -36,7 +36,7 @@ export class EmployeeContractComponent extends UIComponent {
   formGroup: FormGroup;
   editStatusObj: any;
 
-  currentEmpObj: any;
+  currentEmpObj: any = null;
   dialogEditStatus: any;
   
 
@@ -95,13 +95,16 @@ export class EmployeeContractComponent extends UIComponent {
         },
       },
     ]
-    console.log('view cua e contract', this.view);
-    this.view.dataService.methodDelete = 'DeleteEContractAsync';
-    console.log('data service data', this.view?.formModel.funcID);
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
-      this.eContractHeaderText = res;
-      console.log('hed do` text ne',this.eContractHeaderText);
-    })
+    // console.log('view cua e contract', this.view);
+    // // if(this.view){
+
+    // //   this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    // // }
+    // console.log('data service data', this.view?.formModel.funcID);
+    // this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+    //   this.eContractHeaderText = res;
+    //   console.log('hed do` text ne',this.eContractHeaderText);
+    // })
   }
 
   ngAfterViewChecked(){
@@ -205,6 +208,10 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   clickMF(event, data){
+    console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
+    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
+
+    
     switch (event.functionID) {
       case 'HRT1001A7': // cap nhat da ki
       case 'HRT1001A0': // huy hop dong
@@ -252,7 +259,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '850px';
+    option.Width = '800px';
     option.FormModel = this.view.formModel;
     // let isAppendix = false;
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
@@ -266,7 +273,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         actionType: actionType,
         dataObj: data,
-        empObj: this.currentEmpObj,
+        empObj: actionType == 'add' ? null: this.currentEmpObj,
         headerText:
           actionHeaderText,
         employeeId: data?.employeeID,
@@ -327,13 +334,20 @@ export class EmployeeContractComponent extends UIComponent {
   }
   changeItemDetail(event) {
     this.itemDetail = event?.data;
+    console.log('eventttttttttttttttttt', event);
+    
+    console.log('itemdetail', this.itemDetail);
+
     
   }
   getDetailContract(event, data){
     if(data){
       this.itemDetail = data;
+      console.log('itemdetail', this.itemDetail);
+      
       this.df.detectChanges();
     }
   }
+  
   
 }

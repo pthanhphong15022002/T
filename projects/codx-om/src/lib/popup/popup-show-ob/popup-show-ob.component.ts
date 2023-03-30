@@ -130,6 +130,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   oldOB: any;
   popupTitle='';
   okrVll: any;
+  isHiddenChart=true;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -198,9 +199,9 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getItemOKRAlign(i: any, recID: any) {
     this.openAccordionAlign[i] = !this.openAccordionAlign[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    // if(this.dataOKR[i].items && this.dataOKR[i].items.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
+    //     if(item) this.dataOKR[i].items = item
     //   });
   }
   getItemOKRAssign(i: any, recID: any) {
@@ -212,7 +213,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
         .subscribe((res: any) => {
           if (res) {
             this.dataOKR = res;
-            this.okrChild = res.child;            
+            this.okrChild = res.items;            
             this.detectorRef.detectChanges();
           }
         });
@@ -348,20 +349,19 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Func------------------------//
-  //Sửa trọng số KR
-  editWeight(obRecID: any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
-    let popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle='Tính kết quả thực hiện cho mục tiêu';
+  //Sửa trọng số KR  
+  editWeight() {
+    let popupTitle='Thay đổi trọng số cho KQ chính';
+    let subTitle =this.dataOB?.okrName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
-    let dialogShowKR = this.callfunc.openForm(
+    let dialogEditWeightKR = this.callfunc.openForm(
       PopupOKRWeightComponent,
       '',
       null,
       null,
       null,
-      [obRecID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
+      [this.dataOB, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle,this.okrVll],
       '',
       dModel
     );
@@ -374,13 +374,16 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-
+  hiddenChartClick(evt: any) {
+    this.isHiddenChart = evt;
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
   selectionChange(parent) {
     if (parent.isItem) {
-      parent.data.items= parent?.data?.child;
+      parent.data.items= parent?.data?.items;
     }
   }
   //-----------------------End-------------------------------//

@@ -15,26 +15,26 @@
 
       <div class="col-6 d-flex  align-items-center justify-content-center">
         <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
-          <codx-label [default]="compName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+          <span class="fw-bold fs-2">{{compName}}</span>
         </div>
         <div class="pt-5 pb-2 text-center" *ngIf="funcID == deptFuncID">
-          <codx-label [default]="deptName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+          <span class="fw-bold fs-2">{{deptName}}</span>
         </div>
         <div class="pt-5 pb-2 text-center" *ngIf="funcID == orgFuncID">
-          <codx-label [default]="orgName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+          <span class="fw-bold fs-2">{{orgName}}</span>
         </div>
         <div class="pt-5 pb-2 text-center" *ngIf="funcID == persFuncID">
-          <codx-label [default]="persName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+          <span class="fw-bold fs-2">{{persName}}</span>
         </div>
       </div>
 
       <div class="col-3 d-flex align-items-center justify-content-end">
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu" >
+        <div *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu" >
           <span class="symbol-label bg-om-gray">
             <i class="icon-create text-dark"></i>
           </span>
         </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
+        <div  *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
           <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
             <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
           </span>
@@ -66,7 +66,7 @@
                 <div class="h-100" *ngIf="dataOKR != null">
                     <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll" 
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
-                    [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel"
+                    [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel" [curOrgUnitID]="curOrgID"
                     [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
                   
                   
@@ -128,7 +128,8 @@
                 <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content><lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+            <ng-template #content>
+              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
             </ng-template>
           </e-tabitem>
           <e-tabitem>

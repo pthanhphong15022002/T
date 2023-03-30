@@ -19,6 +19,7 @@
             [Group]="dialogAutoNum"
             [formModel]="formModel"
             (valueChange)="valueChange($event)"
+            (controlBlur)="blur($event)"
           >
           </codx-input>
         </div>
@@ -35,6 +36,7 @@
               [Group]="dialogAutoNum"
               (valueChange)="valueChange($event)"
               [showSpinButton]="false"
+              (controlBlur)="blur($event)"
             >
             </codx-input>
           </div>
@@ -52,6 +54,7 @@
             [formModel]="formModel"
             field="fixedString"
             (valueChange)="valueChange($event, 'fixedString')"
+            (controlBlur)="blur($event)"
           >
           </codx-input>
         </div>
@@ -66,6 +69,7 @@
             [formModel]="formModel"
             (valueChange)="valueChange($event)"
             [disabled]="!lstEnableSeparator.includes(data?.stringFormat)"
+            (controlBlur)="blur($event)"
           >
           </codx-input>
         </div>
@@ -81,6 +85,7 @@
             [formModel]="formModel"
             field="dateFormat"
             (valueChange)="valueChange($event)"
+            (controlBlur)="blur($event)"
           >
           </codx-input>
         </div>
@@ -141,6 +146,7 @@
             field="autoReset"
             class="test-check"
             (valueChange)="valueChange($event)"
+            (controlBlur)="blur($event)"
             [crrValue]="data.autoReset"
           >
           </codx-input>

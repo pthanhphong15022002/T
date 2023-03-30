@@ -46,7 +46,7 @@ export interface IJournal {
     dIM1: string;
     dIM2: string;
     dIM3: string;
-    iDIMControl: string;
+    idimControl: string;
     approval: any;
     approver: any;
     approvedBy: string;
@@ -87,4 +87,6 @@ export interface IJournal {
     unposter: string;
     unpostTime: number | null;
     sharer: string;
+    duplicateVoucherNo: string;
+    dataValue: string;
 }

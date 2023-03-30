@@ -36,6 +36,9 @@ import { CodxTableComponent } from './task/codx-table/codx-table.component';
 import { OpportunityComponent } from './opportunity/opportunity.component';
 import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
 import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
+import { QuotationsComponent } from './quotations/quotations.component';
+import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
+import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
 const routes: Routes = [
   {
     path: '',
@@ -46,12 +49,12 @@ const routes: Routes = [
         component: TestComponetComponent,
       },
       {
-        path: 'customermanagement/:funcID',
+        path: 'customers/:funcID',
         component: CrmCustomerComponent,
       },
       {
         // gán tạm để làm UI
-        path: 'opportunity/:funcID',
+        path: 'sales/:funcID',
         component: OpportunityComponent,
       },
       {
@@ -85,6 +88,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     OpportunityComponent,
     OpportunityDetailComponent,
     TabDetailCustomComponent,
+    QuotationsComponent,
+    PopupAddQuotationsComponent,
+    PopupAddOpportunityComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

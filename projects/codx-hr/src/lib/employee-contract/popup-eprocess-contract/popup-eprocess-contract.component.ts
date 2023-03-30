@@ -112,12 +112,12 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data truyen vao ben trong ', this.data);
+    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    console.log('emp truyen vao ne', this.employeeObj);
     
     if(this.data){
-      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
-      console.log('emp truyen vao ne', this.employeeObj);
       if(this.data.benefits){
-        this.tempBenefitArr = JSON.parse(this.data?.benefits);
+        this.tempBenefitArr = JSON.parse(JSON.stringify(this.data?.benefits));
       }
       console.log('lst benefit', this.tempBenefitArr);
     }
@@ -201,13 +201,15 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
           option
         );
         this.dialogAddBenefit.closed.subscribe((res) => {
-          this.tempBenefitArr.push({
-            BenefitID: res.event.benefitID,
-            BenefitAmt: res.event.benefitAmt,
-            BenefitNorm: res.event.benefitNorm
-          });
-          this.data.benefits = JSON.stringify(this.tempBenefitArr);
-          this.df.detectChanges();
+          if(res?.event){
+            this.tempBenefitArr.push({
+              BenefitID: res.event.benefitID,
+              BenefitAmt: res.event.benefitAmt,
+              BenefitNorm: res.event.benefitNorm
+            });
+            this.data.benefits = JSON.stringify(this.tempBenefitArr);
+            this.df.detectChanges();
+          }
         });
   }
 
@@ -268,11 +270,14 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
 
   onSaveForm() {
     console.log('data chuan bi luu', this.data);
+    if(this.data.payForm == null) this.data.payForm = '';
+    if(this.data.benefits == null) this.data.benefits = '';
+
     
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
     if (this.data.effectedDate > this.data.expiredDate) {
       this.hrSevice.notifyInvalidFromTo(

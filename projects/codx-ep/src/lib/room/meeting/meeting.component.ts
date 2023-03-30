@@ -93,10 +93,19 @@ export class MeetingComponent extends UIComponent {
   changeHost(imgUrl) {
     this.curHost = imgUrl;
   }
+  urlChange(evt:any){
+    if(evt && evt?.data !=null){
+      this.meetingUrl= evt?.data;
+      this.detectorRef.detectChanges();
+    }
+  }
   closeDialog(isSave: boolean) {
     if (isSave) {
-      this.data[0].onlineUrl = this.meetingUrl;
+      this.data[0].onlineUrl = this.meetingUrl;      
+      this.dialog.close(this.meetingUrl);
     }
-    this.dialog.close();
+    else{         
+      this.dialog.close();
+    }
   }
 }

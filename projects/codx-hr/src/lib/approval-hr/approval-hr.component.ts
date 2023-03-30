@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Input } from '@syncfusion/ej2-angular-inputs';
-import { CacheService, Util } from 'codx-core';
+import { CacheService, DataRequest, Util } from 'codx-core';
 import {
   convertHtmlAgency,
   convertHtmlAgency2,
@@ -26,95 +26,98 @@ import { CodxHrService } from '../codx-hr.service';
   templateUrl: './approval-hr.component.html',
   styleUrls: ['./approval-hr.component.css'],
 })
-
 @ViewChild
-export class ApprovalHrComponent implements OnInit,  AfterViewInit, OnChanges{
-    extractContent = extractContent
-    convertHtmlAgency = convertHtmlAgency2
-    data:any;
-    funcID: any;
-    lstDtDis: any;
-    gridViewSetup: any;
-    formModel: any;
-    view:any = {}
-    dataItem = {}
-    dvlRelType: any;
-    ms020: any;
-    ms021: any;
-    active = 1;
+export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
+  extractContent = extractContent;
+  convertHtmlAgency = convertHtmlAgency2;
+  data: any;
+  funcID: any;
+  lstDtDis: any;
+  gridViewSetup: any;
+  formModel: any;
+  view: any = {};
+  dataItem = {};
+  dvlRelType: any;
+  ms020: any;
+  ms021: any;
+  active = 1;
   constructor(
     private cache: CacheService,
     private hrService: CodxHrService,
-    private router : ActivatedRoute
-  ) {}
+    private router: ActivatedRoute
+  ) {
+    debugger;
+  }
 
-  ngOnChanges(changes: SimpleChanges, ): void { }
+  ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
-    debugger
+    debugger;
     this.router.params.subscribe((params) => {
-      this.funcID = params['FuncID'];
-      if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
+      this.funcID = params['FuncIDs'];
+      if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
     });
     console.log('asdasdasdasd');
-    
-   
   }
 
-  ngAfterViewInit(): void {
-   
-  }
- 
-  getGridViewSetup(funcID:any, id:any)
-  {
+  ngAfterViewInit(): void {}
+
+  getGridViewSetup(funcID: any, id: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
-      this.formModel = 
-      {
-        entityName : fuc?.entityName,
-        formName : fuc?.formName,
-        funcID : funcID,
-        gridViewName : fuc?.gridViewName
-      }
-    
-      this.getDtDis(id);
+      this.formModel = {
+        entityName: fuc?.entityName,
+        formName: fuc?.formName,
+        funcID: funcID,
+        gridViewName: fuc?.gridViewName,
+      };
+
+      this.getDetailContract(id);
     });
-  
   }
-  getDtDis(id: any) {
+  getDetailContract(id: any) {
     this.data = null;
-    if(id)
-    {
-      // this.odService.getDetailDispatch(id,this.formModel?.entityName,true).subscribe((item) => {
-      //   //this.getChildTask(id);
-      //   if (item) {
-      //     this.data = formatDtDis(item);
-      //     //this.view.dataService.setDataSelected(this.lstDtDis);
-      //   }
-      // });
+    if (id) {
+      let request = new DataRequest();
+      request.entityName = this.formModel.entityName;
+      request.predicate = 'RecID=@0';
+      request.dataValue = id;
+      request.pageLoading = false;
+      this.hrService.loadData('HR', request).subscribe((res) => {
+        if (res) {
+          console.log(res);
+
+          this.data = res[0][0];
+        }
+      });
     }
   }
-  getSubTitle(relationType:any , agencyName:any , shareBy: any )
-  {
-    if(relationType == "1") return Util.stringFormat(this.ms020?.customName, this.fmTextValuelist(relationType,"6"), agencyName);
-    return Util.stringFormat(this.ms021?.customName, this.fmTextValuelist(relationType,"6"),shareBy);
+  getSubTitle(relationType: any, agencyName: any, shareBy: any) {
+    if (relationType == '1')
+      return Util.stringFormat(
+        this.ms020?.customName,
+        this.fmTextValuelist(relationType, '6'),
+        agencyName
+      );
+    return Util.stringFormat(
+      this.ms021?.customName,
+      this.fmTextValuelist(relationType, '6'),
+      shareBy
+    );
   }
   fmTextValuelist(val: any, type: any) {
-    var name = "";
+    var name = '';
     try {
       switch (type) {
-       
-        case "6":
-          {
-            var data = this.dvlRelType?.datas.filter(function (el: any) { return el.value == val });
-            return data[0].text;
-          }
-       
+        case '6': {
+          var data = this.dvlRelType?.datas.filter(function (el: any) {
+            return el.value == val;
+          });
+          return data[0].text;
+        }
       }
       return name;
+    } catch (ex) {
+      return '';
     }
-    catch (ex) {
-      return "";
-    }
-  } 
-  openFormFuncID(val: any , datas:any = null) {
   }
+  openFormFuncID(val: any, datas: any = null) {}
 }

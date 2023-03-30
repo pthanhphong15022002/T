@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { auto } from '@popperjs/core';
-import { CallFuncService, DialogRef, FormModel, SidebarModel } from 'codx-core';
+import { CallFuncService, DialogModel, DialogRef, FormModel, SidebarModel } from 'codx-core';
 import { PopupTypeTaskComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
+import { PopupAddQuotationsComponent } from '../quotations/popup-add-quotations/popup-add-quotations.component';
 import { PopupTaskComponent } from '../task/popup-task/popup-task.component';
 
 @Component({
@@ -18,6 +19,24 @@ export class TestComponetComponent implements OnInit {
   ngOnInit(): void {
   }
  
+  openFormAddQuotations(){
+        var obj = {
+          action: 'add',
+          headerText: 'sdasdsadasdasd',
+        };
+        let option = new DialogModel();
+        option.IsFull = true;
+        var dialog = this.callfc.openForm(
+          PopupAddQuotationsComponent,
+          '',
+          null,
+          null,
+          '',
+          obj,
+          '',
+          option
+        );
+  }
   
 
 }

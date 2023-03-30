@@ -494,7 +494,6 @@ a:link {
 .aqua {
   border: 1px aqua solid;
 }
-
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
 }
@@ -2070,7 +2069,7 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
     .container-toolbar + .container-fluid{
       padding-left:16px!important;
       padding-right:16px!important;
-      height: calc(100vh - 120px)!important;
+     // height: calc(100vh - 120px)!important;
     }
   }
 }
@@ -2097,4 +2096,36 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled{
 .codx-card-custom .stepper-body {
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+codx-input .rte-placeholder{
+  padding: 10px!important;
+}
+.btn.codx-vllicon{
+  display: flex;
+  align-items: center;
+}
+/* calendar */
+.box-day .me-8.mb-4{
+  margin-right: 7px!important;
+  margin-bottom: 7px!important;
+}
+.box-time .me-8.mb-4{
+  margin-right: 10px!important;
+  margin-bottom: 10px!important;
+}
+
+.e-kanban .e-kanban-table .e-header-cells.e-collapsed .e-column-collapse {
+  color: var(--primary-light);
+}
+.e-grid .e-gridheader {
+  border-bottom-color:var(--border-list);
+}
+codx-valuelist .btn.select-icon{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ejs-richtexteditor.codx-textarea .e-content{
+height: 80px!important;
 }

@@ -28,9 +28,7 @@ export class ChatContainerComponent implements OnInit {
   lstGroupCollapse:Array<any> = [];
   constructor
   (
-    private api:ApiHttpService,
     private signalRSV:SignalRService,
-    private applicationRef:ApplicationRef,
     private sanitizer: DomSanitizer,
     private dt:ChangeDetectorRef
   ) 
@@ -118,7 +116,7 @@ export class ChatContainerComponent implements OnInit {
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    this.signalRSV.sendData(data,"ActiveGroupAsync");
+    this.signalRSV.sendData("ActiveGroupAsync",data);
   }
 
 }

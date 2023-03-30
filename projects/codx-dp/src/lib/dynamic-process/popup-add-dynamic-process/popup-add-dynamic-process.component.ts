@@ -494,8 +494,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
-        console.log(this.stepList);
-
         if (res && res.update) {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -1817,9 +1815,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             return group;
           }, {});
           const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+            let task = taskGroupList[taskGroup['recID']] ?? [];
             return {
               ...taskGroup,
-              task: taskGroupList[taskGroup['recID']] ?? [],
+              task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
             };
           });
           step['taskGroups'] = taskGroupConvert;
@@ -1916,7 +1915,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepEdit = step;
       this.stepName = this.stepNew['stepName'];
     }
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 350);
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
   }
 
   saveStep() {
@@ -2509,7 +2508,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var checkGroup = this.lstGroup.some(
       (x) => x.groupID == this.process?.groupID
     );
-    return this.process.processName &&
+    return this.process.processName?.trim() &&
       this.process?.groupID &&
       checkGroup &&
       this.stepList?.length > 0
@@ -2655,7 +2654,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   onKeyDown(event: KeyboardEvent) {
     if (event.code === 'F5') {
       // xử lý sự kiện nhấn F5 ở đây
-      console.log('thuan');
     }
   }
 

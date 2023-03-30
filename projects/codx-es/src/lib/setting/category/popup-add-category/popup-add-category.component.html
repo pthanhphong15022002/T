@@ -108,7 +108,7 @@
           </label>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div
           class="d-flex align-items-center mb-4"
           *ngIf="hasModuleES == true && data.eSign"
@@ -271,12 +271,12 @@
         ></div>
       </ng-container>
     </div> -->
-    <codx-approval-step
+    <codx-view-approval-step
       #approvalStep
       [transID]="data.recID"
       [approveStatus]="'1'"
     >
-    </codx-approval-step>
+    </codx-view-approval-step>
   </ng-template>
   <ng-template #footer>
     <button

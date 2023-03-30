@@ -26,8 +26,8 @@
               >
               </codx-tag>
             </div>
-            <div class="d-flex align-items-start" *ngIf="dataSelect.memo">
-              <div class="me-2">
+            <div class="d-flex flex-column" *ngIf="dataSelect.memo">
+              <div class="mt-1">
                 <codx-label
                   class="text-gray-500 text-nowrap"
                   fiedName="Memo"
@@ -75,7 +75,7 @@
               </div>
             </div> -->
           </div>
-          <div class="d-flex flex-column align-items-start justify-content-end">
+          <div class="d-flex flex-column align-items-start justify-content-end ms-9">
             <div class="progress">
               <div
                 class="progress-done"
@@ -95,7 +95,10 @@
             </div>
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
-                <div class="badge badge-primary">{{ stepName }}</div>
+                <div class="badge " [ngStyle]="{'background-color':stepValue['backgroundColor']}">
+                  <span [ngClass]="stepValue['icon']" [ngStyle]="{'color':stepValue['iconColor']}" class="me-2"></span>
+                  <span [ngStyle]="{'color':stepValue['textColor']}">{{ stepName }}</span>
+                </div>
                 <div class="text-gray-500 my-1">
                   {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy" }}
                 </div>
@@ -320,9 +323,9 @@
                         (click)="click(i, item.stepID)"
                         [style]="getbackgroundColor(item)"
                       >
-                        <div class="d-flex align-items-center">
-                          <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" style="font-size: 18px;"></span>
-                          <span> {{ item.stepName }}</span>
+                        <div class="d-flex align-items-top ps-6">
+                          <span [ngClass]="item?.icon" [ngStyle]="{ 'color': item?.iconColor }" class="fs-6 me-2"></span>
+                          <span class="line-clamp line-clamp-2 step-name"> {{ item.stepName }}</span>
                         </div>
                       </div>
                     </ng-container>
@@ -347,7 +350,6 @@
                     [stepNameEnd]="getStepNameIsComlepte(instance)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
-                    [titleHeaderCF]="titleDefault"
                   ></codx-stages-detail>
                 </ng-container>
               </ng-container>
@@ -358,11 +360,11 @@
                     [dataStep]="item"
                     [showColumnControl]="showColumnControl(item.stepID)"
                     [isUpdate]="dataSelect.write && !dataSelect.closed && (dataSelect.status =='1' || dataSelect.status=='2' )"
-                    [currentRecID]="currentRecID"
-                    (inputCustomField)="inputCustomField($event)"
+                    [currentElmID]="currentElmID"
+                    (inputElmIDCF)="inputElmIDCustomField($event)"
                     [isSaving]="isSaving"
-                    (actionSave)="actionSaveCustomField($event)"
-                    [titleHeaderCF]="titleDefault"
+                    (actionSaveCF)="actionSaveCustomField($event)"
+                    [titleHeaderFormCF]="titleDefault"
                   ></codx-field-detail>
                 </ng-container>
               </ng-container>

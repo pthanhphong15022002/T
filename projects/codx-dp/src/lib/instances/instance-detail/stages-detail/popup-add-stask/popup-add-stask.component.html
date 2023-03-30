@@ -29,9 +29,9 @@
   <div class="card-form">
     <!-- Link group -->
     <div class="form-group">
-      <div>
+      <div class="d-flex align-items-top">
         <codx-label
-          class="text-primary"
+          class="text-primary me-2"
           fiedName="StepName"
           [formModel]="dialog?.formModel"
           default="Thuộc giai đoạn: "
@@ -59,9 +59,10 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
-            [readonly]="groupTaskID"
-          ></ejs-dropdownlist>
-        </div>
+            [readonly]="isTaskDefault || (groupTaskID)"
+            ></ejs-dropdownlist>
+            <!-- [readonly]="groupTaskID" -->
+          </div>
       </div>
     </div>
     <!-- Ten Cong Viec -->
@@ -85,6 +86,7 @@
           type="text"
           [crrValue]="stepsTasks?.taskName"
           (valueChange)="valueChangeText($event)"
+           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -105,6 +107,7 @@
           refValue="DP023"
           [crrValue]="stepsTasks?.callType"
           (valueChange)="valueChangeCombobox($event)"
+           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -127,6 +130,7 @@
             [checked]="stepsTasks?.isOnline"
             field="isOnline"
             (valueChange)="valueChangeAlert($event)"
+             [disabled]="isTaskDefault"
           >
           </codx-input>
         </div>
@@ -177,6 +181,7 @@
           [crrValue]="stepsTasks?.startDate"
           type="datetime"
           format="F"
+           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -194,6 +199,7 @@
           [crrValue]="stepsTasks?.endDate"
           type="datetime"
           format="F"
+           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -214,6 +220,7 @@
         type="text"
         [Group]=""
         (valueChange)="valueChangeText($event)"
+         [disabled]="isTaskDefault"
       >
       </codx-input>
       <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
@@ -236,6 +243,7 @@
                 [crrValue]="stepsTasks?.durationDay"
                 type="text"
                 (valueChange)="valueChangeText($event)"
+                 [disabled]="true"
               >
               </codx-input>
             </div>
@@ -247,6 +255,7 @@
                 type="text"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                 [disabled]="true"
               >
               </codx-input>
             </div>
@@ -267,6 +276,7 @@
               refValue="DP030"
               type="valuelist"
               (valueChange)="valueChangeText($event)"
+               [disabled]="isTaskDefault"
             >
             </codx-input>
           </div>
@@ -294,6 +304,7 @@
           [multiple]="true"
           [showInput]="false"
           (valueChange)="applyOwner($event, listChair)"
+           [disabled]="isTaskDefault"
         >
         </codx-input>
       </div>
@@ -321,6 +332,7 @@
         type="text"
         [height]="'150'"
         (valueChange)="valueChangeText($event)"
+         [disabled]="isTaskDefault"
       >
       </codx-input>
     </div>
@@ -332,6 +344,7 @@
         [checked]="stepsTasks?.createTask"
         field="createTask"
         (valueChange)="valueChangeAlert($event)"
+         [disabled]="isTaskDefault"
       >
       </codx-input>
      
@@ -339,7 +352,7 @@
         class="ms-3 mb-3"
           name="lblAlert"
           [formModel]="form.formModel"
-          default="Tạo tack trong phân hệ quản lý công việc"
+          default="Tạo task trong phân hệ quản lý công việc"
         >
         </codx-label>
     </div>

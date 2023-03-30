@@ -1,16 +1,16 @@
 <codx-form *ngIf="skrGrid && krGrid && obGrid" [headerText]="headerText" [dialog]="dialogRef"
-    [bodyCss]="'bgEDEDED pt-5 px-15 '" [body]="body">
+    [bodyCss]="'bgEDEDED pt-5 px-25'" [body]="body">
 </codx-form>
 <ng-template #body>
 
-    <div class="bg-white d-flex justify-content-between flex-column h-100 w-100 ">
+    <div class=" bg-white d-flex justify-content-between flex-column h-100 w-100 ">
         <div class="d-flex justify-content-between align-items-center pt-10 pb-5 px-15">
             <span class="fs-2 fw-bold">{{curOrgName}}</span>
-            <span>{{okrPlan.periodID}}</span>
+            <span class="fs-4 fw-bold">{{okrPlan.periodID}}</span>
         </div>
         <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
             <div class="flex-column d-flex justify-content-start px-15">
-                <div class="d-flex justify-content-start flex-column" *ngFor="let ob of dataOKR;let i=index">
+                <div class="d-flex justify-content-start flex-column pb-5" *ngFor="let ob of dataOKR;let i=index">
                     <div class="d-flex justify-content-start flex-column">
                         <div class="d-flex align-items-end flex-row cursor-pointer w-100">
                             <div class="w-70 d-flex justify-content-start align-items-end">
@@ -60,11 +60,11 @@
                                         <codx-inplace type="valuelist" [refValue]="krGrid?.measurement?.referedValue"
                                             [emptyText]="krGrid?.measurement?.headerText" field="measurement"
                                             [value]="kr?.measurement" [class]="'om-input w-100 text-center'"
-                                            (valueChange)="krChange($event,i,ii)"></codx-inplace>
+                                            (valueChange)="krChange($event,i,ii)"></codx-inplace>   
                                     </div>
 
                                     <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace type="number" [refValue]="krGrid?.target?.referedValue"
+                                        <codx-inplace type="number" [refValue]="krGrid?.target?.referedValue" [showButtons]="false"
                                             [emptyText]="krGrid?.target?.headerText" field="target" [value]="kr?.target"
                                             [class]="' w-100 om-input text-center'"
                                             (valueChange)="krChange($event,i,ii)"></codx-inplace>
@@ -78,7 +78,7 @@
                                     </div>
 
                                     <div class="w-10 d-flex align-items-end justify-content-center mb-3">
-                                        <span class="icon-post_add cursor-pointer text-gray-600 w-fit"
+                                        <span class="icon-post_add cursor-pointer text-gray-600 w-fit" ngbTooltip="Thêm kết quả phụ"
                                             (click)="addOKR(skrType,i,ii)"></span>
                                     </div>
                                 </div>
@@ -107,8 +107,8 @@
                                             <codx-inplace type="valuelist"
                                                 [refValue]="skrGrid?.measurement?.referedValue"
                                                 [emptyText]="skrGrid?.measurement?.headerText" field="measurement"
-                                                [dataValue]="skr?.measurement" [class]="'om-input w-100 text-center'"
-                                                (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
+                                                [value]="skr?.measurement" [class]="'om-input w-100 text-center'"
+                                                (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>                                                                                
                                         </div>
 
                                         <div class="w-30 min-h-table d-flex justify-content-center align-items-end">

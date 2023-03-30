@@ -131,7 +131,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   attendeesNumber = 0;
   grView: any;
   data: any;
-  host:any;
+  host: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -145,7 +145,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = { ...dialogData?.data[0]};
+    this.data = { ...dialogData?.data[0] };
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
@@ -314,9 +314,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 this.attendeesList.push(tempAttender);
               }
               if (tempAttender.userID == this.data.createdBy) {
-                this.curUser = tempAttender;        
+                this.curUser = tempAttender;
               }
-              
+
               this.resources.push(tempAttender);
             });
           }
@@ -556,8 +556,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.codxEpService
         .getBookingItems(this.data.recID)
         .subscribe((res: any) => {
-          if (res) {
-            res.forEach((item) => {
+          if (res && res.bookingItems) {
+            res.bookingItems.forEach((item) => {
               let tmpSta = new BookingItems();
               (tmpSta.itemID = item?.itemID),
                 (tmpSta.quantity = item?.quantity),
@@ -655,8 +655,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tmpPer.download = true;
         tmpPer.isActive = true;
         this.listFilePermission.push(tmpPer);
-        if(item.roleType=='1'){
-          this.data.owner=item?.userID;
+        if (item.roleType == '1') {
+          this.data.owner = item?.userID;
         }
       });
       this.tmpAttendeesList.push(this.curUser);
@@ -1105,7 +1105,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupLink() {
-    this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
+    let dlLink= this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
+    dlLink.closed.subscribe((res:any)=>{
+      if(res){
+        this.data.onlineUrl=res?.event;
+      }
+    })
   }
   showAllResourceChange(evt: any) {
     if (evt != null) {
@@ -1294,7 +1299,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     var listUserID = '';
     var listDepartmentID = '';
     var listUserIDByOrg = '';
-    var listGroupMembersID='';
+    var listGroupMembersID = '';
     var type = 'U';
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -1307,8 +1312,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
-            case 'UG':
-              listGroupMembersID+= obj.id + ';'
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
             break;
         }
       }
@@ -1370,7 +1375,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           id += ';' + resourceID;
           this.getListUser(resourceID);
         }
-
       } else {
         this.getListUser(resourceID);
       }
