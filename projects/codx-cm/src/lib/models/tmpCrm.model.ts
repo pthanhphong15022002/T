@@ -36,6 +36,8 @@ export class tmpCrm {
   email: string;
   allowCall: boolean = true;
   allowEmail: boolean = true;
+  disadvantage: string;
+  advantage: string;
   contacts: CM_Contacts[];
   address: CM_Address[];
 }

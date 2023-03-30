@@ -310,19 +310,10 @@
         ></codx-searchbar>
       </div>
     </div>
-    <div
-      class="table-responsive mt-3"
-      style="height: 420px; border-radius: 5px"
-    >
-      <table id="myTable" class="table table-hover">
-        <thead
-          style="
-            position: sticky;
-            top: 0;
-            background-color: var(--primary-active);
-            color: white;
-          "
-        >
+    <div class="table-responsive mt-3" style="height: 380px;border-radius: 5px;">
+      <table id="myTable" class="table table-hover ">
+        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
+        color: white;">
           <tr>
             <th></th>
             <th
@@ -341,10 +332,8 @@
             </th>
           </tr>
         </thead>
-        <tbody
-          style="border-bottom: 1px solid #dee2e6"
-          *ngFor="let item of cashpaymentline"
-        >
+        <tbody style="border-bottom: 1px solid #dee2e6;"
+          *ngFor="let item of cashpaymentline | slice: (page-1) * pageSize : page * pageSize ">
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
@@ -452,11 +441,7 @@
           </div>
         </div>
       </div>
-      <div style="position: relative">
-        <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
-      </div>
-
-      <div id="mySearch" style="display: none" class="container w-90 h-90">
+      <div id="mySearch" style="display: none;" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img
@@ -488,27 +473,57 @@
       </div>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-start me-10">
-    <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
-  </div>
-  <div class="form-group mt-6 mb-0 row">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-light-primary"
-            (click)="addRow()"
-          >
-            <codx-label
-              name="btnAdd"
-              formName="System"
-              default="Thêm dòng"
-            ></codx-label>
-          </button>
-        </div>
+  <div *ngIf="cashpaymentline.length > 0" class="container w-90 h-90">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="cashpaymentline.length"></ngb-pagination>
       </div>
     </div>
+  </div>
+  <!-- <ng-container *ngIf="modegrid == 3">
+    <ejs-grid class="mt-3" #grid [dataSource]='cashpaymentline' height='400px'>
+      <e-columns>
+        <e-column field='' headerText='' width='150'>
+        </e-column>
+        <e-column [field]='item.field' [headerText]='item.headerText' width='200' *ngFor="let item of columnGrids">
+        </e-column>
+      </e-columns>
+      <ng-template #rowTemplate let-data>
+        <tr>
+          <td style="border-bottom:1px solid #dee2e6 ;">
+            <div class="d-flex">
+              <span type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
+                <i class="icon-edit_square icon-16"></i>
+              </span>
+              <span type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(data)">
+                <i class="icon-delete icon-16"></i>
+              </span>
+            </div>
+          </td>
+          <td *ngFor="let items of columnGrids" style="border-bottom:1px solid #dee2e6 ;">
+            <div *ngFor="let keymodel of keymodel">
+              <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
+                <div
+                  style="background: var(--primary-active);width: 31px;height: 30px;align-items: center;border-radius: 50px;"
+                  class="d-flex justify-content-start">
+                  <span style="display: block;margin: auto;color: white;" class="fs-5 fw-bold">{{data[keymodel]}}</span>
+                </div>
+              </span>
+              <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'note'">
+                <div [ngbTooltip]="data[keymodel]">
+                  <span  class="fs-5">{{data[keymodel]}}</span>
+                </div>
+              </span>
+              <span [ngbTooltip]="data[keymodel]"
+                *ngIf="items.field == keymodel.toLowerCase() && items.field != 'rowno' && items.field != 'note'">{{data[keymodel]}}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </ejs-grid>
+  </ng-container> -->
+  <div class="d-flex align-items-center justify-content-start me-10 mt-3">
+    <span class="fs-5 fw-bold">Tổng tiền: {{total}}</span>
   </div>
 </ng-template>
 <!-- End: CashPaymentLine -->

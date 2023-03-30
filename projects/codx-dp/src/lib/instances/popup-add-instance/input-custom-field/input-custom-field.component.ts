@@ -174,4 +174,7 @@ export class InputCustomFieldComponent implements OnInit {
     //  return;
     //}//
   }
+  controlBlur(e){
+  //chua la gi ca
+  }
 }

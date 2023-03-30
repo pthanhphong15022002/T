@@ -344,6 +344,7 @@ export class CrmCustomerComponent
     //     });
     // }
     this.view.dataService.methodSave = 'AddCrmAsync';
+    this.view.dataService.methodUpdate = 'UpdateCustomerAsync';
 
     this.detectorRef.detectChanges();
   }
@@ -431,6 +432,9 @@ export class CrmCustomerComponent
         );
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.customerDetail.listTab(this.funcID);
+          }
         });
       });
     });
@@ -460,6 +464,14 @@ export class CrmCustomerComponent
             ['edit', this.titleAction],
             option
           );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              this.customerDetail.listTab(this.funcID);
+              this.detectorRef.detectChanges();
+            }
+          });
         });
       });
   }
