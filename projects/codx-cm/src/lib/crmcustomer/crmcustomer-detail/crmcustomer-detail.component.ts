@@ -96,32 +96,50 @@ export class CrmcustomerDetailComponent implements OnInit {
         },
       ];
     } else if (funcID == 'CM0102') {
-      this.tabDetail = [
-        {
-          name: 'Information',
-          textDefault: 'Thông tin chung',
-          icon: 'icon-info',
-          isActive: true,
-        },
-        {
-          name: 'Task',
-          textDefault: 'Công việc',
-          icon: 'icon-format_list_numbered',
-          isActive: false,
-        },
-        {
-          name: 'Opportunity',
-          textDefault: 'Cơ hội',
-          icon: 'icon-add_shopping_cart',
-          isActive: false,
-        },
-        {
-          name: 'Product',
-          textDefault: 'Sản phẩm đã mua',
-          icon: 'icon-shopping_bag',
-          isActive: false,
-        },
-      ];
+      if(this.dataSelected.isCustomer == true){
+        this.tabDetail = [
+          {
+            name: 'Information',
+            textDefault: 'Thông tin chung',
+            icon: 'icon-info',
+            isActive: true,
+          },
+          {
+            name: 'Task',
+            textDefault: 'Công việc',
+            icon: 'icon-format_list_numbered',
+            isActive: false,
+          },
+          {
+            name: 'Opportunity',
+            textDefault: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+            isActive: false,
+          },
+          {
+            name: 'Product',
+            textDefault: 'Sản phẩm đã mua',
+            icon: 'icon-shopping_bag',
+            isActive: false,
+          },
+        ];
+      }else{
+        this.tabDetail = [
+          {
+            name: 'Information',
+            textDefault: 'Thông tin chung',
+            icon: 'icon-info',
+            isActive: true,
+          },
+          {
+            name: 'Task',
+            textDefault: 'Công việc',
+            icon: 'icon-format_list_numbered',
+            isActive: false,
+          }
+        ];
+      }
+
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {

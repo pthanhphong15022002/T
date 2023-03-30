@@ -1,7 +1,18 @@
-<codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form>
+<!-- <codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form> -->
+
+
+<codx-form
+  headerText="{{ title }}"
+  [subHeader]="subheader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+></codx-form>
+
+
 <ng-template #subheader>
     <div class="offcanvas-header d-flex align-items-center justify-content-between w-100" kt-hidden-height="46">
-        <h2 class="m-0">{{title}}</h2>
+        <div></div>
         <div class="btn-extand mt-2 d-flex justify-content-end me-2">
             <a class="text-gray-700 text-hover-primary d-flex align-items-center">
                 <span class="text-dark">
@@ -89,34 +100,34 @@
                     <div class="d-flex align-items-center justify-content-between mt-4">
                         <codx-label [formModel]="dialog.formModel" name="Permissions" default="Chia sẻ đến">
                         </codx-label>
-                        <a class="btn btn-icon btn-xs btn-light-primary" (click)="openFormShare(controlShare)">
-                            <span class="icon-person_add_alt_1 icon-18"></span>
+                        <a class="btn btn-icon btn-sm btn-light-primary" (click)="openFormShare(controlShare)">
+                            <span class="icon-person_add_alt_1 icon-16"></span>
                         </a>
                     </div>
                     <ng-container
                         *ngIf="objectType == '1' || objectType == '2' || objectType == '3' || objectType == '4' || objectType == '5' || objectType == '6' || objectType == '9' ;else tmpShare">
-                        <div class="d-flex">
-                            <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                                <span class="symbol-circle">
-                                    <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true"
-                                        [showText]="true" [path]="'assets/themes/sys/default/img/'"
-                                        [showBgColor]="true">
-                                    </codx-vll>
-                                </span>
+                        <div class="d-flex mt-3">
+                            <div class="bg-gray-200 rounded-4 p-2 px-3 d-flex align-items-center fd-shareuser">
+                                <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true"
+                                    [showText]="true" [path]="'assets/themes/sys/default/img/'"
+                                    [showBgColor]="true">
+                                </codx-vll>
                             </div>
                         </div>
                     </ng-container>
                     <ng-template #tmpShare>
                         <ng-container *ngIf="lstShare">
-                            <div class="'user-mini-group float-left'">
-                                <div class="user-mini-item mb-2 me-2" *ngFor="let item of lstShare">
-                                    <div class="d-flex align-items-center">
-                                        <codx-img [width]="30" [isDefaulImg]="true" [objectId]="item.objectID"
-                                            objectType="AD_Users">
-                                        </codx-img>
-                                        <div class="text-gray-700">{{item.objectName}}</div>
-                                        <span class="icon-close icon-16 ms-2 text-danger"
-                                            (click)="removeUser(item)"></span>
+                            <div class="d-flex mt-3">
+                                <div class="'user-mini-group float-left'">
+                                    <div class="user-mini-item" *ngFor="let item of lstShare">
+                                        <div class="d-flex align-items-center">
+                                            <codx-img [width]="25" [isDefaulImg]="true" [objectId]="item.objectID"
+                                                objectType="AD_Users">
+                                            </codx-img>
+                                            <div class="text-gray-700">{{item.objectName}}</div>
+                                            <span class="icon-close icon-16 ms-3 text-danger"
+                                                (click)="removeUser(item)"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +139,7 @@
                 && cardType != CARDTYPE_EMNUM.Share 
                 && cardType != CARDTYPE_EMNUM.Radio">
                 <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
-                    <div class="text-dark font-weight-bold">
+                    <div class="text-dark fw-bold">
                         <codx-label [formModel]="dialog.formModel" name="Pattern" default="Chọn thiệp">
                         </codx-label>
                     </div>
@@ -145,7 +156,7 @@
                                 <div class="d-flex align-items-center">
                                     <ng-container *ngFor="let itemChild of lstPattern; let idxChild = index;">
                                         <ng-container *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
-                                            <div class="fd-parttern-item mx-5 position-relative">
+                                            <div class="fd-parttern-item me-5 position-relative">
                                                 <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
                                                     <div class="w-100 h-100 rounded-2"
                                                         [style.background-color]="itemChild.backgroundColor"
@@ -197,22 +208,23 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
-                    <div class="row border border-primary rounded mt-6">
-                        <div class="col-6 bg-primary text-white d-flex align-items-center justify-content-center">
+                    <div class="row mt-8">
+                        <div class="col-6 form-group">
                             <codx-label [formModel]="dialog.formModel" name="HasPoints" default="Tặng xu">
                             </codx-label>
+                            <div class="d-flex justify-content-evenly align-items-center rounded-1 border border-gray-200">
+                                <button class="btn btn-icon btn-sm btn-white" type="button" (click)="subPoint()">
+                                    <span class="icon-remove icon-18"></span>
+                                </button>
+                                <codx-input type="text" [disabled]="true" class="text-center" [crrValue]="givePoint"
+                                    readonly [className]="'border-none'">
+                                </codx-input>
+                                <button class="btn btn-icon btn-sm btn-white" type="button" (click)="addPoint()">
+                                    <span class="icon-add icon-18 "></span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-6 d-flex justify-content-evenly align-items-center ">
-                            <button class="btn bg-transparent" type="button" (click)="subPoint()">
-                                <span class="icon-remove icon-18"></span>
-                            </button>
-                            <codx-input type="text" [disabled]="true" class="text-center" [crrValue]="givePoint"
-                                readonly [className]="'border-none'">
-                            </codx-input>
-                            <button class="btn bg-transparent" type="button" (click)="addPoint()">
-                                <span class="icon-add icon-18 "></span>
-                            </button>
-                        </div>
+
                     </div>
                 </ng-container>
             </ng-container>

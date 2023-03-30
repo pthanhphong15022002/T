@@ -43,6 +43,7 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   constructor(public sanitizer: DomSanitizer) {
     //tesst
+    this.quotations = new CM_Quotations
     this.quotations.recID = Util.uid();
   }
 

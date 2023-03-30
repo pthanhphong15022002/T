@@ -128,6 +128,7 @@ export class InstancesComponent
   //bien chuyen page
   process: any;
   tabInstances = [];
+  instanceStepsId = [];
   haveDataService = false;
   listHeader = [];
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
@@ -184,7 +185,6 @@ export class InstancesComponent
       });
     });
   }
-
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -290,7 +290,7 @@ export class InstancesComponent
           textColor: column['dataColums']?.textColor || null,
         };
       }) || [];
-    console.log(dataColumns);
+      console.log(dataColumns);
 
     return dataColumns;
   }
@@ -959,6 +959,88 @@ export class InstancesComponent
       });
     });
   }
+
+  autoMoveStage(dataInstance)
+  {
+   var data = [dataInstance.instance, dataInstance.listStep,dataInstance.step]
+   var isStopAuto = false;
+   var strStepsId = '';
+   debugger;
+   var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
+  //
+   if(autoMoveStage.ischeck) {
+
+      if(autoMoveStage.transferControl == 1 ) {
+        var completedAllTask  = this.completedAllTasks(dataInstance.step.stepID,dataInstance.listStep);
+        isStopAuto = completedAllTask.isStopAuto;
+        strStepsId = completedAllTask?.idxSteps.join(';') ?? '';
+      }
+
+      if(isStopAuto) {
+        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+        (idx != -1) && this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
+      }
+      else {
+          let dataUpdate = [dataInstance.instance,dataInstance.listStep,strStepsId]
+          this.codxDpService.autoMoveStage(dataUpdate).subscribe((res) => {
+            if(res) {
+
+            }
+
+
+          });
+      }
+   }
+
+  }
+
+  completedAllTasks(stepID,listStep){
+    var isStopAuto = false;
+    var index = listStep.findIndex(x=> x.stepID == stepID);
+    var idxSteps =[];
+    for(let i = index; i < listStep.length; i++)
+    {
+      //  TRUE GÁN TẠM THAY  listStep[i].progress == 100
+        if( true && this.checkTransferControl(listStep[i].stepID) ) {
+          var isCheckOnwer = listStep[i]?.onwer ? false:true;
+          var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
+        }
+        if(isCheckFields || isCheckOnwer) {
+          isStopAuto = true;
+          break;
+        }
+        idxSteps.push(listStep[i].stepID);
+    }
+    var result = {
+      isStopAuto: isStopAuto,
+      idxSteps:idxSteps
+    }
+    return result;
+  }
+
+  completedLastTasks(){
+
+  }
+
+  checkFieldsIEmpty(fields){
+    return fields.includes(x=> !x.dataValue && x.isRequired);
+  }
+
+  checkTransferControl(stepID){
+    var listStep = this.process.steps.filter(x=> !x.isSuccessStep && !x.isFailStep);
+    var stepCurrent = listStep.find(x=> x.recID == stepID);
+    var ischeck = false;
+    if(stepCurrent) {
+      var transferControl = stepCurrent?.transferControl;
+      if( transferControl != 0) {
+        ischeck =  true;
+      }
+    }
+    return {ischeck:ischeck, transferControl:transferControl};
+  }
+
+
+
   openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     // this.codxDpService.get
     var formMD = new FormModel();

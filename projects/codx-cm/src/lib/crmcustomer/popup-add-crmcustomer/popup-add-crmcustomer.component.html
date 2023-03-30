@@ -310,13 +310,13 @@
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
               {{contactsPerson.contactName}}
             </div>
-            <div class="mb-1">
+            <div class="mb-1" *ngIf="contactsPerson.phoneNumber">
               <span [ngClass]="contactsPerson.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                 class=" icon-16 me-1"></span>
               <span [ngClass]="contactsPerson.allowCall ? 'text-primary' : ''"
                 class="text-gray-900">{{contactsPerson.phoneNumber}}</span>
             </div>
-            <div>
+            <div *ngIf="contactsPerson.email">
               <span [ngClass]="contactsPerson.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                 class="icon-16 me-1 text-gray-900"></span>
               <span [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{contactsPerson.email}}</span>
