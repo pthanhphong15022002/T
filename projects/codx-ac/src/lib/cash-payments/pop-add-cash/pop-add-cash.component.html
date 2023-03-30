@@ -1,5 +1,14 @@
-<codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
-  [subHeader]="subHeader" [customToolbar]="subToolbar" [openMore]="false">
+<codx-form
+  #form
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [data]="cashpayment"
+  [subHeader]="subHeader"
+  [customToolbar]="subToolbar"
+  [openMore]="false"
+>
 </codx-form>
 
 <!-- Start: Sub header -->
@@ -7,8 +16,13 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="w-100 d-flex justify-content-between">
       <div class="mt-2 col-2 ms-3 input-circle input-lg">
-        <codx-input [disabled]="formType === 'edit'" [Group]="form.formGroup" field="voucherType"
-          [formModel]="form.formModel" (valueChange)="changeType($event)">
+        <codx-input
+          [disabled]="formType === 'edit'"
+          [Group]="form.formGroup"
+          field="voucherType"
+          [formModel]="form.formModel"
+          (valueChange)="changeType($event)"
+        >
         </codx-input>
         <!-- <codx-input
           type="valuelist"
@@ -77,9 +91,6 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div class="row mb-2">
-      <ng-container *ngTemplateOutlet="addLine"></ng-container>
-    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -96,8 +107,12 @@
               <div class="form-group">
                 <codx-label fiedName="CashBookID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="cashBookID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -108,8 +123,13 @@
               <div class="form-group">
                 <codx-label fiedName="PaymentAmt" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt"
-                  (valueChange)="valueChange($event)" [min]="0"></codx-input>
+                <codx-input
+                  [Group]="form.formGroup"
+                  [formModel]="form.formModel"
+                  field="paymentAmt"
+                  (valueChange)="valueChange($event)"
+                  [min]="0"
+                ></codx-input>
               </div>
             </div>
           </div>
@@ -121,8 +141,12 @@
               <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  [formModel]="form.formModel"
+                  field="objectID"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -133,8 +157,14 @@
               <div class="form-group">
                 <codx-label fiedName="Payee" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" type="combobox" refValue="EmployeesAC"
-                  field="payee" (valueChange)="valueChange($event)"></codx-input>
+                <codx-input
+                  [Group]="form.formGroup"
+                  [formModel]="form.formModel"
+                  type="combobox"
+                  refValue="EmployeesAC"
+                  field="payee"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
               </div>
             </div>
           </div>
@@ -144,10 +174,17 @@
             <div class="form-group">
               <!-- Lý do chi -->
               <div class="form-group">
-                <codx-label fiedName="TransactionText" [formModel]="form.formModel">
+                <codx-label
+                  fiedName="TransactionText"
+                  [formModel]="form.formModel"
+                >
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="transactionText" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="transactionText"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -157,8 +194,12 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="memo"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -171,8 +212,12 @@
             <div class="form-group">
               <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="currencyID"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -181,8 +226,12 @@
             <div class="form-group">
               <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="exchangeRate"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -193,8 +242,12 @@
             <div class="form-group">
               <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="voucherDate"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -203,8 +256,12 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="voucherNo"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -218,71 +275,165 @@
 <!-- Start:CashPaymentLine -->
 <ng-template #tabCashPaymentLine>
   <div class="h-100" *ngIf="cashpayment.voucherType === '1' && modegrid == 1">
-    <codx-gridview-v2 #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
-      [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
-      [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
-      [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
-      [height]="gridHeight" [autoLoad]="false" rowHeight="40" (cellChanged)="cashPaymentLineChanged($event)"
-      (created)="gridCreated($event)"></codx-gridview-v2>
+    <codx-gridview-v2
+      #gridCashPaymentLine
+      [formName]="fmCashPaymentsLines.formName"
+      [gridViewName]="fmCashPaymentsLines.gridViewName"
+      [entityName]="fmCashPaymentsLines.entityName"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      predicates="TransID=@0"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataValues]="form.data.recID"
+      [dataSource]="cashpaymentline"
+      service="AC"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="cashPaymentLineChanged($event)"
+      (created)="gridCreated($event)"
+    ></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0">
+  <ng-container
+    *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0"
+  >
     <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{pageCount}}
+        Tất cả {{ pageCount }}
       </div>
       <div class="mt-2">
-        <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
+        <codx-searchbar
+          (searchEvent)="searchName($event)"
+          type="slide"
+          class="me-1"
+        ></codx-searchbar>
       </div>
     </div>
-    <div class="table-responsive mt-3" style="height: 420px;border-radius: 5px;">
-      <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-        color: white;">
+    <div
+      class="table-responsive mt-3"
+      style="height: 420px; border-radius: 5px"
+    >
+      <table id="myTable" class="table table-hover">
+        <thead
+          style="
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-active);
+            color: white;
+          "
+        >
           <tr>
             <th></th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;"
-              *ngFor="let item of columnGrids">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+              *ngFor="let item of columnGrids"
+            >
               <div class="d-flex">
-                <span class="fs-5 fw-bold">{{item.headerText}}</span>
+                <span class="fs-5 fw-bold">{{ item.headerText }}</span>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6;" *ngFor="let item of cashpaymentline">
+        <tbody
+          style="border-bottom: 1px solid #dee2e6"
+          *ngFor="let item of cashpaymentline"
+        >
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-                  (click)="editRow(item)">
+                <span
+                  ngbTooltip="Chỉnh sửa"
+                  type="button"
+                  class="btn btn-icon btn-light-primary ms-1"
+                  (click)="editRow(item)"
+                >
                   <i class="icon-edit_square icon-16"></i>
                 </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-                  (click)="deleteRow(item)">
+                <span
+                  ngbTooltip="Xóa"
+                  type="button"
+                  class="btn btn-icon btn-light-danger ms-1"
+                  (click)="deleteRow(item)"
+                >
                   <i class="icon-delete icon-16"></i>
                 </span>
               </div>
             </td>
-            <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
-              <div *ngFor="let keymodel of keymodel"
-                style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            <td
+              class="fs-5"
+              style="padding: 10px 10px"
+              *ngFor="let items of columnGrids"
+            >
+              <div
+                *ngFor="let keymodel of keymodel"
+                style="
+                  width: 100px;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
                 <!-- rowno line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'rowno'
+                  "
+                >
                   <div
-                    style="background: var(--primary-active);width: 31px;height: 30px;align-items: center;border-radius: 50px;"
-                    class="d-flex justify-content-start">
-                    <span style="display: block;margin: auto;color: white;"
-                      class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    style="
+                      background: var(--primary-active);
+                      width: 31px;
+                      height: 30px;
+                      align-items: center;
+                      border-radius: 50px;
+                    "
+                    class="d-flex justify-content-start"
+                  >
+                    <span
+                      style="display: block; margin: auto; color: white"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
-                <div style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
-                  [ngbTooltip]="item[keymodel]">
-                  <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'note'">
-                    <span *ngIf="items.field == keymodel.toLowerCase()">{{item[keymodel]}}</span>
+                <div
+                  style="
+                    width: 100px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  "
+                  [ngbTooltip]="item[keymodel]"
+                >
+                  <span
+                    *ngIf="
+                      items.field == keymodel.toLowerCase() &&
+                      items.field == 'note'
+                    "
+                  >
+                    <span *ngIf="items.field == keymodel.toLowerCase()">{{
+                      item[keymodel]
+                    }}</span>
                   </span>
                 </div>
                 <!-- other line -->
-                <span [ngbTooltip]="item[keymodel]"
-                  *ngIf="items.field == keymodel.toLowerCase() && items.field != 'rowno' && items.field != 'note'">{{item[keymodel]}}</span>
+                <span
+                  [ngbTooltip]="item[keymodel]"
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field != 'rowno' &&
+                    items.field != 'note'
+                  "
+                  >{{ item[keymodel] }}</span
+                >
               </div>
             </td>
           </tr>
@@ -291,7 +442,10 @@
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
@@ -302,10 +456,13 @@
         <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
       </div>
 
-      <div id="mySearch" style="display: none;" class="container w-90 h-90">
+      <div id="mySearch" style="display: none" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS010" | mssg | async }}
             </div>
@@ -315,7 +472,12 @@
       <div id="myBtn" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px;" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+            <button
+              style="border-radius: 49px"
+              type="button"
+              class="btn btn-light-primary mt-2"
+              (click)="addRow()"
+            >
               <div class="d-flex align-items-center">
                 <i class="icon-add_box icon-18"></i>
                 <span class="fs-5">Thêm dòng</span>
@@ -327,7 +489,26 @@
     </div>
   </ng-container>
   <div class="d-flex align-items-center justify-content-start me-10">
-    <span class="fs-5 fw-bold">Tổng tiền: {{total}}</span>
+    <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
+  </div>
+  <div class="form-group mt-6 mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
+          <button
+            type="button"
+            class="btn btn-light-primary"
+            (click)="addRow()"
+          >
+            <codx-label
+              name="btnAdd"
+              formName="System"
+              default="Thêm dòng"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: CashPaymentLine -->
@@ -335,12 +516,43 @@
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabVoucherLineRefs>
   <div class="h-100" *ngIf="cashpayment.voucherType === '2'">
-    <codx-gridview-v2 #gridVoucherLineRefs formName="VoucherLineRefs" gridViewName="grvVoucherLineRefs"
-      entityName="AC_VoucherLineRefs" [templateMore]="morefunction" [editSettings]="editSettings"
-      [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="voucherLineRefs"
-      service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="voucherLineRefsChanged($event)" (created)="gridCreated($event)"
-      (inputClick)="voucherLineRefsCellClick($event)"></codx-gridview-v2>
+    <codx-gridview-v2
+      #gridVoucherLineRefs
+      formName="VoucherLineRefs"
+      gridViewName="grvVoucherLineRefs"
+      entityName="AC_VoucherLineRefs"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataValues]="form.data.recID"
+      [dataSource]="voucherLineRefs"
+      service="AC"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="voucherLineRefsChanged($event)"
+      (created)="gridCreated($event)"
+    ></codx-gridview-v2>
+  </div>
+  <div class="form-group mt-6 mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
+          <button
+            type="button"
+            class="btn btn-light-primary"
+            (click)="openVoucher()"
+          >
+            <codx-label
+              name="btnAdd"
+              formName="System"
+              default="Thêm dòng"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
@@ -348,8 +560,12 @@
 <!-- Start: More function -->
 <ng-template #morefunction let-data>
   <div class="has-action-menu" style="height: 30px">
-    <codx-mfunc [dataItem]="data" [formModel]="dialog.formModel" type="hover"
-      (clickMF)="clickMF($event, data)"></codx-mfunc>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dialog.formModel"
+      type="hover"
+      (clickMF)="clickMF($event, data)"
+    ></codx-mfunc>
   </div>
 </ng-template>
 <!-- End: More function -->
@@ -365,26 +581,15 @@
 </ng-template>
 <!-- End: Footer -->
 
-<!-- Start: Add line -->
-<ng-template #addLine let-data>
-  <div class="form-group mb-0 row" *ngIf="cashpayment.voucherType === '1' && modegrid == 1">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button type="button" class="btn btn-light-primary" (click)="addRow()">
-            <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-<!-- End: Add line -->
-
 <!-- Start: Tab Referen -->
 <ng-template #tabRef>
-  <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="cashpayment.recID"
-    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  <codx-tabs
+    [entityName]="form.formModel.entityName"
+    [formModel]="form.formModel"
+    [objectID]="cashpayment.recID"
+    [funcID]="form.formModel.funcID"
+    [TabControl]="tabInfo"
+  ></codx-tabs>
 </ng-template>
 <!-- End: Tab Referen -->
 
@@ -397,27 +602,54 @@
           <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
           <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
-        <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase">{{headerText}}</div>
+        <div
+          class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase"
+        >
+          {{ headerText }}
+        </div>
         <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          <codx-input
+            class="badge badge-danger"
+            [Group]="form.formGroup"
+            field="status"
+            [formModel]="form.formModel"
+          >
           </codx-input>
         </div>
       </div>
       <div class="d-flex justify-content-end me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
           <button type="button" class="btn btn-light-primary">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            <codx-label
+              class="fs-6 fw-normal"
+              fiedName="lblSave"
+              [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName"
+              default="Lưu & thêm"
+            ></codx-label>
           </button>
         </div>
         <div class="ms-2 me-2">
-          <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 60px"
+            (click)="onSave()"
+          >
+            <codx-label
+              class="fs-6 fw-normal"
+              fiedName="lblSave"
+              [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName"
+              default="Lưu"
+            ></codx-label>
           </button>
         </div>
         <div class="ms-2">
-          <div class="mt-1 btn btn-icon btn-sm btn-light-primary btn-circle bg" (click)="close()">
+          <div
+            class="mt-1 btn btn-icon btn-sm btn-light-primary btn-circle bg"
+            (click)="close()"
+          >
             <i class="icon-close icon-16"></i>
           </div>
         </div>
