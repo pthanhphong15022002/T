@@ -67,8 +67,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   elementCodxinput: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
-  Lines:PurchaseInvoicesLines;
-  checkline:any = true;
+  Lines: PurchaseInvoicesLines;
+  checkline: any = true;
   vatinvoices: VATInvoices = new VATInvoices();
   objectvatinvoices: Array<VATInvoices> = [];
   fmVATInvoices: FormModel = {
@@ -95,9 +95,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  data = [];
   columnGrids = [];
   keymodel: any = [];
+  page: any = 1;
+  pageSize = 5;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -226,7 +227,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.purchaseinvoices.recID,
         ])
         .subscribe((res: any) => {
-          if (res != null) {
+          if (res.length > 0) {
             this.keymodel = Object.keys(res[0]);
             this.purchaseInvoicesLines = res;
             this.purchaseInvoicesLines.forEach((element) => {
@@ -238,9 +239,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         });
     }
   }
-//#endregion
+  //#endregion
 
-//#region Init
+  //#region Init
   onInit(): void {}
 
   ngAfterViewInit() {
@@ -429,6 +430,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           res.rowNo = idx + 1;
+          res.transID = this.purchaseinvoices.recID;
           this.openPopupLine(res);
         }
       });
@@ -604,9 +606,19 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {});
       }
     }
+    let index = this.purchaseInvoicesLines.findIndex(
+      (x) => x.recID == data.recID
+    );
+    this.purchaseInvoicesLines.splice(index, 1);
+    if (this.purchaseInvoicesLines.length > 0) {
+      for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
+        this.purchaseInvoicesLines[i].rowNo = i + 1;
+      }
+    }
     this.api
       .exec('PS', 'PurchaseInvoicesLinesBusiness', 'DeleteLineAsync', [
         data.recID,
+        this.purchaseInvoicesLines,
       ])
       .subscribe((res: any) => {
         if (res) {
@@ -618,15 +630,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             .subscribe((res: any) => {});
         }
       });
-    let index = this.purchaseInvoicesLines.findIndex(
-      (x) => x.recID == data.recID
-    );
-    this.purchaseInvoicesLines.splice(index, 1);
-    if (this.purchaseInvoicesLines.length > 0) {
-      for (let i = 0; i < this.purchaseInvoicesLines.length; i++) {
-        this.purchaseInvoicesLines[i].rowNo = i + 1;
-      }
-    }
     this.notification.notifyCode('SYS008', 0, '');
     this.loadPageCount();
   }
@@ -720,7 +723,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         //this.purchaseInvoicesLines = this.gridPurchase.dataSource;
         this.dialog.dataService
           .save((opt: RequestOption) => {

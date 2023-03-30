@@ -143,8 +143,8 @@ export class EmployeeDetailComponent extends UIComponent {
 
   onSectionChange(data: any, index: number = -1) {
     if (index > -1 && this.isClick == false) {
-      let element = document.getElementById(this.active[index]);
-      element.blur();
+      // let element = document.getElementById(this.active[index]);
+      // element.blur();
       this.active[index] = data;
       this.detectorRef.detectChanges();
     }
@@ -1290,7 +1290,8 @@ export class EmployeeDetailComponent extends UIComponent {
           (p) => p.parentID == this.selfInfoFuncID
         );
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd.splice(0, 2);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        //this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
@@ -3011,15 +3012,18 @@ export class EmployeeDetailComponent extends UIComponent {
     switch (this.crrFuncTab) {
       case this.selfInfoFuncID:
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd.splice(0, 2);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd.splice(0, 2);
         break;
       case this.legalInfoFuncID:
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
-        this.lstBtnAdd.splice(0, 1);
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd.splice(0, 1);
         break;
       case this.jobInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncTaskInfo;
-        this.lstBtnAdd = null;
+        this.lstBtnAdd = this.lstFuncTaskInfo;
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd = null;
         break;
       case this.benefitInfoFuncID:
         this.lstBtnAdd = this.lstFuncSalary;

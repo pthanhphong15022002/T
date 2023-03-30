@@ -1,25 +1,13 @@
 <codx-form
   #form
-  [headerText]="formTitle"
-  [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
   [formModel]="dialogRef.formModel"
   [dialog]="dialogRef"
-  subToolbarCss="text-end"
-  [subToolbar]="subToolbar"
+  [customToolbar]="customToolbar"
   [data]="cashTransfer"
 >
 </codx-form>
-
-<ng-template #subHeader>
-  <codx-input
-    field="status"
-    [formModel]="form.formModel"
-    [Group]="form.formGroup"
-  >
-  </codx-input>
-</ng-template>
 
 <ng-template #body>
   <ejs-tab #tabGeneralInfo class="popup-cash-transfer pe-3">
@@ -482,24 +470,61 @@
   ></codx-tabs>
 </ng-template>
 
-<ng-template #subToolbar>
-  <ng-container *ngIf="dialogData.data.formType !== 'edit'">
-    <button type="button" class="btn btn-outline-primary" (click)="save(false)">
-      <codx-label
-        class="fs-6 fw-normal"
-        fiedName="lblSaveAndClear"
-        [formModel]="form.formModel"
-        default="Lưu & thêm"
-      ></codx-label>
-    </button>
-  </ng-container>
+<ng-template #customToolbar>
+  <div class="d-flex justify-content-between pt-2 w-100">
+    <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-lg btn-primary btn-circle me-4 bg">
+        <i
+          class="icon-16"
+          [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
+        ></i>
+      </div>
+      <div
+        class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase"
+      >
+        {{ formTitle }}
+      </div>
+      <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
+        <codx-input
+          field="status"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+    </div>
 
-  <button type="button" class="btn btn-primary ms-3 me-6" (click)="save(true)">
-    <codx-label
-      class="fs-6 fw-normal"
-      fiedName="lblSave"
-      [formModel]="form.formModel"
-      default="Lưu"
-    ></codx-label>
-  </button>
+    <div class="d-flex align-items-center">
+      <ng-container *ngIf="!isEdit">
+        <button
+          type="button"
+          class="btn btn-light-primary"
+          (click)="save(false)"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSaveAndClear"
+            [formModel]="form.formModel"
+            default="Lưu & thêm"
+          ></codx-label>
+        </button>
+      </ng-container>
+
+      <button type="button" class="btn btn-primary ms-3" (click)="save(true)">
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblSave"
+          [formModel]="form.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+
+      <div
+        class="ms-4 btn btn-icon btn-sm btn-light-primary btn-circle bg"
+        (click)="close()"
+      >
+        <i class="icon-close icon-16"></i>
+      </div>
+    </div>
+  </div>
 </ng-template>

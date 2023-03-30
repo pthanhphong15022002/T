@@ -22,7 +22,6 @@ export class JournalNamesComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  testimg = 'UyNhiemChi.svg';
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -83,7 +82,7 @@ export class JournalNamesComponent extends UIComponent {
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
         urlRedirect += func.url;
         this.route.navigate([urlRedirect], {
-          queryParams: { recID: data.recID },
+          queryParams: { recID: data.recID, journalNo: data.journalNo },
         });
       }
     });
@@ -152,7 +151,7 @@ export class JournalNamesComponent extends UIComponent {
 
   copy(e, data): void {
     console.log('copy', data);
-    
+
     if (data.dataValue) {
       data = { ...data, ...JSON.parse(data.dataValue) };
     }

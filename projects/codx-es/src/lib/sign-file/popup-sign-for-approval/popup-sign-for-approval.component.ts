@@ -326,7 +326,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                   result: true,
                   mode: mode,
                 };
-                this.notify.notifyCode('RS002');
+                this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
                 this.dialog && this.dialog.close(result);
               } else {
@@ -358,7 +358,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       };
                       this.esService.statusChange.next(mode);
                       this.esService.setupChange.next(true);
-                      this.notify.notifyCode('RS002');
+                      this.notify.notifyCode('SYS034');
                       this.canOpenSubPopup = false;
                     } else {
                       this.esService.setupChange.next(true);
@@ -394,7 +394,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
         break;
       }
-
       case '1': {
         switch (this.signerInfo.supplier) {
           //usb
@@ -418,7 +417,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       result: true,
                       mode: mode,
                     };
-                    this.notify.notifyCode('RS002');
+                    this.notify.notifyCode('SYS034');
                     this.canOpenSubPopup = false;
                     this.dialog && this.dialog.close(result);
                   } else {
@@ -443,7 +442,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                   result: true,
                   mode: mode,
                 };
-                this.notify.notifyCode('RS002');
+                this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
                 this.dialog && this.dialog.close(result);
               } else {
