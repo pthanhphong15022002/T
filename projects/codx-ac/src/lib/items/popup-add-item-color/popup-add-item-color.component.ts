@@ -4,9 +4,10 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { map } from 'rxjs/operators';
+import { CodxAcService } from '../../codx-ac.service';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
 import { ItemsService } from '../items.service';
 
@@ -26,6 +27,7 @@ export class PopupAddItemColorComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private itemsService: ItemsService,
+    private acService: CodxAcService,
     private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
@@ -82,7 +84,7 @@ export class PopupAddItemColorComponent extends UIComponent {
     console.log(this.itemColor);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -112,7 +114,7 @@ export class PopupAddItemColorComponent extends UIComponent {
     console.log(this.itemColor);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

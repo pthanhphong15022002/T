@@ -11,7 +11,6 @@ export interface Item {
   manufacturer: string;
   abcCategory: string;
   umid: string;
-  dimConversion: boolean | null;
   conversionRule: string;
   sWeight: number;
   description: string;
@@ -57,12 +56,9 @@ export interface Item {
   modifiedBy: string;
   note: string;
   cwConversion: number | null;
-  sizeID: string;
-  packingSizeID: string;
-  attributeID: string;
-  colorID: string;
   autoConversion: boolean | null;
   conversionFormula: string;
   pWeight: number | null;
-  userItemIDToCreateDim2: boolean | null;
+  autoCreateDIM2: boolean | null;
+  dimArray: string;
 }

@@ -326,8 +326,8 @@ export class PopupAddOKRPlanComponent
     this.codxOmService
       .addEditOKRPlans(this.okrPlan, this.dataOKR, this.isAdd)
       .subscribe((res) => {
-        if (res) {
-          let x = res;
+        if (res) {          
+          this.notificationsService.notifyCode('SYS007');
           this.dialogRef && this.dialogRef.close(true);
         }
       });

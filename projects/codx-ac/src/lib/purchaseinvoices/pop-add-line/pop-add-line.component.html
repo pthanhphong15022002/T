@@ -1,15 +1,26 @@
 <codx-form #form [headerText]="" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog" [footer]="footer"
-  subToolbarCss="text-end" [subToolbar]="subToolbar" [data]="purchaseInvoicesLines">
+  subToolbarCss="text-end" [customToolbar]="subToolbar" [data]="purchaseInvoicesLines">
 </codx-form>
 <ng-template #subToolbar>
-  <div class="d-flex justify-content-start me-2">
-    <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
-      <i *ngIf="type == 'add'" class="icon-add_box icon-16"></i>
-      <i *ngIf="type == 'edit'" class="icon-edit_square icon-16"></i>
-    </div>
-    <div class="card-title">
-      <div class="d-flex flex-column">
-        <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-2">
+      <div class="d-flex justify-content-start me-2">
+        <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+          <i *ngIf="type == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="type == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="ms-2">
+          <div class="btn btn-icon btn-sm btn-light-primary btn-circle bg" (click)="close()">
+            <i class="icon-close icon-16"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
