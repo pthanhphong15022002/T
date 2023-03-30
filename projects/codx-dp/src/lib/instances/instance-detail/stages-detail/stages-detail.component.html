@@ -9,7 +9,9 @@
   <div class="header-job py-3 px-5">
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-top mb-2">
-        <span class="fw-bold fs-4 text-dark me-2">{{ dataStep?.stepName }}</span>
+        <span class="fw-bold fs-4 text-dark me-2">{{
+          dataStep?.stepName
+        }}</span>
         <i
           class="icon-event_notes text-gray-500 icon-20"
           (click)="openPopupSup(popupSup, dataStep)"
@@ -17,15 +19,14 @@
       </div>
       <div>
         <codx-mfunc
-        [formModel]="frmModel"
-        (clickMF)="clickMFStep($event, dataStep)"
-        [dataItem]="moreDefaut"
-        [type]="'hover'"
-        (changeDataMF)="changeDataMFStep($event)"
-      >
-      </codx-mfunc>
+          [formModel]="frmModel"
+          (clickMF)="clickMFStep($event, dataStep)"
+          [dataItem]="moreDefaut"
+          [type]="'hover'"
+          (changeDataMF)="changeDataMFStep($event)"
+        >
+        </codx-mfunc>
       </div>
-     
     </div>
     <div class="mb-3">
       <div class="d-flex justify-content-between">
@@ -155,8 +156,9 @@
     [dataStep]="dataStep"
     [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
-    [isUpdate]="isUpdate"
+    [isUpdate]="isUpdate && dataStep.stepStatus <3"
     [titleHeaderFormCF]="titleDefault"
+    [viewsCurrent]="viewsCurrent"
   >
   </codx-field-detail>
   <!-- nvthuan -->
@@ -350,7 +352,9 @@
                                 <div class="text-dark fw-bold fs-6">
                                   <span>{{ task?.taskName }}</span>
                                   <span
-                                    [ngClass]="checkExitsParentID(taskList?.task, task)"
+                                    [ngClass]="
+                                      checkExitsParentID(taskList?.task, task)
+                                    "
                                     class="h4"
                                     >*</span
                                   >
@@ -493,7 +497,8 @@
       class="disabled-inline"
       (click)="
         checkEventProgress(data) &&
-        (instance.status == 1 || instance.status == 2) && !isClosed
+        (instance.status == 1 || instance.status == 2) &&
+        !isClosed
           ? openUpdateProgress(data)
           : ''
       "

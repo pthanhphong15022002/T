@@ -50,6 +50,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
+  @Input() viewsCurrent='' ;
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
