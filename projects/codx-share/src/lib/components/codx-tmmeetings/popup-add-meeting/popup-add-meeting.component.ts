@@ -1,16 +1,3 @@
-import { TmpMemo } from './../../models/task.model';
-import {
-  CO_Content,
-  CO_MeetingTemplates,
-} from './../../models/CO_MeetingTemplates.model';
-import {
-  CO_Meetings,
-  CO_Permissions,
-  CO_Resources,
-  EP_BookingAttendees,
-  EP_Boooking,
-  TmpRoom,
-} from './../../models/CO_Meetings.model';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -33,10 +20,12 @@ import {
   DialogModel,
 } from 'codx-core';
 import moment from 'moment';
-import { TemplateComponent } from '../template/template.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
-import { CodxTMService } from '../../codx-tm.service';
+import { CO_Meetings, CO_Permissions, EP_BookingAttendees, EP_Boooking, TmpRoom } from '../models/CO_Meetings.model';
+import { CO_MeetingTemplates } from '../models/CO_MeetingTemplates.model';
+import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
+import { TemplateComponent } from '../template/template.component';
 
 @Component({
   selector: 'lib-popup-add-meeting',
