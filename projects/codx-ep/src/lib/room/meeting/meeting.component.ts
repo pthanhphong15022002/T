@@ -64,8 +64,6 @@ export class MeetingComponent extends UIComponent {
   curHost;
   onInit(): void {
     this.cache.valueList('EP021').subscribe((res) => {
-      console.log(res);
-
       this.vllImgUrl = res.datas;
       this.curHost = this.vllImgUrl[0];
     });
@@ -94,12 +92,20 @@ export class MeetingComponent extends UIComponent {
 
   changeHost(imgUrl) {
     this.curHost = imgUrl;
-    console.log('curHost', imgUrl);
+  }
+  urlChange(evt:any){
+    if(evt && evt?.data !=null){
+      this.meetingUrl= evt?.data;
+      this.detectorRef.detectChanges();
+    }
   }
   closeDialog(isSave: boolean) {
     if (isSave) {
-      this.data[0].onlineUrl = this.meetingUrl;
+      this.data[0].onlineUrl = this.meetingUrl;      
+      this.dialog.close(this.meetingUrl);
     }
-    this.dialog.close();
+    else{         
+      this.dialog.close();
+    }
   }
 }

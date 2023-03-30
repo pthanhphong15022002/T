@@ -9,10 +9,10 @@
   </div>
   <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
     <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" name="lblFirstName" default="Họ và đệm">
+      <codx-label [formModel]="dialog.formModel" name="lblLastName" default="Họ và đệm">
       </codx-label>
-      <codx-input type="text" [crrValue]="firstName" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="firstName">
+      <codx-input type="text" [crrValue]="lastName" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="lastName">
       </codx-input>
       <!-- <codx-input
         [formModel]="form.formModel"
@@ -23,10 +23,10 @@
       </codx-input> -->
     </div>
     <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" name="lblLastName" default="Tên">
+      <codx-label [formModel]="dialog.formModel" name="lblFirstName"  default="Tên">
       </codx-label>
-      <codx-input type="text" [crrValue]="lastName" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="lastName">
+      <codx-input type="text" [crrValue]="firstName" (valueChange)="valueChange($event)"
+        [formModel]="dialog.formModel" field="firstName">
       </codx-input>
       <!-- <codx-input
         [formModel]="form.formModel"
