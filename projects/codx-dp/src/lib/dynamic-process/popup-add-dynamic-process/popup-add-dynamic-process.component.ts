@@ -1044,7 +1044,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               objectID: element.id,
               objectName: element.text,
               objectType: element.objectType,
-              roleType: type,
+              roleType: "R",
             };
             this.addRole(role);
           });
@@ -2730,7 +2730,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (check) {
       this.notiService.notifyCode('DP027', 0, role?.objectName);
     } else {
-      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID);
+      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID && r.roleType == "R");
       if (index >= 0) {
         step?.roles?.splice(index, 1);
       }
