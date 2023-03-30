@@ -300,6 +300,14 @@ export class CodxDpService {
       data
     );
   }
+  autoMoveStage(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
+      data
+    );
+  }
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
