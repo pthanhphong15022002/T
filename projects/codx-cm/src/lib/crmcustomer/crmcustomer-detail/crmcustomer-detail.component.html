@@ -15,14 +15,14 @@
                   {{ funcID == 'CM0101' ? dataSelected.customerName : funcID == 'CM0102' ? dataSelected.contactName : funcID == 'CM0103' ? dataSelected.partnerName : dataSelected.opponentName}}
                 </div>
                 <div class="d-flex align-items-start me-4 mb-1" *ngIf="funcID == 'CM0102'">
-                  <div class="me-3">
+                  <div class="me-3" *ngIf="dataSelected?.phoneNumber">
                     <span
                       [ngClass]="dataSelected?.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                       class=" icon-16 me-1"></span>
                     <span [ngClass]="dataSelected?.allowCall ? 'text-primary' : ''"
                       class="text-gray-900">{{dataSelected?.phoneNumber}}</span>
                   </div>
-                  <div>
+                  <div *ngIf="dataSelected?.email">
                     <span [ngClass]="dataSelected?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                       class="icon-16 me-1 text-gray-900"></span>
                     <span [ngClass]="dataSelected?.allowEmail ? 'text-primary' : ''"
@@ -67,13 +67,13 @@
                         {{item?.contactName}}
                       </div>
                       <div class="d-flex align-items-start me-4 mb-1">
-                        <div class="me-3">
+                        <div class="me-3" *ngIf="item?.phoneNumber">
                           <span [ngClass]="item.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                             class=" icon-16 me-1"></span>
                           <span [ngClass]="item.allowCall ? 'text-primary' : ''"
-                            class="text-gray-900">{{item.phoneNumber}}</span>
+                            class="text-gray-900">{{item?.phoneNumber}}</span>
                         </div>
-                        <div>
+                        <div *ngIf="item?.email">
                           <span [ngClass]="item.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                             class="icon-16 me-1 text-gray-900"></span>
                           <span [ngClass]="item.allowEmail ? 'text-primary' : ''"
@@ -241,12 +241,12 @@
       </div>
     </div>
     <div class="col-4 d-flex flex-column">
-      <div class="mb-1">
+      <div class="mb-1" *ngIf="data?.phoneNumber">
         <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
           class=" icon-16 me-1"></span>
         <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
       </div>
-      <div>
+      <div  *ngIf="data?.email">
         <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
           class="icon-16 me-1 text-gray-900"></span>
         <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>

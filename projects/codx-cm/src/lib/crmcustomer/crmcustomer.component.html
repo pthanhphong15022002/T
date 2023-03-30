@@ -81,7 +81,7 @@
 <!--List view-->
 
 <ng-template #itemViewList let-data>
-  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
+  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [entityName]="entityName" [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
 </ng-template>
 <!--List view-->
 <!--list details tempfull-->
@@ -95,11 +95,11 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column" >
-    <div class="mt-1" *ngIf="funcID == 'CM0102'">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.phoneNumber">
       <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'" class=" icon-16 me-1"></span>
       <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0102'">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.email">
       <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'" class="icon-16 me-1 text-gray-900"></span>
       <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>
     </div>
