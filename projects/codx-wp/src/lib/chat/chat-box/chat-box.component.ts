@@ -470,9 +470,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   deleteMessage(index:number){
     if(index != -1){
       let data = this.arrMessages.splice(index,1);
-      this.api.execSv("WP","ERN.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
+      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
       .subscribe();
-
     }
   }
 }
