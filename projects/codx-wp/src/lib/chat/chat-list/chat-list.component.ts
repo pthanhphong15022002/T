@@ -26,6 +26,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
+import { MessageSystemPipe } from '../chat-box/mssgSystem.pipe';
 import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.component';
 
 @Component({
@@ -41,22 +42,20 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   moreFC: any = null;
   user:any = null;
   searched:boolean = false;
+  messageSystemPipe:MessageSystemPipe = null;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
-    private injector:Injector,
     private api: ApiHttpService,
     private signalRSV: SignalRService,
-    private callFCSV: CallFuncService,
     private cache: CacheService,
-    private notifySV: NotificationsService,
     private dt: ChangeDetectorRef,
-    private applicationRef: ApplicationRef,
     private auth: AuthStore,
 
   ) 
   {
     this.user = this.auth.get();
     this.formModel = new FormModel();
+    this.messageSystemPipe = new MessageSystemPipe(this.cache);
   }
 
   ngOnInit(): void {
@@ -91,17 +90,31 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // add mesage
-    this.signalRSV.reciverChat.subscribe((res: any) => {
+    this.signalRSV.chat.subscribe((res: any) => {
       if (res.groupID){
         let data = this.codxListView.dataService.data;
         let _index = data.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
           let group = data[_index]; 
-          group.message = res.message;
-          group.modifiedOn = res.modifiedOn;
-          group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
-          (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
-          (this.codxListView.dataService as CRUDService).add(group).subscribe();
+          if(res.messageType == "3"){
+            this.messageSystemPipe.transform(res.jsMessage)
+            .subscribe(res => {
+              group.message = res.message;
+              group.modifiedOn = res.modifiedOn;
+              group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
+              (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
+              (this.codxListView.dataService as CRUDService).add(group).subscribe();
+            });
+          }
+          else
+          {
+            group.message = res.message;
+            group.modifiedOn = res.modifiedOn;
+            group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
+            (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
+            (this.codxListView.dataService as CRUDService).add(group).subscribe();
+          }
+          
         }
       }
     });

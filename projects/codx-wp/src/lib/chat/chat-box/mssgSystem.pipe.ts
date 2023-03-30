@@ -3,50 +3,33 @@ import { CacheService, Util } from 'codx-core';
 import { map, Observable, of } from 'rxjs';
 
 @Pipe({
-  name: 'mssgSYS'
+  name: 'mssgSYS',
+  pure : true
 })
 export class MessageSystemPipe implements PipeTransform {
-  constructor
-  (
-    private cache:CacheService,
-    private applicationRef:ApplicationRef,
+  constructor(
+    private cache:CacheService
   )
   {}
-  transform(jsMessage: any,...arg:any[]): Observable<any> {
+  transform(jsMessage: any): Observable<any> {
    return this.cache.message(jsMessage.mssgCode).pipe(map((mssg:any) => {
     if(mssg.defaultName){
       switch(jsMessage.mssgCode){
         case"WP038":// add member
-            let param1 = jsMessage.value.find(x => x.fieldName === "0");
-            let param2 = jsMessage.value.find(x => x.fieldName === "1");
-            let value1 = JSON.parse(param1.fieldValue)
-            let value2 = JSON.parse(param2.fieldValue)
-            let text1 = this.dynamicTemplate(value1,arg[0]);
-            let text2 = this.dynamicTemplate(value2,arg[1]);
-            let content = Util.stringFormat(mssg.defaultName,text1,text2);
+            let fileName1 = JSON.parse(jsMessage.value[0].fieldValue);
+            let fileName2 = JSON.parse(jsMessage.value[1].fieldValue);
+            let content = "";
+            if(Array.isArray(fileName1)){
+              let strName = Array.from<any>(fileName1).map(x => x.UserName);
+              content = Util.stringFormat(mssg.defaultName,strName,fileName2.UserName);
+            }
             return content;
         default:
-            return null;
+            return "";
       }
     }
-    else return null;
+    else return "";
    }));
   }
 
-  // dynamic template
-  dynamicTemplate(data:any,template:TemplateRef<any>){
-    debugger
-    let viewRef = template.createEmbeddedView({$implicit: data});
-    if(viewRef){
-      this.applicationRef.attachView(viewRef);
-      viewRef.detectChanges();
-      let divElement = document.createElement("div");
-      viewRef.rootNodes.forEach(ele => {
-        debugger
-        divElement.append(ele);
-      });
-      return divElement.outerHTML;
-    }
-    return null;
-  }
 }

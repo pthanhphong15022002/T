@@ -53,7 +53,7 @@
                     <div class="message-system" >
                         <ng-container [ngSwitch]="item.jsMessage.mssgCode">
                             <ng-container *ngSwitchCase="'WP038'">
-                                <div [innerHTML]="item.jsMessage | mssgSYS:tmp1:tmp2 | async"></div>
+                                <div [innerHTML]="item.jsMessage | mssgSYS | async"></div>
                             </ng-container>
                         </ng-container>
                     </div>
@@ -314,15 +314,10 @@
                         </div>
                     </div>
                 </ng-container>
-                <div class="footer-message-text">
-                    <codx-input 
-                        type="textarea"
-                        format="ed2" 
-                        [rows]="1"
-                        [class]="'rounded-pill'" 
-                        [crrValue]="data.message"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+                <div class="footer-message-text" >
+                    <input type="text" class="input"
+                     (keyup.enter)="sendMessage()"  
+                     [(ngModel)]="data.message">
                 </div>
             </div>
             <button type="button" class="footer-button btn btn-icon btn-circle btn-light" (click)="sendMessage()">
