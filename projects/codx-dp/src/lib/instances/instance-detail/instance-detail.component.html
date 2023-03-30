@@ -260,7 +260,7 @@
                     [isUpdate]="
                       dataSelect.write &&
                       !dataSelect.closed &&
-                      (dataSelect.status == '1' || dataSelect.status == '2') && tmpTeps.stepStatus <'3'
+                      (dataSelect.status == '1' || dataSelect.status == '2') && tmpTeps.stepStatus <'2'
                     "
                     [isCreate]="dataSelect.create"
                     [isClosed]="dataSelect.closed"
@@ -286,7 +286,7 @@
                       dataSelect.write &&
                       !dataSelect.closed &&
                       (dataSelect.status == '1' || dataSelect.status == '2')
-                      && item.stepStatus <'3'
+                      && item.stepStatus <'2'
                     "
                     [currentElmID]="currentElmID"
                     (inputElmIDCF)="inputElmIDCustomField($event)"
