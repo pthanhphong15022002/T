@@ -119,6 +119,7 @@ export class IncommingComponent
   dataItem: any;
   funcList: any;
   userID: any;
+  textLabelAdd:any ;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -202,6 +203,7 @@ export class IncommingComponent
     this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
+    if(!this.textLabelAdd) this.textLabelAdd = evt.text;
     switch (evt.id) {
       case 'btnAdd':
         this.show();
@@ -218,7 +220,7 @@ export class IncommingComponent
         IncommingAddComponent,
         {
           gridViewSetup: this.gridViewSetup,
-          headerText: 'Thêm mới ' + (this.funcList?.customName).toLowerCase(),
+          headerText: this.textLabelAdd + " " + (this.funcList?.customName).toLowerCase(),
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
@@ -247,12 +249,12 @@ export class IncommingComponent
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009"
+        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
     );
     //Unbookmark
     var unbm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010"
+        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
     );
     if (data?.isBookmark) {
       if(bm[0]) bm[0].disabled = true;
@@ -347,13 +349,13 @@ export class IncommingComponent
       });
     }
     var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114'
+      (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
     );
     if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
     if (data?.status == '4') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113'
+        (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
       );
       if (approvel[0]) approvel[0].disabled = true;
       if (approvelCL[0]) approvelCL[0].disabled = false;

@@ -81,25 +81,25 @@
 <!--List view-->
 
 <ng-template #itemViewList let-data>
-  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
+  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [entityName]="entityName" [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
 </ng-template>
 <!--List view-->
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
     [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imageWidth]="35" imgCss="me-3"
-    imageObjType="AD_Users" [title]="getNameCrm(data)" [titleCss]="'fs-6'" [descTmp]="descTmp"
+    [imageObjType]="entityName" [title]="getNameCrm(data)" [titleCss]="'fs-6'" [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'" [formModel]="view.formModel"
     [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column" >
-    <div class="mt-1" *ngIf="funcID == 'CM0102'">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.phoneNumber">
       <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'" class=" icon-16 me-1"></span>
       <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0102'">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.email">
       <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'" class="icon-16 me-1 text-gray-900"></span>
       <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>
     </div>
@@ -107,9 +107,9 @@
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
       <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
+    <div class="mt-1" *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.field">
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
-      <span>Thương mại, dịch vụ</span>
+      <span>{{data.field}}</span>
     </div>
   </div>
 </ng-template>
@@ -133,6 +133,6 @@
 <!--Detail-->
 <ng-template #templateDetail>
   <codx-crmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
-    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)">
+    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName">
   </codx-crmcustomer-detail>
 </ng-template>

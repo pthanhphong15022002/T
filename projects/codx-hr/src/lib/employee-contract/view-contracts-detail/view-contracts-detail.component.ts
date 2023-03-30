@@ -8,6 +8,8 @@ import {
   ViewChild,
   ViewEncapsulation,
   Injector,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -36,7 +38,7 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
   templateUrl: './view-contracts-detail.component.html',
   styleUrls: ['./view-contracts-detail.component.css'],
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewContractDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
     private hrService: CodxHrService,
@@ -59,6 +61,7 @@ export class ViewDetailComponent implements OnInit {
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
+  @Output() clickMFunction = new EventEmitter();
   @ViewChild('attachment') attachment;
 
   dataCategory;
@@ -332,86 +335,99 @@ export class ViewDetailComponent implements OnInit {
         datas = this.view.dataService.data[index];
       }
     }
+    console.log('functioniddddddddddd', funcID);
 
-    switch (val?.functionID) {
-      // Gửi duyệt
-      case 'HRT1001A3':
-        this.beforeRelease();
-        break;
-      //this.edit(datas, val);
-      //break;
-      // Cập nhật đã ký ( hoàn tất)
-      case 'HRT1001A7':
-      //this.delete(datas);
-      //break;
-      // Hủy
-      case 'HRT1001A0':
-      //this.copy(datas);
-      //break;
-      // case 'EST01101': //hủy yeu cau duyệt
-      //   this.beforeCancel(datas);
-      //   break;
-      // case 'EST01102': //Xem van ban
-      //   this.viewFile(datas, val);
-      //   break;
-      // case 'EST01103': //bookmark
-      //   this.bookmark(datas);
-      //   break;
-      // case 'EST01104': //unBookmark
-      //   this.unBookmark(datas);
-      //   break;
-      // 11
-    }
-  }
-
-  release() {
-    this.hrService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res) => {
-        if (res) {
-          this.dataCategory = res;
-          this.hrService
-            .release(
-              this.itemDetail.recID,
-              this.dataCategory.processID,
-              this.formModel.entityName,
-              this.formModel.funcID,
-              'Hợp đồng lao động'
-            )
-            .subscribe((result) => {
-              console.log('ok', result);
-              if(result?.msgCodeError == null && result?.rowCount){
-                this.notify.notifyCode('ES007');
-                this.itemDetail.approvalStatus = '3';
-              } else
-                this.notify.notifyCode(result?.msgCodeError);
-            });
-        }
-      });
-  }
-  
-  beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if(res){
-        debugger;
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(p => p.Category == this.formModel.entityName);
-        if(index > -1){
-          let eContractsObj = parsedJSON[index];
-          if (eContractsObj['ApprovalRule'] == '1') {
-            this.release();
-          }
-          else{
-            //đợi BA mô tả
-          }
-        }
-      }
-    });
-
+    // let oUpdate = JSON.parse(JSON.stringify(datas));
+    this.clickMFunction.emit({event: val, data: datas});
     
+    // switch (val?.functionID) {
+    //   // Gửi duyệt
+    //   case 'HRT1001A3':
+    //     this.beforeRelease();
+    //     break;
+    //   // Cập nhật đã ký ( hoàn tất)
+    //   case 'HRT1001A7':
+    //     let oUpdate = JSON.parse(JSON.stringify(datas));
+    //     this.clickMFunction.emit({event: val, data: oUpdate});
+    //     break;
+    //   //this.delete(datas);
+    //   //break;
+    //   // Hủy
+    //   case 'HRT1001A0':
+    //   //this.copy(datas);
+    //   //break;
+    //   // case 'EST01101': //hủy yeu cau duyệt
+    //   //   this.beforeCancel(datas);
+    //   //   break;
+    //   // case 'EST01102': //Xem van ban
+    //   //   this.viewFile(datas, val);
+    //   //   break;
+    //   // case 'EST01103': //bookmark
+    //   //   this.bookmark(datas);
+    //   //   break;
+    //   // case 'EST01104': //unBookmark
+    //   //   this.unBookmark(datas);
+    //   //   break;
+    //   // 11
+    // }
   }
+
+  // release() {
+  //   this.hrService
+  //     .getCategoryByEntityName(this.formModel.entityName)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.dataCategory = res;
+  //         this.hrService
+  //           .release(
+  //             this.itemDetail.recID,
+  //             this.dataCategory.processID,
+  //             this.formModel.entityName,
+  //             this.formModel.funcID,
+  //             '<div> Hợp đồng lao động - ' + this.itemDetail.contractNo + '</div>'
+  //           )
+  //           .subscribe((result) => {
+  //             console.log('ok', result);
+  //             if (result?.msgCodeError == null && result?.rowCount) {
+  //               this.notify.notifyCode('ES007');
+  //               this.itemDetail.signStatus = '3';
+  //               this.hrService
+  //                 .editEContract(this.itemDetail)
+  //                 .subscribe((res) => {
+  //                   if (res) {
+  //                     console.log('after release', res);
+  //                     this.view?.dataService
+  //                       ?.update(this.itemDetail)
+  //                       .subscribe();
+  //                   }
+  //                 });
+  //             } else this.notify.notifyCode(result?.msgCodeError);
+  //           });
+  //       }
+  //     });
+  // }
+
+  // beforeRelease() {
+  //   let category = '4';
+  //   let formName = 'HRParameters';
+  //   this.hrService.getSettingValue(formName, category).subscribe((res) => {
+  //     if (res) {
+  //       debugger;
+  //       let parsedJSON = JSON.parse(res?.dataValue);
+  //       let index = parsedJSON.findIndex(
+  //         (p) => p.Category == this.formModel.entityName
+  //       );
+  //       if (index > -1) {
+  //         let eContractsObj = parsedJSON[index];
+  //         if (eContractsObj['ApprovalRule'] == '1') {
+  //           this.release();
+  //         } else {
+  //           //đợi BA mô tả
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
 
   assign(datas) {
     if (this.checkOpenForm(this.funcID)) {
@@ -572,7 +588,7 @@ export class ViewDetailComponent implements OnInit {
         if (res) {
           datas.approveStatus = '0';
           this.view.dataService.update(datas).subscribe();
-          this.notify.notifyCode('RS002');
+          this.notify.notifyCode('SYS034');
         }
       });
   }

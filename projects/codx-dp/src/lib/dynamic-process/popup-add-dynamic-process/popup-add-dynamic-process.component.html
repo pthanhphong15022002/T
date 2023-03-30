@@ -1158,7 +1158,6 @@
         </codx-input>
       </div>
     </div>
-    
   </div>
 <hr />
   <div class="form-group mt-5">
@@ -1763,15 +1762,15 @@
             <div class="d-flex align-items-center">
               <div class="me-5">
                 <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="step.leadtimeControl" [crrValue]="step.leadtimeControl"
+                  [label]="titleRadioYes" [checked]="true" [crrValue]="step?.leadtimeControl"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="!step.leadtimeControl"
-                  [crrValue]="step.leadtimeControl" [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
-                </codx-input>
+                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="!step?.leadtimeControl"
+                [crrValue]="step?.leadtimeControl" [label]="titleRadioNo"
+                (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+              </codx-input>
               </div>
             </div>
           </div>
@@ -1780,7 +1779,7 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label fiedName="" default="Cho phép người phụ trách cập nhật tiến độ giai đoạn">
+              <codx-label fiedName="ProgressTaskGroupControl" default="Cho phép người phụ trách cập nhật tiến độ giai đoạn">
               </codx-label>
             </div>
             <div class="text-gray-600">
@@ -1792,14 +1791,15 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="" [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formStepsRoleCtrl" field="yes" [checked]="step.progressStepControl"
+                  [crrValue]="step.progressStepControl" [label]="titleRadioYes"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
-                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formStepsRoleCtrl" field="no" [checked]="!step.progressStepControl"
+                  [crrValue]="step.progressStepControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -1822,14 +1822,15 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="" [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formTaskRoleCtrl" field="yes" [checked]="step.progressTaskGroupControl"
+                  [crrValue]="step.progressTaskGroupControl" [label]="titleRadioYes"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
-                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formTaskRoleCtrl" field="no" [checked]="!step.progressTaskGroupControl"
+                  [crrValue]="step.progressTaskGroupControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)">
                 </codx-input>
               </div>
             </div>

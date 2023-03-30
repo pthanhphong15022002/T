@@ -14,8 +14,6 @@
     <div class="form-group mt-3">
       <codx-label fiedName="TaskGroupName" [formModel]="dialog.formModel" default="Nhóm công việc">
       </codx-label>
-      <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
-      </codx-label>
       <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text" [crrValue]="taskGroups.taskGroupName"
         (valueChange)="valueChange($event)">
       </codx-input>

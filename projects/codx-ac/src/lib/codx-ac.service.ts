@@ -5,7 +5,7 @@ import {
   CacheService,
   DataRequest,
   FormModel,
-  NotificationsService
+  NotificationsService,
 } from 'codx-core';
 import { map, Observable, tap } from 'rxjs';
 import { Transactiontext } from './models/transactiontext.model';
@@ -81,14 +81,21 @@ export class CodxAcService {
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
-    irregularFields: string[] = []
+    irregularFields: string[] = [],
+    ignoredFields: string[] = []
   ): boolean {
     console.log(formGroup);
     console.log(gridViewSetup);
 
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
     const controls = formGroup.controls;
     let isValid: boolean = true;
     for (const propName in controls) {
+      if (ignoredFields.includes(propName.toLowerCase())) {
+        continue;
+      }
+
       if (controls[propName].invalid) {
         const gvsPropName =
           irregularFields.find(

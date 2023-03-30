@@ -5,7 +5,7 @@
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
           <div class="me-3">
-            <codx-img [objectId]="dataSelected.recID" [objectType]="formModel.entityName" [width]="35">
+            <codx-img [objectId]="dataSelected.recID" [objectName]="getNameCrm(dataSelected)" [objectType]="entityName" [width]="35">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -15,14 +15,14 @@
                   {{ funcID == 'CM0101' ? dataSelected.customerName : funcID == 'CM0102' ? dataSelected.contactName : funcID == 'CM0103' ? dataSelected.partnerName : dataSelected.opponentName}}
                 </div>
                 <div class="d-flex align-items-start me-4 mb-1" *ngIf="funcID == 'CM0102'">
-                  <div class="me-3">
+                  <div class="me-3" *ngIf="dataSelected?.phoneNumber">
                     <span
                       [ngClass]="dataSelected?.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                       class=" icon-16 me-1"></span>
                     <span [ngClass]="dataSelected?.allowCall ? 'text-primary' : ''"
                       class="text-gray-900">{{dataSelected?.phoneNumber}}</span>
                   </div>
-                  <div>
+                  <div *ngIf="dataSelected?.email">
                     <span [ngClass]="dataSelected?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                       class="icon-16 me-1 text-gray-900"></span>
                     <span [ngClass]="dataSelected?.allowEmail ? 'text-primary' : ''"
@@ -34,8 +34,8 @@
                   <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-start">
-                <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+              <div class="d-flex flex-column align-items-start" *ngIf="dataSelected?.field">
+                <codx-tag [entityName]="entityName" [disabled]="true" [isEdit]="false"
                   [value]="dataSelected?.field">
                 </codx-tag>
               </div>
@@ -51,7 +51,7 @@
               </div>
               <div class="d-flex flex-grow-1 mb-4">
                 <div class="me-3">
-                  <codx-img [objectId]="item.recID" [objectType]="formModel.entityName" [width]="35">
+                  <codx-img [objectId]="item.recID" [objectName]="item.contactName" [objectType]="'CM_Contacts'" [width]="35">
                   </codx-img>
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
@@ -67,13 +67,13 @@
                         {{item?.contactName}}
                       </div>
                       <div class="d-flex align-items-start me-4 mb-1">
-                        <div class="me-3">
+                        <div class="me-3" *ngIf="item?.phoneNumber">
                           <span [ngClass]="item.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                             class=" icon-16 me-1"></span>
                           <span [ngClass]="item.allowCall ? 'text-primary' : ''"
-                            class="text-gray-900">{{item.phoneNumber}}</span>
+                            class="text-gray-900">{{item?.phoneNumber}}</span>
                         </div>
-                        <div>
+                        <div *ngIf="item?.email">
                           <span [ngClass]="item.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                             class="icon-16 me-1 text-gray-900"></span>
                           <span [ngClass]="item.allowEmail ? 'text-primary' : ''"
@@ -213,7 +213,7 @@
       </ng-template>
     </ng-template>
     <ng-template #tabs let-data>
-      <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
+      <codx-tabs [entityName]="entityName" [formModel]="formModel" [TabControl]="tabControl"
         [objectID]="dataSelected.recID" [funcID]="formModel.funcID" [dataTree]="treeTask"></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
@@ -223,7 +223,7 @@
   <div class="row mb-2">
     <div class="col-4 d-flex">
       <div class="me-3">
-        <codx-img [objectId]="data.recID" [objectType]="formModel" [width]="35">
+        <codx-img [objectId]="data.recID" [objectName]="data?.contactName" [objectType]="'CM_Contacts'" [width]="35">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-grow-1">
@@ -241,12 +241,12 @@
       </div>
     </div>
     <div class="col-4 d-flex flex-column">
-      <div class="mb-1">
+      <div class="mb-1" *ngIf="data?.phoneNumber">
         <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
           class=" icon-16 me-1"></span>
         <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
       </div>
-      <div>
+      <div  *ngIf="data?.email">
         <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
           class="icon-16 me-1 text-gray-900"></span>
         <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>

@@ -7,6 +7,7 @@ import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef 
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
+import { ViewContractDetailComponent } from './view-contracts-detail/view-contracts-detail.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -15,7 +16,7 @@ import { PopupEContractComponent } from '../employee-profile/popup-econtract/pop
 })
 export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
-  @ViewChild('viewdetail') viewdetail?: TemplateRef<any>;
+  @ViewChild('viewdetail') viewdetail: ViewContractDetailComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
@@ -24,7 +25,8 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = []
-  funcID: string
+  funcID: string;
+  dataCategory;
   eContractHeaderText;
   method = 'LoadDataEcontractWithEmployeeInfoAsync';
   numofRecord;
@@ -36,7 +38,7 @@ export class EmployeeContractComponent extends UIComponent {
   formGroup: FormGroup;
   editStatusObj: any;
 
-  currentEmpObj: any;
+  currentEmpObj: any = null;
   dialogEditStatus: any;
   
 
@@ -95,16 +97,16 @@ export class EmployeeContractComponent extends UIComponent {
         },
       },
     ]
-    console.log('view cua e contract', this.view);
-    if(this.view){
+    // console.log('view cua e contract', this.view);
+    // // if(this.view){
 
-      this.view.dataService.methodDelete = 'DeleteEContractAsync';
-    }
-    console.log('data service data', this.view?.formModel.funcID);
-    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
-      this.eContractHeaderText = res;
-      console.log('hed do` text ne',this.eContractHeaderText);
-    })
+    // //   this.view.dataService.methodDelete = 'DeleteEContractAsync';
+    // // }
+    // console.log('data service data', this.view?.formModel.funcID);
+    // this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+    //   this.eContractHeaderText = res;
+    //   console.log('hed do` text ne',this.eContractHeaderText);
+    // })
   }
 
   ngAfterViewChecked(){
@@ -207,12 +209,21 @@ export class EmployeeContractComponent extends UIComponent {
     
   }
 
+  clickEvent(event){
+    console.log('clickEvent', event);
+    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
+    this.clickMF(event?.event, event?.data);
+  }
+
   clickMF(event, data){
     console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
     console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
 
     
     switch (event.functionID) {
+      case 'HRT1001A3':
+        this.beforeRelease();
+        break;
       case 'HRT1001A7': // cap nhat da ki
       case 'HRT1001A0': // huy hop dong
       case 'HRT1001A9': // thanh ly hop dong
@@ -273,7 +284,7 @@ export class EmployeeContractComponent extends UIComponent {
       {
         actionType: actionType,
         dataObj: data,
-        empObj: this.currentEmpObj,
+        empObj: actionType == 'add' ? null: this.currentEmpObj,
         headerText:
           actionHeaderText,
         employeeId: data?.employeeID,
@@ -348,6 +359,62 @@ export class EmployeeContractComponent extends UIComponent {
       this.df.detectChanges();
     }
   }
+
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        debugger;
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eContractsObj = parsedJSON[index];
+          if (eContractsObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+            //đợi BA mô tả
+          }
+        }
+      }
+    });
+  }
   
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.dataCategory = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.dataCategory.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> Hợp đồng lao động - ' + this.itemDetail.contractNo + '</div>'
+            )
+            .subscribe((result) => {
+              console.log('ok', result);
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.signStatus = '3';
+                this.hrService
+                  .editEContract(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      console.log('after release', res);
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
+        }
+      });
+  }
   
 }

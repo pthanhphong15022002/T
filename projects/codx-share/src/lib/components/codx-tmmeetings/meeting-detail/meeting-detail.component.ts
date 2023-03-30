@@ -1,10 +1,5 @@
 import { ViewEncapsulation } from '@angular/core';
-import {
-  CO_MeetingTemplates,
-  CO_Content,
-} from './../../models/CO_MeetingTemplates.model';
 import { formatDate } from '@angular/common';
-import { CO_Meetings, TabControl } from './../../models/CO_Meetings.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import {
   ChangeDetectorRef,
@@ -25,6 +20,8 @@ import {
   ApiHttpService,
 } from 'codx-core';
 import moment from 'moment';
+import { CO_Meetings, TabControl } from '../models/CO_Meetings.model';
+import { CO_Content, CO_MeetingTemplates } from '../models/CO_MeetingTemplates.model';
 
 @Component({
   selector: 'lib-meeting-detail',
