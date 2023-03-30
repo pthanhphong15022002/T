@@ -63,7 +63,17 @@
                         <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
                             <div class="message-send">
                                 <div class="message-function">
-                                    <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                                    <span ngbDropdown ngbDropdownToggle 
+                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                        <ul ngbDropdownMenu>
+                                            <li ngbDropdownItem>
+                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                    <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                    <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </span>
                                     <ng-container *ngIf="item.refType != 'm'">
                                         <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                     </ng-container>
@@ -225,7 +235,17 @@
                                 <ng-container *ngIf="item.refType != 'm'">
                                     <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                 </ng-container>
-                                <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                                <span ngbDropdown ngbDropdownToggle 
+                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                        <ul ngbDropdownMenu>
+                                            <li ngbDropdownItem>
+                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                    <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                    <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </span>
                             </div>
                         </ng-template>  
                     </div>
@@ -340,14 +360,6 @@
             </div>
         </ng-container>
     </div>
-</ng-template>
-<ng-template #tmp1 let-data>
-    <ng-container *ngFor="let item of data">
-        <span (click)="click(item)">{{item.userName}}</span>
-    </ng-container>
-</ng-template>
-<ng-template #tmp2 let-data>
-    <span (click)="click(data)">{{data.userName}}</span>
 </ng-template>
 <ng-container #controlTag *ngIf="showCBB">
     <codx-combobox-popup 

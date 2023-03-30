@@ -100,7 +100,8 @@
                 <div
                   class="badge"
                   [ngStyle]="{
-                    'background-color': stepValue['backgroundColor']
+                    'background-color':
+                      stepValue['backgroundColor'] || '#3699ff'
                   }"
                 >
                   <span
@@ -200,6 +201,24 @@
                     </div>
                   </div>
                 </ng-template>
+                <!-- mô tả -->
+                <div>
+                  <ul class="d-flex align-items-center">
+                    <li
+                      *ngFor="let item of listTypeTask"
+                      class="d-flex align-items-center"
+                    >
+                      <span class="me-1 fs-5 font-weight-bold"
+                        >{{ item?.text }}:
+                      </span>
+                      <div
+                        class="me-5"
+                        [ngStyle]="{ 'background-color': item?.color }"
+                        style="height: 20px; width: 60px; border-radius: 5px"
+                      ></div>
+                    </li>
+                  </ul>
+                </div>
               </ng-container>
               <ng-container *ngIf="viewModelDetail == 'S'">
                 <div

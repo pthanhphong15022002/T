@@ -575,7 +575,7 @@ export class StagesDetailComponent implements OnInit {
         return group;
       }, {});
       const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
-        let task = taskGroupList[taskGroup['recID']] ?? [];
+        let task = taskGroupList[taskGroup['refID']] ?? [];
         return {
           ...taskGroup,
           task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
@@ -975,15 +975,17 @@ export class StagesDetailComponent implements OnInit {
           this.step.progress = Number(medium);
           this.progress = medium;
 
-          // đang test cấm xóa
-          // if(true){
-          // let dataInstance = {
-          //   instance:this.instance,
-          //   listStep:this.listStep,
-          //   step:this.step
-          // }
-          //   this.serviceInstance.autoMoveStage(dataInstance);
-          // }
+          // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
+          // sửa false thành điều kiện
+          if(false){
+          let dataInstance = {
+            instance:this.instance,
+            listStep:this.listStep,
+            step:this.step
+          }
+            this.serviceInstance.autoMoveStage(dataInstance);
+          }
+
         }
       });
   }

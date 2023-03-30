@@ -2029,7 +2029,7 @@ export class CodxHrService {
       'ERM.Business.Core',
       'DataBusiness',
       'ReleaseAsync',
-      [recID, processID, entityName, funcID, '<div>' + title + '</div>']
+      [recID, processID, entityName, funcID, title]
     );
   }
 }

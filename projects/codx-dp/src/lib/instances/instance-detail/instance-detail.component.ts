@@ -68,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
   instanceStatus: any;
   currentStep = 0;
   instance: any;
+  listTypeTask = [];
   //gantchat
   ganttDs = [];
   ganttDsClone = [];
@@ -121,7 +122,13 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.rollHeight();
