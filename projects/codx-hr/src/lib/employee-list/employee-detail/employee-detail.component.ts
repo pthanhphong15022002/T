@@ -172,7 +172,10 @@ export class EmployeeDetailComponent extends UIComponent {
   crrPassport: any;
   //visa
   lstVisa: any = [];
-  crrVisa: any = {};
+  crrVisa: any;
+
+  //workpermit
+  crrWorkpermit: any;
 
   //jobInfo
   jobInfo: any;
@@ -458,8 +461,8 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region RowCount
   eDegreeRowCount;
   passportRowCount: number;
-  visaRowCount: Number;
-  workPermitRowCount: Number;
+  visaRowCount: number;
+  workPermitRowCount: number;
   eExperienceRowCount;
   eCertificateRowCount;
   eBenefitRowCount: number = 0;
@@ -1174,9 +1177,9 @@ export class EmployeeDetailComponent extends UIComponent {
             if (res) {
               if (res.type == 'loaded') {
                 t.visaRowCount = res['data'].length;
-                // if(res['data'].length > 0){
-                //   this.crrVisa = res.data[0]
-                // }
+                if(res['data'].length > 0){
+                  this.crrVisa = res.data[0]
+                }
               }
             }
           });
@@ -1260,6 +1263,9 @@ export class EmployeeDetailComponent extends UIComponent {
             if (res) {
               if (res.type == 'loaded') {
                 t.workPermitRowCount = res['data'].length;
+                if(res['data'].length > 0){
+                  this.crrWorkpermit = res.data[0];
+                }
               }
             }
           });
@@ -2336,7 +2342,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.passportGridview, 'delete', data);
+                    this.workPermitRowCount = this.updateGridView(this.workPermitGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2353,7 +2359,8 @@ export class EmployeeDetailComponent extends UIComponent {
                     //   this.lstVisa.splice(i, 1);
                     //   console.log('delete visa', this.lstVisa);
                     // }
-                    this.updateGridView(this.visaGridview, 'delete', data);
+                    
+                    this.visaRowCount += this.updateGridView(this.visaGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -3500,7 +3507,7 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.workPermitGridview.dataService as CRUDService).clear();
-      else this.updateGridView(this.workPermitGridview, actionType, data);
+      else this.updateGridView(this.workPermitGridview, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -4683,15 +4690,27 @@ export class EmployeeDetailComponent extends UIComponent {
         returnVal = 1;
       } else if (actionType == 'edit') {
         (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
-      } else if ((actionType = 'delete')) {
+      } else if (actionType = 'delete') {
         (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
         returnVal = -1;
       }
-
+      if(gridView.formModel.entityName == this.ePassportFormModel.entityName){
+        this.crrPassport = gridView.dataService.data[0];
+        this.df.detectChanges()
+      }
+      if(gridView.formModel.entityName == this.eVisaFormModel.entityName){
+        this.crrVisa = gridView.dataService.data[0];
+        this.df.detectChanges()
+      }
+      if(gridView.formModel.entityName == this.eWorkPermitFormModel.entityName){
+        this.crrWorkpermit = gridView.dataService.data[0];
+        this.df.detectChanges()
+      }
       return returnVal;
     }
     return 0;
   }
+
   valueChangeFilterAssetCategory(evt) {
     this.filterByAssetCatIDArr = evt.data;
     this.UpdateEAssetPredicate();
