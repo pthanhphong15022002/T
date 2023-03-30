@@ -7,16 +7,20 @@
   [formModel]="dialog.formModel"
   [dialog]="dialog"
 >
-  <ng-template #body let-item>
+  <ng-template #body>
     <ng-container *ngIf="form.formGroup">
       <div class="form-group">
         <codx-img
-        class="avata ava-edit"
-          [objectId]="item?.recID"
-          [objectName]="item?.contactName"
+          #imageUpload
+          class="avata ava-edit"
+          [objectId]="master?.recID"
+          [isDefaulImg]="true"
+          [objectName]="master?.contactName"
           [objectType]="dialog?.formModel?.entityName"
           [width]="80"
           [isAllowEdit]="true"
+          [funcId]="dialog.formModel?.funcID"
+          [imgOn]="date"
         >
         </codx-img>
       </div>
