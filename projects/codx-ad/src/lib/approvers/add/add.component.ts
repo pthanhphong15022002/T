@@ -50,6 +50,7 @@ export class AddApproversComponent extends UIComponent {
   //#region Roles
   dialogRoles: DialogRef;
   //#endregion
+  date = new Date();
   constructor(
     private inject: Injector,
     // private api: ApiHttpService,
