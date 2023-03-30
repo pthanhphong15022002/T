@@ -47,7 +47,6 @@ export class AddApproversComponent extends UIComponent {
   isTemp = true;
   lstChangeFunc: tmpTNMD[] = [];
   lstRoles: tmpformChooseRole[] = [];
-
   //#region Roles
   dialogRoles: DialogRef;
   //#endregion
@@ -197,6 +196,13 @@ export class AddApproversComponent extends UIComponent {
           this.master.memberIDs = res[1];
           // this.dialog.dataService.update(this.master).subscribe((res2) => {
           this.dialog.close(this.master);
+          this.imageUpload
+          .updateFileDirectReload(this.master.recID)
+          .subscribe((result) => {
+            if (result) {
+              console.log('res', result);
+            }
+          });
           // });
         } else {
           this.dialog.dataService.hasSaved = true;
@@ -210,13 +216,7 @@ export class AddApproversComponent extends UIComponent {
 
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
-    this.imageUpload
-      .updateFileDirectReload(this.master.recID)
-      .subscribe((result) => {
-        if (result) {
-          console.log('res', result);
-        }
-      });
+   
     if (this.members?.length > 0) {
       let lstMemID = [];
       this.members?.forEach((mem) => {
