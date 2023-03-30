@@ -54,7 +54,7 @@
         <div class="col-6">
           <div class="me-3 d-flex align-items-center">
             <div class="d-flex align-items-center">
-              <codx-img class="" [width]="25" [objectId]="item.contactID" objectType="AD_Users">
+              <codx-img class="" [width]="25" [objectId]="item.recID" [objectName]="item.contactName" objectType="CM_Contacts">
               </codx-img>
             </div>
             <div class="ms-3">
@@ -68,12 +68,12 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="">
+          <div class="" *ngIf="item.phoneNumber">
             <span
               [ngClass]="item.allowCall == true ? 'icon-phone_android text-primary icon-16 me-1' : 'icon-phonelink_erase icon-16 me-1' "></span>
             <span [ngClass]="item.allowCall == true ? 'text-primary text-gray-900' : 'text-gray-900'">{{item.phoneNumber}}</span>
           </div>
-          <div>
+          <div *ngIf="item.email">
             <span
               [ngClass]="item.allowEmail == true ? 'icon-email text-primary icon-16 me-1' : 'icon-print_disabled icon-16 me-1'"></span>
             <span [ngClass]="item.allowEmail == true ? 'text-primary text-gray-900' : 'text-gray-900'">{{item.email}}</span>

@@ -548,7 +548,7 @@
         </div>
       </div>
     </div>
-    <div ngbDropdown class="emp-check-add rounded-circle" *ngIf="lstBtnAdd">
+    <div ngbDropdown class="emp-check-add rounded-circle" *ngIf="lstBtnAdd && lstBtnAdd.length > 0">
       <span
         ngbDropdownToggle
         class="btn btn-icon btn-primary rounded-circle fs-1 icon-add icon-22"
@@ -1885,6 +1885,7 @@
                 [pageSize]="numPageSizeGridView"
                 [rowHeight]="40"
                 height="auto"
+                [sort]="[visaSortModel]"
               ></codx-gridview>
               <!-- [height]="
                     passportRowCount > numPageSizeGridView
@@ -1943,6 +1944,7 @@
                 [pageSize]="numPageSizeGridView"
                 [rowHeight]="40"
                 height="auto"
+                [sort]="[workPermitSortModel]"
               ></codx-gridview>
               <!-- [height]="
                     passportRowCount > numPageSizeGridView
@@ -5103,11 +5105,18 @@
 
 <ng-template #templateBenefitAmt let-data>
   <div #benefitNorm>
-    {{ data?.benefitAmt }}
-    /
-    {{
-      data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
-    }}
+    <span
+    [innerHTML]="
+    data?.benefitAmt | formatvalue : benefitFormodel : 'benefitAmt' | async
+  "
+    >
+    </span>
+    <span
+    [innerHTML]="
+    data?.benefitNorm | formatvalue : benefitFormodel : 'benefitNorm' | async
+  "
+    ></span>
+
   </div>
 </ng-template>
 
@@ -5336,12 +5345,10 @@
           : 'border-1 text-dark badge-secondary fw-bold'
       "
       [style.border-color]="isMaxGrade(data) ? '' : 'black'"
+      [innerHTML]="
+      data?.skillGradeID | formatvalue : eSkillFormmodel : 'skillGradeID' | async
+    "
     >
-      {{
-        data?.skillGradeID
-          | formatvalue : eSkillFormmodel : "skillGradeID"
-          | async
-      }}
     </span>
   </div>
 </ng-template>
@@ -5430,12 +5437,12 @@
       class="badge border-0 mb-1 badge-primary"
       [style.background]="getAssetBackgroundColor(data.assetCategory)"
       [style.color]="getAssetFontColor(data.assetCategory)"
-    >
-      {{
-        data?.assetCategory
-          | formatvalue : eAssetFormModel : "assetCategory"
-          | async
-      }}
+      [innerHTML]="
+      data?.assetCategory
+        | formatvalue : eAssetFormModel : 'assetCategory'
+        | async
+    "
+      >
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-class icon-16 me-1 text-primary"></i>
@@ -5570,11 +5577,10 @@
     <div class="d-flex align-items-center">
       <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
-        <span>{{
-          data?.issuedPlace
-            | formatvalue : eVisaFormModel : "issuedPlace"
-            | async
-        }}</span>
+        <span
+        [innerHTML]="
+        data?.issuedPlace | formatvalue : eVisaFormModel : 'issuedPlace' | async
+      "></span>
       </span>
     </div>
   </div>
@@ -6289,13 +6295,11 @@
       data?.awardID | formatvalue : awardFormModel : 'awardID' | async
     "
   ></div>
-  <div class="text-primary">
-    <i></i>
-    {{
-      data?.awardFormCategory
-        | formatvalue : awardFormModel : "awardFormCategory"
-        | async
-    }}
+  <div class="text-primary"
+  [innerHTML]="
+  data?.awardFormCategory | formatvalue : awardFormModel : 'awardFormCategory' | async
+"
+  >
   </div>
 </ng-template>
 
@@ -6348,13 +6352,22 @@
     class="has-action-menu min-h-40px"
     [innerHTML]="data?.reason | formatvalue : awardFormModel : 'reason' | async"
   >
-    <codx-mfunc
+    <!-- <<<<<< -->
+    <!-- <codx-mfunc
       [formModel]="awardFormModel"
       (clickMF)="clickMF($event, data, 'eAwards')"
       [dataItem]="data"
       type="hover"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
+    <codx-mfunc
+    [formModel]="awardFormModel"
+    (clickMF)="clickMF($event, data, 'eAwards')"
+    type="hover"
+    [dataItem]="data"
+  >
+  </codx-mfunc>
+ 
   </div>
 </ng-template>
 <!--#end region-->

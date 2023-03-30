@@ -516,7 +516,7 @@ export class ViewDetailComponent implements OnInit {
         if (res) {
           datas.approveStatus = '0';
           this.view.dataService.update(datas).subscribe();
-          this.notify.notifyCode('RS002');
+          this.notify.notifyCode('SYS034');
         }
       });
   }

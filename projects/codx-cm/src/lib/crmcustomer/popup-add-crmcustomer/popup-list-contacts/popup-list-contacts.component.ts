@@ -87,6 +87,7 @@ export class PopupListContactsComponent implements OnInit {
         } else {
           this.changeContacts(0, this.lstSearch[0]);
         }
+        this.changeDet.detectChanges()
       }
     });
   }
@@ -107,6 +108,8 @@ export class PopupListContactsComponent implements OnInit {
         this.lstSearch = [];
         this.contact = null;
       }
+      this.changeDet.detectChanges()
+
     });
   }
 }

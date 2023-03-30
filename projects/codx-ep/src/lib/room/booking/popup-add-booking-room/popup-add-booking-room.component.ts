@@ -1105,7 +1105,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupLink() {
-    this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
+    let dlLink= this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
+    dlLink.closed.subscribe((res:any)=>{
+      if(res){
+        this.data.onlineUrl=res?.event;
+      }
+    })
   }
   showAllResourceChange(evt: any) {
     if (evt != null) {

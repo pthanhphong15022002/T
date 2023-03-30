@@ -357,8 +357,8 @@ export class StagesDetailComponent implements OnInit {
       stepTaskData: dataTransmit || {},
       taskList: this.taskList,
       stepName: this.step?.stepName,
-      groupTaskID:this.groupTaskID,
-      leadtimeControl:!this.step?.leadtimeControl,
+      groupTaskID: this.groupTaskID,
+      leadtimeControl: !this.step?.leadtimeControl,
     };
     let option = new SidebarModel();
     option.Width = '550px';
@@ -481,6 +481,9 @@ export class StagesDetailComponent implements OnInit {
       case 'DP13':
         this.assignTask(e.data, task);
         break;
+      case 'DP20':
+        this.openUpdateProgress(task);
+        break;
     }
   }
   //giao viec
@@ -563,9 +566,10 @@ export class StagesDetailComponent implements OnInit {
         return group;
       }, {});
       const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+        let task = taskGroupList[taskGroup['recID']] ?? [];
         return {
           ...taskGroup,
-          task: taskGroupList[taskGroup['refID']] ?? [],
+          task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
         };
       });
       step['taskGroups'] = taskGroupConvert;
@@ -597,6 +601,9 @@ export class StagesDetailComponent implements OnInit {
         break;
       case 'DP12':
         this.viewTask(data, 'G');
+        break;
+      case 'DP20':
+        this.openUpdateProgress(data);
         break;
     }
   }
@@ -777,10 +784,9 @@ export class StagesDetailComponent implements OnInit {
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.dataProgressClone['progress'] = this.dataProgress['progress'];
-          this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
-          this.dataProgressClone['note'] = this.dataProgress['note'];
-          if (this.dataProgress['taskGroupID'] === undefined) {
+          if (this.dataProgress['isSuccessStep'] != undefined) {
+            this.updateProgressStep();
+          } else if (this.dataProgress['taskGroupID'] === undefined) {
             this.updateProgressGroupTask();
           } else {
             this.updateProgressTask();
@@ -788,10 +794,9 @@ export class StagesDetailComponent implements OnInit {
         }
       });
     } else {
-      this.dataProgressClone['progress'] = this.dataProgress['progress'];
-      this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
-      this.dataProgressClone['note'] = this.dataProgress['note'];
-      if (this.dataProgress['taskGroupID'] === undefined) {
+      if (this.dataProgress['isSuccessStep'] != undefined) {
+        this.updateProgressStep();
+      } else if (this.dataProgress['taskGroupID'] === undefined) {
         this.updateProgressGroupTask();
       } else {
         this.updateProgressTask();
@@ -799,36 +804,98 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  updateProgressStep() {
+    let idStep = this.dataProgress['recID'];
+    let progress = this.dataProgress['progress'];
+    this.dpService
+      .updateProgressStep([idStep, Number(progress)])
+      .subscribe((res) => {
+        if (res) {
+          this.step.progress = Number(progress);
+          this.progress = progress;
+          this.notiService.notifyCode('SYS006');
+          this.popupUpdateProgress.close();
+          this.saveAssign.emit(true);
+        }
+      });
+  }
+
   updateProgressGroupTask() {
-    let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
-    delete taskGroupSave['task'];
-    this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
-      if (res) {
-        this.notiService.notifyCode('SYS006');
-        this.popupUpdateProgress.close();
-        this.calculateProgressStep();
-        this.saveAssign.emit(true);
+    this.notiService.alertCode('DP031').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
+        delete taskGroupSave['task'];
+        this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS006');
+            this.popupUpdateProgress.close();
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+          }
+        });
+      }
+      if (x.event && x.event.status == 'N'){
+        let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
+        delete taskGroupSave['task'];
+        this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS006');
+            this.popupUpdateProgress.close();
+            this.saveAssign.emit(true);
+          }
+        });
       }
     });
   }
 
   updateProgressTask() {
-    let value = this.calculateProgressTaskGroup(this.dataProgress, 'update');
-    let dataSave = [this.dataProgress, value?.average];
-    this.dpService.updateTask(dataSave).subscribe((res) => {
-      if (res) {
-        this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
-        this.notiService.notifyCode('SYS007');
-        this.popupUpdateProgress.close();
-        this.calculateProgressStep();
-        this.saveAssign.emit(true);
-      } else {
-        this.popupUpdateProgress.close();
+    this.notiService.alertCode('DP028').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.dataProgressClone['progress'] = this.dataProgress['progress'];
+        this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+        this.dataProgressClone['note'] = this.dataProgress['note'];
+        let value = this.calculateProgressTaskGroup(
+          this.dataProgress,
+          'update'
+        );
+        let dataSave = [this.dataProgress, value?.average];
+        this.dpService.updateTask(dataSave).subscribe((res) => {
+          if (res) {
+            this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
+            this.notiService.notifyCode('SYS007');
+            this.popupUpdateProgress.close();
+            this.calculateProgressStep();
+            this.saveAssign.emit(true);
+          } else {
+            this.popupUpdateProgress.close();
+          }
+        });
+      } 
+      if (x.event && x.event.status == 'N'){
+        let dataSave = [this.dataProgress, -1];
+        this.dpService.updateTask(dataSave).subscribe((res) => {
+          if (res) {
+            this.dataProgressClone['progress'] = this.dataProgress['progress'];
+            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['note'] = this.dataProgress['note'];
+            this.notiService.notifyCode('SYS007');
+            this.popupUpdateProgress.close();
+            this.saveAssign.emit(true);
+          } else {
+            this.popupUpdateProgress.close();
+          }
+        });
       }
     });
   }
 
-  checkExitsParentID(taskList, task): string{
+  checkExitsParentID(taskList, task): string {
     if (task?.requireCompleted) {
       return 'text-red';
     }
@@ -1065,6 +1132,33 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
 
+  async changeDataMFStep(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+          case 'DP07':
+          case 'DP08':
+          case 'DP12':
+          case 'DP13':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  clickMFStep(e, data) {
+    if (e != null) {
+      switch (e.functionID) {
+        case 'DP20':
+          this.openUpdateProgress(data);
+          break;
+      }
+    }
+  }
+
   async changeDataMF(e, type, data = null) {
     if (e != null) {
       e.forEach((res) => {
@@ -1112,7 +1206,7 @@ export class StagesDetailComponent implements OnInit {
           //Thêm công việc
           case 'DP08':
             if (
-              (type != 'group' && !this.isCreate) ||
+              type != 'group' ||
               (this.instance.status != 1 && this.instance.status != 2) ||
               !this.isUpdate
             )

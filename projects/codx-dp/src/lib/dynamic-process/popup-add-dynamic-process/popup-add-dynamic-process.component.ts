@@ -1817,9 +1817,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             return group;
           }, {});
           const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+            let task = taskGroupList[taskGroup['recID']] ?? [];
             return {
               ...taskGroup,
-              task: taskGroupList[taskGroup['recID']] ?? [],
+              task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
             };
           });
           step['taskGroups'] = taskGroupConvert;
@@ -2509,7 +2510,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var checkGroup = this.lstGroup.some(
       (x) => x.groupID == this.process?.groupID
     );
-    return this.process.processName &&
+    return this.process.processName?.trim() &&
       this.process?.groupID &&
       checkGroup &&
       this.stepList?.length > 0

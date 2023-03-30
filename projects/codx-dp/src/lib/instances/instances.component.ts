@@ -60,7 +60,8 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
-  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;InstanceDetailComponent
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  InstanceDetailComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
@@ -290,18 +291,17 @@ export class InstancesComponent
         };
       }) || [];
       console.log(dataColumns);
+
     return dataColumns;
   }
 
-  getPropertiesHeader(data, type){
-    if(this.listHeader?.length == 0){
+  getPropertiesHeader(data, type) {
+    if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
-    let find = this.listHeader?.find(item => item.recID === data.keyField);
+    let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
   }
-
-
 
   //CRUD
   add() {
@@ -435,11 +435,11 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
-        this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx),
+        (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
       ],
       option
     );
@@ -604,6 +604,7 @@ export class InstancesComponent
                   this.dataSelected.closed = check;
                   this.noti.notifyCode(check ? 'DP016' : 'DP017');
                   this.view.dataService.remove(this.dataSelected).subscribe();
+                  this.dataSelected = this.view.dataService.data[0];
                   this.detectorRef.detectChanges();
                 }
               });
@@ -890,7 +891,7 @@ export class InstancesComponent
             );
             dialogMoveStage.closed.subscribe((e) => {
               this.isClick = true;
-              this.stepIdClick='';
+              this.stepIdClick = '';
               if (!e || !e.event) {
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
@@ -1161,13 +1162,9 @@ export class InstancesComponent
     return totalDay;
   }
   getSumDurationHourOfSteps(listStepCbx: any) {
-      let totalHour = listStepCbx
+    let totalHour = listStepCbx
       .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce(
-        (sum, f) =>
-          sum +f?.durationHour ,
-        0
-      );
+      .reduce((sum, f) => sum + f?.durationHour, 0);
     return totalHour;
   }
   setTimeHoliday(dayOffs: string): number {

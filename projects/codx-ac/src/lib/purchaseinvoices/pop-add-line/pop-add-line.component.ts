@@ -76,6 +76,9 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       }
     }
   }
+  close(){
+    this.dialog.close();
+  }
   onSave(){
     this.checkValidate();
     if (this.validate > 0) {
