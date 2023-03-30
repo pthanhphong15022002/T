@@ -22,7 +22,6 @@ export class JournalNamesComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  testimg = 'UyNhiemChi.svg';
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -152,7 +151,7 @@ export class JournalNamesComponent extends UIComponent {
 
   copy(e, data): void {
     console.log('copy', data);
-    
+
     if (data.dataValue) {
       data = { ...data, ...JSON.parse(data.dataValue) };
     }

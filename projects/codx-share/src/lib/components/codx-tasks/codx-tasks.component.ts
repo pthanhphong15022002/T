@@ -214,6 +214,16 @@ export class CodxTasksComponent
     this.afterLoad();
     //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
+
+    //them prdicate vao loc
+    if (this.predicate && this.dataValue) {
+      let object = {
+        predicate: this.predicate,
+        dataValue: this.dataValue,
+      };
+      this.dataObj = Object.assign({}, this.dataObj, object);
+    }
+    debugger;
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
@@ -1900,9 +1910,9 @@ export class CodxTasksComponent
       .subscribe((res) => {
         if (res) {
           this.dayoff = res;
-        //  res.forEach((ele) => {
-         //   this.dayoff = res;
-         // });
+          //  res.forEach((ele) => {
+          //   this.dayoff = res;
+          // });
         }
       });
   }

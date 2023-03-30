@@ -333,17 +333,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   checkCartItems(_cart: any[]) {
-    let isPassed = true;
     _cart.map((item) => {
       if (item && item.quantity == 0) {
-        this.notificationsService.notify(
-          'Số lượng yêu cầu VPP phải lớn hơn 0',
-          '3'
-        );
-        isPassed = false;
+        this.notificationsService.notifyCode('EP021');
+        return false;
       }
     });
-    return isPassed;
+    return true;
   }
   //#endregion "Validate function before booking stationery"
 

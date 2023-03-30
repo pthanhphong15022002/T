@@ -858,7 +858,7 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.notify.alertCode('RS002');
+            this.notify.alertCode('DP007');
             dialogTemplateName && dialogTemplateName.close();
           }
         });
@@ -876,7 +876,7 @@ export class PopupAddSignFileComponent implements OnInit {
       .updateApproveTemplate(this.data.recID, this.data.processID)
       .subscribe((res) => {
         if (res != null) {
-          this.notify.notifyCode('RS002');
+          this.notify.notifyCode('SYS007');
         }
       });
   }
