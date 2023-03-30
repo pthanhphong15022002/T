@@ -273,6 +273,7 @@
                     [isDelete]="dataSelect.delete" [isEdit]="dataSelect.edit"
                     [isUpdate]="dataSelect.write && !dataSelect.closed && (dataSelect.status =='1' || dataSelect.status=='2' )"
                     [isCreate]="dataSelect.create" [isClosed]="dataSelect.closed" [titleDefault]="titleDefault"
+                    [listStep]="listSteps"
                     [instance]="instance" [lstIDInvo]="lstInv" [listStepReason]="getReasonByStepId(dataSelect.stepID)"
                     [stepNameEnd]="getStepNameIsComlepte(instance)" [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"></codx-stages-detail>

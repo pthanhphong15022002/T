@@ -41,6 +41,7 @@ import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynam
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { InstancesComponent } from '../../instances.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -70,6 +71,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
   @Input() showColumnControl = 1;
+  @Input() listStep:any;
   @Output() saveAssign = new EventEmitter<any>();
 
   dateActual: any;
@@ -135,7 +137,8 @@ export class StagesDetailComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-    private dpService: CodxDpService
+    private dpService: CodxDpService,
+    private serviceInstance: InstancesComponent,
   ) {
     this.user = this.authStore.get();
   }
@@ -956,9 +959,21 @@ export class StagesDetailComponent implements OnInit {
     this.dpService
       .updateProgressStep([stepID, Number(medium)])
       .subscribe((res) => {
-        if (res) {
+        if (res) {;
           this.step.progress = Number(medium);
           this.progress = medium;
+
+
+          // đang test cấm xóa
+          // if(true){
+          // let dataInstance = {
+          //   instance:this.instance,
+          //   listStep:this.listStep,
+          //   step:this.step
+          // }
+          //   this.serviceInstance.autoMoveStage(dataInstance);
+          // }
+
         }
       });
   }
