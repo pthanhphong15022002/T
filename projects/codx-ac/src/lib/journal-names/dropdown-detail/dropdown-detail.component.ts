@@ -11,6 +11,7 @@ export class DropdownDetailComponent extends UIComponent {
   //#region Constructor
   @Input() modelShares: IModelShare[];
   @Input() formModel: FormModel;
+  ids: string;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -18,7 +19,9 @@ export class DropdownDetailComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.ids = this.modelShares?.map((d) => d.id).join(';');
+  }
   //#endregion
 
   //#region Event
@@ -28,8 +31,5 @@ export class DropdownDetailComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  getIds(): string {
-    return this.modelShares.map((d) => d.id).join(';');
-  }
   //#endregion
 }

@@ -59,7 +59,7 @@
                     field="cashBookName"
                     [disabled]="true"
                     [formModel]="form.formModel"
-                    [crrValue]="getCashBookNameById(cashTransfer?.cashBookID)"
+                    [crrValue]="cashBookName1"
                   ></codx-input>
                 </div>
                 <div class="col-2 form-group">
@@ -85,6 +85,7 @@
                     field="cashBookID2"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
+                    (valueChange)="handleInputChange($event)"
                   ></codx-input>
                 </div>
                 <div class="col-6 form-group">
@@ -98,7 +99,7 @@
                     field="cashBookName2"
                     [disabled]="true"
                     [formModel]="form.formModel"
-                    [crrValue]="getCashBookNameById(cashTransfer?.cashBookID2)"
+                    [crrValue]="cashBookName2"
                   ></codx-input>
                 </div>
               </div>
@@ -313,7 +314,8 @@
                     ></codx-label>
                     <codx-input
                       field="invoiceDate"
-                      [formModel]="fmVATInvoice"
+                      type="datetime"
+                      format="F"
                       [crrValue]="vatInvoice?.invoiceDate"
                       (valueChange)="handleInputChange($event, 'vatInvoice')"
                       [disabled]="!hasInvoice"

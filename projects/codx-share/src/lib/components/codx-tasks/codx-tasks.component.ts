@@ -64,6 +64,8 @@ export class CodxTasksComponent
   @Input() calendarID: string;
   @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() predicate?: any;
+  @Input() dataValue?: any;
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
   @Input() idField = 'taskID';
@@ -301,7 +303,7 @@ export class CodxTasksComponent
         break;
       case 'TMT0203':
       case 'MWP0062':
-      case 'OMT013':
+      case 'OMT014':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
         break;
@@ -1706,7 +1708,7 @@ export class CodxTasksComponent
     if (
       this.funcID == 'TMT0203' ||
       this.funcID == 'MWP0062' ||
-      this.funcID == 'OMT013'
+      this.funcID == 'OMT014'
     )
       this.isAssignTask = true;
     else this.isAssignTask = false;

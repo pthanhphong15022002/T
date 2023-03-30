@@ -494,7 +494,9 @@ a:link {
 .aqua {
   border: 1px aqua solid;
 }
-
+.green {
+  border: 1px rgb(61, 211, 2) solid;
+}
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
 }
@@ -2121,4 +2123,12 @@ codx-input .rte-placeholder{
 }
 .e-grid .e-gridheader {
   border-bottom-color:var(--border-list);
+}
+codx-valuelist .btn.select-icon{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ejs-richtexteditor.codx-textarea .e-content{
+height: 80px!important;
 }

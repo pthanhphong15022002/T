@@ -26,8 +26,8 @@
               >
               </codx-tag>
             </div>
-            <div class="d-flex align-items-start" *ngIf="dataSelect.memo">
-              <div class="me-2">
+            <div class="d-flex flex-column" *ngIf="dataSelect.memo">
+              <div class="mt-1">
                 <codx-label
                   class="text-gray-500 text-nowrap"
                   fiedName="Memo"
@@ -75,7 +75,7 @@
               </div>
             </div> -->
           </div>
-          <div class="d-flex flex-column align-items-start justify-content-end">
+          <div class="d-flex flex-column align-items-start justify-content-end ms-9">
             <div class="progress">
               <div
                 class="progress-done"
@@ -95,7 +95,10 @@
             </div>
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
-                <div class="badge badge-primary">{{ stepName }}</div>
+                <div class="badge " [ngStyle]="{'background-color':stepValue['backgroundColor']}">
+                  <span [ngClass]="stepValue['icon']" [ngStyle]="{'color':stepValue['iconColor']}" class="me-2"></span>
+                  <span [ngStyle]="{'color':stepValue['textColor']}">{{ stepName }}</span>
+                </div>
                 <div class="text-gray-500 my-1">
                   {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy" }}
                 </div>

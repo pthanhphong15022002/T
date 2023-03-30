@@ -258,13 +258,19 @@
                                 <span class="switch switch-sm ms-3">
                                     <codx-input type="switch" class="test-check" field="ExchangeRateCoinsControl"
                                         (valueChange)=" valueChange($event)"
-                                        [checked]="quantity.ExchangeRateCoinsControl == '0' ? false : true"
+                                        [checked]="quantity.ExchangeRateCoinsControl === '1' ? true : false"
                                         [disabled]="disableGroupFund" label="">
                                     </codx-input>
                                 </span>
                                 <div class="setting-btnright">
-                                    <span class="icon-edit-one text-hover-primary icon-18"
-                                        (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'ExchangeRateCoins')"></span>
+                                    <ng-container
+                                        *ngIf="quantity.ExchangeRateCoinsControl == '1'; else noExchangeRateCoinsControl">
+                                        <span class="icon-edit-one text-hover-primary icon-18"
+                                            (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'ExchangeRateCoins')"></span>
+                                    </ng-container>
+                                    <ng-template #noExchangeRateCoinsControl>
+                                        <span class="icon-edit-one text-hover-primary icon-18"></span>
+                                    </ng-template>
                                 </div>
                             </div>
                         </div>

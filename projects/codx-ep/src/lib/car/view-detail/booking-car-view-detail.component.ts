@@ -112,7 +112,7 @@ export class BookingCarViewDetailComponent
         this.detectorRef.detectChanges();
       } else if (this.type == '2') {
         this.codxEpService
-          .getApproveByRecID(changes.itemDetail?.currentValue?.recID)
+          .getApproveByRecID(changes.itemDetail?.currentValue?.approvalTransRecID)
           .subscribe((res) => {
             if (res) {
               this.itemDetail = res;

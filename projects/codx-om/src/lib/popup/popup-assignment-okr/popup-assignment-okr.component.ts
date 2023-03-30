@@ -280,7 +280,7 @@ export class PopupAssignmentOKRComponent
     }
   }
   assignTo(owner:any){
-    this.assignmentOKR.userID = owner?.userID;
+    this.assignmentOKR.userID = owner?.domainUser;
     this.assignmentOKR.employeeID = owner?.employeeID;
     this.assignmentOKR.orgUnitID = owner?.orgUnitID;
     this.assignmentOKR.departmentID = owner?.departmentID;

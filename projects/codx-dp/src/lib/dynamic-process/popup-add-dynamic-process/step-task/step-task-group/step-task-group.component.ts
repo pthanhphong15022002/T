@@ -76,9 +76,9 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    let roles = e?.map(role => {
-      return {...role, roleType:'P'}
-    })
+    let roles = e?.map((role) => {
+      return { ...role, roleType: 'P' };
+    });
     this.taskGroup['roles'] = roles || [];
   }
 
@@ -147,7 +147,11 @@ export class StepTaskGroupComponent implements OnInit {
   handleSave() {
     let message = [];
     for (let key of this.REQUIRE) {
-      if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
+      if (
+        (typeof this.taskGroup[key] === 'string' &&
+          !this.taskGroup[key].trim()) ||
+        !this.taskGroup[key]
+      ) {
         message.push(this.view[key]);
       }
     }
@@ -159,7 +163,10 @@ export class StepTaskGroupComponent implements OnInit {
     } else if (!this.isSave) {
       this.notiService.notifyCode('DP012');
     } else {
-      let difference = this.getHour(this.taskGroup) - this.timeOld;
+      let difference =
+        this.type == 'edit'
+          ? this.getHour(this.taskGroup) - this.timeOld
+          : this.getHour(this.taskGroup);
       if (difference > 0 && difference > this.differenceTime) {
         this.notiService.alertCode('DP010').subscribe((x) => {
           if (x.event && x.event.status == 'Y') {

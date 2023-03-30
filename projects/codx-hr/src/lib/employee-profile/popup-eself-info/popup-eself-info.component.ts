@@ -137,19 +137,24 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       this.notitfy.notifyCode('SYS037');
       return;
     }
+    const date = new Date()
+    //Ngay cap CMND ko dc lon hon ngay hien hanh
+    if (date.toJSON() < this.data.issuedOn) {
+      this.notitfy.notifyCode('HR012');
+      return 
+      }
+
 
     //Xu li validate thong tin CMND nhan vien
-    console.log(this.data.expiredOn);
-    console.log(this.data.issuedOn);
     if (this.data.idExpiredOn < this.data.issuedOn) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
-        'EffectedDate',
+        'IssuedOn',
         this.formModel
-      );
-      return;
-    }
-
+        )
+        return;
+      }
+      
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {
         this.notitfy.notifyCode('SYS007');

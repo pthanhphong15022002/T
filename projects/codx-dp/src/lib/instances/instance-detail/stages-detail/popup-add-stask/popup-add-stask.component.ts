@@ -72,11 +72,11 @@ export class PopupAddStaskComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.status = dt?.data[0];
-    this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['value'];
-    this.stepID = dt?.data[2];
-    this.groupTackList = dt?.data[3];
+    this.status = dt?.data?.status;
+    this.title = dt?.data['taskType']['text'];
+    this.stepType = dt?.data['taskType']['value'];
+    this.stepID = dt?.data['stepID'];
+    this.groupTackList = dt?.data['listGroup'];
     this.dialog = dialog;
 
     if (this.status == 'add') {
@@ -84,18 +84,18 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
-      this.stepsTasks['taskGroupID'] = dt?.data[7];
+      this.stepsTasks['taskGroupID'] = dt?.data['groupTaskID'];
       this.stepsTasks['refID'] = Util.uid();
       this.stepsTasks['isTaskDefault'] = false;
     } else {
       this.showLabelAttachment = true;
-      this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
+      this.stepsTasks = dt?.data['stepTaskData'] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
-    this.taskList = dt?.data[5];
-    this.taskName = dt?.data[6];
-    this.groupTaskID = dt?.data[7];
-    this.leadtimeControl = dt?.data[8];
+    this.taskList = dt?.data['taskList'];
+    this.taskName = dt?.data['stepName'];
+    this.groupTaskID = dt?.data['groupTaskID'];
+    this.leadtimeControl = dt?.data['leadtimeControl'];
   }
 
   ngOnInit(): void {
@@ -172,13 +172,13 @@ export class PopupAddStaskComponent implements OnInit {
       this.isLoadDate = !this.isLoadDate;
       return;
     }
-    this.isLoadDate = !this.isLoadDate;
     this.stepsTasks[event?.field] = event?.data?.fromDate;
     const startDate =  new Date(this.stepsTasks['startDate']);
     const endDate = new Date(this.stepsTasks['endDate']);
 
     if (endDate && startDate > endDate){
       this.isSaveTimeTask = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP019');
       return;
     } else {
@@ -187,16 +187,33 @@ export class PopupAddStaskComponent implements OnInit {
 
     if (endDate > new Date(this.groupTask?.endDate)) {
       this.isSaveTimeGroup = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
     }else{
       this.isSaveTimeGroup = true;
     }
 
-    if (startDate >new Date(this.groupTask['startDate'])) {
+    if (startDate < new Date(this.groupTask['startDate'])) {
       this.isSaveTimeGroup = false;
+      this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
     }else{
       this.isSaveTimeGroup = true;
+    }
+    if(this.stepsTasks['startDate'] && this.stepsTasks['endDate']){
+      const endDate = new Date(this.stepsTasks['endDate']);
+      const startDate = new Date(this.stepsTasks['startDate']);
+      if(endDate >= startDate){
+        const duration = endDate.getTime() - startDate.getTime();
+        const time = Math.floor(duration / 60 / 1000/ 60);
+        const hours = time % 24;
+        const days = Math.floor(time / 24);
+        this.stepsTasks['durationHour'] = hours;
+        this.stepsTasks['durationDay'] = days;
+      }
+    }else{
+      this.stepsTasks['durationHour'] = 0;
+      this.stepsTasks['durationDay'] = 0;
     }
   }
   applyOwner(e, datas) {

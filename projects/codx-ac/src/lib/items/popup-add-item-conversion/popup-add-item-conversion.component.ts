@@ -1,8 +1,4 @@
-import {
-  Component,
-  Injector, Optional,
-  ViewChild
-} from '@angular/core';
+import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   DialogData,
@@ -10,9 +6,10 @@ import {
   ImageViewerComponent,
   NotificationsService,
   UIComponent,
-  UploadFile
+  UploadFile,
 } from 'codx-core';
 import { map } from 'rxjs/operators';
+import { CodxAcService } from '../../codx-ac.service';
 import { UMConversion } from '../interfaces/UMConversion.interface';
 import { ItemsService } from '../items.service';
 
@@ -34,6 +31,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private itemsService: ItemsService,
+    private acService: CodxAcService,
     private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
@@ -89,9 +87,11 @@ export class PopupAddItemConversionComponent extends UIComponent {
     this.itemConversion.inverted = this.itemConversion.inverted ? 1 : 0;
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
-        this.dialogData.data.gridViewSetup
+        this.dialogData.data.gridViewSetup,
+        [],
+        ['ItemID']
       )
     ) {
       return;
@@ -131,7 +131,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
     this.itemConversion.conversion = this.itemConversion.conversion.toString();
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

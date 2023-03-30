@@ -20,6 +20,7 @@ export class ViewJobComponent implements OnInit {
   dataInput = {}; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
   type = '';
   owner = [];
+  person = [];
   participant = [];
   listDataInput = [];
   listTypeTask = [];
@@ -64,6 +65,7 @@ export class ViewJobComponent implements OnInit {
 
     this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
     this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
     console.log(this.owner);
     
 

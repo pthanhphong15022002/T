@@ -236,6 +236,7 @@
                 [crrValue]="stepsTasks?.durationDay"
                 type="text"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -247,6 +248,7 @@
                 type="text"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                [disabled]="true"
               >
               </codx-input>
             </div>
@@ -339,7 +341,7 @@
         class="ms-3 mb-3"
           name="lblAlert"
           [formModel]="form.formModel"
-          default="Tạo tack trong phân hệ quản lý công việc"
+          default="Tạo task trong phân hệ quản lý công việc"
         >
         </codx-label>
     </div>

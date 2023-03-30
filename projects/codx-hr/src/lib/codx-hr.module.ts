@@ -92,8 +92,9 @@ import { EmployeeDetailComponent } from './employee-list/employee-detail/employe
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
-import { ViewDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
+import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
 import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
+import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 export const routes: Routes = [
   {
     path: '',
@@ -106,10 +107,10 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
-          {
-            path: 'employeelist/:funcID',
-            component: EmployeeListComponent,
-          },
+          // {
+          //   path: 'employeelist/:funcID',
+          //   component: EmployeeListComponent,
+          // },
         ],
       },
       {
@@ -196,6 +197,13 @@ export const routes: Routes = [
               import('projects/codx-hr/src/lib/codx-approvel.module').then(
                 (m) => m.CodxApprovelModule
               ),
+            // component: CodxApprovalComponent,
+            // children: [
+            //   {
+            //     path: 'econtracts/:FuncID/:id',
+            //     component: ApprovalHrComponent,
+            //   },
+            // ],
             data: { noReuse: true },
           },
 
@@ -329,7 +337,7 @@ const T_Component: Type<any>[] = [
   EmployeeContractComponent,
   ScrollSpyDirective,
   PopupEProcessContractComponent,
-  ViewDetailComponent,
+  ViewContractDetailComponent,
 ];
 @NgModule({
   imports: [
