@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, ViewChild } from '@angular/core';
-import { CO_Resources, CO_Permissions } from './../../models/CO_Meetings.model';
 import {
   Component,
   EventEmitter,
@@ -16,12 +15,11 @@ import {
   ViewsComponent,
   Util,
 } from 'codx-core';
-import { PopupRescheduleMeetingComponent } from '../popup-reschedule-meeting/popup-reschedule-meeting.component';
 import { ActivatedRoute } from '@angular/router';
-import { PopupAddResourcesComponent } from '../popup-add-resources/popup-add-resources.component';
+import { CO_Permissions } from '../models/CO_Meetings.model';
 
 @Component({
-  selector: 'lib-view-list-meet',
+  selector: 'share-view-list-meet',
   templateUrl: './view-list-meet.component.html',
   styleUrls: ['./view-list-meet.component.scss'],
 })
