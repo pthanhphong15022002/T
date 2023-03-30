@@ -876,7 +876,7 @@ export class StagesDetailComponent implements OnInit {
             this.popupUpdateProgress.close();
           }
         });
-      } 
+      }
       if (x.event && x.event.status == 'N'){
         let dataSave = [this.dataProgress, -1];
         this.dpService.updateTask(dataSave).subscribe((res) => {
@@ -963,16 +963,16 @@ export class StagesDetailComponent implements OnInit {
           this.step.progress = Number(medium);
           this.progress = medium;
 
-
-          // đang test cấm xóa
-          // if(true){
-          // let dataInstance = {
-          //   instance:this.instance,
-          //   listStep:this.listStep,
-          //   step:this.step
-          // }
-          //   this.serviceInstance.autoMoveStage(dataInstance);
-          // }
+          // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
+          // sửa true thành điều kiện
+          if(true){
+          let dataInstance = {
+            instance:this.instance,
+            listStep:this.listStep,
+            step:this.step
+          }
+            this.serviceInstance.autoMoveStage(dataInstance);
+          }
 
         }
       });

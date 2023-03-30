@@ -35,7 +35,6 @@ import {
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { firstValueFrom } from 'rxjs';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
@@ -138,7 +137,7 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private noti: NotificationsService,
+    private notificationsService: NotificationsService,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
     @Optional() dialog: DialogRef,
@@ -572,7 +571,7 @@ export class InstancesComponent
 
   openOrClosed(data, check) {
     if (this.process.showInstanceControl === '1') {
-      this.noti
+      this.notificationsService
         .alertCode('DP018', null, "'" + this.titleAction + "'")
         .subscribe((info) => {
           if (info.event.status == 'Y') {
@@ -581,7 +580,7 @@ export class InstancesComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.closed = check;
-                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
               });
@@ -593,7 +592,7 @@ export class InstancesComponent
     ) {
       this.view.dataService.dataSelected = data;
 
-      this.noti
+      this.notificationsService
         .alertCode('DP018', null, "'" + this.titleAction + "'")
         .subscribe((info) => {
           if (info.event.status == 'Y') {
@@ -602,7 +601,7 @@ export class InstancesComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.closed = check;
-                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                   this.view.dataService.remove(this.dataSelected).subscribe();
                   this.dataSelected = this.view.dataService.data[0];
                   this.detectorRef.detectChanges();
@@ -962,36 +961,63 @@ export class InstancesComponent
 
   autoMoveStage(dataInstance)
   {
-   var data = [dataInstance.instance, dataInstance.listStep,dataInstance.step]
-   var isStopAuto = false;
-   var strStepsId = '';
-   debugger;
-   var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
-  //
-   if(autoMoveStage.ischeck) {
-
-      if(autoMoveStage.transferControl == 1 ) {
-        var completedAllTask  = this.completedAllTasks(dataInstance.step.stepID,dataInstance.listStep);
-        isStopAuto = completedAllTask.isStopAuto;
-        strStepsId = completedAllTask?.idxSteps.join(';') ?? '';
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notificationsService.alert('Chị khanh ơi thiết lập message code yesno cho em với','Chị khanh ơi thiết lập message code yesno cho em với' ,config).closed.subscribe(
+      (x) => {
+        if (x.event.status == 'Y') {
+          this.handleMoveStage(dataInstance);
+        }
       }
-
-      if(isStopAuto) {
-        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
-        (idx != -1) && this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
-      }
-      else {
-          let dataUpdate = [dataInstance.instance,dataInstance.listStep,strStepsId]
-          this.codxDpService.autoMoveStage(dataUpdate).subscribe((res) => {
-            if(res) {
-
+    );
+  }
+  handleMoveStage(dataInstance){
+    var isStopAuto = false;
+    var strStepsId = [];
+    var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
+    if(autoMoveStage.ischeck) {
+       if(autoMoveStage.transferControl == 1 ) {
+         var completedAllTask  = this.completedAllTasks(dataInstance.step.stepID,dataInstance.listStep);
+         isStopAuto = completedAllTask.isStopAuto;
+         strStepsId = completedAllTask?.idxSteps;
+       }
+       if(isStopAuto) {
+         return;
+       }
+       else {
+           var instanceStepId = dataInstance.listStep.filter(x=> strStepsId.some(y=> y == x.stepID));
+           for(let item of instanceStepId ){
+            if(item.stepStatus == '0') {
+              item.stepStatus = '1';
+              item.actualEnd = new Date();
             }
-
-
-          });
-      }
-   }
-
+            else if(item.stepStatus == '1') {
+              item.stepStatus = '3';
+            }
+           }
+           dataInstance.instance.stepID =  instanceStepId.find(item=> item.stepStatus == '1').stepID;
+           var processId = dataInstance.instance.processID;
+           var data = [instanceStepId,processId];
+           this.codxDpService.autoMoveStage(data).subscribe((res) => {
+             if(res) {
+             var stepsUpdate = dataInstance.listStep.map(item1 => {
+                const item2 = instanceStepId.find(item2 => item1.stepID === item2.stepID);
+                if (item2) {
+                  return { ...item1, status: item2.status };
+                }
+              });
+              this.listStepInstances = stepsUpdate;
+              this.dataSelected = dataInstance.instance;
+              this.view.dataService.update(this.dataSelected).subscribe();
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              this.detailViewInstance.dataSelect = this.dataSelected;
+              this.detailViewInstance.instance = this.dataSelected;
+              this.detailViewInstance.listSteps = this.listStepInstances;
+              this.detectorRef.detectChanges();
+             }
+           });
+       }
+    }
   }
 
   completedAllTasks(stepID,listStep){
@@ -1000,9 +1026,8 @@ export class InstancesComponent
     var idxSteps =[];
     for(let i = index; i < listStep.length; i++)
     {
-      //  TRUE GÁN TẠM THAY  listStep[i].progress == 100
         if( true && this.checkTransferControl(listStep[i].stepID) ) {
-          var isCheckOnwer = listStep[i]?.onwer ? false:true;
+          var isCheckOnwer = listStep[i]?.owner ? false:true;
           var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
         }
         if(isCheckFields || isCheckOnwer) {
@@ -1010,6 +1035,11 @@ export class InstancesComponent
           break;
         }
         idxSteps.push(listStep[i].stepID);
+        idxSteps.push(listStep[i+1].stepID);
+        if(listStep[i+1].isSuccessStep || listStep[i+1].isFailStep) {
+          isStopAuto = true;
+        }
+        break;
     }
     var result = {
       isStopAuto: isStopAuto,
