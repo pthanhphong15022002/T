@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService, Util } from 'codx-core';
 import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 
@@ -46,26 +46,6 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
     
   }
   ngAfterViewInit(): void {
-    this.signalRSV.newGroup.subscribe((res:any)=>{
-      debugger
-      if(res)
-      {
-        this.codxImg.updateFileDirectReload(res.groupID).subscribe((res2:any) => {
-          debugger
-          if(res2){
-            this.notifiSV.notify("Tạo nhóm chat thành công");
-          }
-          this.signalRSV.sendData("ActiveNewGroup",res);
-          this.dialogRef.close(res);
-        });
-      }
-      else
-      {
-        this.notifiSV.notify("Tạo nhóm chat không thành công");
-        this.dialogRef.close(null);
-      }
-
-    });
   }
   // set data
   setData(){
@@ -151,15 +131,36 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
   }
   // insert group
   insertGroup(){
-    if(this.group)
-    {
-      if(this.group.members?.length == 0){
+    debugger
+    if(this.group){
+      if(!Array.isArray(this.group.members)){
         this.notifiSV.notify("Vui lòng chọn thành viên");
         return;
       }
+      this.group.groupID = Util.uid();
       this.group.groupType = "2";
-      let data = JSON.stringify(this.group);
-      this.signalRSV.sendData("NewGroup",data);
+      this.codxImg.updateFileDirectReload(this.group.groupID)
+      .subscribe((res:any) => {
+        if(res){
+          this.api.execSv(
+          "WP", 
+          "ERM.Business.WP", 
+          "GroupBusiness", 
+          "InsertGroupAsync",[this.group])
+          .subscribe((res:any) => {
+            if(res){
+              this.signalRSV.sendData("ActiveNewGroup",res);
+              this.dialogRef.close(res);
+              this.notifiSV.notify("Tạo nhóm chat thành công");
+
+            }
+            else{
+              this.dialogRef.close(null);
+              this.notifiSV.notify("Tạo nhóm chat không thành công");
+            }
+          });
+        }
+      });
     }
     
   }

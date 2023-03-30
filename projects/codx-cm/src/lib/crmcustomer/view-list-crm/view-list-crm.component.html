@@ -6,7 +6,7 @@
   <div class="d-flex justify-content-between border-bottom">
     <div class="col-4 justify-content-start">
       <codx-temp-full cardCss="card-template p-3 list-task" [imageId]="data.recID" [imageObjName]="getNameCrm(data)"
-        [imageWidth]="40" imgCss="me-3" [imageObjType]="formModel.entityName" [titleTmp]="titleTmp" [titleCss]="'fs-6'"
+        [imageWidth]="40" imgCss="me-3" [imageObjType]="entityName" [titleTmp]="titleTmp" [titleCss]="'fs-6'"
         [descTmp]="descTmp" [formModel]="formModel" [dataItem]="data" [hideMF]="true">
       </codx-temp-full>
       <ng-template #titleTmp let-data>
@@ -19,15 +19,15 @@
           </div>
         </div>
       </ng-template>
-      <ng-template #descTmp>
+      <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
           <div class="d-flex align-items-start me-4 mb-1" *ngIf="funcID == 'CM0102'">
-            <div class="me-3">
+            <div class="me-3" *ngIf="data?.phoneNumber">
               <span [ngClass]="data?.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                 class=" icon-16 me-1"></span>
               <span [ngClass]="data?.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data?.phoneNumber}}</span>
             </div>
-            <div>
+            <div *ngIf="data?.email">
               <span [ngClass]="data?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                 class="icon-16 me-1 text-gray-900"></span>
               <span [ngClass]="data?.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data?.email}}</span>
@@ -38,7 +38,7 @@
             <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
           </div>
           <div *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
-            <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.field">
+            <codx-tag [entityName]="entityName" [disabled]="true" [isEdit]="false" [value]="data?.field">
             </codx-tag>
           </div>
         </div>
@@ -46,14 +46,14 @@
     </div>
     <div class="col-4 d-flex align-items-center justify-content-center">
       <div *ngIf="funcID == 'CM0102' || funcID == 'CM0104'">
-        <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.field">
+        <codx-tag [entityName]="entityName" [disabled]="true" [isEdit]="false" [value]="data?.field">
         </codx-tag>
       </div>
       <div class="d-flex" *ngIf="(funcID == 'CM0101' || funcID == 'CM0103') && data.contacts != null && data.contacts.length > 0">
         <ng-container *ngFor="let item of data.contacts">
           <div *ngIf="item.contactType == '1'" class="d-flex">
             <div class="me-3">
-              <codx-img [objectId]="item.recID" [objectName]="getNameCrm(data)" [objectType]="formModel.entityName" [width]="35">
+              <codx-img [objectId]="item.recID" [objectName]="getNameCrm(data)" [objectType]="entityName" [width]="35">
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
@@ -62,12 +62,12 @@
                   {{item?.contactName}}
                 </div>
                 <div class="d-flex align-items-start me-4 mb-1">
-                  <div class="me-3">
+                  <div class="me-3" *ngIf="item?.phoneNumber">
                     <span [ngClass]="item?.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
                     class=" icon-16 me-1"></span>
                   <span [ngClass]="item?.allowCall ? 'text-primary' : ''" class="text-gray-900">{{item?.phoneNumber}}</span>
                   </div>
-                  <div>
+                  <div *ngIf="item?.email">
                     <span [ngClass]="item?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                     class="icon-16 me-1 text-gray-900"></span>
                   <span [ngClass]="item?.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{item?.email}}</span>
