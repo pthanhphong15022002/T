@@ -107,11 +107,23 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
-          // {
-          //   path: 'employeelist/:funcID',
-          //   component: EmployeeListComponent,
-          // },
         ],
+      },
+      {
+        path: 'econtracts/:funcID',
+        component: EmployeeContractComponent,
+      },
+      // {
+      //   path: 'employeeinfomation/:funcID',
+      //   component: EmployeeInfomationComponent,
+      // },
+      {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-hr/src/lib/codx-approvel.module').then(
+            (m) => m.CodxApprovelModule
+          ),
+        data: { noReuse: true },
       },
       {
         path: '',
@@ -123,21 +135,6 @@ export const routes: Routes = [
           },
         ],
       },
-      
-      // {
-      //   path:'',
-      //   component: LayoutComponent,
-      //   children:[
-      //     {
-      //       path: 'approvals/:funcID',
-      //       loadChildren: () =>
-      //         import('projects/codx-hr/src/lib/codx-approvel.module').then(
-      //           (m) => m.CodxApprovelModule
-      //         ),
-      //       data: { noReuse: true },
-      //     },
-      //   ]
-      // },
       {
         path: '',
         component: LayoutOnlyHeaderComponent,
@@ -183,29 +180,7 @@ export const routes: Routes = [
             data: { noReuse: true },
             component: ReportinglineComponent,
           },
-          {
-            path: 'econtracts/:funcID',
-            component: EmployeeContractComponent,
-          },
-          // {
-          //   path: 'employeeinfomation/:funcID',
-          //   component: EmployeeInfomationComponent,
-          // },
-          {
-            path: 'approvals/:funcID',
-            loadChildren: () =>
-              import('projects/codx-hr/src/lib/codx-approvel.module').then(
-                (m) => m.CodxApprovelModule
-              ),
-            // component: CodxApprovalComponent,
-            // children: [
-            //   {
-            //     path: 'econtracts/:FuncID/:id',
-            //     component: ApprovalHrComponent,
-            //   },
-            // ],
-            data: { noReuse: true },
-          },
+
 
           {
             path: 'setting',
