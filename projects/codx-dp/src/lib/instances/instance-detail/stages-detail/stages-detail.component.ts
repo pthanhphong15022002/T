@@ -964,8 +964,8 @@ export class StagesDetailComponent implements OnInit {
           this.progress = medium;
 
           // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
-          // sửa true thành điều kiện
-          if(true){
+          // sửa false thành điều kiện
+          if(false){
           let dataInstance = {
             instance:this.instance,
             listStep:this.listStep,
