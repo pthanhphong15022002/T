@@ -333,13 +333,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   checkCartItems(_cart: any[]) {
+    let isPassed = true;
     _cart.map((item) => {
       if (item && item.quantity == 0) {
         this.notificationsService.notifyCode('EP021');
-        return false;
+        isPassed = false;
       }
     });
-    return true;
+    return isPassed;
   }
   //#endregion "Validate function before booking stationery"
 
