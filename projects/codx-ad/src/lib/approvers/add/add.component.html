@@ -11,8 +11,10 @@
     <ng-container *ngIf="form.formGroup">
       <div class="form-group">
         <codx-img
-        class="avata ava-edit"
+          #imageUpload
+          class="avata ava-edit"
           [objectId]="item?.recID"
+          [isDefaulImg]="true"
           [objectName]="item?.contactName"
           [objectType]="dialog?.formModel?.entityName"
           [width]="80"

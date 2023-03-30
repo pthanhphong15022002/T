@@ -15,6 +15,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
@@ -73,6 +74,8 @@ export class AddApproversComponent extends UIComponent {
 
   //#region ViewChild
   @ViewChild('form', { static: true }) form;
+  @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
+
   //#endregion
 
   //#region  Init
@@ -207,7 +210,13 @@ export class AddApproversComponent extends UIComponent {
 
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
-
+    this.imageUpload
+      .updateFileDirectReload(this.master.recID)
+      .subscribe((result) => {
+        if (result) {
+          console.log('res', result);
+        }
+      });
     if (this.members?.length > 0) {
       let lstMemID = [];
       this.members?.forEach((mem) => {

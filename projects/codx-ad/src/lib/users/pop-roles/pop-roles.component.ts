@@ -91,6 +91,7 @@ export class PopRolesComponent implements OnInit {
           module: role.functionID,
           moduleSales: '',
           quantity: 1,
+          moduleName: role.customName ?? '',
         };
         this.lstChangeFunc.push(tmpMD);
       });
@@ -169,6 +170,7 @@ export class PopRolesComponent implements OnInit {
           module: item.functionID,
           moduleSales: '',
           quantity: 1,
+          moduleName: item?.customName,
         };
         this.lstChangeFunc.push(tmpMD);
       } else {
@@ -308,8 +310,14 @@ export class PopRolesComponent implements OnInit {
         this.adService
           .getListValidOrderForModules(this.lstChangeFunc)
           .subscribe((lstTNMDs: tmpTNMD[]) => {
-            if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-              this.notiService.notifyCode('AD017');
+            let errorMD = [];
+            lstTNMDs?.filter((tnmd) => {
+              if (tnmd.isError) {
+                errorMD.push(tnmd.moduleName);
+              }
+            });
+            if (lstTNMDs == null || errorMD.length > 0) {
+              this.notiService.notifyCode('AD017', null, errorMD.join(', '));
             } else {
               this.onSave(lstTNMDs);
             }
