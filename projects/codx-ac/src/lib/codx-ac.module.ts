@@ -82,24 +82,29 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'cashreceipts/:funcID',
         component: CashReceiptsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'purchaseinvoices/:funcID',
         component: PurchaseinvoicesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'journalnames/:funcID',
         component: JournalNamesComponent,
+        data: { noReuse: true },
       },
-      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
       {
         path: 'cashtranfers/:funcID',
         component: CashTransfersComponent,
+        data: { noReuse: true },
       },
+      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
   {
