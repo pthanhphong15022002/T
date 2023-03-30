@@ -223,7 +223,7 @@ export class CodxTasksComponent
       };
       this.dataObj = Object.assign({}, this.dataObj, object);
     }
-    debugger;
+   
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
