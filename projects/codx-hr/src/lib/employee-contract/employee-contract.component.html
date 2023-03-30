@@ -16,7 +16,7 @@
   (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
-
+<!-- <<<< -->
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center min-h-100px">
     <div class="w-25">
@@ -284,6 +284,7 @@
     [formModel]="view?.formModel"
     [view]="view"
     (uploaded)="getDetailContract($event, data)"
+    (clickMFunction)="clickEvent($event)"
     >
   </lib-view-contracts-detail>
   <ng-template #itemRightDetail> </ng-template>

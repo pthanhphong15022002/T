@@ -17,15 +17,11 @@ import { Post } from 'src/shared/models/post';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
-
-  templateChatBox: TemplateRef<any> = null;
   userConnect = new EventEmitter<any>();
-  newGroup = new EventEmitter<any>();
   activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
-  reciverChat = new EventEmitter<any>();
+  chat = new EventEmitter<any>();
   voteChat = new EventEmitter<any>();
-  addMember = new EventEmitter<any>();
   constructor(
     private authStore: AuthStore) {
     this.createConnection();
@@ -58,9 +54,6 @@ export class SignalRService {
       switch (res.action) {
         case 'onConnected':
           break;
-        case 'newGroup':
-          this.newGroup.emit(res.data);
-          break;
         case 'activeNewGroup':
           this.activeNewGroup.emit(res.data);
           break;
@@ -68,14 +61,13 @@ export class SignalRService {
           this.activeGroup.emit(res.data);
           break;
         case 'sendMessage':
-          this.reciverChat.emit(res.data);
+          this.chat.emit(res.data);
           break;
         case 'voteMessage':
           this.voteChat.emit(res.data);
           break;
-        case 'AddMemberToGroup':
-          debugger
-          this.addMember.emit(res.data);
+        case 'sendMessageSystem':
+          this.chat.emit(res.data);
           this.activeGroup.emit(res.data);
         break;
       }
