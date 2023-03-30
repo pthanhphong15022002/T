@@ -53,7 +53,7 @@
                     <div class="message-system" >
                         <ng-container [ngSwitch]="item.jsMessage.mssgCode">
                             <ng-container *ngSwitchCase="'WP038'">
-                                <div [innerHTML]="item.jsMessage | mssgSYS:tmp1:tmp2 | async"></div>
+                                <div [innerHTML]="item.jsMessage | mssgSYS | async"></div>
                             </ng-container>
                         </ng-container>
                     </div>
@@ -63,7 +63,17 @@
                         <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
                             <div class="message-send">
                                 <div class="message-function">
-                                    <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                                    <span ngbDropdown ngbDropdownToggle 
+                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                        <ul ngbDropdownMenu>
+                                            <li ngbDropdownItem>
+                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                    <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                    <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </span>
                                     <ng-container *ngIf="item.refType != 'm'">
                                         <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                     </ng-container>
@@ -225,7 +235,17 @@
                                 <ng-container *ngIf="item.refType != 'm'">
                                     <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                 </ng-container>
-                                <span class="icon-more_vert me-2 cursor-pointer text-gray-600"></span>
+                                <span ngbDropdown ngbDropdownToggle 
+                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                        <ul ngbDropdownMenu>
+                                            <li ngbDropdownItem>
+                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                    <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                    <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </span>
                             </div>
                         </ng-template>  
                     </div>
@@ -314,15 +334,10 @@
                         </div>
                     </div>
                 </ng-container>
-                <div class="footer-message-text">
-                    <codx-input 
-                        type="textarea"
-                        format="ed2" 
-                        [rows]="1"
-                        [class]="'rounded-pill'" 
-                        [crrValue]="data.message"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+                <div class="footer-message-text" >
+                    <input type="text" class="input"
+                     (keyup.enter)="sendMessage()"  
+                     [(ngModel)]="data.message">
                 </div>
             </div>
             <button type="button" class="footer-button btn btn-icon btn-circle btn-light" (click)="sendMessage()">
@@ -345,14 +360,6 @@
             </div>
         </ng-container>
     </div>
-</ng-template>
-<ng-template #tmp1 let-data>
-    <ng-container *ngFor="let item of data">
-        <span (click)="click(item)">{{item.userName}}</span>
-    </ng-container>
-</ng-template>
-<ng-template #tmp2 let-data>
-    <span (click)="click(data)">{{data.userName}}</span>
 </ng-template>
 <ng-container #controlTag *ngIf="showCBB">
     <codx-combobox-popup 

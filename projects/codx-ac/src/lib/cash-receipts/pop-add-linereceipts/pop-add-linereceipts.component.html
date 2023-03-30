@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog" [footer]="footer"
-  [customToolbar]="subToolbar" [data]="cashpaymentline">
+  [customToolbar]="subToolbar" [data]="cashreceiptslines">
 </codx-form>
 <ng-template #subToolbar>
   <div class="w-100">
@@ -66,54 +66,65 @@
           </codx-input>
         </div>
       </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label fiedName="DIM3" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label fiedName="DIM1" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label fiedName="LoanContractID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input [Group]="form.formGroup" field="loanContractID" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="DIM3" [formModel]="form.formModel">
+          <codx-label fiedName="DIM2" [formModel]="form.formModel">
           </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+          <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="DIM1" [formModel]="form.formModel">
+          <codx-label fiedName="ProjectID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
+          <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="AssetType" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label fiedName="DIM2" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input [Group]="form.formGroup" field="diM2" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
       </div>
     </div>
     <div class="row">
@@ -142,7 +153,6 @@
         <codx-label *ngIf="type =='edit'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
           [gridViewName]="formModel?.gridViewName" default="Cập nhật"></codx-label>
       </button>
-      
     </div>
   </div>
 </ng-template>
