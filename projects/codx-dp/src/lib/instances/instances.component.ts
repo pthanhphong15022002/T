@@ -1037,7 +1037,7 @@ export class InstancesComponent
     var idxSteps =[];
     for(let i = index; i < listStep.length; i++)
     {
-        if( true && this.checkTransferControl(listStep[i].stepID) ) {
+        if( this.checkTransferControl(listStep[i].stepID) ) {
           var isCheckOnwer = listStep[i]?.owner ? false:true;
           var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
         }
