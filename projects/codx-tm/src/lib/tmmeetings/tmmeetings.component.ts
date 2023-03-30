@@ -39,6 +39,8 @@ import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popu
   selector: 'codx-meetings',
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class TMMeetingsComponent implements OnInit {
   funcID: any;
