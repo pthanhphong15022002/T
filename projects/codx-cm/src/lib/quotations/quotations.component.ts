@@ -1,6 +1,7 @@
 import {
   Component,
   Injector,
+  Input,
   OnInit,
   Optional,
   TemplateRef,
@@ -21,6 +22,7 @@ import {
   styleUrls: ['./quotations.component.css'],
 })
 export class QuotationsComponent extends UIComponent {
+  @Input() funcID: string;
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];

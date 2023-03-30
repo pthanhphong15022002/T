@@ -10,11 +10,13 @@ import { interval } from 'rxjs';
 import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
+import { MessageSystemPipe } from './mssgSystem.pipe';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss']
 })
+
 export class ChatBoxComponent implements OnInit, AfterViewInit{
   @HostListener('click')
   onClick() {
@@ -23,7 +25,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @Input() groupID:any;
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
-
 
   funcID:string = "WPT11"
   formModel:FormModel = null;
@@ -38,6 +39,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   group:any = null;
   blocked:boolean = false;
   loading:boolean = false;
+  messageSystemPipe:MessageSystemPipe = null;
   MESSAGETYPE = {
     TEXT:'1',
     ATTACHMENTS:'2',
@@ -60,7 +62,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   @ViewChild("codxATMImages") codxATMImages:AttachmentComponent;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
-
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   constructor
@@ -79,6 +80,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     this.user = this.auth.get();
     this.data = new WP_Messages();
     this.formModel = new FormModel();
+    this.messageSystemPipe = new MessageSystemPipe(this.cache);
+
   }
 
   ngOnInit(): void 
@@ -124,22 +127,33 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   ngAfterViewInit(): void {
     //receiver message
-    this.signalR.reciverChat.subscribe((res:any) => {
-      if(res)
-      {
-        this.arrMessages.push(res);
-        this.group.lastMssgID = res.recID; 
-        this.group.message = res.message; 
-        this.group.messageType = res.messageType;
+    this.signalR.chat.subscribe((res:any) => {
+      debugger
+      if(res){
+        let data = res;
+        this.group.lastMssgID = data.recID;
+        this.group.messageType = data.messageType;
+        if(res.messageType == "3"){
+          this.messageSystemPipe.transform(data.jsMessage)
+          .subscribe(res => {
+            data.message = res;
+            this.group.message = data.message;
+            this.arrMessages.push(data);
+          });
+        }
+        else
+        {
+          this.group.message = data.message;
+          this.arrMessages.push(data);
+        }
         setTimeout(()=>{
           this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
         },100)
-        this.dt.detectChanges();
       }
     });
     //vote message
     this.signalR.voteChat.subscribe((res:any) => {
-      if(res.groupID === this.groupID){
+      if(res){
         let mssg = this.arrMessages.find(x => x.recID == res.recID);
         if(mssg){
           if(!Array.isArray(mssg.votes)){
@@ -159,19 +173,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           mssg.votes.push(res);
           this.dt.detectChanges();
         }
-      }
-    });
-    //add member to group
-    this.signalR.addMember.subscribe((res:any) => {
-      if(res.message){
-        this.arrMessages = res.message
-        this.group.lastMssgID = res.message.recID; 
-        this.group.message = res.message.message; 
-        this.group.messageType = "3";
-        setTimeout(()=>{
-          this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
-        },100)
-        this.dt.detectChanges();
       }
     });
   }
@@ -235,11 +236,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   closeChatBox(){
     this.close.emit();
   }
-  // value Change
-  valueChange(event:any){
-    if(this.data.message !== event.data)
-      this.data.message = event.data;
-  }
+
   // send message
   sendMessage(){
     if(!this.blocked){
@@ -442,7 +439,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  //
+  // group by tin nhắn theo ngày
   checkDate(index:number){
 
   }
@@ -470,9 +467,11 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   clickAddMemeber(){
     this.showCBB = !this.showCBB;
   }
-  //
-  click(item){
-    console.log(item);
-    ;
+  deleteMessage(index:number){
+    if(index != -1){
+      let data = this.arrMessages.splice(index,1);
+      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
+      .subscribe();
+    }
   }
 }

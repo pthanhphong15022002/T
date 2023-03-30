@@ -106,8 +106,11 @@
             field="isCustomer">
           </codx-input>
         </div>
-        <codx-input [Group]="form.formGroup" [disabled]="!data.isCustomer" [formModel]="form.formModel" field="customerFrom">
-        </codx-input>
+        <div *ngIf="data.isCustomer">
+          <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="!data.isCustomer" field="customerFrom">
+          </codx-input>
+        </div>
+
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'">
@@ -280,7 +283,7 @@
 <ng-template #avata>
   <div class="avatar-container">
     <div class="avatar" (click)="addAvatar()">
-      <ng-container *ngIf="linkAvatar != ''">
+      <ng-container *ngIf="linkAvatar">
         <img [src]="linkAvatar" alt="">
       </ng-container>
       <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">

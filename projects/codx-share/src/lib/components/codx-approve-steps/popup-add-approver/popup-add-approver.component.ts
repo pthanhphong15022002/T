@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
@@ -22,7 +23,7 @@ export class PopupAddApproverComponent implements OnInit {
 
   constructor(
     private cr: ChangeDetectorRef,
-    // private esService: CodxEsService,
+    private esService: CodxEsService,
     private codxService: CodxShareService,
 
     @Optional() data?: DialogData,
@@ -76,6 +77,36 @@ export class PopupAddApproverComponent implements OnInit {
       this.codxService.notifyInvalid(this.fgroupApprover, this.formModel);
       return;
     }
+
+    //Kiểm tra Insert thêm 1 dòng trong danh mục chữ ký số
+    this.esService
+      .getDataDefault('ESS21', 'ES_Signatures', 'RecID')
+      .subscribe((res) => {
+        let oSignature = res.data;
+        oSignature.signatureType = '3';
+        oSignature.fullName = this.data.name;
+        oSignature.email = this.data.email;
+        oSignature.position = this.data.position;
+        oSignature.userID = this.data.email;
+        oSignature.phone = this.data.phone;
+
+        this.esService
+        .getSettingByPredicate(
+          'FormName=@0 and Category=@1',
+          'ESParameters;1'
+          )
+          .subscribe((setting) => {
+            if (setting) {
+              let format = JSON.parse(setting?.dataValue);
+              console.log('res', oSignature);
+
+              oSignature.otpControl = format?.ParnerOTPControl;
+
+            }
+            //this.esService.addNewSignature(oSignature).subscribe((res) => {});
+          });
+      });
+
     let lstExisted = this.lstApprover.filter(
       (p) => p.email == this.data?.email
     );

@@ -184,7 +184,18 @@ export class InstancesComponent
       });
     });
   }
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
+    // if (!this.haveDataService) {
+    //   let dataProcess = await firstValueFrom(
+    //     this.codxDpService.getProcessByProcessID(this.processID)
+    //   );
+    //   if (dataProcess && dataProcess.read) {
+    //     this.loadData(dataProcess);
+    //     // this.continueLoad = true ;
+    //   } else {
+    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+    //   }
+    // }
     this.views = [
       {
         type: ViewType.listdetail,
@@ -228,13 +239,14 @@ export class InstancesComponent
       ),
     };
 
-    if (!this.haveDataService) {
+    if (this.haveDataService) this.getListCbxProccess(this.process?.applyFor);
+    else {
       this.codxDpService
         .getProcessByProcessID(this.processID)
         .subscribe((ps) => {
           if (ps && ps.read) {
             this.loadData(ps);
-            // this.continueLoad = true ;
+            this.getListCbxProccess(ps?.applyFor);
           } else {
             this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
           }
@@ -267,7 +279,6 @@ export class InstancesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-    this.getListCbxProccess(this.process?.applyFor);
   }
 
   click(evt: ButtonModel) {
@@ -289,7 +300,7 @@ export class InstancesComponent
           textColor: column['dataColums']?.textColor || null,
         };
       }) || [];
-      console.log(dataColumns);
+    console.log(dataColumns);
 
     return dataColumns;
   }
@@ -1020,7 +1031,7 @@ export class InstancesComponent
     }
   }
 
-  completedAllTasks(stepID,listStep){
+  completedAllTasks(stepID, listStep) {
     var isStopAuto = false;
     var index = listStep.findIndex(x=> x.stepID == stepID);
     var idxSteps =[];
@@ -1043,33 +1054,31 @@ export class InstancesComponent
     }
     var result = {
       isStopAuto: isStopAuto,
-      idxSteps:idxSteps
-    }
+      idxSteps: idxSteps,
+    };
     return result;
   }
 
-  completedLastTasks(){
+  completedLastTasks() {}
 
+  checkFieldsIEmpty(fields) {
+    return fields.includes((x) => !x.dataValue && x.isRequired);
   }
 
-  checkFieldsIEmpty(fields){
-    return fields.includes(x=> !x.dataValue && x.isRequired);
-  }
-
-  checkTransferControl(stepID){
-    var listStep = this.process.steps.filter(x=> !x.isSuccessStep && !x.isFailStep);
-    var stepCurrent = listStep.find(x=> x.recID == stepID);
+  checkTransferControl(stepID) {
+    var listStep = this.process.steps.filter(
+      (x) => !x.isSuccessStep && !x.isFailStep
+    );
+    var stepCurrent = listStep.find((x) => x.recID == stepID);
     var ischeck = false;
-    if(stepCurrent) {
+    if (stepCurrent) {
       var transferControl = stepCurrent?.transferControl;
-      if( transferControl != 0) {
-        ischeck =  true;
+      if (transferControl != 0) {
+        ischeck = true;
       }
     }
-    return {ischeck:ischeck, transferControl:transferControl};
+    return { ischeck: ischeck, transferControl: transferControl };
   }
-
-
 
   openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     // this.codxDpService.get
@@ -1167,7 +1176,7 @@ export class InstancesComponent
         };
         this.listProccessCbx.unshift(obj);
         this.listProccessCbx = this.listProccessCbx.filter(
-          (x) => x !== this.process.recID
+          (x) => x !== this.process?.recID
         );
       });
     });

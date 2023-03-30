@@ -566,7 +566,7 @@ export class StagesDetailComponent implements OnInit {
         return group;
       }, {});
       const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
-        let task = taskGroupList[taskGroup['recID']] ?? [];
+        let task = taskGroupList[taskGroup['refID']] ?? [];
         return {
           ...taskGroup,
           task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
