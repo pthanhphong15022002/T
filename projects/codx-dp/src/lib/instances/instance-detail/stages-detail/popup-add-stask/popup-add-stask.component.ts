@@ -65,6 +65,7 @@ export class PopupAddStaskComponent implements OnInit {
   groupTask;
   leadtimeControl = false;
   isLoadDate = false;
+  isTaskDefault = false;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -96,6 +97,7 @@ export class PopupAddStaskComponent implements OnInit {
     this.taskName = dt?.data['stepName'];
     this.groupTaskID = dt?.data['groupTaskID'];
     this.leadtimeControl = dt?.data['leadtimeControl'];
+    this.isTaskDefault = this.status == 'edit' ? this.stepsTasks['isTaskDefault'] : false;
   }
 
   ngOnInit(): void {
