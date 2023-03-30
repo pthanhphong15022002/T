@@ -112,9 +112,6 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div class="row mb-2">
-      <ng-container *ngTemplateOutlet="addLine"></ng-container>
-    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -292,7 +289,7 @@
 
 <!-- Start:CashPaymentLine -->
 <ng-template #tabCashPaymentLine>
-  <div class="h-100" *ngIf="cashpayment.voucherType === '1'">
+  <div class="h-100" *ngIf="cashpayment && cashpayment.voucherType === '1'">
     <codx-gridview-v2
       #gridCashPaymentLine
       [formName]="fmCashPaymentsLines.formName"
@@ -312,6 +309,25 @@
       (cellChanged)="cashPaymentLineChanged($event)"
       (created)="gridCreated($event)"
     ></codx-gridview-v2>
+  </div>
+  <div class="form-group mt-6 mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
+          <button
+            type="button"
+            class="btn btn-light-primary"
+            (click)="addRow()"
+          >
+            <codx-label
+              name="btnAdd"
+              formName="System"
+              default="Thêm dòng"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: CashPaymentLine -->
@@ -336,8 +352,26 @@
       rowHeight="40"
       (cellChanged)="voucherLineRefsChanged($event)"
       (created)="gridCreated($event)"
-      (inputClick)="voucherLineRefsCellClick($event)"
     ></codx-gridview-v2>
+  </div>
+  <div class="form-group mt-6 mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
+          <button
+            type="button"
+            class="btn btn-light-primary"
+            (click)="openVoucher()"
+          >
+            <codx-label
+              name="btnAdd"
+              formName="System"
+              default="Thêm dòng"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
@@ -365,30 +399,6 @@
   </div>
 </ng-template>
 <!-- End: Footer -->
-
-<!-- Start: Add line -->
-<ng-template #addLine let-data>
-  <div class="form-group mb-0 row">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button
-            type="button"
-            class="btn btn-light-primary"
-            (click)="addRow()"
-          >
-            <codx-label
-              name="btnAdd"
-              formName="System"
-              default="Thêm dòng"
-            ></codx-label>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-<!-- End: Add line -->
 
 <!-- Start: Tab Referen -->
 <ng-template #tabRef>
