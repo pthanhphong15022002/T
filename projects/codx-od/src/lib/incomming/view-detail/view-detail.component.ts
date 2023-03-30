@@ -800,7 +800,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             headerText: val?.data?.customName,
             gridViewSetup: this.gridViewSetup,
             option: option,
-            data:datas
+            data:datas,
           },
           option
         );
