@@ -3,14 +3,10 @@ import {
   Component,
   Injector,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import {
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewType
-} from 'codx-core';
+import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { map, Observable, tap } from 'rxjs';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
 
 @Component({
@@ -30,18 +26,22 @@ export class CashTransfersComponent
   };
   functionName: string;
   parentID: string;
+  journalNo: string;
 
   constructor(inject: Injector) {
     super(inject);
 
-    this.router.queryParams.subscribe((res) => {
-      if (res?.recID) this.parentID = res.recID;
+    this.router.queryParams.subscribe((params) => {
+      console.log(params);
+      this.parentID = params?.recID;
+      this.journalNo = params?.journalNo;
     });
   }
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+  }
 
   ngAfterViewInit(): void {
     this.views = [

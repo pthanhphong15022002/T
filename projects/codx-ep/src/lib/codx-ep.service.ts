@@ -58,7 +58,7 @@ export class CodxEpService {
   //temp environment
   environment = {
     SureMeet: {
-      baseUrl: '/suremeet/',
+      baseUrl: 'http://localhost:8011/suremeet/',
       tokenUrl: 'api/auth/token',
       addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
       connectMettingUrl: 'PublicMeeting/Verify',
