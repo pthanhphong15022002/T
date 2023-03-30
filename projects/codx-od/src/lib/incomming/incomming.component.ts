@@ -347,13 +347,13 @@ export class IncommingComponent
       });
     }
     var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114'
+      (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
     );
     if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
     if (data?.status == '4') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113'
+        (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
       );
       if (approvel[0]) approvel[0].disabled = true;
       if (approvelCL[0]) approvelCL[0].disabled = false;
