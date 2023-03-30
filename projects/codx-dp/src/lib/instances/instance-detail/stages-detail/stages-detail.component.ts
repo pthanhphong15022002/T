@@ -478,6 +478,9 @@ export class StagesDetailComponent implements OnInit {
       case 'DP13':
         this.assignTask(e.data, task);
         break;
+      case 'DP20':
+        this.openUpdateProgress(task);
+        break;
     }
   }
   //giao viec
@@ -594,6 +597,9 @@ export class StagesDetailComponent implements OnInit {
         break;
       case 'DP12':
         this.viewTask(data, 'G');
+        break;
+      case 'DP20':
+        this.openUpdateProgress(data);
         break;
     }
   }
@@ -1097,7 +1103,7 @@ export class StagesDetailComponent implements OnInit {
           //Thêm công việc
           case 'DP08':
             if (
-              (type != 'group' && !this.isCreate) ||
+              (type != 'group') ||
               (this.instance.status != 1 && this.instance.status != 2) ||
               !this.isUpdate
             )
