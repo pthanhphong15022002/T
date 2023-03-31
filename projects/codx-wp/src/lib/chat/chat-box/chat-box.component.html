@@ -212,13 +212,16 @@
                                 <ng-container *ngIf="item.votes">
                                     <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
                                         <ng-container *ngFor="let vote of item.votes">
-                                            <codx-vll 
-                                                [path]="'assets/themes/wp/default/img/'"
-                                                [name]="'L1480'" 
-                                                [value]="vote.voteType" 
-                                                [showIcon]="true" 
-                                                [icoCss]="'w-15px h-15px'">
-                                            </codx-vll>
+                                            <div class="d-flex">
+                                                <codx-vll 
+                                                    [path]="'assets/themes/wp/default/img/'"
+                                                    [name]="'L1480'" 
+                                                    [value]="vote.voteType" 
+                                                    [showIcon]="true" 
+                                                    [icoCss]="'w-15px h-15px'">
+                                                </codx-vll>
+                                                <span *ngIf="vote.listVote.length > 1">{{vote.listVote.length}}</span>
+                                            </div>
                                         </ng-container>
                                     </div>
                                 </ng-container>
@@ -385,7 +388,7 @@
             <ul ngbNav #nav="ngbNav" class="nav-tabs">
                 <ng-container *ngFor="let item of lstVoted">
                     <li ngbNavItem>
-                        <a ngbNavLink>
+                        <a ngbNavLink class="d-flex">
                             <ng-container *ngIf="item.voteType == '0';else tmpVoteType">
                                 <codx-label classList="fw-bolder" [formModel]="formModel" name="lblPopupVote" default="Tất cả"></codx-label>
                             </ng-container>
@@ -400,14 +403,14 @@
                                     </codx-vll>
                                 </div>
                             </ng-template>    
-                            <div>{{item.users.length}}</div>
+                            <div>{{item.listVote.length}}</div>
                         </a>
                         <ng-template ngbNavContent>
-                            <ng-container *ngFor="let member of item.users">
+                            <ng-container *ngFor="let member of item.listVote">
                                 <div class="user-item">
                                     <div class="d-flex">
-                                        <codx-img [objectId]="member.userID" objectType="AD_Users" [width]="30"></codx-img>
-                                        <span>{{member.userName}}</span>
+                                        <codx-img [objectId]="member.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+                                        <span>{{member.createdName}}</span>
                                     </div>
                                     <div>
                                         <codx-vll 
