@@ -579,10 +579,19 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        console.log(data.recID);
-        
+        this.startInstance([data.recID,this.process.recID])
         break;
     }
+  }
+
+  startInstance(data){
+    this.codxDpService.startInstance(data).subscribe((res) => {
+      if(res){
+        this.detailViewInstance.getStageByStep(res);
+        this.detectorRef.detectChanges();
+      }
+      
+    })
   }
 
   openOrClosed(data, check) {
