@@ -579,54 +579,48 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        console.log(data.recID);
-        
+        this.startInstance([data.recID,this.process.recID])
         break;
     }
   }
 
+  startInstance(data){
+    this.codxDpService.startInstance(data).subscribe((res) => {
+      if(res){
+        this.detailViewInstance.getStageByStep(res);
+        this.detectorRef.detectChanges();
+      }
+      
+    })
+  }
+
   openOrClosed(data, check) {
-    if (this.process.showInstanceControl === '1') {
-      this.notificationsService
-        .alertCode('DP018', null, "'" + this.titleAction + "'")
-        .subscribe((info) => {
-          if (info.event.status == 'Y') {
-            this.codxDpService
-              .openOrClosedInstance(data.recID, check)
-              .subscribe((res) => {
-                if (res) {
-                  this.dataSelected.closed = check;
-                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+    this.notificationsService
+      .alertCode('DP018', null, "'" + this.titleAction + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.codxDpService
+            .openOrClosedInstance(data.recID, check)
+            .subscribe((res) => {
+              if (res) {
+                this.dataSelected.closed = check;
+                this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+                if (this.process.showInstanceControl === '1') {
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
-              });
-          }
-        });
-    } else if (
-      this.process.showInstanceControl === '0' ||
-      this.process.showInstanceControl === '2'
-    ) {
-      this.view.dataService.dataSelected = data;
-
-      this.notificationsService
-        .alertCode('DP018', null, "'" + this.titleAction + "'")
-        .subscribe((info) => {
-          if (info.event.status == 'Y') {
-            this.codxDpService
-              .openOrClosedInstance(data.recID, check)
-              .subscribe((res) => {
-                if (res) {
-                  this.dataSelected.closed = check;
-                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
+                if (
+                  this.process.showInstanceControl === '0' ||
+                  this.process.showInstanceControl === '2'
+                ) {
                   this.view.dataService.remove(this.dataSelected).subscribe();
                   this.dataSelected = this.view.dataService.data[0];
-                  this.detectorRef.detectChanges();
+                  this.view.dataService.onAction.next({ type: 'delete', data: data });
                 }
-              });
-          }
-        });
-    }
-    this.changeDetectorRef.detectChanges();
+                this.detectorRef.detectChanges();
+              }
+            });
+        }
+      });
   }
 
   beforeClosed(opt: RequestOption, check) {
@@ -799,9 +793,7 @@ export class InstancesComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {
-      
-    });
+    popup.closed.subscribe((e) => {});
   }
 
   dropInstance(data) {
@@ -850,11 +842,11 @@ export class InstancesComponent
   }
 
   changeView(e) {
-    if (e?.view.type == 2)  this.viewsCurrent='d-'
+    if (e?.view.type == 2) this.viewsCurrent = 'd-';
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      this.viewsCurrent='k-'
+      this.viewsCurrent = 'k-';
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -976,87 +968,96 @@ export class InstancesComponent
     });
   }
 
-  autoMoveStage(dataInstance)
-  {
+  autoMoveStage(dataInstance) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    this.notificationsService.alert('Chị khanh ơi thiết lập message code yesno cho em với','Chị khanh ơi thiết lập message code yesno cho em với' ,config).closed.subscribe(
-      (x) => {
+    this.notificationsService
+      .alert(
+        'Chị khanh ơi thiết lập message code yesno cho em với',
+        'Chị khanh ơi thiết lập message code yesno cho em với',
+        config
+      )
+      .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           this.handleMoveStage(dataInstance);
         }
-      }
-    );
+      });
   }
-  handleMoveStage(dataInstance){
+  handleMoveStage(dataInstance) {
     var isStopAuto = false;
     var strStepsId = [];
     var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
-    if(autoMoveStage.ischeck) {
-       if(autoMoveStage.transferControl == 1 ) {
-         var completedAllTask  = this.completedAllTasks(dataInstance.step.stepID,dataInstance.listStep);
-         isStopAuto = completedAllTask.isStopAuto;
-         strStepsId = completedAllTask?.idxSteps;
-       }
-       if(isStopAuto) {
-         return;
-       }
-       else {
-           var instanceStepId = dataInstance.listStep.filter(x=> strStepsId.some(y=> y == x.stepID));
-           for(let item of instanceStepId ){
-            if(item.stepStatus == '0') {
-              item.stepStatus = '1';
-              item.actualStart = new Date();
-            }
-            else if(item.stepStatus == '1') {
-              item.stepStatus = '3';
-            }
-           }
-           dataInstance.instance.stepID =  instanceStepId.find(item=> item.stepStatus == '1').stepID;
-           var processId = dataInstance.instance.processID;
-           var data = [instanceStepId,processId];
-           this.codxDpService.autoMoveStage(data).subscribe((res) => {
-             if(res) {
-             var stepsUpdate = dataInstance.listStep.map(item1 => {
-                var item2 = instanceStepId.find(item2 => item1.stepID === item2.stepID);
-                if (item2) {
-                  return { ...item1, status: item2.status };
-                }
-              });
-              this.listStepInstances = stepsUpdate;
-              this.dataSelected = dataInstance.instance;
-              this.view.dataService.update(this.dataSelected).subscribe();
-              if (this.kanban) this.kanban.updateCard(this.dataSelected);
-              this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.instance = this.dataSelected;
-              this.detailViewInstance.listSteps = this.listStepInstances;
-              this.detectorRef.detectChanges();
-             }
-           });
-       }
+    if (autoMoveStage.ischeck) {
+      if (autoMoveStage.transferControl == 1) {
+        var completedAllTask = this.completedAllTasks(
+          dataInstance.step.stepID,
+          dataInstance.listStep
+        );
+        isStopAuto = completedAllTask.isStopAuto;
+        strStepsId = completedAllTask?.idxSteps;
+      }
+      if (isStopAuto) {
+        return;
+      } else {
+        var instanceStepId = dataInstance.listStep.filter((x) =>
+          strStepsId.some((y) => y == x.stepID)
+        );
+        for (let item of instanceStepId) {
+          if (item.stepStatus == '0') {
+            item.stepStatus = '1';
+            item.actualStart = new Date();
+          } else if (item.stepStatus == '1') {
+            item.stepStatus = '3';
+          }
+        }
+        dataInstance.instance.stepID = instanceStepId.find(
+          (item) => item.stepStatus == '1'
+        ).stepID;
+        var processId = dataInstance.instance.processID;
+        var data = [instanceStepId, processId];
+        this.codxDpService.autoMoveStage(data).subscribe((res) => {
+          if (res) {
+            var stepsUpdate = dataInstance.listStep.map((item1) => {
+              var item2 = instanceStepId.find(
+                (item2) => item1.stepID === item2.stepID
+              );
+              if (item2) {
+                return { ...item1, status: item2.status };
+              }
+            });
+            this.listStepInstances = stepsUpdate;
+            this.dataSelected = dataInstance.instance;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+            this.detailViewInstance.dataSelect = this.dataSelected;
+            this.detailViewInstance.instance = this.dataSelected;
+            this.detailViewInstance.listSteps = this.listStepInstances;
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
     }
   }
 
   completedAllTasks(stepID, listStep) {
     var isStopAuto = false;
-    var index = listStep.findIndex(x=> x.stepID == stepID);
-    var idxSteps =[];
-    for(let i = index; i < listStep.length; i++)
-    {
-        if( this.checkTransferControl(listStep[i].stepID) ) {
-          var isCheckOnwer = listStep[i]?.owner ? false:true;
-          var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
-        }
-        if(isCheckFields || isCheckOnwer) {
-          isStopAuto = true;
-          break;
-        }
-        idxSteps.push(listStep[i].stepID);
-        idxSteps.push(listStep[i+1].stepID);
-        if(listStep[i+1].isSuccessStep || listStep[i+1].isFailStep) {
-          isStopAuto = true;
-        }
+    var index = listStep.findIndex((x) => x.stepID == stepID);
+    var idxSteps = [];
+    for (let i = index; i < listStep.length; i++) {
+      if (this.checkTransferControl(listStep[i].stepID)) {
+        var isCheckOnwer = listStep[i]?.owner ? false : true;
+        var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
+      }
+      if (isCheckFields || isCheckOnwer) {
+        isStopAuto = true;
         break;
+      }
+      idxSteps.push(listStep[i].stepID);
+      idxSteps.push(listStep[i + 1].stepID);
+      if (listStep[i + 1].isSuccessStep || listStep[i + 1].isFailStep) {
+        isStopAuto = true;
+      }
+      break;
     }
     var result = {
       isStopAuto: isStopAuto,

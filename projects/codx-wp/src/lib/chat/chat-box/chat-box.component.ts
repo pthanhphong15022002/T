@@ -4,6 +4,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { content } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PopupVoteComponent } from 'projects/codx-share/src/lib/components/treeview-comment/popup-vote/popup-vote.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { interval } from 'rxjs';
@@ -64,6 +65,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
+  @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
   constructor
   (
     private api:ApiHttpService,
@@ -129,7 +131,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     //receiver message
     this.signalR.chat.subscribe((res:any) => {
       debugger
-      if(res){
+      if(res.groupID == this.groupID){
         let data = res;
         this.group.lastMssgID = data.recID;
         this.group.messageType = data.messageType;
@@ -153,7 +155,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     });
     //vote message
     this.signalR.voteChat.subscribe((res:any) => {
-      if(res){
+      if(res.groupID == this.groupID){
         let mssg = this.arrMessages.find(x => x.recID == res.recID);
         if(mssg){
           if(!Array.isArray(mssg.votes)){
@@ -367,6 +369,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       });
     }
   }
+
   // click files 
   clickViewFile(file){
     let option = new DialogModel();
@@ -473,5 +476,23 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       this.api.execSv("WP","ERM.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
       .subscribe();
     }
+  }
+
+  //
+  // show vote
+  lstVoted:any[] = [];
+  clickShowVote(mssg:any) {
+    if(this.popupVoted){
+      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","GetVoteAsync",[mssg.recID])
+      .subscribe((res:any[]) => {
+        this.lstVoted = res;
+        this.callFC.openForm(this.popupVoted,"",500,300);
+      });
+    }
+  }
+
+  //
+  closePopupVote(dialog:any){
+    dialog?.close();
   }
 }

@@ -345,7 +345,7 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.recID,
+          autoNoCode: this.journal.journalNo,
           description: this.dialogRef.formModel?.entityName,
         }
       )
