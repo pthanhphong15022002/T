@@ -1,10 +1,12 @@
 import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService, Util } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../../codx-share.service';
 import { tmpHistory } from '../../../models/tmpComments.model';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { PopupVoteComponent } from '../../treeview-comment/popup-vote/popup-vote.component';
+import { ViewFileDialogComponent } from '../../viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'codx-comment-history',
@@ -21,7 +23,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() actionType:string;
   @Input() reference:string;
   @Input() formModel:FormModel;
-  @Input() type: "view" | "create" = "view";
+  @Input() new:boolean = false;
   @Input() data:any;
   @Input() viewIcon:boolean = true;
   @Input() allowVotes:boolean = true;
@@ -34,7 +36,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Output() evtSend = new EventEmitter;
   user: any = null;
   message: string = "";
-  lstFile: any[] = [];
+  files:any = null
   grdSetUp:any;
   date = new Date();
   REFERTYPE = {
@@ -51,6 +53,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     private cache: CacheService,
     private notifySV:NotificationsService,
     private callFuc:CallFuncService,
+    private codxShareSV:CodxShareService,
     private dt: ChangeDetectorRef
   ) 
   {
@@ -58,6 +61,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger
     if(this.data){
       this.getFileByObjectID();
     }
@@ -71,15 +75,8 @@ export class CodxCommentHistoryComponent implements OnInit {
       "GetFilesByIbjectIDAsync",
       this.data.recID)
     .subscribe((res:any[]) => {
-      if(res.length > 0){
-        let files = res;
-        files.map((e:any) => {
-          if(e && e.referType == this.REFERTYPE.VIDEO)
-          {
-            e['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-          }
-        })
-        this.lstFile = res; 
+      if(Array.isArray(res)){
+        this.files = res[0]; 
         this.dt.detectChanges();
     }});
   }
@@ -110,97 +107,110 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
   // select file
   selectedFiles(event: any) {
-    if (event.data.length > 0) {
-      let files = event.data;
-      files.map((e: any) => {
-        if (e.mimeType.indexOf("image") >= 0) {
-          e['referType'] = this.REFERTYPE.IMAGE;
-        }
-        else if (e.mimeType.indexOf("video") >= 0) {
-          e['referType'] = this.REFERTYPE.VIDEO;
-        }
-        else {
-          e['referType'] = this.REFERTYPE.APPLICATION;
-        }
-      });
-      this.lstFile = files;
+    if (Array.isArray(event.data)) {
+      let file = event.data[0];
+      if(file.mimeType.indexOf("image") >= 0 ){
+        file['referType'] = this.REFERTYPE.IMAGE;
+        file['source'] = file.avatar;
+      }
+      else if(file.mimeType.indexOf("video") >= 0)
+      {
+        file['referType'] = this.REFERTYPE.VIDEO;
+        file['source'] = file.data;
+      }
+      else{
+        file['referType'] = this.REFERTYPE.APPLICATION;
+      }
+      this.files = file;
       this.dt.detectChanges();
     }
   }
   // remove file
-  removeFile(file: any) {
-    this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
+  removeFile() {
+    this.files = null;
     this.dt.detectChanges();
   }
   // send comment
-  async sendComments() {
-    if(!this.message && this.lstFile.length == 0)
-    {
+  sendComments() {
+    this.deleteComment
+    if(!this.message && !this.files){
       this.notifySV.notifyCode("SYS010");
       return;
     }
     let data = new tmpHistory();
+    data.recID = Util.uid();
     data.comment = this.message;
-    data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
     data.functionID = this.funcID;
     data.reference = this.reference;
-    data.createdBy = this.user.userID;
-    data.createdName = this.user.userName;
-    data.createdOn = new Date();
-    this.api.execSv("BG","ERM.Business.BG","CommentLogsBusiness","InsertCommentAsync",data)
-    .subscribe(async (res1:any[]) => {
-      if(res1[0])
-      { 
-        debugger
-        data = JSON.parse(JSON.stringify(res1[1])); 
-        if(data.attachments > 0)
-        {
-          this.codxATM.objectId = data.recID;
-          this.codxATM.objectType = "BG_Comments";
-          this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.lstFile));  
-          (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
-            if(res2){
-              this.lstFile.unshift(res2.data);
-              this.evtSend.emit(data);
-              this.notifySV.notifyCode("WP034"); 
-              this.clearData();  
-              this.lstFile = JSON.parse(JSON.stringify(this.lstFile)); 
-              this.dt.detectChanges();
-            }
-          })
+    if(this.files){
+      data.attachments = 1;
+      this.codxATM.objectId = data.recID;
+      let lstFile = [];
+      lstFile.push(this.files);
+      this.codxATM.fileUploadList =  lstFile;
+      this.codxATM.objectType = "BG_Comments";
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res: any) => {
+        if(res){
+          this.api.execSv(
+            "BG",
+            "ERM.Business.BG",
+            "CommentLogsBusiness",
+            "InsertCommentAsync",[data])
+            .subscribe((res:any[]) => {
+              if(res[0])
+              {
+                this.evtSend.emit(res[1]);
+                this.notifySV.notifyCode("WP034"); 
+              }
+              else
+                this.notifySV.notifyCode("SYS023");
+              this.clearData(); 
+            });
         }
         else
         {
-           
-            this.evtSend.emit(data);
-            this.notifySV.notifyCode("WP034");
-            this.clearData();   
+          this.notifySV.notifyCode("SYS023");
+          this.clearData(); 
         }
-      }
-      else 
-      {
-        this.notifySV.notifyCode("SYS023");
-      }
-    });
-
+      });
+    }
+    else
+    {
+      this.api.execSv(
+        "BG",
+        "ERM.Business.BG",
+        "CommentLogsBusiness",
+        "InsertCommentAsync",[data])
+        .subscribe((res:any[]) => {
+          if(res[0])
+          {
+            this.evtSend.emit(res[1]);
+            this.notifySV.notifyCode("WP034"); 
+          }
+          else
+            this.notifySV.notifyCode("SYS023");
+          this.clearData(); 
+        });
+    }
   }
+  // clear data
   clearData(){
-    this.lstFile = [];
     this.message = "";
+    this.files = null;
   }
+  //click upload file
   uploadFile() {
     this.codxATM.uploadFile();
   }
-
-
+  //click reply
   replyTo(data:any) {
     this.evtReply.emit(data);
   }
-
-  votePost(data: any, voteType = null) 
-  {
+  //vote comment
+  votePost(data: any, voteType = null) {
     this.api.execSv(
       "BG",
       "ERM.Business.BG",
@@ -226,9 +236,9 @@ export class CodxCommentHistoryComponent implements OnInit {
 
       });
   }
+  //click show votes
   showVotes(data:any){
     if(data){
-      debugger
       let object = {
         data: data,
         entityName: "BG_Comments",
@@ -236,5 +246,23 @@ export class CodxCommentHistoryComponent implements OnInit {
       }
       this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
     }
+  }
+
+  //click view file
+  clickViewFile(file:any){
+    let option = new DialogModel();
+      option.FormModel = this.formModel;
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.callFuc.openForm(
+        ViewFileDialogComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
   }
 }
