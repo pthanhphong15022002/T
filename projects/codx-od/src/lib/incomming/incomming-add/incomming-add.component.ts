@@ -363,7 +363,7 @@ export class IncommingAddComponent implements OnInit {
       .saveDispatch(this.dataRq, this.dispatch)
       .subscribe(async (item) => {
         if (item.status == 0) {
-          this.data = item;
+          this.data = item.data;
           this.attachment.dataSelected = item.data;
        
           (await this.attachment.saveFilesObservable()).subscribe(
@@ -379,7 +379,10 @@ export class IncommingAddComponent implements OnInit {
                
               // }
               if (item2?.status == 0 || Array.isArray(item2)) {
-                //Lưu thông tin người chia sẻ
+                //Gửi mail
+                 this.odService.sendMail2(this.dataRq,this.data.recID).subscribe();
+                
+                 //Lưu thông tin người chia sẻ
                 if(this.dispatch.relations && this.dispatch.relations.length>0)
                 {
                   var per = new permissionDis();
@@ -401,6 +404,8 @@ export class IncommingAddComponent implements OnInit {
                     }
                     
                   });
+
+                 
                  
                 }
                 else
