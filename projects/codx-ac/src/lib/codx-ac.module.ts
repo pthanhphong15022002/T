@@ -8,7 +8,7 @@ import { CodxAcComponent } from './codx-ac.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CurrencyFormComponent } from './currency-form/currency-form.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
@@ -73,6 +73,7 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
+import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 
 export const routes: Routes = [
   {
@@ -227,6 +228,7 @@ export const routes: Routes = [
     VoucherComponent,
     PopAddLinecashComponent,
     NameByIdPipe,
+    PopAddLinereceiptsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

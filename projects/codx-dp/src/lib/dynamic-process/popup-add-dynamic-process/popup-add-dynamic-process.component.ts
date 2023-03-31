@@ -1046,7 +1046,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               objectID: element.id,
               objectName: element.text,
               objectType: element.objectType,
-              roleType: type,
+              roleType: "R",
             };
             this.addRole(role);
           });
@@ -1827,7 +1827,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['task'] = taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
             taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
           }
@@ -2732,7 +2732,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (check) {
       this.notiService.notifyCode('DP027', 0, role?.objectName);
     } else {
-      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID);
+      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID && r.roleType == "R");
       if (index >= 0) {
         step?.roles?.splice(index, 1);
       }

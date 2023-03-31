@@ -241,7 +241,8 @@
 <ng-template #content let-modal>
     <div class="modal-header p-5">
         <h4 class="modal-title" id="modal-basic-title">{{ modelForm.title }}</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="btn btn-icon btn-sm btn-white" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span class="icon-close icon-18"></span>
         </button>
     </div>
     <div class="modal-body">

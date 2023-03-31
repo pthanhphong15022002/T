@@ -50,6 +50,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
+  @Input() viewsCurrent='' ;
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -67,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
   instanceStatus: any;
   currentStep = 0;
   instance: any;
+  listTypeTask = [];
   //gantchat
   ganttDs = [];
   ganttDsClone = [];
@@ -120,7 +122,13 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -147,7 +155,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync(insID, proccessID) {
-    var data = [insID, proccessID];
+    var data = [insID, proccessID,this.instanceStatus];
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {

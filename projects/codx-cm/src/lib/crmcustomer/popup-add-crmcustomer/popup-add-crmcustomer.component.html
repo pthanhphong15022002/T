@@ -15,7 +15,8 @@
         <codx-label [formModel]="form.formModel"
           [fiedName]="funcID == 'CM0101' ? 'CustomerID' : funcID == 'CM0102' ? 'ContactID' : (funcID == 'CM0103' ? 'PartnerID' : 'OpponentID')">
         </codx-label>
-        <codx-input [field]="funcID == 'CM0101' ? 'customerID' : funcID == 'CM0102' ? 'ContactID' : funcID == 'CM0103' ? 'partnerID' : 'opponentID'"
+        <codx-input
+          [field]="funcID == 'CM0101' ? 'customerID' : funcID == 'CM0102' ? 'ContactID' : funcID == 'CM0103' ? 'partnerID' : 'opponentID'"
           [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
@@ -30,8 +31,8 @@
       <div class="form-group" *ngIf="funcID == 'CM0102'">
         <codx-label [formModel]="dialog.formModel" name="lblLastName" default="Họ và đệm">
         </codx-label>
-        <codx-input type="text" [crrValue]="lastName" (valueChange)="valueChange($event)"
-          [formModel]="dialog.formModel" field="lastName">
+        <codx-input type="text" [crrValue]="lastName" (valueChange)="valueChange($event)" [formModel]="dialog.formModel"
+          field="lastName">
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
@@ -98,16 +99,18 @@
       <div class="form-group" *ngIf="funcID == 'CM0102'">
         <div class="d-flex justify-content-between">
           <div>
-            <codx-label fiedName="IsCustomer" class="text-dark fw-bold" [formModel]="dialog.formModel"
-              >
+            <codx-label fiedName="IsCustomer" class="text-dark fw-bold" [formModel]="dialog.formModel">
             </codx-label>
           </div>
-          <codx-input type="switch" [crrValue]="data.isCustomer" (valueChange)="valueChange($event)"
-            field="isCustomer">
+          <codx-input type="switch" [crrValue]="data.isCustomer" (valueChange)="valueChange($event)" field="isCustomer">
           </codx-input>
         </div>
-        <codx-input [Group]="form.formGroup" [disabled]="!data.isCustomer" [formModel]="form.formModel" field="customerFrom">
-        </codx-input>
+        <div *ngIf="data.isCustomer">
+          <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="!data.isCustomer"
+            field="customerFrom">
+          </codx-input>
+        </div>
+
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'">
@@ -150,8 +153,7 @@
       <div class="form-group" *ngIf="funcID == 'CM0102'">
         <codx-label [formModel]="form.formModel" fiedName="JobTitle">
         </codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
-          [formModel]="form.formModel" field="jobTitle">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [formModel]="form.formModel" field="jobTitle">
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
@@ -207,14 +209,14 @@
         <div class="d-flex justify-content-between">
           <div>
             <codx-input type="switch" class="me-2" [crrValue]="data?.allowEmail" (valueChange)="valueChange($event)"
-               field="allowEmail"> </codx-input>
+              field="allowEmail"> </codx-input>
           </div>
           <div class="w-100">
             <codx-label [formModel]="form.formModel" fiedName="AllowEmail">
             </codx-label>
           </div>
         </div>
-        </div>
+      </div>
     </div>
   </div>
   <div class="mb-4" *ngIf="funcID == 'CM0104'">
@@ -280,8 +282,9 @@
 <ng-template #avata>
   <div class="avatar-container">
     <div class="avatar" (click)="addAvatar()">
-      <ng-container *ngIf="linkAvatar != ''">
-        <img [src]="linkAvatar" alt="">
+      <ng-container *ngIf="linkAvatar">
+        <img [src]="linkAvatar">
+
       </ng-container>
       <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
         <img src="../../../assets/codx/user/avatar.jpg" alt="">
@@ -319,7 +322,8 @@
             <div *ngIf="contactsPerson.email">
               <span [ngClass]="contactsPerson.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
                 class="icon-16 me-1 text-gray-900"></span>
-              <span [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{contactsPerson.email}}</span>
+              <span [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''"
+                class="text-gray-900">{{contactsPerson.email}}</span>
             </div>
           </div>
         </div>

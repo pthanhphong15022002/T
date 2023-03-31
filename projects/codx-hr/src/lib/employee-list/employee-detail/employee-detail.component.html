@@ -5563,6 +5563,13 @@
 
 <!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
+  <div class="d-flex align-items-center">
+    <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="
+        data.recID == crrVisa?.recID ? ' bg-primary' : 'bg-transparent'
+      "
+    ></span>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-5px">
       <span class="icon-email icon-16 text-gray-500 me-2"></span>
@@ -5583,6 +5590,7 @@
       "></span>
       </span>
     </div>
+  </div>
   </div>
 </ng-template>
 
@@ -5638,6 +5646,13 @@
 
 <!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
+  <div class="d-flex align-items-center">
+    <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
+      [class]="
+        data.recID == crrWorkpermit?.recID ? ' bg-primary' : 'bg-transparent'
+      "
+    ></span>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-5px">
       <span class="icon-email icon-16 text-gray-500 me-2"></span>
@@ -5664,6 +5679,7 @@
       </span>
     </div>
   </div>
+  </div>  
 </ng-template>
 
 <ng-template #workPermitCol2 let-data>

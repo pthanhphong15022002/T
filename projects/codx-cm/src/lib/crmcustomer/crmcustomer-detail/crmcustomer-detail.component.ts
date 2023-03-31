@@ -1,3 +1,4 @@
+import { CodxCmService } from './../../codx-cm.service';
 import {
   Component,
   Input,
@@ -47,6 +48,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
+    private cmSv: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -59,6 +61,14 @@ export class CrmcustomerDetailComponent implements OnInit {
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
+  }
+
+  getOneData(recID, funcID){
+    this.cmSv.getOne(recID, funcID).subscribe(res =>{
+      if(res){
+        this.dataSelected = res;
+      }
+    })
   }
 
   listTab(funcID) {

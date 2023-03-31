@@ -150,6 +150,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() referType: string ="";
   @Input() dataSelected: any;
   @Input() addPermissions: Permission[] = [];
+  @Input() actionType :string = "" ; 
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -752,6 +753,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         return this.fileService
           .addMultiFileObservable(
             this.fileUploadList,
+            this.actionType,
             this.formModel?.entityName,
             this.isDM,
             this.folder,
@@ -937,6 +939,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var done = this.fileService
         .addMultiFile(
           this.fileUploadList,
+          this.actionType,
           this.formModel?.entityName,
           this.isDM,
           this.folder,
@@ -1063,6 +1066,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         this.fileService
                           .addMultiFile(
                             this.fileUploadList,
+                            this.actionType,
                             this.formModel?.entityName,
                             this.isDM,
                             this.folder,
@@ -1227,6 +1231,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var obj2 = from(this.fileService
               .addFileObservable(
                 fileItem,
+                this.actionType,
                 this.formModel?.entityName,
                 this.isDM,
                 this.folder,
@@ -1257,6 +1262,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     return  this.fileService
                     .addFileObservable(
                       fileItem,
+                      this.actionType,
                       this.formModel?.entityName,
                       this.isDM,
                       this.folder,
@@ -1475,7 +1481,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem, this.formModel?.entityName, this.isDM , this.folder).toPromise();
+    var done = this.fileService.addFile(fileItem , this.actionType , this.formModel?.entityName, this.isDM , this.folder).toPromise();
     if (done) {
       done
         .then((item) => {

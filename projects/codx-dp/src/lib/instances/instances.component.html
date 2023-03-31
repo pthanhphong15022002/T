@@ -147,7 +147,23 @@
 </ng-template>
 
 <ng-template #popDetail let-dialog>
-  <codx-form [body]="templateDetail" [dialog]="dialog"> </codx-form>
+  <codx-form [body]="detailPopupClick" [dialog]="dialog">
+    <ng-template #detailPopupClick>
+      <codx-instance-detail
+        [dataService]="view.dataService"
+        [formModel]="view.formModel"
+        [dataSelect]="dataSelected"
+        (moreFunctionEvent)="clickMoreFunc($event)"
+        (changeMF)="changeMF($event)"
+        [listStepsProcess]="process.steps"
+        [listCbxProccess]="listProccessCbx"
+        [viewModelDetail]="this.process.viewModeDetail"
+        [tabInstances]="tabInstances"
+        [viewsCurrent]="'k-'"
+      >
+      </codx-instance-detail>
+    </ng-template>
+  </codx-form>
 </ng-template>
 <!-- end kanban -->
 
@@ -275,6 +291,7 @@
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
     [tabInstances]="tabInstances"
+    [viewsCurrent]="'d-'"
   >
   </codx-instance-detail>
 </ng-template>

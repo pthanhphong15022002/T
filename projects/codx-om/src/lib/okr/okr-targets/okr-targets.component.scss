@@ -164,6 +164,15 @@
 .ob-kr:hover {
     cursor: pointer;
     color: var(--text-primary) !important;
+    text-decoration: underline;
+}
+
+.ob-name{
+    font-size: 1.04em; 
+    font-weight: 500;
+}
+.kr-name{
+    font-weight: 450;
 }
 
 .bg-color {
@@ -197,3 +206,8 @@
     padding-right: 10rem !important;
     padding-left: 10rem !important;
 }
+// ::ng-deep{
+//     .collapse-conent{
+//         padding-top: 15px !important;
+//     }
+// }

@@ -15,6 +15,7 @@ import {
   Util,
 } from 'codx-core';
 import {
+  DP_Instances_Steps,
   DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
@@ -47,9 +48,9 @@ export class PopupAddStaskComponent implements OnInit {
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
   tasksItem = '';
-  stepID = '';
   status = 'add';
   taskList: DP_Instances_Steps_Tasks[] = [];
+  step: DP_Instances_Steps;
   show = false;
   dataCombobox = [];
   valueInput = '';
@@ -66,6 +67,9 @@ export class PopupAddStaskComponent implements OnInit {
   leadtimeControl = false;
   isLoadDate = false;
   isTaskDefault = false;
+  startDateParent: Date;
+  endDateParent: Date;
+  
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -76,14 +80,14 @@ export class PopupAddStaskComponent implements OnInit {
     this.status = dt?.data?.status;
     this.title = dt?.data['taskType']['text'];
     this.stepType = dt?.data['taskType']['value'];
-    this.stepID = dt?.data['stepID'];
+    this.step = dt?.data['step'];
     this.groupTackList = dt?.data['listGroup'];
     this.dialog = dialog;
 
     if (this.status == 'add') {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
       this.stepsTasks['taskType'] = this.stepType;
-      this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['stepID'] = this.step?.recID;
       this.stepsTasks['progress'] = 0;
       this.stepsTasks['taskGroupID'] = dt?.data['groupTaskID'];
       this.stepsTasks['refID'] = Util.uid();
@@ -102,6 +106,13 @@ export class PopupAddStaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];
+    this.startDateParent = new Date(this.step['startDate']);
+    this.endDateParent = new Date(this.step['endDate']);
+    console.log(this.startDateParent.getTime());
+    if(!this.stepsTasks['taskGroupID']){
+      this.stepsTasks['startDate'] = this.startDateParent;
+      console.log(this.stepsTasks['startDate'].getTime());
+    }
     this.getFormModel();
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
@@ -162,43 +173,62 @@ export class PopupAddStaskComponent implements OnInit {
 
   filterText(value, key) {
     this.stepsTasks[key] = value;
-    this.groupTask = this.groupTackList.find((x) => x.refID === value);
-    this.taskGroupName = this.groupTask['taskGroupName'] || '';
-    this.stepsTasks['startDate'] = this.groupTask['startDate'] || new Date();
+    if(value){
+      this.groupTask = this.groupTackList.find((x) => x.refID === value);
+      this.taskGroupName = this.groupTask['taskGroupName'] || '';
+      this.startDateParent = new Date(this.groupTask['startDate']);
+      this.endDateParent = new Date(this.groupTask['endDate']);
+      this.stepsTasks['startDate'] = this.startDateParent || new Date();
+    }else{
+      this.taskGroupName = '';
+      this.startDateParent = new Date(this.step['startDate']);
+      this.endDateParent = new Date(this.step['endDate']);
+      this.stepsTasks['startDate'] = this.startDateParent || new Date();
+    }
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
   changeValueDate(event) {
+    this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
     if(this.isLoadDate){
       this.isLoadDate = !this.isLoadDate;
       return;
     }
-    this.stepsTasks[event?.field] = event?.data?.fromDate;
     const startDate =  new Date(this.stepsTasks['startDate']);
     const endDate = new Date(this.stepsTasks['endDate']);
-
+   
     if (endDate && startDate > endDate){
       this.isSaveTimeTask = false;
       this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP019');
+      this.stepsTasks['durationHour'] = 0;
+      this.stepsTasks['durationDay'] = 0;
       return;
     } else {
       this.isSaveTimeTask = true;
     }
 
-    if (endDate > new Date(this.groupTask?.endDate)) {
+    if (endDate > this.endDateParent) {
       this.isSaveTimeGroup = false;
       this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
+      this.stepsTasks['durationHour'] = 0;
+      this.stepsTasks['durationDay'] = 0;
+      return;
     }else{
       this.isSaveTimeGroup = true;
     }
-
-    if (startDate < new Date(this.groupTask['startDate'])) {
+    console.log(new Date(startDate.toLocaleString()).getTime());
+    console.log(new Date(this.startDateParent.toLocaleString()).getTime());
+    
+    if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
       this.isSaveTimeGroup = false;
       this.isLoadDate = !this.isLoadDate;
       this.notiService.notifyCode('DP020');
+      this.stepsTasks['durationHour'] = 0;
+      this.stepsTasks['durationDay'] = 0;
+      return;
     }else{
       this.isSaveTimeGroup = true;
     }
@@ -217,6 +247,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['durationHour'] = 0;
       this.stepsTasks['durationDay'] = 0;
     }
+    this.isLoadDate = !this.isLoadDate;
   }
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;

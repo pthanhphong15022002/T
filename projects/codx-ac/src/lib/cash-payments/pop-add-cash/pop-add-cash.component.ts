@@ -7,10 +7,15 @@ import {
   Injector,
   OnInit,
   Optional,
+  PipeTransform,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import {
+  EditSettingsModel,
+  GridComponent,
+} from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   CacheService,
@@ -34,7 +39,9 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-
+import { Template } from '@angular/compiler/src/render3/r3_ast';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -70,6 +77,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   pageCount: any;
   tab: number = 0;
   total: any = 0;
+  data: any;
   transactiontext: Array<Transactiontext> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -90,6 +98,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  page: any = 1;
+  pageSize = 5;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -157,9 +167,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpayment.recID
           )
           .subscribe((res: any) => {
+            if (res.length > 0) {
+              this.keymodel = Object.keys(res[0]);
+            }
             this.cashpaymentline = res;
             this.pageCount = '(' + this.cashpaymentline.length + ')';
-            this.keymodel = Object.keys(res[0]);
             this.cashpaymentline.forEach((element) => {
               this.total = this.total + element.dr;
             });
@@ -195,6 +207,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         style: 'currency',
         currency: 'VND',
       });
+      this.pageCount = '(' + this.cashpaymentline.length + ')';
     }
   }
   //#endregion
@@ -204,7 +217,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.dialog?.close();
   }
   searchName(e) {
-    var filter, table, tr, td, i, txtValue, mySearch, myBtn;
+    var filter, table, tr, td, i, txtValue, mySearch, myBtn, myPag;
     filter = e.toUpperCase();
     table = document.getElementById('myTable');
     tr = table.getElementsByTagName('tr');
@@ -581,6 +594,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
+          formType: this.formType,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -608,9 +622,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (dataline != null) {
                   this.cashpaymentline[index] = dataline;
                   this.loadTotal();
+                  this.notification.notifyCode('SYS007', 0, '');
                 }
                 window.localStorage.removeItem('dataline');
-                this.notification.notifyCode('SYS007', 0, '');
               });
             }
           });
@@ -642,6 +656,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       headerText: this.headerText,
       data: data,
       type: 'add',
+      formType: this.formType,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();

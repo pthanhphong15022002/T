@@ -311,7 +311,7 @@ export class OpenFolderComponent implements OnInit {
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
-      var done = this.fileService.addMultiFile(this.fileUploadList,this.formModel?.entityName ,false).toPromise().then(res => {
+      var done = this.fileService.addMultiFile(this.fileUploadList,"",this.formModel?.entityName ,false).toPromise().then(res => {
         if (res != null) {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
@@ -399,7 +399,7 @@ export class OpenFolderComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem , this.formModel?.entityName ,this.isDM , null ).toPromise();
+    var done = this.fileService.addFile(fileItem,"" , this.formModel?.entityName ,this.isDM , null ).toPromise();
     if (done) {
       done.then(item => {
         if (item.status == 0) {
