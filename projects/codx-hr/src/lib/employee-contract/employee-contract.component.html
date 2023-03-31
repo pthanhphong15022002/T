@@ -192,6 +192,7 @@
 
 <ng-template #templateListDetail let-data>
   <codx-temp-full
+     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
     cardCss="card codx_cardcenter p-3"
     [imageId]="data?.emp?.employeeID"
@@ -206,7 +207,7 @@
   >
   </codx-temp-full>
   <ng-template #titleTmp let-data>
-    <div>
+    <div class="w-100">
       <div class="justify-content-between text-dark fw-bold">
         <span>
           {{ data?.emp?.employeeName }}
@@ -248,7 +249,7 @@
           {{ data.expiredDate | fmDT }}
         </span>
       </div>
-      <div class="justify-content-between text-dark">
+      <div class="d-flex justify-content-between text-dark">
         <span class="mt-2">
           <codx-vll
             class="badge fw-bold"

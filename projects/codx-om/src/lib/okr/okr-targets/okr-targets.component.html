@@ -43,8 +43,8 @@
     <!-- Title OKR -->
     <div class="d-flex align-items-center justify-content-between" #titleOKR>
       <div class="d-flex align-items-center">
-        <i class="fa-solid fa-bullseye me-4 ms-1 text-danger"></i>
-        <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-4 fw-bold"></codx-label>
+        <!-- <i class="fa-solid fa-bullseye me-4 ms-1 text-danger"></i> -->
+        <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-2 fw-bold"></codx-label>
       </div>
       <div class="d-flex align-items-center">
         <div class="ms-2 me-2" ngbDropdown [container]="'body'">
@@ -81,7 +81,7 @@
         <div class="w-100 pt-3 pb-2 ob-background d-flex justify-content-between">
           <div class="d-flex align-items-center flex-row cursor-pointer w-100">
             <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-            <span>{{ item?.okrName }}</span>
+            <span class="ob-kr ob-name" (click)="showKR(item,null)">{{ item?.okrName }}</span>
             <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
               [value]="item?.category" class="ms-2 badge badge-light badge-md fs-7">
             </codx-vll>
@@ -144,7 +144,7 @@
         <div class="d-flex align-items-center cursor-pointer  w-100">
 
           <span class="me-2" [inlineSVG]="okrVll?.kr?.icon"></span>
-          <span> {{ item?.okrName }} </span>
+          <span class="ob-kr fs-6 kr-name"  (click)="showKR(item,null)"> {{ item?.okrName }} </span>
           <span class="mx-2">|</span>
           <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
           <span [innerHTML]="item?.umid | formatvalue : formModelKR : 'UMID' | async"></span>
@@ -200,7 +200,7 @@
         <div class="d-flex align-items-center cursor-pointer w-100">
 
           <span class="me-2" [inlineSVG]="okrVll?.skr?.icon"></span>
-          <div>{{ item?.okrName }} </div>
+          <div class="ob-kr" (click)="showKR(item,null)">{{ item?.okrName }} </div>
           <span class="mx-2">|</span>
           <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
 

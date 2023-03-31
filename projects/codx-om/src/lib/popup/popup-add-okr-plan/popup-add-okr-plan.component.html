@@ -18,7 +18,7 @@
                                     <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
                                     <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
                                         <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
-                                            [class]="'om-input w-100'"  [id]="'ob'+i"
+                                            [class]="'om-input w-100 fw-bold'" [cssClass]="'om-input w-100 fw-bold fs-4'"  [id]="'ob'+i"
                                             [emptyText]="okrGrv?.obGrv?.okrName?.description+ ' ' +(i+1)"
                                             (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -26,14 +26,14 @@
     
                                 <div class="w-40 d-flex justify-content-start ">
                                     <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace class="om-input w-80" field="category" type="valuelist"
-                                            [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="'text-center'"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist"
+                                            [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="'text-center'" [cssClass]="'fw-bold'"
                                             [emptyText]="okrGrv?.obGrv?.category?.description" [value]="ob?.category"
                                             (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
                                     <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace class="om-input w-80" field="confidence" type="valuelist"
-                                            [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="'text-center'"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist"
+                                            [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="'text-center'"[cssClass]="'fw-bold'"
                                             [emptyText]="okrGrv?.obGrv?.confidence?.description" [value]="ob?.confidence"
                                             (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -46,7 +46,7 @@
     
                                         <span class="me-2 mb-2" [inlineSVG]="okrVll?.kr?.icon"></span>
                                         <div class="d-flex align-items-center w-100">
-                                            <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
+                                            <div class="w-100 min-h-table d-flex justify-content-start w-100 align-items-end">
                                                 <codx-inplace type="text" field="okrName" [value]="kr?.okrName"
                                                     [class]="'om-input w-100'"  [id]="'ob'+i+'kr'+ii"
                                                     [emptyText]="okrGrv?.krGrv?.okrName?.description+ ' ' +(ii+1)"
@@ -93,9 +93,9 @@
                                                 <!-- <i class="icon-drag_indicator me-3 fs-3"></i>
                                                 <span class="fw-bold me-1">SKR{{iii+1}}:</span> -->
                                                 <div
-                                                    class="w-100 min-h-table d-flex justify-content-center align-items-end">
-                                                    <codx-inplace type="text" field="okrName" [value]="skr?.okrName"
-                                                        [class]="'om-input w-100'" [id]="'ob'+i+'kr'+ii+'skr'+iii"
+                                                    class="w-100 min-h-table d-flex justify-content-start w-100  align-items-end">
+                                                    <codx-inplace type="text" field="okrName" [value]="skr?.okrName" 
+                                                        [class]="'om-input w-100 text-gray-600 '" [id]="'ob'+i+'kr'+ii+'skr'+iii"
                                                         [emptyText]="okrGrv?.skrGrv?.okrName?.description+ ' ' +(ii+1)"
                                                         (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
                                                 </div>

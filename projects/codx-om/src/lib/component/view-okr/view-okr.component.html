@@ -14,7 +14,7 @@
       <div class="d-flex align-items-center flex-row cursor-pointer w-100">
         
         <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-        <span>{{ item?.okrName }}</span>
+        <span  class="ob-name" >{{ item?.okrName }}</span>
         <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
           [value]="item?.category" class="ms-2 badge badge-light badge-md fs-7">
         </codx-vll>
@@ -76,7 +76,7 @@
     <div class="d-flex align-items-center cursor-pointer  w-100">
       
       <span class="me-2" [inlineSVG]="okrVll?.kr?.icon"></span>
-      <span> {{ item?.okrName }} </span>
+      <span  class="fs-6 kr-name" > {{ item?.okrName }} </span>
       <span class="mx-2">|</span>
       <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
 
