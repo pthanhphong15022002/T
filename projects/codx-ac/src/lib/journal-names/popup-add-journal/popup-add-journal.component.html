@@ -59,6 +59,18 @@
     </div>
 
     <div class="form-group">
+      <codx-label
+        fiedName="inputMode"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="inputMode"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
       <ng-container
         *ngIf="journal.journalType == '0803' || journal.journalType == '0805'"
       >
@@ -159,7 +171,11 @@
       </div>
 
       <div class="col-2">
-        <div class="d-flex justify-content-end" role="button" (click)="openAutoNumberPopup()">
+        <div
+          class="d-flex justify-content-end"
+          role="button"
+          (click)="openAutoNumberPopup()"
+        >
           <span class="icon-edit-one icon-20 text-primary"></span>
         </div>
       </div>
