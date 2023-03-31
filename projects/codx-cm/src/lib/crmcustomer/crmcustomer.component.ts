@@ -18,7 +18,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopupAddCrmcontactsComponent } from './popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
 import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
 
@@ -468,6 +467,8 @@ export class CrmCustomerComponent
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
               this.view.dataService.update(e.event).subscribe();
+              console.log(this.entityName);
+              this.dataSelected = this.view.dataService.data[0];
               this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
@@ -476,7 +477,41 @@ export class CrmCustomerComponent
       });
   }
 
-  copy(data) {}
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '800px';
+        this.titleAction =
+          this.titleAction + ' ' + this.view?.function.customName;
+        var dialog = this.callfc.openSide(
+          PopupAddCrmcustomerComponent,
+          ['copy', this.titleAction],
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event).subscribe();
+            console.log(this.entityName);
+            this.dataSelected = this.view.dataService.data[0];
+            this.customerDetail.listTab(this.funcID);
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+    });
+  }
   //#endregion
 
   //#region event

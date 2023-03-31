@@ -5,13 +5,17 @@
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-          <div class="h-15px w-100 bg-gray-200 rounded-4">
-            <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="dataOKRPlans?.progress + '%'" aria-valuenow="50"
-              aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="h-15px w-100 bg-gray-200 rounded-4">            
+            <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="dataOKRPlans?.progress + '%'"
+              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            </div>
           </div>
-          <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">         
-            
-            <span [innerHTML]="(dataOKRPlans?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
+          <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
+
+            <span *ngIf="dataOKRPlans?.progress==0" [innerHTML]="(dataOKRPlans?.progress)+'%'"></span>
+            <span *ngIf="dataOKRPlans?.progress!=0"
+              [innerHTML]="(dataOKRPlans?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
+
           </div>
         </div>
       </div>
@@ -39,8 +43,8 @@
     <!-- Title OKR -->
     <div class="d-flex align-items-center justify-content-between" #titleOKR>
       <div class="d-flex align-items-center">
-        <i class="fa-solid fa-bullseye me-4 ms-1 text-danger"></i>
-        <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-4 fw-bold"></codx-label>
+        <!-- <i class="fa-solid fa-bullseye me-4 ms-1 text-danger"></i> -->
+        <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-2 fw-bold"></codx-label>
       </div>
       <div class="d-flex align-items-center">
         <div class="ms-2 me-2" ngbDropdown [container]="'body'">
@@ -55,9 +59,9 @@
             <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
           </div>
         </div>
-        <codx-toolbar-button [button]="button"  (buttonClick)="click($event)">
+        <codx-toolbar-button [button]="button" (buttonClick)="click($event)">
         </codx-toolbar-button>
-        
+
 
       </div>
     </div>
@@ -71,91 +75,43 @@
 
     <ng-template #templateTreeView let-item>
       <!--OB node-->
-        <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
+      <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
 
-          <hr class=" w-100 my-0">
-          <div class="w-100 pt-3 pb-2 ob-background d-flex justify-content-between">
-            <div class="d-flex align-items-center flex-row cursor-pointer w-100">
-              <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-              <span>{{ item?.okrName }}</span>
-              <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
-                [value]="item?.category" class="ms-2 badge badge-light badge-md fs-7">
-              </codx-vll>
-              <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
-                [value]="item?.confidence" class="badge badge-light badge-md fs-7">
-              </codx-vll>
-            </div>
-            <div class="d-flex align-items-center justify-content-end ">
-  
-              <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-              <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-                <span [innerHTML]="(item?.progress | formatvalue : formModelOB : 'progress' | async )+'%'"></span>
-                <div class="h-7px w-100 bg-gray-200 rounded-4">
-                  <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-  
-  
-              </div>
-              <div class="d-flex ms-5 align-items-end">
-                <button class="btn btn-icon btn-sm position-relative ms-4" (click)="clickTreeNode($event)" ngbTooltip="Kết quả">
-                  <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
-                  <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs " 
-                    [ngClass]="item?.items && item?.items.length >0 ? 'bg-color': 'bg-gray-300'">{{
-                    item?.items? item?.items.length :0 }}</span>
-                </button>
-                <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
-                  <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
-                  <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
-                    [ngClass]="item?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
-                    item?.totalLinkOKR ? item?.totalLinkOKR : 0 }}</span>
-                </button>
-                <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
-                  <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
-                  <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-                    [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                    item?.updates ? item?.updates.length : 0 }}</span>
-                </button>
-                <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
-                  <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
-                  <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-                    [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                    item?.notes ? item?.notes.length : 0 }}</span>
-                </button>
-                <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item" class="ms-4"
-                  (clickMF)="clickMF($event,item)"></codx-mfunc>
-              </div>
-            </div>
-          </div>
-        </div>  
-        <!--KR node-->
-        <div class="d-flex align-items-center  py-2 kr-background justify-content-between  " *ngIf="item?.okrType==krType">
-  
-          <div class="d-flex align-items-center cursor-pointer  w-100">
-            
-            <span class="me-2" [inlineSVG]="okrVll?.kr?.icon"></span>
-            <span> {{ item?.okrName }} </span>
-            <span class="mx-2">|</span>
-            <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
-            <span [innerHTML]="item?.umid | formatvalue : formModelKR : 'UMID' | async"></span>
+        <hr class=" w-100 my-0">
+        <div class="w-100 pt-3 pb-2 ob-background d-flex justify-content-between">
+          <div class="d-flex align-items-center flex-row cursor-pointer w-100">
+            <span class="me-2" [inlineSVG]="okrVll?.ob?.icon"></span>
+            <span class="ob-kr ob-name" (click)="showKR(item,null)">{{ item?.okrName }}</span>
+            <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+              [value]="item?.category" class="ms-2 badge badge-light badge-md fs-7">
+            </codx-vll>
+            <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+              [value]="item?.confidence" class="badge badge-light badge-md fs-7">
+            </codx-vll>
           </div>
           <div class="d-flex align-items-center justify-content-end ">
+
             <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
             <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-              
-              <span [innerHTML]="(item?.progress | formatvalue : formModelKR : 'progress' | async )+'%'"></span>
+              <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
+              <span *ngIf="item?.progress!=0"
+                [innerHTML]="(item?.progress | formatvalue : formModelOB : 'progress' | async )+'%'"></span>
               <div class="h-7px w-100 bg-gray-200 rounded-4">
                 <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                  aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                </div>
+                
               </div>
-  
+
+
             </div>
             <div class="d-flex ms-5 align-items-end">
-              <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Kết quả phụ">
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="clickTreeNode($event)"
+                ngbTooltip="Kết quả">
                 <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
-                  [ngClass]="item?.items  && item?.items.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.items ? item?.items.length : 0 }}</span>
+                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                  [ngClass]="item?.items && item?.items.length >0 ? 'bg-color': 'bg-gray-300'">{{
+                  item?.items? item?.items.length :0 }}</span>
               </button>
               <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
                 <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
@@ -167,71 +123,133 @@
                 <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
                   [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.updates ? item?.updates?.length : 0 }}</span>
+                  item?.updates ? item?.updates.length : 0 }}</span>
               </button>
               <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
                 <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
                   [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.notes ? item?.notes?.length : 0 }}</span>
+                  item?.notes ? item?.notes.length : 0 }}</span>
               </button>
-              <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-                (clickMF)="clickKRMF($event,item,false)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
+              <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item" class="ms-4"
+                (clickMF)="clickMF($event,item)"></codx-mfunc>
             </div>
           </div>
         </div>
-  
-        <!--SKR node-->
-        <div class="d-flex align-items-center  py-2 skr-background justify-content-between  ms-3" *ngIf="item?.okrType==skrType">
-          <div class="d-flex align-items-center cursor-pointer w-100">
-            
-            <span class="me-2" [inlineSVG]="okrVll?.skr?.icon"></span>
-            <div>{{ item?.okrName }} </div>
-            <span class="mx-2">|</span>
-            <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
-            
-            <span [innerHTML]="item?.umid | formatvalue : formModelSKR : 'UMID' | async"></span>
-          </div>
-          <div class="d-flex align-items-center justify-content-end ">
-            <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-            <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-              
-              <span [innerHTML]="(item?.progress | formatvalue : formModelSKR : 'progress' | async )+'%'"></span>
-              <div class="h-7px w-100 bg-gray-200 rounded-4">
-                <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
-                  aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <!--KR node-->
+      <div class="d-flex align-items-center  py-2 kr-background justify-content-between  "
+        *ngIf="item?.okrType==krType">
+
+        <div class="d-flex align-items-center cursor-pointer  w-100">
+
+          <span class="me-2" [inlineSVG]="okrVll?.kr?.icon"></span>
+          <span class="ob-kr fs-6 kr-name"  (click)="showKR(item,null)"> {{ item?.okrName }} </span>
+          <span class="mx-2">|</span>
+          <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+          <span [innerHTML]="item?.umid | formatvalue : formModelKR : 'UMID' | async"></span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end ">
+          <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+          <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+
+            <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
+            <span *ngIf="item?.progress!=0"
+              [innerHTML]="(item?.progress | formatvalue : formModelKR : 'progress' | async )+'%'"></span>
+            <div class="h-7px w-100 bg-gray-200 rounded-4">
+              <div class="rounded-4 h-7px" [ngClass]="item?.actual>=item?.current? 'bg-success' :'bg-danger'" role="progressbar" [style.width]="item?.progress + '%'"
+                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
               </div>
-  
             </div>
-            <div class="d-flex ms-5  align-items-end">
-              <button class="btn btn-icon btn-sm position-relative ms-4">
-                <span class="icon-vpn_key icon-20 text-gray-300 text-hover-primary"></span>
-  
-              </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
-                <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
-                  [ngClass]="item?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.totalLinkOKR ? item?.totalLinkOKR : 0 }}</span>
-              </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
-                <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-                  [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.updates ? item?.updates?.length : 0 }}</span>
-              </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
-                <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-                  [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.notes ? item?.notes?.length : 0 }}</span>
-              </button>
-              <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
-                (clickMF)="clickKRMF($event,item,true)"  (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
-            </div>
+
+          </div>
+          <div class="d-flex ms-5 align-items-end">
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Kết quả phụ">
+              <span class="icon-vpn_key icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                [ngClass]="item?.items  && item?.items.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.items ? item?.items.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
+              <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                [ngClass]="item?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.totalLinkOKR ? item?.totalLinkOKR : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
+              <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.updates ? item?.updates?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
+              <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.notes ? item?.notes?.length : 0 }}</span>
+            </button>
+            <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
+              (clickMF)="clickKRMF($event,item,false)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
           </div>
         </div>
-      
+      </div>
+
+      <!--SKR node-->
+      <div class="d-flex align-items-center  py-2 skr-background justify-content-between  ms-3"
+        *ngIf="item?.okrType==skrType">
+        <div class="d-flex align-items-center cursor-pointer w-100">
+
+          <span class="me-2" [inlineSVG]="okrVll?.skr?.icon"></span>
+          <div class="ob-kr" (click)="showKR(item,null)">{{ item?.okrName }} </div>
+          <span class="mx-2">|</span>
+          <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+
+          <span [innerHTML]="item?.umid | formatvalue : formModelSKR : 'UMID' | async"></span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end ">
+          <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
+          <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
+
+            <span *ngIf="item?.progress!=0"
+              [innerHTML]="(item?.progress | formatvalue : formModelSKR : 'progress' | async )+'%'"></span>
+
+            <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
+            <div class="h-7px w-100 bg-gray-200 rounded-4">
+              <div class="rounded-4 h-7px" [ngClass]="item?.actual>=item?.current? 'bg-success' :'bg-danger'" role="progressbar" [style.width]="item?.progress + '%'"
+                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+
+          </div>
+          <div class="d-flex ms-5  align-items-end">
+            <button class="btn btn-icon btn-sm position-relative ms-4">
+              <span class="icon-vpn_key icon-20 text-gray-300 text-hover-primary"></span>
+
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
+              <span class="icon-link icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
+                [ngClass]="item?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.totalLinkOKR ? item?.totalLinkOKR : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
+              <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.updates ? item?.updates?.length : 0 }}</span>
+            </button>
+            <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
+              <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
+                [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
+                item?.notes ? item?.notes?.length : 0 }}</span>
+            </button>
+            <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
+              (clickMF)="clickKRMF($event,item,true)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
+          </div>
+        </div>
+      </div>
+
 
     </ng-template>
 
@@ -240,4 +258,4 @@
 
 <ng-template #popupAddTask>
   <app-popup-add></app-popup-add>
-  </ng-template>
+</ng-template>

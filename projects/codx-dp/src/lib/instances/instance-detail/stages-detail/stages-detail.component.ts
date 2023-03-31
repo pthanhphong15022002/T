@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   SimpleChanges,
@@ -71,7 +72,9 @@ export class StagesDetailComponent implements OnInit {
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
   @Input() showColumnControl = 1;
-  @Input() listStep:any;
+  @Input() listStep: any;
+  @Input() viewsCurrent = '';
+  @Input()currentElmID :string
   @Output() saveAssign = new EventEmitter<any>();
 
   dateActual: any;
@@ -128,7 +131,7 @@ export class StagesDetailComponent implements OnInit {
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
-
+  viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
 
@@ -138,10 +141,16 @@ export class StagesDetailComponent implements OnInit {
     private cache: CacheService,
     private authStore: AuthStore,
     private dpService: CodxDpService,
-    private serviceInstance: InstancesComponent,
+    private serviceInstance: InstancesComponent
   ) {
     this.user = this.authStore.get();
+    this.viewCrr = this.viewsCurrent;
   }
+  // ngOnChange() {
+  //   if(this.viewCrr != this.viewsCurrent){
+  //     this.cu
+  //   }
+  // }
 
   ngOnInit(): void {
     this.grvTaskGroupsForm = {
@@ -828,7 +837,8 @@ export class StagesDetailComponent implements OnInit {
         this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
           if (res) {
             this.dataProgressClone['progress'] = this.dataProgress['progress'];
-            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS006');
             this.popupUpdateProgress.close();
@@ -837,13 +847,14 @@ export class StagesDetailComponent implements OnInit {
           }
         });
       }
-      if (x.event && x.event.status == 'N'){
+      if (x.event && x.event.status == 'N') {
         let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
         delete taskGroupSave['task'];
         this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
           if (res) {
             this.dataProgressClone['progress'] = this.dataProgress['progress'];
-            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS006');
             this.popupUpdateProgress.close();
@@ -876,13 +887,14 @@ export class StagesDetailComponent implements OnInit {
             this.popupUpdateProgress.close();
           }
         });
-      } 
-      if (x.event && x.event.status == 'N'){
+      }
+      if (x.event && x.event.status == 'N') {
         let dataSave = [this.dataProgress, -1];
         this.dpService.updateTask(dataSave).subscribe((res) => {
           if (res) {
             this.dataProgressClone['progress'] = this.dataProgress['progress'];
-            this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+            this.dataProgressClone['actualEnd'] =
+              this.dataProgress['actualEnd'];
             this.dataProgressClone['note'] = this.dataProgress['note'];
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
@@ -959,20 +971,20 @@ export class StagesDetailComponent implements OnInit {
     this.dpService
       .updateProgressStep([stepID, Number(medium)])
       .subscribe((res) => {
-        if (res) {;
+        if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
 
-
-          // đang test cấm xóa
-          // if(true){
-          // let dataInstance = {
-          //   instance:this.instance,
-          //   listStep:this.listStep,
-          //   step:this.step
-          // }
-          //   this.serviceInstance.autoMoveStage(dataInstance);
-          // }
+          // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
+          // sửa false thành điều kiện
+          if(false){
+          let dataInstance = {
+            instance:this.instance,
+            listStep:this.listStep,
+            step:this.step
+          }
+            this.serviceInstance.autoMoveStage(dataInstance);
+          }
 
         }
       });

@@ -18,7 +18,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
+          *ngIf="isUpdate"
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
@@ -31,7 +31,7 @@
           (click)="
             clickShow(
               $event,
-              titleDefault ? dataStep.recID : 'v-' + dataStep.recID
+              viewsCurrent+(titleDefault ? dataStep.recID : 'v-' + dataStep.recID)
             )
           "
         >
@@ -41,7 +41,7 @@
     </div>
   </div>
   <div
-    id="{{ titleDefault ? dataStep.recID : 'v-' + dataStep.recID }}"
+    id="{{ viewsCurrent+(titleDefault ? dataStep.recID : 'v-' + dataStep.recID) }}"
     class="main"
     [ngClass]="'show-main'"
   >
@@ -67,16 +67,16 @@
 
 <ng-template #viewCustomFields let-data>
   <div
-    id="{{ titleDefault ? data.recID : 'v-' + data.recID }}"
-    class="show-main border border-gray-200 rounded px-6 py-4"
+    id="{{ viewsCurrent+(titleDefault ? data.recID : 'v-' + data.recID) }}"
+    class="show-main border border-gray-200 rounded px-6 py-4 cursor-pointer"
     (dblclick)="
-      clickInput(titleDefault ? data.recID : 'v-' + data.recID, dataStep, true)
+      clickInput(viewsCurrent+(titleDefault ? data.recID : 'v-' + data.recID), dataStep, true)
     "
   >
     <div class="fw-bold mb-1">
       {{ data.title }}
     </div>
-    <div class="cursor-pointer">
+    <div class="">
       <span class="place-holder margin-l" *ngIf="!data.dataValue">
         {{ data.title }}
       </span>
@@ -171,7 +171,7 @@
 
   <ng-container>
     <div
-      id="fr-{{ titleDefault ? data.recID : 'v-' + data.recID }}"
+      id="fr-{{ viewsCurrent+(titleDefault ? data.recID : 'v-' + data.recID)}}"
       class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
     >
       <codx-input-custom-field

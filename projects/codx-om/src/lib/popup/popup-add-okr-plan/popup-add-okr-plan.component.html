@@ -1,165 +1,167 @@
-<codx-form *ngIf="skrGrid && krGrid && obGrid" [headerText]="headerText" [dialog]="dialogRef"
-    [bodyCss]="'bgEDEDED pt-5 px-25'" [body]="body">
+<codx-form *ngIf="okrGrv?.krGrv && okrGrv?.obGrv && okrGrv?.skrGrv" [headerText]="headerText" [dialog]="dialogRef"
+    [bodyCss]="'bgEDEDED pt-5'" [body]="body">
 </codx-form>
 <ng-template #body>
-
-    <div class=" bg-white d-flex justify-content-between flex-column h-100 w-100 ">
-        <div class="d-flex justify-content-between align-items-center pt-10 pb-5 px-15">
-            <span class="fs-2 fw-bold">{{curOrgName}}</span>
-            <span class="fs-4 fw-bold">{{okrPlan.periodID}}</span>
-        </div>
-        <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
-            <div class="flex-column d-flex justify-content-start px-15">
-                <div class="d-flex justify-content-start flex-column pb-5" *ngFor="let ob of dataOKR;let i=index">
-                    <div class="d-flex justify-content-start flex-column">
-                        <div class="d-flex align-items-end flex-row cursor-pointer w-100">
-                            <div class="w-70 d-flex justify-content-start align-items-end">
-
-                                <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-                                <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
-                                    <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
-                                        [class]="'om-input w-100'"  [id]="'ob'+i"
-                                        [emptyText]="obGrid?.okrName?.description+ ' ' +(i+1)"
-                                        (valueChange)="obChange($event,i)"></codx-inplace>
+    <div class="container d-flex h-100 w-100 bgEDEDED">
+        <div class=" bg-white d-flex justify-content-between flex-column h-100 w-100 ">
+            <div class="d-flex justify-content-between align-items-center pt-10 pb-5 px-15">
+                <span class="fs-2 fw-bold">{{curOrgName}}</span>
+                <span class="fs-4 fw-bold">{{okrPlan?.periodID}}</span>
+            </div>
+            <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
+                <div class="flex-column d-flex justify-content-start px-15">
+                    <div class="d-flex justify-content-start flex-column pb-5" *ngFor="let ob of dataOKR;let i=index">
+                        <div class="d-flex justify-content-start flex-column">
+                            <div class="d-flex align-items-end flex-row cursor-pointer w-100">
+                                <div class="w-60 d-flex justify-content-start align-items-end">
+    
+                                    <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
+                                    <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
+                                        <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
+                                            [class]="'om-input w-100 fw-bold'" [cssClass]="'om-input w-100 fw-bold fs-4'"  [id]="'ob'+i"
+                                            [emptyText]="okrGrv?.obGrv?.okrName?.description+ ' ' +(i+1)"
+                                            (valueChange)="obChange($event,i)"></codx-inplace>
+                                    </div>
                                 </div>
+    
+                                <div class="w-40 d-flex justify-content-start ">
+                                    <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
+                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist"
+                                            [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="'text-center'" [cssClass]="'fw-bold'"
+                                            [emptyText]="okrGrv?.obGrv?.category?.description" [value]="ob?.category"
+                                            (valueChange)="obChange($event,i)"></codx-inplace>
+                                    </div>
+                                    <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
+                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist"
+                                            [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="'text-center'"[cssClass]="'fw-bold'"
+                                            [emptyText]="okrGrv?.obGrv?.confidence?.description" [value]="ob?.confidence"
+                                            (valueChange)="obChange($event,i)"></codx-inplace>
+                                    </div>
+                                </div>
+    
                             </div>
-
-                            <div class="w-30 d-flex justify-content-start ">
-                                <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
-                                    <codx-inplace class="om-input w-80" field="category" type="valuelist"
-                                        [refValue]="obGrid?.category?.referedValue" [class]="'text-center'"
-                                        [emptyText]="obGrid?.category?.description" [value]="ob?.category"
-                                        (valueChange)="obChange($event,i)"></codx-inplace>
-                                </div>
-                                <div class="w-45 min-h-table d-flex justify-content-center align-items-end">
-                                    <codx-inplace class="om-input w-80" field="confidence" type="valuelist"
-                                        [refValue]="obGrid?.confidence?.referedValue" [class]="'text-center'"
-                                        [emptyText]="obGrid?.confidence?.description" [value]="ob?.confidence"
-                                        (valueChange)="obChange($event,i)"></codx-inplace>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="d-flex justify-content-start flex-column" *ngFor="let kr of ob?.items;let ii=index">
-                            <div class="d-flex align-items-end cursor-pointer w-100 ">
-                                <div class="w-70 d-flex align-items-end justify-content-start ps-8">
-
-                                    <span class="me-2 mb-2" [inlineSVG]="okrVll?.kr?.icon"></span>
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
-                                            <codx-inplace type="text" field="okrName" [value]="kr?.okrName"
-                                                [class]="'om-input w-100'"  [id]="'ob'+i+'kr'+ii"
-                                                [emptyText]="krGrid?.okrName?.description+ ' ' +(ii+1)"
+                            <div class="d-flex justify-content-start flex-column" *ngFor="let kr of ob?.items;let ii=index">
+                                <div class="d-flex align-items-end cursor-pointer w-100 ">
+                                    <div class="w-60 d-flex align-items-end justify-content-start ps-8">
+    
+                                        <span class="me-2 mb-2" [inlineSVG]="okrVll?.kr?.icon"></span>
+                                        <div class="d-flex align-items-center w-100">
+                                            <div class="w-100 min-h-table d-flex justify-content-start w-100 align-items-end">
+                                                <codx-inplace type="text" field="okrName" [value]="kr?.okrName"
+                                                    [class]="'om-input w-100'"  [id]="'ob'+i+'kr'+ii"
+                                                    [emptyText]="okrGrv?.krGrv?.okrName?.description+ ' ' +(ii+1)"
+                                                    (valueChange)="krChange($event,i,ii)"></codx-inplace>
+                                            </div>
+                                        </div>
+    
+                                    </div>
+                                    <div class="w-40 d-flex justify-content-start ">
+                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                            <codx-inplace type="valuelist" [refValue]="okrGrv?.krGrv?.measurement?.referedValue"
+                                                [emptyText]="okrGrv?.krGrv?.measurement?.headerText" field="measurement"
+                                                [value]="kr?.measurement" [class]="'om-input w-100 text-center'"
+                                                (valueChange)="krChange($event,i,ii)"></codx-inplace>   
+                                        </div>
+    
+                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                            <codx-inplace type="number" [refValue]="okrGrv?.krGrv?.target?.referedValue" [showButtons]="false"
+                                                [emptyText]="okrGrv?.krGrv?.target?.headerText" field="target" [value]="kr?.target"
+                                                [class]="' w-100 om-input text-center'"
                                                 (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                         </div>
-                                    </div>
-
-                                </div>
-                                <div class="w-30 d-flex justify-content-start ">
-                                    <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace type="valuelist" [refValue]="krGrid?.measurement?.referedValue"
-                                            [emptyText]="krGrid?.measurement?.headerText" field="measurement"
-                                            [value]="kr?.measurement" [class]="'om-input w-100 text-center'"
-                                            (valueChange)="krChange($event,i,ii)"></codx-inplace>   
-                                    </div>
-
-                                    <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace type="number" [refValue]="krGrid?.target?.referedValue" [showButtons]="false"
-                                            [emptyText]="krGrid?.target?.headerText" field="target" [value]="kr?.target"
-                                            [class]="' w-100 om-input text-center'"
-                                            (valueChange)="krChange($event,i,ii)"></codx-inplace>
-                                    </div>
-
-                                    <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                        <codx-inplace type="combobox" [refValue]="krGrid?.umid?.referedValue"
-                                            [emptyText]="krGrid?.umid?.headerText" field="umid" [value]="kr?.umid"
-                                            [class]="' w-100 om-input text-center'"
-                                            (valueChange)="krChange($event,i,ii)"></codx-inplace>
-                                    </div>
-
-                                    <div class="w-10 d-flex align-items-end justify-content-center mb-3">
-                                        <span class="icon-post_add cursor-pointer text-gray-600 w-fit" ngbTooltip="Thêm kết quả phụ"
-                                            (click)="addOKR(skrType,i,ii)"></span>
+    
+                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                            <codx-inplace type="combobox" [refValue]="okrGrv?.krGrv?.umid?.referedValue"
+                                                [emptyText]="okrGrv?.krGrv?.umid?.headerText" field="umid" [value]="kr?.umid"
+                                                [class]="' w-100 om-input text-center'"
+                                                (valueChange)="krChange($event,i,ii)"></codx-inplace>
+                                        </div>
+    
+                                        <div class="w-10 d-flex align-items-end justify-content-center mb-3">
+                                            <span class="icon-post_add cursor-pointer text-gray-600 w-fit" ngbTooltip="Thêm kết quả phụ"
+                                                (click)="addOKR(skrType,i,ii)"></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-start flex-column"
-                                *ngFor="let skr of kr?.items;let iii=index">
-                                <div class="d-flex align-items-center cursor-pointer w-100 ">
-                                    <div class="w-70 d-flex justify-content-start align-items-end ps-16">
-
-                                        <span class="me-2 mb-2" [inlineSVG]="okrVll?.skr?.icon"></span>
-                                        <div class="d-flex align-items-center w-100">
-                                            <!-- <i class="icon-drag_indicator me-3 fs-3"></i>
-                                            <span class="fw-bold me-1">SKR{{iii+1}}:</span> -->
-                                            <div
-                                                class="w-100 min-h-table d-flex justify-content-center align-items-end">
-                                                <codx-inplace type="text" field="okrName" [value]="skr?.okrName"
-                                                    [class]="'om-input w-100'" [id]="'ob'+i+'kr'+ii+'skr'+iii"
-                                                    [emptyText]="skrGrid?.okrName?.description+ ' ' +(ii+1)"
+                                <div class="d-flex justify-content-start flex-column"
+                                    *ngFor="let skr of kr?.items;let iii=index">
+                                    <div class="d-flex align-items-center cursor-pointer w-100 ">
+                                        <div class="w-60 d-flex justify-content-start align-items-end ps-16">
+    
+                                            <span class="me-2 mb-2" [inlineSVG]="okrVll?.skr?.icon"></span>
+                                            <div class="d-flex align-items-center w-100">
+                                                <!-- <i class="icon-drag_indicator me-3 fs-3"></i>
+                                                <span class="fw-bold me-1">SKR{{iii+1}}:</span> -->
+                                                <div
+                                                    class="w-100 min-h-table d-flex justify-content-start w-100  align-items-end">
+                                                    <codx-inplace type="text" field="okrName" [value]="skr?.okrName" 
+                                                        [class]="'om-input w-100 text-gray-600 '" [id]="'ob'+i+'kr'+ii+'skr'+iii"
+                                                        [emptyText]="okrGrv?.skrGrv?.okrName?.description+ ' ' +(ii+1)"
+                                                        (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                        <div class="w-40 d-flex justify-content-start ">
+                                            <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                                <codx-inplace type="valuelist"
+                                                    [refValue]="okrGrv?.skrGrv?.measurement?.referedValue"
+                                                    [emptyText]="okrGrv?.skrGrv?.measurement?.headerText" field="measurement"
+                                                    [value]="skr?.measurement" [class]="'om-input w-100 text-center'"
+                                                    (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>                                                                                
+                                            </div>
+    
+                                            <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                                <codx-inplace type="number" [refValue]="okrGrv?.skrGrv?.target?.referedValue"
+                                                    [emptyText]="okrGrv?.skrGrv?.target?.headerText" field="target"
+                                                    [value]="skr?.target" [class]="' w-100 om-input text-center'"
+                                                    (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
+                                            </div>
+    
+                                            <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
+                                                <codx-inplace type="combobox" [refValue]="okrGrv?.skrGrv?.umid?.referedValue"
+                                                    [emptyText]="okrGrv?.skrGrv?.umid?.headerText" field="umid" [value]="skr?.umid"
+                                                    [class]="' w-100 om-input text-center'"
                                                     (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
                                             </div>
                                         </div>
-
                                     </div>
-                                    <div class="w-30 d-flex justify-content-start ">
-                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                            <codx-inplace type="valuelist"
-                                                [refValue]="skrGrid?.measurement?.referedValue"
-                                                [emptyText]="skrGrid?.measurement?.headerText" field="measurement"
-                                                [value]="skr?.measurement" [class]="'om-input w-100 text-center'"
-                                                (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>                                                                                
-                                        </div>
-
-                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                            <codx-inplace type="number" [refValue]="skrGrid?.target?.referedValue"
-                                                [emptyText]="skrGrid?.target?.headerText" field="target"
-                                                [value]="skr?.target" [class]="' w-100 om-input text-center'"
-                                                (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
-                                        </div>
-
-                                        <div class="w-30 min-h-table d-flex justify-content-center align-items-end">
-                                            <codx-inplace type="combobox" [refValue]="skrGrid?.umid?.referedValue"
-                                                [emptyText]="skrGrid?.umid?.headerText" field="umid" [value]="skr?.umid"
-                                                [class]="' w-100 om-input text-center'"
-                                                (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
-                                        </div>
-                                    </div>
+    
                                 </div>
-
                             </div>
-                        </div>
-                        <div class="w-100 h-100 flex-column d-flex justify-content-start ">
-
-                            <div class="d-flex align-items-center cursor-pointer om-add-btn py-3 ps-8 w-fit"
-                                (click)="addOKR(krType,i,0)">
-                                <i class="icon-add_circle_outline me-3 om-fs-3"></i>
-                                <codx-label class="text-gray-600" default="Thêm kết quả"
-                                    fiedName="lblAddKR"></codx-label>
+                            <div class="w-100 h-100 flex-column d-flex justify-content-start ">
+    
+                                <div class="d-flex align-items-center cursor-pointer om-add-btn py-3 ps-8 w-fit"
+                                    (click)="addOKR(krType,i,0)">
+                                    <i class="icon-add_circle_outline me-3 om-fs-3"></i>
+                                    <codx-label class="text-gray-600" default="Thêm kết quả"
+                                        fiedName="lblAddKR"></codx-label>
+                                </div>
                             </div>
+    
                         </div>
-
                     </div>
-                </div>
-
-
-                <div class="w-100 h-100 flex-column d-flex justify-content-start py-3 ">
-                    <div class="d-flex align-items-center cursor-pointer om-add-btn w-fit" (click)="addOKR(obType,0,0)">
-                        
-                        <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-                        <codx-label class="text-gray-600 om-border-bottom-add fw-bold" default="Thêm mục tiêu"
-                            fiedName="lblAddObject"></codx-label>
+    
+    
+                    <div class="w-100 h-100 flex-column d-flex justify-content-start py-3 ">
+                        <div class="d-flex align-items-center cursor-pointer om-add-btn w-fit" (click)="addOKR(obType,0,0)">
+                            
+                            <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
+                            <codx-label class="text-gray-600 om-border-bottom-add fw-bold" default="Thêm mục tiêu"
+                                fiedName="lblAddObject"></codx-label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="d-flex justify-content-end mb-10 px-15" style="height:35px" (click)="onSaveForm()">
-            <button type="button" class="btn btn-primary"><codx-label default="Lưu"
-                    fiedName="lblSave"></codx-label></button>
+    
+    
+            <div class="d-flex justify-content-end my-5 px-15" (click)="onSaveForm()">
+                <button type="button" class="btn btn-primary"><codx-label default="Lưu"
+                        fiedName="lblSave"></codx-label></button>
+            </div>
         </div>
     </div>
+    
 
 </ng-template>
 <ng-template #footer>

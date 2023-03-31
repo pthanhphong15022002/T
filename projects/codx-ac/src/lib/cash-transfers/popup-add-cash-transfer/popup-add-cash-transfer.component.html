@@ -17,7 +17,9 @@
         <ng-template #headerText>
           <div class="d-flex align-items-top">
             <i class="icon-info icon-18 me-2"></i>
-            <div class="fw-bold fs-6 text-uppercase">Thông tin chung</div>
+            <div class="fw-bold fs-6 text-uppercase">
+              {{ tabName$ | async }}
+            </div>
           </div>
         </ng-template>
         <ng-template #content>
@@ -302,8 +304,7 @@
                     ></codx-label>
                     <codx-input
                       field="invoiceDate"
-                      type="datetime"
-                      format="F"
+                      [formModel]="fmVATInvoice"
                       [crrValue]="vatInvoice?.invoiceDate"
                       (valueChange)="handleInputChange($event, 'vatInvoice')"
                       [disabled]="!hasInvoice"
