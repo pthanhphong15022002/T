@@ -73,8 +73,7 @@
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <codx-comments [funcID]="funcID" [dVll]="dVll" [objectType]="objectType" [data]="data"
-            [parentID]="data.parentID" [refID]="data.recID" [new]="false" [formModel]="formModel"
-            (evtViewDetail)="clickViewDetailComment($event)" (evtDeleteComment)="deleteComment($event)"
+            [parentID]="data.parentID" [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
         <div class="ms-15" *ngFor="let item of data.listComment">
@@ -92,8 +91,7 @@
     <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <div>
             <codx-comments [funcID]="funcID" [dVll]="dVll" [objectType]="objectType" [data]="data"
-                [parentID]="data.parentID" [refID]="data.recID" [new]="false" [formModel]="formModel"
-                (evtViewDetail)="clickViewDetailComment($event)" (evtDeleteComment)="deleteComment($event)"
+                [parentID]="data.parentID" [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
         </div>

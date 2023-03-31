@@ -44,20 +44,18 @@ export class PopupAddOKRPlanComponent
   funcID: any;
   okrPlan: any;
   headerText = '';
-  modelOKR: any;
   curOrgName = '';
   okrFG: FormGroup;
   listFG: any;
   dataOKR: any;
-  obGrid: any;
-  krGrid: any;
-  skrGrid: any;
   owner: any;
   funcType: any;
   isAdd = false;
   curOrgID: any;
   okrFM: any;
   okrVll: any;
+  groupModel: any;
+  okrGrv: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -69,28 +67,21 @@ export class PopupAddOKRPlanComponent
     super(injector);
     this.funcID = dialogData.data[0];
     this.okrPlan = dialogData.data[1];
+    this.groupModel = {...dialogData.data[2]};
     this.headerText = dialogData.data[3];
     this.curOrgID = dialogData.data[4];
     this.curOrgName = dialogData.data[5];
     this.okrFM = dialogData.data[6];
     this.okrVll = dialogData.data[7];
     this.funcType = dialogData.data[8];
+    this.okrGrv = dialogData.data[9];
 
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;
-    this.modelOKR = dialogData.data[2];
     if (this.funcType == OMCONST.MFUNCID.Add) {
       this.isAdd = true;
-      this.modelOKR.items = [];
-      this.modelOKR.isAdd = true;
-      this.modelOKR.okrLevel = this.okrPlan.okrLevel;
-      this.modelOKR.periodID = this.okrPlan.periodID;
-      this.modelOKR.year = this.okrPlan.year;
-      this.modelOKR.interval = this.okrPlan.interval;
-      this.modelOKR.okrType = this.obType;
-      this.modelOKR.target = 0;
-      this.modelOKR.measurement = null;
-      this.dataOKR = [{ ...this.modelOKR }];
+
+      this.dataOKR = [];
     }
   }
 
@@ -107,46 +98,13 @@ export class PopupAddOKRPlanComponent
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   getCacheData() {
-    this.cache
-      .gridViewSetup(
-        this.okrFM?.obFM?.formName,
-        this.okrFM?.obFM?.gridViewName
-      )
-      .subscribe((obGrd) => {
-        if (obGrd) {
-          this.obGrid = Util.camelizekeyObj(obGrd);
-          console.log(this.obGrid);
-        }
-      });
-    this.cache
-      .gridViewSetup(
-        this.okrFM?.krFM?.formName,
-        this.okrFM?.krFM?.gridViewName
-      )
-      .subscribe((krGrd) => {
-        if (krGrd) {
-          this.krGrid = Util.camelizekeyObj(krGrd);
-        }
-      });
-    this.cache
-      .gridViewSetup(
-        this.okrFM?.skrFM?.formName,
-        this.okrFM?.skrFM?.gridViewName
-      )
-      .subscribe((skrGrd) => {
-        if (skrGrd) {
-          this.skrGrid = Util.camelizekeyObj(skrGrd);
-        }
-      });
+    
 
-      this.cache
-      .valueList("OM004"
-      )
-      .subscribe((skrGrd) => {
-        if (skrGrd) {
-          let x = skrGrd;
-        }
-      });
+    this.cache.valueList('OM004').subscribe((skrGrd) => {
+      if (skrGrd) {
+        let x = skrGrd;
+      }
+    });
   }
 
   //---------------------------------------------------------------------------------//
@@ -201,59 +159,80 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   addOKR(type: any, obIndex: number, krIndex: number) {
     if (type && obIndex != null && krIndex != null) {
-      let tmpOKR = { ...this.modelOKR };
-      tmpOKR.items = [];
-      tmpOKR.isAdd = true;
       switch (type) {
         case this.obType:
-          tmpOKR.okrType = this.obType;
-          this.dataOKR.push(tmpOKR);
+          this.dataOKR.push(this.createNewOKR(type));
           break;
 
         case this.krType:
           if (this.dataOKR[obIndex]?.okrName == null) {
-            this.notificationsService.notify('OM002');
+            this.notificationsService.notify('Tên mục tiêu không được bỏ trống');
             return;
           }
           if (!this.dataOKR[obIndex]?.items) {
             this.dataOKR[obIndex].items = [];
           }
-          tmpOKR.okrType = this.krType;
-          this.dataOKR[obIndex]?.items.push(tmpOKR);
+          this.dataOKR[obIndex]?.items.push(this.createNewOKR(type));
           break;
 
         case this.skrType:
           if (this.dataOKR[obIndex]?.items[krIndex]?.okrName == null) {
-            this.notificationsService.notify('OM002');
+            this.notificationsService.notify('Tên kết quả chính không được bỏ trống');
             return;
           }
           if (!this.dataOKR[obIndex]?.items[krIndex]?.items) {
             this.dataOKR[obIndex].items[krIndex].items = [];
           }
-          tmpOKR.okrType = this.skrType;
-          this.dataOKR[obIndex]?.items[krIndex]?.items.push(tmpOKR);
+          this.dataOKR[obIndex]?.items[krIndex]?.items.push(this.createNewOKR(type));
           break;
       }
 
       this.detectorRef.detectChanges();
-      let id='';
-      switch(type){
+      let id = '';
+      switch (type) {
         case this.obType:
-          id='ob'+(this.dataOKR.length-1);
+          id = 'ob' + (this.dataOKR.length - 1);
           break;
         case this.krType:
-          id='ob'+obIndex+'kr'+(this.dataOKR[obIndex].items.length-1);
+          id = 'ob' + obIndex + 'kr' + (this.dataOKR[obIndex].items.length - 1);
           break;
         case this.skrType:
-          id='ob'+obIndex+'kr'+krIndex+'skr'+(this.dataOKR[obIndex].items[krIndex].items.length-1);
+          id =
+            'ob' +
+            obIndex +
+            'kr' +
+            krIndex +
+            'skr' +
+            (this.dataOKR[obIndex].items[krIndex].items.length - 1);
           break;
       }
-      let dom=document.getElementById(id);
+      let dom = document.getElementById(id);
       let curInput = window.ng.getComponent(dom);
-      if(curInput){
+      if (curInput) {
         curInput.multiSelectObj.enableEditMode = true;
       }
     }
+  }
+  createNewOKR(type: string) {
+    let tmpOKR = null;
+    switch (type) {
+      case this.obType:
+        tmpOKR = {...this.groupModel.obModel};
+        break;
+      case this.krType:
+        tmpOKR = {...this.groupModel.krModel};
+        break;
+      case this.skrType:
+        tmpOKR = {...this.groupModel.skrModel};
+        break;
+    }
+    tmpOKR.items = [];
+    tmpOKR.isAdd = true;
+    tmpOKR.okrLevel = this.okrPlan.okrLevel;
+    tmpOKR.periodID = this.okrPlan.periodID;
+    tmpOKR.year = this.okrPlan.year;
+    tmpOKR.interval = this.okrPlan.interval;
+    return tmpOKR;
   }
   obChange(evt: any, obIndex: number) {
     if (evt && evt?.field && evt?.data != null && obIndex != null) {
@@ -292,24 +271,23 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
-  inputValidate(){
+  inputValidate() {
     for (let ob of this.dataOKR) {
-      ob.weight= 1/this.dataOKR.length;
+      ob.weight = 1 / this.dataOKR.length;
       if (ob.okrName == null || ob.okrName == '') {
-        this.notificationsService.notify('OM002');
+        this.notificationsService.notify('Tên mục tiêu không được bỏ trống');
         return;
       } else {
         for (let kr of ob.items) {
-          
-          kr.weight= 1/ob.items.length;
+          kr.weight = 1 / ob.items.length;
           if (kr.okrName == null || kr.okrName == '') {
-            this.notificationsService.notify('OM002');
+            this.notificationsService.notify('Tên kết quả chính không được bỏ trống');
             return;
-          } else {            
+          } else {
             for (let skr of kr.items) {
-              skr.weight= 1/kr.items.length;
+              skr.weight = 1 / kr.items.length;
               if (skr.okrName == null || skr.okrName == '') {
-                this.notificationsService.notify('OM002');
+                this.notificationsService.notify('Tên kết quả phụ không được bỏ trống');
                 return;
               }
             }
@@ -326,8 +304,15 @@ export class PopupAddOKRPlanComponent
     this.codxOmService
       .addEditOKRPlans(this.okrPlan, this.dataOKR, this.isAdd)
       .subscribe((res) => {
-        if (res) {          
-          this.notificationsService.notifyCode('SYS007');
+        if (res) {
+          if(this.isAdd){
+
+            this.notificationsService.notifyCode('SYS006');
+          }
+          else{
+            
+            this.notificationsService.notifyCode('SYS007');
+          }
           this.dialogRef && this.dialogRef.close(true);
         }
       });
@@ -335,9 +320,7 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
-  onCreated(evt:any){
-
-  }
+  onCreated(evt: any) {}
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
