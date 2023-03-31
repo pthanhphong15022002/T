@@ -247,6 +247,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   lstGroup = [];
   checkGroup = true;
   errorMessage = '';
+  listPermissions: any;
+  listPermissionsSaved: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -273,21 +275,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValueYesNo();
     this.getValueDayHour();
     if (this.action === 'copy') {
+      this.listPermissions = [];
+      this.listPermissions = JSON.parse(JSON.stringify(this.process.permissions));
+      this.process.permissions = [];
       this.instanceNoSetting = this.process.instanceNoSetting;
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
         (this.newIdProccess = dt.data.newIdProccess),
         (this.listValueCopy = dt.data.listValueCopy);
       var valueListStr = this.listValueCopy.join(';');
-      this.process.permissions =
-        this.listValueCopy.findIndex((x) => x === '2') !== -1
-          ? this.process.permissions
-          : [];
-      this.permissions = this.process.permissions;
-      this.setDefaultOwner();
 
-      // copy file image
-      // this.process.recID = this.oldIdProccess;
       this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
         this.getListStepByProcessIDCopy(
           this.oldIdProccess,
@@ -2452,7 +2449,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? event.previousIndex + 1
         : event.currentIndex + 1;
     let listID = this.stepList
-      ?.filter((step) => step.stepNo >= start && step.stepNo <= end)
+      ?.filter((step) => step.stepNo >= start)
       .map((stepFind) => {
         return stepFind.recID;
       });
@@ -3304,8 +3301,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   getListStepByProcessIDCopy(oldProccesID, newProccessID, valueListStr) {
     var data = [oldProccesID, newProccessID, valueListStr];
-    this.CodxDpService.getListStepByIdProccessCopy(data).subscribe((res) => {
-      if (res) {
+
+    this.CodxDpService.getListStepByIdProccessCopy(data).subscribe((data) => {
+      if (data) {
+        var res = data[0];
+        var listObjectId = data[1];
         this.editTest(res);
         res.forEach((step) => {
           if (!step['isSuccessStep'] && !step['isFailStep']) {
@@ -3331,7 +3331,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.stepList.push(step);
           }
         });
+        this.listPermissions = this.listValueCopy.includes('2') || this.listValueCopy.includes('4')? this.listPermissions : [];
+        if(!this.listValueCopy.includes('2')) {
+          this.listPermissions = this.listPermissions.filter(element => (element.roleType === 'P' &&  listObjectId.includes(element.objectID )) || (element.roleType !== 'P' && element.roleType !== 'F')   );
+        }
+        if(!this.listValueCopy.includes('4')) {
+          this.listPermissions = this.listPermissions.filter(element => (element.roleType === 'P' && !listObjectId.includes(element.objectID)) || element.roleType !== 'P' );
+        }
+        this.process.permissions = this.listPermissions
+        this.permissions = this.process.permissions;
+        this.setDefaultOwner();
         this.viewStepSelect(this.stepList[0]);
+
       }
     });
   }

@@ -729,7 +729,6 @@ export class OpenFolderComponent implements OnInit {
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
-        fileUpload.createdOn = this.getNow();
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;

@@ -346,8 +346,9 @@ export class DynamicProcessComponent
             dialog.closed.subscribe((e) => {
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                debugger;
                 e.event.totalInstance = this.totalInstance;
-                this.view.dataService.update(e.event).subscribe();
+                this.view.dataService.add(e.event).subscribe();
                 this.changeDetectorRef.detectChanges();
               }
             });
@@ -495,6 +496,8 @@ export class DynamicProcessComponent
         this.properties(data);
         break;
       case 'DP01012': // edit name
+      case 'DP02012':
+      case 'DP02022':
         this.renameProcess(data);
         break;
       case 'DP042': // edit name
@@ -533,7 +536,7 @@ export class DynamicProcessComponent
           case 'DP02021':
           case 'DP02031':
             let isRead = this.checkPermissionRead(data);
-            if (!isRead || this.funcID == 'DP0203') {
+            if (!isRead) {
               res.isblur = true;
             }
             break;
@@ -646,8 +649,8 @@ export class DynamicProcessComponent
 
   checkPermissionRead(data) {
     let isRead = data.read;
-
-    return isRead ? true : false;
+    let isFunc = this.funcID == 'DP0203' ? false : true
+    return isRead || isFunc;
   }
 
   doubleClickViewProcess(data) {
@@ -695,7 +698,7 @@ export class DynamicProcessComponent
     this.dpService.dataProcess.next(data);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
 
-  
+
     // let isRead = this.checkPermissionRead(data);
     // if (!isRead) {
     //   return;
