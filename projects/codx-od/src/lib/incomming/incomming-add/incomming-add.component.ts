@@ -392,7 +392,7 @@ export class IncommingAddComponent implements OnInit {
                     per.to.push(this.dispatch.relations[i].userID);
                   }
                   per.recID = item?.data?.recID;
-                  per.funcID = this.formModel?.funcID;
+                  per.funcID = "ODT81";
                   per.download = true;
                   per.share = true;
                   this.odService.shareDispatch(per,this.referType).subscribe(item3=>{
