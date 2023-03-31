@@ -237,11 +237,11 @@
         item.objectType == '2' || item.objectType == '3' ||
         item.objectType == '4' || item.objectType == '5' ||
         item.objectType == '6' || item.objectType == '9'; else tmpPermison">
-            <span class="bg-gray-200 rounded-1 p-2">
-                <span class="symbol-circle">
-                    <img src="assets/themes/sys/default/img/{{item.objectType | vll:'L1901':'icon' | async}}" />
+            <span class="bg-gray-200 rounded-1 p-2 d-flex align-items-center">
+                <span class="symbol-circle me-2">
+                    <img class="w-20px" src="assets/themes/sys/default/img/{{item.objectType | vll:'L1901':'icon' | async}}" />
                 </span>
-                <span class="fs-7 ms-1">{{item.objectType | vll:'L1901':'text' |async}}</span>
+                <span class="fs-7">{{item.objectType | vll:'L1901':'text' |async}}</span>
             </span>
         </ng-container>
         <ng-template #tmpPermison>

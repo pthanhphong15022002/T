@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -26,19 +27,28 @@ import { DispatchService } from '../../services/dispatch.service';
   templateUrl: './addlink.component.html',
   styleUrls: ['./addlink.component.scss'],
 })
-export class AddLinkComponent implements OnInit {
+export class AddLinkComponent implements OnInit , AfterViewInit {
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   @Input() viewbase: ViewsComponent;
   @Input() isFilter = true;
+  headerText: any;
   gridViewSetup: any;
   dialog: any;
   data: any;
+  dataSelected: any;
+  dataLink: any = []
+  formModel:any;
   count = 0;
+  funcID : any;
   addLinkForm = new FormGroup({
     recID: new FormControl(),
   });
+  tabInfo: any[] = [
+    { icon: '', text: 'Liên kết', name: 'tbLink' },
+    { icon: '', text: 'Văn bản đã liên kết', name: 'tbLinkText' },
+  ];
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -49,10 +59,36 @@ export class AddLinkComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.headerText = dt?.data?.headerText;
+    this.dataSelected = dt?.data?.data;
+    this.formModel =  JSON.stringify(dialog?.formModel);
+    this.formModel = JSON.parse(this.formModel);
+    this.funcID = dialog?.formModel?.funcID
+    this.formModel.funcID = "";
+  }
+  ngAfterViewInit(): void {
+    this.setHeight();
   }
   ngOnInit(): void {
-    //this.cache.gridViewSetup()
     this.searchText('');
+    this.getDataLink();
+  }
+
+  setHeight()
+  {
+    let height = window.innerHeight;
+    if(height && height>0) document.getElementById("h-scroll").style.maxHeight = (height - 250) + "px";
+  }
+
+  getDataLink()
+  {
+    if(this.dataSelected?.recID)
+    {
+      this.odService.getDetailDispatch(this.dataSelected?.recID, this.formModel?.entityName , "source").subscribe(item=>{
+        if(item && item.linkss && item.linkss.length > 0) this.dataLink = item?.linkss;
+      })
+    }
+    
   }
 
   searchText(val: any) {
@@ -70,7 +106,7 @@ export class AddLinkComponent implements OnInit {
     this.api
       .execSv<any>('OD', 'Core', 'DataBusiness', 'SearchFullTextAdvAsync', {
         query: val,
-        functionID: this.dialog?.formModel?.funcID,
+        functionID: this.funcID,
         entityName: 'OD_Dispatches',
         page: 1,
         pageSize: 20,
@@ -85,13 +121,14 @@ export class AddLinkComponent implements OnInit {
   onSave() {
     this.odService
       .addLink(
-        this.dialog.dataService.dataSelected.recID,
+        this.dataSelected?.recID,
         this.addLinkForm.value.recID,
         '',
         ''
       )
       .subscribe((item) => {
-        if (item) {
+        if (item) 
+        {
           this.notifySvr.notify('Liên kết thành công');
           this.dialog.close();
         } else this.notifySvr.notify('Liên kết không thành công');

@@ -16,6 +16,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   validate: any = 0;
   type: any;
+  itemName:any;
   purchaseInvoicesLines:PurchaseInvoicesLines;
   constructor(
     private inject: Injector,
@@ -40,6 +41,15 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+      this.api
+        .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
+          this.purchaseInvoicesLines.itemID,
+        ])
+        .subscribe((res: any) => {
+          if (res != null) {
+            this.itemName = res.itemName;
+          }
+        })
   }
 
   onInit(): void {}
@@ -49,6 +59,19 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   }
   
   valueChange(e){
+    switch(e.field){
+      case 'itemID':
+        this.api
+        .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
+          e.data,
+        ])
+        .subscribe((res: any) => {
+          if (res != null) {
+            this.itemName = res.itemName;
+          }
+        })
+      break;
+    }
     this.purchaseInvoicesLines[e.field] = e.data;
   }
   checkValidate() {
@@ -80,6 +103,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
   onSave(){
+    
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;

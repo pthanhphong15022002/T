@@ -109,7 +109,6 @@ export class CodxEmailComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.templateID = data?.data?.templateID;
-    this.isAddNew = data?.data?.isAddNew ?? true;
 
     this.cubeID = data?.data?.cubeID;
     this.functionID = data?.data?.functionID;
@@ -194,7 +193,7 @@ export class CodxEmailComponent implements OnInit {
 
                           this.data = res1[0];
                           this.dialogETemplate.patchValue(this.data);
-                          if (this.data.cubeID) {
+                          if (this.data?.cubeID) {
                             //Load field theo cubeID của EmailTemplate
                             this.loadListFieldByCubeID(this.data.cubeIB);
                           } else {
@@ -452,23 +451,23 @@ export class CodxEmailComponent implements OnInit {
           .editEmailTemplate(this.data, lstSento)
           .subscribe((res) => {
             if (res) {
-              if (this.formGroup) {
-                let emailTemplates = this.formGroup.value.emailTemplates;
-                //this.esService.lstTmpEmail.push(res);
-                let i = emailTemplates.findIndex(
-                  (p) => p.emailType == res.templateType
-                );
-                if (i >= 0) {
-                  emailTemplates[i].templateID = res.recID;
+              // if (this.formGroup) {
+              //   let emailTemplates = this.formGroup.value.emailTemplates;
+              //   //this.esService.lstTmpEmail.push(res);
+              //   let i = emailTemplates.findIndex(
+              //     (p) => p.emailType == res.templateType
+              //   );
+              //   if (i >= 0) {
+              //     emailTemplates[i].templateID = res.recID;
 
-                  if (this.attachment.fileUploadList.length > 0) {
-                    this.attachment.objectId = res.recID;
-                    this.attachment.saveFiles();
-                  }
+              //     if (this.attachment.fileUploadList.length > 0) {
+              //       this.attachment.objectId = res.recID;
+              //       this.attachment.saveFiles();
+              //     }
 
-                  this.formGroup.patchValue({ emailTemplates: emailTemplates });
-                }
-              }
+              //     this.formGroup.patchValue({ emailTemplates: emailTemplates });
+              //   }
+              // }
               this.dialog && this.dialog.close(res);
             }
           });
@@ -502,8 +501,17 @@ export class CodxEmailComponent implements OnInit {
         });
     } else if (this.isAddNew) {
       // lưu mới
+      if (this.data && this.data.recID) {
+        delete this.data.recID;
+      }
+      
+      if (lstSento && lstSento?.length > 0) {
+        lstSento.forEach((element) => {
+          delete element.recID;
+        });
+      }
       this.codxService
-        .addEmailTemplate(this.dialogETemplate.value, lstSento)
+        .addEmailTemplate(this.data, lstSento)
         .subscribe((res) => {
           if (res) {
             // if (this.formGroup) {
@@ -522,32 +530,33 @@ export class CodxEmailComponent implements OnInit {
               this.attachment.objectId = res.recID;
               this.attachment.saveFiles();
             }
+            this.data.recID = res.recID;
             this.dialog && this.dialog.close(res);
           }
         });
     } else if (this.isAddNew == false && this.templateID) {
       //chỉnh sửa
       this.codxService
-        .editEmailTemplate(this.dialogETemplate.value, lstSento)
+        .editEmailTemplate(this.data, lstSento)
         .subscribe((res) => {
           if (res) {
-            if (this.formGroup) {
-              let emailTemplates = this.formGroup.value.emailTemplates;
-              //this.esService.lstTmpEmail.push(res);
-              let i = emailTemplates.findIndex(
-                (p) => p.emailType == res.templateType
-              );
-              if (i >= 0) {
-                emailTemplates[i].templateID = res.recID;
+            // if (this.formGroup) {
+            //   let emailTemplates = this.formGroup.value.emailTemplates;
+            //   //this.esService.lstTmpEmail.push(res);
+            //   let i = emailTemplates.findIndex(
+            //     (p) => p.emailType == res.templateType
+            //   );
+            //   if (i >= 0) {
+            //     emailTemplates[i].templateID = res.recID;
 
-                if (this.attachment.fileUploadList.length > 0) {
-                  this.attachment.objectId = res.recID;
-                  this.attachment.saveFiles();
-                }
+            //     if (this.attachment.fileUploadList.length > 0) {
+            //       this.attachment.objectId = res.recID;
+            //       this.attachment.saveFiles();
+            //     }
 
-                this.formGroup.patchValue({ emailTemplates: emailTemplates });
-              }
-            }
+            //     this.formGroup.patchValue({ emailTemplates: emailTemplates });
+            //   }
+            // }
             this.dialog && this.dialog.close(res);
           }
         });

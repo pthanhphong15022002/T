@@ -797,8 +797,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog = this.callfunc.openSide(
           AddLinkComponent,
           {
+            headerText: val?.data?.customName,
             gridViewSetup: this.gridViewSetup,
             option: option,
+            data:datas,
           },
           option
         );
