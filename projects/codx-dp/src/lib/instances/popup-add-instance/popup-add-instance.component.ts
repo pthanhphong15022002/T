@@ -365,12 +365,12 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   handleEndDayInstnace(durationDay: any, totalHourSteps:any) {
     this.instance.endDate = new Date();
-    this.instance.endDate.setDate(
-      this.instance.endDate.getDate() + durationDay
-    );
-    this.instance.endDate.setHours(
-      this.instance.endDate.getHours() + totalHourSteps
-    );
+    // this.instance.endDate.setDate(
+    //   this.instance.endDate.getDate() + durationDay
+    // );
+    // this.instance.endDate.setHours(
+    //   this.instance.endDate.getHours() + totalHourSteps
+    // );
 
     this.dateOfDuration = JSON.parse(JSON.stringify(this.instance?.endDate));
   }
@@ -411,5 +411,41 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
+  }
+
+  setTimeHoliday(
+    startDay: Date,
+    endDay: Date,
+    dayOff: string
+  ): Date {
+    if (
+      !dayOff ||
+      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
+    ) {
+      const isSaturday = dayOff.includes("7");
+      const isSunday = dayOff.includes("8");
+      // let day = 0;
+
+      // for ( let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
+      //   if (currentDate.getDay() === 6 && isSaturday) {
+      //     ++day;
+      //   }
+      //   if (currentDate.getDay() === 0 && isSunday) {
+      //     ++day;
+      //   }
+      // }
+
+      // endDay.setDate(endDay.getDate() + day);
+
+      // if (endDay.getDay() === 0 && isSunday) {
+      //   endDay.setDate(endDay.getDate() + 1);
+      // }
+      // for(let currentDate = new Date(startDay);  )
+
+      // endDay = new Date();
+      // for(let i=0; i < )
+
+    }
+    return endDay;
   }
 }

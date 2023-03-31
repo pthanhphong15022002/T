@@ -175,6 +175,6 @@ export class InputCustomFieldComponent implements OnInit {
     //}//
   }
   controlBlur(e){
-  //chua la gi ca
+   if(e.crrValue) this.valueChange(e.crrValue)
   }
 }
