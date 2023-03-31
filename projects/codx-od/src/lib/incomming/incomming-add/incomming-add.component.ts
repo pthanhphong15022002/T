@@ -379,8 +379,9 @@ export class IncommingAddComponent implements OnInit {
                
               // }
               if (item2?.status == 0 || Array.isArray(item2)) {
-                //Gửi mail
-                 this.odService.sendMail2(this.dataRq,this.data.recID).subscribe();
+                if(this.data.owner != this.data.createdBy)
+                  //Gửi mail
+                  this.odService.sendMail2(this.dataRq,this.data.recID).subscribe();
                 
                  //Lưu thông tin người chia sẻ
                 if(this.dispatch.relations && this.dispatch.relations.length>0)
@@ -395,7 +396,7 @@ export class IncommingAddComponent implements OnInit {
                   per.funcID = "ODT81";
                   per.download = true;
                   per.share = true;
-                  this.odService.shareDispatch(per,this.referType).subscribe(item3=>{
+                  this.odService.shareDispatch(per,this.referType,this.formModel?.entityName).subscribe(item3=>{
                     if(item3)
                     {
                       item.data.relations = item3?.data[0].relations
@@ -426,7 +427,7 @@ export class IncommingAddComponent implements OnInit {
       
     } else if (this.type == 'edit') {
       this.odService
-        .updateDispatch(this.dispatch,this.formModel?.funcID , false,this.referType)
+        .updateDispatch(this.dispatch,this.formModel?.funcID , false,this.referType, this.formModel?.entityName)
         .subscribe(async (item) => {
           if (item.status == 0) {
             if(this.fileDelete && this.fileDelete.length > 0)

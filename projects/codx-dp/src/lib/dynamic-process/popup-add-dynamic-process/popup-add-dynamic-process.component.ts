@@ -2452,7 +2452,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? event.previousIndex + 1
         : event.currentIndex + 1;
     let listID = this.stepList
-      ?.filter((step) => step.stepNo >= start && step.stepNo <= end)
+      ?.filter((step) => step.stepNo >= start)
       .map((stepFind) => {
         return stepFind.recID;
       });
