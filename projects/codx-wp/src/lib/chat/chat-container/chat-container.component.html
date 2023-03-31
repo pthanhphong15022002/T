@@ -26,9 +26,11 @@
                             [width]="50">
                         </codx-img>
                         <ng-template #tooltipMssage>
-                            <div class="w-200px p-2 text-start overflow-hidden d-flex">
+                            <div class="d-flex align-items-center p-2 text-start overflow-hidden w-200px">
                                 <codx-img [objectId]="item.messageSendBy" [objectType]="'AD_Users'" [width]="30"></codx-img>
-                                <span>{{item.message}}</span>
+                                <ng-container *ngIf="item.messageType !=='3'">
+                                    <div class="me-1">{{item.message}}</div>
+                                </ng-container>
                             </div>
                         </ng-template>
                     </div>
