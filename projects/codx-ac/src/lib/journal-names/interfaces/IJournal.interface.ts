@@ -89,4 +89,5 @@ export interface IJournal {
     sharer: string;
     duplicateVoucherNo: string;
     dataValue: string;
+    inputMode: string;
 }

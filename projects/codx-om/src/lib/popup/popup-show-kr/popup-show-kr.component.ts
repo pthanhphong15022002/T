@@ -390,21 +390,21 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //     this.detectorRef.detectChanges();
   //   });
   // }
-  checkIn(kr: any) {
-    let popupTitle= 'Cập nhật tiến độ';
-    let dialogCheckIn = this.callfc.openForm(
-      PopupCheckInComponent,
-      '',
-      800,
-      500,
-      '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
-    );
-    dialogCheckIn.closed.subscribe((res) => {
-      if (res && res.event) {
-      }
-    });
-  }
+  // checkIn(kr: any) {
+  //   let popupTitle= 'Cập nhật tiến độ';
+  //   let dialogCheckIn = this.callfc.openForm(
+  //     PopupCheckInComponent,
+  //     '',
+  //     800,
+  //     500,
+  //     '',
+  //     [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
+  //   );
+  //   dialogCheckIn.closed.subscribe((res) => {
+  //     if (res && res.event) {
+  //     }
+  //   });
+  // }
 
   calculatorProgress() {
     this.totalProgress = this.dataKR.progress;

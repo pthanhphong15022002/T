@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormModel,
   SidebarModel,
@@ -25,10 +32,12 @@ export class FieldDetailComponent implements OnInit {
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
   @Input() currentElmID: any;
+  @Input() viewsCurrent = '';
   @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
-  @Output() actionSaveCF= new EventEmitter<any>();
+  @Output() actionSaveCF = new EventEmitter<any>();
 
+  viewsCrr: any;
   currentRate = 0;
   dtFormatDate: any = [];
   formModelDefault: FormModel = {
@@ -54,9 +63,12 @@ export class FieldDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.currentRate = 8;
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+      console.log(this.elmIDCrr)
   }
+  
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -106,22 +118,21 @@ export class FieldDetailComponent implements OnInit {
   }
 
   popupCustomField(data) {
-    if(this.currentElmID && this.currentElmID!= this.elmIDCrr){
-      this.clickInput(this.currentElmID) ;
+    if (this.currentElmID && this.currentElmID != this.elmIDCrr) {
+      this.clickInput(this.currentElmID);
     }
-    if(this.elmIDCrr ){
-      this.clickInput(this.elmIDCrr) ;
+    if (this.elmIDCrr) {
+      this.clickInput(this.elmIDCrr);
     }
-    this.elmIDCrr= this.currentElmID= null;    
-    this.inputElmIDCF.emit(null)
-    if(this.currentElmID)
-    var list = [];
+    this.elmIDCrr = this.currentElmID = null;
+    this.inputElmIDCF.emit(null);
+    if (this.currentElmID) var list = [];
     if (data && data.length > 0) {
       list = data;
     } else {
       list.push(data);
     }
-    var obj = { data: list ,titleHeader : this.titleHeaderFormCF}; //lấy từ funra
+    var obj = { data: list, titleHeader: this.titleHeaderFormCF }; //lấy từ funra
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
       formName: 'DPInstancesStepsFields',
@@ -172,14 +183,14 @@ export class FieldDetailComponent implements OnInit {
 
   clickInput(eleID, dataStep = null, isClick = false) {
     if (this.isSaving) return;
-    if (isClick) {
+    if (isClick && eleID!=this.elmIDCrr) {
       if (this.currentElmID && this.currentElmID != this.elmIDCrr)
         this.clickInput(this.currentElmID);
       if (this.elmIDCrr) {
         this.clickInput(this.elmIDCrr);
       }
     }
-    if (dataStep?.stepStatus >= 3 || !this.isUpdate) return;
+    if (!this.isUpdate) return;
 
     let element = document.getElementById(eleID);
     if (element) {
@@ -207,8 +218,9 @@ export class FieldDetailComponent implements OnInit {
     }
     if (isClick) {
       this.elmIDCrr = eleID;
-      this.inputElmIDCF.emit(this.elmIDCrr);      
+      this.inputElmIDCF.emit(this.elmIDCrr);
     } else this.elmIDCrr = null;
+    
   }
 
   valueChangeCustom(event) {
@@ -296,12 +308,11 @@ export class FieldDetailComponent implements OnInit {
         if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
         this.notiService.notifyCode('SYS007');
         this.clickInput(this.elmIDCrr);
-        this.inputElmIDCF.emit(null);      
+        this.inputElmIDCF.emit(null);
       } else {
         this.notiService.notifyCode('SYS021');
         if (idx != -1) this.dataStep.fields[idx].dataValue = this.dataValueOld;
       }
-
     });
   }
 }

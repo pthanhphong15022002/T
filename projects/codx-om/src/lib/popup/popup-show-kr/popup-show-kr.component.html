@@ -109,7 +109,7 @@
                       </div>
                       <codx-label name="lbl" default="Lịch sử cập nhật" class="ps-2 fs-5 fw-bolder"></codx-label>
                     </div>
-                    <span type="button" (click)="checkIn(dataKR)"
+                    <span type="button"
                       class="w-110px d-flex py-2 px-4 bg-color rounded justify-content-center">
                       <span class="icon-edit_square btn-text-primary text-light me-1"></span>
                       <codx-label class="text-light" fiedName="lbl" default="Cập nhật"></codx-label>
@@ -150,7 +150,7 @@
                                 imageType="circle">
                               </codx-img>
                               <div class="ms-2">
-                                <div>{{ item?.createdBy }}</div>
+                                <span [innerHTML]="item?.createdBy | formatvalue : okrFM?.krFM : 'owner' | async "></span>
                                 <div class="text-black-50">
                                   {{ item?.positionName }}
                                 </div>
@@ -160,25 +160,18 @@
                               <div
                                 class="d-flex align-items-center kr-process w-200px min-w-200px align-items-center me-2">
                                 <div class="h-15px w-100 bgEDEDED rounded-4">
-                                  <div *ngIf="dataKR.checkInMode == '1'" class="bg-color rounded-4 h-15px"
-                                    role="progressbar" [style.width]="item.value + '%'" aria-valuenow="50"
+                                  <div class="bg-color rounded-4 h-15px"
+                                    role="progressbar" [style.width]="item?.cummulated + '%'" aria-valuenow="50"
                                     aria-valuemin="0" aria-valuemax="100"></div>
-                                  <div *ngIf="dataKR.checkInMode == '2'" class="bg-color rounded-4 h-15px"
-                                    role="progressbar" [style.width]="progressHistory[index] + '%'" aria-valuenow="50"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                  
                                 </div>
                                 <div class="process-per text-light position-absolute top-0 fs-8" style="left: 72%">
-                                  <span *ngIf="dataKR.checkInMode == '1'">{{
-                                    item?.value
-                                    }}</span>
-                                  <span *ngIf="dataKR.checkInMode == '2'">{{
-                                    progressHistory[index]
-                                    }}</span>
+                                  {{ item?.cummulated }}
                                   %
                                 </div>
                               </div>
                               <span class="fs-6 fw-bolder me-5 w-50px">
-                                {{ item?.value }}
+                                {{ item?.cummulated }}
                               </span>
                               <span class="position-relative text-primary icon-attach_file me-2">
                                 <span

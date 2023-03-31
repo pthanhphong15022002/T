@@ -3,6 +3,7 @@ import {
   Component,
   Injector,
   Input,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import {
@@ -43,6 +44,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     //this.getCacheData();
+    
   }
 
   //-----------------------End-------------------------------//

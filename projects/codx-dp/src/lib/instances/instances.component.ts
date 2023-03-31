@@ -130,6 +130,7 @@ export class InstancesComponent
   instanceStepsId = [];
   haveDataService = false;
   listHeader = [];
+  viewsCurrent = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -795,7 +796,7 @@ export class InstancesComponent
       option
     );
     popup.closed.subscribe((e) => {
-      this.viewType = 'd';
+      
     });
   }
 
@@ -845,12 +846,13 @@ export class InstancesComponent
   }
 
   changeView(e) {
+    if (e?.view.type == 2)  this.viewsCurrent='d-'
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-
-      this.changeDetectorRef.detectChanges();
+      this.viewsCurrent='k-'
     }
+    this.changeDetectorRef.detectChanges();
   }
   // end code
 
