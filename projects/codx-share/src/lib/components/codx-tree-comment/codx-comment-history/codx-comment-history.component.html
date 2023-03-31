@@ -121,14 +121,14 @@
                 </ng-container>
                 <ng-container *ngIf="files">
                     <div class="d-flex position-relative ms-10">
-                        <div class="">
+                        <div class="" (click)="clickViewFile(files)">
                             <ng-container *ngIf="files.referType == REFERTYPE.IMAGE || files.referType == REFERTYPE.VIDEO">
                                 <codx-img 
-                                        [objectId]="data.recID" 
-                                        [objectType]="'BG_Comments'"
-                                        imageType="square"
-                                        [width]="100"
-                                        [referType]="files.referType">
+                                    [objectId]="data.recID" 
+                                    [objectType]="'BG_Comments'"
+                                    imageType="square"
+                                    [width]="100"
+                                    [referType]="files.referType">
                                 </codx-img>
                             </ng-container>
                             <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
