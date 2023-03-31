@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CacheService,
   FormModel,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -511,6 +512,26 @@ export class CrmCustomerComponent
         });
       });
     });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.detectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteCrmAsync';
+    opt.data = [itemSelected.recID, this.funcID];
+    return true;
   }
   //#endregion
 
