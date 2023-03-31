@@ -320,7 +320,6 @@ export class VersionComponent implements OnInit {
     this.fileEditing.avatar = `../../../assets/codx/dms/${this.getAvatar(file.name)}`;
     this.fileEditing.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length) || file.name;
     this.fileEditing.createdBy = this.user.userName;//userName;
-    this.fileEditing.createdOn = this.getNow();
     this.fileEditing.type = file.type;
     this.fileEditing.fileSize = file.size;
     this.fileEditing.fileName = file.name;
