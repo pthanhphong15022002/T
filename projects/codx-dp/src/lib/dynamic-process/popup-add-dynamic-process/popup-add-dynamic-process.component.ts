@@ -154,6 +154,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly gridViewNameStepsReason: string = 'grvDPStepsReasons';
   readonly formDurationCtrl: string = 'DurationControl';
   readonly formLeaTimeCtrl: string = 'LeadtimeControl';
+  readonly formStepsRoleCtrl: string = 'StepsRoleCtrl';
+  readonly formTaskRoleCtrl: string = 'TaskRoleCtrl';
   readonly formEdit: string = 'edit'; // form edit for poup reason
   readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
@@ -1044,7 +1046,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               objectID: element.id,
               objectName: element.text,
               objectType: element.objectType,
-              roleType: type,
+              roleType: "R",
             };
             this.addRole(role);
           });
@@ -2730,7 +2732,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (check) {
       this.notiService.notifyCode('DP027', 0, role?.objectName);
     } else {
-      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID);
+      let index = step?.roles?.findIndex((r) => r.objectID == role.objectID && r.roleType == "R");
       if (index >= 0) {
         step?.roles?.splice(index, 1);
       }
@@ -3000,8 +3002,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
     }
-
     this.changeDetectorRef.detectChanges();
+
+  }
+  valueChangeApproveRoleCtrl($event, form: string) {
+    let checked = $event.component.checked;
+    if ($event) {
+      if (form === this.formStepsRoleCtrl) {
+        if ($event.field === this.radioYes && checked) {
+          this.step.progressStepControl = true;
+        } else if ($event.field === this.radioNo && checked) {
+          this.step.progressStepControl = false;
+        }
+      } else {
+        if ($event.field === this.radioYes && checked) {
+          this.step.progressTaskGroupControl = true;
+        } else if ($event.field === this.radioNo && checked) {
+          this.step.progressTaskGroupControl = false;
+        }
+      }
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
   valueChangeMemo($event) {

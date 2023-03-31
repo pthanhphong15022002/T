@@ -70,8 +70,15 @@
     <div class="row">
       <div class="col-6 row">
         <div class="form-group col-7">
-          <codx-label default="Tên báo giá"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+          <codx-label
+            fiedName="QuotationName"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="quotationName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
         <div class="form-group col-2">
           <codx-label default="Phiên bản"></codx-label>
@@ -167,12 +174,11 @@
       [entityName]="fmProcductsLines.entityName"
       [templateMore]="morefunction"
       [editSettings]="editSettings"
-      predicates="TransID=@0"
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataValues]="form.data.recID"
       [dataSource]="productsLine"
-      service="AC"
+      service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
@@ -180,6 +186,7 @@
       (created)="gridCreated($event)"
     ></codx-gridview-v2>
   </div>
+  <!-- predicates="TransID=@0"  cai nay truyền loc-->
 </ng-template>
 <!-- End: Chi tiết sản phẩm -->
 

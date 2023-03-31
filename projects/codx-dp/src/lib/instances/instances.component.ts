@@ -35,7 +35,6 @@ import {
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { firstValueFrom } from 'rxjs';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
@@ -60,7 +59,8 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
-  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;InstanceDetailComponent
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  InstanceDetailComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
@@ -127,8 +127,10 @@ export class InstancesComponent
   //bien chuyen page
   process: any;
   tabInstances = [];
+  instanceStepsId = [];
   haveDataService = false;
   listHeader = [];
+  viewsCurrent = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
@@ -136,7 +138,7 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private noti: NotificationsService,
+    private notificationsService: NotificationsService,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
     @Optional() dialog: DialogRef,
@@ -183,8 +185,18 @@ export class InstancesComponent
       });
     });
   }
-  
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
+    // if (!this.haveDataService) {
+    //   let dataProcess = await firstValueFrom(
+    //     this.codxDpService.getProcessByProcessID(this.processID)
+    //   );
+    //   if (dataProcess && dataProcess.read) {
+    //     this.loadData(dataProcess);
+    //     // this.continueLoad = true ;
+    //   } else {
+    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+    //   }
+    // }
     this.views = [
       {
         type: ViewType.listdetail,
@@ -228,13 +240,14 @@ export class InstancesComponent
       ),
     };
 
-    if (!this.haveDataService) {
+    if (this.haveDataService) this.getListCbxProccess(this.process?.applyFor);
+    else {
       this.codxDpService
         .getProcessByProcessID(this.processID)
         .subscribe((ps) => {
           if (ps && ps.read) {
             this.loadData(ps);
-            // this.continueLoad = true ;
+            this.getListCbxProccess(ps?.applyFor);
           } else {
             this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
           }
@@ -267,7 +280,6 @@ export class InstancesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-    this.getListCbxProccess(this.process?.applyFor);
   }
 
   click(evt: ButtonModel) {
@@ -289,20 +301,18 @@ export class InstancesComponent
           textColor: column['dataColums']?.textColor || null,
         };
       }) || [];
-      console.log(dataColumns);
-      
-    return dataColumns;   
+    console.log(dataColumns);
+
+    return dataColumns;
   }
 
-  getPropertiesHeader(data, type){
-    if(this.listHeader?.length == 0){
+  getPropertiesHeader(data, type) {
+    if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
     }
-    let find = this.listHeader?.find(item => item.recID === data.keyField);
+    let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
   }
-
-
 
   //CRUD
   add() {
@@ -436,11 +446,11 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
-        this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx),
+        (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
       ],
       option
     );
@@ -573,7 +583,7 @@ export class InstancesComponent
 
   openOrClosed(data, check) {
     if (this.process.showInstanceControl === '1') {
-      this.noti
+      this.notificationsService
         .alertCode('DP018', null, "'" + this.titleAction + "'")
         .subscribe((info) => {
           if (info.event.status == 'Y') {
@@ -582,7 +592,7 @@ export class InstancesComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.closed = check;
-                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                   this.view.dataService.update(this.dataSelected).subscribe();
                 }
               });
@@ -594,7 +604,7 @@ export class InstancesComponent
     ) {
       this.view.dataService.dataSelected = data;
 
-      this.noti
+      this.notificationsService
         .alertCode('DP018', null, "'" + this.titleAction + "'")
         .subscribe((info) => {
           if (info.event.status == 'Y') {
@@ -603,8 +613,9 @@ export class InstancesComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.closed = check;
-                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.notificationsService.notifyCode(check ? 'DP016' : 'DP017');
                   this.view.dataService.remove(this.dataSelected).subscribe();
+                  this.dataSelected = this.view.dataService.data[0];
                   this.detectorRef.detectChanges();
                 }
               });
@@ -785,7 +796,7 @@ export class InstancesComponent
       option
     );
     popup.closed.subscribe((e) => {
-      this.viewType = 'd';
+      
     });
   }
 
@@ -835,12 +846,13 @@ export class InstancesComponent
   }
 
   changeView(e) {
+    if (e?.view.type == 2)  this.viewsCurrent='d-'
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-
-      this.changeDetectorRef.detectChanges();
+      this.viewsCurrent='k-'
     }
+    this.changeDetectorRef.detectChanges();
   }
   // end code
 
@@ -891,7 +903,7 @@ export class InstancesComponent
             );
             dialogMoveStage.closed.subscribe((e) => {
               this.isClick = true;
-              this.stepIdClick='';
+              this.stepIdClick = '';
               if (!e || !e.event) {
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
@@ -959,6 +971,117 @@ export class InstancesComponent
       });
     });
   }
+
+  autoMoveStage(dataInstance)
+  {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notificationsService.alert('Chị khanh ơi thiết lập message code yesno cho em với','Chị khanh ơi thiết lập message code yesno cho em với' ,config).closed.subscribe(
+      (x) => {
+        if (x.event.status == 'Y') {
+          this.handleMoveStage(dataInstance);
+        }
+      }
+    );
+  }
+  handleMoveStage(dataInstance){
+    var isStopAuto = false;
+    var strStepsId = [];
+    var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
+    if(autoMoveStage.ischeck) {
+       if(autoMoveStage.transferControl == 1 ) {
+         var completedAllTask  = this.completedAllTasks(dataInstance.step.stepID,dataInstance.listStep);
+         isStopAuto = completedAllTask.isStopAuto;
+         strStepsId = completedAllTask?.idxSteps;
+       }
+       if(isStopAuto) {
+         return;
+       }
+       else {
+           var instanceStepId = dataInstance.listStep.filter(x=> strStepsId.some(y=> y == x.stepID));
+           for(let item of instanceStepId ){
+            if(item.stepStatus == '0') {
+              item.stepStatus = '1';
+              item.actualEnd = new Date();
+            }
+            else if(item.stepStatus == '1') {
+              item.stepStatus = '3';
+            }
+           }
+           dataInstance.instance.stepID =  instanceStepId.find(item=> item.stepStatus == '1').stepID;
+           var processId = dataInstance.instance.processID;
+           var data = [instanceStepId,processId];
+           this.codxDpService.autoMoveStage(data).subscribe((res) => {
+             if(res) {
+             var stepsUpdate = dataInstance.listStep.map(item1 => {
+                const item2 = instanceStepId.find(item2 => item1.stepID === item2.stepID);
+                if (item2) {
+                  return { ...item1, status: item2.status };
+                }
+              });
+              this.listStepInstances = stepsUpdate;
+              this.dataSelected = dataInstance.instance;
+              this.view.dataService.update(this.dataSelected).subscribe();
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              this.detailViewInstance.dataSelect = this.dataSelected;
+              this.detailViewInstance.instance = this.dataSelected;
+              this.detailViewInstance.listSteps = this.listStepInstances;
+              this.detectorRef.detectChanges();
+             }
+           });
+       }
+    }
+  }
+
+  completedAllTasks(stepID, listStep) {
+    var isStopAuto = false;
+    var index = listStep.findIndex(x=> x.stepID == stepID);
+    var idxSteps =[];
+    for(let i = index; i < listStep.length; i++)
+    {
+        if( this.checkTransferControl(listStep[i].stepID) ) {
+          var isCheckOnwer = listStep[i]?.owner ? false:true;
+          var isCheckFields = this.checkFieldsIEmpty(listStep[i].fields);
+        }
+        if(isCheckFields || isCheckOnwer) {
+          isStopAuto = true;
+          break;
+        }
+        idxSteps.push(listStep[i].stepID);
+        idxSteps.push(listStep[i+1].stepID);
+        if(listStep[i+1].isSuccessStep || listStep[i+1].isFailStep) {
+          isStopAuto = true;
+        }
+        break;
+    }
+    var result = {
+      isStopAuto: isStopAuto,
+      idxSteps: idxSteps,
+    };
+    return result;
+  }
+
+  completedLastTasks() {}
+
+  checkFieldsIEmpty(fields) {
+    return fields.includes((x) => !x.dataValue && x.isRequired);
+  }
+
+  checkTransferControl(stepID) {
+    var listStep = this.process.steps.filter(
+      (x) => !x.isSuccessStep && !x.isFailStep
+    );
+    var stepCurrent = listStep.find((x) => x.recID == stepID);
+    var ischeck = false;
+    if (stepCurrent) {
+      var transferControl = stepCurrent?.transferControl;
+      if (transferControl != 0) {
+        ischeck = true;
+      }
+    }
+    return { ischeck: ischeck, transferControl: transferControl };
+  }
+
   openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
     // this.codxDpService.get
     var formMD = new FormModel();
@@ -1055,7 +1178,7 @@ export class InstancesComponent
         };
         this.listProccessCbx.unshift(obj);
         this.listProccessCbx = this.listProccessCbx.filter(
-          (x) => x !== this.process.recID
+          (x) => x !== this.process?.recID
         );
       });
     });
@@ -1080,13 +1203,9 @@ export class InstancesComponent
     return totalDay;
   }
   getSumDurationHourOfSteps(listStepCbx: any) {
-      let totalHour = listStepCbx
+    let totalHour = listStepCbx
       .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce(
-        (sum, f) =>
-          sum +f?.durationHour ,
-        0
-      );
+      .reduce((sum, f) => sum + f?.durationHour, 0);
     return totalHour;
   }
   setTimeHoliday(dayOffs: string): number {

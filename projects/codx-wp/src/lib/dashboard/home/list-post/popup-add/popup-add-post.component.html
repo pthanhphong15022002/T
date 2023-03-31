@@ -28,7 +28,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-start ">
                     <ng-container *ngIf="data.shareControl">
-                        <div (click)="openControlShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                        <div (click)="openControlShare(tmpControlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
                             <codx-vll 
                                 [name]="'WP001'" 
                                 [value]="data.shareControl" 
@@ -61,7 +61,7 @@
                     [copyStyle]="copyFormat"
                     type="textarea" 
                     [crrValue]="data.content" 
-                    [placeholder]="placeholderText"
+                    [placeholder]="mssgPlacehHolder"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -297,7 +297,7 @@
         </button>
     </div>
 </ng-template>
-<ng-template #controlShare let-dialog>
+<ng-template #tmpControlShare let-dialog>
     <codx-share 
         [dialog]="dialog" 
         [multiple]="false" 
@@ -305,11 +305,12 @@
         (eventApply)="addPerrmissonShares($event)">
     </codx-share>
 </ng-template>
-<ng-container #controlTag *ngIf="showCBB">
+<ng-container *ngIf="showCBB">
     <codx-combobox-popup 
         [comboboxName]="'Share_Users'" 
         [multiple]="true" 
         [width]="width"
+        [value]="strPermissionTag"
         [height]="height" 
         (clickSave)="addPerrmissonTags($event)">
     </codx-combobox-popup>

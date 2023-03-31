@@ -53,11 +53,11 @@ export class PopupQuickaddContactComponent implements OnInit {
 
   onAdd() {
     var data = [];
-    if (this.lastName != null && this.lastName.trim() != '') {
-      if (this.firstName != null && this.firstName.trim() != '') {
-        this.data.contactName = this.firstName + ' ' + this.lastName;
+    if (this.firstName != null && this.firstName.trim() != '') {
+      if (this.lastName != null && this.lastName.trim() != '') {
+        this.data.contactName = this.lastName + ' ' + this.firstName;
       } else {
-        this.data.contactName = this.lastName;
+        this.data.contactName = this.firstName;
       }
     } else {
       this.data.contactName = '';
@@ -80,7 +80,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave() {
-    if (this.lastName == null || this.lastName.trim() == '') {
+    if (this.firstName == null || this.firstName.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,

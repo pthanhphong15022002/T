@@ -201,11 +201,24 @@ export class PopupAddJournalComponent
     temp.projectControl = this.journal.projectControl == '1' ? true : false;
     temp.assetControl = this.journal.assetControl == '1' ? true : false;
     temp.postSubControl = this.journal.postSubControl == '1' ? true : false;
-    temp.creater = this.journal.creater ? JSON.stringify(this.journal.creater) : this.journal.creater;
-    temp.approver = this.journal.approver ? JSON.stringify(this.journal.approver) : this.journal.approver;
-    temp.poster = this.journal.poster ? JSON.stringify(this.journal.poster) : this.journal.poster;
-    temp.unposter = this.journal.unposter ? JSON.stringify(this.journal.unposter) : this.journal.unposter;
-    temp.sharer = this.journal.sharer ? JSON.stringify(this.journal.sharer) : this.journal.sharer;
+    temp.creater = this.journal.creater
+      ? JSON.stringify(this.journal.creater)
+      : this.journal.creater;
+    temp.approver = this.journal.approver
+      ? JSON.stringify(this.journal.approver)
+      : this.journal.approver;
+    temp.poster = this.journal.poster
+      ? JSON.stringify(this.journal.poster)
+      : this.journal.poster;
+    temp.unposter = this.journal.unposter
+      ? JSON.stringify(this.journal.unposter)
+      : this.journal.unposter;
+    temp.sharer = this.journal.sharer
+      ? JSON.stringify(this.journal.sharer)
+      : this.journal.sharer;
+
+    const { dataValue, ...rest } = temp;
+    temp.dataValue = JSON.stringify(rest);
 
     console.log(temp);
 

@@ -295,8 +295,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
     else this.ms023 = ms023;
     
-
-    var dvlRelType =  this.codxODService.loadMessage('OD023')
+    var dvlRelType =  this.codxODService.loadValuelist('OD008')
     if(isObservable(dvlRelType))
     {
       dvlRelType.subscribe((item) => {
@@ -413,6 +412,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       else this.dvlCategory = vll;
     }
+
     var vllRelType = this.codxODService.loadValuelist('OD008');
     if(isObservable(vllRelType))
     {
@@ -429,7 +429,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlStatusRel = item;
       });
     }
-    else this.dvlStatusRel = vllRelType;
+    else this.dvlStatusRel = vllStatusRel;
    
     var vllReCall = this.codxODService.loadValuelist('OD010');
     if(isObservable(vllReCall))
@@ -438,7 +438,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlReCall = item;
       });
     }
-    else this.dvlReCall = vllRelType;
+    else this.dvlReCall = vllReCall;
 
     var vllStatusTM  = this.codxODService.loadValuelist('L0614');
     if(isObservable(vllStatusTM))
@@ -447,7 +447,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dvlStatusTM = item;
       });
     }
-    else this.dvlStatusTM = vllRelType;
+    else this.dvlStatusTM = vllStatusTM;
 
     var ms020 =  this.codxODService.loadMessage('OD020')
     if(isObservable(ms020))
@@ -593,8 +593,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText:
-                'Chỉnh sửa ' + (this.funcList?.defaultName).toLowerCase(),
+              headerText: val?.data?.customName + ' ' + (this.funcList?.customName).toLowerCase(),
               formModel: this.formModel,
               type: 'edit',
               data: datas,
@@ -664,8 +663,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText:
-                'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
+              headerText: val?.data?.customName + ' ' + (this.funcList?.customName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
             },
@@ -799,8 +797,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog = this.callfunc.openSide(
           AddLinkComponent,
           {
+            headerText: val?.data?.customName,
             gridViewSetup: this.gridViewSetup,
             option: option,
+            data:datas,
           },
           option
         );
@@ -1386,10 +1386,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         return 'Gửi đến ' + agencyName;
       }
     }
+    
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
-      shareBy
+      shareBy 
     );
   }
   updateNotCallFuntion(data: any) {
