@@ -442,8 +442,8 @@ export class PopupAddInstanceComponent implements OnInit {
       // }
       // for(let currentDate = new Date(startDay);  )
 
-      endDay = new Date();
-      for(let i=0; i < )
+      // endDay = new Date();
+      // for(let i=0; i < )
 
     }
     return endDay;
