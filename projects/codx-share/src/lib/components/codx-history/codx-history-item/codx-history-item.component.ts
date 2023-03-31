@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } f
 import { isObject } from '@syncfusion/ej2-base';
 import { FormModel, ApiHttpService, AuthService, CacheService, NotificationsService, CallFuncService, DialogModel, DialogRef } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { ViewFileDialogComponent } from '../../viewFileDialog/viewFileDialog.component';
 @Component({
   selector: 'codx-history-item',
   templateUrl: './codx-history-item.component.html',
@@ -26,8 +27,6 @@ export class CodxHistoryItemComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
-    private cache: CacheService,
-    private notifySV:NotificationsService,
     private callFuc:CallFuncService,
     private dt: ChangeDetectorRef
   ) 
@@ -36,30 +35,36 @@ export class CodxHistoryItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.data?.actionType === "C")
-    {
+    if(this.data.actionType === "A" || this.data.actionType === "C" || this.data.actionType === "C1" || this.data.actionType === "C2" || this.data.actionType === "3"){
       this.getFileByObjectID(this.data.recID);
     }
   }
 
+  // get file by objectID
   getFileByObjectID(objetcID:string){
-    if(objetcID)
-    {
+    if(this.data.actionType == "C"){
       this.api.execSv(
         "DM",
         "ERM.Business.DM",
         "FileBussiness",
         "GetFilesByIbjectIDAsync",
+        this.data.recID)
+      .subscribe((res:any[]) => {
+        if(Array.isArray(res)){
+          debugger
+          this.lstFile = res; 
+          this.dt.detectChanges();
+      }});
+    }
+    else{
+      this.api.execSv(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "GetFilesByTrackLogIDAsync",
         [objetcID])
         .subscribe((res:any[]) => {
-          if(res?.length > 0){
-            let files = res;
-            files.forEach((e:any) => {
-              if(e && e.referType == this.REFERTYPE.VIDEO)
-              {
-                e['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-              }
-            })
+          if(Array.isArray(res)){
             this.lstFile = res; 
             this.dt.detectChanges();
         }});
@@ -90,6 +95,33 @@ export class CodxHistoryItemComponent implements OnInit {
   //
   clickClosePopup(dialog:DialogRef){
     dialog.close();
+  }
+
+  //click view file
+  clickViewFile(file:any){
+    let option = new DialogModel();
+      option.FormModel = this.formModel;
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.callFuc.openForm(
+        ViewFileDialogComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
+  }
+  // format file size 
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
 }

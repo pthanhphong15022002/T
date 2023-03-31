@@ -77,7 +77,7 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
   setHeight()
   {
     let height = window.innerHeight;
-    if(height && height>0) document.getElementById("h-scroll").style.maxHeight = (height - 250) + "px";
+    if(height && height>0 && document.getElementById("h-scroll") ) document.getElementById("h-scroll").style.maxHeight = (height - 250) + "px";
   }
 
   getDataLink()

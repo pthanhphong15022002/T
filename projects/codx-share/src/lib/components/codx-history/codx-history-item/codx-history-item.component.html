@@ -121,50 +121,29 @@
             </p>
           </div>
           <ng-container *ngIf="lstFile">
-            <div class="row px-4 justify-content-between">
+            <div class="row mt-2">
+              <!-- danh sách file đính kèm -->
               <ng-container *ngFor="let item of lstFile">
-                <div class="col-5 my-2">
-                  <div class="w-100 position-relative">
-                    <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                      <ng-container *ngIf="item.recID; else imageSrc">
-                        <codx-img
-                          [recId]="item.recID"
-                          [objectId]="item.objectID"
-                          [width]="100"
-                          cssClass="pic"
-                          imageType="square"
-                          [imgOn]="item.modifiedOn"
-                        >
-                        </codx-img>
-                      </ng-container>
-                      <ng-template #imageSrc>
-                        <img
-                          [src]="item.data || item.avatar"
-                          alt=""
-                          class="image"
-                        />
-                      </ng-template>
-                    </ng-container>
-                    <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                      <video #video controls class="w-100 rounded min-h-250px">
-                        <source
-                          [src]="item.srcVideo || item.data"
-                          type="video/mp4"
-                        />
-                      </video>
-                    </ng-container>
-                    <ng-container
-                      *ngIf="item.referType == REFERTYPE.APPLICATION"
-                    >
-                      <codx-temp-full
-                        imageSrc="{{ item.extension | avtFile }}"
-                        imgCss="w-20px me-3 cursor-pointer"
-                        title="{{ item.fileName }}"
-                        [descLine]="1"
-                      >
-                      </codx-temp-full>
-                    </ng-container>
-                  </div>
+                <div class="cursor-pointer" (click)="clickViewFile(item)">
+                  <ng-container *ngIf="item.referType == 'image' || item.referType == 'video' ; else tmpFileDocument">
+                      <codx-img [objectId]="data.recID" 
+                        [objectType]="'BG_Comments'"
+                        imageType="square"
+                        [width]="100"
+                        [referType]="item.referType">
+                      </codx-img>
+                  </ng-container>
+                  <ng-template #tmpFileDocument>
+                    <codx-temp-full 
+                      [imageId]="data.recID" 
+                      imageObjType="BG_Comments"
+                      [imageReferType]="item.fileType"
+                      [desc]="formatBytes(item.fileSize)"
+                      [title]="item.fileName"
+                      desc2="" 
+                      [descLine]="1">
+                    </codx-temp-full>
+                  </ng-template>
                 </div>
               </ng-container>
             </div>
@@ -612,17 +591,19 @@
             {{ data.createdOn | timefrom }}
           </div>
         </div>
-        <!-- <ng-container *ngIf="data.listFile">
+        <ng-container *ngIf="lstFile">
           <div class="row mt-2">
+            <!-- danh sách file đính kèm -->
             <codx-thumbnail
               class="popup-attachment"
-              [files]="data.listFile"
+              [files]="lstFile"
               [formModel]="formModel"
               [hideDelete]="'1'"
-              [hideMoreF]="'0'"
-            ></codx-thumbnail>
+              [hideMoreF]="'0'">
+            </codx-thumbnail>
           </div>
-        </ng-container> -->
+        </ng-container>
+        
       </div>
     </div>
   </div>
@@ -738,6 +719,18 @@
           <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
+          <ng-container *ngIf="lstFile">
+            <div class="row mt-2">
+              <!-- danh sách file đính kèm -->
+              <codx-thumbnail
+                class="popup-attachment"
+                [files]="lstFile"
+                [formModel]="formModel"
+                [hideDelete]="'1'"
+                [hideMoreF]="'0'">
+              </codx-thumbnail>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -790,6 +783,18 @@
           <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
+          <ng-container *ngIf="lstFile">
+            <div class="row mt-2">
+              <!-- danh sách file đính kèm -->
+              <codx-thumbnail
+                class="popup-attachment"
+                [files]="lstFile"
+                [formModel]="formModel"
+                [hideDelete]="'1'"
+                [hideMoreF]="'0'">
+              </codx-thumbnail>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -834,6 +839,18 @@
           <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
+          <ng-container *ngIf="lstFile">
+            <div class="row mt-2">
+              <!-- danh sách file đính kèm -->
+              <codx-thumbnail
+                class="popup-attachment"
+                [files]="lstFile"
+                [formModel]="formModel"
+                [hideDelete]="'1'"
+                [hideMoreF]="'0'">
+              </codx-thumbnail>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>

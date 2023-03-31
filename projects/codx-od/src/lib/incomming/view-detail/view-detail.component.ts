@@ -136,6 +136,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         textDefault: 'Xét duyệt',
         isActive: false,
       });
+    this.api.execSv("DM","DM","FileBussiness","GetFilesByTrackLogIDAsync","00ef0f56-cf6f-11ed-b735-d89ef34ba7ae").subscribe()
   }
 
   ngOnChanges(changes: SimpleChanges): void {

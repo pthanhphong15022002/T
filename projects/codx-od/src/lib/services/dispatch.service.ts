@@ -320,5 +320,9 @@ export class DispatchService implements OnDestroy {
     {
       return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [funcID , entityName , key])
     }
-    
+    //send mail
+    sendMail2(dataRq : DataRequest , recID:string)
+    {
+      return this.api.execSv<any>('OD','OD','DispatchesBusiness','SendMailAsync', [dataRq , recID])
+    }
 }

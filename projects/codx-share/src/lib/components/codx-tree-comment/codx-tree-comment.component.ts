@@ -69,14 +69,12 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
       }
     });
   }
-  getDataAsync() 
-  {    
+  getDataAsync() {    
     this.getCommentsAsync(this.objectID);
     this.getValueIcon();
   }
   // get data comments 
-  getCommentsAsync(objectID: string) 
-  {
+  getCommentsAsync(objectID: string) {
     if(objectID ){
       this.api
       .execSv(
