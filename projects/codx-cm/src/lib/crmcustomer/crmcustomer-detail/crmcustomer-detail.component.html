@@ -4,9 +4,9 @@
     <ng-template #header let-data>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
-
           <div class="me-3">
-            <codx-img [objectId]="dataSelected.recID" [objectName]="getNameCrm(dataSelected)" [objectType]="entityName" [width]="35">
+            <codx-img [objectId]="dataSelected.recID" [objectName]="getNameCrm(dataSelected)" [referType]="'avt'"
+            [imgOn]="dataSelected?.modifiedOn" [objectType]="entityName" [width]="35">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">

@@ -122,7 +122,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
@@ -155,7 +155,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync(insID, proccessID) {
-    var data = [insID, proccessID];
+    var data = [insID, proccessID,this.instanceStatus];
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {

@@ -18,7 +18,7 @@ import {
   CRUDService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { PopupAddressComponent } from '../popup-address/popup-address.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
