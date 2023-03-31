@@ -24,7 +24,7 @@ export class OkrReviewsComponent extends UIComponent {
     });
 
     this.cache.valueList('OM010').subscribe((res) => {
-      console.log(res);
+      
       this.reviewType = res?.datas;
     });
   }

@@ -325,9 +325,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
 
-  clickMF(e: any, ob: any) {
-    console.log(ob);
-    
+  clickMF(e: any, ob: any) {    
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -872,6 +870,7 @@ export class OkrTargetsComponent implements OnInit {
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
     let dModel = new DialogModel();
+    popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
     dModel.FormModel = this.formModelKR;
     let dialogShowKR = this.callfunc.openForm(
