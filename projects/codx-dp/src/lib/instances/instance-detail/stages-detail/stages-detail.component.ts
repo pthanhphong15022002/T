@@ -352,7 +352,7 @@ export class StagesDetailComponent implements OnInit {
     let listData = {
       status,
       taskType: this.jobType,
-      stepID: this.step?.recID,
+      step: this.step,
       listGroup: this.taskGroupList,
       stepTaskData: dataTransmit || {},
       taskList: this.taskList,
@@ -576,7 +576,7 @@ export class StagesDetailComponent implements OnInit {
       this.taskGroupList = step['taskGroups'];
       if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
         let taskGroup = new DP_Instances_Steps_TaskGroups();
-        taskGroup['task'] = taskGroupList['null'] || [];
+        taskGroup['task'] = taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
