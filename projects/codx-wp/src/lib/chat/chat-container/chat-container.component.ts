@@ -107,6 +107,7 @@ export class ChatContainerComponent implements OnInit {
       let codxBoxChat =  window.ng.getComponent(ele);
       let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
       if(index > -1 && codxBoxChat){
+        debugger
         this.lstGroupActive.splice(index, 1);
         this.lstGroupCollapse.unshift(codxBoxChat.group);
         ele.remove();
