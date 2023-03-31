@@ -174,6 +174,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   
   valueChangeIndex(e:any)
   {
+    debugger
     if(e?.data)
     {
       this.indexQ = e?.data;
