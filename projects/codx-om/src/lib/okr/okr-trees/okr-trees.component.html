@@ -4,7 +4,7 @@
 </codx-treeview>
 <ng-template #templateTreeView let-item>
     <div (click)="clickTreeNode($event)" class="mb-2">
-        <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-row align-items-center h-50px" >
             <div *ngIf="item?.orgUnitType=='1'" class="d-flex justify-content-center align-items-center" style="height:30px;width:30px;background:#3699FF">
                 <span class="icon-home justify-content-center align-items-center text-light"></span>
             </div>       

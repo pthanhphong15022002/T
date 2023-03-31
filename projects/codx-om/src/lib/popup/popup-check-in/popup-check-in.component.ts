@@ -135,8 +135,11 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
+    if(this.checkIns?.cummulated < this.dataKR?.actual){
+      this.notificationsService.notify('Giá trị sau cùng không được nhỏ hơn giá trị của lần cập nhật trước đó');
+    }
     if(this.dataKR.checkInMode=='1'){
-      this.checkIns.value= this.checkIns?.cummulated - this.dataKR?.actual
+      this.checkIns.value= this.checkIns?.cummulated - this.dataKR?.actual;
     }
     else{
       this.checkIns.cummulated= this.checkIns.value + this.dataKR?.actual;
