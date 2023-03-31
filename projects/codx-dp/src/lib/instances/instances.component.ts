@@ -579,12 +579,7 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-<<<<<<< HEAD
         this.startInstance([data.recID,this.process.recID])
-=======
-        console.log(data.recID);
-
->>>>>>> 2753f58a2dc0547dadea717f1ac34cbe1d578ffa
         break;
     }
   }
