@@ -27,7 +27,9 @@
         <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
         <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
           
-          <span [innerHTML]="(item?.progress | formatvalue :  okrFM?.obFM : 'progress' | async )+'%'"></span>
+          <span *ngIf="item?.progress!=0" [innerHTML]="(item?.progress | formatvalue :  okrFM?.obFM : 'progress' | async )+'%'"></span>
+          
+          <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
           <div class="h-7px w-100 bg-gray-200 rounded-4">
             <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
               aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -84,7 +86,9 @@
       <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
       <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
         
-        <span [innerHTML]="(item?.progress | formatvalue :  okrFM?.krFM : 'progress' | async )+'%'"></span>
+        <span  *ngIf="item?.progress!=0" [innerHTML]="(item?.progress | formatvalue :  okrFM?.krFM : 'progress' | async )+'%'"></span>
+        
+        <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
         <div class="h-7px w-100 bg-gray-200 rounded-4">
           <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
             aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -137,7 +141,9 @@
     <div class="d-flex align-items-center justify-content-end ">
       <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
       <div class="d-flex flex-column align-items-center kr-process w-200px min-w-200px ms-3">
-         <span [innerHTML]="(item?.progress | formatvalue : okrFM?.skrFM : 'progress' | async )+'%'"></span>
+         <span *ngIf="item?.progress!=0"  [innerHTML]="(item?.progress | formatvalue : okrFM?.skrFM : 'progress' | async )+'%'"></span>
+         
+         <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
         <div class="h-7px w-100 bg-gray-200 rounded-4">
           <div class="bg-color rounded-4 h-7px" role="progressbar" [style.width]="item?.progress + '%'"
             aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>

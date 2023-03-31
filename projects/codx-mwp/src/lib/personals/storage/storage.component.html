@@ -48,6 +48,14 @@
         </div>
       </div>
     </button>
+    <div>
+      <app-list-post #listPost
+        [predicate]="predicatePortal" 
+        [dataValue]="dataValuePortal" 
+        [isShowCreate]="false"
+        [moreFuncTmp]="moreFC">
+      </app-list-post>
+    </div>
     <ng-template #detail></ng-template>
     <ng-template #moreFC let-item>
       <div class="more">
