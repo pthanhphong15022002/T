@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
+import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'codx-comments',
@@ -303,10 +304,20 @@ export class CodxCommentsComponent implements OnInit {
   }
   //click view detail
   clickViewDetail(file:any){
-    if(this.evtViewDetail)
-    {
-      this.evtViewDetail.emit(file);
-    }
+    let option = new DialogModel();
+      option.FormModel = this.formModel;
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.callFuc.openForm(
+        ViewFileDialogComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
   }
 
 }
