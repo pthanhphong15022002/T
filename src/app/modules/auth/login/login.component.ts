@@ -416,6 +416,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
         if (this.returnUrl) {
           this.returnUrl = decodeURIComponent(this.returnUrl);
+          // if (this.returnUrl.indexOf('/') > 1)
+          //   this.returnUrl = '/' + this.returnUrl;
         }
 
         if (
@@ -456,17 +458,12 @@ export class LoginComponent implements OnInit, OnDestroy {
                 `${this.returnUrl ? this.returnUrl : data.tenant}`,
               ]);
           }
-          // window.location.href = this.returnUrl
-          //   ? this.returnUrl
-          //   : data.tenant;
-          else
-            return this.router.navigate([
-              `${this.returnUrl ? this.returnUrl : data.tenant}`,
-            ]);
+          window.location.href = this.returnUrl ? this.returnUrl : data.tenant;
+          // return this.router.navigate([
+          //   `${this.returnUrl ? this.returnUrl : data.tenant}`,
+          // ]);
         }
       } else {
-        // this.alerttext = data.error;
-        //$(this.error.nativeElement).html(data.error);
         this.notificationsService.notify(data.error);
         return false;
       }
