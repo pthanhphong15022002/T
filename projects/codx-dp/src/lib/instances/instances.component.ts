@@ -1000,7 +1000,7 @@ export class InstancesComponent
            for(let item of instanceStepId ){
             if(item.stepStatus == '0') {
               item.stepStatus = '1';
-              item.actualEnd = new Date();
+              item.actualStart = new Date();
             }
             else if(item.stepStatus == '1') {
               item.stepStatus = '3';
@@ -1012,7 +1012,7 @@ export class InstancesComponent
            this.codxDpService.autoMoveStage(data).subscribe((res) => {
              if(res) {
              var stepsUpdate = dataInstance.listStep.map(item1 => {
-                const item2 = instanceStepId.find(item2 => item1.stepID === item2.stepID);
+                var item2 = instanceStepId.find(item2 => item1.stepID === item2.stepID);
                 if (item2) {
                   return { ...item1, status: item2.status };
                 }
