@@ -16,8 +16,8 @@ export class ForwardComponent implements OnInit {
   user: any;
   dialog: any;
   gridViewSetup : any;
-  funcID: any;
   forward = new forwarDis();
+  formModel:any;
   formatBytes = formatBytes;
   getJSONString = getJSONString;
   @Input() viewbase: ViewsComponent;
@@ -36,6 +36,7 @@ export class ForwardComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.formModel = dt?.data?.formModel
   }
     
   ngOnInit(): void {
@@ -43,7 +44,6 @@ export class ForwardComponent implements OnInit {
     this.user = this.authStore.get();
     this.gridViewSetup = this.data["gridViewSetup"];
     this.files = this.data?.files;
-    this.funcID = this.data?.funcID;
   }
   changeValueUserID(event: any)
   {
@@ -52,7 +52,10 @@ export class ForwardComponent implements OnInit {
   onSave()
   {
     this.forwardForm.value.userID = this.forwardForm.value.userID.join(";");
-    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forwardForm.value , this.funcID).subscribe((item)=>{
+    this.forwardForm.value.funcID = this.formModel?.funcID;
+    this.forwardForm.value.referType = "source";
+    this.forwardForm.value.entityName = this.formModel?.entityName;
+    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forwardForm.value).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })
