@@ -255,6 +255,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
+    debugger
     if (this.lstQuestion) {
       let seqNo = 0;
       if (!answerType)
