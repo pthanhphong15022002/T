@@ -262,3 +262,37 @@ codx-chat-box.active{
     border: 1px solid gray;
     border-radius: 20px;
 }
+
+.popup-vote{
+    background-color: var(--bg-body);
+    padding: 10px;
+}
+.popup-title{
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+}
+.popup-voteType{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+.vote-list{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.vote-item{
+    padding: 10px;
+}
+.popup-users{
+    padding: 10px;
+}
+.user-item{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+}
