@@ -28,7 +28,6 @@ import { CodxTaskComponent } from './task/codx-task/codx-task.component';
 import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
 import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
 import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
-import { PopupAddCrmcontactsComponent } from './crmcustomer/popup-add-crmcontacts/popup-add-crmcontacts.component';
 import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
 import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
@@ -80,7 +79,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTaskComponent,
     PopupAddCrmcustomerComponent,
     PopupAddressComponent,
-    PopupAddCrmcontactsComponent,
     ViewListCrmComponent,
     PopupListContactsComponent,
     PopupQuickaddContactComponent,

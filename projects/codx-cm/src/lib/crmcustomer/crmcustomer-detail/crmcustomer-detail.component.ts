@@ -1,3 +1,4 @@
+import { CodxCmService } from './../../codx-cm.service';
 import {
   Component,
   Input,
@@ -47,6 +48,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
+    private cmSv: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -59,6 +61,14 @@ export class CrmcustomerDetailComponent implements OnInit {
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
+  }
+
+  getOneData(recID, funcID){
+    this.cmSv.getOne(recID, funcID).subscribe(res =>{
+      if(res){
+        this.dataSelected = res;
+      }
+    })
   }
 
   listTab(funcID) {
@@ -196,11 +206,12 @@ export class CrmcustomerDetailComponent implements OnInit {
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,

@@ -64,10 +64,6 @@ export class FieldDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-      console.log(this.elmIDCrr)
-  }
   
 
   clickShow(e, id) {

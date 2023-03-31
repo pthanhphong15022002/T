@@ -1824,7 +1824,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['task'] = taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
             taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
           }
@@ -2449,7 +2449,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? event.previousIndex + 1
         : event.currentIndex + 1;
     let listID = this.stepList
-      ?.filter((step) => step.stepNo >= start && step.stepNo <= end)
+      ?.filter((step) => step.stepNo >= start)
       .map((stepFind) => {
         return stepFind.recID;
       });

@@ -1208,6 +1208,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
       fileItem.data = '';
+      fileItem.source = null;
       var appName = environment.appName;
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = null;
@@ -1853,7 +1854,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
             files[i].name.length
           ) || files[i].name;
         fileUpload.createdBy = this.user.userName;
-        fileUpload.createdOn = this.getNow();
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;
@@ -3147,7 +3147,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
             files[i].name.length
           ) || files[i].name;
         fileUpload.createdBy = this.user.userName;
-        fileUpload.createdOn = this.getNow();
         // var arrName = files[i].name.split(".");
         // arrName.splice((arrName.length - 1), 1);
         // var name = arrName.join('.');

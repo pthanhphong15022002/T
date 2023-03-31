@@ -163,9 +163,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
             this.form.formGroup.patchValue({
               currencyID: res.currencyID,
               exchangeRate: res.exchangeRate,
-              multi: res.multi,
-              payAmount2: res.payAmount2,
             });
+
+            this.cashTransfer.multi = res.multi;
+            this.cashTransfer.payAmount2 = res.payAmount2;
           }
         });
     }
@@ -183,9 +184,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
         if (res) {
           this.form.formGroup.patchValue({
             exchangeRate: res.exchangeRate,
-            multi: res.multi,
-            payAmount2: res.payAmount2,
           });
+
+          this.cashTransfer.multi = res.multi;
+          this.cashTransfer.payAmount2 = res.payAmount2;
         }
       });
   }

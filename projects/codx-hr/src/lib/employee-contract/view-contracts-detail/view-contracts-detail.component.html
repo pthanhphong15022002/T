@@ -74,15 +74,14 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold"
-          
-        >
-          {{
-            itemDetail?.limitMonths != null
-              ? itemDetail?.limitMonths + " Tháng"
-              : "Đang cập nhật"
-          }}
-        </span>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.limitMonths
+              | formatvalue : formModel : 'limitMonths'
+              | async
+          "
+        ></span>
       </div>
 
       <div class="d-flex align-items-center me-5 mb-5 col-5">
@@ -92,8 +91,14 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold">
-          {{ itemDetail?.EffectedDate | fmDT }}
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.EffectedDate
+              | formatvalue : formModel : 'EffectedDate'
+              | async
+          "
+        >
         </span>
       </div>
 
@@ -375,21 +380,23 @@
             | async
         "
       ></span>
-      <span>
+      <span
+        [innerHTML]="
+          itemDetail?.emp?.email
+            | formatvalue : view.formModel : 'email'
+            | async
+        "
+      >
         <i class="icon-email"></i>
-        {{
-          itemDetail?.emp?.email != null
-            ? itemDetail?.emp?.email
-            : "Đang cập nhật"
-        }}
       </span>
-      <span>
+      <span
+        [innerHTML]="
+          itemDetail?.emp?.mobile
+            | formatvalue : view.formModel : 'mobile'
+            | async
+        "
+      >
         <i class="icon-phone_android"></i>
-        {{
-          itemDetail?.emp?.mobile != null
-            ? itemDetail?.emp?.mobile
-            : "Đang cập nhật"
-        }}
       </span>
     </div>
     <!-- 2 -->

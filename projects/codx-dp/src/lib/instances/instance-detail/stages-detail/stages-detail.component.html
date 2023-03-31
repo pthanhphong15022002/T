@@ -63,7 +63,7 @@
         >
           <span
             [ngStyle]="
-              +progress < 5 ? { position: 'relative', left: '15px' } : {}
+              +progress < 10 ? { position: 'relative', left: '15px' } : {}
             "
             >{{progress || 0 }}%</span
           >
@@ -156,7 +156,7 @@
     [dataStep]="dataStep"
     [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
-    [isUpdate]="isUpdate && dataStep.stepStatus <3"
+    [isUpdate]="isUpdate"
     [titleHeaderFormCF]="titleDefault"
     [viewsCurrent]="viewsCurrent"
   >
