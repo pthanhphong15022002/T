@@ -164,6 +164,15 @@
 .ob-kr:hover {
     cursor: pointer;
     color: var(--text-primary) !important;
+    text-decoration: underline;
+}
+
+.ob-name{
+    font-size: 1.04em; 
+    font-weight: 500;
+}
+.kr-name{
+    font-weight: 450;
 }
 
 .bg-color {
