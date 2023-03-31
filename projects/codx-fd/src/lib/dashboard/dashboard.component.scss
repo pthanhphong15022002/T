@@ -1,9 +1,9 @@
 
 .fd_cards{
     width: 100%;
-    height: 350px;
-    border-bottom: 1px solid gray;
-    padding: 16px;
+    height: 240px;
+    border-bottom: 1px solid var(--gray-150);
+    overflow: auto;
 }
 
 .tmpshare {
@@ -15,11 +15,15 @@
 }
 
 .history-box {
-    max-height: 200px;
-    overflow: auto;
+    height: calc(100vh - 420px);
+   // overflow: auto;
 }
 .fd_histories{
     width: 100%;
     height: 350px;
     padding: 16px;
+}
+.fd-pagehome #newfeed{
+    padding-bottom: 10px;
+
 }
