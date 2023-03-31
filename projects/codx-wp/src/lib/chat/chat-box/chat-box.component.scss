@@ -122,7 +122,7 @@
     padding: 4px;
 }
 .message-reft{
-    background-color: rgb(196, 207, 218);
+    background-color: var(--primary-lighter);
     max-width: 250px;
     border-radius: 2px;
     padding: 4px;
@@ -242,7 +242,7 @@ codx-chat-box.active{
 }
 .message-send-message{
     border-radius: 6px;
-    background-color: rgb(115, 212, 250);
+    background-color: var(--primary-lighter);
     padding: 4px;
 }
 .message-system{
