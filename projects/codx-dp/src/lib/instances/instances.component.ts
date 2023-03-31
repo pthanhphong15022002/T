@@ -578,6 +578,10 @@ export class InstancesComponent
       case 'DP17':
         this.approvalTrans('tes1', 'test2');
         break;
+      case 'DP21':
+        console.log(data.recID);
+        
+        break;
     }
   }
 
