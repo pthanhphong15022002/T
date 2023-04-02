@@ -12,6 +12,7 @@ import { UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
+import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 
 @Component({
   selector: 'app-answers',
@@ -32,7 +33,32 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   pervious = false;
   question:any;
   lstCountQuestion = [];
+  lstQuestion : any;
   indexQuesAns: number = 0;
+  Objs =  [
+    { Country : "GBR", GoldMedal : 27, SilverMedal : 23, BronzeMedal : 17, MappingName : "Great Britain" },
+    { Country : "CHN", GoldMedal : 26, SilverMedal : 18, BronzeMedal : 26, MappingName : "China" },
+    { Country : "AUS", GoldMedal : 8, SilverMedal : 11, BronzeMedal : 10, MappingName : "Australia" },
+    { Country : "RUS", GoldMedal : 19, SilverMedal : 17, BronzeMedal : 20, MappingName : "Russia" },
+];
+primaryXAxis: Object = {
+  labelIntersectAction: Browser.isDevice ? 'None' : 'Rotate45', labelRotation: Browser.isDevice ? -45 : 0 , edgeLabelPlacement: 'Shift',valueType: 'Category', interval: 1, majorGridLines: { width: 0 }, majorTickLines: { width: 0 }
+};
+//Initializing Primary Y Axis
+primaryYAxis: Object = {
+  majorTickLines: { width: 0 }, lineStyle: { width: 0 }, 
+};
+chartSettings: ChartSettings = {
+  title: '15 Objectives',
+  seriesSetting: [
+    {
+      type: 'Column',
+      xName: 'answer',
+      yName: 'count',
+    },
+  ],
+
+};
   constructor(
     private injector: Injector,
     private awserSV :CodxSVAnswerService
@@ -71,14 +97,14 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     if(this.recID)
     {
       this.awserSV.getRespondents(this.recID).subscribe((item:any) =>{
-        if(item && item.length>0) {
-          this.lstRespondents = item;
+        if(item) {
+          this.lstRespondents = item[0];
+          this.lstQuestion = item[1]
+          this.lstCountQuestion = item[2]
           this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
-          this.loadDataAnswerID(this.respondents.responds[0].questionID);
           this.setSelectedDropDown(this.respondents.responds[0].question)
-          this.awserSV.loadQuestion(this.respondents.responds[0].questionID).subscribe(itemQ =>{
-            if(itemQ) this.question = itemQ;
-          })
+          this.loadQuestionByID(this.respondents.responds[0].questionID);
+          if(this.respondents.responds.length == 1) this.next = false
         }
       })
     }
@@ -100,28 +126,20 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   selectedDropDown(index:any,item:any=null)
   {
     if(!item) item = this.respondents.responds[(index - 1)].question;
-    else
+    else if(this.respondents.responds.length > 1)
     {
       var e = {data : index + 1 };
       this.valueChangeIndex(e);
     }
 
     this.setSelectedDropDown(item);
-    this.loadDataAnswerID(this.respondents.responds[this.indexQ-1].questionID);
-    var o = this.awserSV.loadQuestion(this.respondents.responds[this.indexQ-1].questionID);
-    if(isObservable(o))
-    {
-      o.subscribe(itemQ =>{
-        if(itemQ) {
-          this.question = itemQ;
-          this.detectorRef.detectChanges();
-        }
-      })
-    }
-    else this.question = o;
-
+    this.loadQuestionByID(this.respondents.responds[this.indexQ-1].questionID);
   }
 
+  loadQuestionByID(id:any)
+  {
+    this.question = this.lstQuestion.filter(x=>x.recID == id)[0];
+  }
   //Thay đổi câu hỏi kế tiếp hoặc câu hỏi trước đó
   changeQuestion(type:any)
   {
@@ -174,7 +192,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   
   valueChangeIndex(e:any)
   {
-    debugger
     if(e?.data)
     {
       this.indexQ = e?.data;
@@ -212,83 +229,36 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     var dc= document.getElementById("collapseExample");
     dc.classList.remove("show");
   }
-  //Lọc dữ liệu câu hỏi 
-  loadDataAnswerID(idQ:any)
-  {
-    var indexQs = this.lstCountQuestion.findIndex(x=>x.idQ == idQ);
-    if(indexQs >= 0) return
-    for(var a = 0 ; a < this.lstRespondents.length ; a++)
-    {
-      for(var i = 0 ; i< this.lstRespondents[a].responds.length ; i++)
-      {
-       
-        if(this.lstRespondents[a].responds[i].questionID == idQ)
-        {
-          var check = this.lstCountQuestion.findIndex(x=>x.idQ == idQ);
-          if(check < 0)
-          {
-            var obj = 
-            {
-              idQ: idQ,
-              listAnswer : []
-            }
-            if(this.lstRespondents[a].responds[i].results.length > 0)
-            {
 
-              for(var y = 0 ; y < this.lstRespondents[a].responds[i].results.length ; y++)
-              {
-                var obj2 = 
-                {
-                  answer:  this.lstRespondents[a].responds[i].results[y].answer,
-                  count : 1,
-                  respondents : [
-                    {
-                      index : (a + 1),
-                      recID : this.lstRespondents[a].recID
-                    }
-                  ]
-                }
-                obj.listAnswer.push(obj2)
-              }
-            }
-            this.lstCountQuestion.push(obj);
-          }
-          else
-          {
-  
-            for(var y = 0 ; y < this.lstRespondents[a].responds[i].results.length ; y++)
-            {
-              var index = this.lstCountQuestion[check].listAnswer.findIndex(x=>x.answer == this.lstRespondents[a].responds[i].results[y].answer);
-              if(index < 0)
-              {
-                var obj2 = 
-                {
-                  answer:  this.lstRespondents[a].responds[i].results[y].answer,
-                  count : 1,
-                  respondents : [
-                    {
-                      index : (a + 1),
-                      recID : this.lstRespondents[a].recID
-                    }
-                  ]
-                }
-                this.lstCountQuestion[check].listAnswer.push(obj2)
-              }
-              else {
-                this.lstCountQuestion[check].listAnswer[index].count ++;
-                this.lstCountQuestion[check].listAnswer[index].respondents.push( {
-                  index : (a + 1),
-                  recID : this.lstRespondents[a].recID
-                });
-              }
-            
-            }
-          }
+  //Đếm số lượng câu hỏi khác rỗng
+  countAnswer(answers:any)
+  {
+    var count = 0 ;
+    if(answers && answers.length > 0) 
+    var listAnswers =  answers.filter(x=>x.answer);
+    if(listAnswers.length > 0)
+      listAnswers.forEach(elm => {
+        count = count + elm.count;
+      });
+    return count
+  }
+
+  dataSourceChart(data:any)
+  {
+    debugger
+    var list = data.filter(x=>x.answer);
+    var arr=[];
+    if(list && list.length > 0 ) 
+    {
+      list.forEach(elm =>{
+        var obj = 
+        {
+          Answer : elm.answer,
+          Count : elm.count
         }
-      }
-      
+        arr.push(obj)
+      });
     }
-    console.log(this.lstCountQuestion)
-    this.detectorRef.detectChanges();
+    return arr;
   }
 }
