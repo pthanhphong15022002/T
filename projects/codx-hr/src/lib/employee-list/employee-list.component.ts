@@ -109,7 +109,6 @@ export class EmployeeListComponent extends UIComponent {
         width: 200,
         template: this.itemStatusName,
       },
-      { field: '', headerText: '', width: 50, template: this.itemAction },
     ];
     this.views = [
       {
@@ -120,6 +119,7 @@ export class EmployeeListComponent extends UIComponent {
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
+          hideMoreFunc: true
         },
       },
       // {

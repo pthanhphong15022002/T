@@ -138,24 +138,24 @@
     >
     </codx-combobox-popup>
   </ng-container>
-  <ng-container *ngIf="arrIdUser?.length > 0">
+
     <!-- <codx-imgs
       [objectId]="listIdUser"
       objectType="AD_Users"
       [numberImages]="5"
     ></codx-imgs> -->
-    <div class="d-flex" >
-      <ng-container *ngFor="let userID of arrIdUser">
+    <div class="d-flex" *ngIf="arrIdUser && arrIdUser?.length > 0">
+      <ng-container *ngFor="let id of arrIdUser">
         <div style="position: relative">
-          <codx-img class="" [objectId]="userID" objectType="AD_Users">
+          <codx-img class="" [objectId]="id" objectType="AD_Users">
           </codx-img>
           <div style="position: absolute; right: 0px; top: 0px">
-            <span class="text-danger icon-close icon-16 cursor-pointer" (click)="deleteUser(userID)"></span>
+            <span class="text-danger icon-close icon-16 cursor-pointer" (click)="deleteUser(id)"></span>
           </div>
         </div>
       </ng-container>
     </div>
-  </ng-container>
+ 
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'R'">
