@@ -6,11 +6,23 @@
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item.stepNo }}</div>
-        <div class="step-title text-gray-700 fw-bold fs-5">
+        <div class="step-title text-gray-700 fw-bold fs-5 me-1">
           {{ item.stepType | vll : "ES002" : "text" | async }}
         </div>
+        <div
+          class="step-title text-gray-700 fw-bold fs-5 me-1"
+          *ngIf="item.signatureType">|</div>
+        <div
+          class="step-title text-gray-700 fw-bold fs-5 me-1"
+          [innerHTML]="
+            item.signatureType
+              | formatvalue : fmApprovalStep : 'signatureType'
+              | async
+          "
+        ></div>
+        <div class="text-gray-500 fs-5 me-1">-</div>
         <div class="text-gray-500 fs-5">
-          - {{ item.stepName ?? item.stepNote }}
+          {{ item.stepName ?? item.stepNote }}
         </div>
       </div>
       <div class="codx-approval-content ms-16">
@@ -197,11 +209,26 @@
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item.stepNo }}</div>
-        <div class="step-title text-gray-800 fw-bold fs-4 me-1">
+        <div class="step-title text-gray-700 fw-bold fs-5 me-1">
           {{ item.stepType | vll : "ES002" : "text" | async }}
+          <!-- {{ item.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
         </div>
-        <div class="text-gray-400 fs-5">
-          - {{ item.stepName ?? item.stepNote }}
+        <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
+          <div
+          class="step-title text-gray-700 fw-bold fs-5 me-1">|</div>
+          <div
+            class="step-title text-gray-700 fw-bold fs-5 me-1"
+            [innerHTML]="
+              item.signatureType
+                | formatvalue : fmApprovalTrans : 'signatureType'
+                | async
+            "
+          ></div>
+        </ng-container>
+        
+        <div class="text-gray-400 fs-5 me-1">-</div>
+        <div class="text-gray-400 fs-5 me-1">
+          {{ item.stepName ?? item.stepNote }}
         </div>
       </div>
       <div class="codx-approval-content ms-17">
@@ -344,7 +371,11 @@
           </div>
           <div
             class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3"
-            *ngIf="approver.status != '3' && approver.comment != '' && approver.comment"
+            *ngIf="
+              approver.status != '3' &&
+              approver.comment != '' &&
+              approver.comment
+            "
           >
             <div class="text-comment">
               {{ approver.comment }}

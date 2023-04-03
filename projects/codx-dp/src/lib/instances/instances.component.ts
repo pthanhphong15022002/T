@@ -579,19 +579,18 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance([data.recID,this.process.recID])
+        this.startInstance([data.recID, this.process.recID]);
         break;
     }
   }
 
-  startInstance(data){
+  startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
-      if(res){
+      if (res) {
         this.detailViewInstance.getStageByStep(res);
         this.detectorRef.detectChanges();
       }
-      
-    })
+    });
   }
 
   openOrClosed(data, check) {
@@ -614,7 +613,10 @@ export class InstancesComponent
                 ) {
                   this.view.dataService.remove(this.dataSelected).subscribe();
                   this.dataSelected = this.view.dataService.data[0];
-                  this.view.dataService.onAction.next({ type: 'delete', data: data });
+                  this.view.dataService.onAction.next({
+                    type: 'delete',
+                    data: data,
+                  });
                 }
                 this.detectorRef.detectChanges();
               }
@@ -632,8 +634,8 @@ export class InstancesComponent
 
   //#popup roles
 
-  changeDataMF(e, data) {
-    if (e != null && data != null) {
+  changeDataMF(e, data, isStart?) {
+    if (e != null && data != null && isStart) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -707,6 +709,19 @@ export class InstancesComponent
         }
       });
     }
+    // else{
+    //   e.forEach((res) => {
+    //     switch (res.functionID) {
+    //       case 'DP09':
+    //       case 'DP10':
+    //       case 'DP02':
+    //         res.disabled = true;
+    //         break;
+    //       default:
+    //         res.isblur = true;
+    //         }
+    //       })
+    // }
   }
   //End
 
@@ -797,12 +812,12 @@ export class InstancesComponent
   }
 
   dropInstance(data) {
+    data.stepID = this.crrStepID;
     if (this.moreFuncInstance?.length == 0) {
-      data.stepID = this.crrStepID;
       this.changeDetectorRef.detectChanges();
       return;
     }
-    data.stepID = this.crrStepID;
+
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
@@ -816,10 +831,22 @@ export class InstancesComponent
       if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
         if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          if (data.closed || !data.edit) {
+            this.notificationsService.notify(
+              'Không thể chuyển tiếp giai đoạn ! - Khanh thêm mess gấp để thay thế!',
+              '2'
+            );
+            return;
+          }
           idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
-          if (idx != -1)
+          if (idx != -1) {
             this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
+          }
         } else {
+          if(data.closed || !data.edit){
+            this.notificationsService.notify("Không thể đánh dấu thành công / thất bại  ! - Khanh thêm mess gấp để thay thế!",'2')
+            return;
+         }
           if (stepCrr?.isSuccessStep) {
             idx = this.moreFuncInstance.findIndex(
               (x) => x.functionID == 'DP10'
@@ -834,10 +861,11 @@ export class InstancesComponent
               this.moveReason(this.moreFuncInstance[idx], data, false);
           }
         }
-      } else {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
+      } 
+      // else {
+      //  // data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
     }
   }
 
@@ -1171,7 +1199,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data);
+    this.changeDataMF(e.e, e.data, e.isStart);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
