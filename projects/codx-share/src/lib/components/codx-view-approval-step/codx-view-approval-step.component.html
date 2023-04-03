@@ -213,7 +213,7 @@
           {{ item.stepType | vll : "ES002" : "text" | async }}
           <!-- {{ item.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
         </div>
-        <ng-container *ngIf="item.signatureType && fmApprovalTrans">
+        <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
           <div
           class="step-title text-gray-700 fw-bold fs-5 me-1">|</div>
           <div

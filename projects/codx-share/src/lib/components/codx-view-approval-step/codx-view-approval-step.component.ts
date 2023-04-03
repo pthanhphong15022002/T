@@ -92,9 +92,11 @@ export class CodxViewApprovalStepComponent
           }
         });
       } else {
-        this.esService.getFormModel('EST04').then((res) => {
-          if (res) this.fmApprovalTrans = res;
-        });
+        if(!this.fmApprovalTrans){
+          this.esService.getFormModel('EST04').then((res) => {
+            if (res) this.fmApprovalTrans = res;
+          });
+        }
         this.esService
           .getApprovalTransByTransID(this.transID)
           .subscribe((res) => {
