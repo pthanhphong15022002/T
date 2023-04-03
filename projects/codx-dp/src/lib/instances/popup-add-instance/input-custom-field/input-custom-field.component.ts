@@ -72,7 +72,7 @@ export class InputCustomFieldComponent implements OnInit {
         break;
       case 'P':
         this.listIdUser = this.customField?.dataValue ?? '';
-        this.arrIdUser = this.listIdUser.split(';');
+        this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
         break;
       case 'A':
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
@@ -146,7 +146,7 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
-      this.arrIdUser = this.listIdUser.split(';');
+      this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
