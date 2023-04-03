@@ -41,4 +41,13 @@ export class CodxCmService {
       [recID, funcID]
     );
   }
+
+  updateContactCrm(contact, funcID, recIDCrm){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'UpdateContactCrmAsync',
+      [contact, funcID, recIDCrm]
+    );
+  }
 }

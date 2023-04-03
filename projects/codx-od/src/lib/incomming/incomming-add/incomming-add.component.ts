@@ -122,7 +122,10 @@ export class IncommingAddComponent implements OnInit {
           // })
         }
       }
-      if(this.type == "copy") this.dispatch.dispatchNo = null
+      if(this.type == "copy") {
+        this.dispatch.dispatchNo = null
+        this.dispatch.isBookmark = false;
+      }
       // if(!this.dispatch.dispatchNo)
       // {
       //   //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
