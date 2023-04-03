@@ -7,7 +7,7 @@
   </codx-mfunc>
 </ng-template>
 <ng-template #resourceNameCol let-data>
-  <div class="d-flex flex-row align-items-center">
+  <div class="d-flex flex-row align-items-center py-3 align-items-center ">
     <codx-img class="me-4" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
       [objectName]="data?.resourceName" imageType="circle" width="50" [imgOn]="data?.modifiedOn"></codx-img>
     <div class="d-flex flex-column fs-7">

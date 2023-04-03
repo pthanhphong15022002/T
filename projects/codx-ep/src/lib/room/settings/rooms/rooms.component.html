@@ -7,10 +7,10 @@
   </codx-mfunc>
 </ng-template>
 <ng-template #resourceNameCol let-data>
-  <div class="d-flex flex-row justify-content-start">
+  <div class="d-flex flex-row justify-content-start align-items-center py-3">
     <codx-img #avatar [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle"
       width="50" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
-    <div class="ms-4 d-flex flex-column">
+    <div class="ms-4 d-flex flex-column align-items-between ">
       <span class="fw-bold" [innerHTML]="data?.resourceName | formatvalue : formModel : 'ResourceName' | async"></span>
       <div class="float-left fs-7">
         <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking"></codx-label>
