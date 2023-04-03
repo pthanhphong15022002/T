@@ -165,6 +165,7 @@ export class CodxApprovalComponent
             fuc?.functionID +
             '/' +
             this.dataItem?.transID;
+            debugger
             if(url) this.codxService.navigate('', url);
           }
           

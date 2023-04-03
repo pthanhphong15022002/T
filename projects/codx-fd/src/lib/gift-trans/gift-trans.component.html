@@ -6,19 +6,19 @@
 </ng-template>
 <ng-template #itemTemplate let-data>
     <ng-container *ngIf="data.transType == '1'; else transType2">
-        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
+        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3 px-4" [typeMF]="'hover'"
             [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
             imageObjType="AD_Users" imgCss="me-3" [title]="data.userName"
-            [desc]="data.transType | vll:'L1422':'text' | async" [status]="data.status" [statusVll]="'L1428'"
-            [date]="data.createdOn" [bookmark]="false">
+            [subTitle]="data.transType | vll:'L1422':'text' | async" [status]="data.status" [statusVll]="'L1428'"
+            [date]="data.createdOn" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
         </codx-temp-full>
     </ng-container>
     <ng-template #transType2>
-        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
+        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3 px-4" [typeMF]="'hover'"
             [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.itemID"
             imageObjType="AD_Users" imgCss="me-3" [title]="data.userName"
-            [desc]="data.transType | vll:'L1437':'text' | async" [status]="data.status" [statusVll]="'L1428'"
-            [date]="data.createdOn" [bookmark]="false">
+            [subTitle]="data.transType | vll:'L1437':'text' | async" [status]="data.status" [statusVll]="'L1428'"
+            [date]="data.createdOn" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
         </codx-temp-full>
     </ng-template>
 

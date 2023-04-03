@@ -14,7 +14,7 @@
 </codx-layout-add>
 
   <ng-template #contractInfo>
-    <div *ngIf="actionType == 'add' || actionType == 'copy'" class="form-group row">
+    <div *ngIf="(actionType == 'add' && employeeObj == null) || (actionType == 'copy' && employeeObj == null)" class="form-group row">
         <codx-img
             [width]="35"
             class="me-3 col-3"
@@ -37,22 +37,22 @@
             </codx-input>
         </div>
     </div>
-    <div *ngIf="actionType == 'edit'">
+    <div *ngIf="actionType == 'edit' || actionType == 'copy' || (actionType == 'add' && employeeObj != null)">
       <div class="d-flex"> 
         <div class="d-flex flex-column">
           <codx-img
             [width]="35"
             class="me-3"
-            [objectId]="data?.emp.employeeID"
+            [objectId]="employeeObj.employeeID"
             [referType]="'avt'"
-            [objectName]="data?.emp.employeeName"
+            [objectName]="employeeObj.employeeName"
             [objectType]="'HR_Employees'"
           >
           </codx-img>
           <codx-vll
           class="badge badge-sm"
           [name]="'HR001'"
-          [value]="data?.emp?.gender"
+          [value]="employeeObj?.gender"
           [showText]="false"
           [showIcon]="true"
           [showBgColor]="true"
@@ -63,11 +63,11 @@
           <div>
             <div class="text-dark fw-bold">
               <span>
-                {{ data.emp.employeeName }}
+                {{ employeeObj.employeeName }}
               </span>
               <i class="icon-qr_code_scanner icon-14 me-1"></i>
               <span>
-                {{ data.emp.employeeID }}
+                {{ employeeObj.employeeID }}
               </span>
             </div>
   

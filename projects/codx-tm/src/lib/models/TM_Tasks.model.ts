@@ -43,6 +43,7 @@ export class TM_Tasks {
   completedQty: number;
   duration: number;
   lateCode: string = '';
+  sessionID:string ='';
   refID: any;
   refType: string = '';
   refNo: string = '';

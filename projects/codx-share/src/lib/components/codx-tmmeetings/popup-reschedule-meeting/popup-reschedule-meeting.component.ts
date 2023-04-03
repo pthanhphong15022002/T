@@ -1,4 +1,3 @@
-import { CO_Meetings } from './../../models/CO_Meetings.model';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
   DialogData,
@@ -7,7 +6,8 @@ import {
   NotificationsService,
 } from 'codx-core';
 import moment from 'moment';
-import { CodxTMService } from '../../codx-tm.service';
+import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
+import { CO_Meetings } from '../models/CO_Meetings.model';
 
 @Component({
   selector: 'lib-popup-reschedule-meeting',

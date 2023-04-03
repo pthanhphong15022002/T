@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VoucherComponent } from './voucher.component';
+import { PopAddLinereceiptsComponent } from './pop-add-linereceipts.component';
 
-describe('VoucherComponent', () => {
-  let component: VoucherComponent;
-  let fixture: ComponentFixture<VoucherComponent>;
+describe('PopAddLinereceiptsComponent', () => {
+  let component: PopAddLinereceiptsComponent;
+  let fixture: ComponentFixture<PopAddLinereceiptsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VoucherComponent ]
+      declarations: [ PopAddLinereceiptsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VoucherComponent);
+    fixture = TestBed.createComponent(PopAddLinereceiptsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

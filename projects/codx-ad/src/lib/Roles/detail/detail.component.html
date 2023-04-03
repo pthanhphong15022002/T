@@ -98,6 +98,15 @@
                               >
                               </codx-label>
                             </th>
+                            <th scope="col" class="w-150px">
+                              <codx-label
+                                name="lblAllowView"
+                                formName="Roles"
+                                default="
+                              Có phân quyền"
+                              >
+                              </codx-label>
+                            </th>
                             <th scope="col" class="w-170px">
                               <codx-label
                                 name="lblpermissionControl"
@@ -158,6 +167,24 @@
                           <tr *ngFor="let item of dataAuthorize">
                             <ng-container>
                               <td>{{ item.customName || item.defaultName }}</td>
+                              <td>
+                                <codx-input
+                                  type="checkbox"
+                                  [disabled]="
+                                    !active ||
+                                    (item.listTemplate | active : '0')
+                                  "
+                                  [checked]="
+                                    dataRole[item.functionID]?.DataPer?.run ||
+                                    false
+                                  "
+                                  field="run"
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
                               <td class="text-center">
                                 <codx-input
                                   type="valuelist"
@@ -166,10 +193,13 @@
                                   placeholder=""
                                   [disabled]="
                                     !active ||
-                                    (item.listTemplate | active : '0')
+                                    (item.listTemplate | active : '1')
                                   "
                                   ngDefaultControl
-                                  refValue="SYS029"
+                                  [refValue]="
+                                    (item.listControl | active : '1' : true) ||
+                                    'SYS029'
+                                  "
                                   field="permissionControl"
                                   [crrValue]="
                                     dataRole[item.functionID]?.DataPer
@@ -177,7 +207,7 @@
                                       ? dataRole[item.functionID]?.DataPer
                                           ?.permissionControl
                                       : dataRole[item.functionID]?.Entity
-                                          ?.permissionControl || 0
+                                          ?.permissionControl || ''
                                   "
                                   (valueChange)="
                                     valueChange($event, item.functionID)
@@ -190,7 +220,7 @@
                                   type="checkbox"
                                   [disabled]="
                                     !active ||
-                                    (item.listTemplate | active : '1')
+                                    (item.listTemplate | active : '2' : true)
                                   "
                                   [checked]="
                                     dataRole[item.functionID]?.DataPer
@@ -210,42 +240,20 @@
                                   class="cotrol-vll"
                                   placeholder=""
                                   ngDefaultControl
-                                  refValue="SYS026"
-                                  [disabled]="
-                                    !active ||
-                                    (item.listTemplate | active : '2')
+                                  [refValue]="
+                                    (item.listControl | active : '3' : true) ||
+                                    'SYS026'
                                   "
-                                  [crrValue]="
-                                    dataRole[item.functionID]?.DataPer?.read
-                                      ? dataRole[item.functionID]?.DataPer?.read
-                                      : 0
-                                  "
-                                  field="read"
-                                  (valueChange)="
-                                    valueChange($event, item.functionID)
-                                  "
-                                >
-                                </codx-input>
-                              </td>
-                              <td>
-                                <codx-input
-                                  type="valuelist"
-                                  name="select"
-                                  class="cotrol-vll"
-                                  placeholder=""
                                   [disabled]="
                                     !active ||
                                     (item.listTemplate | active : '3')
                                   "
-                                  ngDefaultControl
-                                  refValue="SYS026"
-                                  field="delete"
                                   [crrValue]="
-                                    dataRole[item.functionID]?.DataPer?.delete
-                                      ? dataRole[item.functionID]?.DataPer
-                                          ?.delete
-                                      : 0
+                                    dataRole[item.functionID]?.DataPer?.read
+                                      ? dataRole[item.functionID]?.DataPer?.read
+                                      : ''
                                   "
+                                  field="read"
                                   (valueChange)="
                                     valueChange($event, item.functionID)
                                   "
@@ -263,13 +271,44 @@
                                     (item.listTemplate | active : '4')
                                   "
                                   ngDefaultControl
-                                  refValue="SYS026"
+                                  [refValue]="
+                                    (item.listControl | active : '4' : true) ||
+                                    'SYS026'
+                                  "
+                                  field="delete"
+                                  [crrValue]="
+                                    dataRole[item.functionID]?.DataPer?.delete
+                                      ? dataRole[item.functionID]?.DataPer
+                                          ?.delete
+                                      : ''
+                                  "
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td>
+                                <codx-input
+                                  type="valuelist"
+                                  name="select"
+                                  class="cotrol-vll"
+                                  placeholder=""
+                                  [disabled]="
+                                    !active ||
+                                    (item.listTemplate | active : '5')
+                                  "
+                                  ngDefaultControl
+                                  [refValue]="
+                                    (item.listControl | active : '5') ||
+                                    'SYS026'
+                                  "
                                   field="write"
                                   [crrValue]="
                                     dataRole[item.functionID]?.DataPer?.write
                                       ? dataRole[item.functionID]?.DataPer
                                           ?.write
-                                      : 0
+                                      : ''
                                   "
                                   (valueChange)="
                                     valueChange($event, item.functionID)
@@ -283,7 +322,7 @@
                                   type="checkbox"
                                   [disabled]="
                                     !active ||
-                                    (item.listTemplate | active : '5')
+                                    (item.listTemplate | active : '6')
                                   "
                                   [checked]="
                                     dataRole[item.functionID]?.Export || false
@@ -376,7 +415,7 @@
                                 [crrValue]="
                                   dataRole[item.functionID]?.DataPer?.read
                                     ? dataRole[item.functionID]?.DataPer?.read
-                                    : 0
+                                    : ''
                                 "
                                 field="read"
                                 (valueChange)="

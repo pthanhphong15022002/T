@@ -1,6 +1,5 @@
 <codx-views
   #view
-  entityName="AD_UserGroups"
   service="SYS"
   assemblyName="AD"
   className="UserGroupsBusiness"
@@ -14,19 +13,48 @@
 </codx-views>
 
 <ng-template #itemTemplate let-data>
+  <!-- [title]="data.groupName" -->
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="moreFunction($event, data)"
-    [imageId]="data.groupID"
+    [imageId]="data.recID"
     imageObjType="AD_UserGroups"
-    [title]="data.groupName"
-    [subTitle]="data.note"
+    [titleTmp]="titleTmp"
+    [subTitleTmp]="subTitleTmp"
     [resources]="data['users']"
     resourceObjType="AD_Users"
     [formModel]="view.formModel"
     [typeMF]="'hover'"
     [dataItem]="data"
   ></codx-temp-full>
+</ng-template>
+
+<ng-template #titleTmp let-data>
+  <div class="d-flex">
+    <div
+      class="title"
+      [innerHTML]="
+        data.groupName | formatvalue : view.formModel : 'GroupName' | async
+      "
+    ></div>
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      name="AD008"
+      [value]="data?.groupType"
+      class="badge badge-danger"
+    >
+    </codx-vll>
+  </div>
+</ng-template>
+
+<ng-template #subTitleTmp let-data>
+  <div class="d-flex">
+    <div
+      class="note"
+      [innerHTML]="data.note | formatvalue : view.formModel : 'Note' | async"
+    ></div>
+  </div>
 </ng-template>
 
 <ng-template #item2 let-data>

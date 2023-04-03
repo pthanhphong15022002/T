@@ -278,7 +278,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             this.data?.fixedString + dateFormat + this.data?.separator;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -297,7 +296,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -316,7 +314,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -335,7 +332,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -354,7 +350,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -372,7 +367,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber = this.data?.fixedString + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
           if (lengthNumber <= 0) {
-            this.notify.notifyCode('AD018');
             this.invalidValue = true;
           } else {
             this.invalidValue = false;
@@ -456,5 +450,14 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   prarseInt(data) {
     return parseInt(data);
+  }
+
+  blur(event){
+    console.log('blur', event);
+    setTimeout(() => {
+      if(this.invalidValue){
+        this.notify.notifyCode('AD018');
+      }
+    }, 500);setTimeout
   }
 }

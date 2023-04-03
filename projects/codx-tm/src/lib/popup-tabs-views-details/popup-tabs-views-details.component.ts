@@ -93,7 +93,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
       this.projectID = this.data?.refID;
       this.resources = this.dataObj?.resources;
       this.meetingID = this.data?.meetingID;
-      this.dataObjAssign ={refNo : this.meetingID}
+      this.dataObjAssign ={sessionID : this.meetingID}
       this.name = 'Comments';
       this.all = [
         {

@@ -48,7 +48,6 @@ export class PopupAddKRComponent extends UIComponent {
   oParentID: any;
   dialogTargets: DialogRef;
   funcID: any;
-  tempTarget: any;
   funcType: any;
   isSubKR: boolean;
   isAdd = true;
@@ -159,8 +158,6 @@ export class PopupAddKRComponent extends UIComponent {
         if (param) {
           this.omSetting = JSON.parse(param.dataValue);
           this.defaultFequence = this.omSetting?.Frequency;
-          this.defaultCheckInDay = this.omSetting?.CheckIn?.Day;
-          this.defaultCheckInTime = this.omSetting?.CheckIn?.Time;
           
         }
       });
@@ -169,25 +166,22 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
   getCurrentKR() {
-    if (this.funcType == OMCONST.MFUNCID.Edit) {
-      this.okrRecID = this.oldKR.recID;
-    } else {
-      this.okrRecID = null;
+    if(this.funcType == OMCONST.MFUNCID.Add){
+      this.afterOpenAddForm();
+      this.isAfterRender = true;
     }
-    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel) => {
-      if (krModel) {
-        if (this.funcType == OMCONST.MFUNCID.Add) {
-          this.afterOpenAddForm();
-        } else if (this.funcType == OMCONST.MFUNCID.Edit) {
-          this.afterOpenEditForm(krModel);
-        } else {
-          this.afterOpenCopyForm(krModel);
+    else{
+      this.codxOmService.getOKRByID(this.oldKR.recID).subscribe((krModel) => {
+        if (krModel) {
+          if (this.funcType == OMCONST.MFUNCID.Edit) {
+            this.afterOpenEditForm(krModel);
+          } else {
+            this.afterOpenCopyForm(krModel);
+          }       
+          this.isAfterRender = true;   
         }
-        
-        this.isAfterRender = true;
-      }
-    });
-    
+      });
+    } 
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
@@ -227,18 +221,7 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
 
-  onSaveForm() {
-    //xóa khi đã lấy được model chuẩn từ setting
-    if (
-      this.funcType == OMCONST.MFUNCID.Add ||
-      this.funcType == OMCONST.MFUNCID.Copy
-    ) {
-      this.kr.okrType = this.isSubKR
-        ? OMCONST.VLL.OKRType.SKResult
-        : OMCONST.VLL.OKRType.KResult;
-      this.OKRLevel();
-    }
-    //---------------------------------------
+  onSaveForm() {    
     this.fGroupAddKR = this.form?.formGroup;
 
     this.kr.buid = this.kr.buid ?? this.curUser?.buid;
@@ -332,7 +315,7 @@ export class PopupAddKRComponent extends UIComponent {
       }
       if (this.planVLL && this.planVLL.length > 0) {
         for (let i = 0; i < this.planVLL.length; i++) {
-          let tmpTarget = { ...this.targetsModel };
+          let tmpTarget = { ...this.groupModel?.targetsModel };
           tmpTarget.period =
             this.kr?.plan == OMCONST.VLL.Plan.Month
               ? (i + 1).toString()
@@ -346,6 +329,7 @@ export class PopupAddKRComponent extends UIComponent {
       }
     }
   }
+
   closeEditTargets(dialog: any) {
     this.kr.targets = [];
     for (let i = 0; i < this.unEditedTargets.length; i++) {
@@ -353,33 +337,44 @@ export class PopupAddKRComponent extends UIComponent {
     }
     dialog.close();
   }
-  // mapDefaultValueToData(kr:any){
-  //   kr.frequence=this.defaultFequence;
-  //   kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
-  // }
 
   afterOpenAddForm() {
-    this.kr = { ...this.groupModel?.okrModel };
-    this.targetsModel = { ...this.groupModel?.targetsModel };
-    this.kr.frequence = this.defaultFequence;
-    this.kr.checkIn = {
-      day: this.defaultCheckInDay,
-      time: this.defaultCheckInTime,
-    };
+    if(this.isSubKR){
+      this.kr = { ...this.groupModel?.skrModel };
+    }
+    else{      
+      this.kr = { ...this.groupModel?.krModel };
+    }
+  }
+  fullTargets(planVLL:any, targets:any, plan:string){
+    if(planVLL!=null && targets!=null){
+      let tempTarget = [];
+      for(let i=0; i<planVLL.length;i++){
+        if(targets[i].periodID=planVLL[i].value){
+          tempTarget.push(targets[i]);
+        }
+        else{
+          let nullTarget= {...targets[0]};
+          nullTarget.periodID=planVLL[i].value;
+          nullTarget.target=0;        
+          tempTarget.push(targets[i]);
+        }
+      }
+    }
+    
   }
   afterOpenEditForm(krModel: any) {
     this.kr = krModel;
-    if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
-      this.planVLL = this.monthVLL?.datas;
-    } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
-      this.planVLL = this.quarterVLL?.datas;
-    }
+    this.planVLL = this.kr?.plan == OMCONST.VLL.Plan.Month ? this.monthVLL?.datas:this.quarterVLL?.datas;
+    //this.fullTargets()
+    
   }
   afterOpenCopyForm(krModel: any) {
+    this.afterOpenAddForm();
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((gv: any) => {
-        if (gv) {
+        if (gv) {          
           let gridView = Util.camelizekeyObj(gv);
           for (const key in gridView) {
             const element = gridView[key];
@@ -387,13 +382,11 @@ export class PopupAddKRComponent extends UIComponent {
               this.allowCopyField.push(key);
             }
           }
+
           for (const fieldName of this.allowCopyField) {
-            krModel[fieldName] = this.oldKR[fieldName];
-          }
-          this.kr = krModel;
-          this.kr.shares = [];
-          this.kr.checkIns = [];
-          //this.mapDefaultValueToData(this.kr);
+            this.kr[fieldName] = krModel[fieldName];
+          }          
+          this.planVLL = this.kr?.plan == OMCONST.VLL.Plan.Month ? this.monthVLL?.datas:this.quarterVLL?.datas;
         }
       });
   }
@@ -429,6 +422,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.calculatorTarget(this.kr?.plan);
     }
     this.unEditedTargets = [];
+
     for (let i = 0; i < this.kr.targets.length; i++) {
       this.unEditedTargets.push({ ...this.kr.targets[i] });
     }

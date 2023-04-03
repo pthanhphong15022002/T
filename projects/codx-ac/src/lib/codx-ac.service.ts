@@ -7,7 +7,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { filter, map, Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Transactiontext } from './models/transactiontext.model';
 
 @Injectable({
@@ -77,18 +77,25 @@ export class CodxAcService {
     }
     return newMemo;
   }
-  
+
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
-    irregularFields: string[] = []
+    irregularFields: string[] = [],
+    ignoredFields: string[] = []
   ): boolean {
     console.log(formGroup);
     console.log(gridViewSetup);
 
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
     const controls = formGroup.controls;
     let isValid: boolean = true;
     for (const propName in controls) {
+      if (ignoredFields.includes(propName.toLowerCase())) {
+        continue;
+      }
+
       if (controls[propName].invalid) {
         const gvsPropName =
           irregularFields.find(
@@ -130,9 +137,18 @@ export class CodxAcService {
       )
       .pipe(
         tap((p) => console.log(p)),
-        filter((p) => !!p),
         map((p) => JSON.parse(p[0])),
         tap((p) => console.log(p))
+      );
+  }
+
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(
+        tap((r) => console.log(r)),
+        map((r) => r[0]),
+        tap((r) => console.log(r))
       );
   }
 }

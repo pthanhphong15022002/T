@@ -76,11 +76,13 @@ export const OMCONST = {
     KRDistribute: 'OMT203',
     KREditSKRWeight: 'OMT204',
     KRCheckIn: 'OMT205',
+    KRTask: 'OMT206',
     //SKR
     SKRDetail: 'OMT301',
     SKRAssign: 'OMT302',
     SKRDistribute: 'OMT303',
     SKRCheckIn: 'OMT304',
+    SKRTask: 'OMT305',
   },
 
   VLL: {

@@ -86,7 +86,10 @@
         default="Phương pháp tính giá"
       ></codx-label
       >:&nbsp;
-      <b>{{ getInventoryModelById(data?.inventModelID) }}</b>
+      <b>{{
+        inventoryModels
+          | nameById : data?.inventModelID : "InventModelID" : "InventModelName"
+      }}</b>
     </td>
     <td class="fs-8">
       <codx-label
@@ -95,7 +98,9 @@
         default="Theo dõi"
       ></codx-label
       >:&nbsp;
-      <b>{{ getDimGroupNameById(data?.dimGroupID) }}</b>
+      <b>{{
+        dimGroups | nameById : data?.dimGroupID : "DimGroupID" : "DimGroupName"
+      }}</b>
     </td>
     <td>
       <codx-mfunc

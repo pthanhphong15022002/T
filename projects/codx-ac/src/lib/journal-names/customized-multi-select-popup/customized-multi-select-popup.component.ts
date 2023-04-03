@@ -28,7 +28,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
     super(injector);
 
     try {
-      this.selectedOptions = JSON.parse(dialogData.data.selectedOptions);
+      this.selectedOptions = JSON.parse(dialogData.data.selectedOptions) ?? [];
     } catch {}
   }
 
@@ -55,7 +55,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
             data.datas.map((d) => ({
               value: d.value,
               text: d.text,
-              checked: this.selectedOptions.some((o) => o.value === d.value),
+              checked: this.selectedOptions?.some((o) => o.value === d.value),
               disabled: !settingValues.includes(d.value),
             }))
           ),
@@ -75,7 +75,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
     console.log(e);
 
     if (e.data) {
-      if (!this.selectedOptions.some((o) => o.value === data.value)) {
+      if (!this.selectedOptions?.some((o) => o.value === data.value)) {
         this.selectedOptions.push({ value: data.value, text: data.text });
       }
     } else {

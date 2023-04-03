@@ -81,7 +81,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {}
   getGridViewSetup() {
     this.cache.functionList(this.funcID).subscribe((fuc) => {
-      debugger
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -104,6 +103,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
             referedType: grd[key[i]]?.referedType,
             headerText: grd[key[i]]?.headerText,
             data: grd[key[i]]?.headerText,
+            fieldName : grd[key[i]]?.fieldName,
           };
           this.getDataByRefValue(
             grd[key[i]]?.referedType,
@@ -115,6 +115,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           var objn = {
             dataType: grd[key[i]]?.dataType,
             headerText: grd[key[i]]?.headerText,
+            fieldName : grd[key[i]]?.fieldName,
             view: key[i],
           };
           objn.headerText = grd[key[i]]?.headerText;

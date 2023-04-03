@@ -122,16 +122,16 @@ export class EmployeeListComponent extends UIComponent {
           resources: this.columnsGrid,
         },
       },
-      {
-        id: '1',
-        type: ViewType.card,
-        active: false,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-          resources: this.cardTemp,
-        },
-      },
+      // {
+      //   id: '1',
+      //   type: ViewType.card,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     panelLeftRef: this.panelLeftRef,
+      //     resources: this.cardTemp,
+      //   },
+      // },
     ];
     this.view.dataService.methodUpdate = 'UpdateEmpInfoAsync';
     this.detectorRef.detectChanges();

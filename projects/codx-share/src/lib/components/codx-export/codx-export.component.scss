@@ -1,6 +1,6 @@
 .nav-export .nav-item
 {
-  min-width: 200px;
+  min-width: 230px;
   margin: 6px 0;
 }
 .nav-export .active
@@ -11,6 +11,7 @@
 {
   color: black;
   padding: 0.3rem 1rem;
+  border-radius: 3px!important;
 }
 .tmp-content .tab-pane
 {
@@ -18,16 +19,16 @@
 }
 .export-container
 {
-  margin : 65px 0;
+  margin-top: 20px;
 }
 .btn-ml
 {
-  margin-left: 220px;
+  margin-left: 250px;
 }
-.h-scroll
-{
-  height: 465px;
-}
+
 .h-temp{
-  height: calc(100% - 35px);
+  height: calc(100% - 60px);
+}
+.h-temp .tmp-content{
+  overflow: auto;
 }

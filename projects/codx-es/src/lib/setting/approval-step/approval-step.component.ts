@@ -317,7 +317,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
           }
         }
         if (this.type == '0') {
-          this.notifySvr.notifyCode('RS002');
+          this.notifySvr.notifyCode('SYS007');
           this.addEditItem.emit(true);
         }
       }

@@ -6,9 +6,10 @@ import {
   ImageViewerComponent,
   NotificationsService,
   UIComponent,
-  UploadFile
+  UploadFile,
 } from 'codx-core';
 import { map } from 'rxjs/operators';
+import { CodxAcService } from '../../codx-ac.service';
 import { ItemStyle } from '../interfaces/ItemStyle.interface';
 import { ItemsService } from '../items.service';
 
@@ -30,6 +31,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private itemsService: ItemsService,
+    private acService: CodxAcService,
     private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
@@ -79,7 +81,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
     console.log(this.itemStyle);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -116,7 +118,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
     console.log(this.itemStyle);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

@@ -8,12 +8,12 @@
         else elseSelected
       ">
       <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </div>
     <ng-template #elseSelected>
       <span class="btn btn-sm btn-light btn-pill">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </ng-template>
   </div>
@@ -54,7 +54,7 @@
       >
       </codx-input> -->
       <span *ngIf="(dispatch.dispatchType == '1' || dispatch.dispatchType == '4')" class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
-        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'" [formName]="formModel?.formName"></codx-label>
       </span>
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
@@ -62,7 +62,7 @@
         (valueChange)="changeValueDept($event)">
       </codx-input>
       <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('dept')">
-        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'" [formName]="formModel?.formName"></codx-label>
       </span>
     </div>
   </div>
@@ -87,7 +87,7 @@
       </codx-input>
     </div>
   </div>
- 
+
   <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
@@ -158,7 +158,7 @@
       [default]="dispatch?.dispatchType == '2' ? 'Người gửi' : null"></codx-label>
     <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
-        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
+        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P"
         [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input> -->
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="owner" [ngClass]="'w-100'"
@@ -169,7 +169,7 @@
     <codx-label fiedName="lblodshare" [default]="'Người được chia sẻ'" [formName]="form.formModel.formName"></codx-label>
     <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
-        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
+        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P"
         [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input> -->
     <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"

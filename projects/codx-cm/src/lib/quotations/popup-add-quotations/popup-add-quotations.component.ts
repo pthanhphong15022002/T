@@ -1,14 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   CodxFormComponent,
   CodxGridviewV2Component,
+  DialogData,
   DialogRef,
   FormModel,
   Util,
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CM_Products, CM_Quotations } from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -16,18 +18,17 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 })
 export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('gridVoucherLineRefs')
-  public gridProductsLine: CodxGridviewV2Component;
+  @ViewChild('gridProductsLine') gridProductsLine: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('cashGeneral') cashGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  quotations: any = {recID: '0000-0000-0000-0000'};
+  quotations: CM_Quotations;
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
   fmProcductsLines: FormModel = {
-    formName: 'grvCMProducts',
+    formName: 'CMProducts',
     gridViewName: 'grvCMProducts',
     entityName: 'CM_Products',
   };
@@ -38,10 +39,15 @@ export class PopupAddQuotationsComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  productsLine = []; //mang san pham
+  productsLine: Array<CM_Products> = []; //mang san pham
 
-  constructor(public sanitizer: DomSanitizer) {
-    //tesst
+  constructor(
+    public sanitizer: DomSanitizer,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.dialog = dialog;
+    this.quotations = new CM_Quotations();
     this.quotations.recID = Util.uid();
   }
 
@@ -70,8 +76,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.write = true;
     data.delete = true;
     data.read = true;
-    data.rowNo = idx + 1;
-    data.transID = this.quotations?.recID;
+    // data.rowNo = idx + 1;
+    // data.transID = this.quotations?.recID;
     this.gridProductsLine.addRow(data, idx);
   }
 }

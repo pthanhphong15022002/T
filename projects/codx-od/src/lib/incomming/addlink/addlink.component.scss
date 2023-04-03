@@ -1,0 +1,25 @@
+#ejsTabAddLink
+{
+    .e-tab-header
+    {
+        max-width: 500px !important;
+    }
+    .e-tab-text
+    {
+        color: black;
+        text-transform: none !important;
+    }
+    .e-content
+    {
+        padding: 0 30px;
+    }
+    .e-active
+    {
+        border-radius: 0 !important;
+    }
+    .h-scroll
+    {
+        width: 100%;
+        overflow: auto;
+    }
+}

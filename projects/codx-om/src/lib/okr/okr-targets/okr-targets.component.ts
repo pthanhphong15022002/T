@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CacheService,
@@ -30,6 +31,10 @@ import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/po
 import { PopupAddOBComponent } from '../../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupCheckInComponent } from '../../popup/popup-check-in/popup-check-in.component';
+import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -38,10 +43,12 @@ const _notSubKR = false;
   selector: 'lib-okr-targets',
   templateUrl: './okr-targets.component.html',
   styleUrls: ['./okr-targets.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class OkrTargetsComponent implements OnInit {
   @ViewChild('omTab') omTab: any;
   @ViewChild('treeView') treeView: any;
+  @ViewChild('popupAddTask') popupAddTask: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -56,7 +63,9 @@ export class OkrTargetsComponent implements OnInit {
   @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
   @Input() okrFM:any;
-  @Input() okrVll:any;
+  @Input() okrVll:any;  
+  @Input() okrGrv:any;  
+  @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner 
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
   isCollapsed = false;
@@ -150,6 +159,7 @@ export class OkrTargetsComponent implements OnInit {
   svgSKR=''
   Objs = [];
   Krs = [];
+  defaultOwner:string;
   progress: number = 0;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
@@ -201,6 +211,23 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   getCacheData() {
+    if(this.funcID== OMCONST.FUNCID.PERS){
+
+      this.codxOmService.getEmployeesByEmpID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
+        if (ownerInfo) {
+          this.defaultOwner=ownerInfo?.domainUser;
+        }
+      });
+    }
+    else{
+      this.codxOmService.getManagerByOrgUnitID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
+        if (ownerInfo) {
+          this.defaultOwner=ownerInfo?.domainUser;
+        }
+      });
+    }
+
+    
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -298,9 +325,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
 
-  clickMF(e: any, ob: any) {
-    console.log(ob);
-    
+  clickMF(e: any, ob: any) {    
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -378,6 +403,12 @@ export class OkrTargetsComponent implements OnInit {
       case OMCONST.MFUNCID.SKRAssign:
       case OMCONST.MFUNCID.KRAssign: {
         this.assignmentOKR(kr, e.text);
+        break;
+      }
+      //Giao việc
+      case OMCONST.MFUNCID.SKRTask:
+      case OMCONST.MFUNCID.KRTask: {
+        this.addTask(kr, e?.text,e?.data);
         break;
       }
     }
@@ -467,6 +498,7 @@ export class OkrTargetsComponent implements OnInit {
               ob.items = [];
             }
             ob.items.push(kr);
+            ob.hasChildren= true;
             return;
           }
         }
@@ -508,6 +540,7 @@ export class OkrTargetsComponent implements OnInit {
                   kr.items = [];
                 }
                 kr.items.push(skr);
+                kr.hasChildren= true;
               }
             }
           }
@@ -564,6 +597,45 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  addTask(kr:any,popupTitle:string,mfunc:string){
+
+    var task = new TM_Tasks();
+        task.refID = kr?.recID;
+        task.refType = 'OM_OKRs';
+
+        let option = new SidebarModel();
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM002',
+          title: popupTitle,//val?.data.customName,
+          vllShare: 'TM003',
+          task: task,
+          referedData: kr,
+          referedFunction: mfunc,
+        };
+        //option.DataService = this.view.dataService;
+        option.FormModel = this.formModelKR;
+        option.Width = '550px';
+        let dialog = this.callfunc.openSide(
+          AssignInfoComponent,
+          assignModel,
+          option
+        );
+        // dialog.closed.subscribe((e) => {
+        //   if (e?.event && e?.event[0]) {
+        //     datas.status = '3';
+        //     // debugger;
+        //     // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
+        //     //   if(item) that.data.tasks= item;
+        //     // })
+        //     that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
+        //       if (item.status == 0) {
+        //         that.view.dataService.update(e.data).subscribe();
+        //       } else that.notifySvr.notify(item.message);
+        //     });
+        //   }
+        // });
+    
+  }
   editOKRWeight(ob: any, popupTitle: any) {
     let subTitle = ob?.okrName;
     let dModel = new DialogModel();
@@ -651,10 +723,12 @@ export class OkrTargetsComponent implements OnInit {
   //OBject
   addOB(popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
+    option.FormModel = this.formModelOB;    
+    let baseModel= {...this.groupModel};
+    baseModel.obModel.owner=this.defaultOwner;
     let dialogOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,this.groupModel],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,baseModel],
       option
     );
     dialogOB.closed.subscribe((res) => {
@@ -706,12 +780,13 @@ export class OkrTargetsComponent implements OnInit {
   //KeyResults && SubKeyResult
   addKR(popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-
-    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;
-
+    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;    
+    let baseModel= {...this.groupModel};
+    baseModel.krModel.owner=this.defaultOwner;
+    baseModel.skrModel.owner=this.defaultOwner;
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,this.groupModel],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel],
       option
     );
     dialogKR.closed.subscribe((res) => {
@@ -795,6 +870,7 @@ export class OkrTargetsComponent implements OnInit {
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
     let dModel = new DialogModel();
+    popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
     dModel.FormModel = this.formModelKR;
     let dialogShowKR = this.callfunc.openForm(
