@@ -848,10 +848,11 @@ export class InstancesComponent
               this.moveReason(this.moreFuncInstance[idx], data, false);
           }
         }
-      } else {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
+      } 
+      // else {
+      //  // data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
     }
   }
 
