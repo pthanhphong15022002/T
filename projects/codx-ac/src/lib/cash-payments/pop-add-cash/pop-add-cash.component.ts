@@ -40,7 +40,7 @@ import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Template } from '@angular/compiler/src/render3/r3_ast';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
@@ -84,7 +84,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-
   gridHeight: number;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -147,6 +146,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 field: res[keygrid[index]].fieldName.toLowerCase(),
                 headerText: res[keygrid[index]].headerText,
                 columnOrder: res[keygrid[index]].columnOrder,
+                allowFilter: res[keygrid[index]].allowFilter,
               };
               this.columnGrids.push(column);
             }
@@ -561,12 +561,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpaymentline[i].rowNo = i + 1;
           }
         }
-        this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'DeleteLineAsync', [
-            data.recID,
-            this.cashpaymentline,
-          ])
-          .subscribe((res: any) => {});
+        this.cashpaymentlineDelete.push(data);
         this.notification.notifyCode('SYS008', 0, '');
         this.pageCount = '(' + this.cashpaymentline.length + ')';
         this.loadTotal();
@@ -593,8 +588,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         var obj = {
           headerText: this.headerText,
           data: { ...data },
-          type: 'edit',
-          formType: this.formType,
+          type: 'edit'
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -656,7 +650,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       headerText: this.headerText,
       data: data,
       type: 'add',
-      formType: this.formType,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
