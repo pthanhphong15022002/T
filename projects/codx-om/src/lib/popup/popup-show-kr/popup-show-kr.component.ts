@@ -224,7 +224,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Align)
+        .getListAlign(this.oldKR?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
@@ -233,7 +233,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAssign(){
     this.codxOmService
-        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Assign)
+        .getListAssign(this.oldKR?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           
@@ -390,21 +390,21 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //     this.detectorRef.detectChanges();
   //   });
   // }
-  checkIn(kr: any) {
-    let popupTitle= 'Cập nhật tiến độ';
-    let dialogCheckIn = this.callfc.openForm(
-      PopupCheckInComponent,
-      '',
-      800,
-      500,
-      '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
-    );
-    dialogCheckIn.closed.subscribe((res) => {
-      if (res && res.event) {
-      }
-    });
-  }
+  // checkIn(kr: any) {
+  //   let popupTitle= 'Cập nhật tiến độ';
+  //   let dialogCheckIn = this.callfc.openForm(
+  //     PopupCheckInComponent,
+  //     '',
+  //     800,
+  //     500,
+  //     '',
+  //     [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
+  //   );
+  //   dialogCheckIn.closed.subscribe((res) => {
+  //     if (res && res.event) {
+  //     }
+  //   });
+  // }
 
   calculatorProgress() {
     this.totalProgress = this.dataKR.progress;

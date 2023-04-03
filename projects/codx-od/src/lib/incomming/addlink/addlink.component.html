@@ -53,21 +53,24 @@
     <ng-container *ngIf="dataLink && dataLink.length > 0">
         <div *ngFor="let item of dataLink">
             <codx-temp-full [content]="extractContent(item.oDis.title)"
-            [desc]="convertHtmlAgency(item.oDis.agencyName, gridViewSetup?.AgencyName?.headerText)"
-            [status]="item.oDis.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="item.oDis.createdOn"
-            cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(item.oDis.createdBy,item.oDis.owner)"
-            [resourceObjType]="'AD_Users'" [icoStatus]="item.oDis?.urgency"
-            [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
-            [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-            [bookmark]="item.oDis.isBookmark" [titleLine]="2" [dataItem]="data">
-        </codx-temp-full>
+                [desc]="convertHtmlAgency(item.oDis.agencyName, gridViewSetup?.AgencyName?.headerText)"
+                [status]="item.oDis.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="item.oDis.createdOn"
+                cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(item.oDis.createdBy,item.oDis.owner)"
+                [resourceObjType]="'AD_Users'" [icoStatus]="item.oDis?.urgency"
+                [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+                [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+                [bookmark]="item.oDis.isBookmark" [titleLine]="2" [dataItem]="data" [footer]="footerFile">
+            </codx-temp-full>
+            <ng-template #footerFile>
+                <codx-thumbnail [files]="item.filess" [hideDelete]="'1'" [hideMoreF]="'0'"></codx-thumbnail>
+            </ng-template>
         </div>
     </ng-container>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" type="submit" (click)="onSave()">
-            Gửi
+            <codx-label default="Gửi" [formName]="formModel?.formName" [fiedName]="'lblSend'"></codx-label>
         </button>
     </div>
 </ng-template>
@@ -78,6 +81,8 @@
     </div>
    
 </ng-template>
+
+
 
 
 <!-- <codx-form [headerText]="headerText"  [body]="body" [footer]="footer" [dialog]="dialog">

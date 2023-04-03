@@ -39,7 +39,6 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
-import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-questions',
@@ -207,22 +206,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       fontColor: 'black',
       fontFormat: 'B',
     };
-    // this.router.queryParams.subscribe((queryParams) => {
-    //   if (queryParams?.funcID) {
-    //     this.funcID = queryParams.funcID;
-    //     this.cache.functionList(this.funcID).subscribe((res) => {
-    //       debugger
-    //       if (res) {
-    //         this.functionList = res;
-    //         if (queryParams?.recID) {
-    //           this.recID = queryParams.recID;
-    //           this.loadData(this.recID);
-    //         }
-    //         else this.createNewQ();
-    //       }
-    //     });
-    //   } else this.createNewQ();
-    // });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes?.funcID && changes.funcID?.previousValue != changes.funcID?.currentValue)
@@ -321,7 +304,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       .execSv("SV",'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
-          debugger
+          
           this.questions = this.getHierarchy(res[0], res[1]);
           this.SVServices.getFilesByObjectTypeRefer(
             this.functionList.entityName,
@@ -387,7 +370,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     ]).subscribe((item:any)=>{
       if(item)
       {
-        debugger
+        
         this.idSession = item.idSession; 
         this.questions[0].children = item.lst;
         this.questions[0].children[0]['active'] = true;

@@ -50,6 +50,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listSteps: DP_Instances_Steps[] = [];
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
+  @Input() viewsCurrent = '';
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -67,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
   instanceStatus: any;
   currentStep = 0;
   instance: any;
+  listTypeTask = [];
   //gantchat
   ganttDs = [];
   ganttDsClone = [];
@@ -80,7 +82,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
-  currentElmID:any
+  currentElmID: any
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -103,7 +105,8 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnaceStep: string = 'instnaceStep';
   treeTask = [];
   isSaving = false;
-  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  isStart = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -120,7 +123,13 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -147,42 +156,14 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync(insID, proccessID) {
-    var data = [insID, proccessID];
+    var data = [insID, proccessID, this.instanceStatus];
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
-        var total = 0;
-        for (var i = 0; i < this.listSteps.length; i++) {
-          var stepNo = i;
-          var data = this.listSteps[i];
-          if (data.stepID == this.dataSelect.stepID) {
-            this.lstInv = this.getInvolved(data.roles);
-            this.stepName = data.stepName;
-            this.currentStep = stepNo;
-            this.currentNameStep = this.currentStep;
-            this.tmpTeps = data;
-            this.stepValue = {
-              textColor: data.textColor,
-              backgroundColor: data.backgroundColor,
-              icon: data.icon,
-              iconColor: data.iconColor,
-            }
-          }
-          total += data.progress;
-          stepNo = i + 1;
-        }
-        if (this.listSteps != null && (this.listSteps.length - 2) > 0) {
-          this.progress = (total / (this.listSteps.length - 2)).toFixed(1).toString();
-        } else {
-          this.progress = '0';
-        }
-        this.currentStep = this.listSteps.findIndex(
-          (x) => x.stepStatus === '1'
-        );
-        this.checkCompletedInstance(this.instanceStatus);
+        this.getStageByStep(this.listSteps);
       } else {
         this.listSteps = [];
         this.stepName = '';
@@ -191,6 +172,39 @@ export class InstanceDetailComponent implements OnInit {
       }
       //  this.getListStepsStatus();
     });
+  }
+
+  getStageByStep(listSteps) {
+    this.isStart = listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
+    var total = 0;
+    for (var i = 0; i < listSteps.length; i++) {
+      var stepNo = i;
+      var data = listSteps[i];
+      if (data.stepID == this.dataSelect.stepID) {
+        this.lstInv = this.getInvolved(data.roles);
+        this.stepName = data.stepName;
+        this.currentStep = stepNo;
+        this.currentNameStep = this.currentStep;
+        this.tmpTeps = data;
+        this.stepValue = {
+          textColor: data.textColor,
+          backgroundColor: data.backgroundColor,
+          icon: data.icon,
+          iconColor: data.iconColor,
+        }
+      }
+      total += data.progress;
+      stepNo = i + 1;
+    }
+    if (listSteps != null && (listSteps.length - 2) > 0) {
+      this.progress = (total / (listSteps.length - 2)).toFixed(1).toString();
+    } else {
+      this.progress = '0';
+    }
+    this.currentStep = listSteps.findIndex(
+      (x) => x.stepStatus === '1'
+    );
+    this.checkCompletedInstance(this.instanceStatus);
   }
 
   getInvolved(roles) {
@@ -264,7 +278,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps });
+    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps, isStart: this.isStart});
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -322,7 +336,7 @@ export class InstanceDetailComponent implements OnInit {
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           let test = this.ganttDsClone.map(i => {
             return {
-              name:i.name,
+              name: i.name,
               start: i.startDate,
               end: i.endDate,
             }
@@ -350,8 +364,8 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
-  getbackgroundColor(step){
-    return step?.backgroundColor ? '--primary-color:' +  step?.backgroundColor : '--primary-color: #23468c';
+  getbackgroundColor(step) {
+    return step?.backgroundColor ? '--primary-color:' + step?.backgroundColor : '--primary-color: #23468c';
   }
 
   getColorStepName(status: string) {
@@ -451,15 +465,15 @@ export class InstanceDetailComponent implements OnInit {
     return 1;
   }
 
-  inputElmIDCustomField(e){
-    this.currentElmID = e ;
+  inputElmIDCustomField(e) {
+    this.currentElmID = e;
   }
-  actionSaveCustomField(e){
-    this.isSaving =e ;
+  actionSaveCustomField(e) {
+    this.isSaving = e;
   }
-  clickMenu(e){
-     this.viewModelDetail = e
-     this.isSaving = false ;
-     this.currentElmID = null ;
+  clickMenu(e) {
+    this.viewModelDetail = e
+    this.isSaving = false;
+    this.currentElmID = null;
   }
 }

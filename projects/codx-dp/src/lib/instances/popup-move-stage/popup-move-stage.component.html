@@ -222,7 +222,7 @@
       </div>
     </div>
 
-    <div class="form-group" >
+    <div class="form-group" *ngIf="fieldsNull?.length > 0">
       <div>
         <div class="d-flex justify-content-end">
           <div class="me-auto">
@@ -232,7 +232,6 @@
           </div>
         </div>
         <div class="pt-5">
-          <ng-container *ngIf="fieldsNull?.length > 0">
             <ng-container *ngFor="let item of fieldsNull">
                 <codx-input-custom-field
                   [customField]="item"
@@ -244,7 +243,6 @@
                 >
                 </codx-input-custom-field>
             </ng-container>
-          </ng-container>
         </div>
       </div>
     </div>

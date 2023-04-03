@@ -129,62 +129,61 @@ export class PopupAddOBComponent extends UIComponent {
   ngAfterViewInit(): void {}
 
   
-  onInit(): void {
+  onInit(): void {    
+    this.getCurrentOB();
     
-    if (this.funcType == OMCONST.MFUNCID.Edit) {
-      this.okrRecID=this.oldOB.recID;
+  }
+  getCurrentOB() {
+    if(this.funcType == OMCONST.MFUNCID.Add){
+      this.afterOpenAddForm();
+      this.isAfterRender = true;
     }
     else{
-      this.okrRecID=null;
-    }
-    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel:any) => {
-      if (krModel) {
-        if(this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy){
-          krModel.periodID= this.okrPlan.periodID;          
-          krModel.year= this.okrPlan.year;
-          krModel.interval= this.okrPlan.interval;
-          krModel.transID = this.okrPlan.recID;
-          krModel.parentID=this.okrPlan.recID;
-          krModel.owner = this.groupModel?.okrModel.owner;
+      this.codxOmService.getOKRByID(this.oldOB.recID).subscribe((obModel) => {
+        if (obModel) {
+          if (this.funcType == OMCONST.MFUNCID.Edit) {
+            this.afterOpenEditForm(obModel);
+          } else if (this.funcType == OMCONST.MFUNCID.Copy) {
+            this.afterOpenCopyForm(obModel);
+          } 
+          this.isAfterRender=true;         
         }
-        if (this.funcType == OMCONST.MFUNCID.Add) {
-          
-          this.ob = krModel;          
-          if (this.ob.shares && this.ob.shares.length > 0) {
-            this.shareModel = this.ob.shares[0];
-            this.ob.shares=[];
-            this.createShares(this.shareModel)
-          }
-        } else if (this.funcType == OMCONST.MFUNCID.Edit) {
-          this.ob = krModel;
-        } else {
-          this.cache
-            .gridViewSetup(
-              this.formModel?.formName,
-              this.formModel?.gridViewName
-            )
-            .subscribe((gv: any) => {
-              if (gv) {
-                let gridView = Util.camelizekeyObj(gv);
-                for (const key in gridView) {
-                  const element = gridView[key];
-                  if (element?.allowCopy) {
-                    this.allowCopyField.push(key);
-                  }
-                }
-                debugger
-                for (const fieldName of this.allowCopyField) {
-                  krModel[fieldName] = this.oldOB[fieldName];
-                }                
-                this.ob = krModel;
-              }
-            });
-        }
-        this.isAfterRender = true;
-      }
-    });
+      });
+    } 
   }
 
+  afterOpenAddForm() {
+    this.ob = { ...this.groupModel?.obModel };   
+    this.ob.periodID= this.okrPlan.periodID;          
+    this.ob.year= this.okrPlan.year;
+    this.ob.interval= this.okrPlan.interval;
+    this.ob.transID = this.okrPlan.recID;
+    this.ob.parentID=this.okrPlan.recID; 
+  }
+  
+  afterOpenEditForm(obModel: any) {
+    this.ob = obModel;    
+  }
+
+  afterOpenCopyForm(obModel: any) {
+    this.afterOpenAddForm();
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((gv: any) => {
+        if (gv) {          
+          let gridView = Util.camelizekeyObj(gv);
+          for (const key in gridView) {
+            const element = gridView[key];
+            if (element?.allowCopy) {
+              this.allowCopyField.push(key);
+            }
+          }
+          for (const fieldName of this.allowCopyField) {
+            this.ob[fieldName] = obModel[fieldName];
+          }
+        }
+      });
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Base Event------------------------//

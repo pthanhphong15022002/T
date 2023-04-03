@@ -9,10 +9,13 @@
 ></codx-form>
 
 <ng-template #subHeader>
-  <span>{{ stepName }}</span>
+ 
 </ng-template>
 <ng-template #body>
-  <div class="form-group">
+  <div class="mt-5">
+    <span class="fs-3 fw-bold text-primary">{{ stepName }}</span>
+  </div>
+  <div class="form-group mt-3">
     <div>
       <codx-label
         fiedName="Memo"
@@ -30,17 +33,16 @@
     </codx-input>
   </div>
 
-  <div class="row pb-3">
-    <div class="col-12">
-      <div style="font-weight: 500 !important">
-        <codx-label
+  <div class="form-group">
+    <div class="mb-2">
+      <codx-label
           fiedName="ProcessID"
           [formModel]="form.formModel"
           default="Quy trình được chuyển đến"
         >
         </codx-label>
-      </div>
-
+      
+      <div class="mb-1">
       <ejs-combobox
         id="recID"
         [dataSource]="listCbxProccess"
@@ -49,10 +51,10 @@
         [value]="moveProccess"
         [enabled]="false"
       ></ejs-combobox>
-
-      <div class="col-12">
+    </div>
+      <div class="mb-1">
         <codx-label
-          class="fst-italic fs-8 text-danger"
+          class="text-italic fs-7 text-danger"
           default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
         ></codx-label>
       </div>
@@ -70,7 +72,7 @@
 
 
   <div>
-    <div class="pb-0" style="font-weight: 500 !important">
+    <div class="fw-bold text-dark mb-3">
       <codx-label
         fiedName=""
         [formModel]="form.formModel"
@@ -79,8 +81,8 @@
       </codx-label>
     </div>
     <div *ngFor="let item of listReason">
-      <div class="form-check py-2">
-        <input class="form-check-input rounded-circle" type="checkbox" (change)="checkValue($event,item)"/>
+      <div class="form-check mb-3">
+        <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"/>
         <span class="form-check-label">
           {{ item.reasonName }}
         </span>
