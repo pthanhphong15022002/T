@@ -1560,15 +1560,6 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   min-height: 150px;
 }
 
-.dialog-extend {
-  position: fixed;
-  right: 0;
-  width: 320px;
-  bottom: 0;
-  z-index: 9999;
-  background-color: white;
-  top: 97px;
-}
 
 .btn.w-36px {
   min-width: 36px !important;
@@ -2158,4 +2149,40 @@ codx-valuelist .btn.select-icon{
 
 .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, .e-input-group textarea.e-input, .e-input-group.e-control-wrapper textarea.e-input {
   font: var(--fs-body);
+}
+
+//dialog extend
+
+.icon-login{
+margin-left: 3px;
+}
+
+.dialog-extend {
+
+  .codx-dialog-container.e-slide{
+    transition: width .2s ease-in-out;
+    width: 1150px!important;
+  }
+  .dialog-more{
+    width: 350px;
+    position: absolute;
+    top: 9;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    padding: 0 15px;
+  }
+  .icon-login{
+    rotate: 180deg;
+    transition: rotate .2s ease-in-out;
+  }
+}
+
+
+
+// control calendar
+codx-calendar{
+.e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+  text-transform: none; 
+}
 }
