@@ -1391,6 +1391,7 @@ export class InstancesComponent
   }
   //filter- tam
   valueChangeFilterStatus(e) {
+    this.dataSelected=null
     this.dataValueByStatusArr = e.data;
     let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
     if (this.dataValueByStatusArr?.length <= 0) {

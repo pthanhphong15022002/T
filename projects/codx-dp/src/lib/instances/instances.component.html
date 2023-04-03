@@ -320,7 +320,7 @@
     [cssClass]="'rounded-pill border-1'"
     cssPopup="h-350px w-300px"
     [emptyText]="grvSetup['Status']?.headerText"
-    [isMulti]="false"
+    [isMulti]="grvSetup.Status?.multiSelect"
     type="valuelist"
     [field]="'Status'"
     [refValue]="grvSetup.Status?.referedValue"
