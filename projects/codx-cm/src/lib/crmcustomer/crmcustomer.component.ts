@@ -472,7 +472,7 @@ export class CrmCustomerComponent
             if (e && e.event != null) {
               this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
-              this.dataSelected = this.view.dataService.data[0];
+              this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
               this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
@@ -508,7 +508,7 @@ export class CrmCustomerComponent
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.dataSelected = this.view.dataService.data[0];
+            this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
             this.customerDetail.listTab(this.funcID);
             this.detectorRef.detectChanges();
           }

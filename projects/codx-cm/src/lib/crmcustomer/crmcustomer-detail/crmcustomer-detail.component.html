@@ -137,7 +137,7 @@
                 <codx-information [funcID]="funcID" [dataSelected]="dataSelected" [formModel]="formModel">
                 </codx-information>
               </div>
-              <div class="mb-3">
+              <div class="mb-3" *ngIf="dataSelected?.memo">
                 <div class="mb-3">
                   <codx-label class="text-dark fw-bold" fiedName="Memo" [formModel]="formModel" default="Mô
                   tả">
