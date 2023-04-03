@@ -48,7 +48,7 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-    (controlBlur)="valueChange($event)"
+   
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -61,7 +61,7 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-    (controlBlur)="valueChange($event)"
+    
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -76,7 +76,7 @@
       [crrValue]="customField.dataValue"
       [placeholder]="customField.note || ''"
       (keyUpEnter)="valueChange($event)"
-      (controlBlur)="valueChange($event)"
+  
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     ></codx-input>
@@ -90,9 +90,7 @@
     [format]="formatDate"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="valueChange($event)"
-    (keyUpEnter)="valueChange($event)"
-    (valueChange)="valueChange($event)"
+    (controlBlur)="controlBlur($event)"
     [disabled]="disable"
   >
   </codx-input>
@@ -105,7 +103,6 @@
     [refValue]="customField.refValue"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"

@@ -18,14 +18,14 @@ import {
   DialogData,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
-import { CashPaymentLine } from '../../models/CashPaymentLine.model';
+import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
 
 @Component({
-  selector: 'lib-pop-add-linecash',
-  templateUrl: './pop-add-linecash.component.html',
-  styleUrls: ['./pop-add-linecash.component.css'],
+  selector: 'lib-pop-add-linereceipts',
+  templateUrl: './pop-add-linereceipts.component.html',
+  styleUrls: ['./pop-add-linereceipts.component.css'],
 })
-export class PopAddLinecashComponent extends UIComponent implements OnInit {
+export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText: string;
@@ -34,7 +34,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   validate: any = 0;
   type: any;
   formType: any;
-  cashpaymentline: CashPaymentLine;
+  cashreceiptslines: CashReceiptsLines;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -49,11 +49,11 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.cashpaymentline = dialogData.data?.data;
+    this.cashreceiptslines = dialogData.data?.data;
     this.type = dialogData.data?.type;
     this.formType = dialogData.data?.formType;
     this.cache
-      .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
+      .gridViewSetup('CashReceiptsLines', 'grvCashReceiptsLines')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -64,24 +64,24 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.cashpaymentline);
+    this.form.formGroup.patchValue(this.cashreceiptslines);
   }
   close() {
     this.dialog.close();
   }
-  valueChange(e: any) {
-    this.cashpaymentline[e.field] = e.data;
+  valueChange(e) {
+    this.cashreceiptslines[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.cashpaymentline);
+    var keymodel = Object.keys(this.cashreceiptslines);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.cashpaymentline[keymodel[i]] == null ||
-              String(this.cashpaymentline[keymodel[i]]).match(/^ *$/) !== null
+              this.cashreceiptslines[keymodel[i]] == null ||
+              String(this.cashreceiptslines[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -105,8 +105,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         } else {
           if (this.formType == 'edit') {
             this.api
-              .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-                this.cashpaymentline,
+              .exec('AC', 'CashReceiptsLinesBusiness', 'UpdateLineAsync', [
+                this.cashreceiptslines,
               ])
               .subscribe((res: any) => {
                 if (res) {
@@ -119,16 +119,16 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       case 'edit':
         if (this.formType == 'edit') {
           this.api
-            .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-              this.cashpaymentline,
-            ])
-            .subscribe((res: any) => {});
-        }
+          .exec('AC', 'CashReceiptsLinesBusiness', 'UpdateLineAsync', [
+            this.cashreceiptslines,
+          ])
+          .subscribe((res: any) => {});
         break;
+        }
     }
     window.localStorage.setItem(
       'dataline',
-      JSON.stringify(this.cashpaymentline)
+      JSON.stringify(this.cashreceiptslines)
     );
     this.dialog.close();
   }

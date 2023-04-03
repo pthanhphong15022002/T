@@ -329,13 +329,13 @@ export class CodxOmService {
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
   //Lấy model
-getOKRModel() {
+getOKRModel(funcID:string) {
   return this.api.execSv(
     OMCONST.SERVICES,
     OMCONST.ASSEMBLY,
     OMCONST.BUSINESS.OKR,
     'GetModelAsync',
-    []
+    [funcID]
   );
 }
   //Thêm, sửa okr plan

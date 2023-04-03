@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CacheService,
@@ -42,6 +43,7 @@ const _notSubKR = false;
   selector: 'lib-okr-targets',
   templateUrl: './okr-targets.component.html',
   styleUrls: ['./okr-targets.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class OkrTargetsComponent implements OnInit {
   @ViewChild('omTab') omTab: any;
@@ -62,6 +64,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() isHiddenChart: boolean;
   @Input() okrFM:any;
   @Input() okrVll:any;  
+  @Input() okrGrv:any;  
   @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner 
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
@@ -322,9 +325,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
 
-  clickMF(e: any, ob: any) {
-    console.log(ob);
-    
+  clickMF(e: any, ob: any) {    
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -497,6 +498,7 @@ export class OkrTargetsComponent implements OnInit {
               ob.items = [];
             }
             ob.items.push(kr);
+            ob.hasChildren= true;
             return;
           }
         }
@@ -538,6 +540,7 @@ export class OkrTargetsComponent implements OnInit {
                   kr.items = [];
                 }
                 kr.items.push(skr);
+                kr.hasChildren= true;
               }
             }
           }
@@ -722,7 +725,7 @@ export class OkrTargetsComponent implements OnInit {
     let option = new SidebarModel();
     option.FormModel = this.formModelOB;    
     let baseModel= {...this.groupModel};
-    baseModel.okrModel.owner=this.defaultOwner;
+    baseModel.obModel.owner=this.defaultOwner;
     let dialogOB = this.callfunc.openSide(
       PopupAddOBComponent,
       [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,baseModel],
@@ -779,7 +782,8 @@ export class OkrTargetsComponent implements OnInit {
     let option = new SidebarModel();
     option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;    
     let baseModel= {...this.groupModel};
-    baseModel.okrModel.owner=this.defaultOwner;
+    baseModel.krModel.owner=this.defaultOwner;
+    baseModel.skrModel.owner=this.defaultOwner;
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
       [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel],
@@ -866,6 +870,7 @@ export class OkrTargetsComponent implements OnInit {
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
     let dModel = new DialogModel();
+    popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
     dModel.FormModel = this.formModelKR;
     let dialogShowKR = this.callfunc.openForm(

@@ -52,13 +52,13 @@
                 <div class="fs-3 fw-bold text-dark mb-1">
                   {{ policy?.policyName }}
                 </div>
-                <div class="text-dark-50">{{ policy?.memo }}</div>
+                <div class="text-gray-500">{{ policy?.memo }}</div>
               </div>
             </div>
             <div class="list-ranking mt-10" *ngIf="this.isGroup != 0">
               <table class="table list-ranking">
                 <thead>
-                  <tr *ngIf="policy">
+                  <tr *ngIf="policy" class="fw-bold border-bottom">
                     <th scope="col" *ngIf="isGroup == '0' || isGroup == '2'">
                       {{ policy?.itemType | vll: "L1432":"text" | async }}
                     </th>
@@ -74,9 +74,11 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of lstPolicyLine">
-                    <td>{{ item.name }}</td>
-                    <td class="w-50px font-size-lg fw-bold">
-                      <div class="d-flex" #ele>
+                    <td>
+                      <div class="pt-1">{{ item.name }}</div>
+                    </td>
+                    <td class="w-100px fs-6 fw-bold">
+                      <div class="d-flex pt-1" #ele>
                         <span class="me-1 oparator" [style.color]="item.value < 0 ? 'red' : 'green'">
                           {{ item.value < 0 ? "-" : "+" }}</span>{{ item.value < 0 ? item.value * -1 : item.value }}
                               </div>
@@ -84,15 +86,15 @@
                     <td class="w-50px">
                       <div class="d-flex align-items-center">
                         <div ngbDropdown class="dropdown" container="body">
-                          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                          <a href="javascript:void(0)" class="btn btn-light btn-sm btn-icon"
                             ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
-                            <i class="icon-more_vert icon-20 text-dark-75"></i>
+                            <i class="icon-more_vert icon-20"></i>
                           </a>
                           <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                             <li>
                               <a (click)="open(content, item.id, item.value)" ngbDropdownItem href="javascript:void(0)">
-                                <span [class]="'icon-create icon-18'"></span>
-                                <span class="ms-3">
+                                <span [class]="'icon-create icon-16'"></span>
+                                <span class="ms-2">
                                   <codx-label name="lblUpdate" [formModel]="" default="Chỉnh sửa">
                                   </codx-label>
                                 </span>
@@ -117,7 +119,9 @@
             <codx-label name="lblUpdatePoint" [formModel]="" default="Chỉnh sửa số điểm">
             </codx-label>
           </h4>
-          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+          <button type="button" class="btn btn-icon btn-sm btn-white" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span class="icon-close icon-18"></span>
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group row mt-3">

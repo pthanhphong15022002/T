@@ -405,34 +405,4 @@ export class TreeviewCommentComponent implements OnInit {
     this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
     this.dt.detectChanges();
   }
-  // view file
-  clickViewDetailComment(file:any){
-    if(file){
-      // let dialog = new DialogModel();
-      // dialog.FormModel = this.formModel;
-      // dialog.IsFull = true;
-      // this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
-      if (file) {
-        let _data = {
-          objectID:file.objectID,
-          recID:file.recID,
-          referType:file.referType
-        };
-        let option = new DialogModel();
-        option.FormModel = this.formModel;
-        option.IsFull = true;
-        option.zIndex = 999;
-        this.callFuc.openForm(
-          PopupDetailComponent,
-          '',
-          0,
-          0,
-          '',
-          _data,
-          '',
-          option
-        );
-      }
-    }
-  }
 }

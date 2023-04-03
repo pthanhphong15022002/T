@@ -61,7 +61,8 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.headerText = dt?.data?.headerText;
     this.dataSelected = dt?.data?.data;
-    this.formModel = dialog?.formModel;
+    this.formModel =  JSON.stringify(dialog?.formModel);
+    this.formModel = JSON.parse(this.formModel);
     this.funcID = dialog?.formModel?.funcID
     this.formModel.funcID = "";
   }
@@ -76,7 +77,7 @@ export class AddLinkComponent implements OnInit , AfterViewInit {
   setHeight()
   {
     let height = window.innerHeight;
-    if(height && height>0) document.getElementById("h-scroll").style.maxHeight = (height - 250) + "px";
+    if(height && height>0 && document.getElementById("h-scroll") ) document.getElementById("h-scroll").style.maxHeight = (height - 250) + "px";
   }
 
   getDataLink()

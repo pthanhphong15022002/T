@@ -251,7 +251,6 @@ export class PopupAssignmentOKRComponent
             this.codxOmService.getEmployeesByEmpID(res?.employeeID).subscribe((ownerInfo) => {
               if (ownerInfo) {
                 this.assignTo(ownerInfo);
-
                 this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
               }
             });

@@ -15,9 +15,10 @@ import {
   FormModel,
   NotificationsService,
   CacheService,
+  CRUDService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { PopupAddressComponent } from '../popup-address/popup-address.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
@@ -29,7 +30,7 @@ import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-qu
 })
 export class PopupAddCrmcustomerComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-  data = new tmpCrm;
+  data = new tmpCrm();
   dialog: any;
   title = '';
   action: any;
@@ -61,7 +62,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       }
       if (this.data.contacts != null && this.data.contacts.length > 0) {
         this.contacts = this.data.contacts;
-        var check = this.contacts.filter((x) => x.contactType == '1')[0];
+        var check = this.contacts.find((x) => x.contactType == '1');
         if (check != null) this.contactsPerson = check;
       }
     }
@@ -102,34 +103,51 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       this.lastName = e.field == 'lastName' ? e.data : this.lastName;
     } else {
       this.data[e.field] = e.data;
+      if(this.funcID == 'CM0102'){
+        if(e.field == 'isCustomer'){
+          if(e.data == true){
+            this.data.customerFrom = new Date();
+          }else{
+            this.data.customerFrom = null;
+          }
+        }
+      }
+
     }
   }
 
   beforeSave(op) {
     var data = [];
-    if (this.action === 'add') {
-      op.method = 'AddCrmAsync';
-      op.className = 'CustomersBusiness';
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
-        if (this.contactsPerson != null) {
-          if (this.contacts != null && this.contacts.length > 0) {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
+      if (this.contactsPerson != null) {
+        if (this.contacts != null && this.contacts.length > 0) {
+          var check = this.contacts.find(x=> x.recID == this.contactsPerson.recID);
+          if(check == null){
             this.contacts.forEach((el) => {
               el.contactType = '2';
             });
+            this.contacts.push(this.contactsPerson);
           }
+        }else{
           this.contacts.push(this.contactsPerson);
-          this.data.contacts = this.contacts;
         }
+        this.data.contacts = this.contacts;
+
       }
-      if (this.firstName != null && this.firstName.trim() != '') {
-        if (this.lastName != null && this.lastName.trim() != '') {
-          this.data.contactName = this.lastName + ' ' + this.firstName;
-        } else {
-          this.data.contactName = this.firstName;
-        }
+    }
+    if (this.firstName != null && this.firstName.trim() != '') {
+      if (this.lastName != null && this.lastName.trim() != '') {
+        this.data.contactName = this.lastName + ' ' + this.firstName;
       } else {
-        this.data.contactName = '';
+        this.data.contactName = this.firstName;
       }
+    } else {
+      this.data.contactName = '';
+    }
+    if (this.action === 'add' || this.action == 'copy') {
+      op.method = 'AddCrmAsync';
+      op.className = 'CustomersBusiness';
+
       data = [
         this.data,
         this.dialog.formModel.formName,
@@ -137,6 +155,11 @@ export class PopupAddCrmcustomerComponent implements OnInit {
         this.dialog.formModel.entityName,
         this.contactsPerson?.recID,
       ];
+    } else {
+      op.method = 'UpdateCustomerAsync';
+      op.className = 'CustomersBusiness';
+
+      data = [this.data, this.funcID, this.contactsPerson?.recID];
     }
     op.data = data;
     return true;
@@ -153,8 +176,24 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       });
   }
 
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        this.imageAvatar.clearData();
+        if (res && res.update) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+            this.dialog.close(res.update);
+        }else{
+          this.dialog.close();
+        }
+      });
+  }
+
   async onSave() {
-    if(this.funcID == 'CM0102'){
+    if (this.funcID == 'CM0102') {
       if (this.firstName == null || this.firstName.trim() == '') {
         this.notiService.notifyCode(
           'SYS009',
@@ -175,11 +214,19 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
         if (res) {
-          this.onAdd();
+          this.hanleSave();
         }
       });
     } else {
+      this.hanleSave();
+    }
+  }
+
+  hanleSave(){
+    if(this.action == 'add' || this.action == 'copy'){
       this.onAdd();
+    }else{
+      this.onUpdate();
     }
   }
 

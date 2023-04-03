@@ -32,4 +32,13 @@ export class CodxCmService {
       key
     );
   }
+
+  getOne(recID, funcID){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'GetOneAsync',
+      [recID, funcID]
+    );
+  }
 }
