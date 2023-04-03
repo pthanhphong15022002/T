@@ -89,3 +89,48 @@ export class CM_Address {
   modifiedOn: Date;
   modifiedBy: string;
 }
+export class CM_Tasks {
+  recID: string;
+  objectType: string;
+  objectID: string;
+  taskType: string;
+  taskName: string;
+  indexNo: number;
+  startDate: Date;
+  endDate: Date;
+  durantionDay: number;
+  durationHour: number;
+  reminders: string;
+  reminderBy: string;
+  memo: string;
+  roles: CM_Tasks_Roles[] = [];
+  owner: string;
+  isOnline: boolean;
+  callType: string;
+  reference: string;
+  createTask: boolean;
+  lastUpDate: Date;
+  comments: number;
+  attachments: number;
+  progress: number;
+  actualEnd: Date;
+  status: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+export class CM_Tasks_Roles {
+  recID: string;
+  taskID: string;
+  roleType: string;
+  objectType: string;
+  objectName: string;
+  objectID: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}

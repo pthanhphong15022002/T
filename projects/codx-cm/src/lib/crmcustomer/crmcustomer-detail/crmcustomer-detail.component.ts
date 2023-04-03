@@ -52,7 +52,10 @@ export class CrmcustomerDetailComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('-------------00000-------------',this.dataSelected);
+    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataSelected.recID) {
