@@ -1409,18 +1409,21 @@ export class InstancesComponent
     
 
     let toltalData = this.dataValueFilterArr?.length;
-    for (var i = 0; i < this.dataValueByStatusArr.length - 1; i++) {
+    for (var i = 0; i < dataValueFiler.length - 1; i++) {
       predicates += predicate + (i + toltalData) + 'or ';
     }
 
-    predicates += predicate + (this.filterStatusPredicates.length + toltalData);
+    predicates += predicate + (this.dataValueFilterArr.length + toltalData);
 
-    if (this.arrFieldFilter.length>0) {
+    if (this.arrFieldFilter.length>1) {
       this.filterInstancePredicates += ' and ( ' + predicates + ' )';
       this.dataValueFilterArr = this.dataValueFilterArr.concat(dataValueFiler);
-    } else {
+    } else if(this.arrFieldFilter.length>0){
       this.filterInstancePredicates = predicates;
       this.dataValueFilterArr = dataValueFiler;
+    }else{
+      this.filterInstancePredicates = '';
+      this.dataValueFilterArr = [];
     }
   }
 
@@ -1443,7 +1446,7 @@ export class InstancesComponent
         }
       });
     } else {
-      this.filterStatusPredicates = '';
+      this.filterInstancePredicates = '';
       this.dataValueFilterArr = [];
     }
     (this.view.dataService as CRUDService)
