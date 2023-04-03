@@ -3,6 +3,7 @@ export class tmpCrm {
   customerID: string;
   partnerID: string;
   opponentID: string;
+  contactID: string;
   customerName: string;
   contactName: string;
   partnerName: string;
@@ -36,6 +37,8 @@ export class tmpCrm {
   email: string;
   allowCall: boolean = true;
   allowEmail: boolean = true;
+  disadvantage: string;
+  advantage: string;
   contacts: CM_Contacts[];
   address: CM_Address[];
 }

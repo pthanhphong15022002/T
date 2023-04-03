@@ -70,7 +70,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
   valueChange(e: any) {
-    this.cashpaymentline[e.field] = e.data;
+    //this.cashpaymentline[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);

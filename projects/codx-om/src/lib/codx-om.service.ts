@@ -329,13 +329,13 @@ export class CodxOmService {
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
   //Lấy model
-getOKRModel() {
+getOKRModel(funcID:string) {
   return this.api.execSv(
     OMCONST.SERVICES,
     OMCONST.ASSEMBLY,
     OMCONST.BUSINESS.OKR,
     'GetModelAsync',
-    []
+    [funcID]
   );
 }
   //Thêm, sửa okr plan
@@ -584,14 +584,24 @@ getOKRModel() {
       recID
     );
   }
-  //Lấy danh sách liên kết/phụ thuộc OKR
-  getListAlignAssign(recID: string, refType: string) {
+  //Lấy danh sách phụ thuộc OKR
+  getListAssign(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetListAlignAssignAsync',
-      [recID, refType]
+      'GetListAssignAsync',
+      [recID]
+    );
+  }
+  //Lấy danh sách liên kết OKR
+  getListAlign(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetListAlignAsync',
+      [recID]
     );
   }
   //Lấy OB và tất cả KR con theo ID của OB

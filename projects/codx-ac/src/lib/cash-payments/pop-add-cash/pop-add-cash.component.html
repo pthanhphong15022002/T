@@ -52,7 +52,13 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-18 me-2"></i>
-              <div class="fw-bold fs-6 text-uppercase">Thông tin chứng từ</div>
+              <div class="fw-bold fs-6 text-uppercase">
+                <codx-label
+                  fiedName="lblVoucherInfo"
+                  [formModel]="formModel"
+                  default="Thông tin chứng từ"
+                ></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
@@ -68,7 +74,13 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <span class="fw-bold fs-6 text-uppercase">Chi tiết</span>
+              <span class="fw-bold fs-6 text-uppercase"
+                ><codx-label
+                  fiedName="lblDetail"
+                  [formModel]="formModel"
+                  default="Chi tiết"
+                ></codx-label>
+              </span>
             </div>
           </ng-template>
           <ng-template #content>
@@ -82,7 +94,13 @@
               <div class="me-2">
                 <div class="icon-format_list_numbered icon-20"></div>
               </div>
-              <div class="fw-bold fs-5">Tổng hợp</div>
+              <div class="fw-bold fs-5">
+                <codx-label
+                  fiedName="lblGeneral"
+                  [formModel]="formModel"
+                  default="Tổng hợp"
+                ></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
@@ -298,7 +316,7 @@
   <ng-container
     *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0"
   >
-    <div class="d-flex align-items-center justify-content-end pt-2">
+    <!-- <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
         Tất cả {{ pageCount }}
       </div>
@@ -309,11 +327,20 @@
           class="me-1"
         ></codx-searchbar>
       </div>
-    </div>
-    <div class="table-responsive mt-3" style="height: 380px;border-radius: 5px;">
-      <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-        color: white;">
+    </div> -->
+    <div
+      class="table-responsive mt-3"
+      style="height: 380px; border-radius: 5px"
+    >
+      <table id="myTable" class="table table-hover">
+        <thead
+          style="
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-active);
+            color: white;
+          "
+        >
           <tr>
             <th></th>
             <th
@@ -332,8 +359,13 @@
             </th>
           </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6;"
-          *ngFor="let item of cashpaymentline | slice: (page-1) * pageSize : page * pageSize ">
+        <tbody
+          style="border-bottom: 1px solid #dee2e6"
+          *ngFor="
+            let item of cashpaymentline
+              | slice : (page - 1) * pageSize : page * pageSize
+          "
+        >
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
@@ -441,7 +473,7 @@
           </div>
         </div>
       </div>
-      <div id="mySearch" style="display: none;" class="container w-90 h-90">
+      <div id="mySearch" style="display: none" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img
@@ -476,7 +508,11 @@
   <div *ngIf="cashpaymentline.length > 0" class="container w-90 h-90">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="cashpaymentline.length"></ngb-pagination>
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="cashpaymentline.length"
+        ></ngb-pagination>
       </div>
     </div>
   </div>
@@ -523,7 +559,7 @@
     </ejs-grid>
   </ng-container> -->
   <div class="d-flex align-items-center justify-content-start me-10 mt-3">
-    <span class="fs-5 fw-bold">Tổng tiền: {{total}}</span>
+    <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
   </div>
 </ng-template>
 <!-- End: CashPaymentLine -->

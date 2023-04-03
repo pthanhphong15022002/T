@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -20,6 +21,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { of } from 'rxjs';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 
@@ -102,6 +104,9 @@ export class CashPaymentsComponent extends UIComponent {
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
         break;
     }
   }
@@ -208,6 +213,30 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
+
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashPaymentsBusiness';

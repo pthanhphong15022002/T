@@ -8,11 +8,6 @@
   font-size: 1.3rem;
 }
 
-.mt-9 {
-  margin-top: 100px !important;
-  height: 500px !important;
-}
-
 .chart-received {
   width: 363.25px;
 }
@@ -33,48 +28,11 @@
   border-radius: 4px !important;
   padding: 10px 15px 0;
 }
-
-.w-0 {
-  width: 0px;
-}
-
-.h-0 {
-  height: 0px;
-}
-
-.white {
-  background-color: white;
-  color: white;
-}
-
-.p-a {
-  position: relative;
-}
-
 .list-performance {
   min-height: 558px;
 }
-
-.min-w-400px {
-  min-width: 400px !important;
-}
-
-.w-400px {
-  width: 400px !important;
-}
-
-.pl-3,
-.px-3 {
-  padding-left: 2.75rem !important;
-  margin-right: -25px;
-}
-
-.pd-r-0 {
-  padding-right: 0px;
-}
-
 .top-item {
-  width: 125px;
+  width: 140px;
 }
 
 .top1 .top-pic {
@@ -128,24 +86,8 @@
   min-width: 177.84px !important;
 }
 
-.text-dark-50 {
-  color: #666666 !important;
-}
-
 .top-champion {
   height: 159px !important;
-}
-
-.left-5 {
-  margin-left: 5px;
-}
-
-.left-30 {
-  margin-left: 30px;
-}
-
-.pd-r-30 {
-  padding-right: 30px;
 }
 
 .process-performance {
@@ -215,11 +157,7 @@
 
 .process-value .text-dark span {
   padding: 2px;
-  background-color: wheat;
-}
-
-.text-muted {
-  color: #91919f !important;
+  //background-color: wheat;
 }
 
 .process-number {
@@ -250,14 +188,6 @@
   color: #971fa9;
 }
 
-.font-size-h4 {
-  font-size: 1.35rem;
-}
-
-.font-weight-bold {
-  font-weight: 600;
-}
-
 .label.label-inline {
   border-radius: 3px !important;
   padding: 0 8px !important;
@@ -271,29 +201,34 @@
   color: #3699ff;
   background-color: #e1f0ff;
 }
-
-.with-number .list-number {
+.user-listnumber{
+  position: relative;
+}
+.user-listnumber .list-number {
   position: absolute;
-  top: 24px;
-  left: 24px;
-  width: 24px;
-  height: 24px;
-  border-radius: 24px;
-  line-height: 24px;
+  top: 22px;
+  left: 22px;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  line-height: 20px;
   text-align: center;
-  color: #ffa800;
+  color: #ff5e00;
   font-weight: 500;
   background-color: #fff4de;
 }
 
-.left-15 {
-  margin-left: 15px !important;
+.w-40px{
+  width: 40px;
 }
-
-.gray {
-  background-color: gray;
+.pic-top2{
+  padding-top: 4px;
+  padding-left: 1px;
 }
-
-.page-home {
-  padding-top: 5%;
+.pic-top1{
+  padding-top: 25px;
+}
+.pic-top3{
+  padding-top: 4px;
+  padding-left: 1px;
 }

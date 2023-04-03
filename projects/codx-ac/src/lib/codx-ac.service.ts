@@ -141,4 +141,14 @@ export class CodxAcService {
         tap((p) => console.log(p))
       );
   }
+
+  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+    return this.api
+      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(
+        tap((r) => console.log(r)),
+        map((r) => r[0]),
+        tap((r) => console.log(r))
+      );
+  }
 }

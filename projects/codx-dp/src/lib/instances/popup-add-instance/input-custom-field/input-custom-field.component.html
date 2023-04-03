@@ -48,7 +48,6 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-    (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -61,7 +60,6 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-    (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -76,7 +74,6 @@
       [crrValue]="customField.dataValue"
       [placeholder]="customField.note || ''"
       (keyUpEnter)="valueChange($event)"
-      (controlBlur)="valueChange($event)"
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     ></codx-input>
@@ -90,9 +87,7 @@
     [format]="formatDate"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="valueChange($event)"
-    (keyUpEnter)="valueChange($event)"
-    (valueChange)="valueChange($event)"
+    (controlBlur)="controlBlur($event)"
     [disabled]="disable"
   >
   </codx-input>
@@ -105,7 +100,6 @@
     [refValue]="customField.refValue"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"
@@ -144,13 +138,24 @@
     >
     </codx-combobox-popup>
   </ng-container>
-  <ng-container *ngIf="listIdUser">
-    <codx-imgs
+
+    <!-- <codx-imgs
       [objectId]="listIdUser"
       objectType="AD_Users"
       [numberImages]="5"
-    ></codx-imgs>
-  </ng-container>
+    ></codx-imgs> -->
+    <div class="d-flex" *ngIf="arrIdUser && arrIdUser?.length > 0">
+      <ng-container *ngFor="let id of arrIdUser">
+        <div style="position: relative">
+          <codx-img class="" [objectId]="id" objectType="AD_Users">
+          </codx-img>
+          <div style="position: absolute; right: 0px; top: 0px">
+            <span class="text-danger icon-close icon-16 cursor-pointer" (click)="deleteUser(id)"></span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+ 
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'R'">
