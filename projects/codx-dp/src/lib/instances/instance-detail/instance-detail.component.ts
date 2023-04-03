@@ -106,6 +106,7 @@ export class InstanceDetailComponent implements OnInit {
   treeTask = [];
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  isStart = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -174,6 +175,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getStageByStep(listSteps) {
+    this.isStart = listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
     var total = 0;
     for (var i = 0; i < listSteps.length; i++) {
       var stepNo = i;
@@ -276,7 +278,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps });
+    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps, isStart: this.isStart});
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {

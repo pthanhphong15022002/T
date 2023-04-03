@@ -655,8 +655,8 @@ export class InstancesComponent
 
   //#popup roles
 
-  changeDataMF(e, data) {
-    if (e != null && data != null) {
+  changeDataMF(e, data, isStart?) {
+    if (e != null && data != null && isStart) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -730,6 +730,19 @@ export class InstancesComponent
         }
       });
     }
+    // else{
+    //   e.forEach((res) => {
+    //     switch (res.functionID) {
+    //       case 'DP09':
+    //       case 'DP10':
+    //       case 'DP02':
+    //         res.disabled = true;
+    //         break;
+    //       default:
+    //         res.isblur = true;
+    //         }
+    //       })
+    // }
   }
   //End
 
@@ -1210,7 +1223,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data);
+    this.changeDataMF(e.e, e.data, e.isStart);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
