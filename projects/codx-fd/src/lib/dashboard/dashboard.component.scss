@@ -23,7 +23,10 @@
     height: 350px;
     padding: 16px;
 }
-.fd-pagehome #newfeed{
-    padding-bottom: 10px;
 
+.fd-pagehome{
+    max-width: 1000px;
+    margin: 0 auto;
+    height: calc(100vh - 115px)!important;
+    overflow: hidden;
 }

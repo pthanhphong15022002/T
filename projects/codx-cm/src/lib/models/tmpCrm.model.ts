@@ -3,6 +3,7 @@ export class tmpCrm {
   customerID: string;
   partnerID: string;
   opponentID: string;
+  contactID: string;
   customerName: string;
   contactName: string;
   partnerName: string;
