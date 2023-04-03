@@ -122,7 +122,7 @@
     padding: 4px;
 }
 .message-reft{
-    background-color: rgb(196, 207, 218);
+    background-color: var(--primary-lighter);
     max-width: 250px;
     border-radius: 2px;
     padding: 4px;
@@ -242,7 +242,7 @@ codx-chat-box.active{
 }
 .message-send-message{
     border-radius: 6px;
-    background-color: rgb(115, 212, 250);
+    background-color: var(--primary-lighter);
     padding: 4px;
 }
 .message-system{
@@ -261,4 +261,38 @@ codx-chat-box.active{
     outline: none;
     border: 1px solid gray;
     border-radius: 20px;
+}
+
+.popup-vote{
+    background-color: var(--bg-body);
+    padding: 10px;
+}
+.popup-title{
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+}
+.popup-voteType{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+.vote-list{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.vote-item{
+    padding: 10px;
+}
+.popup-users{
+    padding: 10px;
+}
+.user-item{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
 }

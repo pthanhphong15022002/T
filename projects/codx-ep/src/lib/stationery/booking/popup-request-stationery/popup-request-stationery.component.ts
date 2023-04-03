@@ -150,7 +150,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
       this.epService.getBookingItems(this.data?.recID).subscribe((res: any) => {
-        if (res) {
+        if (res) {          
           res.forEach((item) => {
             let tmpSta = new BookingItems();
             (tmpSta.itemID = item?.itemID),

@@ -690,7 +690,7 @@ export class CodxEpService {
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'GetBookingByIDAsync',
+      'GetListBookingItemAsync',
       [recID]
     );
   }

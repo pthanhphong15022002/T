@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Inject, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Inject, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthService, ButtonModel, CRUDService, NotificationsService, RequestModel, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { mode } from 'crypto-js';
@@ -7,7 +7,8 @@ import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component
 @Component({
     selector: 'lib-gift-trans',
     templateUrl: './gift-trans.component.html',
-    styleUrls: ['./gift-trans.component.scss']
+    styleUrls: ['./gift-trans.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class GiftTransComponent extends UIComponent {
     views: Array<ViewModel>;

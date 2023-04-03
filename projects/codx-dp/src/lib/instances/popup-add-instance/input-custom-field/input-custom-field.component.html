@@ -48,7 +48,6 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-   
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -61,7 +60,6 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
-    (controlBlur)="controlBlur($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
@@ -76,7 +74,6 @@
       [crrValue]="customField.dataValue"
       [placeholder]="customField.note || ''"
       (keyUpEnter)="valueChange($event)"
-      (controlBlur)="controlBlur($event)"
       (valueChange)="valueChange($event)"
       [disabled]="disable"
     ></codx-input>
@@ -91,8 +88,6 @@
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
     (controlBlur)="controlBlur($event)"
-    (keyUpEnter)="valueChange($event)"
-    (valueChange)="valueChange($event)"
     [disabled]="disable"
   >
   </codx-input>
@@ -105,7 +100,6 @@
     [refValue]="customField.refValue"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="controlBlur($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
     [disabled]="disable"
@@ -144,12 +138,23 @@
     >
     </codx-combobox-popup>
   </ng-container>
-  <ng-container *ngIf="listIdUser">
-    <codx-imgs
+  <ng-container *ngIf="arrIdUser?.length > 0">
+    <!-- <codx-imgs
       [objectId]="listIdUser"
       objectType="AD_Users"
       [numberImages]="5"
-    ></codx-imgs>
+    ></codx-imgs> -->
+    <div class="d-flex" >
+      <ng-container *ngFor="let userID of arrIdUser">
+        <div style="position: relative">
+          <codx-img class="" [objectId]="userID" objectType="AD_Users">
+          </codx-img>
+          <div style="position: absolute; right: 0px; top: 0px">
+            <span class="text-danger icon-close icon-16 cursor-pointer" (click)="deleteUser(userID)"></span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </ng-container>
 </ng-container>
 

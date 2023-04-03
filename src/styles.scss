@@ -31,6 +31,13 @@ erm-quick-links-inner .dropdown-menu {
   opacity: 0.65;
   font-style: italic;
 }
+.clear {
+  clear: both;
+}
+.w-1100px {
+  width: 1100px !important;
+}
+
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
@@ -494,6 +501,12 @@ a:link {
 
 .aqua {
   border: 1px aqua solid;
+}
+.border-test {
+  border: 1px yellowgreen solid;
+}
+.color-test {
+  color: yellowgreen;
 }
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
@@ -1545,16 +1558,6 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   min-height: 150px;
 }
 
-.dialog-extend {
-  position: fixed;
-  right: 0;
-  width: 320px;
-  bottom: 0;
-  z-index: 9999;
-  background-color: white;
-  top: 97px;
-}
-
 .btn.w-36px {
   min-width: 36px !important;
   width: 36px !important;
@@ -1667,12 +1670,13 @@ textarea.codx-textarea {
 
 codx-dropdown-calendar {
   button.dropdown-toggle.btn {
-    height: 26px !important;
+    height: 32px !important;
     line-height: inherit;
   }
   .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
     padding-top: 2px !important;
     padding-bottom: 2px !important;
+    height: 32px !important;
   }
 }
 
@@ -2131,13 +2135,43 @@ codx-valuelist .btn.select-icon {
 .symbol-circle .symbol img {
   border-radius: 50%;
 }
-.clear {
-  clear: both;
-}
 
 .e-input-group input.e-input,
 .e-input-group.e-control-wrapper input.e-input,
 .e-input-group textarea.e-input,
 .e-input-group.e-control-wrapper textarea.e-input {
   font: var(--fs-body);
+}
+
+//dialog extend
+
+.icon-login {
+  margin-left: 3px;
+}
+
+.dialog-extend {
+  .codx-dialog-container.e-slide {
+    transition: width 0.2s ease-in-out;
+    width: 1150px !important;
+  }
+  .dialog-more {
+    width: 350px;
+    position: absolute;
+    top: 9;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    padding: 0 15px;
+  }
+  .icon-login {
+    rotate: 180deg;
+    transition: rotate 0.2s ease-in-out;
+  }
+}
+
+// control calendar
+codx-calendar {
+  .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+    text-transform: none;
+  }
 }

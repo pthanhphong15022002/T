@@ -63,12 +63,12 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-  getOneData(recID, funcID){
-    this.cmSv.getOne(recID, funcID).subscribe(res =>{
-      if(res){
+  getOneData(recID, funcID) {
+    this.cmSv.getOne(recID, funcID).subscribe((res) => {
+      if (res) {
         this.dataSelected = res;
       }
-    })
+    });
   }
 
   listTab(funcID) {
@@ -106,7 +106,7 @@ export class CrmcustomerDetailComponent implements OnInit {
         },
       ];
     } else if (funcID == 'CM0102') {
-      if(this.dataSelected.isCustomer == true){
+      if (this.dataSelected.isCustomer == true) {
         this.tabDetail = [
           {
             name: 'Information',
@@ -133,7 +133,7 @@ export class CrmcustomerDetailComponent implements OnInit {
             isActive: false,
           },
         ];
-      }else{
+      } else {
         this.tabDetail = [
           {
             name: 'Information',
@@ -146,10 +146,9 @@ export class CrmcustomerDetailComponent implements OnInit {
             textDefault: 'Công việc',
             icon: 'icon-format_list_numbered',
             isActive: false,
-          }
+          },
         ];
       }
-
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {
@@ -206,11 +205,12 @@ export class CrmcustomerDetailComponent implements OnInit {
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
@@ -220,6 +220,24 @@ export class CrmcustomerDetailComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var contactsPerson = e.event;
+        contactsPerson.contactType = '2';
+        this.cmSv
+          .updateContactCrm(
+            contactsPerson,
+            this.funcID,
+            this.dataSelected.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.dataSelected.contacts.push(contactsPerson);
+            }
+          });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   getNameCrm(data) {
