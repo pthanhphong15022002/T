@@ -42,22 +42,33 @@
 <ng-template #viewColumKaban let-data>
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    [id]="data?.keyField"
   >
-    <div class="line-colums">{{ data.headerText }}</div>
+    <div class="line-colums d-flex">
+      <span
+        [ngClass]="getPropertiesHeader(data, 'icon')"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+        style="font-size: 18px"
+        class="me-3"
+      >
+      </span>
+      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+        {{ data.headerText }}
+      </span>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
-  <codx-temp-full style="width: 100%" [title]="data.title" [descTmp]="descTmp">
+  <codx-temp-full
+    style="width: 100%"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+    [title]="data.title"
+    [descTmp]="descTmp"
+  >
   </codx-temp-full>
   <ng-template #descTmp>
     <div class="flex-body">
-      <!-- <div class="d-flex align-items-center">
-        <span class="text-gray-600 icon-14 icon-apartment me-1"></span><span>Khanh bá đạo gặp Thảo cũng phải khóc !!!</span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="text-gray-600"></span><span>70% la cai gi</span>
-      </div> -->
       <div class="d-flex justify-content-end">
         <span
           #pCr="ngbPopover"
@@ -135,7 +146,23 @@
 </ng-template>
 
 <ng-template #popDetail let-dialog>
-  <codx-form [body]="templateDetail" [dialog]="dialog"> </codx-form>
+  <codx-form [body]="detailPopupClick" [dialog]="dialog">
+    <ng-template #detailPopupClick>
+      <codx-instance-detail
+        [dataService]="view.dataService"
+        [formModel]="view.formModel"
+        [dataSelect]="dataSelected"
+        (moreFunctionEvent)="clickMoreFunc($event)"
+        (changeMF)="changeMF($event)"
+        [listStepsProcess]="process.steps"
+        [listCbxProccess]="listProccessCbx"
+        [viewModelDetail]="this.process.viewModeDetail"
+        [tabInstances]="tabInstances"
+        [viewsCurrent]="'k-'"
+      >
+      </codx-instance-detail>
+    </ng-template>
+  </codx-form>
 </ng-template>
 <!-- end kanban -->
 
@@ -158,7 +185,7 @@
 </ng-template>
 
 <ng-template #baseHeaderRightTmp let-data>
-  <span [class]="data.closed ? 'icon-lock' : ''"> </span>
+  <span [class]="data.closed ? 'icon-lock text-danger' : ''"> </span>
 </ng-template>
 
 <ng-template #descTmp let-data>
@@ -194,11 +221,22 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="me-2 badge badge-primary">
+      <div>
         <div *ngFor="let item of listSteps">
-          <span *ngIf="item.stepID === data.stepID">
-            {{ item.stepName }}
-          </span>
+          <div
+            *ngIf="item.stepID === data.stepID"
+            [ngStyle]="{ 'background-color': item['backgroundColor'] }"
+            class="me-2 badge badge-primary"
+          >
+            <span
+              [ngClass]="item['icon']"
+              [ngStyle]="{ color: item['iconColor'] }"
+              class="me-2"
+            ></span>
+            <span [ngStyle]="{ color: item['textColor'] }">
+              {{ item.stepName }}</span
+            >
+          </div>
         </div>
       </div>
       <div
@@ -252,6 +290,7 @@
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
     [tabInstances]="tabInstances"
+    [viewsCurrent]="'d-'"
   >
   </codx-instance-detail>
 </ng-template>
@@ -275,4 +314,31 @@
       [setRequire]="false"
     ></codx-label>
   </span>
+</ng-template>
+<ng-template #footerButton>
+  <codx-dropdown-select
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    [emptyText]="grvSetup['Status']?.headerText"
+    [isMulti]="grvSetup.Status?.multiSelect"
+    type="valuelist"
+    [field]="'Status'"
+    [refValue]="grvSetup.Status?.referedValue"
+    (valueChange)="valueChangeFilterStatus($event)"
+  ></codx-dropdown-select>
+
+  <!-- <codx-dropdown-select
+    (valueChange)="valueToolbarChange($event, item.fieldName)"
+    [field]="item.fieldName"
+    [value]="item.defaultSearchValue"
+    [emptyText]="item.headerText"
+    [refValue]="item.referedValue"
+    [cssClass]="'rounded-pill border-1'"
+    [isMulti]="item.multiFilter"
+    [fieldName]="item.headerText"
+    [type]="'valuelist'"
+    [textType]="'raw'"
+    cssPopup="h-450px w-300px"
+    [isToolbar]="true"
+  ></codx-dropdown-select> -->
 </ng-template>

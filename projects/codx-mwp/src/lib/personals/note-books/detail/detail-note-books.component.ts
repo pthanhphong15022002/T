@@ -8,6 +8,7 @@ import {
   DialogRef,
   DialogModel,
   NotificationsService,
+  ViewModel,
 } from 'codx-core';
 import {
   Component,
@@ -26,7 +27,7 @@ import { A } from '@angular/cdk/keycodes';
   styleUrls: ['./detail-note-books.component.scss'],
 })
 export class DetailNoteBooksComponent extends UIComponent {
-  @Input() views: any = [];
+  @Input() views: ViewModel[] = [];
 
   recID: any;
   data: any;
@@ -150,6 +151,7 @@ export class DetailNoteBooksComponent extends UIComponent {
                 active: true,
                 model: {
                   resources: this.columnsGrid,
+                  hideMoreFunc:true,
                 },
               },
               {
@@ -159,6 +161,7 @@ export class DetailNoteBooksComponent extends UIComponent {
                 active: false,
                 model: {
                   template: this.listView,
+                  hideMoreFunc:true,
                 },
               },
             ];

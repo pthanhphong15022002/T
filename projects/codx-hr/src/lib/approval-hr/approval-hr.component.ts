@@ -53,7 +53,7 @@ export class ApprovalHrComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnInit(): void {
     debugger;
     this.router.params.subscribe((params) => {
-      this.funcID = params['FuncID'];
+      this.funcID = params['FuncIDs'];
       if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
     });
     console.log('asdasdasdasd');

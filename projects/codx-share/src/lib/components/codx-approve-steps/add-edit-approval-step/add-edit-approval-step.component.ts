@@ -14,6 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -77,6 +78,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
   headerText1;
 
+  user; //Thông tin người đang nhập
+
   title = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
@@ -115,6 +118,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
   constructor(
     // private esService: CodxEsService,
+    private auth: AuthStore,
     private codxService: CodxShareService,
     private cr: ChangeDetectorRef,
     private notifySvr: NotificationsService,
@@ -123,6 +127,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+
+    this.user = this.auth.get();
     this.dialog = dialog;
     this.transId = data?.data.transID;
     this.stepNo = data?.data.stepNo;
@@ -149,7 +155,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
     //test tabQuery
     //this.hideTabQuery = !this.hideTabQuery;
-
 
     if (this.hideTabQuery) {
       this.tabInfo = [
@@ -304,9 +309,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           }
 
           //Loại cấp phát -> duyệt đại diện
-          if(this.data.stepType == 'I'){
-            this.data.approveMode = "3";
-            this.dialogApprovalStep.patchValue({ approveMode: this.data.approveMode });
+          if (this.data.stepType == 'I') {
+            this.data.approveMode = '3';
+            this.dialogApprovalStep.patchValue({
+              approveMode: this.data.approveMode,
+            });
             this.currentApproveMode = this.data.approveMode;
             this.cr.detectChanges();
           }
@@ -375,19 +382,16 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforeSave(){
+  beforeSave() {
     console.log(this.queryBuilder);
-    if(this.queryBuilder){
-      this.queryBuilder.saveForm()
+    if (this.queryBuilder) {
+      this.queryBuilder.saveForm();
       return;
-    }
-    else{
+    } else {
       this.onSaveForm();
     }
-    
   }
 
-  
   saveFilterChange(event) {
     this.data.constraints = event.filters;
     this.onSaveForm();
@@ -442,13 +446,17 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   openSetupEmail(email) {
     if (email?.isEmail == '1') {
       let data = {
-        formGroup: this.dialogApprovalStep,
+        // formGroup: this.dialogApprovalStep,
         templateID: email?.templateID,
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,
         showFrom: true,
+        isAddNew: false,
       };
+      if (!email.modifiedBy && !email.modifiedOn) {
+        data.isAddNew = true;
+      }
 
       let dialogEmail = this.callfc.openForm(
         CodxEmailComponent,
@@ -460,20 +468,23 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       );
       dialogEmail.closed.subscribe((res) => {
         if (res.event) {
-          let emailTemplates = this.dialogApprovalStep?.value.emailTemplatess;
-          let i = emailTemplates?.findIndex(
-            (p) => p.emailType == res.templateType
+          let result = res.event;
+          let emailTemplateLst = this.dialogApprovalStep?.value.emailTemplates;
+          let i = emailTemplateLst?.findIndex(
+            (p) => p.emailType == result.templateType
           );
           if (i >= 0) {
-            emailTemplates[i].templateID = res.event.recID;
-
+            emailTemplateLst[i].templateID = result.recID;
+            emailTemplateLst[i].modifiedOn = new Date();
+            emailTemplateLst[i].modifiedBy = this.user?.userID;
             // if (this.attachment.fileUploadList.length > 0) {
             //   this.attachment.objectId = res.recID;
             //   this.attachment.saveFiles();
             // }
 
+            this.data.emailTemplates = emailTemplateLst;
             this.dialogApprovalStep.patchValue({
-              emailTemplates: emailTemplates,
+              emailTemplates: emailTemplateLst,
             });
           }
         }

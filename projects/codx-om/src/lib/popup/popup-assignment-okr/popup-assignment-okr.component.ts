@@ -150,13 +150,16 @@ export class PopupAssignmentOKRComponent
           if (links && links.length > 0) {
 
             let oldLink = links[0];
-            this.assignmentOKR.okrName = oldLink?.okrName;
-            this.assignmentOKR.umid = oldLink?.umid;
-            this.assignmentOKR.isActive = true;
-            this.assignmentOKR.distributePct = oldLink?.distributePct;
-            this.assignmentOKR.distributeValue = oldLink?.distributeValue;
-            this.assignmentOKR.orgUnitID = oldLink?.orgUnitID;
-            this.assignmentOKR.orgUnitName = oldLink?.orgUnitName;
+            // this.assignmentOKR.okrName = oldLink?.okrName;
+            // this.assignmentOKR.umid = oldLink?.umid;
+            // this.assignmentOKR.isActive = true;
+            // this.assignmentOKR.distributePct = oldLink?.distributePct;
+            // this.assignmentOKR.distributeValue = oldLink?.distributeValue;
+            // this.assignmentOKR.orgUnitID = oldLink?.orgUnitID;
+            // this.assignmentOKR.orgUnitName = oldLink?.orgUnitName;
+            // this.assignmentOKR.objectID = oldLink?.objectID;
+            this.assignmentOKR = oldLink;
+
             this.detectorRef.detectChanges();
             this.isAdd = false;
             this.codxOmService
@@ -251,7 +254,6 @@ export class PopupAssignmentOKRComponent
             this.codxOmService.getEmployeesByEmpID(res?.employeeID).subscribe((ownerInfo) => {
               if (ownerInfo) {
                 this.assignTo(ownerInfo);
-
                 this.assignmentOKR.objectType=OMCONST.OBJECT_TYPE.EMP;
               }
             });
@@ -280,7 +282,7 @@ export class PopupAssignmentOKRComponent
     }
   }
   assignTo(owner:any){
-    this.assignmentOKR.userID = owner?.userID;
+    this.assignmentOKR.userID = owner?.domainUser;
     this.assignmentOKR.employeeID = owner?.employeeID;
     this.assignmentOKR.orgUnitID = owner?.orgUnitID;
     this.assignmentOKR.departmentID = owner?.departmentID;

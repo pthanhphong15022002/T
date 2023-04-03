@@ -44,6 +44,7 @@ import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
 import { ScrollPipe } from './chat/chat-box/scrollPipe.pipe';
+import { MessageSystemPipe } from './chat/chat-box/mssgSystem.pipe';
 
 export const routes: Routes = [
   {
@@ -134,7 +135,8 @@ const Component: Type<any>[] = [
   ApproveComponent,
   ApproveDetailComponent,
   ChatContainerComponent,
-  ScrollPipe
+  ScrollPipe,
+  MessageSystemPipe
 ];
 
 @NgModule({

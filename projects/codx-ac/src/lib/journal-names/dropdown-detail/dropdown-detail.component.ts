@@ -1,4 +1,11 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
 import { IModelShare } from '../interfaces/IModelShare.interface';
 
@@ -7,10 +14,11 @@ import { IModelShare } from '../interfaces/IModelShare.interface';
   templateUrl: './dropdown-detail.component.html',
   styleUrls: ['./dropdown-detail.component.css'],
 })
-export class DropdownDetailComponent extends UIComponent {
+export class DropdownDetailComponent extends UIComponent implements OnChanges {
   //#region Constructor
   @Input() modelShares: IModelShare[];
   @Input() formModel: FormModel;
+  ids: string;
 
   constructor(private injector: Injector) {
     super(injector);
@@ -19,6 +27,12 @@ export class DropdownDetailComponent extends UIComponent {
 
   //#region Init
   onInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.modelShares) {
+      this.ids = this.modelShares?.map((d) => d.id).join(';');
+    }
+  }
   //#endregion
 
   //#region Event
@@ -28,8 +42,5 @@ export class DropdownDetailComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  getIds(): string {
-    return this.modelShares.map((d) => d.id).join(';');
-  }
   //#endregion
 }

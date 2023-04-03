@@ -138,7 +138,7 @@ export class PopupOKRWeightComponent
         .subscribe((res: any) => {
           if (res) {
             this.dataOKR = res;
-            this.okrChild = res.child;
+            this.okrChild = res.items;
             this.totalProgress = 0;
             Array.from(this.okrChild).forEach((kr: any) => {
               this.totalProgress += kr?.weight*kr?.progress;
@@ -153,7 +153,7 @@ export class PopupOKRWeightComponent
         .subscribe((res: any) => {
           if (res) {
             this.dataOKR = res;
-            this.okrChild = res.child;
+            this.okrChild = res.items;
             this.totalProgress = this.dataOKR.progress;
             this.totalProgress = 0;
             Array.from(this.okrChild).forEach((ob: any) => {

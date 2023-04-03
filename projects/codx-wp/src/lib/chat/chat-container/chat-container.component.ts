@@ -28,9 +28,7 @@ export class ChatContainerComponent implements OnInit {
   lstGroupCollapse:Array<any> = [];
   constructor
   (
-    private api:ApiHttpService,
     private signalRSV:SignalRService,
-    private applicationRef:ApplicationRef,
     private sanitizer: DomSanitizer,
     private dt:ChangeDetectorRef
   ) 
@@ -58,8 +56,8 @@ export class ChatContainerComponent implements OnInit {
       }
     });
     //receiver message
-    this.signalRSV.reciverChat.subscribe((res:any) => {
-      if(res.groupID){
+    this.signalRSV.chat.subscribe((res:any) => {
+      if(res){
         this.handleBoxChat(res);         
       }
     });
@@ -109,6 +107,7 @@ export class ChatContainerComponent implements OnInit {
       let codxBoxChat =  window.ng.getComponent(ele);
       let index = this.lstGroupActive.findIndex(x => x.groupID == group.groupID); 
       if(index > -1 && codxBoxChat){
+        debugger
         this.lstGroupActive.splice(index, 1);
         this.lstGroupCollapse.unshift(codxBoxChat.group);
         ele.remove();
@@ -118,7 +117,7 @@ export class ChatContainerComponent implements OnInit {
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    this.signalRSV.sendData(data,"ActiveGroupAsync");
+    this.signalRSV.sendData("ActiveGroupAsync",data);
   }
 
 }

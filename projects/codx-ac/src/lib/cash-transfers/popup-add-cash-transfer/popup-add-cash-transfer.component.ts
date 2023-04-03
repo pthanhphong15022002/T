@@ -1,7 +1,6 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -11,7 +10,9 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
+import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 
@@ -27,6 +28,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
   hasInvoice: boolean = false;
+  cashBookName1: string = '';
+  cashBookName2: string = '';
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -42,16 +45,21 @@ export class PopupAddCashTransferComponent extends UIComponent {
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
+  isEdit: boolean = false;
+  tabName$: Observable<string>;
+  journal: IJournal;
 
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
+    private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
 
     this.formTitle = dialogData.data.formTitle;
+    this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
 
     this.cashTransfer.feeControl = Boolean(
@@ -62,12 +70,35 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.loadComboboxData('CashBooks').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.cashBooks = JSON.parse(res[0]);
-      }
-    });
+    this.acService
+      .loadComboboxData('CashBooks', 'AC')
+      .subscribe((cashBooks) => {
+        if (cashBooks) {
+          this.cashBookName1 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID
+          );
+          this.cashBookName2 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID2
+          );
+        }
+      });
+
+    this.tabName$ = this.cache.valueList('AC071').pipe(
+      tap((t) => console.log(t)),
+      map((t) => t.datas?.[0].default),
+      tap((t) => console.log(t))
+    );
+
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.cashTransfer.journalNo;
+    options.pageLoading = false;
+    this.acService
+      .loadDataAsync('AC', options)
+      .subscribe((res) => (this.journal = res[0]));
 
     this.cache
       .gridViewSetup(
@@ -85,7 +116,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
         this.gvsVATInvoices = res;
       });
 
-    if (this.dialogData.data.formType === 'edit') {
+    if (this.isEdit) {
       // load vatInvoice
       const options = new DataRequest();
       options.entityName = 'AC_VATInvoices';
@@ -113,7 +144,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
   //#region Event
   handleInputChange(e, prop: string = 'cashTransfer') {
-    console.log(e);
+    let field = e.field.toLowerCase();
 
     if (e.field) {
       this[prop][e.field] =
@@ -122,9 +153,17 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this[prop] = e.data;
     }
 
+    if (e.field.toLowerCase() === 'cashbookid') {
+      this.cashBookName1 = e.component.itemsSelected[0].CashBookName;
+    }
+
+    if (e.field.toLowerCase() === 'cashbookid2') {
+      this.cashBookName2 = e.component.itemsSelected[0].CashBookName;
+    }
+
     const fields: string[] = ['currencyid', 'cashbookid', 'payamount2'];
 
-    if (fields.includes(e.field.toLowerCase())) {
+    if (fields.includes(field)) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
           e.field,
@@ -135,9 +174,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
             this.form.formGroup.patchValue({
               currencyID: res.currencyID,
               exchangeRate: res.exchangeRate,
-              multi: res.multi,
-              payAmount2: res.payAmount2,
             });
+
+            this.cashTransfer.multi = res.multi;
+            this.cashTransfer.payAmount2 = res.payAmount2;
           }
         });
     }
@@ -155,35 +195,35 @@ export class PopupAddCashTransferComponent extends UIComponent {
         if (res) {
           this.form.formGroup.patchValue({
             exchangeRate: res.exchangeRate,
-            multi: res.multi,
-            payAmount2: res.payAmount2,
           });
+
+          this.cashTransfer.multi = res.multi;
+          this.cashTransfer.payAmount2 = res.payAmount2;
         }
       });
   }
-  //#endregion
 
-  //#region Method
-  save(closeAfterSaving: boolean): void {
+  close() {
+    this.dialogRef.close();
+  }
+
+  handleClickSave(closeAfterSaving: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
 
-    // validate data
-    let isValid = true;
-    const controls = this.form.formGroup.controls;
-    for (const propName in controls) {
-      if (controls[propName].invalid) {
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          `"${this.gvsCashTransfers[this.toPascalCase(propName)]?.headerText}"`
-        );
-
-        isValid = false;
-      }
+    let ignoredFields = [];
+    if (this.journal.voucherNoRule === '2') {
+      ignoredFields.push('VoucherNo');
     }
 
-    if (!isValid) {
+    if (
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gvsCashTransfers,
+        [],
+        ignoredFields
+      )
+    ) {
       return;
     }
 
@@ -199,13 +239,64 @@ export class PopupAddCashTransferComponent extends UIComponent {
       (this.cashTransfer?.payAmount || 0) +
       (this.cashTransfer?.paymentFees || 0) +
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
+    this.cashTransfer.voucherNo = this.cashTransfer.voucherNo ?? '';
 
+    // if this voucherNo already exists,
+    // the system will automatically suggest another voucherNo
+    if (
+      this.journal.voucherNoRule !== '0' &&
+      this.journal.duplicateVoucherNo === '0' &&
+      this.cashTransfer.voucherNo
+    ) {
+      const options = new DataRequest();
+      options.entityName = 'AC_CashTranfers';
+      options.predicates = 'VoucherNo=@0';
+      options.dataValues = this.cashTransfer.voucherNo;
+      options.pageLoading = false;
+      this.acService.loadDataAsync('AC', options).subscribe((res: any[]) => {
+        if (res.length > 0) {
+          this.api
+            .exec(
+              'ERM.Business.AC',
+              'CashTranfersBusiness',
+              'GenerateAutoNumberAsync',
+              this.journal.journalNo
+            )
+            .subscribe((autoNumber: string) => {
+              this.notiService
+                .alertCode(
+                  'AC0003',
+                  null,
+                  `'${this.cashTransfer.voucherNo}'`,
+                  `'${autoNumber}'`
+                )
+                .subscribe((res) => {
+                  console.log(res);
+                  if (res.event.status === 'Y') {
+                    this.form.formGroup.patchValue({ voucherNo: autoNumber });
+                    this.save(closeAfterSaving);
+                  }
+
+                  return;
+                });
+            });
+        } else {
+          this.save(closeAfterSaving);
+        }
+      });
+    } else {
+      this.save(closeAfterSaving);
+    }
+  }
+  //#endregion
+
+  //#region Method
+  save(closeAfterSaving: boolean): void {
     this.dialogRef.dataService
       .save((req: RequestOption) => {
-        req.methodName =
-          this.dialogData.data.formType === 'add'
-            ? 'AddCashTransferAsync'
-            : 'UpdateCashTransferAsync';
+        req.methodName = !this.isEdit
+          ? 'AddCashTransferAsync'
+          : 'UpdateCashTransferAsync';
         req.className = 'CashTranfersBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
@@ -261,20 +352,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
       });
   }
 
-  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.page = 1;
-    dataRequest.pageSize = pageSize;
-    return this.api.execSv(
-      'AC',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      [dataRequest]
-    );
-  }
-
   crudVatInvoice(methodName: string, vatInvoice: IVATInvoice) {
     this.api
       .exec('AC', 'VATInvoicesBusiness', methodName, vatInvoice)
@@ -285,16 +362,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  getCashBookNameById(id: string): string {
-    return this.cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
-  }
-
-  toPascalCase(camelCase: string): string {
-    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-  }
-
-  toCamelCase(camelCase: string): string {
-    return camelCase.charAt(0).toLowerCase() + camelCase.slice(1);
+  getCashBookNameById(cashBooks: any[], id: string): string {
+    return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
   }
 
   validateVATInvoice(gvsVATInvoices, vatInvoice): boolean {
@@ -304,7 +373,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
         console.log(prop);
         if (
           gvsVATInvoices[prop].datatype === 'String' &&
-          !vatInvoice[this.toCamelCase(prop)]?.trim()
+          !vatInvoice[this.acService.toCamelCase(prop)]?.trim()
         ) {
           this.notiService.notifyCode(
             'SYS009',

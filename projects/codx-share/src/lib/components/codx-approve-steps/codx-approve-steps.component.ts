@@ -326,7 +326,7 @@ export class CodxApproveStepsComponent
           }
         }
         if (this.type == '0') {
-          this.notifySvr.notifyCode('RS002');
+          this.notifySvr.notifyCode('DP007');
           this.addEditItem.emit(true);
         }
       }

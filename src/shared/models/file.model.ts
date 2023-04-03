@@ -74,8 +74,9 @@ export class FileInfo {
     bookmarks: any;
     excerpts: string;
     relation: string;
-    source: string;
+    source: string = "";
     countDownload: any;
+    childID:any
 }
 
 export class ItemInterval {
@@ -94,9 +95,9 @@ export class FileUpload {
     order: any;
     isSystem: any;
     recID: string;
-    title: string;
-    relation: string;
-    source: string;
+    title: string = "";
+    relation: string = "";
+    source: string = "";
     fileName: string;
     avatar: any;
     thumbnail: string;
@@ -104,7 +105,7 @@ export class FileUpload {
     createdBy: string;
     createdByName: string;
     referType: string;
-    createdOn: any;
+    createdOn: Date;
     extension: string;
     category: string;
     fileSize: any;
@@ -126,24 +127,24 @@ export class FileUpload {
     data: any;
     item: any;
     folderID: string;
-    approval: any;
-    revision: any;
-    checkSecurity: any;
-    physical: any;
-    copyrightsControl: any;
-    location: any;
-    approvers: any;
+    approval: boolean = false;
+    revision: boolean = false;
+    checkSecurity: boolean = false;
+    physical: boolean = false;
+    copyrightsControl: boolean = false;
+    location: string = "";
+    approvers: string = "";
     revisionNote: any;
     bookmarks: Bookmark[];
     permissions: Permission[];
-    form: any; // share or request permission
-    titleEmail: string;
-    contentEmail: string;
+    form: string = ""; // share or request permission
+    titleEmail: string = "";
+    contentEmail: string = "";
     funcID: string;
-    folderType: any;
-    version: any;
-    urlShare: string;
-    excerpts: string;
+    folderType: string = "";
+    version: string = "";
+    urlShare: string = "";
+    excerpts: string = "";
     toPermission: Permission[];
     byPermission: Permission[];
     ccPermission: Permission[];
@@ -154,20 +155,20 @@ export class FileUpload {
     reWrite: boolean;
     sendEmail: boolean;
     postBlog: boolean;
-    urlPath: string;
-    note: string;
-    icon: string;
-    comment: string;
-    userName: string;
-    read: any;
-    create: any;
-    delete: any;
-    share: any;
-    download: any;
-    upload: any;
-    assign: any;
-    write: any;
-    viewThumb:any;
+    urlPath: string = "";
+    note: string = "";
+    icon: string = "";
+    comment: string = "";
+    userName: string = "";
+    read: boolean;
+    create: boolean;
+    delete: boolean;
+    share: boolean;
+    download: boolean;
+    upload: boolean;
+    assign: boolean;
+    write: boolean;
+    viewThumb:boolean = false;
     rawFile:any
 }
 
@@ -238,7 +239,7 @@ export class Permission {
     objectName: string;
     objectID: string;
     objectType: string;
-    approvers: string;
+    approvers: string ;
     type: string;
     email: string;
     typeId: string;

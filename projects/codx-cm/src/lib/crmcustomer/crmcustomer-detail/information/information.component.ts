@@ -8,7 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class InformationComponent implements OnInit {
 
   @Input() funcID = 'CM0101'; //True - Khách hàng; False - Liên hệ
-
+  @Input() dataSelected: any;
+  @Input() formModel: any;
   constructor() { }
 
   ngOnInit(): void {

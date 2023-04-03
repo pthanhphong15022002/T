@@ -172,7 +172,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   selectItemSeach(item: any) {
     if(item.type != 'H'){
       item.type = item.type == 'U' ? '1':'2';
-      this.signalRSV.sendData(item,"GetGroupSearch");
+      this.signalRSV.sendData("GetGroupSearch",item);
     }
   }
 

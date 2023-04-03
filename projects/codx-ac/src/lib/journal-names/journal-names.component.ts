@@ -10,6 +10,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { JournalService } from './journal-names.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
 @Component({
@@ -21,7 +22,6 @@ export class JournalNamesComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  testimg = 'UyNhiemChi.svg';
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -30,7 +30,8 @@ export class JournalNamesComponent extends UIComponent {
   constructor(
     inject: Injector,
     private route: Router,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private journalService: JournalService
   ) {
     super(inject);
   }
@@ -81,7 +82,7 @@ export class JournalNamesComponent extends UIComponent {
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
         urlRedirect += func.url;
         this.route.navigate([urlRedirect], {
-          queryParams: { recID: data.recID },
+          queryParams: { recID: data.recID, journalNo: data.journalNo },
         });
       }
     });
@@ -92,31 +93,43 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    this.view.dataService.addNew().subscribe(() => {
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
+    this.view.dataService
+      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync'))
+      .subscribe((res) => {
+        console.log(res);
+        const options = new SidebarModel();
+        options.Width = '800px';
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
 
-      this.callfc.openSide(
-        PopupAddJournalComponent,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
-    });
+        this.callfc.openSide(
+          PopupAddJournalComponent,
+          {
+            formType: 'add',
+            formTitle: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        );
+      });
   }
 
   edit(e, data): void {
     console.log('edit', { data });
 
     this.api
-      .exec('ERM.Business.AC', 'JournalsBusiness', 'IsEditableAsync', data.recID)
+      .exec(
+        'ERM.Business.AC',
+        'JournalsBusiness',
+        'IsEditableAsync',
+        data.recID
+      )
       .subscribe((res) => {
         if (res) {
+          if (data.dataValue) {
+            data = { ...data, ...JSON.parse(data.dataValue) };
+          }
+
           this.view.dataService.dataSelected = data;
           this.view.dataService.edit(data).subscribe(() => {
             const options = new SidebarModel();
@@ -138,7 +151,31 @@ export class JournalNamesComponent extends UIComponent {
       });
   }
 
-  copy(e, ata): void {}
+  copy(e, data): void {
+    console.log('copy', data);
+
+    if (data.dataValue) {
+      data = { ...data, ...JSON.parse(data.dataValue) };
+    }
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+
+      this.callfc.openSide(
+        PopupAddJournalComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
 
   delete(data): void {
     console.log('delete', data);
@@ -149,12 +186,18 @@ export class JournalNamesComponent extends UIComponent {
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
-        req.data = data;
+        req.data = data.recID;
 
         return true;
       })
       .subscribe((res: any) => {
         console.log(res);
+
+        if (res) {
+          this.journalService
+            .deleteAutoNumber(data.recID)
+            .subscribe((res) => console.log(res));
+        }
       });
   }
   //#region Method

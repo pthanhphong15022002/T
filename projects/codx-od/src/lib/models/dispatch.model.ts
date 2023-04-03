@@ -41,7 +41,10 @@ class forwarDis
     userID         : string;
     comment        : string;
     sendMail       : boolean;
-    inforSentEMail : inforSentEMail 
+    inforSentEMail : inforSentEMail;
+    funcID         : string;
+    referType      : string;
+    entityName     : string;
 }
 
 //Cập nhật tiến độ

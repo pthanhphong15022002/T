@@ -33,7 +33,7 @@
   </div>
   <div class="form-group">
     <codx-label fiedName="OnlineUrl" default="Đường dẫn" [formModel]="dialogRef.formModel"></codx-label>
-    <codx-input class="form-control" type="text" [disabled]="meetingUrl != null" [crrValue]="meetingUrl">
+    <codx-input class="form-control" type="text" [disabled]="meetingUrl != null" [crrValue]="meetingUrl" (valueChange)="urlChange($event)">
     </codx-input>
   </div>
 </div>

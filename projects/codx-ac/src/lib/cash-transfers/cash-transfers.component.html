@@ -3,9 +3,10 @@
   idField="recID"
   [views]="views"
   [button]="btnAdd"
-  funcID="ACT0422"
   service="AC"
   entityName="AC_CashTranfers"
+  predicates="JournalNo=@0"
+  [dataValues]="journalNo"
   (buttonClick)="handleClickAdd($event)"
 >
 </codx-views>

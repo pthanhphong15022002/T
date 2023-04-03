@@ -634,24 +634,26 @@
             </div>
             <div id="{{ haveTitle? item.recID: 'v-'+item.recID }}" class="show-main" cdkDropList [cdkDropListData]="item?.fields || []"
               (cdkDropListDropped)="dropCustomFile($event, item.recID)">
-              <div *ngIf="!item?.fields || item?.fields?.length == 0" class="position-relative p-9">
-                <div class="position-absolute top-50 start-50 translate-middle" cdkDrag [cdkDragDisabled]="true"
-                  [cdkDragData]="null">
-                  <button type="button" class="btn btn-outline-primary"
-                    (click)="addCustomField(item.recID, item.processID)">
-                    <i class="icon-add icon-18 text-primary"></i>
-                    <codx-label [name]="'lblAddCustomField'" [formName]="'DPStepsFields'"
-                      [gridViewName]="'grvDPStepsFields'" [default]="'Thêm trường tùy chỉnh'"></codx-label>
-                  </button>
+              <div *ngIf="!item?.fields || item?.fields?.length == 0" class="p-6">
+                <div class="d-flex align-items-center justify-content-center w-100">
+                  <div cdkDrag [cdkDragDisabled]="true"
+                    [cdkDragData]="null">
+                    <button type="button" class="btn btn-outline-primary"
+                      (click)="addCustomField(item.recID, item.processID)">
+                      <i class="icon-add icon-18 text-primary"></i>
+                      <codx-label [name]="'lblAddCustomField'" [formName]="'DPStepsFields'"
+                        [gridViewName]="'grvDPStepsFields'" [default]="'Thêm trường tùy chỉnh'"></codx-label>
+                    </button>
+                  </div>
                 </div>
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field mx-0 row">
+                <div class="class-field p-6 row">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div class="col-{{
                         12 / item.showColumnControl
-                      }} has-action-menu crr-fiels p-3" cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="item1">
+                      }} has-action-menu crr-fiels" cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="item1">
                       <!-- <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">
                         {{ item1?.title }} ( {{ item1?.fieldName }} )
                       </div>
@@ -1156,10 +1158,10 @@
         </codx-input>
       </div>
     </div>
-    
   </div>
-
+<hr />
   <div class="form-group mt-5">
+
     <codx-label fiedName="icon" [formModel]="grvStep" default="Demo:" class="me-4">
     </codx-label>
     <div [ngStyle]="{ background: stepNew?.backgroundColor }" class="d-flex align-items-center box-demo">
@@ -1474,8 +1476,8 @@
         </div>
       </div>
     </div>
-    <div id="role-setup-step" class="main-job px-5" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="row mt-3">
+    <div id="role-setup-step" class="main-job p-6" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+      <div class="row">
         <div class="col-6">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
@@ -1760,15 +1762,15 @@
             <div class="d-flex align-items-center">
               <div class="me-5">
                 <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="step.leadtimeControl" [crrValue]="step.leadtimeControl"
+                  [label]="titleRadioYes" [checked]="true" [crrValue]="step?.leadtimeControl"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="!step.leadtimeControl"
-                  [crrValue]="step.leadtimeControl" [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
-                </codx-input>
+                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="!step?.leadtimeControl"
+                [crrValue]="step?.leadtimeControl" [label]="titleRadioNo"
+                (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+              </codx-input>
               </div>
             </div>
           </div>
@@ -1777,7 +1779,7 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
-              <codx-label fiedName="" default="Cho phép người phụ trách cập nhật tiến độ giai đoạn">
+              <codx-label fiedName="ProgressTaskGroupControl" default="Cho phép người phụ trách cập nhật tiến độ giai đoạn">
               </codx-label>
             </div>
             <div class="text-gray-600">
@@ -1789,14 +1791,15 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="" [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formStepsRoleCtrl" field="yes" [checked]="step.progressStepControl"
+                  [crrValue]="step.progressStepControl" [label]="titleRadioYes"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
-                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formStepsRoleCtrl" field="no" [checked]="!step.progressStepControl"
+                  [crrValue]="step.progressStepControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)">
                 </codx-input>
               </div>
             </div>
@@ -1819,14 +1822,15 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="me-5">
-                <codx-input [name]="formLeaTimeCtrl" type="radio" style="width: 100%" field="yes"
-                  [label]="titleRadioYes" [checked]="" [crrValue]=""
-                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formTaskRoleCtrl" field="yes" [checked]="step.progressTaskGroupControl"
+                  [crrValue]="step.progressTaskGroupControl" [label]="titleRadioYes"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)">
                 </codx-input>
               </div>
               <div class="me-5">
-                <codx-input type="radio" [name]="formLeaTimeCtrl" field="no" [checked]="" [crrValue]=""
-                  [label]="titleRadioNo" (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)">
+                <codx-input type="radio" [name]="formTaskRoleCtrl" field="no" [checked]="!step.progressTaskGroupControl"
+                  [crrValue]="step.progressTaskGroupControl" [label]="titleRadioNo"
+                  (valueChange)="valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)">
                 </codx-input>
               </div>
             </div>

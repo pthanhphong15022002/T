@@ -7,6 +7,7 @@ import {
   Component,
   Input,
   OnInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CacheService,
@@ -23,14 +24,14 @@ import {
 })
 export class OkrTreesComponent implements OnInit, AfterViewInit {
   @Input() funcID:any;
-  @Input() planRecID:any;
+  @Input() dataOKRPlans:any;
   @Input() okrFM:any;
   @Input() okrVll:any;
+  @Input() orgUnitTree:any;
   dataTree: any;
   listDistribute: any;
   isAfterRender: boolean;
   curUser: any;
-  orgUnitTree: any;
   openAccordionAlign=[];
   constructor(
     private callfunc: CallFuncService,
@@ -40,17 +41,16 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
     private notificationsService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-  ) {
-
-    
+  ) {    
     this.curUser = authStore.get();
   }
   //_______________________Base Func_________________________//
   ngOnInit(): void {
+    
+    this.getOrgTreeOKR();
   }
   ngAfterViewInit() {
     
-    this.getOKRAssign();
   }
 
   //-----------------------End-------------------------------//
@@ -66,7 +66,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   //-----------------------End-------------------------------//
 
   //_______________________Get Data Func_____________________//
-  getOKRAssign() {
+  getOrgTreeOKR() {
     if (this.curUser?.employee != null) {
       let tempOrgID = '';
       let okrLevel='';
@@ -88,7 +88,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
           okrLevel =OMCONST.VLL.OKRLevel.PERS;
           break;
       }
-      this.codxOmService.getOrgTreeOKR(this.planRecID,tempOrgID).subscribe((listOrg: any) => {
+      this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,tempOrgID).subscribe((listOrg: any) => {
         if (listOrg) {          
 
             this.orgUnitTree=[listOrg];
@@ -116,9 +116,9 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   //_______________________Custom Func_______________________//
   getItemOKRAlign(i: any, recID: any) {
     this.openAccordionAlign[i] = !this.openAccordionAlign[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    // if(this.dataOKR[i].items && this.dataOKR[i].items.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
+    //     if(item) this.dataOKR[i].items = item
     //   });
   }
   //-----------------------End-------------------------------//

@@ -1,15 +1,33 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Pipe,
+  PipeTransform,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ButtonModel,
-  DataRequest, RequestOption,
+  DataRequest,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType
+  ViewType,
 } from 'codx-core';
 import { map, Observable } from 'rxjs';
+import { CodxAcService } from '../codx-ac.service';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
+
+@Pipe({
+  name: 'nameById',
+})
+export class NameByIdPipe implements PipeTransform {
+  transform(data: any[], id: string, key: string, value: string) {
+    return data?.find((d) => d?.[key] === id)?.[value];
+  }
+}
 
 @Component({
   selector: 'lib-items',
@@ -29,12 +47,14 @@ export class ItemsComponent extends UIComponent {
   functionName: string;
 
   // combobox data
-  warehouses: any[];
-  locations: any[];
-  inventoryModels: any[];
-  dimGroups: any[];
+  inventoryModels: any[] = [];
+  dimGroups: any[] = [];
 
-  constructor(private inject: Injector, private itemsService: ItemsService) {
+  constructor(
+    private inject: Injector,
+    private itemsService: ItemsService,
+    private acService: CodxAcService
+  ) {
     super(inject);
   }
   //#endregion
@@ -52,33 +72,17 @@ export class ItemsComponent extends UIComponent {
       )
       .subscribe((res) => (this.functionName = res));
 
-    this.loadComboboxData('Warehouses').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.warehouses = JSON.parse(res[0]);
-      }
-    });
+    this.acService
+      .loadComboboxData('InventoryModels', 'IV')
+      .subscribe((res) => {
+        this.inventoryModels = res;
+      });
 
-    this.loadComboboxData('WarehouseLocations').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.locations = JSON.parse(res[0]);
-      }
-    });
-
-    this.loadComboboxData('InventoryModels').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.inventoryModels = JSON.parse(res[0]);
-      }
-    });
-
-    this.loadComboboxData('DimensionGroups').subscribe((res) => {
-      if (res) {
-        console.log(JSON.parse(res[0]));
-        this.dimGroups = JSON.parse(res[0]);
-      }
-    });
+    this.acService
+      .loadComboboxData('DimensionGroups', 'IV')
+      .subscribe((res) => {
+        this.dimGroups = res;
+      });
   }
 
   ngAfterViewInit() {
@@ -99,10 +103,25 @@ export class ItemsComponent extends UIComponent {
         sameData: true,
         model: {
           resources: [
-            { width: '35%', headerText: 'Item Header', field: 'itemHeader' },
-            { width: '35%',  headerText: 'Inventory Header', field: 'inventoryHeader' },
-            { width: '15%',  headerText: 'Unit Conversion Header', field:'itemHeader' },
-            { width: '15%',  headerText: 'Status Header',field:'statusHeader' },
+            {
+              width: '33%',
+              headerTemplate: this.header1,
+              headerText: 'Item Header',
+              field: 'itemHeader',
+            },
+            {
+              width: '33%',
+              headerTemplate: this.header2,
+              headerText: 'Inventory Header',
+              field: 'inventoryHeader',
+            },
+            {
+              width: '33%',
+              headerTemplate: this.header3,
+              headerText: 'Dim Header',
+              field: 'dimHeader',
+            },
+            { width: '1%', field: 'statusHeader', headerText: '' },
           ],
           template: this.itemTemplate,
         },
@@ -248,38 +267,8 @@ export class ItemsComponent extends UIComponent {
         }
       });
   }
-
-  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.page = 1;
-    dataRequest.pageSize = pageSize;
-    return this.api.execSv(
-      'IV',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      [dataRequest]
-    );
-  }
   //#endregion
 
   //#region Function
-  getWarehouseNameById(id: string): string {
-    return this.warehouses?.find((w) => w.WarehouseID === id)?.WarehouseName;
-  }
-
-  getLocationNameById(id: string): string {
-    return this.locations?.find((w) => w.LocationID === id)?.LocationName;
-  }
-
-  getInventoryModelById(id: string): string {
-    return this.inventoryModels?.find((w) => w.InventModelID === id)
-      ?.InventModelName;
-  }
-
-  getDimGroupNameById(id: string): string {
-    return this.dimGroups?.find((w) => w.DimGroupID === id)?.DimGroupName;
-  }
   //#endregion
 }

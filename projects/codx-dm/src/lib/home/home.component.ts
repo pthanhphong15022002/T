@@ -426,6 +426,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     //RefeshData
     this.dmSV.isRefeshData.subscribe(res=>{
+      debugger
       if(res)
       {
         this.refeshData();

@@ -237,7 +237,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (
         this.functionID == 'TMT0203' ||
         this.functionID == 'MWP0062' ||
-        this.functionID == 'OMT013'
+        this.functionID == 'OMT014'
       ) {
         this.task.category = '3';
       } else {
@@ -249,7 +249,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (
         this.functionID == 'TMT0203' ||
         this.functionID == 'MWP0062' ||
-        this.functionID == 'OMT013'
+        this.functionID == 'OMT014'
       ) {
         this.task.category = '3';
       } else {

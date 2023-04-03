@@ -151,6 +151,14 @@ import { CodxBookingRoomScheduleContentComponent } from './components/codx-booki
 import { CountChartComponent } from './components/codx-dashboard/template-chart/count-chart/count-chart.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TopChartComponent } from './components/codx-dashboard/template-chart/top-chart/top-chart.component';
+import { CodxTmmeetingsComponent } from './components/codx-tmmeetings/codx-tmmeetings.component';
+import { ViewListMeetComponent } from './components/codx-tmmeetings/view-list-meet/view-list-meet.component';
+import { PopupAddMeetingComponent } from './components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { TemplateComponent } from './components/codx-tmmeetings/template/template.component';
+import { PopupStatusMeetingComponent } from './components/codx-tmmeetings/popup-status-meeting/popup-status-meeting.component';
+import { PopupRescheduleMeetingComponent } from './components/codx-tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
+import { PopupAddResourcesComponent } from './components/codx-tmmeetings/popup-add-resources/popup-add-resources.component';
+import { MeetingDetailComponent } from './components/codx-tmmeetings/meeting-detail/meeting-detail.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -257,6 +265,15 @@ const T_Component: Type<any>[] = [
   CodxBookingRoomScheduleContentComponent,
   CountChartComponent,
   TopChartComponent,
+  //meetings
+  CodxTmmeetingsComponent,
+  ViewListMeetComponent,
+  PopupAddMeetingComponent,
+  TemplateComponent,
+  PopupStatusMeetingComponent,
+  PopupRescheduleMeetingComponent,
+  PopupAddResourcesComponent,
+  MeetingDetailComponent
 ];
 
 const T_Pipe: Type<any>[] = [

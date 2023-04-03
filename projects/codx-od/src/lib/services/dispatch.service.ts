@@ -191,9 +191,9 @@ export class DispatchService implements OnDestroy {
   }
 
   //Chia sẻ văn bản
-  shareDispatch(obj: permissionDis , referType:any)
+  shareDispatch(obj: permissionDis , referType:any , entityName:string)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', [obj , referType]);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ShareDispatchAsync', [obj , referType,entityName]);
   }
 
   //Thu hồi quyền chia sẻ của user
@@ -207,9 +207,9 @@ export class DispatchService implements OnDestroy {
     return this.api.exec<any>('OD', 'DispatchesBusiness', 'RecallRelationAsync', resID);
   }
   //Chuyển tiếp công văn
-  forwardDispatch(recID:any , obj: forwarDis , funcID:string)
+  forwardDispatch(recID:any , obj: forwarDis)
   {
-    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ForwardDispatchAsync', [recID,obj,funcID]);
+    return this.api.exec<any>('OD', 'DispatchesBusiness', 'ForwardDispatchAsync', [recID,obj]);
   }
 
   //Cập nhật kết quả
@@ -223,9 +223,9 @@ export class DispatchService implements OnDestroy {
      return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj]);
    }
     //cập nhật công văn
-    updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean , referType: string)
+    updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean , referType: string , entityName: string)
     {
-      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj , funcID ,isDlFile,referType]);
+      return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateDispatchAsync', [obj , funcID ,isDlFile,referType,entityName]);
     }
 
    //Add link
@@ -320,5 +320,9 @@ export class DispatchService implements OnDestroy {
     {
       return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [funcID , entityName , key])
     }
-    
+    //send mail
+    sendMail2(dataRq : DataRequest , recID:string)
+    {
+      return this.api.execSv<any>('OD','OD','DispatchesBusiness','SendMailAsync', [dataRq , recID])
+    }
 }

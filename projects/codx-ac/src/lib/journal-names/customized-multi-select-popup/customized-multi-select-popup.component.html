@@ -9,8 +9,16 @@
 </codx-form>
 
 <ng-template #body>
-  <div *ngFor="let c of dimControls$ | async" class="mb-3">
-    <!-- <codx-input type="checkbox"></codx-input> -->
+  <div *ngFor="let d of dimControls$ | async" class="mb-3">
+    <codx-input
+      type="checkbox"
+      class="check-circle"
+      [label]="d.text"
+      [checked]="d.checked"
+      [disabled]="d.disabled"
+      field="dim"
+      (valueChange)="handleChange($event, d)"
+    ></codx-input>
   </div>
 </ng-template>
 

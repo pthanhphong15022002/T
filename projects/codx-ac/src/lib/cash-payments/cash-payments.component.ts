@@ -11,14 +11,17 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
   RequestOption,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { of } from 'rxjs';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 
@@ -63,8 +66,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -103,6 +105,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'SYS04':
         this.copy(e, data);
         break;
+      case 'SYS002':
+        this.export(data);
+        break;
     }
   }
   //#endregion
@@ -123,19 +128,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'add',
           headerText: this.headerText,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }
@@ -151,19 +152,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'edit',
           headerText: this.funcName,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }
@@ -179,19 +176,15 @@ export class CashPaymentsComponent extends UIComponent {
           formType: 'copy',
           headerText: this.funcName,
         };
-        let option = new DialogModel();
+        let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
-        this.dialog = this.callfunc.openForm(
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
-          '',
-          null,
-          null,
-          this.view.funcID,
           obj,
-          '',
-          option
+          option,
+          this.view.funcID
         );
       });
   }
@@ -220,12 +213,36 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
+
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashPaymentsBusiness';
     opt.assemblyName = 'AC';
     opt.service = 'AC';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
   //#endregion

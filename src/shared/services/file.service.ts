@@ -166,9 +166,9 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
-    addMultiFileObservable(list: FileUpload[] , entityName:string , isDM: boolean = false  , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = "" ): Observable<DataReturn[] | null> {
+    addMultiFileObservable(list: FileUpload[] , actionType: string , entityName:string , isDM: boolean = false  , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = "" ): Observable<DataReturn[] | null> {
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM ,folder,folderID,folderName,parentID,idField,entityName]).pipe(
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM ,folder,folderID,folderName,parentID,idField,entityName,actionType]).pipe(
             map(data => {
                 return data;                
             }),
@@ -179,11 +179,11 @@ export class FileService implements OnDestroy {
         );
     }
 
-    addMultiFile(list: FileUpload[] , entityName:string , isDM: boolean = false ,  folder:object = null , folderID: string = "" , folderName: string = "", parentID:string= "" , idField:string = "" ): Observable<DataReturn[]> {
+    addMultiFile(list: FileUpload[] , actionType: string , entityName:string , isDM: boolean = false ,  folder:object = null , folderID: string = "" , folderName: string = "", parentID:string= "" , idField:string = "" ): Observable<DataReturn[]> {
         //var bytes = new Int8Array(data as ArrayBuffer);
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField,entityName]);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField,entityName,actionType]);
     }
 
     UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean , funcID: string = ""): Observable<any> {
@@ -229,14 +229,14 @@ export class FileService implements OnDestroy {
     }
 
     //Observable<any>
-    addFile(file: FileUpload , entityName:string , isDM : boolean = false , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string = ""  , idField:string = "" , ): Observable<any> {
+    addFile(file: FileUpload , actionType: string , entityName:string , isDM : boolean = false , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string = ""  , idField:string = "" , ): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName]);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName , actionType]);
     }
 
-    addFileObservable(file: FileUpload , entityName:string , isDM:boolean = false , folder:object = null , folderID: string = "" , folderName: string = "", parentID:string = "" , idField:string = ""): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName]).pipe(
+    addFileObservable(file: FileUpload , actionType: string , entityName:string , isDM:boolean = false , folder:object = null , folderID: string = "" , folderName: string = "", parentID:string = "" , idField:string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField,entityName,actionType]).pipe(
             map(data => {
                 return data;                
             }),

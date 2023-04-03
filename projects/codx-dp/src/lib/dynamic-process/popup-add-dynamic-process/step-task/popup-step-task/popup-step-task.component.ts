@@ -190,21 +190,20 @@ export class PopupJobComponent implements OnInit {
     this.owner = owner;
   }
 
-  changeRoler(e, datas, type) {
+  changeRoler(e, datas, type) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
+    let listRole = [];
     listUser.forEach((element) => {
-      if (!datas.some((item) => item.objectID == element.objectID)) {
-        datas?.shift();
-        datas.push({
+        listRole.push({
           objectID: element.objectID,
           objectName: element.objectName,
           objectType: element.objectType,
           roleType: type,
           taskID: this.stepsTasks['recID'],
         });
-      }
     });
+    this.participant = listRole;
   }
 
   onDeleteOwner(objectID, data) {
@@ -332,7 +331,6 @@ export class PopupJobComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    console.log(e);
   }
 
   getfileCount(e) {

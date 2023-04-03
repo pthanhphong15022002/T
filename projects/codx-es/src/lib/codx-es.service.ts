@@ -159,16 +159,14 @@ export class CodxEsService {
   }
 
   //#region Get from FunctionList
-  getDataDefault(
-    funcID: string,
-    entityName: string,
-    idField: string
-  ): Observable<object> {
-    return this.api.execSv('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
 
   setCacheFormModel(formModel: FormModel) {
@@ -545,7 +543,7 @@ export class CodxEsService {
   //#endregion
 
   //#region AD_AutoNumberDefaults
-  getAutoNumberDefaults(functionID: string){
+  getAutoNumberDefaults(functionID: string) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
@@ -555,7 +553,7 @@ export class CodxEsService {
     );
   }
 
-  updateAutoNumberDefaults(data: any){
+  updateAutoNumberDefaults(data: any) {
     return this.api.execSv<any>(
       'SYS',
       'AD',

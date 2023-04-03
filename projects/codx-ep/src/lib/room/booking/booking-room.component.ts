@@ -678,7 +678,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           .subscribe((booking) => {
             if (booking) {
               this.view.dataService.edit(booking).subscribe((res) => {
-                this.popupClosed = false;
                 let option = new SidebarModel();
                 option.Width = '800px';
                 this.view.dataService.dataSelected = booking;
@@ -711,7 +710,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 this.popupClosed = false;
                 let option = new SidebarModel();
                 option.Width = '800px';
-                this.view.dataService.dataSelected = booking;
+                this.view.dataService.dataSelected = res;
                 option.DataService = this.view?.dataService;
                 option.FormModel = this.formModel;
                 let dialogCopy = this.callFuncService.openSide(

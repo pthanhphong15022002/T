@@ -15,6 +15,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
@@ -46,10 +47,10 @@ export class AddApproversComponent extends UIComponent {
   isTemp = true;
   lstChangeFunc: tmpTNMD[] = [];
   lstRoles: tmpformChooseRole[] = [];
-
   //#region Roles
   dialogRoles: DialogRef;
   //#endregion
+  date = new Date();
   constructor(
     private inject: Injector,
     // private api: ApiHttpService,
@@ -73,6 +74,8 @@ export class AddApproversComponent extends UIComponent {
 
   //#region ViewChild
   @ViewChild('form', { static: true }) form;
+  @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
+
   //#endregion
 
   //#region  Init
@@ -194,6 +197,13 @@ export class AddApproversComponent extends UIComponent {
           this.master.memberIDs = res[1];
           // this.dialog.dataService.update(this.master).subscribe((res2) => {
           this.dialog.close(this.master);
+          this.imageUpload
+          .updateFileDirectReload(this.master.recID)
+          .subscribe((result) => {
+            if (result) {
+              console.log('res', result);
+            }
+          });
           // });
         } else {
           this.dialog.dataService.hasSaved = true;
@@ -207,7 +217,7 @@ export class AddApproversComponent extends UIComponent {
 
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
-
+   
     if (this.members?.length > 0) {
       let lstMemID = [];
       this.members?.forEach((mem) => {

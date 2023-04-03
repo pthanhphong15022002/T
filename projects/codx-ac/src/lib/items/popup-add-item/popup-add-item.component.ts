@@ -17,6 +17,7 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
+import { CodxAcService } from '../../codx-ac.service';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
 import { ItemSize } from '../interfaces/ItemSize.interface';
@@ -125,6 +126,7 @@ export class PopupAddItemComponent
     private injector: Injector,
     private notiService: NotificationsService,
     private itemsService: ItemsService,
+    private acService: CodxAcService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
@@ -485,7 +487,7 @@ export class PopupAddItemComponent
     // console.log(this.itemsProduction);
 
     if (
-      !this.itemsService.validateFormData(
+      !this.acService.validateFormData(
         this.form.formGroup,
         this.gridViewSetup,
         ['UMID']

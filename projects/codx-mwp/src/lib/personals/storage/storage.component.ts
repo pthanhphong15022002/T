@@ -34,8 +34,6 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
-import { StorageServices } from '../../services/storage.services';
-import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 @Component({
   selector: 'app-storage',
@@ -63,7 +61,8 @@ export class StorageComponent
   checkDESC = false;
   gridViewSetup: any = [];
   dataService: CRUDService;
-
+  predicatePortal = '(Category = @0 || Category = @1 || Category = @2) && (ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5)) && Stop = false && RecID.Contains(@6)';
+  dataValuePortal = '1;3;4;0;1;5;';
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
   @ViewChild('detail', { read: ViewContainerRef }) detail!: ViewContainerRef;
@@ -225,65 +224,15 @@ export class StorageComponent
     this.checkFormComment = true;
     this.detail = null;
     this.detectorRef.detectChanges();
-
     var arr: any = new Array();
     if (e?.details) {
       for (let i = 0; i < e?.details?.length; i++) {
         arr.push(e?.details[i]?.refID);
       }
     }
-    var formModel = {
-      entityName: 'WP_Comments',
-      entityPermission: 'WP_Comments',
-      gridViewName: 'grvWPComments',
-      formName: 'WPComments',
-      funcID: 'WP',
-    };
-    this.a = this.detail.createComponent(ListPostComponent);
-    this.a.instance.dataService = null;
-    this.a.instance.isShowCreate = false;
-    this.a.instance.formModel = formModel;
-    this.a.instance.moreFunc = true;
-    this.a.instance.moreFuncTmp = this.moreFC;
-    if (arr?.length == 0) {
-      this.generateGuid();
-      this.dataService.predicate = `(RecID="${this.guidID}")`;
-      this.a.instance.dataService = this.dataService;
-      let myInterval = setInterval(() => {
-        if (this.a.instance.listview) {
-          clearInterval(myInterval);
-          (this.a.instance.listview?.dataService as CRUDService).data = null;
-          (this.a.instance.listview?.dataService as CRUDService).predicate =
-            this.dataService.predicate;
-          (this.a.instance.listview?.dataService as CRUDService).dataValue =
-            null;
-          this.a.instance.listview?.dataService
-            .setPredicate(this.dataService.predicate, [null])
-            .subscribe((res) => {
-              this.detectorRef.detectChanges();
-            });
-        }
-      }, 200);
-    } else {
-      this.dataService.predicates = `(@0.Contains(RecID))`;
-      this.dataService.dataValues = `[${arr.join(';')}]`;
-      this.a.instance.dataService = this.dataService;
-      let myInterval = setInterval(() => {
-        if (this.a.instance.listview) {
-          clearInterval(myInterval);
-          (this.a.instance.listview?.dataService as CRUDService).data = null;
-          (this.a.instance.listview?.dataService as CRUDService).predicates =
-            this.dataService.predicates;
-          (this.a.instance.listview?.dataService as CRUDService).dataValues =
-            this.dataService.dataValues;
-          this.a.instance.listview?.dataService
-            .setPredicate(this.predicate, [this.dataValue])
-            .subscribe((res) => {
-              this.detectorRef.detectChanges();
-            });
-        }
-      }, 200);
-    }
+    // if (arr?.length == 0) {
+    //   this.dataValuePortal += `[${arr.join(';')}]`;
+    // }
   }
 
   guidID: any;
