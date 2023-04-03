@@ -53,7 +53,7 @@
         <ng-container *ngFor="let item of data.contacts">
           <div *ngIf="item.contactType == '1'" class="d-flex">
             <div class="me-3">
-              <codx-img [objectId]="item.recID" [objectName]="getNameCrm(data)" [objectType]="entityName" [width]="35">
+              <codx-img [objectId]="item.recID" [objectName]="item.contactName" [objectType]="'CM_Contacts'" [width]="35">
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
