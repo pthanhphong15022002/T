@@ -40,6 +40,7 @@ export class CodxViewApprovalStepComponent
 
   formModel: FormModel;
   fmApprovalTrans: FormModel;
+  fmApprovalStep: FormModel;
   gridViewSetup: any = {};
 
   positionDefault: string;
@@ -69,18 +70,18 @@ export class CodxViewApprovalStepComponent
       if (this.lstSttApproveStep.includes(this.approveStatus)) {
         this.esService.getFormModel('EST04').then((res) => {
           if (res) {
-            let fmApprovalStep = res;
+            this.fmApprovalStep = res;
             let gridModels = new DataRequest();
             gridModels.dataValue = this.transID;
             gridModels.predicate = 'TransID=@0';
-            gridModels.funcID = fmApprovalStep.funcID;
-            gridModels.entityName = fmApprovalStep.entityName;
-            gridModels.gridViewName = fmApprovalStep.gridViewName;
+            gridModels.funcID = this.fmApprovalStep.funcID;
+            gridModels.entityName = this.fmApprovalStep.entityName;
+            gridModels.gridViewName = this.fmApprovalStep.gridViewName;
             gridModels.pageLoading = false;
-            gridModels.srtColumns = "StepNo";
+            gridModels.srtColumns = 'StepNo';
             gridModels.srtDirections = 'asc';
 
-            if(gridModels.dataValue != null) {
+            if (gridModels.dataValue != null) {
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
                 if (res && res?.length >= 0) {
                   this.process = res;
@@ -91,6 +92,9 @@ export class CodxViewApprovalStepComponent
           }
         });
       } else {
+        this.esService.getFormModel('EST04').then((res) => {
+          if (res) this.fmApprovalTrans = res;
+        });
         this.esService
           .getApprovalTransByTransID(this.transID)
           .subscribe((res) => {
