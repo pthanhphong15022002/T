@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -23,6 +24,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { firstValueFrom } from 'rxjs';
+import { CM_Tasks_Roles } from '../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-popup-task',
@@ -40,6 +42,9 @@ export class PopupTaskComponent implements OnInit {
   task = {};
   parentID = '';
   action = '';
+
+  user: any;
+  userID = '';
 
   formModelMenu: FormModel;
   stepType = '';
@@ -74,6 +79,7 @@ export class PopupTaskComponent implements OnInit {
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -87,6 +93,8 @@ export class PopupTaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFormModel();
+    this.user = this.authStore.get();
+    this.userID = this.user?.userID;
   }
   // common
   valueChangeText(event) {
@@ -215,16 +223,28 @@ export class PopupTaskComponent implements OnInit {
 
   async handlSaveTask() {
     if (this.checkRequire()) {
-      await this.saveFile();
+      let file = await this.saveFile();
       if (this.action == 'edit' || this.action == 'add') {
         this.task['recID'] = Util.uid();
+        this.task['role'] = [this.setRole()];
         this.AddTaskAsync('CM_Customers').subscribe((res) => {
-          console.log(res);
+          if(res){
+            this.dialog.close({ data: res, status: this.status });
+          }          
         });
       } else {
         this.editTaskAsync('CM_Customers');
       }
     }
+  }
+
+  setRole(){
+    let role = new CM_Tasks_Roles();
+    role.recID = Util.uid();
+    role.objectID = this.userID;
+    role.objectName = this.user?.userName;
+    role.objectType = 'O';
+    return role;
   }
 
   AddTaskAsync(mode: string) {
@@ -252,7 +272,9 @@ export class PopupTaskComponent implements OnInit {
       const res = await firstValueFrom(
         await this.attachment.saveFilesObservable()
       );
+      return res;
     }
+    return null;
   }
 
   checkRequire(): boolean {

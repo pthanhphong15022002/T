@@ -84,10 +84,13 @@ export class CodxShowTaskComponent implements OnInit {
       // });
       // data['taskGroups'] = taskGroupConvert;
 
-      if (this.dataSource['taskGroups']?.length > 0 || this.dataSource['tasks']?.length > 0) {
+      console.log('======',this.dataSource);
+      
+      if (this.dataSource['taskGroups']?.length == 0 || this.dataSource['tasks']?.length > 0) {
         let taskGroup = {};
         taskGroup['task'] = this.dataSource['tasks']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.dataSource['taskGroups'] = [];
         this.dataSource['taskGroups'].push(taskGroup);
       }
   }
@@ -152,7 +155,7 @@ export class CodxShowTaskComponent implements OnInit {
     });
   }
 
-  handleTask(data?: any, status?: string) {
+  handleTask(data?: any, action?: string) {
     let taskGroupIdOld = '';
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
@@ -165,9 +168,9 @@ export class CodxShowTaskComponent implements OnInit {
       taskGroupIdOld = data['taskGroupID'];
     }
     let dataTransmit =
-      status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
+      action == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
     let listData = {
-      status,
+      action,
       taskType: this.jobType,
       parentID: this.dataSource?.recID,
       listGroup: [],
@@ -185,7 +188,11 @@ export class CodxShowTaskComponent implements OnInit {
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(PopupTaskComponent, listData, option);
 
-    // dialog.closed.subscribe(async (e) => {
+    dialog.closed.subscribe(async (e) => {
+      if (e?.event) {
+        console.log(e?.event);
+        
+      }
     //   this.groupTaskID = null; //set lại
     //   if (e?.event) {
     //     let taskData = e?.event?.data;
@@ -238,7 +245,7 @@ export class CodxShowTaskComponent implements OnInit {
     //       });
     //     }
     //   }
-    // });
+    });
   }
 
 }
