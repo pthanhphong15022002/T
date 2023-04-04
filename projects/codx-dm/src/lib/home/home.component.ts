@@ -1384,7 +1384,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       
       if (this.textSearch == null || this.textSearch == '') {
         this.isScrollSearch = false;
-        if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
+        if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03' || this.view.funcID == 'DMT00') {
           this.dmSV.isSearchView = false;
           this.setHideModeView();
           this.view.viewChange(this.viewActive);
