@@ -15,6 +15,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
+import { JournalService } from '../../journal-names/journal-names.service';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -53,6 +54,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     private injector: Injector,
     private notiService: NotificationsService,
     private acService: CodxAcService,
+    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -243,50 +245,13 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     // if this voucherNo already exists,
     // the system will automatically suggest another voucherNo
-    if (
-      this.journal.voucherNoRule !== '0' &&
-      this.journal.duplicateVoucherNo === '0' &&
-      this.cashTransfer.voucherNo
-    ) {
-      const options = new DataRequest();
-      options.entityName = 'AC_CashTranfers';
-      options.predicates = 'VoucherNo=@0';
-      options.dataValues = this.cashTransfer.voucherNo;
-      options.pageLoading = false;
-      this.acService.loadDataAsync('AC', options).subscribe((res: any[]) => {
-        if (res.length > 0) {
-          this.api
-            .exec(
-              'ERM.Business.AC',
-              'CashTranfersBusiness',
-              'GenerateAutoNumberAsync',
-              this.journal.journalNo
-            )
-            .subscribe((autoNumber: string) => {
-              this.notiService
-                .alertCode(
-                  'AC0003',
-                  null,
-                  `'${this.cashTransfer.voucherNo}'`,
-                  `'${autoNumber}'`
-                )
-                .subscribe((res) => {
-                  console.log(res);
-                  if (res.event.status === 'Y') {
-                    this.form.formGroup.patchValue({ voucherNo: autoNumber });
-                    this.save(closeAfterSaving);
-                  }
-
-                  return;
-                });
-            });
-        } else {
-          this.save(closeAfterSaving);
-        }
-      });
-    } else {
-      this.save(closeAfterSaving);
-    }
+    this.journalService.handleVoucherNoAndSave(
+      this.journal,
+      this.cashTransfer,
+      'AC_CashTranfers',
+      this.form,
+      () => this.save(closeAfterSaving)
+    );
   }
   //#endregion
 
