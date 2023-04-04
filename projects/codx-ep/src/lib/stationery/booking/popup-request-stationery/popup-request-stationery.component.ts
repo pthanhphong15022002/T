@@ -150,7 +150,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
       this.epService.getBookingItems(this.data?.recID).subscribe((res: any) => {
-        if (res) {          
+        if (res) {
           res.forEach((item) => {
             let tmpSta = new BookingItems();
             (tmpSta.itemID = item?.itemID),
@@ -312,13 +312,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    option.data = [
-      itemData,
-      this.isAddNew,
-      null,
-      this.lstStationery,
-      this.lstStationery,
-    ];
+    option.data = [itemData, this.isAddNew, null, this.lstStationery];
     return true;
   }
 
@@ -326,7 +320,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   //Check items of cart
   isEmptyCart(_cart: any[]): boolean {
     if (_cart && _cart.length > 0) {
-      return true;
+      return false;
     }
     this.notificationsService.notifyCode('EP011');
     return true;
@@ -372,7 +366,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       return;
     }
 
-    if (this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
+    if (!this.isEmptyCart(this.cart) && this.checkCartItems(this.cart)) {
       this.api
         .exec('EP', 'BookingsBusiness', 'QuotaCheckAsync', [
           this.cart,

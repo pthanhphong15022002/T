@@ -11,6 +11,7 @@
   (buttonClick)="buttonClick($event)"
   #form
   [data]="task"
+  [templateExtend]="extend"
 ></codx-layout-add>
 <ng-template #subHeader>
   <codx-tag
@@ -229,9 +230,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="showAssignTo">
-    <div
-      class="d-flex flex-column w-100 mb-1 mt-3"
-    >
+    <div class="d-flex flex-column w-100 mb-1 mt-3">
       <div class="d-flex align-items-center mb-2">
         <span class="icon-person icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary mt-1">
@@ -256,7 +255,8 @@
 
       <div class="d-flex justify-content-end">
         <ng-container *ngFor="let item of listRoles">
-          <button type="button"
+          <button
+            type="button"
             class="btn btn-sm ms-2 btn-light-primary"
             (click)="
               !readOnly ? openControlShare(controlShare, item.value) : ''
@@ -422,7 +422,8 @@
     </div>
     <div class="d-flex justify-content-end mt-2">
       <ng-container *ngFor="let item of listRoles">
-        <button type="button"
+        <button
+          type="button"
           class="btn btn-sm ms-2 btn-light-primary"
           (click)="!readOnly ? openControlShare(controlShare, item.value) : ''"
         >
@@ -777,4 +778,16 @@
     (eventApply)="eventApply($event)"
   >
   </codx-share>
+</ng-template>
+
+<ng-template #extend>
+  <!-- <codx-tabs
+    [entityName]="form.formModel.entityName"
+    [formModel]="form.formModel"
+    [objectID]="task.recID"
+    [funcID]="form.formModel.funcID"
+    [dataReferences]="dataReferences"
+    [isUpPermission]="true"
+    [isEdit]="true"
+  ></codx-tabs> -->
 </ng-template>

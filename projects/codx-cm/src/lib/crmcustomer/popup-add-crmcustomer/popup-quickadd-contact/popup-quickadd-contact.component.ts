@@ -32,7 +32,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.dialog = dialog;
     this.title = dt?.data[0];
     this.action = dt?.data[1];
-    if(this.action == 'edit'){
+    if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data[2]));
       this.getLastAndFirstName(this.data.contactName);
     }
@@ -82,22 +82,25 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       this.data.contactName = '';
     }
+    if (this.action == 'add' || this.action == 'copy') {
+      data = [
+        this.data,
+        this.dialog.formModel.formName,
+        this.dialog.formModel.funcID,
+        this.dialog.formModel.entityName,
+      ];
 
-    data = [
-      this.data,
-      this.dialog.formModel.formName,
-      this.dialog.formModel.funcID,
-      this.dialog.formModel.entityName,
-    ];
-
-    this.cmSv.quickAddContacts(data).subscribe((res) => {
-      if (res) {
-        this.contact = res;
-        this.dialog.close(this.contact);
-      } else {
-        this.dialog.close();
-      }
-    });
+      this.cmSv.quickAddContacts(data).subscribe((res) => {
+        if (res) {
+          this.contact = res;
+          this.dialog.close(this.contact);
+        } else {
+          this.dialog.close();
+        }
+      });
+    } else {
+      this.dialog.close(this.data);
+    }
   }
 
   onSave() {
@@ -115,6 +118,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     if (this.data.email != null && this.data.email.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
     }
+
     this.onAdd();
   }
 
