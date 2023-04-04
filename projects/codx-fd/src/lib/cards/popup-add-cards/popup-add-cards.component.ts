@@ -97,6 +97,11 @@ export class PopupAddCardsComponent implements OnInit {
     Radio: "7"
   };
 
+  SETTINGVALUES_COINS_TRANSTYPE = {
+    Coins: "ActiveCoins",
+    CoCoins: "ActiveCoCoins",
+  };
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -156,9 +161,21 @@ export class PopupAddCardsComponent implements OnInit {
           this.getCountCardSend(this.user.userID, this.cardType);
         }
         if (this.parameter.MaxPointControl === "1") {
-          if (this.parameter.ActiveCoins) {
-            this.getCountPointSend(this.user.userID, this.cardType, this.parameter.ActiveCoins);
-          }
+          this.api.execSv("SYS", "ERM.Business.SYS", "SettingValuesBusiness", "GetParameterAsync",
+            ["FDParameters", this.SETTINGVALUES_COINS_TRANSTYPE.CoCoins]).subscribe((resCoins: any) => {
+              if (resCoins) {
+                const setting = JSON.parse(resCoins);
+                if (setting.ActiveCoCoins == '1') {
+                  this.getCountPointSend(this.user.userID, this.cardType, '0');
+                }
+                else {
+                  this.getCountPointSend(this.user.userID, this.cardType, '1');
+                }
+              }
+            });
+          // if (this.parameter.ActiveCoins) {
+          //   this.getCountPointSend(this.user.userID, this.cardType, this.parameter.ActiveCoins);
+          // }
         }
         this.dt.detectChanges();
       }
