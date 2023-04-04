@@ -33,7 +33,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   validate: any = 0;
   type: any;
-  formType: any;
   cashpaymentline: CashPaymentLine;
   constructor(
     private inject: Injector,
@@ -51,7 +50,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.cashpaymentline = dialogData.data?.data;
     this.type = dialogData.data?.type;
-    this.formType = dialogData.data?.formType;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -70,7 +68,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
   valueChange(e: any) {
-    this.cashpaymentline[e.field] = e.data;
+    //this.cashpaymentline[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -96,36 +94,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     }
   }
   onSave() {
-    switch (this.type) {
-      case 'add':
-        this.checkValidate();
-        if (this.validate > 0) {
-          this.validate = 0;
-          return;
-        } else {
-          if (this.formType == 'edit') {
-            this.api
-              .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-                this.cashpaymentline,
-              ])
-              .subscribe((res: any) => {
-                if (res) {
-                  this.notification.notifyCode('SYS006', 0, '');
-                }
-              });
-          }
-        }
-        break;
-      case 'edit':
-        if (this.formType == 'edit') {
-          this.api
-            .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-              this.cashpaymentline,
-            ])
-            .subscribe((res: any) => {});
-        }
-        break;
-    }
     window.localStorage.setItem(
       'dataline',
       JSON.stringify(this.cashpaymentline)

@@ -6,18 +6,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
   CodxFormComponent,
   CodxInputComponent,
-  CRUDService,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
   RequestOption,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { filter, map, Observable } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';

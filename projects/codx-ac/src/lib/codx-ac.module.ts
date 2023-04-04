@@ -2,7 +2,6 @@ import { JournalNamesComponent } from './journal-names/journal-names.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAcComponent } from './codx-ac.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -234,7 +233,6 @@ export const routes: Routes = [
     RouterModule.forChild(routes),
     CodxCoreModule,
     CodxShareModule,
-    InlineSVGModule,
     CommonModule,
     FormsModule,
     CoreModule,

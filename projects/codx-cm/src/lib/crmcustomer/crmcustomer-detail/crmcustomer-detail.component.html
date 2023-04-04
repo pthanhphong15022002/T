@@ -137,7 +137,7 @@
                 <codx-information [funcID]="funcID" [dataSelected]="dataSelected" [formModel]="formModel">
                 </codx-information>
               </div>
-              <div class="mb-3">
+              <div class="mb-3" *ngIf="dataSelected?.memo">
                 <div class="mb-3">
                   <codx-label class="text-dark fw-bold" fiedName="Memo" [formModel]="formModel" default="Mô
                   tả">
@@ -198,7 +198,7 @@
             </div>
           </ng-container>
           <ng-container *ngIf="name == 'Task'">
-            <ng-container [ngTemplateOutlet]="task" [ngTemplateOutletContext]="{ value: dataSelected.steps }">
+            <ng-container [ngTemplateOutlet]="task" [ngTemplateOutletContext]="{ value: dataSelected }">
             </ng-container>
           </ng-container>
           <ng-container *ngIf="name == 'Opportunity'">
@@ -297,7 +297,8 @@
 </ng-template>
 
 <ng-template #task let-data="value">
-  <div *ngFor="let step of data; let i = index">
+  <codx-show-task [dataSource]="data"></codx-show-task>
+  <!-- <div *ngFor="let step of data; let i = index">
     <div>
       <span class="h4 me-3 justify-content-center align-items-center" style="
           width: 35px;
@@ -309,7 +310,7 @@
       <span class="h4">{{ step.stepName }}</span>
     </div>
     <codx-show-task [dataSource]="step"></codx-show-task>
-  </div>
+  </div> -->
 </ng-template>
 <ng-template #product let-data="value">
   <codx-table></codx-table>

@@ -13,7 +13,6 @@ import { CoreModule } from '@core/core.module';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
@@ -144,7 +143,6 @@ const Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,

@@ -30,9 +30,10 @@ export class ExtendDeadlineComponent implements OnInit {
   }
   onSave()
   {
-    this.deadlineForm.value.recID = this.data.recID;
-    if(this.deadlineForm.value.extendOn == null)this.deadlineForm.value.extendOn = new Date();
-    this.odService.extendDeadLinee(this.deadlineForm.value).subscribe((item)=>{
+    let extendDeadLinee = this.deadlineForm.value as any;
+    extendDeadLinee.recID = this.data.recID;
+    if(this.deadlineForm.value.extendOn == null)extendDeadLinee.extendOn = new Date();
+    this.odService.extendDeadLinee(extendDeadLinee).subscribe((item)=>{
       if(item.status == 0)
         this.dialog.close(item?.data);
         
