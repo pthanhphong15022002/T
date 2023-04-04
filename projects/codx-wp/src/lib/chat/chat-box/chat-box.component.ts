@@ -7,11 +7,13 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { PopupVoteComponent } from 'projects/codx-share/src/lib/components/treeview-comment/popup-vote/popup-vote.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { interval } from 'rxjs';
+import { interval, map } from 'rxjs';
 import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
 import { MessageSystemPipe } from './mssgSystem.pipe';
+import { log } from 'console';
+import { resizeStart } from '@syncfusion/ej2-angular-richtexteditor';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -66,6 +68,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
+
+
+
+  @ViewChild("tmpMssg1",{read:true,static : true}) mssg1:TemplateRef<any>;
+  @ViewChild("tmpMssg2",{read:true,static : true}) mssg2:TemplateRef<any>;
+
   constructor
   (
     private api:ApiHttpService,
@@ -76,14 +84,14 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     private callFC:CallFuncService,
     private sanitizer: DomSanitizer,
     private codxShareSV:CodxShareService,
+    private applicationRef:ApplicationRef,
     private dt:ChangeDetectorRef,
   ) 
   {
     this.user = this.auth.get();
     this.data = new WP_Messages();
     this.formModel = new FormModel();
-    this.messageSystemPipe = new MessageSystemPipe(this.cache);
-
+    this.messageSystemPipe = new MessageSystemPipe(this.cache,this.applicationRef);
   }
 
   ngOnInit(): void 
@@ -130,27 +138,27 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(): void {
     //receiver message
     this.signalR.chat.subscribe((res:any) => {
-      debugger
-      if(res.groupID == this.groupID){
-        let data = res;
-        this.group.lastMssgID = data.recID;
-        this.group.messageType = data.messageType;
-        if(res.messageType == "3"){
-          this.messageSystemPipe.transform(data.jsMessage)
-          .subscribe(res => {
-            data.message = res;
+      let data = res.data;
+      let action = res.action;
+      if(data.groupID == this.groupID){
+        if(action == "deletedMessage"){
+          let index = this.arrMessages.findIndex(x => x.recID == data.recID);
+          if(index != -1){
+            this.arrMessages[index].messageType = "5";
+            this.dt.detectChanges();
+          }
+        }
+        else{
+          this.group.lastMssgID = data.recID;
+          this.group.messageType = data.messageType;
+          if(res.messageType !== "3"){
             this.group.message = data.message;
-            this.arrMessages.push(data);
-          });
+          }
+          this.arrMessages.push(data); 
+          setTimeout(()=>{
+            this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+          },100)
         }
-        else
-        {
-          this.group.message = data.message;
-          this.arrMessages.push(data);
-        }
-        setTimeout(()=>{
-          this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
-        },100)
       }
     });
     //vote message
@@ -158,21 +166,21 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       if(res.groupID == this.groupID){
         let mssg = this.arrMessages.find(x => x.recID == res.recID);
         if(mssg){
+          let vote = {
+            voteType : res.voteType,
+            listVote : [{
+              createdBy: res.createdBy,
+              createdName: res.createdName,
+              voteType : res.voteType
+            }]
+          };
           if(!Array.isArray(mssg.votes)){
-            mssg.votes = [];
+            mssg.votes.push(vote);
           }
-          if(mssg.votes.length > 0){
-            let index = mssg.votes.findIndex((x:any) => x.createdBy == res.createdBy);
-            if(index != -1 ){
-              if(mssg.votes[index].voteType == res.voteType)
-                mssg.votes.splice(index,1);
-              else
-                mssg.votes[index].voteType = res.voteType;
-              this.dt.detectChanges();
-              return;
-            }
+          else
+          {
+                        
           }
-          mssg.votes.push(res);
           this.dt.detectChanges();
         }
       }
@@ -467,18 +475,15 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     }
     this.showCBB = false;
   }
+  //click add member
   clickAddMemeber(){
     this.showCBB = !this.showCBB;
   }
-  deleteMessage(index:number){
-    if(index != -1){
-      let data = this.arrMessages.splice(index,1);
-      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","DeletedAsync",[data[0]])
-      .subscribe();
-    }
+  //xóa tin nhắn
+  deleteMessage(mssg:any,index:number){
+    debugger
+    this.signalR.sendData("DeletedMessage",this.groupID,mssg.recID);
   }
-
-  //
   // show vote
   lstVoted:any[] = [];
   clickShowVote(mssg:any) {
@@ -495,4 +500,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   closePopupVote(dialog:any){
     dialog?.close();
   }
+
+  click(data:any){
+    debugger
+    console.log(data);
+    
+  }
 }
+
+

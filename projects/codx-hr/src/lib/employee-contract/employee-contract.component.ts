@@ -120,7 +120,7 @@ export class EmployeeContractComponent extends UIComponent {
     if(!this.formGroup?.value){
       this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
         this.formGroup = res;
-        console.log('form group ne', this.formGroup);
+        // console.log('form group ne', this.formGroup);
       });
     }
   }
@@ -145,7 +145,7 @@ export class EmployeeContractComponent extends UIComponent {
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
-    console.log('edit object', this.editStatusObj);
+    // console.log('edit object', this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
@@ -155,7 +155,7 @@ export class EmployeeContractComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      console.log('res sau khi update status', res);
+      // console.log('res sau khi update status', res);
       
       this.view.dataService.update(res.event[0]).subscribe((res) => {
       })
@@ -173,8 +173,8 @@ export class EmployeeContractComponent extends UIComponent {
     })
   }
   changeDataMf(event, data){
-    console.log('data changedata MF', event);
-    console.log('data di voi mf', data.signStatus);
+    // console.log('data changedata MF', event);
+    // console.log('data di voi mf', data.signStatus);
     if(data.signStatus == '4' || data.signStatus == '5' || data.signStatus == '9' || data.signStatus == '0'){
       for(let i = 0; i < event.length; i++){
         switch(event[i].functionID){
@@ -205,19 +205,19 @@ export class EmployeeContractComponent extends UIComponent {
         }
       }
     }
-    console.log('mf sau khi change', event);
+    // console.log('mf sau khi change', event);
     
   }
 
-  clickEvent(event){
+  clickEvent(event, data){
     console.log('clickEvent', event);
     // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
     this.clickMF(event?.event, event?.data);
   }
 
   clickMF(event, data){
-    console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
-    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
+    // console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
+    // console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
 
     
     switch (event.functionID) {
@@ -276,7 +276,7 @@ export class EmployeeContractComponent extends UIComponent {
     // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
     //   isAppendix = true;
     // }
-    console.log('nguyen cuc data ne', data);
+    // console.log('nguyen cuc data ne', data);
     
     let dialogAdd = this.callfc.openSide(
       PopupEProcessContractComponent,
@@ -295,7 +295,7 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if(actionType == 'add'){
-          console.log('moi add hop dong xong', res.event[0]);
+          // console.log('moi add hop dong xong', res.event[0]);
           this.view.dataService.add(res.event[0],0).subscribe((res) => {
           });
           this.df.detectChanges();
@@ -333,7 +333,7 @@ export class EmployeeContractComponent extends UIComponent {
 
 
   onMoreMulti(evt){
-    console.log('chon nhieu dong', evt);
+    // console.log('chon nhieu dong', evt);
   }
 
 
@@ -345,16 +345,16 @@ export class EmployeeContractComponent extends UIComponent {
   }
   changeItemDetail(event) {
     this.itemDetail = event?.data;
-    console.log('eventttttttttttttttttt', event);
+    // console.log('eventttttttttttttttttt', event);
     
-    console.log('itemdetail', this.itemDetail);
+    // console.log('itemdetail', this.itemDetail);
 
     
   }
   getDetailContract(event, data){
     if(data){
       this.itemDetail = data;
-      console.log('itemdetail', this.itemDetail);
+      // console.log('itemdetail', this.itemDetail);
       
       this.df.detectChanges();
     }
@@ -397,7 +397,7 @@ export class EmployeeContractComponent extends UIComponent {
               '<div> Hợp đồng lao động - ' + this.itemDetail.contractNo + '</div>'
             )
             .subscribe((result) => {
-              console.log('ok', result);
+              // console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.signStatus = '3';
@@ -405,7 +405,7 @@ export class EmployeeContractComponent extends UIComponent {
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
-                      console.log('after release', res);
+                      // console.log('after release', res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();

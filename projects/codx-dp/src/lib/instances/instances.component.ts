@@ -183,6 +183,7 @@ export class InstancesComponent
       .subscribe((grv) => {
         if (grv) {
           this.grvSetup = grv;
+          this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -659,7 +660,7 @@ export class InstancesComponent
   //#popup roles
 
   changeDataMF(e, data, isStart?) {
-    if (e != null && data != null && isStart) {
+    if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -1375,7 +1376,7 @@ export class InstancesComponent
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
-        color: x?.backgroundColor,
+        color: x?.iconColor,
         text: x.stepName,
         value: x.recID,
       };
@@ -1402,48 +1403,44 @@ export class InstancesComponent
     }
   }
   //filter- tam
-  valueChangFilterStepID(e) {
+  valueChangeFilter(e) {
     this.dataSelected = null;
-    this.dataValueByStepIDArr = e.data;
-    let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStepIDArr?.length <= 0) {
-      if (idxField != -1) {
-        this.arrFieldFilter.splice(idxField, 1);
-      }
-    } else {
-      if (idxField == -1) this.arrFieldFilter.push(e.field);
+    switch (e.field) {
+      case 'Status':
+        this.dataValueByStatusArr = e.data;
+        break;
+      case 'StepID':
+        this.dataValueByStepIDArr = e.data;
+        break;
+      case 'Owner':
+        this.dataValueByOwnerArr = e.data;
+        break;
     }
-    this.loadDataFiler();
-  }
-  valueChangeFilterStatus(e) {
-    this.dataSelected = null;
-    this.dataValueByStatusArr = e.data;
     let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStatusArr?.length <= 0) {
-      if (idxField != -1) {
-        this.arrFieldFilter.splice(idxField, 1);
-      }
-    } else {
+    if (e.data?.length > 0) {
       if (idxField == -1) this.arrFieldFilter.push(e.field);
+    } else {
+      if (idxField != -1) this.arrFieldFilter.splice(idxField, 1);
     }
+
     this.loadDataFiler();
   }
 
   updatePredicate(field, dataValueFiler) {
     let predicates = '';
     let predicate = field + '=@';
-
     let toltalData = this.dataValueFilterArr?.length;
-    for (var i = 0; i < dataValueFiler.length - 1; i++) {
-      predicates += predicate + (i + toltalData) + 'or ';
-    }
-
-    predicates += predicate + (this.dataValueFilterArr.length + toltalData);
+    if (dataValueFiler.length > 1) {
+      for (var i = 0; i < dataValueFiler.length - 1; i++) {
+        predicates += predicate + (i + toltalData) + 'or ';
+      }
+      predicates += predicate + (dataValueFiler.length + toltalData);
+    } else predicates = predicate + toltalData;
 
     if (this.arrFieldFilter.length > 0) {
       let idx = this.arrFieldFilter.findIndex((x) => x == field);
       if (idx == 0) {
-        this.filterInstancePredicates ="( " + predicates + " )";
+        this.filterInstancePredicates = '( ' + predicates + ' )';
         this.dataValueFilterArr = dataValueFiler;
       } else if (idx > 0) {
         this.filterInstancePredicates += ' and ( ' + predicates + ' )';
@@ -1458,9 +1455,9 @@ export class InstancesComponent
 
   //loading Data filter
   loadDataFiler() {
+    this.filterInstancePredicates = '';
+    this.dataValueFilterArr = [];
     if (this.arrFieldFilter.length > 0) {
-      this.filterInstancePredicates = '';
-      this.dataValueFilterArr = [];
       this.arrFieldFilter.forEach((field) => {
         switch (field) {
           case 'Status':
@@ -1474,10 +1471,10 @@ export class InstancesComponent
             break;
         }
       });
-    } else {
-      this.filterInstancePredicates = '';
-      this.dataValueFilterArr = [];
     }
+    if (this.filterInstancePredicates)
+      this.filterInstancePredicates =
+        '( ' + this.filterInstancePredicates + ' )';
     (this.view.dataService as CRUDService)
       .setPredicates(
         [this.filterInstancePredicates],

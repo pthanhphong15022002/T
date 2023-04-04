@@ -46,6 +46,8 @@ export class InputCustomFieldComponent implements OnInit {
   messCodePhoneNum = 'RS030';
   listIdUser: string = '';
   arrIdUser = [];
+  numChange = 0 ;
+
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef
@@ -162,7 +164,9 @@ export class InputCustomFieldComponent implements OnInit {
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
 
-  valueChangeTime() {}
+  valueChangeTime(e) {
+    if(this.numChange > 0)  this.valueChangeCustom.emit({ e: e, data: this.customField });else this.numChange +=1 ;
+  }
 
   addFile() {
     this.attachment.uploadFile();
@@ -189,6 +193,6 @@ export class InputCustomFieldComponent implements OnInit {
     //}//
   }
   controlBlur(e) {
-    if (e.crrValue) this.valueChange(e.crrValue);
+   // if (e.crrValue) this.valueChange(e.crrValue);
   }
 }
