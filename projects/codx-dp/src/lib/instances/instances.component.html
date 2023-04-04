@@ -341,4 +341,16 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
+ 
+  <codx-dropdown-select
+    *ngIf="process"
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    [isMulti]="false"
+    type="valuelist"
+    [emptyText]="grvSetup.StepID.headerText"
+    field="StepID"
+    [dataSource]="stepsResource"
+    (valueChange)="valueChangFilterStepID($event)"
+  ></codx-dropdown-select>
 </ng-template>
