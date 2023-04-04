@@ -3382,7 +3382,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.titleRadioNo = item.text;
           }
         }
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
