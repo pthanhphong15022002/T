@@ -270,6 +270,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
+    this.lstGroup = dt.data?.lstGroup;
+  
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
     this.getValueYesNo();
@@ -296,6 +298,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.action == 'edit') {
       // this.showID = true;
+      this.checkGroup = this.lstGroup.some(x=>x.groupID == this.process?.groupID)
       this.processNameBefore = this.process?.processName;
       this.permissions = this.process.permissions;
       if (this.permissions.length > 0) {
@@ -378,7 +381,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   // }
 
   ngAfterViewInit(): void {
-    this.GetListProcessGroups();
+  //  this.GetListProcessGroups();
   }
 
   GetListProcessGroups() {
@@ -544,14 +547,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     if (e.field === 'groupID') {
-      this.checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      if (!this.checkGroup) {
-        this.cache.message('DP015').subscribe((res) => {
+      if(!this.process.groupID){
+        this.cache.message('SYS028').subscribe((res) => {
           if (res) this.errorMessage = res.customName || res.defaultName;
+          this.checkGroup = false ;
         });
+      }else{
+        this.checkGroup = this.lstGroup.some(
+          (x) => x.groupID == this.process.groupID
+        );
+        if (!this.checkGroup) {
+          this.cache.message('DP015').subscribe((res) => {
+            if (res) this.errorMessage = res.customName || res.defaultName;
+          });
+        }
       }
+     
     }
   }
 
@@ -2505,14 +2516,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkButtonContinue() {
     if (this.currentTab == 0) {
-      this.checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      if (!this.checkGroup) {
-        this.cache.message('DP015').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-        });
-      }
+      // if (!this.checkGroup) {
+      //   this.cache.message('DP015').subscribe((res) => {
+      //     if (res) this.errorMessage = res.customName || res.defaultName;
+      //   });
+      // }
       return (
         this.process.processName &&
         this.process.processName.trim() != '' &&
