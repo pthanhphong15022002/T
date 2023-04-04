@@ -322,7 +322,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
     this.getGrvStepReason();
     this.getValListDayoff();
-    this.autoHandleStepReason();
+   // this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
   }
@@ -562,7 +562,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   closePopup() {
-    //dung bat dong bi rjx
+    //dung bat dong bo rjx
     // let x = await firstValueFrom(this.notiService.alertCode('DP013'));
     // if (x?.event?.status == 'Y') {
     //       this.dialog.close();
@@ -3086,10 +3086,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   autoHandleStepReason() {
     if (this.action === 'add' || this.action === 'copy') {
       // create step reason fail with value is 1
-      this.createStepReason(this.stepSuccess, '1');
+      // this.createStepReason(this.stepSuccess, '1');
+      this.stepSuccess =  this.handleStepReason(this.stepSuccess, '1');
 
       // create step reason fail with value is 2
-      this.createStepReason(this.stepFail, '2');
+      //this.createStepReason(this.stepFail, '2');
+      this.stepFail =  this.handleStepReason(this.stepFail, '2');
     }
     // edit step reason success/fail
     else if (this.action === 'edit') {
@@ -3103,9 +3105,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  createStepReason(stepReason: any, reasonValue: any) {
-    stepReason = this.handleStepReason(stepReason, reasonValue);
-  }
+  // createStepReason(stepReason: any, reasonValue: any) {
+  //   stepReason = this.handleStepReason(stepReason, reasonValue);
+  // }
 
   handleReason(
     reason: DP_Steps_Reasons,
@@ -3366,6 +3368,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;
         this.stepNameReason = reasonValue?.text;
+        this.autoHandleStepReason();
         this.changeDetectorRef.detectChanges();
       }
     });
