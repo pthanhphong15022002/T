@@ -412,7 +412,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
 
   convertStrToDate(eleDate) {
     if (eleDate) {
-      let str: any = eleDate.title.split(',');
+      let str = eleDate.title.split(',');
       let strMonth: any = str[1].split('Tháng');
       let numb: any = strMonth[1] + '-' + strMonth[0];
       numb = numb + '-' + str[2];

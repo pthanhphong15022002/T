@@ -40,6 +40,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   firstName: any;
   lastName: any;
   gridViewSetup: any;
+  moreFuncName: '';
   contactsPerson: CM_Contacts;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -87,6 +88,13 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       this.data.partnerID = null;
       this.data.opponentID = null;
     }
+
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
   }
 
 
@@ -322,12 +330,13 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   openPopupAddress() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
+    var title = this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
     dataModel.formName = 'CMAddresses';
     dataModel.gridViewName = 'grvCMAddresses';
     dataModel.entityName = 'CM_Addresses';
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
-    this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', '', '', opt);
+    this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', [title], '', opt);
   }
 
   //#region Contact
@@ -374,7 +383,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       500,
       500,
       '',
-      '',
+      [this.moreFuncName, 'add', null],
       '',
       opt
     );
