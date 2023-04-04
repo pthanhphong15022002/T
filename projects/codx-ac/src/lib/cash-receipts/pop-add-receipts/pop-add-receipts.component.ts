@@ -136,16 +136,10 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res.length > 0) {
               this.keymodel = Object.keys(res[0]);
+              this.cashreceiptslines = res;
+              this.pageCount = '(' + this.cashreceiptslines.length + ')';
+              this.loadTotal();
             }
-            this.cashreceiptslines = res;
-            this.pageCount = '(' + this.cashreceiptslines.length + ')';
-            this.cashreceiptslines.forEach((element) => {
-              this.total = this.total + element.dr;
-            });
-            this.total = this.total.toLocaleString('it-IT', {
-              style: 'currency',
-              currency: 'VND',
-            });
           });
         //#endregion
       }
@@ -192,13 +186,8 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashreceipts);
-    if (this.formType == 'add') {
-      this.total = this.total.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-      this.pageCount = '(' + this.cashreceiptslines.length + ')';
-    }
+    this.pageCount = '(' + this.cashreceiptslines.length + ')';
+    this.loadTotal();
   }
 
   created(e) {
@@ -444,8 +433,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         var obj = {
           headerText: this.headerText,
           data: { ...data },
-          type: 'edit',
-          formType: this.formType,
+          type: 'edit'
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -472,7 +460,6 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                 if (dataline != null) {
                   this.cashreceiptslines[index] = dataline;
                   this.loadTotal();
-                  this.notification.notifyCode('SYS007', 0, '');
                 }
                 window.localStorage.removeItem('dataline');
               });
@@ -494,13 +481,6 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
             this.cashreceiptslines[i].rowNo = i + 1;
           }
         }
-        this.api
-          .exec('AC', 'CashReceiptsLinesBusiness', 'DeleteLineAsync', [
-            data.recID,
-            this.cashreceiptslines,
-          ])
-          .subscribe((res: any) => {});
-        this.notification.notifyCode('SYS008', 0, '');
         this.pageCount = '(' + this.cashreceiptslines.length + ')';
         this.loadTotal();
         break;
@@ -513,8 +493,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
-      type: 'add',
-      formType: this.formType,
+      type: 'add'
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -718,6 +697,58 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
+      if (this.formType == 'add' || this.formType == 'copy') {
+        if (this.modegrid == 1)
+          this.cashreceiptslines = this.gridCashreceiptsLines.dataSource;
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'CashReceiptsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.cashreceipts];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.acService
+                .addData(
+                  'ERM.Business.AC',
+                  'CashReceiptsLinesBusiness',
+                  'AddAsync',
+                  [this.cashreceiptslines]
+                )
+                .subscribe((res) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'CashReceiptsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.cashreceipts];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res != null) {
+              this.acService
+                .addData('AC', 'CashReceiptsLinesBusiness', 'UpdateAsync', [
+                  this.cashreceiptslines,
+                  this.cashreceiptslinesDelete,
+                ])
+                .subscribe();
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+            }
+          });
+      }
       // nếu voucherNo đã tồn tại,
       // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
       this.journalService.handleVoucherNoAndSave(

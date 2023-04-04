@@ -67,8 +67,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   itemName: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
-  Lines: PurchaseInvoicesLines;
-  checkline: any = true;
+  purchaseInvoicesLinesDelete: Array<PurchaseInvoicesLines> = [];
   vatinvoices: VATInvoices = new VATInvoices();
   objectvatinvoices: Array<VATInvoices> = [];
   fmVATInvoices: FormModel = {
@@ -307,25 +306,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
   valueChangeVAT(e: any) {
     this.vatinvoices[e.field] = e.data;
-  }
-  valueChangeVATformPurchase(e: any) {
-    this.purchaseinvoices[e.field] = e.data;
-    if (this.formType == 'edit')
-      this.api
-        .exec('PS', 'PurchaseInvoicesBusiness', 'UpdateAsync', [
-          this.purchaseinvoices,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.api
-              .exec('AC', 'VATInvoicesBusiness', 'UpdateVATfromPurchaseAsync', [
-                this.purchaseinvoices,
-                null,
-                this.purchaseInvoicesLines,
-              ])
-              .subscribe((res: any) => {});
-          }
-        });
   }
   gridCreated(e) {
     let hBody, hTab, hNote;
@@ -623,14 +603,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.purchaseinvoices.invoiceForm = '';
         this.purchaseinvoices.invoiceSeri = '';
         this.purchaseinvoices.invoiceNo = '';
-        this.acService
-          .addData(
-            'ERM.Business.PS',
-            'PurchaseInvoicesBusiness',
-            'UpdateAsync',
-            [this.purchaseinvoices]
-          )
-          .subscribe((res) => {});
       }
     }
     let index = this.purchaseInvoicesLines.findIndex(
@@ -642,23 +614,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.purchaseInvoicesLines[i].rowNo = i + 1;
       }
     }
-    this.api
-      .exec('PS', 'PurchaseInvoicesLinesBusiness', 'DeleteLineAsync', [
-        data.recID,
-        this.purchaseInvoicesLines,
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.api
-            .exec('AC', 'VATInvoicesBusiness', 'DeleteVATfromPurchaseAsync', [
-              this.purchaseinvoices.recID,
-              data.recID,
-            ])
-            .subscribe((res: any) => {});
-        }
-      });
+    this.purchaseInvoicesLinesDelete.push(data);
     this.loadTotal();
-    this.notification.notifyCode('SYS008', 0, '');
     this.loadPageCount();
   }
   checkValidate() {
@@ -819,6 +776,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 .exec('PS', 'PurchaseInvoicesLinesBusiness', 'UpdateAsync', [
                   this.purchaseinvoices,
                   this.purchaseInvoicesLines,
+                  this.purchaseInvoicesLinesDelete
                 ])
                 .subscribe((res: any) => {
                   if (res) {
