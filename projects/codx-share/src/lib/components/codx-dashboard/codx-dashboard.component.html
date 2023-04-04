@@ -1,4 +1,9 @@
-<codx-form [body]="body" [subToolbar]="toolbar" [dialog]="dialog"></codx-form>
+<codx-form
+  [body]="body"
+  [subToolbar]="isEditMode ? toolbar : null"
+  [dialog]="dialog"
+></codx-form>
+
 <ng-template #body>
   <div class="container-fluid h-100">
     <div class="row h-100 w-100" style="margin: 0">
@@ -26,10 +31,10 @@
           [columns]="columns"
           [cellSpacing]="cellSpacing"
           [cellAspectRatio]="cellAspectRatio"
-          [showGridLines]="true"
-          [allowResizing]="true"
-          [allowFloating]="false"
-          [allowDragging]="true"
+          [showGridLines]="isEditMode"
+          [allowResizing]="isEditMode"
+          [allowFloating]="isEditMode"
+          [allowDragging]="isEditMode"
           (dragStart)="onDragStart($event)"
           (drag)="onDrag($event)"
           (dragStop)="onDragStop($event)"
@@ -67,7 +72,46 @@
     (addNew)="addChart($event, eleLayout)"
     (delete)="deletePanel($event)"
     [body]="templates"
+    [isEditMode]="isEditMode"
   ></layout-panel>
+</ng-template>
+
+<ng-template #toolbar>
+  <div *ngIf="isEditMode" class="d-flex justify-content-between">
+    <!-- <div class="float-start w-100">
+
+    </div> -->
+    <div class="float-start d-flex justify-content-between">
+      <button
+        class="btn btn-sm btn-light-info"
+        title="add chart"
+        (click)="isCollapsed = !isCollapsed"
+      >
+        <i
+          [ngClass]="
+            isCollapsed
+              ? 'icon-i-arrow-right-square'
+              : 'icon-i-arrow-left-square'
+          "
+          class="icon-16"
+        ></i>
+      </button>
+      <button
+        class="btn btn-sm btn-light-info"
+        title="add panel"
+        (click)="addPanel()"
+      >
+        <i class="icon-i-collection icon-16"></i>
+      </button>
+      <button
+        class="btn btn-sm btn-light-warning"
+        title="save"
+        (click)="savePanel($event)"
+      >
+        <i class="icon-fact_check icon-16"></i>
+      </button>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #dfLine>
@@ -1161,43 +1205,5 @@
         </e-accumulation-series>
       </e-accumulation-series-collection>
     </ejs-accumulationchart>
-  </div>
-</ng-template>
-
-<ng-template #toolbar>
-  <div class="d-flex justify-content-between">
-    <!-- <div class="float-start w-100">
-
-    </div> -->
-    <div class="float-start d-flex justify-content-between">
-      <button
-        class="btn btn-sm btn-light-info"
-        title="add chart"
-        (click)="isCollapsed = !isCollapsed"
-      >
-        <i
-          [ngClass]="
-            isCollapsed
-              ? 'icon-i-arrow-right-square'
-              : 'icon-i-arrow-left-square'
-          "
-          class="icon-16"
-        ></i>
-      </button>
-      <button
-        class="btn btn-sm btn-light-info"
-        title="add panel"
-        (click)="addPanel()"
-      >
-        <i class="icon-i-collection icon-16"></i>
-      </button>
-      <button
-        class="btn btn-sm btn-light-warning"
-        title="save"
-        (click)="savePanel($event)"
-      >
-        <i class="icon-fact_check icon-16"></i>
-      </button>
-    </div>
   </div>
 </ng-template>

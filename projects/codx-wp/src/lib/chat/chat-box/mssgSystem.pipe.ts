@@ -1,4 +1,4 @@
-import { ApplicationRef, Pipe,PipeTransform, TemplateRef } from '@angular/core';
+import { ApplicationRef, ElementRef, Pipe,PipeTransform, TemplateRef } from '@angular/core';
 import { CacheService, Util } from 'codx-core';
 import { map, Observable, of } from 'rxjs';
 
@@ -8,28 +8,38 @@ import { map, Observable, of } from 'rxjs';
 })
 export class MessageSystemPipe implements PipeTransform {
   constructor(
-    private cache:CacheService
+    private cache:CacheService,
+    private applicationRef:ApplicationRef
   )
   {}
-  transform(jsMessage: any): Observable<any> {
-   return this.cache.message(jsMessage.mssgCode).pipe(map((mssg:any) => {
-    if(mssg.defaultName){
-      switch(jsMessage.mssgCode){
-        case"WP038":// add member
-            let fileName1 = JSON.parse(jsMessage.value[0].fieldValue);
-            let fileName2 = JSON.parse(jsMessage.value[1].fieldValue);
-            let content = "";
-            if(Array.isArray(fileName1)){
-              let strName = Array.from<any>(fileName1).map(x => x.UserName);
-              content = Util.stringFormat(mssg.defaultName,strName,fileName2.UserName);
-            }
-            return content;
-        default:
-            return "";
-      }
-    }
-    else return "";
-   }));
-  }
+  transform(item:any,...arg:any[]): Observable<any> {
+    return this.cache.message(item.jsMessage.mssgCode).pipe(map((mssg:any) => {
+     if(mssg.defaultName){
+       switch(item.jsMessage.mssgCode){
+         case"WP038":// add member
+            let value1 = JSON.parse(item.jsMessage.value[0].fieldValue)
+            let value2 = JSON.parse(item.jsMessage.value[1].fieldValue)
+            let text1 = this.dynamicTemplate(value1,arg[0]);
+            let text2 = this.dynamicTemplate(value2,arg[1]);
+            let content = Util.stringFormat(mssg.defaultName,text1,text2);
+            let containerRef = document.getElementById(item.recID);
+            containerRef.innerHTML = content;
+            break;
+          default:
+            break;
+        }
+     };
+    }));
+   }
+ 
+   // dynamic template
+   dynamicTemplate(data:any,template:TemplateRef<any>){
+      let viewRef = template.createEmbeddedView({$implicit: data});
+      this.applicationRef.attachView(viewRef);
+      viewRef.detectChanges();
+      let container = document.createElement("div"); 
+      viewRef.rootNodes.forEach(x => container.append(x));
+      return container.innerHTML;
+   }
 
 }

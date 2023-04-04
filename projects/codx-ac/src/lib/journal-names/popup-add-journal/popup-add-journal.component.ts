@@ -13,7 +13,7 @@ import {
   DialogModel,
   DialogRef,
   RequestOption,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxAcService } from '../../codx-ac.service';
@@ -178,7 +178,13 @@ export class PopupAddJournalComponent
   handleClickSave(): void {
     console.log(this.journal);
 
-    if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
+    if (
+      !this.acService.validateFormData(this.form.formGroup, this.gvs, [
+        'DIM1Control',
+        'DIM2Control',
+        'DIM3Control',
+      ])
+    ) {
       return;
     }
 
