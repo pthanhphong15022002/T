@@ -47,7 +47,6 @@ export class BookingCarViewDetailComponent
   @Input() funcID;
   @Input() formModel;
   @Input() data: any;
-  @Input() override view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @Input() type = '1';

@@ -98,7 +98,7 @@ export class SendEmailComponent implements OnInit {
     this.odService
       .sendMail(
         this.dialog.dataService.dataSelected.recID,
-        this.sendEmailForm.value
+        this.sendEmailForm.value as any
       )
       .subscribe((item) => {
         if (item.status == 0) this.dialog.close();

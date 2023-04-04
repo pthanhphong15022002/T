@@ -1,27 +1,20 @@
 import {
   ChangeDetectorRef,
   Component,
-  Inject,
   OnInit,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
   Injector,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
-  ButtonModel,
-  CacheService,
   DataRequest,
   TenantStore,
   ViewModel,
-  ViewsComponent,
   ViewType,
   CodxListviewComponent,
-  CodxService,
   UIComponent,
-  CRUDService,
 } from 'codx-core';
 import {
   AccumulationChart,
@@ -29,7 +22,6 @@ import {
   MarkerSettingsModel,
 } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
-declare var _;
 
 export class Data_Line {
   data: any = [];
@@ -690,9 +682,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   getLabelName(key) {
-    let oData = _.filter(this.L1422, function (o) {
-      if (key == o.value) return o;
-    });
+    let oData = this.L1422.filter(x=>x.value==key);
     return oData.length > 0 ? oData[0].text : key;
   }
 

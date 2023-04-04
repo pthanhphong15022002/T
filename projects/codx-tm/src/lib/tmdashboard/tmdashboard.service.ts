@@ -13,7 +13,7 @@ export class TMDashboardService {
       'BI',
       'BI',
       'ChartsBusiness',
-      'GetChartsByDashboardIDAsync',
+      'GetChartsAsync',
       reportID
     );
   }

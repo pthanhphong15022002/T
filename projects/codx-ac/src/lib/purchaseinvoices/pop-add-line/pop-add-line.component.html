@@ -44,96 +44,103 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM0"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="idiM0">
-          </codx-input>
+    <ng-container *ngFor="let item of objectIdim">
+      <div class="row">
+        <div *ngIf="item.value == '0'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM0"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM0">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="item.value == '1'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM1"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM1">
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM1"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="idiM1">
-          </codx-input>
+      <div class="row">
+        <div *ngIf="item.value == '2'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM2"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM2">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="item.value == '3'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM3"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM3">
+            </codx-input>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM2"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="idiM2">
-          </codx-input>
+      <div class="row">
+        <div *ngIf="item.value == '4'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM4"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM4">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="item.value == '9'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM9"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM9">
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM3"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="idiM3">
-          </codx-input>
+      <div class="row">
+        <div *ngIf="item.value == '5'"  class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM5"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM5">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="item.value == '6'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM6"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM6">
+            </codx-input>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="umid">
-          </codx-input>
+      <div class="row">
+        <div *ngIf="item.value == '7'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM7"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM7">
+            </codx-input>
+          </div>
+        </div>
+        <div *ngIf="item.value == '8'" class="col-6">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="IDIM8"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="idiM8">
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col-8">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM4"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="idiM4">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM5"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="idiM5">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM6"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="idiM6">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM7"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="idiM7">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IDIM8"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="idiM8">
-          </codx-input>
-        </div>
-      </div>
-    </div>
+    </ng-container>
     <div class="row">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="IDIM9"></codx-label>
-        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="idiM9">
+        <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
+        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+          field="umid">
         </codx-input>
       </div>
     </div>
@@ -141,21 +148,24 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="Quantity"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="quantity">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="quantity">
           </codx-input>
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="UnitPrice"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="unitPrice">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="unitPrice">
           </codx-input>
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="NetAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="netAmt">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="netAmt">
           </codx-input>
         </div>
       </div>
@@ -164,44 +174,86 @@
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="VATID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="vatid">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="vatid">
           </codx-input>
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="VATAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="vatAmt">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="vatAmt">
           </codx-input>
         </div>
       </div>
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DiscAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="discAmt">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="discAmt">
           </codx-input>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-4">
+      <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="OffsetAcctID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="offsetAcctID">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="offsetAcctID">
           </codx-input>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="InventAcctID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="inventAcctID">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="inventAcctID">
           </codx-input>
         </div>
       </div>
-      <div class="col-4">
+    </div>
+    <div class="row">
+      <div *ngIf="journals.diM1Control == '1'" class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="diM1">
+          </codx-input>
+        </div>
+      </div>
+      <div *ngIf="journals.diM2Control == '1'" class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="diM2">
+          </codx-input>
+        </div>
+      </div>
+      <div *ngIf="journals.diM3Control == '1'" class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="diM3">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngIf="journals.projectControl" class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ProjectID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="projectID">
+          </codx-input>
+        </div>
+      </div>
+      <div *ngIf="journals.assetControl" class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="AssetID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)" field="assetID">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+            field="assetID">
           </codx-input>
         </div>
       </div>

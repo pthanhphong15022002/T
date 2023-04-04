@@ -51,11 +51,12 @@ export class ForwardComponent implements OnInit {
   }
   onSave()
   {
-    this.forwardForm.value.userID = this.forwardForm.value.userID.join(";");
-    this.forwardForm.value.funcID = this.formModel?.funcID;
-    this.forwardForm.value.referType = "source";
-    this.forwardForm.value.entityName = this.formModel?.entityName;
-    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forwardForm.value).subscribe((item)=>{
+    let forwardForm: any = this.forwardForm.value;
+    forwardForm.userID = forwardForm.userID.join(";");
+    forwardForm.funcID = this.formModel?.funcID;
+    forwardForm.referType = "source";
+    forwardForm.entityName = this.formModel?.entityName;
+    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , forwardForm).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })

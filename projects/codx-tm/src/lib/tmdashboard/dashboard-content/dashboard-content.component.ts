@@ -6,8 +6,6 @@ import {
   Injector,
   Input,
   QueryList,
-  TemplateRef,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -30,10 +28,13 @@ export class DashboardContentComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('template') template: TemplateRef<any>;
-  @ViewChildren('team_dashboard') templates: QueryList<any>;
+  @ViewChildren('my_dashboard') templates1: QueryList<any>;
+  @ViewChildren('team_dashboard') templates2: QueryList<any>;
+  @ViewChildren('asign_dashboard') templates3: QueryList<any>;
 
-  @Input() reportID: string = 'TMD002';
+  templates: QueryList<any>;
+
+  @Input() reportID: string;
 
   dashboard = [];
 
@@ -355,21 +356,28 @@ export class DashboardContentComponent
 
   constructor(private inject: Injector, private biSerivce: TMDashboardService) {
     super(inject);
-    this.reportID = this.router.snapshot.params['reportID'];
+    if (this.reportID != 'TMD002') {
+      this.reportID = this.router.snapshot.params['reportID'];
+    }
+    this.templates = this.templates2;
+    if (this.reportID == 'TMD002') {
+      this.panels = JSON.parse(
+        '[{"id":"dfeb663a-185a-4fef-85b0-25613979133d","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"30a29412-9253-4033-a5e4-617246359357","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.9435262123249284_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31200119842251084_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5547337482348278_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4533692938771181_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.23559424577365373_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5314304532149856_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
+      );
+      this.datas = JSON.parse(
+        '[{"panelId":"dfeb663a-185a-4fef-85b0-25613979133d","data":"1"},{"panelId":"30a29412-9253-4033-a5e4-617246359357","data":"2"},{"panelId":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","data":"3"},{"panelId":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","data":"4"},{"panelId":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","data":"5"},{"panelId":"0.9435262123249284_layout","data":"6"},{"panelId":"0.31200119842251084_layout","data":"7"},{"panelId":"0.5547337482348278_layout","data":"8"},{"panelId":"0.4533692938771181_layout","data":"9"},{"panelId":"0.23559424577365373_layout","data":"10"},{"panelId":"0.5314304532149856_layout","data":"11"}]'
+      );
+    } else {
+      this.panels = [];
+      this.datas = [];
+    }
   }
 
   onInit(): void {
-    this.codxService.reloadComponent();
+    //alert(JSON.stringify(this.reportID));
   }
 
   ngAfterViewInit(): void {
-    this.panels = JSON.parse(
-      '[{"id":"dfeb663a-185a-4fef-85b0-25613979133d","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"30a29412-9253-4033-a5e4-617246359357","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.9435262123249284_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31200119842251084_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5547337482348278_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4533692938771181_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.23559424577365373_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5314304532149856_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
-    );
-    this.datas = JSON.parse(
-      '[{"panelId":"dfeb663a-185a-4fef-85b0-25613979133d","data":"1"},{"panelId":"30a29412-9253-4033-a5e4-617246359357","data":"2"},{"panelId":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","data":"3"},{"panelId":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","data":"4"},{"panelId":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","data":"5"},{"panelId":"0.9435262123249284_layout","data":"6"},{"panelId":"0.31200119842251084_layout","data":"7"},{"panelId":"0.5547337482348278_layout","data":"8"},{"panelId":"0.4533692938771181_layout","data":"9"},{"panelId":"0.23559424577365373_layout","data":"10"},{"panelId":"0.5314304532149856_layout","data":"11"}]'
-    );
-
     this.biSerivce.loadCharts(this.reportID).subscribe((res: BI_Charts[]) => {
       if (res) {
         res.map((item: BI_Charts, index: number) => {

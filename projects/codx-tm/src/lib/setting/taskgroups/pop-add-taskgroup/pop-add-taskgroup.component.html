@@ -4,13 +4,23 @@
 
 <ng-template #tabDescip>
   <div class="add-taskgroup">
-    <!-- <div class="form-group mt-3">
+    <div class="form-group mt-3">
       <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
       </codx-label>
-      <codx-input field="taskGroupID" [disabled]="disabledShowInput" [formModel]="dialog.formModel"
-        [Group]="dialog.formGroup">
+      <codx-input
+        field="taskGroupID"
+        type="text"
+        [placeholder]="
+          disabledShowInput
+            ? planceHolderAutoNumber
+            : gridViewSetup['TaskGroupID']?.description
+        "
+        [disabled]="disabledShowInput"
+        [crrValue]="taskGroups.taskGroupID"
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
-    </div> -->
+    </div>
     <div class="form-group mt-3">
       <codx-label fiedName="TaskGroupName" [formModel]="dialog.formModel" default="Nhóm công việc">
       </codx-label>
