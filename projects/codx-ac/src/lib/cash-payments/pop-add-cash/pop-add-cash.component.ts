@@ -99,9 +99,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ];
   page: any = 1;
   pageSize = 5;
-  searchText:any;
-  key:any;
-  reverse:boolean = false;
+  searchText: any;
+  key: any;
+  reverse: boolean = false;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -635,8 +635,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
-      dataline:this.cashpaymentline,
-      datacash:this.cashpayment,
+      dataline: this.cashpaymentline,
+      datacash: this.cashpayment,
       type: 'add',
     };
     let opt = new DialogModel();
@@ -878,35 +878,35 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.transactiontext = [];
   }
 
-  sort(key){
+  sort(key) {
     this.reverse = !this.reverse;
     var model = new CashPaymentLine();
     var keymodel = Object.keys(model);
-    keymodel.forEach(element => {
+    keymodel.forEach((element) => {
       if (element.toLocaleLowerCase() == key) {
-        switch(key){
+        switch (key) {
           case 'dr':
           case 'rowNo':
             if (!this.reverse) {
               this.cashpaymentline = this.cashpaymentline.sort(
                 (a, b) => a[element] - b[element]
               );
-            }else{
+            } else {
               this.cashpaymentline = this.cashpaymentline.sort(
                 (a, b) => b[element] - a[element]
               );
-            } 
+            }
             break;
           default:
             if (!this.reverse) {
-              this.cashpaymentline = this.cashpaymentline.sort(
-                (a, b) => a[element] > b[element] ? 1 : -1
+              this.cashpaymentline = this.cashpaymentline.sort((a, b) =>
+                a[element] > b[element] ? 1 : -1
               );
-            }else{
-              this.cashpaymentline = this.cashpaymentline.sort(
-                (a, b) => b[element] > a[element] ? 1 : -1
+            } else {
+              this.cashpaymentline = this.cashpaymentline.sort((a, b) =>
+                b[element] > a[element] ? 1 : -1
               );
-            } 
+            }
             break;
         }
       }
