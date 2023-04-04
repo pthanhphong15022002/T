@@ -13,7 +13,6 @@ import { CoreModule } from '@core/core.module';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
@@ -44,6 +43,7 @@ import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
 import { ScrollPipe } from './chat/chat-box/scrollPipe.pipe';
+import { MessageSystemPipe } from './chat/chat-box/mssgSystem.pipe';
 
 export const routes: Routes = [
   {
@@ -134,7 +134,8 @@ const Component: Type<any>[] = [
   ApproveComponent,
   ApproveDetailComponent,
   ChatContainerComponent,
-  ScrollPipe
+  ScrollPipe,
+  MessageSystemPipe
 ];
 
 @NgModule({
@@ -142,7 +143,6 @@ const Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,

@@ -4,9 +4,6 @@ import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { ClipboardModule } from 'ngx-clipboard';
-import { InlineSVGModule } from 'ng-inline-svg';
-import { HoverPreloadModule } from 'ngx-hover-preload';
 import {
   NgxUiLoaderModule,
   SPINNER,
@@ -164,8 +161,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     BrowserAnimationsModule,
     CommonModule,
     HttpClientModule,
-    ClipboardModule,
-    InlineSVGModule.forRoot(),
 
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
     NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
@@ -184,7 +179,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxReportModule.forRoot({ environment }),
     CodxShareModule,
     AppRoutingModule,
-    HoverPreloadModule,
     NgxSkeletonLoaderModule.forRoot({
       animation: 'pulse',
       loadingText: 'This item is actually loading...',

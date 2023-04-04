@@ -2,13 +2,12 @@ import { JournalNamesComponent } from './journal-names/journal-names.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAcComponent } from './codx-ac.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CurrencyFormComponent } from './currency-form/currency-form.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
@@ -73,6 +72,7 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
+import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 
 export const routes: Routes = [
   {
@@ -82,24 +82,29 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'cashreceipts/:funcID',
         component: CashReceiptsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'purchaseinvoices/:funcID',
         component: PurchaseinvoicesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'journalnames/:funcID',
         component: JournalNamesComponent,
+        data: { noReuse: true },
       },
-      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
       {
         path: 'cashtranfers/:funcID',
         component: CashTransfersComponent,
+        data: { noReuse: true },
       },
+      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
   {
@@ -222,12 +227,12 @@ export const routes: Routes = [
     VoucherComponent,
     PopAddLinecashComponent,
     NameByIdPipe,
+    PopAddLinereceiptsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule,
     CodxShareModule,
-    InlineSVGModule,
     CommonModule,
     FormsModule,
     CoreModule,

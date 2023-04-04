@@ -32,4 +32,22 @@ export class CodxCmService {
       key
     );
   }
+
+  getOne(recID, funcID){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'GetOneAsync',
+      [recID, funcID]
+    );
+  }
+
+  updateContactCrm(contact, funcID, recIDCrm){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'UpdateContactCrmAsync',
+      [contact, funcID, recIDCrm]
+    );
+  }
 }

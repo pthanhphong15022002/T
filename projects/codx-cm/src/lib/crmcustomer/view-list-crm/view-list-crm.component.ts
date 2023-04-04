@@ -10,6 +10,7 @@ export class ViewListCrmComponent implements OnInit {
   @Input() formModel: any;
   @Input() vllPriority = '';
   @Input() funcID = 'CM0101';
+  @Input() entityName: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   constructor() { }
 

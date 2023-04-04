@@ -136,6 +136,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         textDefault: 'Xét duyệt',
         isActive: false,
       });
+    this.api.execSv("DM","DM","FileBussiness","GetFilesByTrackLogIDAsync","00ef0f56-cf6f-11ed-b735-d89ef34ba7ae").subscribe()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -697,7 +698,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           {
             gridViewSetup: this.gridViewSetup,
             files: this.data?.files,
-            funcID: this.formModel?.funcID
+            formModel: this.formModel
           },
           option
         );
@@ -797,8 +798,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog = this.callfunc.openSide(
           AddLinkComponent,
           {
+            headerText: val?.data?.customName,
             gridViewSetup: this.gridViewSetup,
             option: option,
+            data:datas,
           },
           option
         );
@@ -1038,7 +1041,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                               if(res3) {
                                                 this.data.status = '3';
                                                 this.data.approveStatus = '1';
-                                                this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType).subscribe(res4=>{
+                                                this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType , this.formModel?.entityName).subscribe(res4=>{
                                                   if(res4.status == 0)
                                                   {
                                                     this.view.dataService.update(this.data).subscribe();
@@ -1057,7 +1060,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                       {
                         this.data.approveStatus = '1';
                         this.data.status = '3';
-                        this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType).subscribe(res4=>{
+                        this.odService.updateDispatch(this.data,this.formModel.funcID ,false,this.referType,this.formModel?.entityName).subscribe(res4=>{
                           if(res4.status == 0)
                           {
                             this.view.dataService.update(this.data).subscribe();
@@ -1212,7 +1215,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         dialog.closed.subscribe((e) => {
           if (e?.event && e?.event[0]) {
             datas.status = '3';
-            that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
+            that.odService.updateDispatch(datas , "", false , this.referType,this.formModel?.entityName).subscribe((item) => {
               if (item.status == 0) {
                 that.view.dataService.update(e.data).subscribe();
               } else that.notifySvr.notify(item.message);
@@ -1285,7 +1288,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '1';
-            this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false , this.referType , this.formModel?.entityName).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1545,7 +1548,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data , "", false , this.referType).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false , this.referType,this.formModel?.entityName).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1628,7 +1631,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false , this.referType,this.formModel?.entityName).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);

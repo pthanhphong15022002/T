@@ -156,12 +156,12 @@
             {{dataSelected?.birthday}}
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row"  *ngIf="dataSelected?.website">
           <div class="col-6">
             <codx-label class="text-gray-300" fiedName="Website" [formModel]="formModel" default="Website:">
             </codx-label>
           </div>
-          <div class="col-6" *ngIf="dataSelected?.website">
+          <div class="col-6">
             {{dataSelected?.website}}
           </div>
         </div>

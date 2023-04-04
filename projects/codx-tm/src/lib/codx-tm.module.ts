@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg';
 import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
@@ -178,13 +177,15 @@ export const routes: Routes = [
       {
         path: 'tmdashboard/:funcID',
         component: TMDashboardComponent,
-        children: [
-          {
-            path: ':reportID',
-            component: DashboardContentComponent,
-          },
-        ],
       },
+      // {
+      //   path: 'teamdashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+      // {
+      //   path: 'assigndashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
     ],
   },
 ];
@@ -230,7 +231,6 @@ const T_Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CoreModule,

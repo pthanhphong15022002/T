@@ -62,13 +62,13 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    //this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+    this.form.formGroup.patchValue(this.cashpaymentline);
   }
   close() {
     this.dialog.close();
   }
   valueChange(e: any) {
-    this.cashpaymentline[e.field] = e.data;
+    //this.cashpaymentline[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -94,22 +94,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     }
   }
   onSave() {
-    switch (this.type) {
-      case 'add':
-        this.checkValidate();
-        if (this.validate > 0) {
-          this.validate = 0;
-          return;
-        }
-        break;
-      case 'edit':
-        this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-            this.cashpaymentline,
-          ])
-          .subscribe((res: any) => {});
-        break;
-    }
     window.localStorage.setItem(
       'dataline',
       JSON.stringify(this.cashpaymentline)

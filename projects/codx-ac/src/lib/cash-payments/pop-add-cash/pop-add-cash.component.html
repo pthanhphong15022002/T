@@ -38,7 +38,13 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-18 me-2"></i>
-              <div class="fw-bold fs-6 text-uppercase">Thông tin chứng từ</div>
+              <div class="fw-bold fs-6 text-uppercase">
+                <codx-label
+                  fiedName="lblVoucherInfo"
+                  [formModel]="formModel"
+                  default="Thông tin chứng từ"
+                ></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
@@ -54,7 +60,13 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <span class="fw-bold fs-6 text-uppercase">Chi tiết</span>
+              <span class="fw-bold fs-6 text-uppercase"
+                ><codx-label
+                  fiedName="lblDetail"
+                  [formModel]="formModel"
+                  default="Chi tiết"
+                ></codx-label>
+              </span>
             </div>
           </ng-template>
           <ng-template #content>
@@ -68,7 +80,13 @@
               <div class="me-2">
                 <div class="icon-format_list_numbered icon-20"></div>
               </div>
-              <div class="fw-bold fs-5">Tổng hợp</div>
+              <div class="fw-bold fs-5">
+                <codx-label
+                  fiedName="lblGeneral"
+                  [formModel]="formModel"
+                  default="Tổng hợp"
+                ></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
@@ -77,9 +95,6 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div class="row mb-2">
-      <ng-container *ngTemplateOutlet="addLine"></ng-container>
-    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -225,30 +240,62 @@
       [height]="gridHeight" [autoLoad]="false" rowHeight="40" (cellChanged)="cashPaymentLineChanged($event)"
       (created)="gridCreated($event)"></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0">
-    <div class="d-flex align-items-center justify-content-end pt-2">
+  <ng-container
+    *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0"
+  >
+    <!-- <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{pageCount}}
+        Tất cả {{ pageCount }}
       </div>
       <div class="mt-2">
         <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
       </div>
-    </div>
-    <div class="table-responsive mt-3" style="height: 420px;border-radius: 5px;">
-      <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-        color: white;">
+    </div> -->
+    <div
+      class="table-responsive mt-3"
+      style="height: 380px; border-radius: 5px"
+    >
+      <table id="myTable" class="table table-hover">
+        <thead
+          style="
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-active);
+            color: white;
+          "
+        >
           <tr>
             <th></th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;"
-              *ngFor="let item of columnGrids">
+            <th style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              " *ngFor="let item of columnGrids">
               <div class="d-flex">
-                <span class="fs-5 fw-bold">{{item.headerText}}</span>
+                <span class="fs-5 fw-bold me-2">{{ item.headerText }}</span>
+                <!-- <span [ngbPopover]="popContent" [popoverTitle]="popTitle" [autoClose]="'outside'">
+                  <i *ngIf="item.allowFilter" style="color: white;" class="icon-filter_line icon-18"></i>
+                </span>
+                <ng-template #popTitle>
+                  <span style="width: auto; white-space: nowrap;">Lọc theo {{item.headerText}}</span>
+                </ng-template>
+                <ng-template #popContent>
+                  <codx-input [field]="item.field" [formModel]="fmCashPaymentsLines">
+                  </codx-input>
+                </ng-template> -->
               </div>
             </th>
           </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6;" *ngFor="let item of cashpaymentline">
+        <tbody
+          style="border-bottom: 1px solid #dee2e6"
+          *ngFor="
+            let item of cashpaymentline
+              | slice : (page - 1) * pageSize : page * pageSize
+          "
+        >
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
@@ -263,33 +310,56 @@
               </div>
             </td>
             <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
-              <div *ngFor="let keymodel of keymodel"
-                style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+              <div *ngFor="let keymodel of keymodel" style="
+                  width: 100px;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                ">
                 <!-- rowno line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
-                  <div
-                    style="background: var(--primary-active);width: 31px;height: 30px;align-items: center;border-radius: 50px;"
-                    class="d-flex justify-content-start">
-                    <span style="display: block;margin: auto;color: white;"
-                      class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                <span *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'rowno'
+                  ">
+                  <div style="
+                      background: var(--primary-active);
+                      width: 31px;
+                      height: 30px;
+                      align-items: center;
+                      border-radius: 50px;
+                    " class="d-flex justify-content-start">
+                    <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">{{ item[keymodel]
+                      }}</span>
                   </div>
                 </span>
-                <div style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
-                  [ngbTooltip]="item[keymodel]">
-                  <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'note'">
-                    <span *ngIf="items.field == keymodel.toLowerCase()">{{item[keymodel]}}</span>
+                <div style="
+                    width: 100px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  " [ngbTooltip]="item[keymodel]">
+                  <span *ngIf="
+                      items.field == keymodel.toLowerCase() &&
+                      items.field == 'note'
+                    ">
+                    <span *ngIf="items.field == keymodel.toLowerCase()">{{
+                      item[keymodel]
+                      }}</span>
                   </span>
                 </div>
                 <!-- other line -->
-                <span [ngbTooltip]="item[keymodel]"
-                  *ngIf="items.field == keymodel.toLowerCase() && items.field != 'rowno' && items.field != 'note'">{{item[keymodel]}}</span>
+                <span [ngbTooltip]="item[keymodel]" *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field != 'rowno' &&
+                    items.field != 'note'
+                  ">{{ item[keymodel] }}</span>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
+        <div style="position: inherit;" class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
@@ -298,11 +368,7 @@
           </div>
         </div>
       </div>
-      <div style="position: relative">
-        <ngx-ui-loader [loaderId]="'loader-01'"></ngx-ui-loader>
-      </div>
-
-      <div id="mySearch" style="display: none;" class="container w-90 h-90">
+      <div id="mySearch" style="display: none" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
@@ -315,7 +381,7 @@
       <div id="myBtn" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px;" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+            <button style="border-radius: 49px" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
               <div class="d-flex align-items-center">
                 <i class="icon-add_box icon-18"></i>
                 <span class="fs-5">Thêm dòng</span>
@@ -326,8 +392,61 @@
       </div>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-start me-10">
-    <span class="fs-5 fw-bold">Tổng tiền: {{total}}</span>
+  <div *ngIf="cashpaymentline.length > 0" class="container w-90 h-90">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="cashpaymentline.length"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+  <!-- <ng-container *ngIf="modegrid == 3">
+    <ejs-grid class="mt-3" #grid [dataSource]='cashpaymentline' height='400px'>
+      <e-columns>
+        <e-column field='' headerText='' width='150'>
+        </e-column>
+        <e-column [field]='item.field' [headerText]='item.headerText' width='200' *ngFor="let item of columnGrids">
+        </e-column>
+      </e-columns>
+      <ng-template #rowTemplate let-data>
+        <tr>
+          <td style="border-bottom:1px solid #dee2e6 ;">
+            <div class="d-flex">
+              <span type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
+                <i class="icon-edit_square icon-16"></i>
+              </span>
+              <span type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(data)">
+                <i class="icon-delete icon-16"></i>
+              </span>
+            </div>
+          </td>
+          <td *ngFor="let items of columnGrids" style="border-bottom:1px solid #dee2e6 ;">
+            <div *ngFor="let keymodel of keymodel">
+              <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
+                <div
+                  style="background: var(--primary-active);width: 31px;height: 30px;align-items: center;border-radius: 50px;"
+                  class="d-flex justify-content-start">
+                  <span style="display: block;margin: auto;color: white;" class="fs-5 fw-bold">{{data[keymodel]}}</span>
+                </div>
+              </span>
+              <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'note'">
+                <div [ngbTooltip]="data[keymodel]">
+                  <span  class="fs-5">{{data[keymodel]}}</span>
+                </div>
+              </span>
+              <span [ngbTooltip]="data[keymodel]"
+                *ngIf="items.field == keymodel.toLowerCase() && items.field != 'rowno' && items.field != 'note'">{{data[keymodel]}}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </ejs-grid>
+  </ng-container> -->
+  <div class="d-flex align-items-center justify-content-start me-10 mt-3">
+    <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
   </div>
 </ng-template>
 <!-- End: CashPaymentLine -->
@@ -339,8 +458,18 @@
       entityName="AC_VoucherLineRefs" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="voucherLineRefs"
       service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="voucherLineRefsChanged($event)" (created)="gridCreated($event)"
-      (inputClick)="voucherLineRefsCellClick($event)"></codx-gridview-v2>
+      (cellChanged)="voucherLineRefsChanged($event)" (created)="gridCreated($event)"></codx-gridview-v2>
+  </div>
+  <div class="form-group mt-6 mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
+          <button type="button" class="btn btn-light-primary" (click)="openVoucher()">
+            <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <!-- End: VoucherLineRefs -->
@@ -365,22 +494,6 @@
 </ng-template>
 <!-- End: Footer -->
 
-<!-- Start: Add line -->
-<ng-template #addLine let-data>
-  <div class="form-group mb-0 row" *ngIf="cashpayment.voucherType === '1' && modegrid == 1">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button type="button" class="btn btn-light-primary" (click)="addRow()">
-            <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-<!-- End: Add line -->
-
 <!-- Start: Tab Referen -->
 <ng-template #tabRef>
   <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="cashpayment.recID"
@@ -397,7 +510,9 @@
           <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
           <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
-        <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase">{{headerText}}</div>
+        <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase">
+          {{ headerText }}
+        </div>
         <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
           <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
           </codx-input>

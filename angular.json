@@ -67,9 +67,7 @@
               "crypto-js",
               "object-path",
               "clipboard.js",
-              "jquery",
-              "moment",
-              "jquery.orgchart.js"
+              "moment"
             ]
           },
           "configurations": {
@@ -777,6 +775,5 @@
         }
       }
     }
-  },
-  "defaultProject": "CodxUI"
+  }
 }

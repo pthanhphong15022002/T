@@ -56,7 +56,7 @@ export class EmployeesLeaveComponent  extends UIComponent {
       { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      { field: '', headerText: '', width: 40, template: this.itemAction }
+      // { field: '', headerText: '', width: 100, template: this.itemAction }
     ];
     this.views = [
       {
@@ -67,7 +67,9 @@ export class EmployeesLeaveComponent  extends UIComponent {
         model: {
           resources: this.columnsGrid,
           // template: this.grid,
-        }
+          hideMoreFunc: true
+        },
+        
       },
       {
         id: '2',

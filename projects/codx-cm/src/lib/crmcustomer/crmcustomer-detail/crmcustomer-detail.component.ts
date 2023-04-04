@@ -1,3 +1,4 @@
+import { CodxCmService } from './../../codx-cm.service';
 import {
   Component,
   Input,
@@ -47,10 +48,14 @@ export class CrmcustomerDetailComponent implements OnInit {
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
+    private cmSv: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('-------------00000-------------',this.dataSelected);
+    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataSelected.recID) {
@@ -59,6 +64,14 @@ export class CrmcustomerDetailComponent implements OnInit {
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
+  }
+
+  getOneData(recID, funcID) {
+    this.cmSv.getOne(recID, funcID).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res;
+      }
+    });
   }
 
   listTab(funcID) {
@@ -96,32 +109,49 @@ export class CrmcustomerDetailComponent implements OnInit {
         },
       ];
     } else if (funcID == 'CM0102') {
-      this.tabDetail = [
-        {
-          name: 'Information',
-          textDefault: 'Thông tin chung',
-          icon: 'icon-info',
-          isActive: true,
-        },
-        {
-          name: 'Task',
-          textDefault: 'Công việc',
-          icon: 'icon-format_list_numbered',
-          isActive: false,
-        },
-        {
-          name: 'Opportunity',
-          textDefault: 'Cơ hội',
-          icon: 'icon-add_shopping_cart',
-          isActive: false,
-        },
-        {
-          name: 'Product',
-          textDefault: 'Sản phẩm đã mua',
-          icon: 'icon-shopping_bag',
-          isActive: false,
-        },
-      ];
+      if (this.dataSelected.isCustomer == true) {
+        this.tabDetail = [
+          {
+            name: 'Information',
+            textDefault: 'Thông tin chung',
+            icon: 'icon-info',
+            isActive: true,
+          },
+          {
+            name: 'Task',
+            textDefault: 'Công việc',
+            icon: 'icon-format_list_numbered',
+            isActive: false,
+          },
+          {
+            name: 'Opportunity',
+            textDefault: 'Cơ hội',
+            icon: 'icon-add_shopping_cart',
+            isActive: false,
+          },
+          {
+            name: 'Product',
+            textDefault: 'Sản phẩm đã mua',
+            icon: 'icon-shopping_bag',
+            isActive: false,
+          },
+        ];
+      } else {
+        this.tabDetail = [
+          {
+            name: 'Information',
+            textDefault: 'Thông tin chung',
+            icon: 'icon-info',
+            isActive: true,
+          },
+          {
+            name: 'Task',
+            textDefault: 'Công việc',
+            icon: 'icon-format_list_numbered',
+            isActive: false,
+          },
+        ];
+      }
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {
@@ -178,11 +208,12 @@ export class CrmcustomerDetailComponent implements OnInit {
   clickAddContact() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'CRMCustomers';
-    dataModel.gridViewName = 'grvCRMCustomers';
-    dataModel.entityName = 'CRM_Customers';
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    this.callFc.openForm(
+    var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
@@ -192,6 +223,24 @@ export class CrmcustomerDetailComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var contactsPerson = e.event;
+        contactsPerson.contactType = '2';
+        this.cmSv
+          .updateContactCrm(
+            contactsPerson,
+            this.funcID,
+            this.dataSelected.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.dataSelected.contacts.push(contactsPerson);
+            }
+          });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   getNameCrm(data) {

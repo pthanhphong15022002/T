@@ -2,8 +2,9 @@
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
             <codx-comment-history 
-                [type]="'create'" 
-                [dVll]="dVll" [vllIcon]="vllIcon" 
+                [new]="true" 
+                [dVll]="dVll" 
+                [vllIcon]="vllIcon" 
                 [funcID]="funcID" 
                 [formModel]="formModel"
                 [actionType]="actionType" 
@@ -29,7 +30,6 @@
             [dVll]="dVll" 
             [vllIcon]="vllIcon"  
             [actionType]="item.actionType" 
-            [type]="'view'"
             [formModel]="formModel"
             (evtDelete)="deleteComment($event)" 
             (evtReply)="replyTo($event)" 
@@ -46,7 +46,7 @@
         </ng-container>
         <ng-container *ngIf="item.showReply">
             <codx-comment-history 
-                [type]="'create'" 
+                [new]="true"
                 [funcID]="funcID" 
                 [actionType]="actionType"
                 [formModel]="formModel"

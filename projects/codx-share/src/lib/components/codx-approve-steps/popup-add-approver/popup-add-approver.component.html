@@ -11,10 +11,19 @@
   <ng-template #body>
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="formModel"> </codx-label>
-      <codx-input
+      <!-- <codx-input
         field="email"
         [Group]="fgroupApprover"
         [formModel]="formModel"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input> -->
+      <codx-input
+        field="email"
+        type="combobox"
+        refType="3"
+        [refValue]="cbxEmail"
+        [crrValue]="data.email"
         (valueChange)="valueChange($event)"
       >
       </codx-input>

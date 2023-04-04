@@ -60,16 +60,15 @@
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
-  <codx-temp-full style="width: 100%" [title]="data.title" [descTmp]="descTmp">
+  <codx-temp-full
+    style="width: 100%"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
+    [title]="data.title"
+    [descTmp]="descTmp"
+  >
   </codx-temp-full>
   <ng-template #descTmp>
     <div class="flex-body">
-      <!-- <div class="d-flex align-items-center">
-        <span class="text-gray-600 icon-14 icon-apartment me-1"></span><span>Khanh bá đạo gặp Thảo cũng phải khóc !!!</span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="text-gray-600"></span><span>70% la cai gi</span>
-      </div> -->
       <div class="d-flex justify-content-end">
         <span
           #pCr="ngbPopover"
@@ -147,7 +146,23 @@
 </ng-template>
 
 <ng-template #popDetail let-dialog>
-  <codx-form [body]="templateDetail" [dialog]="dialog"> </codx-form>
+  <codx-form [body]="detailPopupClick" [dialog]="dialog">
+    <ng-template #detailPopupClick>
+      <codx-instance-detail
+        [dataService]="view.dataService"
+        [formModel]="view.formModel"
+        [dataSelect]="dataSelected"
+        (moreFunctionEvent)="clickMoreFunc($event)"
+        (changeMF)="changeMF($event)"
+        [listStepsProcess]="process.steps"
+        [listCbxProccess]="listProccessCbx"
+        [viewModelDetail]="this.process.viewModeDetail"
+        [tabInstances]="tabInstances"
+        [viewsCurrent]="'k-'"
+      >
+      </codx-instance-detail>
+    </ng-template>
+  </codx-form>
 </ng-template>
 <!-- end kanban -->
 
@@ -170,7 +185,7 @@
 </ng-template>
 
 <ng-template #baseHeaderRightTmp let-data>
-  <span [class]="data.closed ? 'icon-lock' : ''"> </span>
+  <span [class]="data.closed ? 'icon-lock text-danger' : ''"> </span>
 </ng-template>
 
 <ng-template #descTmp let-data>
@@ -275,6 +290,7 @@
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
     [tabInstances]="tabInstances"
+    [viewsCurrent]="'d-'"
   >
   </codx-instance-detail>
 </ng-template>
@@ -298,4 +314,43 @@
       [setRequire]="false"
     ></codx-label>
   </span>
+</ng-template>
+<ng-template #footerButton>
+  <codx-dropdown-select
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    [emptyText]="grvSetup['Status']?.headerText"
+    [isMulti]="grvSetup.Status?.multiSelect"
+    type="valuelist"
+    [field]="'Status'"
+    [refValue]="grvSetup.Status?.referedValue"
+    (valueChange)="valueChangeFilterStatus($event)"
+  ></codx-dropdown-select>
+
+  <!-- <codx-dropdown-select
+    (valueChange)="valueToolbarChange($event, item.fieldName)"
+    [field]="item.fieldName"
+    [value]="item.defaultSearchValue"
+    [emptyText]="item.headerText"
+    [refValue]="item.referedValue"
+    [cssClass]="'rounded-pill border-1'"
+    [isMulti]="item.multiFilter"
+    [fieldName]="item.headerText"
+    [type]="'valuelist'"
+    [textType]="'raw'"
+    cssPopup="h-450px w-300px"
+    [isToolbar]="true"
+  ></codx-dropdown-select> -->
+ 
+  <codx-dropdown-select
+    *ngIf="process"
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    [isMulti]="false"
+    type="valuelist"
+    [emptyText]="grvSetup.StepID.headerText"
+    field="StepID"
+    [dataSource]="stepsResource"
+    (valueChange)="valueChangFilterStepID($event)"
+  ></codx-dropdown-select>
 </ng-template>

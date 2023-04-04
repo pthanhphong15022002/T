@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   CodxFormComponent,
   CodxGridviewV2Component,
+  DialogData,
   DialogRef,
   FormModel,
   Util,
@@ -17,13 +18,12 @@ import { CM_Products, CM_Quotations } from '../../models/cm_model';
 })
 export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('gridVoucherLineRefs')
-  public gridProductsLine: CodxGridviewV2Component;
+  @ViewChild('gridProductsLine') gridProductsLine: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('cashGeneral') cashGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  quotations : CM_Quotations
+  quotations: CM_Quotations;
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
@@ -39,10 +39,15 @@ export class PopupAddQuotationsComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  productsLine :Array<CM_Products> = []; //mang san pham
+  productsLine: Array<CM_Products> = []; //mang san pham
 
-  constructor(public sanitizer: DomSanitizer) {
-    //tesst
+  constructor(
+    public sanitizer: DomSanitizer,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.dialog = dialog;
+    this.quotations = new CM_Quotations();
     this.quotations.recID = Util.uid();
   }
 
@@ -71,8 +76,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.write = true;
     data.delete = true;
     data.read = true;
-    data.rowNo = idx + 1;
-    data.transID = this.quotations?.recID;
+    // data.rowNo = idx + 1;
+    // data.transID = this.quotations?.recID;
     this.gridProductsLine.addRow(data, idx);
   }
 }

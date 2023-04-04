@@ -89,6 +89,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
 
   dialog: any;
   isChart: boolean = false;
+  isEditMode:boolean = false;
 
   annotations: ChartAnnotationSettingsModel[] = [];
 

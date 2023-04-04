@@ -18,7 +18,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
+          *ngIf="isUpdate"
         >
           <i
             [ngClass]="'icon-edit-one icon-18'"
@@ -31,7 +31,8 @@
           (click)="
             clickShow(
               $event,
-              titleDefault ? dataStep.recID : 'v-' + dataStep.recID
+              viewsCurrent +
+                (titleDefault ? dataStep.recID : 'v-' + dataStep.recID)
             )
           "
         >
@@ -41,7 +42,9 @@
     </div>
   </div>
   <div
-    id="{{ titleDefault ? dataStep.recID : 'v-' + dataStep.recID }}"
+    id="{{
+      viewsCurrent + (titleDefault ? dataStep.recID : 'v-' + dataStep.recID)
+    }}"
     class="main"
     [ngClass]="'show-main'"
   >
@@ -67,19 +70,53 @@
 
 <ng-template #viewCustomFields let-data>
   <div
-    id="{{ titleDefault ? data.recID : 'v-' + data.recID }}"
-    class="show-main border border-gray-200 rounded px-6 py-4"
+    id="{{ viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID) }}"
+    class="show-main border border-gray-200 rounded px-6 py-4 cursor-pointer"
     (dblclick)="
-      clickInput(titleDefault ? data.recID : 'v-' + data.recID, dataStep, true)
+      clickInput(
+        viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID),
+        dataStep,
+        true
+      )
     "
   >
-    <div class="fw-bold mb-1">
-      {{ data.title }}
-    </div>
-    <div class="cursor-pointer">
-      <span class="place-holder margin-l" *ngIf="!data.dataValue">
-        {{ data.title }}
+    <div>
+      <span class="fw-bold mb-1">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
       </span>
+    </div>
+
+    <div class="">
+      <ng-container *ngIf="!data.dataValue">
+        <span class="place-holder margin-l" *ngIf="data.dataType != 'R'">
+          {{ data.title }}
+        </span>
+        <ng-container *ngIf="data.dataType == 'R'">
+          <ngb-rating
+            rate="0"
+            [max]="data?.rank"
+            [readonly]="true"
+            [starTemplate]="temp"
+          >
+            <ng-template #temp let-fill="fill" let-index="index">
+              <span
+                class="rankIcon {{ data?.rankIcon }} filled"
+                [class.filled]="fill === 100"
+                [class.bad]="index < data?.rank"
+              ></span>
+            </ng-template>
+          </ngb-rating>
+        </ng-container>
+      </ng-container>
+
       <ng-container *ngIf="data.dataValue">
         <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
           {{ data.dataValue }}
@@ -125,7 +162,7 @@
           </ngb-rating>
         </ng-container>
 
-        <ng-container *ngIf="data.dataType == 'P'">
+        <ng-container *ngIf="data.dataType == 'P' ">
           <codx-imgs
             [width]="35"
             [objectId]="data.dataValue"
@@ -171,7 +208,9 @@
 
   <ng-container>
     <div
-      id="fr-{{ titleDefault ? data.recID : 'v-' + data.recID }}"
+      id="fr-{{
+        viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID)
+      }}"
       class="form-group hidden-main border border-gray-200 rounded px-6 py-4"
     >
       <codx-input-custom-field

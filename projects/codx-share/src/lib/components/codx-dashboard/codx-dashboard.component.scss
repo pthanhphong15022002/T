@@ -1,3 +1,15 @@
+.card {
+  background-color: none;
+}
+
+.card-header {
+  display: none !important;
+}
+
+.card-body {
+  display: none !important;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -15,4 +27,8 @@
 }
 .container-fluid {
   padding: 0;
+}
+
+.e-dashboardlayout .e-control .e-panel .e-panel-transition {
+  transition: top .1s, left .1s;
 }

@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog" [footer]="footer"
-  subToolbarCss="text-end" [customToolbar]="subToolbar" [data]="cashpaymentline">
+  [customToolbar]="subToolbar" [data]="cashpaymentline">
 </codx-form>
 <ng-template #subToolbar>
   <div class="w-100">
@@ -129,6 +129,12 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end me-3">
+    <div *ngIf="type != 'edit'" class="ms-2">
+      <button type="button" class="btn btn-light-primary">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+      </button>
+    </div>
     <div class="ms-2">
       <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
         <codx-label *ngIf="type =='add'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
@@ -136,6 +142,7 @@
         <codx-label *ngIf="type =='edit'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
           [gridViewName]="formModel?.gridViewName" default="Cập nhật"></codx-label>
       </button>
+      
     </div>
   </div>
 </ng-template>

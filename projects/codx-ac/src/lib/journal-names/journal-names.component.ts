@@ -82,7 +82,7 @@ export class JournalNamesComponent extends UIComponent {
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
         urlRedirect += func.url;
         this.route.navigate([urlRedirect], {
-          queryParams: { recID: data.recID },
+          queryParams: { recID: data.recID, journalNo: data.journalNo },
         });
       }
     });
@@ -93,23 +93,25 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    this.view.dataService.addNew().subscribe((res) => {
-      console.log(res);
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
+    this.view.dataService
+      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync'))
+      .subscribe((res) => {
+        console.log(res);
+        const options = new SidebarModel();
+        options.Width = '800px';
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
 
-      this.callfc.openSide(
-        PopupAddJournalComponent,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
-    });
+        this.callfc.openSide(
+          PopupAddJournalComponent,
+          {
+            formType: 'add',
+            formTitle: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        );
+      });
   }
 
   edit(e, data): void {

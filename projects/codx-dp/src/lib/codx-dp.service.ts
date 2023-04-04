@@ -291,12 +291,28 @@ export class CodxDpService {
       data
     );
   }
+  startInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'StartInstanceAsync',
+      data
+    );
+  }
 
   moveStageByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
       'MoveStageByIdInstnaceAsync',
+      data
+    );
+  }
+  autoMoveStage(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AutoMoveStageAsync',
       data
     );
   }

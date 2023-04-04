@@ -1,4 +1,3 @@
-import { ifStmt } from '@angular/compiler/src/output/output_ast';
 import {
   AfterViewInit,
   ChangeDetectorRef,
