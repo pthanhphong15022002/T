@@ -80,9 +80,20 @@
       )
     "
   >
-    <div class="fw-bold mb-1">
-      {{ data.title }}
+    <div>
+      <span class="fw-bold mb-1">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
+      </span>
     </div>
+
     <div class="">
       <ng-container *ngIf="!data.dataValue">
         <span class="place-holder margin-l" *ngIf="data.dataType != 'R'">
@@ -151,7 +162,7 @@
           </ngb-rating>
         </ng-container>
 
-        <ng-container *ngIf="data.dataType == 'P'">
+        <ng-container *ngIf="data.dataType == 'P' ">
           <codx-imgs
             [width]="35"
             [objectId]="data.dataValue"

@@ -220,16 +220,16 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlignAssign(this.oldOB?.recID, OMCONST.VLL.RefType_Link.Align)
+        .getListAlign(this.oldOB?.recID)
         .subscribe((res: any) => {
           if (res) {
-            this.listAlign =res;           
+            this.listAlign = res;           
           }
         });
   }
   getListAssign(){
     this.codxOmService
-        .getListAlignAssign(this.oldOB?.recID, OMCONST.VLL.RefType_Link.Assign)
+        .getListAssign(this.oldOB?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           
