@@ -1533,12 +1533,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               //   this.step.fields.push(this.fieldCrr);
               // }
               this.stepList.forEach((x) => {
-                if (x.recID == this.fieldCrr.stepID)
+                if (x.recID == this.fieldCrr.stepID) {
                   x.fields.push(this.fieldCrr);
-                if (this.action == 'edit') {
-                  let check = this.listStepEdit.some((id) => id == x?.recID);
-                  if (!check) {
-                    this.listStepEdit.push(x?.recID);
+                  if (this.action == 'edit') {
+                    let check = this.listStepEdit.some((id) => id == x?.recID);
+                    if (!check) {
+                      this.listStepEdit.push(x?.recID);
+                    }
                   }
                 }
               });
@@ -1587,14 +1588,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.fieldCrr = e.event;
               this.fieldCrr.sorting = this.step.fields.length;
               this.stepList.forEach((x) => {
-                if (x.recID == this.fieldCrr.stepID)
+                if (x.recID == this.fieldCrr.stepID){
                   x.fields.push(this.fieldCrr);
-                if (this.action == 'edit') {
-                  let check = this.listStepEdit.some((id) => id == x?.recID);
-                  if (!check) {
-                    this.listStepEdit.push(x?.recID);
+                  if (this.action == 'edit') {
+                    let check = this.listStepEdit.some((id) => id == x?.recID);
+                    if (!check) {
+                      this.listStepEdit.push(x?.recID);
+                    }
                   }
-                }
+                } 
               });
               this.changeDetectorRef.detectChanges();
             }
@@ -1638,14 +1640,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
-              // if (this.step.recID == this.fieldCrr.stepID) {
-              //   let index = this.step.fields.findIndex(
-              //     (x) => x.recID == this.fieldCrr.recID
-              //   );
-              //   if (index != -1) {
-              //     this.step.fields[index] = this.fieldCrr;
-              //   }
-              // }
               this.stepList.forEach((obj) => {
                 if (obj.recID == this.fieldCrr.stepID) {
                   let index = obj.fields.findIndex(
@@ -2584,7 +2578,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       let groupFind = task['taskGroupID']
         ? this.taskGroupList.find((x) => x['recID'] === task['taskGroupID'])
         : null;
-      let hourGroup = groupFind ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
+      let hourGroup = groupFind
+        ? this.sumHourGroupTask(groupFind['indexNo'] - 1)
+        : 0;
       return hourGroup + this.getHour(task);
     } else {
       const parentIds = task.parentID.split(';');
