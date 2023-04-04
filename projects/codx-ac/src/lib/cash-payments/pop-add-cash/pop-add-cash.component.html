@@ -207,7 +207,7 @@
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
               <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+                (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule == '1'">
               </codx-input>
             </div>
           </div>

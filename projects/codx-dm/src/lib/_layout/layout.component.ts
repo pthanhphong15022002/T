@@ -42,11 +42,9 @@ export class LayoutComponent
 {
   // Public variables
   override contentContainerClasses = '';
-  override headerCSSClasses?: string;
   override headerHTMLAttributes: any = {};
   override headerLeft: string = 'menu';
   override asideDisplay: boolean = false;
-  override asideCSSClasses?: string;
   disableInput = false;
   module = 'DM';
   dialog: DialogRef;

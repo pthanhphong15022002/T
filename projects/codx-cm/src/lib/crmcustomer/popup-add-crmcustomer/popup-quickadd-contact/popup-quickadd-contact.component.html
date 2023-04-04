@@ -1,7 +1,7 @@
 <div class="container-body p-5">
   <div class="d-flex justify-content-between mb-4">
     <div class="h3">
-      <codx-label name="lblQuickAdd" [formModel]="dialog.formModel" default="Thêm nhanh liên hệ"></codx-label>
+      <codx-label name="lblQuickAdd" [formModel]="dialog.formModel" [default]="title + ' ' + 'nhanh liên hệ'"></codx-label>
     </div>
     <div class="d-flex justify-content-end">
       <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
@@ -37,7 +37,7 @@
       </codx-input> -->
     </div>
     <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" fiedName="PhoneNumber" default="Điện thoại">
+      <codx-label [formModel]="dialog.formModel" fiedName="PhoneNumber">
       </codx-label>
       <codx-input type="text" [crrValue]="data?.phoneNumber" (valueChange)="valueChange($event)"
         [formModel]="dialog.formModel" field="phoneNumber">
@@ -51,7 +51,7 @@
       </codx-input> -->
     </div>
     <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" fiedName="Email" default="Email">
+      <codx-label [formModel]="dialog.formModel" fiedName="Email">
       </codx-label>
       <codx-input type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)"
         [formModel]="dialog.formModel" field="email">
@@ -71,7 +71,7 @@
             [formModel]="dialog.formModel" field="allowCall"> </codx-input>
         </div>
         <div class="w-100">
-          <codx-label [formModel]="dialog.formModel" fiedName="AllowCall" default="Không điện thoại">
+          <codx-label [formModel]="dialog.formModel" fiedName="AllowCall">
           </codx-label>
         </div>
       </div>
@@ -90,7 +90,7 @@
             [formModel]="dialog.formModel" field="allowEmail"> </codx-input>
         </div>
         <div class="w-100">
-          <codx-label [formModel]="dialog.formModel" fiedName="AllowEmail" default="Không gửi mail">
+          <codx-label [formModel]="dialog.formModel" fiedName="AllowEmail">
           </codx-label>
         </div>
       </div>

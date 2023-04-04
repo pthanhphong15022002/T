@@ -30,7 +30,6 @@
 // import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 // import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 // import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-// import { InlineSVGModule } from 'ng-inline-svg';
 // import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
 // import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 // import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
@@ -389,7 +388,6 @@ import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
@@ -703,7 +701,6 @@ const T_Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),

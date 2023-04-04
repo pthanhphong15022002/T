@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { CacheService, CallFuncService, FormModel, SidebarModel } from 'codx-core';
+import { CacheService, CallFuncService, DialogRef, FormModel, SidebarModel } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 import { PopupTaskComponent } from '../popup-task/popup-task.component';
+import { PopupTypeTaskComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
+import { PopupAddStaskComponent } from 'projects/codx-dp/src/lib/instances/instance-detail/stages-detail/popup-add-stask/popup-add-stask.component';
 
 @Component({
   selector: 'codx-show-task',
@@ -13,7 +15,8 @@ export class CodxShowTaskComponent implements OnInit {
   @Input() formModel: FormModel;
   @Output() clickMF = new EventEmitter<any>();
   data: any;
-
+  popupJob: DialogRef;
+  jobType: any;
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTypeTask = [];
@@ -28,7 +31,11 @@ export class CodxShowTaskComponent implements OnInit {
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
-  ) {}
+  ) {
+    if(this.dataSource && !this.dataSource['taskGroups']){
+      this.dataSource['taskGroups'] = [];
+    }
+  }
 
   async ngOnInit(){
     this.grvMoreFunction = await this.getFormModel('DPT0402');
@@ -62,23 +69,27 @@ export class CodxShowTaskComponent implements OnInit {
   }
 
    async groupByTask(data) {  
-    if (data && !data['isSuccessStep'] && !data['isFailStep']) {
-      console.log(data?.tasks);
-      
-      const taskGroupList = data?.tasks?.reduce((group, product) => {
-        const { taskGroupID } = product;
-        group[taskGroupID] = group[taskGroupID] ?? [];
-        group[taskGroupID].push(product);
-        return group;
-      }, {});
-      const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
-        return {
-          ...taskGroup,
-          task: taskGroupList[taskGroup['recID']] ?? [],
-        };
-      });
-      data['taskGroups'] = taskGroupConvert;
-    }
+      // console.log(data?.tasks); 
+      // const taskGroupList = data?.tasks?.reduce((group, product) => {
+      //   const { taskGroupID } = product;
+      //   group[taskGroupID] = group[taskGroupID] ?? [];
+      //   group[taskGroupID].push(product);
+      //   return group;
+      // }, {});
+      // const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
+      //   return {
+      //     ...taskGroup,
+      //     task: taskGroupList[taskGroup['recID']] ?? [],
+      //   };
+      // });
+      // data['taskGroups'] = taskGroupConvert;
+
+      if (this.dataSource['taskGroups']?.length > 0 || this.dataSource['tasks']?.length > 0) {
+        let taskGroup = {};
+        taskGroup['task'] = this.dataSource['tasks']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.dataSource['taskGroups'].push(taskGroup);
+      }
   }
 
   // clickMFTaskGroup(e: any, data?: any) {
@@ -114,11 +125,11 @@ export class CodxShowTaskComponent implements OnInit {
             (type) => type.value === data.taskType
           );
         }
-        this.handleTask('edit',typeTask, data);
+        this.handleTask(null,'edit');
         break;
       case 'SYS04':
         typeTask = data.taskType;
-        this.handleTask('copy', data);
+        this.handleTask(data, 'copy');
         break;
       // case 'DP07':
       //   jobType = data.taskType;
@@ -127,82 +138,107 @@ export class CodxShowTaskComponent implements OnInit {
     }
   }
 
-  handleTask(action: string, typeTask: string, data?: any,) {
-    let roleOld;
+  openPopupTaskGroup(){
+
+  }
+
+  openTypeTask() {
+    this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
+    this.popupJob.closed.subscribe(async (value) => {
+      if (value?.event && value?.event?.value) {
+        this.jobType = value?.event;
+        this.handleTask(null, 'add');
+      }
+    });
+  }
+
+  handleTask(data?: any, status?: string) {
     let taskGroupIdOld = '';
-    let taskInput = {};
-    if (action === 'add') {
-      // this.popupJob.close();
-    } else if (action === 'copy') {
-      taskInput = JSON.parse(JSON.stringify(data));
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    if (!data) {
+      this.popupJob.close();
     } else {
       taskGroupIdOld = data['taskGroupID'];
-      roleOld = JSON.parse(JSON.stringify(data['roles']));
-      taskInput = JSON.parse(JSON.stringify(data));
     }
-
+    let dataTransmit =
+      status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
     let listData = {
-      action,
-      typeTask,
-      step: this.dataSource,
-      listGrooup: this.dataSource['taskGroups'],
-      dataInput: taskInput || {},
-      listTask: this.dataSource['tasks'],
-      // this.listFileTask,
+      status,
+      taskType: this.jobType,
+      parentID: this.dataSource?.recID,
+      listGroup: [],
+      stepTaskData: dataTransmit || {},
+      taskList: [],
+      stepName: '',
+      groupTaskID: '',
+      leadtimeControl: false,
     };
-    var functionID = 'DPT0206'; //id tuy chojn menu ne
-    this.cache.functionList(functionID).subscribe((f) => {
-      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
-        let option = new SidebarModel();
-        let formModel = this.grvMoreFunction;
-        formModel.formName = f.formName;
-        formModel.gridViewName = f.gridViewName;
-        formModel.entityName = f.entityName;
-        formModel.funcID = functionID;
-        option.FormModel = formModel;
-        option.Width = '550px';
-        option.zIndex = 1001;
-        let dialog = this.callfc.openSide(PopupTaskComponent, listData, option);
+    console.log(this.dataSource);
+    
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(PopupTaskComponent, listData, option);
 
-        dialog.closed.subscribe((e) => {
-        //   if (e?.event) {
-        //     let taskData = e?.event?.data;
-        //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
-        //       let index = this.taskGroupList.findIndex(
-        //         (group) => group.recID == taskData.taskGroupID
-        //       );
-        //       if (this.taskGroupList?.length == 0 && index < 0) {
-        //         let taskGroupNull = new DP_Steps_TaskGroups();
-        //         taskGroupNull['task'] = [];
-        //         taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
-        //         this.taskGroupList.push(taskGroupNull);
-        //         this.taskGroupList[0]['task']?.push(taskData);
-        //       } else {
-        //         this.taskGroupList[index]['task']?.push(taskData);
-        //       }
-        //       this.taskList?.push(taskData);
-        //       this.addRole(taskData['roles'][0]);
-        //     } else {
-        //       for (const key in taskData) {
-        //         data[key] = taskData[key];
-        //       }
-        //       data['modifiedOn'] = new Date();
-        //       data['modifiedBy'] = this.userId;
-        //       if (data?.taskGroupID != taskGroupIdOld) {
-        //         this.changeGroupTaskOfTask(data, taskGroupIdOld);
-        //       }
-        //       this.addRole(data['roles'][0], roleOld[0]);
-        //     }
-        //     let check = this.listStepEdit.some(id => id == taskData?.stepID)
-        //     if(!check){
-        //       this.listStepEdit.push(taskData?.stepID);
-        //     }
-        //     this.sumTimeStep();
-        //   }
-        });
-        // this.groupTaskID = null;
-      });
-    });
+    // dialog.closed.subscribe(async (e) => {
+    //   this.groupTaskID = null; //set lại
+    //   if (e?.event) {
+    //     let taskData = e?.event?.data;
+    //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
+    //       let groupTask = this.taskGroupList?.find(
+    //         (x) => x.refID === taskData.taskGroupID
+    //       );
+    //       let role = new DP_Instances_Steps_Tasks_Roles();
+    //       this.setRole(role);
+    //       taskData['roles'] = [role];
+    //       taskData['createdOn'] = new Date();
+    //       taskData['modifiedOn'] = null;
+    //       taskData['modifiedBy'] = null;
+    //       taskData['indexNo'] = groupTask ? groupTask['task']?.length : 1;
+    //       let progress = await this.calculateProgressTaskGroup(taskData, 'add');
+    //       this.dpService
+    //         .addTask([taskData, progress?.average])
+    //         .subscribe((res) => {
+    //           if (res) {
+    //             this.notiService.notifyCode('SYS006');
+    //             let index = this.taskGroupList.findIndex(
+    //               (task) => task.refID == taskData.taskGroupID
+    //             );
+    //             if (index < 0) {
+    //               let taskGroup = new DP_Instances_Steps_TaskGroups();
+    //               taskGroup['task'] = [];
+    //               taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+    //               this.taskGroupList.push(taskGroup);
+    //               this.taskGroupList[0]['task'].push(taskData);
+    //             } else {
+    //               this.taskGroupList[index]['task'].push(taskData);
+    //             }
+    //             this.taskList.push(taskData);
+    //             this.taskGroupList[progress?.indexGroup]['progress'] =
+    //               progress?.average; // cập nhật tiến độ của cha
+    //             this.calculateProgressStep();
+    //             this.saveAssign.emit(true);
+    //           }
+    //         });
+    //     } else {
+    //       taskData['modifiedOn'] = new Date();
+    //       this.dpService.updateTask(taskData).subscribe((res) => {
+    //         if (res) {
+    //           if (taskData?.taskGroupID != taskGroupIdOld) {
+    //             this.changeGroupTask(taskData, taskGroupIdOld);
+    //             this.notiService.notifyCode('SYS007');
+    //             this.saveAssign.emit(true);
+    //           }
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
   }
 
 }
