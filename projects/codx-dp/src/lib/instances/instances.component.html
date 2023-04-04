@@ -341,20 +341,20 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <!-- <span class="mx-1">
+  <span class="mx-1">
     <codx-dropdown-select
       *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [isMulti]="false"
-      type="valuelist"
+      type="combobox"
       [emptyText]="grvSetup.Owner.headerText"
       field="Owner"
-      [dataSource]="stepsResource"
+      [refValue]="'Users'"
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <span class="mx-1">
+   <!--<span class="mx-1">
     <codx-dropdown-select
       *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
