@@ -250,6 +250,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.cashTransfer,
       'AC_CashTranfers',
       this.form,
+      this.isEdit,
       () => this.save(closeAfterSaving)
     );
   }

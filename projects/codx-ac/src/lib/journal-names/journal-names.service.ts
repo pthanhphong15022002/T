@@ -34,6 +34,7 @@ export class JournalService {
     model: any,
     entityName: string,
     form: CodxFormComponent,
+    isEdit: boolean,
     saveFunction
   ) {
     // if this voucherNo already exists,
@@ -45,8 +46,8 @@ export class JournalService {
     ) {
       const options = new DataRequest();
       options.entityName = entityName;
-      options.predicates = 'VoucherNo=@0';
-      options.dataValues = model.voucherNo;
+      options.predicates = !isEdit ? 'VoucherNo=@0' : "VoucherNo=@0&&RecID!=@1";
+      options.dataValues = !isEdit ? model.voucherNo : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;
       this.acService.loadDataAsync('AC', options).subscribe((res: any[]) => {
         if (res.length > 0) {

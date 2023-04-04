@@ -725,6 +725,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         this.cashreceipts,
         'AC_CashReceipts',
         this.form,
+        this.formType === "edit",
         () => this.onSaveLogic()
       );
     }
