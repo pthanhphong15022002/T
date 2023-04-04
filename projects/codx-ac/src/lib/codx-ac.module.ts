@@ -74,6 +74,7 @@ import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
+import { SearchPipe } from './cash-payments/pop-add-cash/search.pipe';
 
 export const routes: Routes = [
   {
@@ -229,6 +230,7 @@ export const routes: Routes = [
     PopAddLinecashComponent,
     NameByIdPipe,
     PopAddLinereceiptsComponent,
+    SearchPipe,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -245,6 +247,7 @@ export const routes: Routes = [
     SplitterModule,
     CodxReportModule,
     NgxUiLoaderModule,
+    FormsModule
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -198,7 +198,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.beforeDelete(option, data)
       )
       .subscribe((res: any) => {
-        if (res) {
+        if (res != null) {
           this.api
             .exec(
               'ERM.Business.AC',

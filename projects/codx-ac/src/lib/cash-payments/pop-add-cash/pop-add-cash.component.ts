@@ -99,6 +99,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ];
   page: any = 1;
   pageSize = 5;
+  searchText:any;
+  key:any;
+  reverse:boolean = false;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -117,6 +120,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService!.dataSelected;
+    var model = new CashPaymentLine();
+    this.keymodel = Object.keys(model);
     this.cache
       .gridViewSetup('CashPayments', 'grvCashPayments')
       .subscribe((res) => {
@@ -169,16 +174,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res.length > 0) {
               this.keymodel = Object.keys(res[0]);
+              this.cashpaymentline = res;
+              this.pageCount = '(' + this.cashpaymentline.length + ')';
+              this.loadTotal();
             }
-            this.cashpaymentline = res;
-            this.pageCount = '(' + this.cashpaymentline.length + ')';
-            this.cashpaymentline.forEach((element) => {
-              this.total = this.total + element.dr;
-            });
-            this.total = this.total.toLocaleString('it-IT', {
-              style: 'currency',
-              currency: 'VND',
-            });
           });
       }
 
@@ -202,13 +201,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpayment);
-    if (this.formType == 'add') {
-      this.total = this.total.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-      this.pageCount = '(' + this.cashpaymentline.length + ')';
-    }
+    this.pageCount = '(' + this.cashpaymentline.length + ')';
+    this.loadTotal();
   }
   //#endregion
 
@@ -258,17 +252,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var totals = 0;
     this.cashpaymentline.forEach((element) => {
       totals = totals + element.dr;
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
     });
-    if (this.cashpaymentline.length == 0) {
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-    }
+    this.total = totals.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
 
   created(e) {
@@ -562,7 +550,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         }
         this.cashpaymentlineDelete.push(data);
-        this.notification.notifyCode('SYS008', 0, '');
         this.pageCount = '(' + this.cashpaymentline.length + ')';
         this.loadTotal();
         break;
@@ -588,7 +575,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         var obj = {
           headerText: this.headerText,
           data: { ...data },
-          type: 'edit'
+          type: 'edit',
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -616,7 +603,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (dataline != null) {
                   this.cashpaymentline[index] = dataline;
                   this.loadTotal();
-                  this.notification.notifyCode('SYS007', 0, '');
                 }
                 window.localStorage.removeItem('dataline');
               });
@@ -649,6 +635,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
+      dataline:this.cashpaymentline,
+      datacash:this.cashpayment,
       type: 'add',
     };
     let opt = new DialogModel();
@@ -729,6 +717,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res != null) {
+              this.acService
+                .addData('AC', 'CashPaymentsLinesBusiness', 'UpdateAsync', [
+                  this.cashpaymentline,
+                  this.cashpaymentlineDelete,
+                ])
+                .subscribe();
               if (this.cashpayment.voucherType === '2') {
                 this.acService
                   .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
@@ -882,6 +876,41 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentlineDelete = [];
     this.voucherLineRefsDelete = [];
     this.transactiontext = [];
+  }
+
+  sort(key){
+    this.reverse = !this.reverse;
+    var model = new CashPaymentLine();
+    var keymodel = Object.keys(model);
+    keymodel.forEach(element => {
+      if (element.toLocaleLowerCase() == key) {
+        switch(key){
+          case 'dr':
+          case 'rowNo':
+            if (!this.reverse) {
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => a[element] - b[element]
+              );
+            }else{
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => b[element] - a[element]
+              );
+            } 
+            break;
+          default:
+            if (!this.reverse) {
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => a[element] > b[element] ? 1 : -1
+              );
+            }else{
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => b[element] > a[element] ? 1 : -1
+              );
+            } 
+            break;
+        }
+      }
+    });
   }
   //#endregion
 }
