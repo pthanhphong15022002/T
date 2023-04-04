@@ -177,13 +177,15 @@ export const routes: Routes = [
       {
         path: 'tmdashboard/:funcID',
         component: TMDashboardComponent,
-        children: [
-          {
-            path: ':reportID',
-            component: DashboardContentComponent,
-          },
-        ],
       },
+      // {
+      //   path: 'teamdashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
+      // {
+      //   path: 'assigndashboard/:funcID',
+      //   component: TMDashboardComponent,
+      // },
     ],
   },
 ];
