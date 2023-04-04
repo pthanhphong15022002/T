@@ -649,8 +649,7 @@ export class DynamicProcessComponent
 
   checkPermissionRead(data) {
     let isRead = data.read;
-    let isFunc = this.funcID == 'DP0203' ? false : true
-    return isRead || isFunc;
+    return isRead;
   }
 
   doubleClickViewProcess(data) {

@@ -89,17 +89,6 @@
   </div>
 </ng-template>
 
-<ng-template #itemAction let-data>
-  <codx-mfunc
-    [formModel]="view.formModel"
-    [itemSelected]="itemSelected"
-    (clickMF)="clickMF($event, data)"
-    [dataItem]="data"
-    [typeMF]="'hover'"
-  >
-  </codx-mfunc>
-</ng-template>
-
 <ng-template #itemEmployee let-data>
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex align-items-top">
@@ -238,7 +227,7 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <div (dblclick)="doubleClick(data)">
+  <div (dblclick)="doubleClick(data)" class="w-100 has-action-menu">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
         <span
@@ -278,5 +267,13 @@
         >{{ data.senioritydate | timeAgo }}</span>
       </div>
     </div>
+    <codx-mfunc
+    [formModel]="view.formModel"
+    [itemSelected]="itemSelected"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
   </div>
 </ng-template>

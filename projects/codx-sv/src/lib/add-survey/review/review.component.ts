@@ -39,7 +39,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   empty = '';
   lstQuestionTemp: any;
   lstQuestion: any;
-
+  isSent:boolean = false
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -217,6 +217,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
+    debugger
     //itemAnswer.choose = true
     if (!e.data && !e.component) return;
     if (e.component) {
@@ -351,8 +352,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
     this.respondents.scores = 0;
     this.respondents.duration = 20;
     this.respondents.pending = true;
-    this.SVServices.onSubmit(this.respondents).subscribe((res) => {
-      debugger;
+    this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
+      if(res && res.status == 5) this.isSent = true
     });
   }
 }

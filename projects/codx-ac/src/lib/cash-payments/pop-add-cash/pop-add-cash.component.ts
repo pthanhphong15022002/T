@@ -1,5 +1,4 @@
 import { VoucherComponent } from './../../popup/voucher/voucher.component';
-import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,22 +6,17 @@ import {
   Injector,
   OnInit,
   Optional,
-  PipeTransform,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   EditSettingsModel,
-  GridComponent,
 } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
-  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -38,10 +32,6 @@ import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -84,7 +74,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-
   gridHeight: number;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -147,6 +136,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 field: res[keygrid[index]].fieldName.toLowerCase(),
                 headerText: res[keygrid[index]].headerText,
                 columnOrder: res[keygrid[index]].columnOrder,
+                allowFilter: res[keygrid[index]].allowFilter,
               };
               this.columnGrids.push(column);
             }
@@ -561,12 +551,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpaymentline[i].rowNo = i + 1;
           }
         }
-        this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'DeleteLineAsync', [
-            data.recID,
-            this.cashpaymentline,
-          ])
-          .subscribe((res: any) => {});
+        this.cashpaymentlineDelete.push(data);
         this.notification.notifyCode('SYS008', 0, '');
         this.pageCount = '(' + this.cashpaymentline.length + ')';
         this.loadTotal();
@@ -593,8 +578,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         var obj = {
           headerText: this.headerText,
           data: { ...data },
-          type: 'edit',
-          formType: this.formType,
+          type: 'edit'
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -656,7 +640,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       headerText: this.headerText,
       data: data,
       type: 'add',
-      formType: this.formType,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
