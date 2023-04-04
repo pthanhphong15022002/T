@@ -52,7 +52,10 @@ export class CrmcustomerDetailComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('-------------00000-------------',this.dataSelected);
+    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataSelected.recID) {
@@ -63,12 +66,12 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-  getOneData(recID, funcID){
-    this.cmSv.getOne(recID, funcID).subscribe(res =>{
-      if(res){
+  getOneData(recID, funcID) {
+    this.cmSv.getOne(recID, funcID).subscribe((res) => {
+      if (res) {
         this.dataSelected = res;
       }
-    })
+    });
   }
 
   listTab(funcID) {
@@ -106,7 +109,7 @@ export class CrmcustomerDetailComponent implements OnInit {
         },
       ];
     } else if (funcID == 'CM0102') {
-      if(this.dataSelected.isCustomer == true){
+      if (this.dataSelected.isCustomer == true) {
         this.tabDetail = [
           {
             name: 'Information',
@@ -133,7 +136,7 @@ export class CrmcustomerDetailComponent implements OnInit {
             isActive: false,
           },
         ];
-      }else{
+      } else {
         this.tabDetail = [
           {
             name: 'Information',
@@ -146,10 +149,9 @@ export class CrmcustomerDetailComponent implements OnInit {
             textDefault: 'Công việc',
             icon: 'icon-format_list_numbered',
             isActive: false,
-          }
+          },
         ];
       }
-
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {
@@ -221,6 +223,24 @@ export class CrmcustomerDetailComponent implements OnInit {
       '',
       opt
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var contactsPerson = e.event;
+        contactsPerson.contactType = '2';
+        this.cmSv
+          .updateContactCrm(
+            contactsPerson,
+            this.funcID,
+            this.dataSelected.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.dataSelected.contacts.push(contactsPerson);
+            }
+          });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   getNameCrm(data) {

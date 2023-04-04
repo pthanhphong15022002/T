@@ -217,7 +217,7 @@
                   field="voucherNo"
                   [formModel]="form.formModel"
                   [Group]="form.formGroup"
-                  [disabled]="journal.voucherNoRule == '1'"
+                  [disabled]="journal?.voucherNoRule == '1'"
                 ></codx-input>
               </div>
             </div>
@@ -501,7 +501,7 @@
         <button
           type="button"
           class="btn btn-light-primary"
-          (click)="save(false)"
+          (click)="handleClickSave(false)"
         >
           <codx-label
             class="fs-6 fw-normal"
@@ -512,7 +512,11 @@
         </button>
       </ng-container>
 
-      <button type="button" class="btn btn-primary ms-3" (click)="save(true)">
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        (click)="handleClickSave(true)"
+      >
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblSave"

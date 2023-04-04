@@ -12,7 +12,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
@@ -105,7 +104,6 @@ export const routes: Routes = [
     NgbModule,
     CoreModule,
     HttpClientModule,
-    InlineSVGModule.forRoot(),
     OverlayModule,
     TabModule,
     CommonModule,

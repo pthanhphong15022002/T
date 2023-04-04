@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxCoreModule } from 'codx-core';
 import { GroupPipe } from './pipes/group-filter.pipe';
 import { FormatPipe } from './pipes/format-string.pipe';
@@ -51,7 +50,6 @@ const T_Pipe: Type<any>[] = [
     NgbModule,
     FormsModule,
     SharedModule,
-    InlineSVGModule.forRoot(),
     CodxCoreModule,
     RouterModule.forChild(routes),
   ],

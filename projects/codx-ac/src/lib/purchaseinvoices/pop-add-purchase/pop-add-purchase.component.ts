@@ -64,7 +64,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   detailActive = 1;
   countDetail = 0;
   pageCount: any;
-  elementCodxinput: any;
+  itemName: any;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   Lines: PurchaseInvoicesLines;
@@ -99,6 +99,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   keymodel: any = [];
   page: any = 1;
   pageSize = 5;
+  modegrid: any = 2;
+  lsVatCode: any;
+  journals: any;
+  totalnet: any = 0;
+  totalvat: any = 0;
+  total: any = 0;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -162,6 +168,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.api
       .exec('AC', 'JournalsBusiness', 'GetDefaultAsync', [this.parentID])
       .subscribe((res: any) => {
+        this.journals = res;
         this.VATType = res.vatType;
         if (this.VATType == '1' || this.VATType == '2') {
           this.cache
@@ -231,6 +238,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             this.keymodel = Object.keys(res[0]);
             this.purchaseInvoicesLines = res;
             this.purchaseInvoicesLines.forEach((element) => {
+              this.loadTotal();
               if (element.vatid != null) {
                 this.countDetail++;
               }
@@ -238,6 +246,20 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.itemName = res;
+        }
+      });
+    this.api
+      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.lsVatCode = res;
+        }
+      });
   }
   //#endregion
 
@@ -248,6 +270,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseinvoices);
     this.pageCount = '(' + this.purchaseInvoicesLines.length + ')';
+    this.loadTotal();
   }
   //#endregion
 
@@ -359,6 +382,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
+      journals: this.journals,
       type: 'add',
     };
     let opt = new DialogModel();
@@ -375,7 +399,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             PopAddLineComponent,
             '',
             650,
-            900,
+            800,
             '',
             obj,
             '',
@@ -386,6 +410,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             if (dataline != null) {
               this.purchaseInvoicesLines.push(dataline);
               this.keymodel = Object.keys(dataline);
+              this.loadTotal();
               this.loadPageCount();
               if (dataline.vatid != null) {
                 this.loadPurchaseInfo();
@@ -512,6 +537,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
+      journals: this.journals,
       type: 'edit',
     };
     let opt = new DialogModel();
@@ -529,7 +555,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             PopAddLineComponent,
             '',
             650,
-            900,
+            800,
             '',
             obj,
             '',
@@ -539,6 +565,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             var dataline = JSON.parse(localStorage.getItem('dataline'));
             if (dataline != null) {
               this.purchaseInvoicesLines[index] = dataline;
+              this.loadTotal();
               if (dataline.vatid != null) {
                 this.loadPurchaseInfo();
               }
@@ -630,6 +657,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             .subscribe((res: any) => {});
         }
       });
+    this.loadTotal();
     this.notification.notifyCode('SYS008', 0, '');
     this.loadPageCount();
   }
@@ -685,6 +713,27 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   // }
   detaiClick(e) {
     this.detailActive = e;
+  }
+  loadTotal() {
+    var totalnet = 0;
+    var totalvat = 0;
+    this.purchaseInvoicesLines.forEach((element) => {
+      totalnet = totalnet + element.netAmt;
+      totalvat = totalvat + element.vatAmt;
+    });
+    this.total = totalnet + totalvat;
+    this.totalnet = totalnet.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
+    this.totalvat = totalvat.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
+    this.total = this.total.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
   //#endregion
 
