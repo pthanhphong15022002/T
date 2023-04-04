@@ -28,6 +28,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() funcID = 'CM0101';
   @Input() entityName = '';
+  moreFuncAdd = '';
   @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -45,6 +46,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   name = 'Information';
   id = '';
   tabDetail = [];
+  formModelContact: FormModel;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -52,9 +54,14 @@ export class CrmcustomerDetailComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    console.log('-------------00000-------------',this.dataSelected);
-    
+  async ngOnInit() {
+    this.formModelContact = await this.cmSv.getFormModel('CM0102');
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncAdd = m.defaultName;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -205,9 +212,10 @@ export class CrmcustomerDetailComponent implements OnInit {
     this.clickMoreFunc.emit({ e: e, data: data });
   }
 
-  clickAddContact() {
+  clickAddContact(action, data) {
     let opt = new DialogModel();
     let dataModel = new FormModel();
+    var title = this.moreFuncAdd;
     dataModel.formName = 'CMContacts';
     dataModel.gridViewName = 'grvCMContacts';
     dataModel.entityName = 'CM_Contacts';
@@ -219,7 +227,7 @@ export class CrmcustomerDetailComponent implements OnInit {
       500,
       500,
       '',
-      '',
+      [title, action, data],
       '',
       opt
     );
@@ -252,6 +260,21 @@ export class CrmcustomerDetailComponent implements OnInit {
       return data.partnerName;
     } else {
       return data.opponentName;
+    }
+  }
+
+  clickMFContact(e, data){
+    this.moreFuncAdd = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.clickAddContact('edit', data);
+        break;
+      case 'SYS02':
+        // this.delete(data);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
     }
   }
 }
