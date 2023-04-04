@@ -72,9 +72,10 @@ export class SharingComponent implements OnInit {
     this.dataDis.share = this.shareForm.get('share').value == null ? false :this.shareForm.get('share').value;
     this.dataDis.formDate = this.shareForm.get('formDate').value == null ? new Date : this.shareForm.get('formDate').value;
     this.dataDis.toDate = this.shareForm.get('toDate').value == null ? new Date : this.shareForm.get('formDate').value; */
-    this.shareForm.value.recID = this.dialog.dataService.dataSelected.recID;
-    this.shareForm.value.funcID = this.formModel.funcID;
-    this.odService.shareDispatch(this.shareForm.value,this.referType,this.formModel.entityName).subscribe((item)=>{
+    let shareForm: any =this.shareForm.value;
+    shareForm.recID = this.dialog.dataService.dataSelected.recID;
+    shareForm.funcID = this.formModel.funcID;
+    this.odService.shareDispatch(shareForm,this.referType,this.formModel.entityName).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })

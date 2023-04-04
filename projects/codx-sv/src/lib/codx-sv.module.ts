@@ -10,7 +10,6 @@ import {
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -76,7 +75,6 @@ const Component: Type<any>[] = [
   imports: [
     CommonModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,

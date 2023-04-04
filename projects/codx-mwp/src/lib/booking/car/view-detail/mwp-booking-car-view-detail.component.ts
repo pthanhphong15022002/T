@@ -10,8 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import { UIComponent } from 'codx-core';
 import moment from 'moment';
 import { BookingService } from '../../../services/booking.services';
 
@@ -33,7 +32,6 @@ export class MWPBookingCarViewDetailComponent extends UIComponent implements OnC
   @Input() funcID;
   @Input() formModel;
   @Input() data: any;
-  @Input() override view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   firstLoad = true;

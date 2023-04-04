@@ -1,9 +1,7 @@
-import { environment } from './../environments/environment.prod';
 import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.component';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HoverPreloadStrategy } from 'ngx-hover-preload';
 import { AuthGuard } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
@@ -265,9 +263,10 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
-      preloadingStrategy: HoverPreloadStrategy,
-    }),
+    RouterModule.forRoot(routes)
+    // RouterModule.forRoot(routes, {
+    //   preloadingStrategy: HoverPreloadStrategy,
+    // }),
   ],
   exports: [RouterModule],
 })

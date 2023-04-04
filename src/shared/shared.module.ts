@@ -1,5 +1,4 @@
 import { FormsModule } from '@angular/forms';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxCoreModule } from 'codx-core';
 import { NgModule, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -24,7 +23,6 @@ const T_Moudule: Type<any>[] = [
   NgbModule,
   ERMModule,
   RouterModule,
-  InlineSVGModule,
   NgxSkeletonLoaderModule,
   DateRangePickerModule,
   FormsModule,
