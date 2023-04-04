@@ -3369,7 +3369,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.stepNameFail = this.iconReasonFail?.text;
         this.stepNameReason = reasonValue?.text;
         this.autoHandleStepReason();
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -3397,7 +3396,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.strHour = ' ' + item.text + ' ';
           }
         }
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
