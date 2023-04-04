@@ -287,6 +287,7 @@ export class PdfComponent
           this.user?.userID,
           this.isApprover,
           this.isEditable,
+          this.transRecID,
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
@@ -1576,6 +1577,7 @@ export class PdfComponent
         curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
+        curImgEle.src = curArea.labelValue;
         let min = 0;
         let scale = 1;
         curImgEle.onload = () => {

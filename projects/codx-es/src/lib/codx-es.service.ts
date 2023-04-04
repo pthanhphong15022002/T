@@ -915,13 +915,13 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(sfRecID) {
+  getSFByID(lstParams) {
     return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
-      sfRecID
+      lstParams
     );
   }
 
