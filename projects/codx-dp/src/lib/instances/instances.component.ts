@@ -145,7 +145,10 @@ export class InstancesComponent
   arrFieldFilter = [];
   dataValueByStatusArr: any = [];
   dataValueByOwnerArr: any = [];
-  dataValueByStepArr: any = [];
+  dataValueByStepIDArr: any = [];
+  fieldsResource = { text: 'stepName', value: 'recID' };
+  stepsResource = [];
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -1369,6 +1372,15 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.stepsResource = this.process?.steps?.map((x) => {
+      let obj = {
+        icon: x?.icon,
+        color: x?.iconColor,
+        text: x.stepName,
+        value: x.recID,
+      };
+      return obj;
+    });
     this.isCreate = this.process.create;
     this.autoName = this.process?.autoName;
     this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
@@ -1390,11 +1402,21 @@ export class InstancesComponent
     }
   }
   //filter- tam
-  valueChangeFilterStatus(e) {
-    this.dataSelected=null
-    this.dataValueByStatusArr = e.data;
+  valueChangeFilter(e) {
+    this.dataSelected = null;
+    switch (e.field) {
+      case 'Status':
+         this.dataValueByStatusArr =  e.data;
+        break;
+      case 'StepID':
+        this.dataValueByStepIDArr =  e.data;
+        break;
+      case 'Owner':
+        this.dataValueByOwnerArr =  e.data;
+        break;
+    }
     let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStatusArr?.length <= 0) {
+    if (this.dataValueByStepIDArr?.length <= 0) {
       if (idxField != -1) {
         this.arrFieldFilter.splice(idxField, 1);
       }
@@ -1404,10 +1426,36 @@ export class InstancesComponent
     this.loadDataFiler();
   }
 
+  // valueChangFilterStepID(e) {
+  //   this.dataSelected = null;
+  //   this.dataValueByStepIDArr = e.data;
+  //   let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
+  //   if (this.dataValueByStepIDArr?.length <= 0) {
+  //     if (idxField != -1) {
+  //       this.arrFieldFilter.splice(idxField, 1);
+  //     }
+  //   } else {
+  //     if (idxField == -1) this.arrFieldFilter.push(e.field);
+  //   }
+  //   this.loadDataFiler();
+  // }
+  // valueChangeFilterStatus(e) {
+  //   this.dataSelected = null;
+  //   this.dataValueByStatusArr = e.data;
+  //   let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
+  //   if (this.dataValueByStatusArr?.length <= 0) {
+  //     if (idxField != -1) {
+  //       this.arrFieldFilter.splice(idxField, 1);
+  //     }
+  //   } else {
+  //     if (idxField == -1) this.arrFieldFilter.push(e.field);
+  //   }
+  //   this.loadDataFiler();
+  // }
+
   updatePredicate(field, dataValueFiler) {
     let predicates = '';
     let predicate = field + '=@';
-    
 
     let toltalData = this.dataValueFilterArr?.length;
     for (var i = 0; i < dataValueFiler.length - 1; i++) {
@@ -1416,13 +1464,17 @@ export class InstancesComponent
 
     predicates += predicate + (this.dataValueFilterArr.length + toltalData);
 
-    if (this.arrFieldFilter.length>1) {
-      this.filterInstancePredicates += ' and ( ' + predicates + ' )';
-      this.dataValueFilterArr = this.dataValueFilterArr.concat(dataValueFiler);
-    } else if(this.arrFieldFilter.length>0){
-      this.filterInstancePredicates = predicates;
-      this.dataValueFilterArr = dataValueFiler;
-    }else{
+    if (this.arrFieldFilter.length > 0) {
+      let idx = this.arrFieldFilter.findIndex((x) => x == field);
+      if (idx == 0) {
+        this.filterInstancePredicates ="( " + predicates + " )";
+        this.dataValueFilterArr = dataValueFiler;
+      } else if (idx > 0) {
+        this.filterInstancePredicates += ' and ( ' + predicates + ' )';
+        this.dataValueFilterArr =
+          this.dataValueFilterArr.concat(dataValueFiler);
+      }
+    } else {
       this.filterInstancePredicates = '';
       this.dataValueFilterArr = [];
     }
@@ -1431,15 +1483,15 @@ export class InstancesComponent
   //loading Data filter
   loadDataFiler() {
     if (this.arrFieldFilter.length > 0) {
-      this.filterStatusPredicates = '';
-      this.dataValueFilterArr=[] ;
+      this.filterInstancePredicates = '';
+      this.dataValueFilterArr = [];
       this.arrFieldFilter.forEach((field) => {
         switch (field) {
           case 'Status':
             this.updatePredicate(field, this.dataValueByStatusArr);
             break;
-          case 'Step':
-            this.updatePredicate(field, this.dataValueByStepArr);
+          case 'StepID':
+            this.updatePredicate(field, this.dataValueByStepIDArr);
             break;
           case 'Owner':
             this.updatePredicate(field, this.dataValueByOwnerArr);

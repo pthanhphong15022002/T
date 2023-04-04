@@ -9,21 +9,18 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
   override aside = false;
-  override toolbar = false;
-
+  override toolbar = true;
+  override toolbarFixed = false;
+  
   constructor(
     private route: ActivatedRoute,
     private cache: CacheService,
     inject: Injector
-  )
-  {
+  ) {
     super(inject);
   }
 
-  onInit(): void 
-  {
-  }
+  onInit(): void {}
 
   onAfterViewInit(): void {}
-
 }

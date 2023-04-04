@@ -41,6 +41,7 @@ export class CashPaymentsComponent extends UIComponent {
   moreFuncName: any;
   funcName: any;
   parentID: string;
+  journalNo: string;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -59,8 +60,9 @@ export class CashPaymentsComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+    this.routerActive.queryParams.subscribe((params) => {
+      this.parentID = params?.recID;
+      this.journalNo = params?.journalNo;
     });
   }
   //#endregion

@@ -349,6 +349,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   // upload file tai day
   public onFileSelect(args: SelectedEventArgs): void {
+    debugger
     if (
       isNullOrUndefined(
         document.getElementById('dropArea').querySelector('.upload-list-root')
@@ -362,6 +363,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
       );
       document.getElementById('dropArea').appendChild(this.parentElement);
     }
+
+    if(this.allowMultiFile == "0") this.fileUploadList = [];
+
     this.handleFileInput(args.filesData);
     args.cancel = true;
   }

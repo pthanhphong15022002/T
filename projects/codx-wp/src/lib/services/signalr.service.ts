@@ -61,14 +61,15 @@ export class SignalRService {
           this.activeGroup.emit(res.data);
           break;
         case 'sendMessage':
-          this.chat.emit(res.data);
+        case 'deletedMessage':
+          this.chat.emit(res);
           break;
         case 'voteMessage':
           this.voteChat.emit(res.data);
           break;
         case 'sendMessageSystem':
-          this.chat.emit(res.data);
-          this.activeGroup.emit(res.data);
+          this.chat.emit(res);
+          this.activeGroup.emit(res);
         break;
       }
     });

@@ -78,7 +78,7 @@
                                     field="StartDate"
                                     [formModel]="dialogRef.formModel" 
                                     [crrValue]="data.startDate" 
-                                    format="F"
+                                    format="d"
                                     (valueChange)="valueChange($event)">
                                 </codx-input>
                             </div>
@@ -171,6 +171,7 @@
                                     [hideBtnSave]="'1'" 
                                     [hideImageThumb]="'1'"
                                     [hideUploadBtn]="'1'" 
+                                    allowExtensions=".png, .jpg, .jpeg"
                                     (fileAdded)="addFiles($event)">
                                 </codx-attachment>
                             </div>
@@ -257,12 +258,12 @@
     <div class="card-footer pt-4">
         <div class="d-flex align-items-center justify-content-end">
             <div class="me-3">
-                <button [attr.disabled]="loading? loading: null" (click)="clickInsertNews()" type="button" class="btn btn-primary">
+                <button [disabled]="loading" (click)="clickInsertNews()" type="button" class="btn btn-primary">
                     <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
                 </button>
             </div>
             <div>
-                <button [attr.disabled]="loading? loading: null" (click)="releaseNews()" type="button" class="btn btn-primary">
+                <button [disabled]="loading" (click)="releaseNews()" type="button" class="btn btn-primary">
                     <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>
                 </button>
             </div>
@@ -297,7 +298,8 @@
                 [hideBtnSave]="'1'" 
                 [hideImageThumb]="'1'"
                 [hideUploadBtn]="'1'" 
-                (fileAdded)="addFilesVideo($event)">
+                allowExtensions=".mp4,.m4p"
+                (fileAdded)="addFiles($event)">
             </codx-attachment>
         </div>
     </div>
