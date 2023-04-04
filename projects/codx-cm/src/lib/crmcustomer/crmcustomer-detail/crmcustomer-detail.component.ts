@@ -234,18 +234,31 @@ export class CrmcustomerDetailComponent implements OnInit {
     dialog.closed.subscribe((e) => {
       if (e && e.event != null) {
         var contactsPerson = e.event;
-        contactsPerson.contactType = '2';
+        if (
+          this.dataSelected.contacts != null &&
+          this.dataSelected.contacts.length > 0
+        ) {
+          var check = this.dataSelected.contacts.filter(
+            (x) => x.recID == contactsPerson.recID
+          );
+          if (check == null) {
+            contactsPerson.contactType = '2';
+          }
+        } else {
+          contactsPerson.contactType = '2';
+        }
         this.cmSv
           .updateContactCrm(
             contactsPerson,
             this.funcID,
-            this.dataSelected.recID
+            this.dataSelected?.recID
           )
           .subscribe((res) => {
-            if (res) {
-              this.dataSelected.contacts.push(contactsPerson);
+            if (res && res.length > 0) {
+              this.dataSelected.contacts = res;
             }
           });
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -263,7 +276,7 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-  clickMFContact(e, data){
+  clickMFContact(e, data) {
     this.moreFuncAdd = e.text;
     switch (e.functionID) {
       case 'SYS03':
