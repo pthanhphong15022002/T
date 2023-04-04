@@ -169,7 +169,7 @@ export class CodxShowTaskComponent implements OnInit {
     let listData = {
       status,
       taskType: this.jobType,
-      step: null,
+      parentID: this.dataSource?.recID,
       listGroup: [],
       stepTaskData: dataTransmit || {},
       taskList: [],
@@ -177,6 +177,8 @@ export class CodxShowTaskComponent implements OnInit {
       groupTaskID: '',
       leadtimeControl: false,
     };
+    console.log(this.dataSource);
+    
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
