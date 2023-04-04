@@ -246,6 +246,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       formType: this.formType,
       data: item,
       userID: this.adUser.userID,
+      quantity: 1,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,

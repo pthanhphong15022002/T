@@ -1,12 +1,11 @@
+import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { AD_UserRoles } from './AD_UserRoles.models';
+
 export class tmpTNMD {
-  module: string;
+  isError = true;
   moduleSales: string;
   moduleName: string;
-  quantity: number = 1;
-  isAddAction: boolean;
-  isOriginal: boolean;
-  isError: boolean;
-  tN_MDRecID?: any;
   startDate?: Date;
   endDate?: Date;
+  orderModuleRecID;
 }

@@ -19,7 +19,7 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="moreFunction($event, data)"
     [imageId]="data.recID"
-    imageObjType="AD_UserGroups"
+    [imageObjType]="view.formModel?.entityName"
     [titleTmp]="titleTmp"
     [subTitleTmp]="subTitleTmp"
     [resources]="data['users']"
@@ -62,8 +62,21 @@
   <div class="tm-viewlist">
     <div class="d-flex flex-row align-items-top p-3 border-bottom">
       <div class="w-100 min-w-200px ps-3">
-        <div class="text-dark fs-6 fw-bold">{{ data?.groupName }}</div>
-        <div class="mt-1 text-gray-500">{{ data?.note }}</div>
+        <codx-temp-full
+          cardCss="card-template border-bottom px-2 pt-4 pb-2"
+          (clickMF)="moreFunction($event, data)"
+          [imageId]="data.recID"
+          [imageObjType]="view.formModel?.entityName"
+          [titleTmp]="titleTmp"
+          [subTitleTmp]="subTitleTmp"
+          [resources]="data['users']"
+          resourceObjType="AD_Users"
+          [formModel]="view.formModel"
+          [typeMF]="'hover'"
+          [dataItem]="data"
+        ></codx-temp-full>
+        <!-- <div class="text-dark fs-6 fw-bold">{{ data?.groupName }}</div>
+        <div class="mt-1 text-gray-500">{{ data?.note }}</div> -->
       </div>
       <div
         class="w-150px min-w-150px"
