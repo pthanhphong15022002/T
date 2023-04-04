@@ -1375,7 +1375,7 @@ export class InstancesComponent
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
-        color: x?.backgroundColor,
+        color: x?.iconColor,
         text: x.stepName,
         value: x.recID,
       };
@@ -1402,9 +1402,19 @@ export class InstancesComponent
     }
   }
   //filter- tam
-  valueChangFilterStepID(e) {
+  valueChangeFilter(e) {
     this.dataSelected = null;
-    this.dataValueByStepIDArr = e.data;
+    switch (e.field) {
+      case 'Status':
+         this.dataValueByStatusArr =  e.data;
+        break;
+      case 'StepID':
+        this.dataValueByStepIDArr =  e.data;
+        break;
+      case 'Owner':
+        this.dataValueByOwnerArr =  e.data;
+        break;
+    }
     let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
     if (this.dataValueByStepIDArr?.length <= 0) {
       if (idxField != -1) {
@@ -1415,19 +1425,33 @@ export class InstancesComponent
     }
     this.loadDataFiler();
   }
-  valueChangeFilterStatus(e) {
-    this.dataSelected = null;
-    this.dataValueByStatusArr = e.data;
-    let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStatusArr?.length <= 0) {
-      if (idxField != -1) {
-        this.arrFieldFilter.splice(idxField, 1);
-      }
-    } else {
-      if (idxField == -1) this.arrFieldFilter.push(e.field);
-    }
-    this.loadDataFiler();
-  }
+
+  // valueChangFilterStepID(e) {
+  //   this.dataSelected = null;
+  //   this.dataValueByStepIDArr = e.data;
+  //   let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
+  //   if (this.dataValueByStepIDArr?.length <= 0) {
+  //     if (idxField != -1) {
+  //       this.arrFieldFilter.splice(idxField, 1);
+  //     }
+  //   } else {
+  //     if (idxField == -1) this.arrFieldFilter.push(e.field);
+  //   }
+  //   this.loadDataFiler();
+  // }
+  // valueChangeFilterStatus(e) {
+  //   this.dataSelected = null;
+  //   this.dataValueByStatusArr = e.data;
+  //   let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
+  //   if (this.dataValueByStatusArr?.length <= 0) {
+  //     if (idxField != -1) {
+  //       this.arrFieldFilter.splice(idxField, 1);
+  //     }
+  //   } else {
+  //     if (idxField == -1) this.arrFieldFilter.push(e.field);
+  //   }
+  //   this.loadDataFiler();
+  // }
 
   updatePredicate(field, dataValueFiler) {
     let predicates = '';

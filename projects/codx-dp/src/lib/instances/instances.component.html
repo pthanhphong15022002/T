@@ -316,16 +316,57 @@
   </span>
 </ng-template>
 <ng-template #footerButton>
-  <codx-dropdown-select
-    [cssClass]="'rounded-pill border-1'"
-    cssPopup="h-350px w-300px"
-    [emptyText]="grvSetup['Status']?.headerText"
-    [isMulti]="grvSetup.Status?.multiSelect"
-    type="valuelist"
-    [field]="'Status'"
-    [refValue]="grvSetup.Status?.referedValue"
-    (valueChange)="valueChangeFilterStatus($event)"
-  ></codx-dropdown-select>
+  <span class="mx-1">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [emptyText]="grvSetup['Status']?.headerText"
+      [isMulti]="grvSetup.Status?.multiSelect"
+      type="valuelist"
+      [field]="'Status'"
+      [refValue]="grvSetup.Status?.referedValue"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="valuelist"
+      [emptyText]="grvSetup.StepID.headerText"
+      field="StepID"
+      [dataSource]="stepsResource"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <!-- <span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="valuelist"
+      [emptyText]="grvSetup.Owner.headerText"
+      field="Owner"
+      [dataSource]="stepsResource"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="valuelist"
+      [emptyText]="grvSetup.Permissions.headerText"
+      field="Permissions"
+      [dataSource]="stepsResource"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span> -->
 
   <!-- <codx-dropdown-select
     (valueChange)="valueToolbarChange($event, item.fieldName)"
@@ -341,16 +382,4 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
- 
-  <codx-dropdown-select
-    *ngIf="process"
-    [cssClass]="'rounded-pill border-1'"
-    cssPopup="h-350px w-300px"
-    [isMulti]="false"
-    type="valuelist"
-    [emptyText]="grvSetup.StepID.headerText"
-    field="StepID"
-    [dataSource]="stepsResource"
-    (valueChange)="valueChangFilterStepID($event)"
-  ></codx-dropdown-select>
 </ng-template>
