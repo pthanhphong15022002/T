@@ -2594,7 +2594,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? this.taskGroupList.find((x) => x['recID'] === task['taskGroupID'])
         : -1;
       let hourGroup =
-        groupFind > 0 ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
+        groupFind ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : null;
       return hourGroup + this.getHour(task);
     } else {
       const parentIds = task.parentID.split(';');
