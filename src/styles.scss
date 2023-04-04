@@ -6,6 +6,9 @@
 
 :root {
   --fs-body: 13px;
+  [class*="e-"]{
+    font-size: var(--fs-body);
+  }
 }
 
 .e-device .e-dlg-content,
@@ -384,7 +387,9 @@ codx-views > .container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-400);
+ // background-color: var(--gray-200);
+ border-color: var(--gray-150);
+ opacity: 1;
 }
 
 .is-invalid .ng-invalid,
@@ -2175,3 +2180,10 @@ codx-calendar {
     text-transform: none;
   }
 }
+
+//
+
+.btn:focus{
+  border-color: transparent!important;
+}
+

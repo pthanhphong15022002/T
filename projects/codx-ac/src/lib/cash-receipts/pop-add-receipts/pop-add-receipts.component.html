@@ -282,6 +282,7 @@
                 field="voucherNo"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
+                [disabled]="journal?.voucherNoRule == '1'"
               >
               </codx-input>
             </div>

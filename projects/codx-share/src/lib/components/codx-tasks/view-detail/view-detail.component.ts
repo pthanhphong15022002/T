@@ -24,7 +24,6 @@ import {
 } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'share-view-detail',

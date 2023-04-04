@@ -18,8 +18,6 @@ import { BS_DaysOff } from '../models/BS_DaysOff.model';
 import { BS_CalendarDate } from '../models/BS_CalendarDate.model';
 import { PopupEditShiftComponent } from '../popup-edit-shift/popup-edit-shift.component';
 
-declare var _;
-
 @Component({
   selector: 'popup-setting-calendar',
   templateUrl: './popup-setting-calendar.component.html',
@@ -137,8 +135,10 @@ export class PopupSettingCalendarComponent extends UIComponent {
     this.ndShift.data = [];
     this.days.forEach((e, i) => {
       let y = i.toString();
-      let stCheck = _.some(weekday.stShift.data, { weekday: y });
-      let ndCheck = _.some(weekday.ndShift.data, { weekday: y });
+      let stCheck = weekday.stShift.data.some({ weekday: y });
+      let ndCheck = weekday.ndShift.data.some({ weekday: y });
+      // let stCheck = _.some(weekday.stShift.data, { weekday: y });
+      // let ndCheck = _.some(weekday.ndShift.data, { weekday: y });
       this.stShift.data.push({
         weekday: y,
         checked: stCheck,
@@ -186,9 +186,7 @@ export class PopupSettingCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.dayOff = _.filter(this.dayOff, function (o) {
-            return o.recID != item.recID;
-          });
+          this.dayOff = this.dayOff.filter(x=>x.recID != item.recID);
         }
       });
   }
@@ -221,9 +219,7 @@ export class PopupSettingCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.calendarDate = _.filter(this.calendarDate, function (o) {
-            return o.recID != item.recID;
-          });
+          this.calendarDate = this.calendarDate.filter(x=>x.recID != item.recID);
         }
       });
   }

@@ -10,8 +10,6 @@ import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
-import { VendorsComponent } from 'projects/codx-ac/src/lib/vendors/vendors.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
@@ -31,7 +29,6 @@ export const routes: Routes = [
     RouterModule.forChild(routes),
     CodxCoreModule,
     CodxShareModule,
-    InlineSVGModule,
     CommonModule,
     FormsModule,
     CoreModule,

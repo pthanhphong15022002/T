@@ -33,7 +33,6 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { PopupVoteComponent } from './components/treeview-comment/popup-vote/popup-vote.component';
 import { LayoutNoAsideComponent } from './_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from './_layout/_onlyHeader/_onlyHeader.component';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
@@ -302,7 +301,6 @@ const T_Pipe: Type<any>[] = [
     NgbModule,
     FormsModule,
     SharedModule,
-    InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
     CoreModule,

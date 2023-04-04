@@ -15,8 +15,8 @@ export class LayoutNoToolbarComponent extends LayoutBaseComponent {
   module = 'TM';
   dialog!: DialogRef;
   override aside = true;
-  override asideFixed = false;
-  override toolbar = false;
+  override toolbar = true;
+
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
   }

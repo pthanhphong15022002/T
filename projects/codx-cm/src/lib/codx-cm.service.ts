@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, CacheService } from 'codx-core';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxCmService {
-  constructor(private api: ApiHttpService) {}
+  constructor(private api: ApiHttpService, private cache: CacheService) {}
 
   quickAddContacts(data) {
     return this.api.exec<any>(
@@ -50,7 +51,14 @@ export class CodxCmService {
       [contact, funcID, recIDCrm]
     );
   }
-  //nvthuan
-  
-  //end nvthuan
+
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = {}
+    formModel['formName'] = f?.formName;
+    formModel['gridViewName'] = f?.gridViewName;
+    formModel['entityName'] = f?.entityName;
+    formModel['funcID'] = functionID;
+    return formModel;
+  }
 }

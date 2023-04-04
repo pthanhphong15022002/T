@@ -637,9 +637,7 @@
       </div>
     </div>
   </div>
-  <div
-    *ngIf="itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2'"
-  >
+  <div *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
     <table>
       <tr>
         <th scope="col" class="w-20"></th>
@@ -674,101 +672,63 @@
       </tr>
     </table>
   </div>
-  <div
-    *ngIf="itemQuestion.answerType != 'O2' || itemQuestion.answerType != 'C2'"
-    class="list answer ms-6"
-  >
-    <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
-      <div class="has-action-menu">
-        <div class="d-flex">
-          <div class="d-flex size-input py-2">
-            <ng-container
-              *ngTemplateOutlet="
-                tempIconAnswers;
-                context: {
-                  seqNoSession: itemSession.seqNo,
-                  itemQuestion: itemQuestion,
-                  itemAnswer: itemAnswer
-                }
-              "
-            ></ng-container>
-            <ng-container
-              *ngTemplateOutlet="
-                tempAnswers;
-                context: {
-                  seqNoSession: itemSession.seqNo,
-                  itemQuestion: itemQuestion,
-                  itemAnswer: itemAnswer
-                }
-              "
-            ></ng-container>
+  <ng-template #tmpL>
+    <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
+      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange($event, itemSession, itemQuestion, $event.value)">
+        <option selected >Chọn</option>
+        <option *ngFor="let item of itemQuestion.answers" value="">{{item.answer}}</option>
+      </select>
+    </ng-container>
+  </ng-template>
+  <ng-template #tmpO>
+    <div class="list answer ms-6">
+      <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
+        <div class="has-action-menu">
+          <div class="d-flex">
+            <div class="d-flex size-input py-2">
+              <ng-container
+                *ngTemplateOutlet="
+                  tempIconAnswers;
+                  context: {
+                    seqNoSession: itemSession.seqNo,
+                    itemQuestion: itemQuestion,
+                    itemAnswer: itemAnswer
+                  }
+                "
+              ></ng-container>
+              <ng-container
+                *ngTemplateOutlet="
+                  tempAnswers;
+                  context: {
+                    seqNoSession: itemSession.seqNo,
+                    itemQuestion: itemQuestion,
+                    itemAnswer: itemAnswer
+                  }
+                "
+              ></ng-container>
+            </div>
           </div>
-        </div>
-        <div #imageInlineAnswer *ngIf="itemAnswer.hasPicture">
-          <div *ngFor="let item of lstEditIV" class="ms-12 mt-3">
-            <div
-              *ngIf="item.objectID == itemAnswer.recID"
-              class="position-relative has-action-menu"
-            >
-              <img
-                class="w-100px border-gray"
-                [src]="getSrcImage(item)"
-                alt=""
-              />
-              <span
-                class="icon-close icon-20 icon-MF-image-outside-answer action-menu pointer"
-              ></span>
+          <div #imageInlineAnswer *ngIf="itemAnswer.hasPicture">
+            <div *ngFor="let item of lstEditIV" class="ms-12 mt-3">
+              <div
+                *ngIf="item.objectID == itemAnswer.recID"
+                class="position-relative has-action-menu"
+              >
+                <img
+                  class="w-100px border-gray"
+                  [src]="getSrcImage(item)"
+                  alt=""
+                />
+                <span
+                  class="icon-close icon-20 icon-MF-image-outside-answer action-menu pointer"
+                ></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <div
-      class="d-flex size-input-other"
-      *ngIf="
-        (itemQuestion?.active && itemQuestion.answerType == 'O') ||
-        itemQuestion.answerType == 'C'
-      "
-    >
-      <ng-container
-        *ngTemplateOutlet="
-          tempIconAnswers;
-          context: {
-            seqNoSession: itemSession.seqNo,
-            seqNoQuestion: itemQuestion.seqNo,
-            itemQuestion: itemQuestion
-          }
-        "
-      ></ng-container>
-      <div class="e-input-group-other">
-        <input
-          class="e-input answer-other"
-          type="text"
-          placeholder="Thêm bình chọn"
-          (focus)="focusIn($event.target)"
-          (blur)="focusOut($event.target)"
-        />
-      </div>
-      <ng-container
-        *ngIf="
-          (itemQuestion?.answerType == 'O' ||
-            itemQuestion?.answerType == 'C') &&
-          !itemQuestion.other
-        "
-        class="d-flex"
-      >
-        <div class="text-or">
-          <codx-label fiedName="" default="hoặc"></codx-label>
-        </div>
-        <div class="add-answer-other">
-          <codx-label
-            fiedName=""
-            default='thêm "Câu trả lời khác"'
-          ></codx-label>
-        </div>
-      </ng-container>
-    </div> -->
-  </div>
+  </ng-template>
 </ng-template>
 
 <ng-template

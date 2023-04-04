@@ -35,30 +35,54 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   lstCountQuestion = [];
   lstQuestion : any;
   indexQuesAns: number = 0;
-  Objs =  [
-    { Country : "GBR", GoldMedal : 27, SilverMedal : 23, BronzeMedal : 17, MappingName : "Great Britain" },
-    { Country : "CHN", GoldMedal : 26, SilverMedal : 18, BronzeMedal : 26, MappingName : "China" },
-    { Country : "AUS", GoldMedal : 8, SilverMedal : 11, BronzeMedal : 10, MappingName : "Australia" },
-    { Country : "RUS", GoldMedal : 19, SilverMedal : 17, BronzeMedal : 20, MappingName : "Russia" },
-];
-primaryXAxis: Object = {
-  labelIntersectAction: Browser.isDevice ? 'None' : 'Rotate45', labelRotation: Browser.isDevice ? -45 : 0 , edgeLabelPlacement: 'Shift',valueType: 'Category', interval: 1, majorGridLines: { width: 0 }, majorTickLines: { width: 0 }
-};
-//Initializing Primary Y Axis
-primaryYAxis: Object = {
-  majorTickLines: { width: 0 }, lineStyle: { width: 0 }, 
-};
-chartSettings: ChartSettings = {
-  title: '15 Objectives',
-  seriesSetting: [
-    {
-      type: 'Column',
-      xName: 'answer',
-      yName: 'count',
-    },
-  ],
+  
+  chartSettingsT: ChartSettings = {
+    title: '',
+    seriesSetting: [
+      {
+        type: 'Column',
+        xName: 'answer',
+        yName: 'count',
+        dataLabel : {
+          name: 'textMapping'
+        },
+        marker : { 
+          dataLabel: { 
+            visible: true, 
+            position: 'Top',
+            template: '<div class="text-white fw-bold">${point.y}</div>' 
+          }
+        }
+      },
+    ],
+  };
+  
+  chartSettingsO: ChartSettings = {
+    title: '',
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'answer',
+        yName: 'percent',
 
-};
+        dataLabel : {
+          name: 'textMapping',
+          visible: true, 
+          position: 'Inside', 
+          enableRotation : false, 
+          connectorStyle: { type: 'Curve', length: '10%' }, 
+          font: {color: 'white', fontWeight:'600' },
+          showZero: false
+        },
+      },
+    ],
+  
+  };
+
+  palettes: string[] = 
+  ["#3366CC","#FF9900","#61EFCD", "#CDDE1F", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
+  "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
+  
   constructor(
     private injector: Injector,
     private awserSV :CodxSVAnswerService
@@ -243,22 +267,94 @@ chartSettings: ChartSettings = {
     return count
   }
 
-  dataSourceChart(data:any)
+  settingChart(answerType:any , properties:any)
   {
-    debugger
-    var list = data.filter(x=>x.answer);
-    var arr=[];
-    if(list && list.length > 0 ) 
+    switch(answerType)
     {
-      list.forEach(elm =>{
-        var obj = 
+      case "T":
         {
-          Answer : elm.answer,
-          Count : elm.count
+          switch(properties)
+          {
+            case "height":
+            {
+              return "250"
+              break;
+            }
+            case 'primaryXAxis':
+            {
+              return {
+                majorGridLines: { width: 0 }, 
+                minorGridLines: { width: 0 },
+                majorTickLines: { width: 0 }, 
+                minorTickLines: { width: 0 },
+                interval: 1, 
+                lineStyle: { width: 0 },
+                labelIntersectAction: 'Rotate45', valueType: 'Category'
+              }
+              break;
+            }
+            case 'primaryYAxis':
+            {
+              return {
+                majorTickLines: { width: 0 }, 
+                lineStyle: { width: 0 }, 
+                majorGridLines: { width: 0.3 },
+                minorGridLines: { width: 0 }, 
+                minorTickLines: { width: 0 },
+              }
+              break;
+            }
+            case 'seriesSetting':
+            {
+              return this.chartSettingsT.seriesSetting
+              break;
+            }
+            case 'chartArea':
+            {
+              return  {
+                border: {
+                    width: 0
+                }
+              };
+            }
+            case 'legendSettings':
+            {
+              return null;
+            }
+          }
+          break;
         }
-        arr.push(obj)
-      });
+      case "O":
+      {
+        switch(properties)
+        {
+          case "height":
+            {
+              return "300"
+              break;
+            }
+          case 'primaryXAxis':
+          case 'primaryYAxis':
+          case 'chartArea':
+            {
+              return null;
+              break;
+            }
+          case 'seriesSetting':
+            {
+              return this.chartSettingsO.seriesSetting
+              break;
+            }
+          case 'legendSettings':
+            {
+              return {
+                toggleVisibility : false
+              };
+              break;
+            }
+        }
+      }
     }
-    return arr;
+    return null;
   }
 }
