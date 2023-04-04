@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg';
 import {
   AccumulationChartAllModule,
   AccumulationTooltipService,
@@ -230,7 +229,6 @@ const T_Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     CoreModule,

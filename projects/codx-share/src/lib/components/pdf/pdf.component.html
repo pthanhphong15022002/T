@@ -188,9 +188,9 @@
         [(zoom)]="zoomValue" [(page)]="curPage" [handTool]="showHand" [showHandToolButton]="showHand"
         [useBrowserLocale]="false" [language]="'vn'" [showUnverifiedSignatures]="true" [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false" (pdfLoaded)="loadedPdf($event)" (pageRendered)="pageRendered($event)"
-        [showBookmarkButton]="false" [showPropertiesButton]="false" [customSidebar]="withoutSidebar"
+        [showPropertiesButton]="false" [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail" [enableDragAndDrop]="false" [contextMenuAllowed]="false"
-        [enablePinchOnMobile]="false" (currentZoomFactor)="('1')" pageViewMode="vertical"
+        (currentZoomFactor)="('1')" pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)">
       </ngx-extended-pdf-viewer>
 

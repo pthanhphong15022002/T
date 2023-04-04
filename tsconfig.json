@@ -11,7 +11,6 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     //"esModuleInterop": true,
-
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
@@ -19,7 +18,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "es2020",
@@ -116,8 +115,6 @@
       ],
       "codx-tn": [
         "dist/codx-tn/codx-tn",
-        "dist/codx-tn",
-        "dist/codx-tn/codx-tn",
         "dist/codx-tn"
       ],
       "codx-wp": [
@@ -135,7 +132,9 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "enableIvy": true,
+    "allowEmptyCodegenFiles": true
     // "enableI18nLegacyMessageIdFormat": false,
     // "strictInjectionParameters": true,
     // "strictInputAccessModifiers": true,

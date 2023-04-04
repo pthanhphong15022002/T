@@ -1,5 +1,4 @@
 import { VoucherComponent } from './../../popup/voucher/voucher.component';
-import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,22 +6,17 @@ import {
   Injector,
   OnInit,
   Optional,
-  PipeTransform,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   EditSettingsModel,
-  GridComponent,
 } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
-  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -38,10 +32,6 @@ import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
