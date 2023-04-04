@@ -183,6 +183,7 @@ export class InstancesComponent
       .subscribe((grv) => {
         if (grv) {
           this.grvSetup = grv;
+          this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
