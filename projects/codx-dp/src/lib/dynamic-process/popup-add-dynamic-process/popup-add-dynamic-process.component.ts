@@ -551,7 +551,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.cache.message('DP015').subscribe((res) => {
           if (res) this.errorMessage = res.customName || res.defaultName;
         });
-      } 
+      }
     }
   }
 
@@ -1735,6 +1735,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let crrIndex = this.stepList.findIndex((x) => x.recID == recID);
     if (crrIndex == -1) return;
     this.dataChild = this.stepList[crrIndex].fields;
+    if (this.action == 'edit') {
+      let check = this.listStepEdit.some((id) => id == recID);
+      if (!check) {
+        this.listStepEdit.push(recID);
+      }
+    }
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     this.changeDetectorRef.detectChanges();
   }
@@ -1758,6 +1764,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var stepIDContain = event.container.id;
     var stepIDPrevious = event.previousContainer.id;
     // var data = event.item?.data;
+    if (this.action == 'edit') {
+      let check = this.listStepEdit.some((id) => id == stepIDContain);
+      if (!check) {
+        this.listStepEdit.push(stepIDContain);
+      }
+    }
+    if (this.action == 'edit') {
+      let check = this.listStepEdit.some((id) => id == stepIDPrevious);
+      if (!check) {
+        this.listStepEdit.push(stepIDPrevious);
+      }
+    }
     event.item.data.stepID = stepIDContain;
     transferArrayItem(
       event.previousContainer.data,
