@@ -1,4 +1,4 @@
-<codx-views #view [views]="views" [autoLoad]="false" [toolbarDisplay]="false">
+<codx-views #view [views]="views" [autoLoad]="false"  [funcID]="funcID" (filterReportChange)="filterChange($event)" (onActions)="onActions($event)">
 </codx-views>
 
 <ng-template #template>
