@@ -6,7 +6,8 @@
 
 :root {
   --fs-body: 13px;
-  [class*="e-"]{
+  
+  .e-grid .e-rowcell{
     font-size: var(--fs-body);
   }
 }
@@ -110,7 +111,12 @@ textarea.e-input,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
   color: var(--gray-800) !important;
-  line-height: 34px;
+  line-height: 32px;
+}
+input.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+  height: 32px!important;
 }
 
 input.e-input::placeholder,
@@ -2153,6 +2159,9 @@ codx-valuelist .btn.select-icon {
 .icon-login {
   margin-left: 3px;
 }
+.dialog-more {
+  display: none;
+}
 
 .dialog-extend {
   .codx-dialog-container.e-slide {
@@ -2167,6 +2176,8 @@ codx-valuelist .btn.select-icon {
     right: 0;
     overflow: auto;
     padding: 0 15px;
+    display: block;
+
   }
   .icon-login {
     rotate: 180deg;
