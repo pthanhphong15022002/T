@@ -1,7 +1,20 @@
-<codx-views #view [funcID]="funcID" service="HR" assemblyName="ERM.Business.HR" entityName="HR_EContracts"
-  className="EContractsBusiness" [method]="method" [views]="views" [autoLoad]="true" idField="recID"
-  [button]="buttonAdd" (buttonClick)="addContract($event)" (onActions)="HandleAction($event)"
-  (oneMoreMulti)="onMoreMulti($event)" (selectedChange)="changeItemDetail($event)">
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EContracts"
+  className="EContractsBusiness"
+  [method]="method"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addContract($event)"
+  (onActions)="HandleAction($event)"
+  (oneMoreMulti)="onMoreMulti($event)"
+  (selectedChange)="changeItemDetail($event)"
+>
 </codx-views>
 <!-- <<<< -->
 <ng-template #templateList let-data>
@@ -14,26 +27,50 @@
         </span> -->
         <!-- end highlight -->
         <div class="d-flex flex-column">
-          <codx-img [width]="35" class="me-3" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
-            [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
+          <codx-img
+            [width]="35"
+            class="me-3"
+            [objectId]="data?.emp?.employeeID"
+            [referType]="'avt'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
+          >
           </codx-img>
-          <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="data?.emp?.gender" [showText]="false"
-            [showIcon]="true" [showBgColor]="true">
+          <codx-vll
+            class="badge badge-sm"
+            [name]="'HR001'"
+            [value]="data?.emp?.gender"
+            [showText]="false"
+            [showIcon]="true"
+            [showBgColor]="true"
+          >
           </codx-vll>
         </div>
         <div class="d-flex flex-column">
           <div>
-            <div class=" fw-bold">
+            <div class="fw-bold">
               <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data?.emp?.employeeID }}</span>
             </div>
           </div>
           <div class="text-gray-700">
-            <span [innerHTML]="data?.positionID | formatvalue : view.formModel : 'positionID' | async"></span>
+            <span
+              [innerHTML]="
+                data?.positionID
+                  | formatvalue : view.formModel : 'positionID'
+                  | async
+              "
+            ></span>
           </div>
           <div class="text-gray-700">
-            <span [innerHTML]=" data?.orgUnitID| formatvalue : view.formModel : 'orgUnitID' | async "></span>
+            <span
+              [innerHTML]="
+                data?.orgUnitID
+                  | formatvalue : view.formModel : 'orgUnitID'
+                  | async
+              "
+            ></span>
           </div>
         </div>
       </div>
@@ -41,19 +78,45 @@
 
     <div class="w-25">
       <div class="d-flex flex-column">
-        <div [class]="data.isCurrent? 'text-primary': 'text-gray-700'" class="fw-bold">
-          <span [title]="eContractHeaderText ? eContractHeaderText['ContractTypeID'] : ''"
-            [innerHTML]="data?.contractTypeID | formatvalue : view.formModel : 'contractTypeID'| async">
+        <div
+          [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+          class="fw-bold"
+        >
+          <span
+            [title]="
+              eContractHeaderText ? eContractHeaderText['ContractTypeID'] : ''
+            "
+            [innerHTML]="
+              data?.contractTypeID
+                | formatvalue : view.formModel : 'contractTypeID'
+                | async
+            "
+          >
           </span>
         </div>
         <div class="d-flex flex-row">
-          <i class="icon-calendar_today icon-14 me-1" [class]="data.isCurrent? 'text-primary': 'text-gray-700'"></i>
-          <div [class]="data.isCurrent? 'text-primary': 'text-gray-700'" class="align-self-center fw-bold">
-            <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
-              {{ data?.effectedDate | fmDT }}</span>
+          <i
+            class="icon-calendar_today icon-14 me-1"
+            [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+          ></i>
+          <div
+            [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+            class="align-self-center fw-bold"
+          >
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+              "
+            >
+              {{ data?.effectedDate | fmDT }}</span
+            >
             <span> - </span>
-            <span [title]="eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''">
-              {{data?.expiredDate | fmDT}}
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''
+              "
+            >
+              {{ data?.expiredDate | fmDT }}
             </span>
           </div>
         </div>
@@ -65,37 +128,70 @@
         <div class="text-gray-700 d-flex flex-row">
           <i class="icon-event_notes icon-13 me-1"></i>
           <div class="align-self-center fw-bold">
-            <span [title]="eContractHeaderText ? eContractHeaderText['ContractNo'] : ''">
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['ContractNo'] : ''
+              "
+            >
               {{ data?.contractNo }}
             </span>
             <span> - </span>
-            <span [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : '' ">
-              {{data?.signedDate | fmDT}}</span>
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
+              "
+            >
+              {{ data?.signedDate | fmDT }}</span
+            >
           </div>
         </div>
         <div class="d-flex flex-row">
           <div>
-            <div class="d-flex flex-row" *ngIf="data?.attachments>0">
+            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
               <i class="icon-attach_file text-primary icon-13"></i>
               <div class="align-self-center notification-count me-4 bg-primary">
-                {{data?.attachments}}
+                {{ data?.attachments }}
               </div>
             </div>
           </div>
-          <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-            [showIcon]="false" [showBgColor]="true">
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+          >
           </codx-vll>
         </div>
       </div>
-      <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName" hideFolder="1"
-        hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
-        [formModel]="view.formModel" displayThumb="full" showMessage="0">
+      <codx-attachment
+        #attachment
+        [objectId]="data?.recID"
+        [objectType]="view.formModel.entityName"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="view.formModel"
+        displayThumb="full"
+        showMessage="0"
+      >
       </codx-attachment>
     </div>
 
     <div class="w-25">
-      <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus" [showText]="true"
-        [showIcon]="false" [showBgColor]="true">
+      <codx-vll
+        [formModel]="view.formModel"
+        [field]="'ApproveStatus'"
+        [value]="data?.approveStatus"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+      >
       </codx-vll>
     </div>
 
@@ -104,8 +200,13 @@
 
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-          (changeDataMF)="changeDataMf($event, data)" [dataItem]="data" type="hover">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMf($event, data)"
+          [dataItem]="data"
+          type="hover"
+        >
         </codx-mfunc>
       </div>
     </div>
@@ -113,10 +214,18 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">Nhân viên</div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">Hợp đồng</div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">Đính kèm</div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">Tình trạng</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblContractType" [default]="'Loại hợp đồng | Thời hạn'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblContractNum" [default]="'Số hợp đồng | Ngày ký'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+    </div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>
@@ -141,14 +250,22 @@
     <div>data?.effectedDate</div>
     <div>data?.signedDate</div>
   </div>
-
 </ng-template>
 
 <ng-template #templateListDetail let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3" [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'"
-    [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'">
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card codx_cardcenter p-3"
+    [imageId]="data?.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [titleTmp]="titleTmp"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+  >
   </codx-temp-full>
   <ng-template #titleTmp let-data>
     <div class="w-100">
@@ -162,24 +279,27 @@
           <span class="text-danger">
             {{ data?.emp?.employeeID }}
           </span>
-
         </span>
       </div>
 
       <div class="justify-content-between text-gray-700">
-        <span [innerHTML]="
+        <span
+          [innerHTML]="
             data.emp.positionID
               | formatvalue : view.formModel : 'PositionID'
               | async
-          "></span>
+          "
+        ></span>
       </div>
 
       <div class="justify-content-between text-dark">
-        <span [innerHTML]="
+        <span
+          [innerHTML]="
             data.contractTypeID
               | formatvalue : view.formModel : 'contractTypeID'
               | async
-          "></span>
+          "
+        ></span>
       </div>
       <div class="justify-content-between text-dark">
         <span>
@@ -191,25 +311,41 @@
       </div>
       <div class="d-flex justify-content-between text-dark">
         <span class="mt-2">
-          <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.signStatus" [showText]="true"
-            [showBgColor]="true">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.signStatus"
+            [showText]="true"
+            [showBgColor]="true"
+          >
           </codx-vll>
         </span>
 
         <span class="d-flex flex-row justify-content-end">
-          <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
-            [numberImages]="3" [mode]="false">
+          <codx-imgs
+            [objectId]="getIdUser(data.createdBy, data.owner)"
+            [objectType]="'AD_Users'"
+            [width]="30"
+            [numberImages]="3"
+            [mode]="false"
+          >
           </codx-imgs>
         </span>
       </div>
     </div>
   </ng-template>
-
 </ng-template>
 
 <ng-template #panelRightListDetail let-data>
-  <lib-view-contracts-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
-    [view]="view" (uploaded)="getDetailContract($event, data)" (clickMFunction)="clickEvent($event, data)">
+  <lib-view-contracts-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    (uploaded)="getDetailContract($event, data)"
+    (clickMFunction)="clickEvent($event, data)"
+  >
   </lib-view-contracts-detail>
   <ng-template #itemRightDetail> </ng-template>
 </ng-template>
@@ -220,12 +356,20 @@
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
-            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEquipment" default="Cập nhật trạng thái"
-              [formModel]="view.formModel"></codx-label>
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Cập nhật trạng thái"
+              [formModel]="view.formModel"
+            ></codx-label>
           </div>
         </div>
         <div class="card-toolbar">
-          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="close2(dialog1)">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="close2(dialog1)"
+          >
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -238,13 +382,32 @@
             <codx-label fiedName="signStatus" [formModel]="view.formModel">
             </codx-label>
           </label>
-          <codx-input disabled="true" field="signStatus" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+          <codx-input
+            disabled="true"
+            field="signStatus"
+            [formModel]="view.formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
         <div class="form-group">
           <label>
-            <codx-label fiedName="Note" [formModel]="view.formModel"></codx-label>
+            <codx-label
+              [default]="'Bình luận'"
+              [name]="'lblComment'"
+            ></codx-label>
           </label>
-          <codx-input field="note" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+          <codx-input
+          type = "text"
+          [formModel]="view.formModel"
+          (valueChange)="ValueChangeComment($event)"
+          >
+
+          </codx-input>
+          <!-- <codx-input
+            field="note"
+            [formModel]="view.formModel"
+            [Group]="formGroup"
+          ></codx-input> -->
         </div>
       </div>
     </div>
@@ -252,7 +415,11 @@
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveUpdateForm()">
           <i class="icon-save"></i>
-          <codx-label default="Lưu" name="lblSave" [formModel]="view.formModel"></codx-label>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
         </button>
       </div>
     </div>
