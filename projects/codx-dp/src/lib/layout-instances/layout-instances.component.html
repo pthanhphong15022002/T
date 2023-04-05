@@ -8,7 +8,7 @@
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
-          [headerBar]="null"
+          [headerBar]="headerTmp"
           class="header align-items-stretch"
           [headerRightBar]="headerRightBar"
           #codxHeader
@@ -21,6 +21,9 @@
       </div>
     </div>
   </div>
+  <ng-template #headerTmp>
+    <span>NAM MÔ A DI ĐÀ PHẬT</span>
+  </ng-template>
 
   <codx-scripts-init></codx-scripts-init>
   <codx-scroll-top></codx-scroll-top>
@@ -125,9 +128,3 @@
   </ng-template>
   <!-- end::TOPBAR -->
 </ng-container>
-
-
-<ng-template #headerTmp>
-    <span >aaaaaaaaaaaaaaaaaaa</span>
-    <span [innerHTML]="viewNameProcess()">{{this.nameProcess}} </span>
-</ng-template>
