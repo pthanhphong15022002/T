@@ -12,18 +12,18 @@
       width="50" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column align-items-between ">
       <span class="fw-bold" [innerHTML]="data?.resourceName | formatvalue : formModel : 'ResourceName' | async"></span>
-      <div class="float-left fs-7">
-        <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking"></codx-label>
+      <div class="float-left mt-1">
+        <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking"  class=""></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1"  [innerHTML]="data?.ranking | formatvalue : formModel : 'Ranking' | async"></span>
       </div>
-      <div class="float-left fs-7">
-        <codx-label [default]="'Diện tích(m2)'" name="lblArea" class="text-gray-600"></codx-label>
+      <div class="float-left mt-1">
+        <codx-label [default]="'Diện tích(m2)'" name="lblArea" class=""></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1" [innerHTML]="data?.area | formatvalue : formModel : 'Area' | async"></span>
       </div>
-      <div class="float-left fs-7">
-        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class="text-gray-600"></codx-label>
+      <div class="float-left mt-1">
+        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class=""></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1" [innerHTML]="data?.capacity | formatvalue : formModel : 'Capacity' | async"></span>
       </div>
@@ -32,8 +32,8 @@
 </ng-template>
 <ng-template #locationCol let-data>
   <div class="d-flex flex-column justify-content-start">
-    <span [innerHTML]="data?.location | formatvalue : formModel : 'Location' | async"></span>
-    <span class="text-truncate"  [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
+    <span class=" mt-1" [innerHTML]="data?.location | formatvalue : formModel : 'Location' | async"></span>
+    <span class="  mt-1 text-truncate"  [innerHTML]="data?.companyID | formatvalue : formModel : 'CompanyID' | async"></span>
   </div>
 </ng-template>
 <ng-template #popupDevice let-dialog>
@@ -82,11 +82,11 @@
     class="d-flex justify-content-center cursor-pointer text-hover-primary">
     <i class="icon-devices me-2"></i>
     <span class="fw-bold me-1">{{ data?.equipmentQty }}</span>
-    <codx-label [default]="'Thiết bị'" class="fs-7" name="lblDevice"></codx-label>
+    <codx-label [default]="'Thiết bị'" class="" name="lblDevice"></codx-label>
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
-  <div class="d-flex justify-content-start">
+  <div class="d-flex  align-items-center  justify-content-start">
     <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold" [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
@@ -95,7 +95,7 @@
 </ng-template>
 
 <ng-template #preparatorCol let-data>
-  <div class="d-flex  justify-content-start">
+  <div class="d-flex align-items-center justify-content-start">
     <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>

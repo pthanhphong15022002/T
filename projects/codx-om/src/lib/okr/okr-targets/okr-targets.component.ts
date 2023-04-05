@@ -715,7 +715,7 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel },this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event && res?.event.length !=null) {        

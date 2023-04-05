@@ -133,22 +133,22 @@ export class PopupAddKRComponent extends UIComponent {
     });
     this.cache.message('OM004').subscribe((mes) => {
       if (mes) {
-        this.messMonth = mes;
+        this.messMonth = mes?.customName;
       }
     });
     this.cache.message('OM005').subscribe((mes) => {
       if (mes) {
-        this.messMonthSub = mes;
+        this.messMonthSub = mes?.customName;
       }
     });
     this.cache.message('OM006').subscribe((mes) => {
       if (mes) {
-        this.messDay = mes;
+        this.messDay = mes?.customName;
       }
     });
     this.cache.message('OM007').subscribe((mes) => {
       if (mes) {
-        this.messWeek = mes;
+        this.messWeek = mes?.customName;
       }
     });
   }
@@ -402,10 +402,10 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
   openPopupFrequence(template: any) {
-    if (this.kr?.frequence == null) {
-      this.notificationsService.notify('Tần suất cập nhật cần có giá trị', '2');
-      return;
-    }
+    // if (this.kr?.frequence == null) {
+    //   this.notificationsService.notify('Tần suất cập nhật cần có giá trị', '2');
+    //   return;
+    // }
 
     this.dialogCheckIn = this.callfc.openForm(template, '', 450, 300, null);
     this.detectorRef.detectChanges();
@@ -416,11 +416,9 @@ export class PopupAddKRComponent extends UIComponent {
       this.kr?.target == null ||
       this.kr?.plan == null
     ) {
-      this.notificationsService.notify(
-        'Chỉ tiêu và phân bổ chỉ tiêu cần có giá trị',
-        '2'
-      );
-      return;
+      this.notificationsService.notifyCode('OM003');
+        return;
+      
     } else if (
       this.kr.targets == null ||
       this.kr?.targets == null ||

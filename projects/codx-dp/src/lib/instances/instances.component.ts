@@ -43,6 +43,7 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
+import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 
 @Component({
   selector: 'codx-instances',
@@ -68,7 +69,7 @@ export class InstancesComponent
   @Output() valueListID = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  moreFuncs: Array<ButtonModel> = [];
+
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -90,6 +91,7 @@ export class InstancesComponent
   instanceID: string;
   dialog: any;
   moreFunc: any;
+  moreFuncStart: any;
   instanceNo: string;
   listSteps = [];
   listStepInstances = [];
@@ -160,6 +162,7 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private layoutInstance : LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -205,10 +208,11 @@ export class InstancesComponent
     });
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.pageTitle.setSubTitle(f?.customName);
+      // if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
+           this.moreFuncStart = this.moreFuncInstance.filter(x=>x.functionID =='DP21')[0]
         }
       });
     });
@@ -290,7 +294,7 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          this.getSumDurationDayOfSteps(this.listStepsCbx);
+         // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //this.getPermissionProcess(this.processID);
@@ -474,6 +478,7 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
+    var endDate = new Date();
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
       [
@@ -483,12 +488,12 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        endDate = this.HandleEndDate(this.listStepsCbx),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
-        (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
         this.isAdminRoles
+
       ],
       option
     );
@@ -543,6 +548,8 @@ export class InstancesComponent
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
+                      var endDate =this.view.dataService.dataSelected.endDate;
+
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
                       [
@@ -552,11 +559,11 @@ export class InstancesComponent
                         this.titleAction,
                         formMD,
                         this.listStepsCbx,
-                        (this.sumDaySteps = this.getSumDurationDayOfSteps(
-                          this.listStepsCbx
-                        )),
+                        endDate = this.HandleEndDate(this.listStepsCbx),
+                        ,
                         this.autoName,
                         this.lstParticipants,
+
                       ],
                       option
                     );
@@ -573,6 +580,8 @@ export class InstancesComponent
         //  });
       });
   }
+
+
 
   //End
 
@@ -618,7 +627,7 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance([data.recID, this.process.recID]);
+        this.startInstance([data.recID]);
         break;
     }
   }
@@ -627,6 +636,8 @@ export class InstancesComponent
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
         this.detailViewInstance.getStageByStep(res);
+        this.dataSelected.status ='2';
+        this.view.dataService.update(this.dataSelected).subscribe() ;
         this.detectorRef.detectChanges();
       }
     });
@@ -1264,29 +1275,29 @@ export class InstancesComponent
     );
   }
 
-  getSumDurationDayOfSteps(listStepCbx: any) {
-    let totalDay = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce(
-        (sum, f) =>
-          sum +
-          f?.durationDay +
-          f?.durationHour +
-          this.setTimeHoliday(f?.excludeDayoff),
-        0
-      );
-    return totalDay;
-  }
-  getSumDurationHourOfSteps(listStepCbx: any) {
-    let totalHour = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce((sum, f) => sum + f?.durationHour, 0);
-    return totalHour;
-  }
-  setTimeHoliday(dayOffs: string): number {
-    let listDays = dayOffs.split(';');
-    return listDays.length;
-  }
+  // getSumDurationDayOfSteps(listStepCbx: any) {
+  //   let totalDay = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce(
+  //       (sum, f) =>
+  //         sum +
+  //         f?.durationDay +
+  //         f?.durationHour +
+  //         this.setTimeHoliday(f?.excludeDayoff),
+  //       0
+  //     );
+  //   return totalDay;
+  // }
+  // getSumDurationHourOfSteps(listStepCbx: any) {
+  //   let totalHour = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce((sum, f) => sum + f?.durationHour, 0);
+  //   return totalHour;
+  // }
+  // setTimeHoliday(dayOffs: string): number {
+  //   let listDays = dayOffs.split(';');
+  //   return listDays.length;
+  // }
 
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {
@@ -1298,6 +1309,49 @@ export class InstancesComponent
     }
     return '';
   }
+
+  HandleEndDate(listSteps: any){
+    var dateNow = new Date();
+    var endDate = new Date();
+    for(let i = 0; i < listSteps.length; i++){
+      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+      endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(dateNow,endDate,listSteps[i]?.excludeDayoff);
+      dateNow = endDate;
+    }
+    return endDate;
+  }
+
+  setTimeHoliday(startDay: Date,endDay: Date, dayOff: string )
+  {
+    if (
+      !dayOff ||
+      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
+    ) {
+      const isSaturday = dayOff.includes("7");
+      const isSunday = dayOff.includes("8");
+      let day = 0;
+
+      for (let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1) ) {
+        if (currentDate.getDay() === 6 && isSaturday) {
+          ++day;
+        }
+        if (currentDate.getDay() === 0 && isSunday) {
+          ++day;
+        }
+      }
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+      endDay.setDate(endDay.getDate() + day);
+      if (endDay.getDay() === 0 && isSunday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+    }
+    return endDay;
+  }
+
   #endregion;
 
   //Export file
@@ -1387,6 +1441,8 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.layoutInstance.dataProcess.next(ps);
+    this.layoutInstance.nameProcess = ps.title
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -1506,4 +1562,10 @@ export class InstancesComponent
     //   this.view.currentView['kanban'].refresh();
     // }
   }
+  clickStartInstances(e){
+    //goij ham start ma dang sai
+    if(e)
+    this.startInstance([this.dataSelected.recID])
+  }
 }
+

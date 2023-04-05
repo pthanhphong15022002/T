@@ -32,12 +32,12 @@ export class CodxShowTaskComponent implements OnInit {
     private cache: CacheService,
     private callfc: CallFuncService,
   ) {
-    if(this.dataSource && !this.dataSource['taskGroups']){
+    if (this.dataSource && !this.dataSource['taskGroups']) {
       this.dataSource['taskGroups'] = [];
     }
   }
 
-  async ngOnInit(){
+  async ngOnInit() {
     this.grvMoreFunction = await this.getFormModel('DPT0402');
   }
 
@@ -45,7 +45,7 @@ export class CodxShowTaskComponent implements OnInit {
     if (changes?.dataSource?.currentValue) {
       let data = await firstValueFrom(this.cache.valueList('DP004'));
       this.listTypeTask = data['datas'];
-      await this.groupByTask(this.dataSource); 
+      await this.groupByTask(this.dataSource);
     }
   }
 
@@ -68,31 +68,31 @@ export class CodxShowTaskComponent implements OnInit {
     return formModel;
   }
 
-   async groupByTask(data) {  
-      // console.log(data?.tasks); 
-      // const taskGroupList = data?.tasks?.reduce((group, product) => {
-      //   const { taskGroupID } = product;
-      //   group[taskGroupID] = group[taskGroupID] ?? [];
-      //   group[taskGroupID].push(product);
-      //   return group;
-      // }, {});
-      // const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
-      //   return {
-      //     ...taskGroup,
-      //     task: taskGroupList[taskGroup['recID']] ?? [],
-      //   };
-      // });
-      // data['taskGroups'] = taskGroupConvert;
+  async groupByTask(data) {
+    // console.log(data?.tasks); 
+    // const taskGroupList = data?.tasks?.reduce((group, product) => {
+    //   const { taskGroupID } = product;
+    //   group[taskGroupID] = group[taskGroupID] ?? [];
+    //   group[taskGroupID].push(product);
+    //   return group;
+    // }, {});
+    // const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
+    //   return {
+    //     ...taskGroup,
+    //     task: taskGroupList[taskGroup['recID']] ?? [],
+    //   };
+    // });
+    // data['taskGroups'] = taskGroupConvert;
 
-      console.log('======',this.dataSource);
-      
-      if (this.dataSource['taskGroups']?.length == 0 || this.dataSource['tasks']?.length > 0) {
-        let taskGroup = {};
-        taskGroup['task'] = this.dataSource['tasks']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
-        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.dataSource['taskGroups'] = [];
-        this.dataSource['taskGroups'].push(taskGroup);
-      }
+    console.log('======', this.dataSource);
+
+    if (this.dataSource['groupTask']?.length == 0 || this.dataSource['tasks']?.length > 0) {
+      let taskGroup = {};
+      taskGroup['tasks'] = this.dataSource['tasks']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
+      taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+      this.dataSource['groupTask'] = [];
+      this.dataSource['groupTask'].push(taskGroup);
+    }
   }
 
   // clickMFTaskGroup(e: any, data?: any) {
@@ -116,7 +116,7 @@ export class CodxShowTaskComponent implements OnInit {
   //   }
   // }
 
-  clickMFTask(event,data) {
+  clickMFTask(event, data) {
     let typeTask = '';
     switch (event?.functionID) {
       case 'SYS02':
@@ -128,7 +128,7 @@ export class CodxShowTaskComponent implements OnInit {
             (type) => type.value === data.taskType
           );
         }
-        this.handleTask(null,'edit');
+        this.handleTask(null, 'edit');
         break;
       case 'SYS04':
         typeTask = data.taskType;
@@ -141,7 +141,7 @@ export class CodxShowTaskComponent implements OnInit {
     }
   }
 
-  openPopupTaskGroup(){
+  openPopupTaskGroup() {
 
   }
 
@@ -181,7 +181,7 @@ export class CodxShowTaskComponent implements OnInit {
       leadtimeControl: false,
     };
     console.log(this.dataSource);
-    
+
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
@@ -190,61 +190,28 @@ export class CodxShowTaskComponent implements OnInit {
 
     dialog.closed.subscribe(async (e) => {
       if (e?.event) {
-        console.log(e?.event);
-        
+        let taskData = e?.event?.data;
+        if (e.event?.action === 'add' || e.event?.action === 'copy') {
+          // let index = this.dataSource['taskGroups'].findIndex(
+          //   (task) => task.recID == taskData.taskGroupID
+          // );
+          // if (index < 0) {
+          //   let taskGroup = {};
+          //   taskGroup['tasks'] = [taskData];
+          //   taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+          //   this.dataSource['taskGroups'].push(taskGroup);
+          // } else {
+          //   this.dataSource['taskGroups'][index]['tasks'].push(taskData);
+          // }
+        } else {
+          if (taskData?.taskGroupID != taskGroupIdOld) {
+          }else{
+
+          }
+        }
+
+
       }
-    //   this.groupTaskID = null; //set lại
-    //   if (e?.event) {
-    //     let taskData = e?.event?.data;
-    //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
-    //       let groupTask = this.taskGroupList?.find(
-    //         (x) => x.refID === taskData.taskGroupID
-    //       );
-    //       let role = new DP_Instances_Steps_Tasks_Roles();
-    //       this.setRole(role);
-    //       taskData['roles'] = [role];
-    //       taskData['createdOn'] = new Date();
-    //       taskData['modifiedOn'] = null;
-    //       taskData['modifiedBy'] = null;
-    //       taskData['indexNo'] = groupTask ? groupTask['task']?.length : 1;
-    //       let progress = await this.calculateProgressTaskGroup(taskData, 'add');
-    //       this.dpService
-    //         .addTask([taskData, progress?.average])
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             this.notiService.notifyCode('SYS006');
-    //             let index = this.taskGroupList.findIndex(
-    //               (task) => task.refID == taskData.taskGroupID
-    //             );
-    //             if (index < 0) {
-    //               let taskGroup = new DP_Instances_Steps_TaskGroups();
-    //               taskGroup['task'] = [];
-    //               taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-    //               this.taskGroupList.push(taskGroup);
-    //               this.taskGroupList[0]['task'].push(taskData);
-    //             } else {
-    //               this.taskGroupList[index]['task'].push(taskData);
-    //             }
-    //             this.taskList.push(taskData);
-    //             this.taskGroupList[progress?.indexGroup]['progress'] =
-    //               progress?.average; // cập nhật tiến độ của cha
-    //             this.calculateProgressStep();
-    //             this.saveAssign.emit(true);
-    //           }
-    //         });
-    //     } else {
-    //       taskData['modifiedOn'] = new Date();
-    //       this.dpService.updateTask(taskData).subscribe((res) => {
-    //         if (res) {
-    //           if (taskData?.taskGroupID != taskGroupIdOld) {
-    //             this.changeGroupTask(taskData, taskGroupIdOld);
-    //             this.notiService.notifyCode('SYS007');
-    //             this.saveAssign.emit(true);
-    //           }
-    //         }
-    //       });
-    //     }
-    //   }
     });
   }
 

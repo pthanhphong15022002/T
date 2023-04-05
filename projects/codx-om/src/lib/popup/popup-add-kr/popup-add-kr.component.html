@@ -40,7 +40,8 @@
         <div class="form-group col-4">
           <codx-label fiedName="Target" [formModel]="form.formModel">
           </codx-label>
-          <codx-input ControlName="target" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="targetChange($event)">
+          <codx-input ControlName="target" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="targetChange($event)">
           </codx-input>
         </div>
 
@@ -71,7 +72,7 @@
 
       </div>
 
-      <div class="row">        
+      <div class="row">
         <div class="col-4">
           <codx-label fiedName="Frequence" [formModel]="form.formModel">
           </codx-label>
@@ -91,7 +92,7 @@
 
 
       </div>
-      <div class="row mb-2">        
+      <div class="row mb-2">
         <div class="mt-1">
           <div class="d-flex flex-row justify-content-start align-items-center comment-text text-gray-600"
             (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='M'">
@@ -209,7 +210,7 @@
               <codx-label [name]=" this.planVLL[i]?.text"></codx-label>
             </div>
 
-            <div class="col-7"  >
+            <div class="col-7">
               <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="border-1 border "
                 (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>
             </div>
@@ -254,31 +255,45 @@
       </div>
       <div class="modal-body">
         <div class="px-5 d-flex flex-row justify-content-start">
-          <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='M'">
-            <span class="mx-2">Ngày</span>
-            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="day" [crrValue]="kr?.checkIn?.day" (valueChange)="checkInChange($event)"></codx-input>
-            <span class="mx-2">trong tháng vào lúc</span>
-            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
-            <span class="mx-2">giờ</span>
+          <div class="d-flex flex-column justify-content-start align-items-start" *ngIf="kr.frequence=='M'">
+            <div class="d-flex flex-row justify-content-start align-items-center">
+              <span class="mx-2">Ngày</span>
+              <div class="w-40px">
+                <codx-input type="number" class=" text-center mx-2 " [showSpinButton]="false" field="day"
+                  [crrValue]="kr?.checkIn?.day" (valueChange)="checkInChange($event)"></codx-input>
+              </div>
+              <span class="mx-2">trong tháng vào lúc</span>
+              <div class="w-40px">
+                <codx-input type="number" [class]="'text-center mx-2 '" [showSpinButton]="false" field="time"
+                  [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+              </div>
+              <span class="mx-2">giờ</span>
+            </div>
+            <span class="place-holder">{{messMonthSub}}</span>
           </div>
 
           <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='W'">
             <span class="mx-2">Ngày</span>
-            <codx-input type="valuelist" [refValue]="'L0012'" [class]="'w-40px text-center mx-2'" style="width: 100px;"
-              [showSpinButton]="false" field="day" [crrValue]="kr?.checkIn?.day"
-              (valueChange)="checkInChange($event)"></codx-input>
+            <div class=" w-100px">
+              <codx-input type="valuelist" [refValue]="'L0012'" [class]="'text-center mx-2'"
+                 [showSpinButton]="false" field="day" [crrValue]="kr?.checkIn?.day"
+                (valueChange)="checkInChange($event)"></codx-input>
+            </div>
             <span class="mx-2">trong tuần vào lúc</span>
-            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            <div class="w-40px">
+              <codx-input type="number" [class]="'text-center mx-2  '" [showSpinButton]="false" field="time"
+                [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            </div>
             <span class="mx-2">giờ</span>
           </div>
 
           <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='D'">
             <span class="mx-2">Trong ngày vào lúc</span>
-            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            <div class="w-40px">
+
+              <codx-input type="number" [class]="'text-center mx-2  '" [showSpinButton]="false" field="time"
+              [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            </div>
             <span class="mx-2">giờ</span>
           </div>
 

@@ -44,6 +44,8 @@ import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynami
 import { PopupPropertiesComponent } from './dynamic-process/popup-properties/popup-properties.component';
 import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties/popup-user-properties/popup-user-properties.component';
 import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
+import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
+
 
 const routes: Routes = [
   {
@@ -64,7 +66,7 @@ const routes: Routes = [
   //thao tesst chuyen popup sang page
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutInstancesComponent,
     children: [
       {
         path: 'instances/:funcID/:processID',
@@ -110,6 +112,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
     PopupParticipantsComponent,
+    LayoutInstancesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
