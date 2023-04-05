@@ -4,40 +4,27 @@ import { OMCONST } from './../codx-om.constant';
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Injector,
-  Input,
-  Output,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  ButtonModel,
   UIComponent,
   ViewModel,
   ViewType,
   AuthStore,
-  CallFuncService,
   DialogModel,
   DataRequest,
-  SidebarModel,
   FormModel,
-  AuthService,
   Util,
   NotificationsService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
-import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { OkrAddComponent } from './okr-add/okr-add.component';
 import { ActivatedRoute } from '@angular/router';
-import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
-const _isAdd = true;
-const _isSubKR = true;
-const _notSubKR = false;
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',

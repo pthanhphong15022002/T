@@ -1,5 +1,5 @@
 .w-40px{
-    width: 40px;
+    width: 40px !important;
 }
 
 .comment-text {
@@ -9,4 +9,7 @@
 .comment-text:hover {
     color: var(--text-primary) !important;
     
+}
+.w-100px{
+    width: 100px !important;
 }
