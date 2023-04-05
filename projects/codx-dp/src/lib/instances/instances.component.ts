@@ -150,7 +150,7 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
- 
+
 
   constructor(
     private inject: Injector,
@@ -291,7 +291,7 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          this.getSumDurationDayOfSteps(this.listStepsCbx);
+         // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //this.getPermissionProcess(this.processID);
@@ -467,6 +467,7 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
+    var endDate = new Date();
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
       [
@@ -476,11 +477,10 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        endDate = this.HandleEndDate(this.listStepsCbx),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
-        (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
       ],
       option
     );
@@ -531,39 +531,39 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                    option.Width = '800px';
-                    option.zIndex = 1001;
-                    this.view.dataService.dataSelected.processID =
-                      this.process.recID;
-                    var dialogEditInstance = this.callfc.openSide(
-                      PopupAddInstanceComponent,
-                      [
-                        'edit',
-                        applyFor,
-                        this.listStepInstances,
-                        this.titleAction,
-                        formMD,
-                        this.listStepsCbx,
-                        (this.sumDaySteps = this.getSumDurationDayOfSteps(
-                          this.listStepsCbx
-                        )),
-                        this.autoName,
-                      ],
-                      option
-                    );
-                    dialogEditInstance.closed.subscribe((e) => {
-                      if (e && e.event != null) {
-                        //xu ly data đổ về
-                        this.detectorRef.detectChanges();
-                      }
-                    });
-                  }
-                });
-            });
+                      option.Width = '800px';
+                      option.zIndex = 1001;
+                      this.view.dataService.dataSelected.processID =
+                        this.process.recID;
+                      var endDate =this.view.dataService.dataSelected.endDate;
+                      var dialogEditInstance = this.callfc.openSide(
+                        PopupAddInstanceComponent,
+                        [
+                          'edit',
+                          applyFor,
+                          this.listStepInstances,
+                          this.titleAction,
+                          formMD,
+                          this.listStepsCbx,
+                          endDate = this.HandleEndDate(this.listStepsCbx),
+                          this.autoName,
+                        ],
+                        option
+                      );
+                      dialogEditInstance.closed.subscribe((e) => {
+                        if (e && e.event != null) {
+                          //xu ly data đổ về
+                          this.detectorRef.detectChanges();
+                        }
+                      });
+                    }
+                  });
+              });
+          });
         });
-        //  });
-      });
-  }
+      }
+
+
 
   //End
 
@@ -1257,29 +1257,29 @@ export class InstancesComponent
     );
   }
 
-  getSumDurationDayOfSteps(listStepCbx: any) {
-    let totalDay = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce(
-        (sum, f) =>
-          sum +
-          f?.durationDay +
-          f?.durationHour +
-          this.setTimeHoliday(f?.excludeDayoff),
-        0
-      );
-    return totalDay;
-  }
-  getSumDurationHourOfSteps(listStepCbx: any) {
-    let totalHour = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce((sum, f) => sum + f?.durationHour, 0);
-    return totalHour;
-  }
-  setTimeHoliday(dayOffs: string): number {
-    let listDays = dayOffs.split(';');
-    return listDays.length;
-  }
+  // getSumDurationDayOfSteps(listStepCbx: any) {
+  //   let totalDay = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce(
+  //       (sum, f) =>
+  //         sum +
+  //         f?.durationDay +
+  //         f?.durationHour +
+  //         this.setTimeHoliday(f?.excludeDayoff),
+  //       0
+  //     );
+  //   return totalDay;
+  // }
+  // getSumDurationHourOfSteps(listStepCbx: any) {
+  //   let totalHour = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce((sum, f) => sum + f?.durationHour, 0);
+  //   return totalHour;
+  // }
+  // setTimeHoliday(dayOffs: string): number {
+  //   let listDays = dayOffs.split(';');
+  //   return listDays.length;
+  // }
 
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {
@@ -1291,6 +1291,49 @@ export class InstancesComponent
     }
     return '';
   }
+
+  HandleEndDate(listSteps: any){
+    var dateNow = new Date();
+    var endDate = new Date();
+    for(let i = 0; i < listSteps.length; i++){
+      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+      endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(dateNow,endDate,listSteps[i]?.excludeDayoff);
+      dateNow = endDate;
+    }
+    return endDate;
+  }
+
+  setTimeHoliday(startDay: Date,endDay: Date, dayOff: string )
+  {
+    if (
+      !dayOff ||
+      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
+    ) {
+      const isSaturday = dayOff.includes("7");
+      const isSunday = dayOff.includes("8");
+      let day = 0;
+
+      for (let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1) ) {
+        if (currentDate.getDay() === 6 && isSaturday) {
+          ++day;
+        }
+        if (currentDate.getDay() === 0 && isSunday) {
+          ++day;
+        }
+      }
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+      endDay.setDate(endDay.getDate() + day);
+      if (endDay.getDay() === 0 && isSunday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+    }
+    return endDay;
+  }
+
   #endregion;
 
   //Export file
@@ -1506,3 +1549,4 @@ export class InstancesComponent
     this.startInstance([this.dataSelected.recID])
   }
 }
+
