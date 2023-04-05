@@ -10,3 +10,19 @@ codx-view-list-detail .codx-detail-footer {
 // codx-wrapper{
 //     padding-top: 0;
 // }
+
+
+.okr-treeview{
+    .content-tree{
+        padding: 0;
+
+        .nochild {
+            width: 36px;
+        }
+        .collapse-conent{
+            margin-top: 17px;
+            margin-right: 2px;
+        }
+    }
+   
+}
