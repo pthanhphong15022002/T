@@ -213,7 +213,6 @@ img.w-20px.h-20px,
   }
 
   .h2-title {
-    font-family: "Roboto";
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -661,10 +660,6 @@ lib-company-setting .e-content {
 
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn.pe-0 {
   padding-right: 0 !important;
-}
-
-.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-  font-family: "Roboto";
 }
 
 codx-tmmeetings .toolbar {
