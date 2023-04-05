@@ -1,37 +1,37 @@
 <ng-container>
   <div cdkDropList class="list">
     <div cdkDropListGroup>
-      <ng-container *ngFor="let taskList of dataSource['taskGroups']">
+      <ng-container *ngFor="let groupTask of dataSource['taskGroups']">
         <div
           cdkDrag
-          [cdkDragData]="taskList"
+          [cdkDragData]="groupTask"
           [cdkDragStartDelay]="100"
-          [cdkDragDisabled]="taskList?.recID ? false : true"
+          [cdkDragDisabled]="groupTask?.recID ? false : true"
           class="card-job-list"
         >
           <div class="card-job task-main">
             <div class="d-flex justify-content-between" style="flex-grow: 1">
               <ng-container
                 [ngTemplateOutlet]="taskGroupTemplate"
-                [ngTemplateOutletContext]="{ value: taskList }"
+                [ngTemplateOutletContext]="{ value: groupTask }"
               ></ng-container>
             </div>
             <div
-              *ngIf="!taskList?.recID"
+              *ngIf="!groupTask?.recID"
               [ngStyle]="
-                taskList?.task?.length == 0 ? { 'min-height': '5px' } : {}
+                groupTask?.task?.length == 0 ? { 'min-height': '5px' } : {}
               "
             ></div>
             <!-- kéo task  -->
             <div
               cdkDropList
-              [cdkDropListData]="taskList?.task || []"
-              [ngStyle]="taskList?.recID ? {} : {}"
-              [id]="'group' + taskList?.recID"
+              [cdkDropListData]="groupTask?.task || []"
+              [ngStyle]="groupTask?.recID ? {} : {}"
+              [id]="'group' + groupTask?.recID"
               class="task ps-14"
             >
               <div
-                *ngFor="let task of taskList?.task"
+                *ngFor="let task of groupTask?.task"
                 cdkDrag
                 [cdkDragStartDelay]="200"
                 [cdkDragData]="task"
@@ -70,7 +70,7 @@
                 </div>
               </div>
               <div
-                *ngIf="taskList?.task?.length === 0"
+                *ngIf="groupTask?.task?.length === 0"
                 style="height: 20px"
               ></div>
             </div>
@@ -260,13 +260,13 @@
       </ejs-progressbar>
     </div>
     <div>
-      <codx-img
+      <!-- <codx-img
         [width]="25"
         class="me-2"
         [objectId]="data?.roles[0]?.objectID"
         objectType="AD_Users"
         [objectName]="data?.roles[0]?.objectName"
-      ></codx-img>
+      ></codx-img> -->
     </div>
     <div class="notify">
       <codx-attachment-temp [objectID]="data.refID"></codx-attachment-temp>
