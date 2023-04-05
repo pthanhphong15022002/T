@@ -175,11 +175,9 @@
                         <div class="d-flex mod icon-like">
                             <ng-container *ngFor="let item of vllL1480">
                                 <a class="mod-icon" (click)="votePost(data, item.value)">
-                                    <!-- <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                        alt="Kiwi standing on oval"> -->
                                         <codx-vll 
                                             name="L1480" 
-                                            [value]="item.voteType" 
+                                            [value]="item.value" 
                                             [path]="'assets/themes/wp/default/img/'"
                                             [showIcon]="true" 
                                             [icoCss]="'w-15px h-15px'">
