@@ -160,6 +160,7 @@
   <codx-form [body]="detailPopupClick" [dialog]="dialog">
     <ng-template #detailPopupClick>
       <codx-instance-detail
+        #detailViewInstance1
         [dataService]="view.dataService"
         [formModel]="view.formModel"
         [dataSelect]="dataSelected"
