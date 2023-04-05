@@ -559,8 +559,9 @@ export class InstancesComponent
               });
           });
         });
-      });
+      
   }
+
 
   //End
 
@@ -1542,3 +1543,4 @@ export class InstancesComponent
     this.startInstance([this.dataSelected.recID,this.process.recID])
   }
 }
+
