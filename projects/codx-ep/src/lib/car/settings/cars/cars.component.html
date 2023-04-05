@@ -10,21 +10,21 @@
   <div class="d-flex flex-row align-items-center py-3 align-items-center ">
     <codx-img class="me-4" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
       [objectName]="data?.resourceName" imageType="circle" width="50" [imgOn]="data?.modifiedOn"></codx-img>
-    <div class="d-flex flex-column fs-7">
-      <span class="d-flex flex-row" >
+    <div class="d-flex flex-column">
+      <span class="d-flex flex-row mt-1" >
 
         <span class="fw-bold" [innerHTML]=" data?.resourceName | formatvalue : formModel : 'resourceName' | async"></span>
       
         <span class="fw-bold mx-1">-</span>
         <span class="fw-bold" [innerHTML]=" data?.code | formatvalue : formModel : 'Code' | async"></span>
       </span>
-      <div class="d-flex flex-row">
-        <codx-label [default]="'Xếp hạng'" name="lblCategory" class="text-gray-600"></codx-label>
+      <div class="d-flex flex-row mt-1">
+        <codx-label [default]="'Xếp hạng'" name="lblCategory" class=""></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1" [innerHTML]=" data?.ranking | formatvalue : formModel : 'Ranking' | async"></span>
       </div>
-      <div class="d-flex flex-row">
-        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class="text-gray-600"></codx-label>
+      <div class="d-flex flex-row mt-1">
+        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class=""></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1" [innerHTML]=" data?.capacity | formatvalue : formModel : 'Capacity' | async"></span>
       </div>
@@ -82,7 +82,7 @@
   <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="d-flex align-items-center">
     <i class="icon-devices"></i>
     <span class="ms-2 fw-bold">{{ data?.equipmentQty }}</span>
-    <codx-label [default]="'Thiết bị'" class="ms-1 fw-bold" name="lblDevice"></codx-label>
+    <codx-label [default]="'Thiết bị'" class="ms-1" name="lblDevice"></codx-label>
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>

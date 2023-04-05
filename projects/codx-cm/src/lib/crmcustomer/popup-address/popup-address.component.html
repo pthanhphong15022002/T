@@ -1,49 +1,39 @@
-<div class="container-body p-5">
-  <div class="d-flex justify-content-between mb-4">
-    <div class="h3">
-      <codx-label name="lblAddress" [formModel]="dialog.formModel" default="Thêm địa chỉ"></codx-label>
-    </div>
-    <div class="d-flex justify-content-end">
-      <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
-    </div>
+<codx-form #form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog" [data]="data">
+</codx-form>
+
+<ng-template #body>
+  <div class="form-group">
+    <codx-label fiedName="AddressType" [formModel]="dialog.formModel"></codx-label>
+    <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="addressType">
+    </codx-input>
   </div>
-  <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
-    <div class="form-group">
-      <codx-label fiedName="AddressType" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="valuelist" [crrValue]="data?.addressType" (valueChange)="valueChange($event)"
-        [refValue]="gridViewSetup?.AddressType?.referedValue" [placeholder]="gridViewSetup?.AddressType?.description" [formModel]="dialog.formModel" field="addressType">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="Country" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="combobox" [crrValue]="data?.country" (valueChange)="valueChange($event)"
-        [refValue]="gridViewSetup?.Country?.referedValue" [placeholder]="gridViewSetup?.Country?.description" [formModel]="dialog.formModel" field="country">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="Province" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="combobox" (valueChange)="valueChange($event)"
-      [refValue]="gridViewSetup?.Province?.referedValue" [placeholder]="gridViewSetup?.Province?.description" [crrValue]="data?.province" [formModel]="dialog.formModel" field="province">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="District" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="combobox" (valueChange)="valueChange($event)"
-      [refValue]="gridViewSetup?.District?.referedValue" [placeholder]="gridViewSetup?.District?.referedValue" [crrValue]="data?.district" [formModel]="dialog.formModel" field="district">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="Ward" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="combobox" (valueChange)="valueChange($event)"
-      [refValue]="gridViewSetup?.Ward?.referedValue" [placeholder]="gridViewSetup?.Ward?.description" [crrValue]="data?.ward" [formModel]="dialog.formModel" field="ward">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label fiedName="Street" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="text" (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Street?.description" [crrValue]="data?.street" [formModel]="dialog.formModel" field="street">
-      </codx-input>
-    </div>
+  <div class="form-group">
+    <codx-label fiedName="Country" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="country">
+    </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label fiedName="Province" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="province">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="District" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="district">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="Ward" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="ward">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="Street" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="street">
+    </codx-input>
+  </div>
+</ng-template>
+<ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="me-2">
       <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
@@ -56,4 +46,6 @@
       </button>
     </div>
   </div>
-</div>
+
+</ng-template>
+

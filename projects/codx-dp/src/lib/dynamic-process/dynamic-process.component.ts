@@ -124,6 +124,8 @@ export class DynamicProcessComponent
 
   isChecked: boolean = false;
   totalInstance: number = 0;
+  lstGroup: any =[];
+  
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -141,6 +143,7 @@ export class DynamicProcessComponent
     // this.genAutoNumber();
     this.getListAppyFor();
     this.getValueFormCopy();
+    this.getListProcessGroups();
     this.user = this.authStore.get();
   }
 
@@ -225,6 +228,7 @@ export class DynamicProcessComponent
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
+              lstGroup : this.lstGroup
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -279,6 +283,7 @@ export class DynamicProcessComponent
                 action: 'edit',
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
+                lstGroup : this.lstGroup
               };
               var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
@@ -332,6 +337,7 @@ export class DynamicProcessComponent
               newIdProccess: this.view.dataService.dataSelected.recID,
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
+              lstGroup : this.lstGroup
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -824,6 +830,14 @@ export class DynamicProcessComponent
         this.notificationsService.notifyCode('DP002');
       } else {
         this.notificationsService.notifyCode('DP003');
+      }
+    });
+  }
+
+  getListProcessGroups() {
+    this.dpService.getListProcessGroups().subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstGroup = res;
       }
     });
   }

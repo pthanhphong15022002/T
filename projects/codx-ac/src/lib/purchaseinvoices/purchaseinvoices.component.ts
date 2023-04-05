@@ -27,6 +27,7 @@ import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.com
   styleUrls: ['./purchaseinvoices.component.css'],
 })
 export class PurchaseinvoicesComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -54,7 +55,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
       if (res && res?.recID) this.parentID = res.recID;
     });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.innerWidth = window.innerWidth;
   }
@@ -74,6 +77,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
       },
     ];
   }
+  //#endregion
+
+  //#region Event
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -198,12 +204,16 @@ export class PurchaseinvoicesComponent extends UIComponent {
         }
       });
   }
+  //#endregion
+
+  //#region Function
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'PurchaseInvoicesBusiness';
     opt.assemblyName = 'PS';
     opt.service = 'PS';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
+  //#endregion
 }

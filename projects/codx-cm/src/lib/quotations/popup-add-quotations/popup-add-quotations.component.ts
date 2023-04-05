@@ -57,7 +57,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   valueChange(e) {}
   select(e) {}
   created(e) {}
-  productsLineChanged(e) {}
+
   gridCreated(e) {
     let hBody, hTab, hNote;
     if (this.cardbodyGeneral)
@@ -79,5 +79,52 @@ export class PopupAddQuotationsComponent implements OnInit {
     // data.rowNo = idx + 1;
     // data.transID = this.quotations?.recID;
     this.gridProductsLine.addRow(data, idx);
+  }
+
+  productsLineChanged(e) {
+    const field = [
+      'accountid',
+      'offsetacctid',
+      'objecttype',
+      'objectid',
+      'dr',
+      'cr',
+      'dr2',
+      'cr2',
+      'transactiontext',
+      'referenceno',
+    ];
+    // if (field.includes(e.field.toLowerCase())) {
+    //   this.api
+    //     .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+    //       this.cashpayment,
+    //       e.data,
+    //       e.field,
+    //       e.data?.isAddNew,
+    //     ])
+    //     .subscribe((res: any) => {
+    //       if (res && res.line)
+    //         this.setDataGrid(res.line.updateColumns, res.line);
+    //     });
+    // }
+
+    // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+    //   if (e.value === '3') {
+    //     //Set lock field
+    //   } else {
+    //     this.api
+    //       .exec<any>(
+    //         'AC',
+    //         'AC',
+    //         'CashPaymentsLinesBusiness',
+    //         'SetLockFieldAsync'
+    //       )
+    //       .subscribe((res) => {
+    //         if (res) {
+    //           //Set lock field
+    //         }
+    //       });
+    //   }
+    //}
   }
 }

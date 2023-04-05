@@ -6,6 +6,10 @@
 
 :root {
   --fs-body: 13px;
+
+  .e-grid .e-rowcell{
+    font-size: var(--fs-body);
+  }
 }
 
 .e-device .e-dlg-content,
@@ -38,6 +42,15 @@ erm-quick-links-inner .dropdown-menu {
   width: 1100px !important;
 }
 
+.btn-noborder .btn{
+  border: 0;
+}
+.table-bordered tr th, .table-bordered tr td {
+  border: 1px var(--gray-150) solid;
+}
+.table.table-bordered tbody tr:last-child td{
+  border: 1px var(--gray-150) solid!important;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
@@ -107,7 +120,12 @@ textarea.e-input,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
   color: var(--gray-800) !important;
-  line-height: 34px;
+  line-height: 32px;
+}
+input.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+  height: 32px!important;
 }
 
 input.e-input::placeholder,
@@ -384,7 +402,9 @@ codx-views > .container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-400);
+ // background-color: var(--gray-200);
+ border-color: var(--gray-150);
+ opacity: 1;
 }
 
 .is-invalid .ng-invalid,
@@ -2148,6 +2168,9 @@ codx-valuelist .btn.select-icon {
 .icon-login {
   margin-left: 3px;
 }
+.dialog-more {
+  display: none;
+}
 
 .dialog-extend {
   .codx-dialog-container.e-slide {
@@ -2162,6 +2185,8 @@ codx-valuelist .btn.select-icon {
     right: 0;
     overflow: auto;
     padding: 0 15px;
+    display: block;
+
   }
   .icon-login {
     rotate: 180deg;
@@ -2174,4 +2199,20 @@ codx-calendar {
   .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
     text-transform: none;
   }
+}
+
+//
+
+.btn:focus{
+  border-color: transparent!important;
+}
+.e-pane.e-static-pane{
+  ejs-listview{
+    .e-list-parent.e-ul .e-list-item {
+      border-bottom: 1px var(--gray-150) solid!important;
+    }
+  }
+}
+.form-control.codx-textarea{
+  padding: 0;
 }

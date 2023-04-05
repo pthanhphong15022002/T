@@ -3,11 +3,12 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay"  [hasSecond]="true"> </codx-aside>
+      <!-- <codx-aside *ngIf="asideDisplay" [hasSecond]="false">
+      </codx-aside> -->
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
-          [headerBar]="null"
+          [headerBar]="headerTmp"
           class="header align-items-stretch"
           [headerRightBar]="headerRightBar"
           #codxHeader
@@ -15,18 +16,17 @@
         </codx-header>
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
-        <codx-wrapper class="d-flex flex-column flex-column-fluid codx-wrapper">
+        <codx-wrapper class="d-flex flex-column flex-column-fluid no-wrapper">
         </codx-wrapper>
       </div>
     </div>
   </div>
-
   <codx-scripts-init></codx-scripts-init>
   <codx-scroll-top></codx-scroll-top>
 
   <!-- begin:: Drawers -->
-  <!-- <codx-messenger-drawer></codx-messenger-drawer>
-  <codx-notify-drawer></codx-notify-drawer> -->
+  <!-- <codx-messenger-drawer></codx-messenger-drawer> -->
+  <!-- <codx-notify-drawer></codx-notify-drawer> -->
   <!-- <codx-user-drawer></codx-user-drawer> -->
   <!-- end:: Drawers -->
 
@@ -66,7 +66,6 @@
         </div>
         </div> -->
     <codx-notify-drawer></codx-notify-drawer>
-    <codx-activies-approval-list></codx-activies-approval-list>
 
     <!-- Home -->
     <div class="align-items-center d-flex ms-1 ms-lg-3">
@@ -125,3 +124,7 @@
   </ng-template>
   <!-- end::TOPBAR -->
 </ng-container>
+
+<ng-template #headerTmp>
+    <span [innerHTML]="viewNameProcess()">{{this.nameProcess}}</span>
+</ng-template>
