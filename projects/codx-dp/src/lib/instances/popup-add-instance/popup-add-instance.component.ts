@@ -117,32 +117,18 @@ export class PopupAddInstanceComponent implements OnInit {
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data[7];
+      this.lstParticipants = dt?.data[8];
       this.owner = this.instance?.owner;
-      if (
-        this.instance.permissions != null &&
-        this.instance.permissions.length > 0
-      ) {
-        this.lstParticipants = this.instance.permissions.filter(
-          (x) => x.roleType === 'P'
-        );
-      }
-    }
-    else if (this.action === 'add' || this.action === 'copy') {
+    }else{
       this.lstParticipants = dt?.data[7];
-      if (this.lstParticipants != null && this.lstParticipants.length > 0)
-        var check = this.lstParticipants.some(
-          (x) => x.objectID === this.user.userID
-        );
-      if (!check) {
-        let tmp = {};
-        tmp['objectID'] = this.user.userID;
-        tmp['objectName'] = this.user.userName;
-        tmp['objectType'] = 'U';
-
-        this.lstParticipants.push(tmp);
+      var isAdmin = dt?.data[10];
+      if(this.user.administrator || isAdmin){
+        this.owner = '';
+      }else{
+        this.owner = this.user.userID
       }
-      this.owner = this.user.userID;
     }
+
 
     if (this.action === 'copy') {
       this.oldIdInstance = dt?.data[8];
@@ -170,6 +156,8 @@ export class PopupAddInstanceComponent implements OnInit {
       this.oldEndDate = this.instance?.endDate;
     }
   }
+
+
 
   ngAfterViewInit(): void {
     if (this.isApplyFor === '1') {
