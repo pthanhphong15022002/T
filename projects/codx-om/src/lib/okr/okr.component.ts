@@ -125,6 +125,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   curOrgName: any;
   periodName: any;
   orgUnitTree: any[];
+  refIDMeeting:any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -157,10 +158,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    
     this.getCacheData();
     this.getOKRModel();
     this.funcIDChanged();
     this.formModelChanged();
+    this.createCOObject();
     this.setTitle();
     if (
       this.periodID != null &&
@@ -290,6 +293,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+  //Tạo thông tin cho CO
+  createCOObject(){
+    this.refIDMeeting = {
+      projectID: this.dataOKRPlans?.recID ? this.dataOKRPlans?.recID : '',
+    };
+  }
   //Lấy OKR Plan
   getOKRPlanForComponent(event: any) {
     if (event) {
@@ -318,6 +327,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.dataOKRPlans = item;
             this.planNull = false;
             this.isAfterRender = true;
+            this.createCOObject();
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((item1: any) => {
@@ -359,8 +369,7 @@ getOrgTreeOKR() {
           break;
       }
       this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,tempOrgID).subscribe((listOrg: any) => {
-        if (listOrg) {          
-
+        if (listOrg) { 
             this.orgUnitTree=[listOrg];
         }
       });
