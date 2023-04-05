@@ -183,13 +183,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (grv) {
             this.grView = Util.camelizekeyObj(grv);
             this.columnGrids = [
-              {
-                field: '',
-                headerText: '',
-                width: 40,
-                template: this.gridMF,
-                textAlign: 'center',
-              },
+              
               {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
@@ -223,74 +217,75 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 field: 'requester',
                 headerText: this.grView?.requester?.headerText,
               },
-            ];
-            this.views.push({
-              sameData: true,
-              type: ViewType.grid,
-              active: false,
-              model: {
-                //resources: this.columnGrids,
-                template2: this.mfButton,
+              {
+                field: '',
+                headerText: '',
+                width: 120,
+                template: this.gridMF,
+                textAlign: 'center',
               },
-            });
+            ];
+            this.views = [
+              {
+                sameData: false,
+                type: ViewType.schedule,
+                active: true,
+                request2: this.modelResource,
+                request: this.request,
+                toolbarTemplate: this.footerButton,
+                showSearchBar: false,
+                showFilter: false,
+                model: {
+                  //panelLeftRef:this.panelLeft,
+                  eventModel: this.fields,
+                  resourceModel: this.resourceField, //resource
+                  template: this.cardTemplate,
+                  template4: this.resourceHeader,
+                  //template5: this.resourceTootip,//tooltip
+                  template6: this.mfButton, //header
+                  template8: this.contentTmp, //content
+                  //template7: this.footerButton,//footer
+                  statusColorRef: 'EP022',
+                },
+              },
+              {
+                type: ViewType.listdetail,
+                sameData: true,
+                active: false,
+                model: {
+                  template: this.itemTemplate,
+                  panelRightRef: this.panelRight,
+                },
+              },
+              {
+                sameData: true,
+                type: ViewType.grid,
+                active: false,
+                model: {
+                  resources: this.columnGrids,
+                  template2: this.mfButton,
+                  hideMoreFunc:true
+                },
+              }
+            ];
+            if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+              this.codxEpService
+                .getBookingByRecID(this.queryParams?.dataValue)
+                .subscribe((res: any) => {
+                  if (res) {
+                    setInterval(() => this.navigate(res.startDate), 2000);
+                  }
+                });
+            }
+            this.detectorRef.detectChanges();
           }
         });
+        
+        this.detectorRef.detectChanges();
     }
   }
   ngAfterViewInit(): void {
-    this.columnGrids = [
-      {
-        field: '',
-        headerText: '',
-        width: 40,
-        template: this.gridMF,
-        textAlign: 'center',
-      },
-    ];
-
-    this.views = [
-      {
-        sameData: false,
-        type: ViewType.schedule,
-        active: true,
-        request2: this.modelResource,
-        request: this.request,
-        toolbarTemplate: this.footerButton,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          //panelLeftRef:this.panelLeft,
-          eventModel: this.fields,
-          resourceModel: this.resourceField, //resource
-          template: this.cardTemplate,
-          template4: this.resourceHeader,
-          //template5: this.resourceTootip,//tooltip
-          template6: this.mfButton, //header
-          template8: this.contentTmp, //content
-          //template7: this.footerButton,//footer
-          statusColorRef: 'EP022',
-        },
-      },
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
-    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
-      this.codxEpService
-        .getBookingByRecID(this.queryParams?.dataValue)
-        .subscribe((res: any) => {
-          if (res) {
-            setInterval(() => this.navigate(res.startDate), 2000);
-          }
-        });
-    }
-    this.detectorRef.detectChanges();
+        
   }
 
   navigate(date) {

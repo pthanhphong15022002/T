@@ -1,3 +1,4 @@
+import { Util } from "codx-core";
 import { Permission } from "./file.model";
 
 export class Post {
@@ -59,6 +60,7 @@ export class Post {
 
 
   constructor(){
+    this.recID = Util.uid();
     this.createdOn = new Date();
     this.permissions = [];
     this.files = [];

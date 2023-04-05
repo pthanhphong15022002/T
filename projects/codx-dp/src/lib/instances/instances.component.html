@@ -169,6 +169,8 @@
         [listCbxProccess]="listProccessCbx"
         [viewModelDetail]="this.process.viewModeDetail"
         [tabInstances]="tabInstances"
+        [moreFunc]="moreFuncStart"
+        (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
       >
       </codx-instance-detail>
@@ -312,6 +314,8 @@
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
     [tabInstances]="tabInstances"
+    [moreFunc]="moreFuncStart"
+    (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
   >
   </codx-instance-detail>

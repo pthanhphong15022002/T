@@ -113,7 +113,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   folder : any;
 
-  hasTenant : boolean = false;
   @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
@@ -153,6 +152,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() dataSelected: any;
   @Input() addPermissions: Permission[] = [];
   @Input() actionType :string = "" ; 
+  @Input() isReferType: boolean = false;
+
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -465,9 +466,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'
-      if(this.referType == "source") this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
-      this.dataRequest.predicate += ')'
+      if(!this.isReferType)
+      {
+        this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'
+        if(this.referType == "source") this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
+        this.dataRequest.predicate += ')'
+      }
+      else
+      {
+        this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false'
+      }
       this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
@@ -534,13 +542,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //this.getFolderNameByFuncList();
 
     //Kiểm tra tenant đã có chưa
-    this.CheckTenantFile(this.user.tenant).then(value=>{
-      if(typeof value == 'object' && value.AppId) this.hasTenant = true;
-      else this.RegisterTenantFile(this.user.tenant).then(val =>{
-        if(typeof val == 'object' && !val.Error) this.hasTenant = true;
-        else this.notificationsService.notify("Đăng ký tenant không thành công");
-      })
-    });
+   
   }
 
   getFolderNameByFuncList()
@@ -705,25 +707,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Promise<Observable<any[]>> {
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
-    }
     this.atSV.fileListAdded = [];
     // return this.addFileObservable(this.fileUploadList[0]);
     return this.onMultiFileSaveObservable();
   }
 
   saveFilesMulObservable(): Observable<any> {
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
-    }
+   
     this.atSV.fileListAdded = [];
     // return this.addFileObservable(this.fileUploadList[0]);
     return from(this.onMultiFileSaveObservable()).pipe(mergeMap(res => {
       return res
-    }));;
+    }));
   }
   updateUrlFileUpload(): Observable<any[]> {
     let total = this.fileUploadList.length;
@@ -741,11 +736,35 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
 
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
+    var tenants = from(this.CheckTenantFile(this.user.tenant));
+    return tenants.pipe(
+      mergeMap((value, i) => { 
+        if(typeof value == 'object' && value.AppId)
+        {
+          return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+            return res
+          }))
+        }
+        else
+        {
+          var tenants = from(this.RegisterTenantFile(this.user.tenant))
+          return tenants.pipe(mergeMap((val,i)=>{
+            if(typeof val == 'object' && val.Data.AppId) {
+              return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                return res
+              }))
+            } 
+            else {
+              this.notificationsService.notify("Đăng ký tenant không thành công");
+              return [];
+            }
+          }))
+        } 
+       }));
     }
-
+    
+  async onMultiFileSaveObservableAfterTenant()
+  {
     this.getFolder();
     try {
       if (this.data == undefined) this.data = [];
@@ -833,80 +852,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     //this.closePopup();
                     return this.atSV.fileListAdded; //this.data;
                   } 
-                  // else {
-                  //   this.fileUploadList = newUploadList;
-                  //   var config = new AlertConfirmInputConfig();
-                  //   config.type = 'checkBox';
-                  //   return this.notificationsService
-                  //     .alert(this.titlemessage, item?.message, config)
-                  //     .closed.pipe(
-                  //       map((x) => {
-                  //         if (x.event.status == 'Y') {
-                  //           // save all
-                  //           if (x.event.data) {
-                  //             // for (
-                  //             //   var i = 0;
-                  //             //   i < this.fileUploadList.length;
-                  //             //   i++
-                  //             // ) {
-                  //             //   this.fileUploadList[i].reWrite = true;
-                  //             // }
-                  //             this.fileService
-                  //               .addMultiFileObservable(
-                  //                 this.fileUploadList,
-                  //                 this.isDM,
-                  //                 this.folder,
-                  //                 this.fdID,
-                  //                 this.fdName,
-                  //                 this.parentID,
-                  //                 this.idField
-                  //               )
-                  //               .pipe()
-                  //               .subscribe((result) => {
-                  //                 var mess = '';
-                  //                 for (var i = 0; i < result.length; i++) {
-                  //                   var f = result[i];
-                  //                   mess =
-                  //                     mess +
-                  //                     (mess != '' ? '<br/>' : '') +
-                  //                     f.message;
-                  //                   this.atSV.fileListAdded.push(
-                  //                     Object.assign({}, result[i])
-                  //                   );
-                  //                 }
-                  //                 if (this.showMessage == '1')
-                  //                   this.notificationsService.notify(mess);
-                  //                 this.fileUploadList = [];
-                  //                 return this.atSV.fileListAdded; //this.data;
-                  //                 //this.closePopup();
-                  //               });
-                  //           } else {
-                  //             // save 1
-                  //             // var index = this.fileUploadList.findIndex(
-                  //             //   (x) => x.fileName == item.data.fileName
-                  //             // );
-                  //             // this.fileUploadList[index].reWrite = true;
-                  //             this.onMultiFileSaveObservable();
-                  //           }
-                  //         } else if (x.event.status == 'N') {
-                  //           // cancel all
-                  //           if (x.event.data) {
-                  //             this.fileUploadList = [];
-                  //             return this.atSV.fileListAdded; //this.data;
-                  //             //this.closePopup();
-                  //           } else {
-                  //             // cancel 1
-                  //             var index = this.fileUploadList.findIndex(
-                  //               (x) => x.fileName == item.data.fileName
-                  //             );
-                  //             this.fileUploadList.splice(index, 1); //remove element from array
-                  //             if (this.fileUploadList.length > 0)
-                  //               this.onMultiFileSaveObservable();
-                  //           }
-                  //         }
-                  //       })
-                  //     );
-                  // }
                 }
               }
             })
@@ -924,16 +869,26 @@ export class AttachmentComponent implements OnInit, OnChanges {
       return null;
     }
   }
-
   saveFiles() {
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
-    }
     this.onMultiFileSave();
   }
 
   async onMultiFileSave() {
+    var check = await this.CheckTenantFile(this.user.tenant);
+    if(typeof check == 'object' && check.AppId) await this.onMultiSaveAfterTenant();
+    else
+    {
+      var regs = await this.RegisterTenantFile(this.user.tenant);
+      if(typeof regs == 'object' && regs.Data.AppId) await this.onMultiSaveAfterTenant();
+      else  {
+        this.notificationsService.notify("Đăng ký tenant không thành công");
+      }
+    }
+   
+  }
+
+  async onMultiSaveAfterTenant()
+  {
     this.getFolder();
     if (
       this.dataFolder &&
@@ -1167,7 +1122,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.notificationsService.notify(this.title2);
     }
   }
-
   addPermissionA()
   {
     if(this.fileUploadList.length > 0 && this.addPermissions.length >0)
@@ -1263,12 +1217,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any> {
-
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
-    }
-
     try {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
@@ -1280,104 +1228,101 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (!fileItem.item?.rawFile?.name)
         uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
-
-      return this.addFileAfterTenantObservable(uploadFile,this.user.tenant,ChunkSizeInKB,fileItem,isAddFile,index);
+      var obj = from(
+        this.uploadFileAsync(uploadFile,this.user.tenant,ChunkSizeInKB)
+      );
+  
+      var chunSizeInfBytes = ChunkSizeInKB * 1024;
+      var sizeInBytes = 0;
+      return obj.pipe(
+        mergeMap((retUpload, i) => {
+          fileItem.thumbnail = retUpload.Data?.RelUrlThumb;
+          fileItem.uploadId = retUpload.Data?.UploadId; 
+          fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; 
+          if (isAddFile)
+          {
+            fileItem.createdOn = new Date();
+            var obj2 = from(this.fileService
+              .addFileObservable(
+                fileItem,
+                this.actionType,
+                this.formModel?.entityName,
+                this.isDM,
+                this.folder,
+                this.fdID,
+                this.fdName,
+                this.parentID,
+                this.idField
+              ));
+              return obj2.pipe(
+                mergeMap(item2=>{
+                  if (item2.status == 0) {
+                    if (this.showMessage == '1')
+                      this.notificationsService.notify(item2.message);
+                    this.fileUploadList[0].recID = item2.data.recID;
+                    this.atSV.fileListAdded.push(Object.assign({}, item2));
+                    this.data.push(Object.assign({}, item2));
+                    this.fileUploadList = [];
+                    return of(item2);
+                  } else if (item2.status == 6) {
+                    // ghi đè
+                    fileItem.recID = item2.data.recID;
+                    fileItem.fileName = item2.data.fileName;
+                    var config = new AlertConfirmInputConfig();
+                    config.type = 'YesNo';
+                    // var objs = from(
+                    //   this.notificationsService.alert(this.title, item2.message, config).closed
+                    // )
+                    return  this.fileService
+                    .addFileObservable(
+                      fileItem,
+                      this.actionType,
+                      this.formModel?.entityName,
+                      this.isDM,
+                      this.folder,
+                      this.fdID,
+                      this.fdName,
+                      this.parentID,
+                      this.idField
+                    )
+                    .pipe(
+                      map((item) => {
+                        if (item.status == 0) {
+                          if (this.showMessage == '1')
+                            this.notificationsService.notify(item.message);
+                          this.fileUploadList[0].recID = item.data.recID;
+                          this.atSV.fileListAdded.push(Object.assign({}, item));
+                          this.data.push(Object.assign({}, item));
+                          this.fileUploadList = [];
+                          return item;
+                         
+                        } else {
+                          this.notificationsService.notify(item.message);
+                        }
+                        return null;
+                      })
+                    );
+                    
+                  } else {
+                    this.notificationsService.notify(item2.message);
+                  }
+                  return null;
+                })
+              )
+          }
+          
+          else {
+            if (index != -1) this.fileUploadList[index] = fileItem;
+            return null;
+          }
+        })
+      );
 
     } catch (ex) {
       return null;
     }
   }
-  addFileAfterTenantObservable(uploadFile:any,tenant:any,ChunkSizeInKB:any,fileItem:any,isAddFile:any,index:any){
-    var obj = from(
-      this.uploadFileAsync(uploadFile,tenant,ChunkSizeInKB)
-    );
-
-    var chunSizeInfBytes = ChunkSizeInKB * 1024;
-    var sizeInBytes = 0;
-    return obj.pipe(
-      mergeMap((retUpload, i) => {
-        fileItem.thumbnail = retUpload.Data?.RelUrlThumb;
-        fileItem.uploadId = retUpload.Data?.UploadId; 
-        fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; 
-        if (isAddFile)
-        {
-          fileItem.createdOn = new Date();
-          var obj2 = from(this.fileService
-            .addFileObservable(
-              fileItem,
-              this.actionType,
-              this.formModel?.entityName,
-              this.isDM,
-              this.folder,
-              this.fdID,
-              this.fdName,
-              this.parentID,
-              this.idField
-            ));
-            return obj2.pipe(
-              mergeMap(item2=>{
-                if (item2.status == 0) {
-                  if (this.showMessage == '1')
-                    this.notificationsService.notify(item2.message);
-                  this.fileUploadList[0].recID = item2.data.recID;
-                  this.atSV.fileListAdded.push(Object.assign({}, item2));
-                  this.data.push(Object.assign({}, item2));
-                  this.fileUploadList = [];
-                  return of(item2);
-                } else if (item2.status == 6) {
-                  // ghi đè
-                  fileItem.recID = item2.data.recID;
-                  fileItem.fileName = item2.data.fileName;
-                  var config = new AlertConfirmInputConfig();
-                  config.type = 'YesNo';
-                  // var objs = from(
-                  //   this.notificationsService.alert(this.title, item2.message, config).closed
-                  // )
-                  return  this.fileService
-                  .addFileObservable(
-                    fileItem,
-                    this.actionType,
-                    this.formModel?.entityName,
-                    this.isDM,
-                    this.folder,
-                    this.fdID,
-                    this.fdName,
-                    this.parentID,
-                    this.idField
-                  )
-                  .pipe(
-                    map((item) => {
-                      if (item.status == 0) {
-                        if (this.showMessage == '1')
-                          this.notificationsService.notify(item.message);
-                        this.fileUploadList[0].recID = item.data.recID;
-                        this.atSV.fileListAdded.push(Object.assign({}, item));
-                        this.data.push(Object.assign({}, item));
-                        this.fileUploadList = [];
-                        return item;
-                       
-                      } else {
-                        this.notificationsService.notify(item.message);
-                      }
-                      return null;
-                    })
-                  );
-                  
-                } else {
-                  this.notificationsService.notify(item2.message);
-                }
-                return null;
-              })
-            )
-        }
-        
-        else {
-          if (index != -1) this.fileUploadList[index] = fileItem;
-          return null;
-        }
-      })
-    );
-  }
+ 
   rewriteFileObservable(
     title: any,
     message: any,
@@ -1430,10 +1375,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true
   ): Promise<FileUpload> {
     
-    if(!this.hasTenant) {
-      this.notificationsService.notify("Chưa đăng ký tenant thành công");
-      return null;
-    }
     // check dung luong dia cungs
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
