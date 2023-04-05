@@ -121,7 +121,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.owner = this.instance?.owner;
     }else{
       this.lstParticipants = dt?.data[7];
-      var isAdmin = dt?.data[11];
+      var isAdmin = dt?.data[10];
       if(this.user.administrator || isAdmin){
         this.owner = '';
       }
