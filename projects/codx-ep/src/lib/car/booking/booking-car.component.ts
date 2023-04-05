@@ -191,25 +191,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
-
-    this.codxEpService.getListResource('2').subscribe((res: any) => {
-      if (res) {
-        this.listCar = [];
-        this.listCar = res;
-      }
-    });
-    this.codxEpService.getListResource('3').subscribe((res: any) => {
-      if (res) {
-        this.listDriver = [];
-        this.listDriver = res;
-      }
-    });
-    this.codxEpService.getListReason('EP_BookingCars').subscribe((res: any) => {
-      if (res) {
-        this.listReason = [];
-        this.listReason = res;
-      }
-    });
   }
   onLoading(evt: any) {
     if (this.formModel) {
@@ -219,13 +200,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           if (grv) {
             this.grView = Util.camelizekeyObj(grv);
             this.columnGrids = [
-              {
-                field: '',
-                headerText: '',
-                width: 40,
-                template: this.gridMF,
-                textAlign: 'center',
-              },
+              
               {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
@@ -264,74 +239,83 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
                 template: this.gridPhone,
                 headerText: this.grView?.phone?.headerText,
               },
-            ];
-            this.views.push({
-              sameData: true,
-              type: ViewType.grid,
-              active: false,
-              model: {
-                resources: this.columnGrids,
+              {
+                field: '',
+                headerText: '',
+                width: 120,
+                template: this.gridMF,
+                textAlign: 'center',
               },
-            });
+            ];
+            this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: 120,
+                template: this.gridMF,
+                textAlign: 'center',
+              },
+            ];
+            this.views = [
+              {
+                sameData: false,
+                type: ViewType.schedule,
+                active: true,
+                request2: this.modelResource,
+                request: this.request,
+                //toolbarTemplate: this.footerButton,
+                showSearchBar: false,
+                showFilter: false,
+                model: {
+                  //panelLeftRef:this.panelLeft,
+                  eventModel: this.fields,
+                  template: this.cardTemplate,
+                  resourceModel: this.resourceField,
+                  //template:this.cardTemplate,
+                  template4: this.resourceHeader,
+                  //template5: this.resourceTootip,
+                  template6: this.mfButton, //header
+                  template8: this.contentTmp, //content
+                  statusColorRef: 'EP022',
+                },
+              },
+              {
+                id: '2',
+                type: ViewType.listdetail,
+                sameData: true,
+                active: false,
+                model: {
+                  template: this.template,
+                  panelRightRef: this.panelRight,
+                },
+              },
+              {
+                sameData: true,
+                type: ViewType.grid,
+                active: false,
+                model: {
+                  resources: this.columnGrids,
+                  hideMoreFunc:true,
+                },
+              }
+            ];
+            if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+              this.codxEpService
+                .getBookingByRecID(this.queryParams?.dataValue)
+                .subscribe((res: any) => {
+                  if (res) {
+                    setInterval(() => this.navigate(res.startDate), 2000);
+                  }
+                });
+            }
+            this.detectorRef.detectChanges();
           }
         });
     }
   }
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.columnGrids = [
-      {
-        field: '',
-        headerText: '',
-        width: 40,
-        template: this.gridMF,
-        textAlign: 'center',
-      },
-    ];
-    this.views = [
-      {
-        sameData: false,
-        type: ViewType.schedule,
-        active: true,
-        request2: this.modelResource,
-        request: this.request,
-        //toolbarTemplate: this.footerButton,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          //panelLeftRef:this.panelLeft,
-          eventModel: this.fields,
-          template: this.cardTemplate,
-          resourceModel: this.resourceField,
-          //template:this.cardTemplate,
-          template4: this.resourceHeader,
-          //template5: this.resourceTootip,
-          template6: this.mfButton, //header
-          template8: this.contentTmp, //content
-          statusColorRef: 'EP022',
-        },
-      },
-      {
-        id: '2',
-        type: ViewType.listdetail,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.template,
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
-    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
-      this.codxEpService
-        .getBookingByRecID(this.queryParams?.dataValue)
-        .subscribe((res: any) => {
-          if (res) {
-            setInterval(() => this.navigate(res.startDate), 2000);
-          }
-        });
-    }
-    this.detectorRef.detectChanges();
+    
   }
   onActionClick(evt?) {
     if (evt.type == 'add' && evt.data?.resourceId != null) {

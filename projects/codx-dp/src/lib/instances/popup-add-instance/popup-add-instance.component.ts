@@ -413,39 +413,5 @@ export class PopupAddInstanceComponent implements OnInit {
     });
   }
 
-  setTimeHoliday(
-    startDay: Date,
-    endDay: Date,
-    dayOff: string
-  ): Date {
-    if (
-      !dayOff ||
-      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
-    ) {
-      const isSaturday = dayOff.includes("7");
-      const isSunday = dayOff.includes("8");
-      // let day = 0;
 
-      // for ( let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
-      //   if (currentDate.getDay() === 6 && isSaturday) {
-      //     ++day;
-      //   }
-      //   if (currentDate.getDay() === 0 && isSunday) {
-      //     ++day;
-      //   }
-      // }
-
-      // endDay.setDate(endDay.getDate() + day);
-
-      // if (endDay.getDay() === 0 && isSunday) {
-      //   endDay.setDate(endDay.getDate() + 1);
-      // }
-      // for(let currentDate = new Date(startDay);  )
-
-      // endDay = new Date();
-      // for(let i=0; i < )
-
-    }
-    return endDay;
-  }
 }
