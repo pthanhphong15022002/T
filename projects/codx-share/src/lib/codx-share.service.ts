@@ -44,7 +44,8 @@ export class CodxShareService {
     private auth: AuthStore,
     private cache: CacheService,
     private fb: FormBuilder
-  ) {}
+  ) {
+  }
   loadFuncID(functionID: any): Observable<any> {
     let paras = [functionID];
     let keyRoot = 'MFunc' + functionID;
@@ -646,7 +647,7 @@ export class CodxShareService {
       return (
         environment.urlUpload +
         '/api/' +
-        environment.appName +
+        arr[1] +
         '/thumbs/' +
         uploadID +
         '/' +
