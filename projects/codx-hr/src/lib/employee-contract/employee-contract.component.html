@@ -40,15 +40,15 @@
     </div>
 
     <div class="w-25">
-      <div class="d-flex flex-column">
-        <div [class]="data.isCurrent? 'text-primary': 'text-gray-700'" class="fw-bold">
+      <div class="d-flex flex-column" [class]="data.isCurrent? 'text-primary': 'text-gray-700'">
+        <div class="fw-bold">
           <span [title]="eContractHeaderText ? eContractHeaderText['ContractTypeID'] : ''"
             [innerHTML]="data?.contractTypeID | formatvalue : view.formModel : 'contractTypeID'| async">
           </span>
         </div>
         <div class="d-flex flex-row">
-          <i class="icon-calendar_today icon-14 me-1" [class]="data.isCurrent? 'text-primary': 'text-gray-700'"></i>
-          <div [class]="data.isCurrent? 'text-primary': 'text-gray-700'" class="align-self-center fw-bold">
+          <span class="icon-calendar_today icon-15 me-1"></span>
+          <div class="align-self-center fw-bold">
             <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
               {{ data?.effectedDate | fmDT }}</span>
             <span> - </span>
@@ -63,7 +63,7 @@
     <div class="w-25">
       <div class="d-flex flex-column">
         <div class="text-gray-700 d-flex flex-row">
-          <i class="icon-event_notes icon-13 me-1"></i>
+          <span class="icon-event_notes icon-15 me-1"></span>
           <div class="align-self-center fw-bold">
             <span [title]="eContractHeaderText ? eContractHeaderText['ContractNo'] : ''">
               {{ data?.contractNo }}
@@ -75,8 +75,8 @@
         </div>
         <div class="d-flex flex-row">
           <div>
-            <div class="d-flex flex-row" *ngIf="data?.attachments>0">
-              <i class="icon-attach_file text-primary icon-13"></i>
+            <div class="d-flex flex-row" *ngIf="data?.attachments ==0">
+              <span class="icon-attach_file text-primary icon-15"></span>
               <div class="align-self-center notification-count me-4 bg-primary">
                 {{data?.attachments}}
               </div>
