@@ -1,32 +1,23 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Injector,
-  Input,
   Optional,
-  Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
-  ImageViewerComponent,
   NotificationsService,
-  RequestOption,
   UIComponent,
   ViewModel,
-  ViewType,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
-import { CheckIns } from '../../model/okr.model';
 
 
 @Component({
@@ -49,6 +40,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   formModel= new FormModel();
   grView: any;
   checkIns: any;
+  okrFM: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -61,7 +53,8 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.headerText= dialogData?.data[1];
     this.dialogRef = dialogRef;    
     this.oldDataKR = dialogData.data[0];    
-    this.checkIns = dialogData.data[2];   
+    this.checkIns = dialogData.data[2];      
+    this.okrFM = dialogData.data[2]; 
   }
 //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -76,10 +69,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.formModel.gridViewName = 'grvOKRs.CheckIns';
     this.formModel.formName = 'OKRs.CheckIns';
     this.fCheckinKR=this.codxService.buildFormGroup(this.formModel.formName,this.formModel.gridViewName);    
-    this.fCheckinKR.patchValue({
-      status:this.checkIns.status,
-      value:this.checkIns.value,
-    });
+    
     this.getCacheData();
     
 
@@ -137,6 +127,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     // }
     if(this.checkIns?.cummulated < this.dataKR?.actual){
       this.notificationsService.notify('Giá trị sau cùng không được nhỏ hơn giá trị của lần cập nhật trước đó');
+      return;
     }
     if(this.dataKR.checkInMode=='1'){
       this.checkIns.value= this.checkIns?.cummulated - this.dataKR?.actual;
