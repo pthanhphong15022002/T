@@ -430,6 +430,23 @@ export class OkrTargetsComponent implements OnInit {
           func.disabled = false;
         }
       });
+      if(kr.items.length<1 || kr.items==null){
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.KREditSKRWeight ) {
+            func.disabled = true;
+          }
+        });
+      }
+      
+    }
+  }
+  changeDataOBMF(evt: any, ob: any){
+    if(ob.items.length<1 || ob.items==null){
+      evt.forEach((func) => {
+        if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight ) {
+          func.disabled = true;
+        }
+      });
     }
   }
   selectionChange(parent) {
@@ -601,6 +618,7 @@ export class OkrTargetsComponent implements OnInit {
 
     var task = new TM_Tasks();
         task.refID = kr?.recID;
+        task.sessionID=kr?.transID;
         task.refType = 'OM_OKRs';
 
         let option = new SidebarModel();

@@ -339,7 +339,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       this.addNew(evt.data);
     }
     if (evt.type == 'doubleClick') {
-      this.edit(evt.data);
+      if(evt?.data.approveStatus == '1'){
+        this.edit(evt.data);
+
+      }
     }
   }
   navigate(date) {
