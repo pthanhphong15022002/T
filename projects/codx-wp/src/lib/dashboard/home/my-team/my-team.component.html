@@ -8,23 +8,27 @@
         <div class="team-group pb-3">
             <ngx-skeleton-loader *ngIf="!employeeMyTeam" count="5" animation="progress"></ngx-skeleton-loader>
             <div class="user-teams">
-                <div *ngIf="employeeMyTeam && employeeMyTeam?.length <=10">
+                <div *ngIf="employeeMyTeam && employeeMyTeam?.length <= 10">
                     <ng-container *ngFor="let myTeam of employeeMyTeam">
-                        <div *ngIf="myTeam?.isOnline" class="ut-item user-online">
-                            <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
+                        <div *ngIf="myTeam.isOnline" class="ut-item user-online">
+                            <codx-img 
+                                popoverClass="userPopoverClass" 
+                                [ngbPopover]="popEmpTitle" placement="bottom"
                                 #empPopover="ngbPopover" [width]="40" [style.border-color]="online?.color"
                                 [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, myTeam)"
-                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam?.employeeName"
-                                [objectId]="myTeam?.employeeID" objectType="HR_Employees">
+                                (mouseleave)="PopoverEmp(empPopover, null)" 
+                                [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" 
+                                objectType="HR_Employees">
                             </codx-img>
                             <span class="value" [style.background-color]="online?.color"></span>
                         </div>
-                        <div *ngIf="!myTeam?.isOnline" class="ut-item user-offline">
+                        <div *ngIf="!myTeam.isOnline" class="ut-item user-offline">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
                                 #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
-                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam?.employeeName"
-                                [objectId]="myTeam?.employeeID" objectType="HR_Employees"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees"
                                 [style.border-color]="offline?.color">
                                 <span class="value" [style.background-color]="offline?.color"></span>
                             </codx-img>
@@ -33,21 +37,21 @@
                 </div>
                 <div *ngIf="employeeMyTeam && employeeMyTeam?.length > 10" id=customViewUser>
                     <ng-container *ngFor="let myTeam of employeeMyTeam; index as num">
-                        <div *ngIf="myTeam?.isOnline && num < 9" class="ut-item user-online">
+                        <div *ngIf="myTeam.isOnline && num < 9" class="ut-item user-online">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
                                 #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
-                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam?.employeeName"
-                                [objectId]="myTeam?.employeeID" objectType="HR_Employees"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees"
                                 [style.border-color]="online?.color">
                             </codx-img>
                             <span class="value" [style.background-color]="online?.color"></span>
                         </div>
-                        <div *ngIf="!myTeam?.isOnline && num < 9" class="ut-item user-offline">
+                        <div *ngIf="!myTeam.isOnline && num < 9" class="ut-item user-offline">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
                                 #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
-                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam?.employeeName"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
                                 [objectId]="myTeam.employeeID" objectType="HR_Employees"
                                 [style.border-color]="offline.color">
                             </codx-img>
