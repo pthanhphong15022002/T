@@ -67,7 +67,7 @@ export class InstancesComponent
   @Output() valueListID = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  moreFuncs: Array<ButtonModel> = [];
+
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -89,6 +89,7 @@ export class InstancesComponent
   instanceID: string;
   dialog: any;
   moreFunc: any;
+  moreFuncStart: any;
   instanceNo: string;
   listSteps = [];
   listStepInstances = [];
@@ -148,6 +149,7 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
+ 
 
   constructor(
     private inject: Injector,
@@ -205,6 +207,7 @@ export class InstancesComponent
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
+           this.moreFuncStart = this.moreFuncInstance.filter(x=>x.functionID =='DP21')[0]
         }
       });
     });
@@ -1491,5 +1494,9 @@ export class InstancesComponent
     //   this.dataObj = Object.assign({}, this.dataObj, filter);
     //   this.view.currentView['kanban'].refresh();
     // }
+  }
+  clickStartInstances(e){
+    //goij ham start ma dang sai
+    this.startInstance([this.dataSelected.recID,this.process.recID])
   }
 }
