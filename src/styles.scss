@@ -2206,4 +2206,13 @@ codx-calendar {
 .btn:focus{
   border-color: transparent!important;
 }
-
+.e-pane.e-static-pane{
+  ejs-listview{
+    .e-list-parent.e-ul .e-list-item {
+      border-bottom: 1px var(--gray-150) solid!important;
+    }
+  }
+}
+.form-control.codx-textarea{
+  padding: 0;
+}
