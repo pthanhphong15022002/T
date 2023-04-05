@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
+import { CashPayment } from '../../models/CashPayment.model';
 
 @Component({
   selector: 'lib-pop-add-linecash',
@@ -33,8 +34,9 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   validate: any = 0;
   type: any;
-  formType: any;
   cashpaymentline: CashPaymentLine;
+  cashpayment:CashPayment;
+  objectcashpaymentline :Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -50,8 +52,9 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.cashpaymentline = dialogData.data?.data;
+    this.objectcashpaymentline = dialogData.data?.dataline;
+    this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
-    this.formType = dialogData.data?.formType;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -95,37 +98,27 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       }
     }
   }
+  clearCashpayment(){
+    let idx = this.objectcashpaymentline.length;
+    let data = new CashPaymentLine();
+    this.api
+    .exec<any>('AC', 'CashPaymentsLinesBusiness', 'SetDefaultAsync', [
+      this.cashpayment,
+      data,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        res.rowNo = idx + 1;
+        this.cashpaymentline = res;
+        this.form.formGroup.patchValue(res);
+      }
+    });
+  }
+  onSaveAdd(){
+    this.objectcashpaymentline.push({...this.cashpaymentline});
+    this.clearCashpayment();
+  }
   onSave() {
-    switch (this.type) {
-      case 'add':
-        this.checkValidate();
-        if (this.validate > 0) {
-          this.validate = 0;
-          return;
-        } else {
-          if (this.formType == 'edit') {
-            this.api
-              .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-                this.cashpaymentline,
-              ])
-              .subscribe((res: any) => {
-                if (res) {
-                  this.notification.notifyCode('SYS006', 0, '');
-                }
-              });
-          }
-        }
-        break;
-      case 'edit':
-        if (this.formType == 'edit') {
-          this.api
-            .exec('AC', 'CashPaymentsLinesBusiness', 'UpdateLineAsync', [
-              this.cashpaymentline,
-            ])
-            .subscribe((res: any) => {});
-        }
-        break;
-    }
     window.localStorage.setItem(
       'dataline',
       JSON.stringify(this.cashpaymentline)

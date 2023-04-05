@@ -45,6 +45,9 @@ export class InputCustomFieldComponent implements OnInit {
   messCodeEmail = 'SYS037'; // Email ko hợp lê
   messCodePhoneNum = 'RS030';
   listIdUser: string = '';
+  arrIdUser = [];
+  numChange = 0 ;
+
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef
@@ -71,6 +74,7 @@ export class InputCustomFieldComponent implements OnInit {
         break;
       case 'P':
         this.listIdUser = this.customField?.dataValue ?? '';
+        this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
         break;
       case 'A':
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
@@ -144,11 +148,25 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
+      this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
 
-  valueChangeTime() {}
+  deleteUser(id) {
+    let index = this.arrIdUser.indexOf(id);
+    if (index > -1) {
+      this.arrIdUser.splice(index, 1);
+      if (this.arrIdUser?.length > 0)
+        this.listIdUser = this.arrIdUser.join(';');
+      else this.listIdUser = '';
+    }
+    this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
+  }
+
+  valueChangeTime(e) {
+    if(this.numChange > 0)  this.valueChangeCustom.emit({ e: e, data: this.customField });else this.numChange +=1 ;
+  }
 
   addFile() {
     this.attachment.uploadFile();
@@ -174,7 +192,7 @@ export class InputCustomFieldComponent implements OnInit {
     //  return;
     //}//
   }
-  controlBlur(e){
-   if(e.crrValue) this.valueChange(e.crrValue)
+  controlBlur(e) {
+   // if (e.crrValue) this.valueChange(e.crrValue);
   }
 }

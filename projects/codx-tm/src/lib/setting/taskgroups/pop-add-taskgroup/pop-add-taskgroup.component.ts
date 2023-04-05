@@ -103,25 +103,25 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         this.taskGroups.completedControl ?? '0';
     }
 
-    // this.api
-    // .execSv<any>(
-    //   'SYS',
-    //   'AD',
-    //   'AutoNumberDefaultsBusiness',
-    //   'GetFieldAutoNoAsync',
-    //   [this.functionID, this.dialog.formModel.entityName]
-    // )
-    // .subscribe((res) => {
-    //   if (res && !res.stop) {
-    //     this.disabledShowInput = true;
-    //     this.cache.message('AD019').subscribe((mes) => {
-    //       if (mes)
-    //         this.planceHolderAutoNumber = mes?.customName || mes?.description;
-    //     });
-    //   } else {
-    //     this.disabledShowInput = false;
-    //   }
-    // });
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [this.functionID, this.dialog.formModel.entityName]
+    )
+    .subscribe((res) => {
+      if (res && !res.stop) {
+        this.disabledShowInput = true;
+        this.cache.message('AD019').subscribe((mes) => {
+          if (mes)
+            this.planceHolderAutoNumber = mes?.customName || mes?.description;
+        });
+      } else {
+        this.disabledShowInput = false;
+      }
+    });
 
   }
   ngAfterViewInit(): void {

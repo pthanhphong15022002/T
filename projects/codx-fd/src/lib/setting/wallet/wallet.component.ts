@@ -40,6 +40,32 @@ export class WalletComponent extends UIComponent implements OnInit {
   funcID: any;
   functionList: any;
 
+  transType: any;
+
+  title: any;
+  description: any;
+  field: any;
+
+  quantitySettingValues: any;
+  titleSettingValues: any;
+  descriptionSettingValues: any;
+  fieldSettingValues: any;
+
+  quantityActiveCoins: any;
+  titleActiveCoins: any;
+  descriptionActiveCoins: any;
+  fieldActiveCoins: any;
+
+  quantityActiveCoCoins: any;
+  titleActiveCoCoins: any;
+  descriptionActiveCoCoins: any;
+  fieldActiveCoCoins: any;
+
+  quantityActiveMyKudos: any;
+  titleActiveMyKudos: any;
+  descriptionActiveMyKudos: any;
+  fieldActiveMyKudos: any;
+
   constructor(
     private at: ActivatedRoute,
     private location: Location,
@@ -63,6 +89,7 @@ export class WalletComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.LoadDataNew();
     this.LoadData();
     this.LoadDataPolicies('2');
     this.LoadDataPolicies('1');
@@ -102,10 +129,7 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
   }
 
-  changValueListPopup(e) {
-    this.objectUpdateCoin[e.field] = e.data;
-    this.fieldUpdateCoin = e.field;
-  }
+
 
   valueChangeVoucher(e) {
     if (e) {
@@ -132,6 +156,25 @@ export class WalletComponent extends UIComponent implements OnInit {
     }
   }
 
+  valueChangeWithTransType(e, transType) {
+    if (e) {
+      var dt = e.data == true ? '1' : '0';
+      this.objectUpdateCoin[e.field] = dt;
+      this.fieldUpdateCoin = e.field;
+      this.handleSaveParameterWithTransType(transType);
+
+      if (e.field == 'ActiveCoCoins') {
+        if (!e.data) {
+          this.objectUpdateCoin['ExchangeRateCoinsControl'] = false;
+          this.fieldUpdateCoin = 'ExchangeRateCoinsControl';
+        }
+        this.disableGroupFund = !e.data;
+        this.handleSaveParameterWithTransType(transType);
+      }
+
+    }
+  }
+
   onSavePopupCombobx() {
     // this.objectUpdateCoin['MaxCoinsForEGift'] = this.quantity.MaxCoinsForEGift;
     // this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
@@ -148,9 +191,119 @@ export class WalletComponent extends UIComponent implements OnInit {
   //   return value == '1' ? true : false;
   // }
 
-  title: any;
-  description: any;
-  field: any;
+  LoadDataNew() {
+    this.api
+      .call(
+        'ERM.Business.FD',
+        'WalletsBusiness',
+        'GetDataForSettingWalletNewAsync'
+      )
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0].length > 0) {
+          //Transtype Null
+          let dataSettingValues = res.msgBodyData[0][0];
+          this.quantitySettingValues = this.fdSV.convertListToObject(
+            dataSettingValues,
+            'fieldName',
+            'fieldValue'
+          );
+          this.titleSettingValues = this.fdSV.convertListToObject(
+            dataSettingValues,
+            'fieldName',
+            'title'
+          );
+          this.descriptionSettingValues = this.fdSV.convertListToObject(
+            dataSettingValues,
+            'fieldName',
+            'description'
+          );
+          this.fieldSettingValues = this.fdSV.convertListToObject(
+            dataSettingValues,
+            'fieldName',
+            'fieldValue'
+          );
+
+          //Transtype ActiveCoins
+          let dataActiveCoins = res.msgBodyData[0][1];
+          this.quantityActiveCoins = this.fdSV.convertListToObject(
+            dataActiveCoins,
+            'fieldName',
+            'fieldValue'
+          );
+          this.titleActiveCoins = this.fdSV.convertListToObject(
+            dataActiveCoins,
+            'fieldName',
+            'title'
+          );
+          this.descriptionActiveCoins = this.fdSV.convertListToObject(
+            dataActiveCoins,
+            'fieldName',
+            'description'
+          );
+          this.fieldActiveCoins = this.fdSV.convertListToObject(
+            dataActiveCoins,
+            'fieldName',
+            'fieldValue'
+          );
+
+          //Transtype ActiveCoCoins
+          let dataActiveCoCoins = res.msgBodyData[0][2];
+          this.quantityActiveCoCoins = this.fdSV.convertListToObject(
+            dataActiveCoCoins,
+            'fieldName',
+            'fieldValue'
+          );
+          this.titleActiveCoCoins = this.fdSV.convertListToObject(
+            dataActiveCoCoins,
+            'fieldName',
+            'title'
+          );
+          this.descriptionActiveCoCoins = this.fdSV.convertListToObject(
+            dataActiveCoCoins,
+            'fieldName',
+            'description'
+          );
+          this.fieldActiveCoCoins = this.fdSV.convertListToObject(
+            dataActiveCoCoins,
+            'fieldName',
+            'fieldValue'
+          );
+
+          console.log('activeCocoins:', this.quantityActiveCoCoins.ActiveCoCoins);
+
+          if (this.quantityActiveCoCoins.ActiveCoCoins == '1') {
+            this.disableGroupFund = false;
+          } else {
+            this.disableGroupFund = true;
+          }
+
+
+          //Transtype ActiveCoCoins
+          let dataActiveMyKudos = res.msgBodyData[0][3];
+          this.quantityActiveMyKudos = this.fdSV.convertListToObject(
+            dataActiveMyKudos,
+            'fieldName',
+            'fieldValue'
+          );
+          this.titleActiveMyKudos = this.fdSV.convertListToObject(
+            dataActiveMyKudos,
+            'fieldName',
+            'title'
+          );
+          this.descriptionActiveMyKudos = this.fdSV.convertListToObject(
+            dataActiveMyKudos,
+            'fieldName',
+            'description'
+          );
+          this.fieldActiveMyKudos = this.fdSV.convertListToObject(
+            dataActiveMyKudos,
+            'fieldName',
+            'fieldValue'
+          );
+          this.changedr.detectChanges();
+        }
+      });
+  }
 
   LoadData() {
     this.api
@@ -160,7 +313,7 @@ export class WalletComponent extends UIComponent implements OnInit {
         'GetDataForSettingWalletAsync'
       )
       .subscribe((res) => {
-        console.log(res);
+
         if (res && res.msgBodyData[0].length > 0) {
           this.data = res.msgBodyData[0][0];
           this.quantity = this.fdSV.convertListToObject(
@@ -189,6 +342,9 @@ export class WalletComponent extends UIComponent implements OnInit {
             this.disableGroupFund = true;
           }
           this.changedr.detectChanges();
+
+          console.log('quantity:', this.quantity);
+          console.log('field:', this.field);
         }
       });
   }
@@ -245,8 +401,30 @@ export class WalletComponent extends UIComponent implements OnInit {
 
   openFormChangeCoin(content, typeContent) {
     this.fieldUpdateCoin = typeContent;
-    this.objectUpdateCoin[this.fieldUpdateCoin] =
-      this.quantity[this.fieldUpdateCoin];
+    this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantity[this.fieldUpdateCoin];
+    this.changedr.detectChanges();
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'sm',
+    });
+  }
+
+  openFormChangeCoinWithType(content, typeContent, type) {
+    this.fieldUpdateCoin = typeContent;
+    if (type == "1") {
+      this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveCoins[this.fieldUpdateCoin];
+      this.transType = "ActiveCoins";
+    }
+    else if (type == "2") {
+      this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveCoCoins[this.fieldUpdateCoin];
+      this.transType = "ActiveCoCoins";
+    }
+    else if (type == "3") {
+      this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveMyKudos[this.fieldUpdateCoin];
+      this.transType = "ActiveMyKudos";
+    }
+
     this.changedr.detectChanges();
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -278,6 +456,42 @@ export class WalletComponent extends UIComponent implements OnInit {
             if (res.msgBodyData[0] === true) {
               for (const property in objectUpdate) {
                 this.quantity[property] = objectUpdate[property];
+              }
+              this.changedr.detectChanges();
+              this.objectUpdateCoin = {};
+            }
+          }
+        });
+    this.modalService.dismissAll();
+  }
+
+  changValueListPopup(e) {
+    console.log('field:', e.field);
+    console.log('data:', e.data);
+
+    this.objectUpdateCoin[e.field] = e.data;
+    this.fieldUpdateCoin = e.field;
+
+    this.handleSaveParameterWithTransType('ActiveCoins');
+  }
+
+  handleSaveParameterWithTransType(transType) {
+    this.onSaveCMParameterWithTransType(this.objectUpdateCoin, transType);
+  }
+
+  onSaveCMParameterWithTransType(objectUpdate, transType) {
+    this.api
+      .callSv('SYS', 'ERM.Business.SYS', 'SettingValuesBusiness', 'SaveParamsOfPolicyAsync',
+        ['FDParameters', transType, JSON.stringify(objectUpdate)]).subscribe((res) => {
+          if (res && res.msgBodyData.length > 0) {
+            if (res.msgBodyData[0] === true) {
+              for (const property in objectUpdate) {
+                if (transType == 'ActiveCoins')
+                  this.quantityActiveCoins[property] = objectUpdate[property];
+                else if (transType == 'ActiveCoCoins')
+                  this.quantityActiveCoCoins[property] = objectUpdate[property];
+                else if (transType == 'ActiveMyKudos')
+                  this.quantityActiveMyKudos[property] = objectUpdate[property];
               }
               this.changedr.detectChanges();
               this.objectUpdateCoin = {};

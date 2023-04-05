@@ -49,6 +49,9 @@ export class CalendarCenterComponent
   calendarID: string;
   vllPriority = 'TM005';
   dayWeek = [];
+  btnAdd = {
+    id: 'btnAdd',
+  };
 
   @Input() resources!: any;
   @Input() resourceModel!: any;

@@ -12,7 +12,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { LayoutComponent } from './_layout/layout.component';
 import { EmployeeInfomationComponent } from './employeeinfomation/employee-infomation.component';
 import { HomeComponent } from './home/home.component';
@@ -184,7 +183,6 @@ const Component: Type<any>[] = [
     CommonModule,
     FormsModule,
     OverlayModule,
-    InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),

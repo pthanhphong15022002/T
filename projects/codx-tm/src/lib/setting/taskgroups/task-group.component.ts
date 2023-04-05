@@ -193,14 +193,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
           template: this.grid,
         },
       },
-      {
-        type: ViewType.list,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.itemTemplate,
-        },
-      },
     ];
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';

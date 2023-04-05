@@ -40,6 +40,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   firstName: any;
   lastName: any;
   gridViewSetup: any;
+  moreFuncName: '';
   contactsPerson: CM_Contacts;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -50,12 +51,12 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected??dialog.dataService));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.action = dt.data[0];
     this.title = dt.data[1];
-    if (this.action != 'add') {
+    if (this.action == 'edit') {
       this.getAvatar(this.data);
       if (this.funcID == 'CM0102') {
         this.getLastAndFirstName(this.data?.contactName);
@@ -79,7 +80,25 @@ export class PopupAddCrmcustomerComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+    if (this.action == 'copy') {
+      this.data.recID = Guid.newGuid();
+      this.data.contacts = [];
+      this.data.customerID = null;
+      this.data.contactID = null;
+      this.data.partnerID = null;
+      this.data.opponentID = null;
+    }
+
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
   }
+
+
+
 
   getLastAndFirstName(contactName) {
     if (contactName != null) {
@@ -103,16 +122,15 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       this.lastName = e.field == 'lastName' ? e.data : this.lastName;
     } else {
       this.data[e.field] = e.data;
-      if(this.funcID == 'CM0102'){
-        if(e.field == 'isCustomer'){
-          if(e.data == true){
+      if (this.funcID == 'CM0102') {
+        if (e.field == 'isCustomer') {
+          if (e.data == true) {
             this.data.customerFrom = new Date();
-          }else{
+          } else {
             this.data.customerFrom = null;
           }
         }
       }
-
     }
   }
 
@@ -121,18 +139,19 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
       if (this.contactsPerson != null) {
         if (this.contacts != null && this.contacts.length > 0) {
-          var check = this.contacts.find(x=> x.recID == this.contactsPerson.recID);
-          if(check == null){
+          var check = this.contacts.find(
+            (x) => x.recID == this.contactsPerson.recID
+          );
+          if (check == null) {
             this.contacts.forEach((el) => {
               el.contactType = '2';
             });
             this.contacts.push(this.contactsPerson);
           }
-        }else{
+        } else {
           this.contacts.push(this.contactsPerson);
         }
         this.data.contacts = this.contacts;
-
       }
     }
     if (this.firstName != null && this.firstName.trim() != '') {
@@ -185,8 +204,8 @@ export class PopupAddCrmcustomerComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-            this.dialog.close(res.update);
-        }else{
+          this.dialog.close(res.update);
+        } else {
           this.dialog.close();
         }
       });
@@ -210,6 +229,17 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       }
     }
 
+    if(this.funcID != 'CM0102' && this.funcID != 'CM0104'){
+      if(this.contactsPerson == null){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['Contacts'].headerText + '"'
+        );
+        return;
+      }
+    }
+
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
@@ -222,10 +252,10 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     }
   }
 
-  hanleSave(){
-    if(this.action == 'add' || this.action == 'copy'){
+  hanleSave() {
+    if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
-    }else{
+    } else {
       this.onUpdate();
     }
   }
@@ -300,12 +330,13 @@ export class PopupAddCrmcustomerComponent implements OnInit {
   openPopupAddress() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
+    var title = this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
     dataModel.formName = 'CMAddresses';
     dataModel.gridViewName = 'grvCMAddresses';
     dataModel.entityName = 'CM_Addresses';
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
-    this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', '', '', opt);
+    this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', [title], '', opt);
   }
 
   //#region Contact
@@ -352,7 +383,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
       500,
       500,
       '',
-      '',
+      [this.moreFuncName, 'add', null],
       '',
       opt
     );
@@ -365,4 +396,18 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     });
   }
   //#endregion
+}
+
+//Dung tam de sinh guid
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
 }

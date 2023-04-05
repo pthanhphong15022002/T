@@ -20,7 +20,7 @@
     --gray-300: #c2c8ca;
     --gray-200: #cad0d3;
     --gray-150: #e1e6e7;
-    --gray-100: #f5f9fa;
+    --gray-100: #f5f8fa;
 
 }
 
@@ -29,7 +29,7 @@
 /*** css for theme********/
 .codx-theme {
 
-
+    
     &.default {
         --primary: #3699ff;
         --primary-active: #005dc7;
@@ -407,13 +407,26 @@
             color: var(--title-color) !important;
         }
     }
-
-    .e-listview .e-list-item.e-active {
-        background-color: var(--primary-lightest);
+    .e-pane.e-static-pane{
+        .e-listview .e-list-item.e-active {
+            background-color: var(--primary-lightest);
+        }
     }
-
     .e-listview .e-list-item:hover {
         background-color: var(--primary-lighter);
+    }
+
+    div#newfeed{
+         
+        ejs-listview {
+            background-color: transparent;
+            .e-list-item.e-active {
+                background-color: var(--bg-body);
+            }
+            .e-list-item:hover {
+                background-color: var(--bg-body);
+            }
+        }
     }
 
     .nav-pills .nav-link.active {
@@ -717,7 +730,7 @@
     }
 
     .codx-tab .tab-content {
-        border-color: var(--border-light);
+        border-color: var(--gray-150);
     }
 
     codx-layout-add .lay-add-tab-footer {

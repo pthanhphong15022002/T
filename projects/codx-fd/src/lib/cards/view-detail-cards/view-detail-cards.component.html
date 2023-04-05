@@ -232,12 +232,12 @@
 </ng-template>
 
 <ng-template #templateShare let-item>
-    <span class="d-block my-2 ps-2">
+    <span class="d-block my-2 ps-2 d-flex flex-wrap">
         <ng-container *ngIf="item.objectType == '1' ||
         item.objectType == '2' || item.objectType == '3' ||
         item.objectType == '4' || item.objectType == '5' ||
         item.objectType == '6' || item.objectType == '9'; else tmpPermison">
-            <span class="bg-gray-200 rounded-1 p-2 d-flex align-items-center">
+            <span class="bg-gray-200 rounded-2 p-2 px-3 d-flex align-items-center">
                 <span class="symbol-circle me-2">
                     <img class="w-20px" src="assets/themes/sys/default/img/{{item.objectType | vll:'L1901':'icon' | async}}" />
                 </span>

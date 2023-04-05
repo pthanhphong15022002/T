@@ -58,7 +58,7 @@ export class ChatContainerComponent implements OnInit {
     //receiver message
     this.signalRSV.chat.subscribe((res:any) => {
       if(res){
-        this.handleBoxChat(res);         
+        this.handleBoxChat(res.data);         
       }
     });
   }

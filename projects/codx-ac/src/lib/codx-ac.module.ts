@@ -2,7 +2,6 @@ import { JournalNamesComponent } from './journal-names/journal-names.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
-import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAcComponent } from './codx-ac.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -74,6 +73,7 @@ import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
+import { SearchPipe } from './cash-payments/pop-add-cash/search.pipe';
 
 export const routes: Routes = [
   {
@@ -229,12 +229,12 @@ export const routes: Routes = [
     PopAddLinecashComponent,
     NameByIdPipe,
     PopAddLinereceiptsComponent,
+    SearchPipe,
   ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule,
     CodxShareModule,
-    InlineSVGModule,
     CommonModule,
     FormsModule,
     CoreModule,
@@ -245,6 +245,7 @@ export const routes: Routes = [
     SplitterModule,
     CodxReportModule,
     NgxUiLoaderModule,
+    FormsModule
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

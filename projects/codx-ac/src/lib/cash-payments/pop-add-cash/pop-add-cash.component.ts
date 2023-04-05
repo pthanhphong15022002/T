@@ -39,9 +39,10 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
+import { JournalService } from '../../journal-names/journal-names.service';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -78,13 +79,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   tab: number = 0;
   total: any = 0;
   data: any;
+  journal: IJournal;
   transactiontext: Array<Transactiontext> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-
   gridHeight: number;
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -100,6 +101,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ];
   page: any = 1;
   pageSize = 5;
+  searchText: any;
+  key: any;
+  reverse: boolean = false;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -107,6 +111,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private callfunc: CallFuncService,
+    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -118,6 +123,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService!.dataSelected;
+    var model = new CashPaymentLine();
+    this.keymodel = Object.keys(model);
     this.cache
       .gridViewSetup('CashPayments', 'grvCashPayments')
       .subscribe((res) => {
@@ -147,6 +154,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 field: res[keygrid[index]].fieldName.toLowerCase(),
                 headerText: res[keygrid[index]].headerText,
                 columnOrder: res[keygrid[index]].columnOrder,
+                allowFilter: res[keygrid[index]].allowFilter,
               };
               this.columnGrids.push(column);
             }
@@ -169,16 +177,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res.length > 0) {
               this.keymodel = Object.keys(res[0]);
+              this.cashpaymentline = res;
+              this.pageCount = '(' + this.cashpaymentline.length + ')';
+              this.loadTotal();
             }
-            this.cashpaymentline = res;
-            this.pageCount = '(' + this.cashpaymentline.length + ')';
-            this.cashpaymentline.forEach((element) => {
-              this.total = this.total + element.dr;
-            });
-            this.total = this.total.toLocaleString('it-IT', {
-              style: 'currency',
-              currency: 'VND',
-            });
           });
       }
 
@@ -197,18 +199,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         //#endregion
       }
     }
+
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.cashpayment.journalNo;
+    options.pageLoading = false;
+    this.acService
+      .loadDataAsync('AC', options)
+      .subscribe((res) => (this.journal = res[0]));
   }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpayment);
-    if (this.formType == 'add') {
-      this.total = this.total.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-      this.pageCount = '(' + this.cashpaymentline.length + ')';
-    }
+    this.pageCount = '(' + this.cashpaymentline.length + ')';
+    this.loadTotal();
   }
   //#endregion
 
@@ -258,17 +264,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var totals = 0;
     this.cashpaymentline.forEach((element) => {
       totals = totals + element.dr;
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
     });
-    if (this.cashpaymentline.length == 0) {
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-    }
+    this.total = totals.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
 
   created(e) {
@@ -561,13 +561,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpaymentline[i].rowNo = i + 1;
           }
         }
-        this.api
-          .exec('AC', 'CashPaymentsLinesBusiness', 'DeleteLineAsync', [
-            data.recID,
-            this.cashpaymentline,
-          ])
-          .subscribe((res: any) => {});
-        this.notification.notifyCode('SYS008', 0, '');
+        this.cashpaymentlineDelete.push(data);
         this.pageCount = '(' + this.cashpaymentline.length + ')';
         this.loadTotal();
         break;
@@ -594,7 +588,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
-          formType: this.formType,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -622,7 +615,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (dataline != null) {
                   this.cashpaymentline[index] = dataline;
                   this.loadTotal();
-                  this.notification.notifyCode('SYS007', 0, '');
                 }
                 window.localStorage.removeItem('dataline');
               });
@@ -655,8 +647,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
+      dataline: this.cashpaymentline,
+      datacash: this.cashpayment,
       type: 'add',
-      formType: this.formType,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -695,60 +688,82 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Method
   onSave() {
-    this.checkValidate();
+    // tu dong khi luu, khong check voucherNo
+    let ignoredFields: string[] = [];
+    if (this.journal.voucherNoRule === '2') {
+      ignoredFields.push('VoucherNo');
+    }
+    this.checkValidate(ignoredFields);
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
-      if (this.modegrid == 1) {
-        this.cashpaymentline = this.gridCashPaymentLine.dataSource;
-      }
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'CashPaymentsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [
-              this.cashpayment,
-              this.cashpaymentline,
-              this.voucherLineRefs,
-            ];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });
-      }
-      if (this.formType == 'edit') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'CashPaymentsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.cashpayment];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res != null) {
-              if (this.cashpayment.voucherType === '2') {
-                this.acService
-                  .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
-                    this.cashpaymentline,
-                    this.voucherLineRefsDelete,
-                  ])
-                  .subscribe();
-              }
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });
-      }
+      // nếu voucherNo đã tồn tại,
+      // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
+      this.journalService.handleVoucherNoAndSave(
+        this.journal,
+        this.cashpayment,
+        'AC_CashPayments',
+        this.form,
+        this.formType === 'edit',
+        () => {
+          if (this.modegrid == 1) {
+            this.cashpaymentline = this.gridCashPaymentLine.dataSource;
+          }
+          if (this.formType == 'add' || this.formType == 'copy') {
+            this.dialog.dataService
+              .save((opt: RequestOption) => {
+                opt.methodName = 'AddAsync';
+                opt.className = 'CashPaymentsBusiness';
+                opt.assemblyName = 'AC';
+                opt.service = 'AC';
+                opt.data = [
+                  this.cashpayment,
+                  this.cashpaymentline,
+                  this.voucherLineRefs,
+                ];
+                return true;
+              })
+              .subscribe((res) => {
+                if (res.save) {
+                  this.dialog.close();
+                  this.dt.detectChanges();
+                }
+              });
+          }
+          if (this.formType == 'edit') {
+            this.dialog.dataService
+              .save((opt: RequestOption) => {
+                opt.methodName = 'UpdateAsync';
+                opt.className = 'CashPaymentsBusiness';
+                opt.assemblyName = 'AC';
+                opt.service = 'AC';
+                opt.data = [this.cashpayment];
+                return true;
+              })
+              .subscribe((res) => {
+                if (res != null) {
+                  this.acService
+                    .addData('AC', 'CashPaymentsLinesBusiness', 'UpdateAsync', [
+                      this.cashpaymentline,
+                      this.cashpaymentlineDelete,
+                    ])
+                    .subscribe();
+                  if (this.cashpayment.voucherType === '2') {
+                    this.acService
+                      .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
+                        this.cashpaymentline,
+                        this.voucherLineRefsDelete,
+                      ])
+                      .subscribe();
+                  }
+                  this.dialog.close();
+                  this.dt.detectChanges();
+                }
+              });
+          }
+        }
+      );
     }
   }
 
@@ -758,38 +773,32 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.cashpaymentline = this.gridCashPaymentLine.dataSource;
+      if (this.modegrid == 1) {
+        this.cashpaymentline = this.gridCashPaymentLine.dataSource;
+      }
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [this.cashpayment];
+          opt.data = [
+            this.cashpayment,
+            this.cashpaymentline,
+            this.voucherLineRefs,
+          ];
           return true;
         })
         .subscribe((res) => {
           if (res.save) {
-            this.acService
-              .addData(
-                'ERM.Business.AC',
-                'CashPaymentsLinesBusiness',
-                'AddAsync',
-                [this.cashpaymentline]
-              )
+            this.clearCashpayment();
+            this.dialog.dataService.clear();
+            this.dialog.dataService
+              .addNew((o) => this.setDefault(o))
               .subscribe((res) => {
-                if (res) {
-                  this.clearCashpayment();
-                  this.dialog.dataService.clear();
-                  this.dialog.dataService
-                    .addNew((o) => this.setDefault(o))
-                    .subscribe((res) => {
-                      this.form.formGroup.patchValue(res);
-                      this.cashpayment = this.dialog.dataService!.dataSelected;
-                    });
-                }
+                this.form.formGroup.patchValue(res);
+                this.cashpayment = this.dialog.dataService!.dataSelected;
               });
-          } else {
           }
         });
     }
@@ -816,11 +825,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  checkValidate() {
+  checkValidate(ignoredFields: string[] = []) {
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
+
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
@@ -889,6 +904,41 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentlineDelete = [];
     this.voucherLineRefsDelete = [];
     this.transactiontext = [];
+  }
+
+  sort(key) {
+    this.reverse = !this.reverse;
+    var model = new CashPaymentLine();
+    var keymodel = Object.keys(model);
+    keymodel.forEach((element) => {
+      if (element.toLocaleLowerCase() == key) {
+        switch (key) {
+          case 'dr':
+          case 'rowNo':
+            if (!this.reverse) {
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => a[element] - b[element]
+              );
+            } else {
+              this.cashpaymentline = this.cashpaymentline.sort(
+                (a, b) => b[element] - a[element]
+              );
+            }
+            break;
+          default:
+            if (!this.reverse) {
+              this.cashpaymentline = this.cashpaymentline.sort((a, b) =>
+                a[element] > b[element] ? 1 : -1
+              );
+            } else {
+              this.cashpaymentline = this.cashpaymentline.sort((a, b) =>
+                b[element] > a[element] ? 1 : -1
+              );
+            }
+            break;
+        }
+      }
+    });
   }
   //#endregion
 }
