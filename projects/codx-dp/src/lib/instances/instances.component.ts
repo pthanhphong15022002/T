@@ -162,7 +162,6 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance : LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -638,6 +637,7 @@ export class InstancesComponent
         this.detailViewInstance.getStageByStep(res);
         this.dataSelected.status ='2';
         this.view.dataService.update(this.dataSelected).subscribe() ;
+        if(this.kanban)this.kanban.updateCard(this.dataSelected);
         this.detectorRef.detectChanges();
       }
     });
@@ -759,33 +759,9 @@ export class InstancesComponent
         }
       });
     }
-    // else{
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       case 'DP09':
-    //       case 'DP10':
-    //       case 'DP02':
-    //         res.disabled = true;
-    //         break;
-    //       default:
-    //         res.isblur = true;
-    //         }
-    //       })
-    // }
   }
   //End
 
-  // getPermissionProcess(id) {
-  //   this.codxDpService.getProcess(id).subscribe((res) => {
-  //     if (res) {
-  //       if (res.permissions != null && res.permissions.length > 0) {
-  //         this.lstParticipants = res.permissions.filter(
-  //           (x) => x.roleType === 'P'
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -947,7 +923,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+   
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -1441,8 +1417,8 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    this.layoutInstance.dataProcess.next(ps);
-    this.layoutInstance.nameProcess = ps.title
+    // this.layoutInstance.dataProcess.next(ps);
+    // this.layoutInstance.nameProcess = ps.title
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
