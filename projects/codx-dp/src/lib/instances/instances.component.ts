@@ -559,7 +559,6 @@ export class InstancesComponent
                         formMD,
                         this.listStepsCbx,
                         endDate = this.HandleEndDate(this.listStepsCbx),
-                        ,
                         this.autoName,
                         this.lstParticipants,
 
@@ -923,7 +922,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-   
+
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
