@@ -32,6 +32,7 @@ import {
   PageTitleService,
   LayoutService,
   CRUDService,
+  AuthStore,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -148,13 +149,15 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
-
+  user: any;
+  isAdminRoles = false;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
     @Optional() dialog: DialogRef,
@@ -162,6 +165,7 @@ export class InstancesComponent
   ) {
     super(inject);
     this.dialog = dialog;
+    this.user = this.authStore.get();
     //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
@@ -290,7 +294,7 @@ export class InstancesComponent
         }
       });
     //this.getPermissionProcess(this.processID);
-
+      this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -330,6 +334,14 @@ export class InstancesComponent
     console.log(dataColumns);
 
     return dataColumns;
+  }
+
+  getAdminRoleDP() {
+    if (!this.user.administrator) {
+      this.codxDpService.getAdminRoleDP(this.user.userID).subscribe((res) => {
+        this.isAdminRoles = res;
+      });
+    }
   }
 
   getPropertiesHeader(data, type) {
@@ -476,6 +488,7 @@ export class InstancesComponent
         this.oldIdInstance,
         this.autoName,
         (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
+        this.isAdminRoles
       ],
       option
     );
@@ -543,6 +556,7 @@ export class InstancesComponent
                           this.listStepsCbx
                         )),
                         this.autoName,
+                        this.lstParticipants,
                       ],
                       option
                     );
