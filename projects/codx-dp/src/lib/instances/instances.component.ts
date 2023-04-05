@@ -163,6 +163,7 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private layoutInstance: LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -1421,8 +1422,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    // this.layoutInstance.dataProcess.next(ps);
-    // this.layoutInstance.nameProcess = ps.title
+    this.layoutInstance.viewNameProcess(ps.processName)
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,

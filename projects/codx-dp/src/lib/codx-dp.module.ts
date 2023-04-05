@@ -66,8 +66,8 @@ const routes: Routes = [
   //thao tesst chuyen popup sang page
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    //component: LayoutInstancesComponent,
+    //component: LayoutNoAsideComponent,
+    component: LayoutInstancesComponent,
     children: [
       {
         path: 'instances/:funcID/:processID',
