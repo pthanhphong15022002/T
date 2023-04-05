@@ -166,8 +166,7 @@ export class PopupAssignmentOKRComponent
               .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
               .subscribe((ownerInfo) => {
                 if (ownerInfo) {
-                  this.assignTo(ownerInfo);
-                  
+                  this.assignTo(ownerInfo);                  
                   this.isAfterRender = true;
                 }
               });
