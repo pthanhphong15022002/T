@@ -18,6 +18,17 @@
           </codx-input>
         </div>
       </div>
+      <div class="col-6">
+        <div class="form-group" *ngIf="user && user.tenant == 'default'">
+          <codx-input
+            field="AllTeant"
+            type="checkbox"
+            label="All Tenant"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
     </div>
     <div class="row list-cache">
       <ng-container *ngFor="let item of listCache">

@@ -537,4 +537,11 @@ export class CodxDpService {
       processID
     );
   }
+
+  getAdminRoleDP(userID){
+    return this.api.exec<any>(
+      'AD', 'UserRolesBusiness', 'CheckUserRolesAsync',
+      [userID, 'DP']
+    );
+  }
 }

@@ -51,11 +51,14 @@
             </div>
             <!-- comment -->
             <div>
-                <treeview-comment [funcID]="'WP'" [fromModel]="dialogRef.formModel" [objectType]="'WP_Comments'"
-                    [dataComment]="post" [objectID]="post.recID">
+                <treeview-comment 
+                    [funcID]="'WP'" 
+                    [fromModel]="dialogRef.formModel" 
+                    [objectType]="'WP_Comments'"
+                    [data]="post" 
+                    [objectID]="post.recID">
                 </treeview-comment>
             </div>
         </ng-container>
-
     </div>
 </div>
