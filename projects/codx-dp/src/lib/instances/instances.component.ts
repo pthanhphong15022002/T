@@ -61,6 +61,7 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
+  @ViewChild('detailViewInstance1') detailViewInstance1: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   InstanceDetailComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
@@ -617,8 +618,10 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
+        this.detailViewInstance1.getStageByStep(res);
         this.detailViewInstance.getStageByStep(res);
         this.dataSelected.status ='2';
+        this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
         this.view.dataService.update(this.dataSelected).subscribe() ;
         this.detectorRef.detectChanges();
       }
@@ -665,9 +668,9 @@ export class InstancesComponent
   }
 
   //#popup roles
-
-  changeDataMF(e, data, isStart?) {
-    if (e != null && data != null) {
+  i = 0;
+  changeDataMF(e, data) {
+    if (e != null && data != null && data.status == "2") {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -825,6 +828,8 @@ export class InstancesComponent
   }
 
   viewDetail(data) {
+    console.log(data);
+    
     this.dataSelected = data;
     let option = new DialogModel();
     option.IsFull = true;
@@ -1234,7 +1239,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data, e.isStart);
+    this.changeDataMF(e.e, e.data);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
