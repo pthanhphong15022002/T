@@ -84,7 +84,8 @@ export class CodxCommentsComponent implements OnInit {
   getFileByObjectID(){
     if(this.data.attachments > 0){
       this.api.execSv(
-        "DM","ERM.Business.DM",
+        "DM",
+        "ERM.Business.DM",
         "FileBussiness",
         "GetFilesByIbjectIDAsync",
         [this.data.recID])
@@ -95,7 +96,7 @@ export class CodxCommentsComponent implements OnInit {
           {
             this.file["source"] = this.codxShareSV.getThumbByUrl(this.file.url,150);
           }
-          else if(this.file.referType == this.REFERTYPE.IMAGE){
+          else if(this.file.referType == this.REFERTYPE.VIDEO){
             this.file["source"] = `${environment.urlUpload}/${this.file.url}`; 
           }
           this.dt.detectChanges();
@@ -324,7 +325,7 @@ export class CodxCommentsComponent implements OnInit {
       {
         file['referType'] = this.REFERTYPE.VIDEO;
         this.file = file;
-        this.file['source'] = file.data;
+        this.file['source'] = file.data.changingThisBreaksApplicationSecurity;
       }
       else
       {
