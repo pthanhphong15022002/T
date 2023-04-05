@@ -162,7 +162,8 @@ export class CodxCommentsComponent implements OnInit {
           .subscribe((res:any) => {
             if(res)
             {
-              data.comments = "";
+              this.data.recID = Util.uid();
+              this.data.comments = "";
               this.file = null;
               this.evtSendComment.emit(res);
               this.notifySvr.notifyCode("WP034");
@@ -191,7 +192,8 @@ export class CodxCommentsComponent implements OnInit {
         [data])
       .subscribe((res:any) => {
         if(res){
-          data.comments = "";
+          this.data.recID = Util.uid();
+          this.data.comments = "";
           this.file = null;
           this.evtSendComment.emit(res);
           this.notifySvr.notifyCode("WP034");
