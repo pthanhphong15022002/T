@@ -1,5 +1,5 @@
 .notification-count {
-    background: blue; 
+    /* background: blue;  */
     height: 20px;
     top: 1rem;
     right: 1.5rem;
@@ -8,6 +8,6 @@
     line-height: 20px;
     border-radius: 50%;
     color: white;
-    border: 1px solid #fdfdfd;
+    /* border: 1px solid; */
     font-size: 12px;
 }

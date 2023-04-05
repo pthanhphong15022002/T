@@ -51,6 +51,8 @@ export class InstanceDetailComponent implements OnInit {
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
+  @Input() moreFunc :any;
+  @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -107,6 +109,7 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
+
 
   constructor(
     private callfc: CallFuncService,
@@ -475,5 +478,9 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e
     this.isSaving = false;
     this.currentElmID = null;
+  }
+
+  startInstances(){
+    this.clickStartInstances.emit(true)
   }
 }

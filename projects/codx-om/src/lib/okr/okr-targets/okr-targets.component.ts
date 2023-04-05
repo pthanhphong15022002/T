@@ -278,7 +278,7 @@ export class OkrTargetsComponent implements OnInit {
 
     this.api
       .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
-        this.dataOKRPlans?.periodID,
+        this.dataOKRPlans?.recID,
       ])
       .subscribe((res: any) => {
         res[1].map((res) => {
@@ -715,7 +715,7 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel },this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res?.event && res?.event.length !=null) {        
