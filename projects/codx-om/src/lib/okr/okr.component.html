@@ -64,12 +64,12 @@
             <ng-template #content>
               <div class="h-100" *ngIf="!planNull ; else elseOKR">
                 <div class="h-100" *ngIf="dataOKR != null">
-                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll"  [okrGrv]="okrGrv" 
+                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll"  [okrGrv]="okrGrv"
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
                     [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel" [curOrgUnitID]="curOrgID"
                     [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
-                  
-                  
+
+
                 </div>
               </div>
               <ng-template #elseOKR>
@@ -130,7 +130,8 @@
             </ng-template>
             <ng-template #content>
               <div>
-                <codx-tmmeetings funcID="OMT017" [projectID]="dataOKRPlans.recID"></codx-tmmeetings>
+
+                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting" [projectID]="dataOKRPlans.recID"></codx-tmmeetings>
               </div>
             </ng-template>
           </e-tabitem>

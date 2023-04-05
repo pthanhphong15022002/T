@@ -278,7 +278,7 @@ export class OkrTargetsComponent implements OnInit {
 
     this.api
       .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
-        this.dataOKRPlans?.periodID,
+        this.dataOKRPlans?.recID,
       ])
       .subscribe((res: any) => {
         res[1].map((res) => {

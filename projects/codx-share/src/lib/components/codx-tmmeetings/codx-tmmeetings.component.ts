@@ -150,6 +150,9 @@ implements OnInit, AfterViewInit {
       this.requestSchedule.dataValue = this.queryParams?.dataValue;
     }
     this.requestSchedule.idField = 'meetingID';
+
+    this.dataObj = JSON.stringify(this.dataObj);
+    this.detectorRef.detectChanges();
   }
 
   receiveMF(e: any) {

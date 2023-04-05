@@ -5,9 +5,9 @@
     right: 1.5rem;
     width: 20px;
     text-align: center;
-    line-height: 19px;
+    line-height: 20px;
     border-radius: 50%;
     color: white;
-    border: 1px solid;
+    /* border: 1px solid; */
     font-size: 12px;
 }
