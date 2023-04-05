@@ -105,6 +105,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   totalnet: any = 0;
   totalvat: any = 0;
   total: any = 0;
+  lockFields: string[];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -125,6 +126,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.recID) this.parentID = res.recID;
     });
+  }
+  //#endregion
+
+  //#region Init
+  onInit(): void {
     if (this.purchaseinvoices.objectID != null) {
       this.api
         .exec<any>('PS', 'PurchaseInvoicesBusiness', 'GetVendorNameAsync', [
@@ -136,6 +142,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
+
     this.cache
       .gridViewSetup('PurchaseInvoices', 'grvPurchaseInvoices')
       .subscribe((res) => {
@@ -143,6 +150,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
@@ -165,6 +173,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           );
         }
       });
+
     this.api
       .exec('AC', 'JournalsBusiness', 'GetDefaultAsync', [this.parentID])
       .subscribe((res: any) => {
@@ -228,6 +237,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             });
         }
       });
+
     if (this.formType == 'edit') {
       this.api
         .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [
@@ -246,6 +256,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
+
     this.api
       .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
@@ -253,6 +264,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.itemName = res;
         }
       });
+
     this.api
       .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
@@ -260,11 +272,17 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.lsVatCode = res;
         }
       });
-  }
-  //#endregion
 
-  //#region Init
-  onInit(): void {}
+    if (
+      this.purchaseinvoices &&
+      this.purchaseinvoices.unbounds &&
+      this.purchaseinvoices.unbounds.lockFields &&
+      this.purchaseinvoices.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.purchaseinvoices.unbounds
+        .lockFields as Array<string>;
+    }
+  }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;

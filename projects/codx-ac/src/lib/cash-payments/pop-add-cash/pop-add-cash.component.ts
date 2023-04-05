@@ -58,13 +58,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   validate: any = 0;
   parentID: string;
   moreFunction: any;
-  modegrid: any = 0;
+  modegrid: any = 1;
   columnGrids = [];
   keymodel: any;
   cashpaymentline: Array<CashPaymentLine> = [];
   voucherLineRefs: Array<any> = [];
   voucherLineRefsDelete: Array<any> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
+  lockFields = [];
   pageCount: any;
   tab: number = 0;
   total: any = 0;
@@ -149,6 +150,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           );
         }
       });
+
     if (this.formType == 'edit') {
       if (this.cashpayment?.voucherType == '1') {
         //#region  load cashpaymentline
@@ -189,6 +191,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
         //#endregion
       }
+    }
+
+    if (
+      this.cashpayment &&
+      this.cashpayment.unbounds &&
+      this.cashpayment.unbounds.lockFields &&
+      this.cashpayment.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
     }
 
     const options = new DataRequest();
@@ -391,7 +402,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  gridCreated(e) {
+  gridCreated(e, grid) {
     let hBody, hTab, hNote;
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
@@ -399,6 +410,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
+    grid.disableField(this.lockFields);
   }
 
   cashPaymentLineChanged(e: any) {

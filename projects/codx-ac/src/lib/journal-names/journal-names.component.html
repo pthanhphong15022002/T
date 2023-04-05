@@ -1,15 +1,20 @@
-<codx-views
-  #view
-  idField="RecID"
-  [views]="views"
-  [button]="button"
-  entityName="AC_Journals"
-  (buttonClick)="add($event)"
->
-</codx-views>
+<div class="h-100 bg-white">
+  <div class="card-body p-0">
+    <div class="container-fluid">aaaaaaaaaaaa</div>
+  </div>
+  <codx-views
+    #view
+    idField="RecID"
+    [views]="views"
+    [button]="button"
+    entityName="AC_Journals"
+    (buttonClick)="add($event)"
+  >
+  </codx-views>
+</div>
 <ng-template #itemTemplate let-data>
   <codx-card-img
-    cardCss="dp-card-process border border-gray-200 rounded-2 h-100
+    cardCss="dp-card-process border border-dark rounded-2 h-100
   w-225px card-no-body"
     [imageSrc]="'assets/themes/ac/default/img/' + data.thumbnail"
     resourceObjType="AC_Journals"
