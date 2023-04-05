@@ -433,7 +433,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         var obj = {
           headerText: this.headerText,
           data: { ...data },
-          type: 'edit'
+          type: 'edit',
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -493,7 +493,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.headerText,
       data: data,
-      type: 'add'
+      type: 'add',
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -697,58 +697,6 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        if (this.modegrid == 1)
-          this.cashreceiptslines = this.gridCashreceiptsLines.dataSource;
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'AddAsync';
-            opt.className = 'CashReceiptsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.cashreceipts];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save) {
-              this.acService
-                .addData(
-                  'ERM.Business.AC',
-                  'CashReceiptsLinesBusiness',
-                  'AddAsync',
-                  [this.cashreceiptslines]
-                )
-                .subscribe((res) => {});
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-            }
-          });
-      }
-      if (this.formType == 'edit') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'CashReceiptsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = [this.cashreceipts];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res != null) {
-              this.acService
-                .addData('AC', 'CashReceiptsLinesBusiness', 'UpdateAsync', [
-                  this.cashreceiptslines,
-                  this.cashreceiptslinesDelete,
-                ])
-                .subscribe();
-              this.dialog.close();
-              this.dt.detectChanges();
-            } else {
-            }
-          });
-      }
       // nếu voucherNo đã tồn tại,
       // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
       this.journalService.handleVoucherNoAndSave(
@@ -756,58 +704,62 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         this.cashreceipts,
         'AC_CashReceipts',
         this.form,
-        this.formType === "edit",
-        () => this.onSaveLogic()
+        this.formType === 'edit',
+        () => {
+          if (this.formType == 'add' || this.formType == 'copy') {
+            if (this.modegrid == 1)
+              this.cashreceiptslines = this.gridCashreceiptsLines.dataSource;
+            this.dialog.dataService
+              .save((opt: RequestOption) => {
+                opt.methodName = 'AddAsync';
+                opt.className = 'CashReceiptsBusiness';
+                opt.assemblyName = 'AC';
+                opt.service = 'AC';
+                opt.data = [this.cashreceipts];
+                return true;
+              })
+              .subscribe((res) => {
+                if (res.save) {
+                  this.acService
+                    .addData(
+                      'ERM.Business.AC',
+                      'CashReceiptsLinesBusiness',
+                      'AddAsync',
+                      [this.cashreceiptslines]
+                    )
+                    .subscribe((res) => {});
+                  this.dialog.close();
+                  this.dt.detectChanges();
+                } else {
+                }
+              });
+          }
+          if (this.formType == 'edit') {
+            this.dialog.dataService
+              .save((opt: RequestOption) => {
+                opt.methodName = 'UpdateAsync';
+                opt.className = 'CashReceiptsBusiness';
+                opt.assemblyName = 'AC';
+                opt.service = 'AC';
+                opt.data = [this.cashreceipts];
+                return true;
+              })
+              .subscribe((res) => {
+                if (res != null) {
+                  this.acService
+                    .addData('AC', 'CashReceiptsLinesBusiness', 'UpdateAsync', [
+                      this.cashreceiptslines,
+                      this.cashreceiptslinesDelete,
+                    ])
+                    .subscribe();
+                  this.dialog.close();
+                  this.dt.detectChanges();
+                } else {
+                }
+              });
+          }
+        }
       );
-    }
-  }
-
-  onSaveLogic() {
-    if (this.formType == 'add' || this.formType == 'copy') {
-      if (this.modegrid == 1)
-        this.cashreceiptslines = this.gridCashreceiptsLines.dataSource;
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
-          opt.className = 'CashReceiptsBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.cashreceipts];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save) {
-            this.acService
-              .addData(
-                'ERM.Business.AC',
-                'CashReceiptsLinesBusiness',
-                'AddAsync',
-                [this.cashreceiptslines]
-              )
-              .subscribe((res) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-          }
-        });
-    }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'CashReceiptsBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.cashreceipts];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res != null) {
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-          }
-        });
     }
   }
   //#endregion
