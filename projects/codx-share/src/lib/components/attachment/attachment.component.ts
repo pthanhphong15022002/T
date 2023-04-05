@@ -730,7 +730,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var tenants = from(this.CheckTenantFile(this.user.tenant));
     return tenants.pipe(
       mergeMap((value, i) => { 
-        debugger
         if(typeof value == 'object' && value.AppId)
         {
           return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
@@ -866,8 +865,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSave() {
-
-    debugger
     var check = await this.CheckTenantFile(this.user.tenant);
     if(typeof check == 'object' && check.AppId) await this.onMultiSaveAfterTenant();
     else
@@ -1211,9 +1208,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any> {
-
-   debugger
-
     try {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
