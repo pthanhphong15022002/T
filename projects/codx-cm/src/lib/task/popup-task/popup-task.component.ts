@@ -229,7 +229,7 @@ export class PopupTaskComponent implements OnInit {
         this.task['role'] = [this.setRole()];
         this.AddTaskAsync('CM_Customers').subscribe((res) => {
           if(res){
-            this.dialog.close({ data: res, status: this.status });
+            this.dialog.close({ data: res, action: this.action });
           }          
         });
       } else {

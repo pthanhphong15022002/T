@@ -604,7 +604,7 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance([data.recID, this.process.recID]);
+        this.startInstance([data.recID]);
         break;
     }
   }
