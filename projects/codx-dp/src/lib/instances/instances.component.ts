@@ -42,6 +42,7 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
+import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 
 @Component({
   selector: 'codx-instances',
@@ -159,6 +160,7 @@ export class InstancesComponent
     private notificationsService: NotificationsService,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private layoutInstance : LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -203,7 +205,7 @@ export class InstancesComponent
     });
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.pageTitle.setSubTitle(f?.customName);
+      // if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
@@ -616,6 +618,8 @@ export class InstancesComponent
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
         this.detailViewInstance.getStageByStep(res);
+        this.dataSelected.status ='2';
+        this.view.dataService.update(this.dataSelected).subscribe() ;
         this.detectorRef.detectChanges();
       }
     });
@@ -1376,6 +1380,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.layoutInstance.dataProcess.next(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -1497,6 +1502,7 @@ export class InstancesComponent
   }
   clickStartInstances(e){
     //goij ham start ma dang sai
-    this.startInstance([this.dataSelected.recID,this.process.recID])
+    if(e)
+    this.startInstance([this.dataSelected.recID])
   }
 }

@@ -21,7 +21,6 @@
       </div>
     </div>
   </div>
-  <ng-template #headerTmp> <p style="width: 300px;">zzzzsfsfsddddddddd dddddd dddddddddddddd ddddddddddddddddd ddddddfsfsddfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaa aaaaaaaaa aaaaaaaaa</p> </ng-template>
   <codx-scripts-init></codx-scripts-init>
   <codx-scroll-top></codx-scroll-top>
 
@@ -125,3 +124,7 @@
   </ng-template>
   <!-- end::TOPBAR -->
 </ng-container>
+
+<ng-template #headerTmp>
+    <span [innerHTML]="viewNameProcess()"></span>
+</ng-template>
