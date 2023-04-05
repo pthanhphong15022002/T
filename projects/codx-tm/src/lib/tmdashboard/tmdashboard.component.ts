@@ -376,7 +376,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         type: ViewType.content,
         active: true,
         sameData: false,
-        reportType:'D',
+        //reportType:'D',
         reportView:true,
         showFilter:true,
 
