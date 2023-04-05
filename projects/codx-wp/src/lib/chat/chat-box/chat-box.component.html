@@ -138,15 +138,18 @@
                                 <!-- votes -->
                                 <ng-container *ngIf="item.votes">
                                     <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <div *ngFor="let vote of item.votes">
-                                            <codx-vll 
+                                        <ng-container *ngFor="let voteItem of item.votes">
+                                            <ng-container *ngIf="voteItem.count > 0">
+                                                <codx-vll 
                                                 [path]="'assets/themes/wp/default/img/'"
                                                 [name]="'L1480'" 
-                                                [value]="vote.voteType" 
+                                                [value]="voteItem.voteType" 
                                                 [showIcon]="true" 
                                                 [icoCss]="'w-15px h-15px'">
                                             </codx-vll>
-                                        </div>
+                                            <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
+                                            </ng-container>
+                                        </ng-container>
                                     </div>
                                 </ng-container>
                             </div>
@@ -218,17 +221,19 @@
                                 <!-- votes -->
                                 <ng-container *ngIf="item.votes">
                                     <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <ng-container *ngFor="let vote of item.votes">
-                                            <div class="d-flex">
-                                                <codx-vll 
-                                                    [path]="'assets/themes/wp/default/img/'"
-                                                    [name]="'L1480'" 
-                                                    [value]="vote.voteType" 
-                                                    [showIcon]="true" 
-                                                    [icoCss]="'w-15px h-15px'">
-                                                </codx-vll>
-                                                <span *ngIf="vote.listVote.length > 1">{{vote.listVote.length}}</span>
-                                            </div>
+                                        <ng-container *ngFor="let voteItem of item.votes">
+                                            <ng-container *ngIf="voteItem.count > 0">
+                                                <div class="d-flex">
+                                                    <codx-vll 
+                                                        [path]="'assets/themes/wp/default/img/'"
+                                                        [name]="'L1480'" 
+                                                        [value]="voteItem.voteType" 
+                                                        [showIcon]="true" 
+                                                        [icoCss]="'w-15px h-15px'">
+                                                    </codx-vll>
+                                                    <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
+                                                </div>
+                                            </ng-container>
                                         </ng-container>
                                     </div>
                                 </ng-container>
