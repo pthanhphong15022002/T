@@ -32,6 +32,7 @@ import {
   PageTitleService,
   LayoutService,
   CRUDService,
+  AuthStore,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -151,22 +152,23 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
-
-
+  user: any;
+  isAdminRoles = false;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance : LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.user = this.authStore.get();
     //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
@@ -296,7 +298,7 @@ export class InstancesComponent
         }
       });
     //this.getPermissionProcess(this.processID);
-
+      this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -336,6 +338,14 @@ export class InstancesComponent
     console.log(dataColumns);
 
     return dataColumns;
+  }
+
+  getAdminRoleDP() {
+    if (!this.user.administrator) {
+      this.codxDpService.getAdminRoleDP(this.user.userID).subscribe((res) => {
+        this.isAdminRoles = res;
+      });
+    }
   }
 
   getPropertiesHeader(data, type) {
@@ -482,6 +492,8 @@ export class InstancesComponent
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
+        this.isAdminRoles
+
       ],
       option
     );
@@ -532,37 +544,41 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                      option.Width = '800px';
-                      option.zIndex = 1001;
-                      this.view.dataService.dataSelected.processID =
-                        this.process.recID;
+                    option.Width = '800px';
+                    option.zIndex = 1001;
+                    this.view.dataService.dataSelected.processID =
+                      this.process.recID;
                       var endDate =this.view.dataService.dataSelected.endDate;
-                      var dialogEditInstance = this.callfc.openSide(
-                        PopupAddInstanceComponent,
-                        [
-                          'edit',
-                          applyFor,
-                          this.listStepInstances,
-                          this.titleAction,
-                          formMD,
-                          this.listStepsCbx,
-                          endDate = this.HandleEndDate(this.listStepsCbx),
-                          this.autoName,
-                        ],
-                        option
-                      );
-                      dialogEditInstance.closed.subscribe((e) => {
-                        if (e && e.event != null) {
-                          //xu ly data đổ về
-                          this.detectorRef.detectChanges();
-                        }
-                      });
-                    }
-                  });
-              });
-          });
+
+                    var dialogEditInstance = this.callfc.openSide(
+                      PopupAddInstanceComponent,
+                      [
+                        'edit',
+                        applyFor,
+                        this.listStepInstances,
+                        this.titleAction,
+                        formMD,
+                        this.listStepsCbx,
+                        endDate = this.HandleEndDate(this.listStepsCbx),
+                        this.autoName,
+                        this.lstParticipants,
+
+                      ],
+                      option
+                    );
+                    dialogEditInstance.closed.subscribe((e) => {
+                      if (e && e.event != null) {
+                        //xu ly data đổ về
+                        this.detectorRef.detectChanges();
+                      }
+                    });
+                  }
+                });
+            });
         });
-      }
+        //  });
+      });
+  }
 
 
 
@@ -623,6 +639,7 @@ export class InstancesComponent
         this.dataSelected.status ='2';
         this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
         this.view.dataService.update(this.dataSelected).subscribe() ;
+        if(this.kanban)this.kanban.updateCard(this.dataSelected);
         this.detectorRef.detectChanges();
       }
     });
@@ -744,33 +761,9 @@ export class InstancesComponent
         }
       });
     }
-    // else{
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       case 'DP09':
-    //       case 'DP10':
-    //       case 'DP02':
-    //         res.disabled = true;
-    //         break;
-    //       default:
-    //         res.isblur = true;
-    //         }
-    //       })
-    // }
   }
   //End
 
-  // getPermissionProcess(id) {
-  //   this.codxDpService.getProcess(id).subscribe((res) => {
-  //     if (res) {
-  //       if (res.permissions != null && res.permissions.length > 0) {
-  //         this.lstParticipants = res.permissions.filter(
-  //           (x) => x.roleType === 'P'
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -934,7 +927,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -1428,7 +1421,8 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    this.layoutInstance.dataProcess.next(ps);
+    // this.layoutInstance.dataProcess.next(ps);
+    // this.layoutInstance.nameProcess = ps.title
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,

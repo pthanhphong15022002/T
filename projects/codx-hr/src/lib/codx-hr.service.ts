@@ -129,6 +129,16 @@ export class CodxHrService {
       );
   }
 
+  addBGTrackLog(objectID, comment, objectType, actionType, createdBy){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EContractsBusiness',
+      'ReceiveToAddBGTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
+
   getMoreFunction(data) {
     return this.api.execSv<any>(
       'SYS',
