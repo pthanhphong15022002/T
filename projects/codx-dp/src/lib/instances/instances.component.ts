@@ -62,7 +62,6 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
-  @ViewChild('detailViewInstance1') detailViewInstance1: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   InstanceDetailComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
@@ -154,6 +153,7 @@ export class InstancesComponent
   stepsResource = [];
   user: any;
   isAdminRoles = false;
+  listInstanceStep = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -634,8 +634,12 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
-        this.detailViewInstance1.getStageByStep(res);
-        this.detailViewInstance.getStageByStep(res);
+        this.listInstanceStep = res;
+        // if(this.detailViewInstance){
+        //   this.detailViewInstance.getStageByStep(res);
+        // }else{
+        //   this.listInstanceStep = res;
+        // }
         this.dataSelected.status ='2';
         this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
         this.view.dataService.update(this.dataSelected).subscribe() ;
@@ -758,9 +762,24 @@ export class InstancesComponent
               res.disabled = true;
             }
             break;
+            case 'DP21':
+              res.disabled = true;
+              break;
         }
       });
-    }
+    }else{
+        e.forEach((res) => {
+          switch (res.functionID) {
+            case 'DP09':
+            case 'DP10':
+            case 'DP02':
+              res.disabled = true;
+              break;
+            default:
+              res.isblur = true;
+              }
+            })
+      }
   }
   //End
 
@@ -821,8 +840,6 @@ export class InstancesComponent
   }
 
   viewDetail(data) {
-    console.log(data);
-    
     this.dataSelected = data;
     let option = new DialogModel();
     option.IsFull = true;
