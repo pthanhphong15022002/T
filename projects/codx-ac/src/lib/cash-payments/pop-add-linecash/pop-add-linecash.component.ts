@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
+import { CashPayment } from '../../models/CashPayment.model';
 
 @Component({
   selector: 'lib-pop-add-linecash',
@@ -34,6 +35,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   validate: any = 0;
   type: any;
   cashpaymentline: CashPaymentLine;
+  cashpayment:CashPayment;
+  objectcashpaymentline :Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -49,6 +52,8 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.cashpaymentline = dialogData.data?.data;
+    this.objectcashpaymentline = dialogData.data?.dataline;
+    this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
@@ -68,7 +73,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
   valueChange(e: any) {
-    //this.cashpaymentline[e.field] = e.data;
+    this.cashpaymentline[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -92,6 +97,26 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         }
       }
     }
+  }
+  clearCashpayment(){
+    let idx = this.objectcashpaymentline.length;
+    let data = new CashPaymentLine();
+    this.api
+    .exec<any>('AC', 'CashPaymentsLinesBusiness', 'SetDefaultAsync', [
+      this.cashpayment,
+      data,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        res.rowNo = idx + 1;
+        this.cashpaymentline = res;
+        this.form.formGroup.patchValue(res);
+      }
+    });
+  }
+  onSaveAdd(){
+    this.objectcashpaymentline.push({...this.cashpaymentline});
+    this.clearCashpayment();
   }
   onSave() {
     window.localStorage.setItem(

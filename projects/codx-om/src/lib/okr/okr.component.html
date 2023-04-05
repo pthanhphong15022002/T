@@ -43,7 +43,7 @@
           cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"></codx-dropdown-calendar>
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
           <span class="symbol-label bg-om-gray">
-            <codx-mfunc [formModel]="formModelPlan" (clickMF)="clickMF($event)"></codx-mfunc>
+            <codx-mfunc [formModel]="formModelPlan"  (changeDataMF)="changeDataMF($event)" (clickMF)="clickMF($event)"></codx-mfunc>
           </span>
         </div>
       </div>
@@ -118,7 +118,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
+              <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID" [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -129,10 +129,12 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tmmeetings funcID="OMT017"></codx-tmmeetings>
+              <div>
+                <codx-tmmeetings funcID="OMT017" [projectID]="dataOKRPlans.recID"></codx-tmmeetings>
+              </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-regular fa-square-check me-2"></i>
@@ -140,7 +142,7 @@
               </div>
             </ng-template>
             <ng-template #content> Đánh giá </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">

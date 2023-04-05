@@ -452,6 +452,20 @@ getOrgTreeOKR() {
         break;
     }
   }
+  changeDataMF(evt:any){
+    if(evt !=null){
+      if(this.dataOKR.length<1 || this.dataOKR==null){
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+            func.disabled = true;
+          }
+        });
+      }
+    }
+  }
   //Hàm click
   click(event: any) {
     switch (event.id) {      

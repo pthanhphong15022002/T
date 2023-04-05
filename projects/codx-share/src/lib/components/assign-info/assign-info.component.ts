@@ -135,6 +135,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   setDefault() {
     this.task.taskID = '';
+    //gán sessionID ra biến riêng để gán lại sau khi lấy model chuẩn
+    let oldSessionID = this.task.sessionID !=null ? this.task.sessionID :null ;
+    
     this.api
       .execSv<number>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
@@ -147,6 +150,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           data['_uuid'] = data['taskID'] ?? Util.uid();
           data['idField'] = 'taskID';
           this.task = data;
+          //gán lại sessionID nếu có
+          if(oldSessionID !=null){
+            this.task.sessionID = oldSessionID;
+          }
           this.loadingAll = true;
           this.openInfo();
         }

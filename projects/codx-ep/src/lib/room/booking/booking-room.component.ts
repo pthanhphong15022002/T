@@ -458,7 +458,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
-      this.edit(event.data);
+      if(event?.data.approveStatus == '1'){
+        this.edit(event.data);
+
+      }
     }
   }
   clickMF(event, data) {
