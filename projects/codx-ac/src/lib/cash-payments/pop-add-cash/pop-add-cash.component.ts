@@ -39,7 +39,6 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 @Component({
