@@ -1424,6 +1424,7 @@ export class InstancesComponent
   loadData(ps) {
     this.process = ps;
     this.layoutInstance.dataProcess.next(ps);
+    this.layoutInstance.nameProcess = ps.title
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,

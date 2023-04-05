@@ -9,11 +9,10 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-
 @Component({
   selector: 'lib-layout-instances',
   templateUrl: './layout-instances.component.html',
-  styleUrls: ['./layout-instances.component.css']
+  styleUrls: ['./layout-instances.component.css'],
 })
 export class LayoutInstancesComponent extends LayoutBaseComponent {
   module = '';
@@ -23,6 +22,7 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   //override toolbar = false;
   dataProcess = new BehaviorSubject<any>(null);
+  nameProcess = '';
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,
@@ -37,14 +37,17 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     });
   }
 
-  onAfterViewInit(): void { }
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
     this.callfc.openSide(NoteDrawerComponent, '', option);
   }
-  viewNameProcess(){
-  
+  viewNameProcess() {
+    this.dataProcess.subscribe((data) => {
+      this.nameProcess = data.title;
+      return this.nameProcess
+    });
   }
 }
