@@ -125,7 +125,7 @@ export class DynamicProcessComponent
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any =[];
-  
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -159,7 +159,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    //this.showButtonAdd = this.funcID == 'DP0101';
+    this.showButtonAdd = this.funcID == 'DP01';
   }
 
   //chang data
