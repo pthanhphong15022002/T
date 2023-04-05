@@ -39,12 +39,12 @@
                 </codx-attachment>
                 <ng-container *ngIf="file">
                     <div class="d-flex position-relative">
-                        <div class="my-3">
+                        <div class="my-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
-                                <img [src]="file.source" alt="" class="w-100 rounded h-50px" >
+                                <img [src]="file.source" alt="" class="w-100 h-100px rounded" >
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.VIDEO">
-                                <video controls class="w-100 rounded h-50px" [src]="file.source | safe:'resourceUrl'">
+                                <video controls class="w-100 h-100px rounded" [src]="file.source | safe:'resourceUrl'">
                                 </video>
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.APPLICATION">
@@ -141,7 +141,7 @@
                 </ng-container>
             </div>
             <ng-container *ngIf="data.attachments > 0">
-                <div class="d-flex h-100px my-3" (click)="clickViewFile(file)">
+                <div class="d-flex my-3" (click)="clickViewFile(file)">
                     <ng-container *ngIf="file">
                         <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
                             <img [src]="file.source" width="100px h-100px"/>
