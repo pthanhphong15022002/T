@@ -56,6 +56,7 @@ export class PopupAddOKRPlanComponent
   okrVll: any;
   groupModel: any;
   okrGrv: any;
+  mssgCode: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -67,7 +68,7 @@ export class PopupAddOKRPlanComponent
     super(injector);
     this.funcID = dialogData.data[0];
     this.okrPlan = dialogData.data[1];
-    this.groupModel = {...dialogData.data[2]};
+    this.groupModel = { ...dialogData.data[2] };
     this.headerText = dialogData.data[3];
     this.curOrgID = dialogData.data[4];
     this.curOrgName = dialogData.data[5];
@@ -98,13 +99,16 @@ export class PopupAddOKRPlanComponent
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   getCacheData() {
-    
-
     this.cache.valueList('OM004').subscribe((skrGrd) => {
       if (skrGrd) {
         let x = skrGrd;
       }
     });
+    this.cache.message("OM002").subscribe(mess=>{
+      if(mess){
+        this.mssgCode= mess?.customName;
+      }
+    })
   }
 
   //---------------------------------------------------------------------------------//
@@ -166,7 +170,8 @@ export class PopupAddOKRPlanComponent
 
         case this.krType:
           if (this.dataOKR[obIndex]?.okrName == null) {
-            this.notificationsService.notify('Tên mục tiêu không được bỏ trống');
+            
+        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.obGrv['okrName'].headerText + '"' );
             return;
           }
           if (!this.dataOKR[obIndex]?.items) {
@@ -177,13 +182,16 @@ export class PopupAddOKRPlanComponent
 
         case this.skrType:
           if (this.dataOKR[obIndex]?.items[krIndex]?.okrName == null) {
-            this.notificationsService.notify('Tên kết quả chính không được bỏ trống');
+            
+        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.krGrv['okrName'].headerText + '"' );
             return;
           }
           if (!this.dataOKR[obIndex]?.items[krIndex]?.items) {
             this.dataOKR[obIndex].items[krIndex].items = [];
           }
-          this.dataOKR[obIndex]?.items[krIndex]?.items.push(this.createNewOKR(type));
+          this.dataOKR[obIndex]?.items[krIndex]?.items.push(
+            this.createNewOKR(type)
+          );
           break;
       }
 
@@ -217,13 +225,13 @@ export class PopupAddOKRPlanComponent
     let tmpOKR = null;
     switch (type) {
       case this.obType:
-        tmpOKR = {...this.groupModel.obModel};
+        tmpOKR = { ...this.groupModel.obModel };
         break;
       case this.krType:
-        tmpOKR = {...this.groupModel.krModel};
+        tmpOKR = { ...this.groupModel.krModel };
         break;
       case this.skrType:
-        tmpOKR = {...this.groupModel.skrModel};
+        tmpOKR = { ...this.groupModel.skrModel };
         break;
     }
     tmpOKR.items = [];
@@ -275,42 +283,48 @@ export class PopupAddOKRPlanComponent
     for (let ob of this.dataOKR) {
       ob.weight = 1 / this.dataOKR.length;
       if (ob.okrName == null || ob.okrName == '') {
-        this.notificationsService.notify('Tên mục tiêu không được bỏ trống');
-        return;
+        return this.obType;
       } else {
         for (let kr of ob.items) {
           kr.weight = 1 / ob.items.length;
           if (kr.okrName == null || kr.okrName == '') {
-            this.notificationsService.notify('Tên kết quả chính không được bỏ trống');
-            return;
+            return this.krType;
           } else {
             for (let skr of kr.items) {
               skr.weight = 1 / kr.items.length;
               if (skr.okrName == null || skr.okrName == '') {
-                this.notificationsService.notify('Tên kết quả phụ không được bỏ trống');
-                return;
+                return this.skrType;
               }
             }
           }
         }
       }
     }
+    return null;
   }
   //---------------------------------------------------------------------------------//
-  //-----------------------------------Logic Func-------------------------------------//
+  //-----------------------------------Logic Func------------------------------------//
   //---------------------------------------------------------------------------------//
   onSaveForm() {
-    this.inputValidate();
+    
+    switch (this.inputValidate()) {
+      case this.obType:
+        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.obGrv['okrName'].headerText + '"' );
+        return;
+      case this.krType:
+        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.krGrv['okrName'].headerText + '"' );
+        return;
+      case this.skrType:
+        this.notificationsService.notifyCode('OM002', 0, '"' + this.okrGrv.skrGrv['okrName'].headerText + '"' );
+        return;
+    }
     this.codxOmService
       .addEditOKRPlans(this.okrPlan, this.dataOKR, this.isAdd)
       .subscribe((res) => {
         if (res) {
-          if(this.isAdd){
-
+          if (this.isAdd) {
             this.notificationsService.notifyCode('SYS006');
-          }
-          else{
-            
+          } else {
             this.notificationsService.notifyCode('SYS007');
           }
           this.dialogRef && this.dialogRef.close(true);
