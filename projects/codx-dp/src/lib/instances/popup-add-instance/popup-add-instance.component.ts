@@ -124,6 +124,8 @@ export class PopupAddInstanceComponent implements OnInit {
       var isAdmin = dt?.data[10];
       if(this.user.administrator || isAdmin){
         this.owner = '';
+      }else{
+        this.owner = this.user.userID
       }
     }
 
