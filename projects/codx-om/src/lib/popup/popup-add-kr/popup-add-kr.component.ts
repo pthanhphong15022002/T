@@ -71,8 +71,9 @@ export class PopupAddKRComponent extends UIComponent {
   tempDay = '';
   tempTime = '';
   oldPlan: any;
-  unEditedTargets = [];
+  editTargets = [];
   groupModel: any;
+  dialogCheckIn: DialogRef;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -200,6 +201,12 @@ export class PopupAddKRComponent extends UIComponent {
       if (evt?.data != this.oldPlan) {
         this.calculatorTarget(evt?.data);
       }
+      this.detectorRef.detectChanges();
+    }
+  }
+  targetChange(evt: any) {
+    if (evt?.data != null && this.kr?.target && this.kr?.plan) {      
+      this.calculatorTarget(this.kr?.plan);      
       this.detectorRef.detectChanges();
     }
   }
@@ -331,10 +338,10 @@ export class PopupAddKRComponent extends UIComponent {
   }
 
   closeEditTargets(dialog: any) {
-    this.kr.targets = [];
-    for (let i = 0; i < this.unEditedTargets.length; i++) {
-      this.kr.targets.push({ ...this.unEditedTargets[i] });
-    }
+    // this.kr.targets = [];
+    // for (let i = 0; i < this.editTargets.length; i++) {
+    //   this.kr.targets.push({ ...this.editTargets[i] });
+    // }
     dialog.close();
   }
 
@@ -400,7 +407,7 @@ export class PopupAddKRComponent extends UIComponent {
       return;
     }
 
-    this.dialogTargets = this.callfc.openForm(template, '', 450, 300, null);
+    this.dialogCheckIn = this.callfc.openForm(template, '', 450, 300, null);
     this.detectorRef.detectChanges();
   }
   openPopupTarget(template: any) {
@@ -421,11 +428,12 @@ export class PopupAddKRComponent extends UIComponent {
     ) {
       this.calculatorTarget(this.kr?.plan);
     }
-    this.unEditedTargets = [];
+    this.editTargets = [];
 
     for (let i = 0; i < this.kr.targets.length; i++) {
-      this.unEditedTargets.push({ ...this.kr.targets[i] });
+      this.editTargets.push({ ...this.kr.targets[i] });
     }
+
     let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 780 : 420;
     this.dialogTargets = this.callfc.openForm(
       template,
@@ -448,10 +456,14 @@ export class PopupAddKRComponent extends UIComponent {
       );
       return;
     }
-    if (this.funcType == OMCONST.MFUNCID.Edit) {
-      this.codxOmService
-        .editKRTargets(this.kr?.recID, this.kr?.targets)
-        .subscribe((res) => {});
+    // if (this.funcType == OMCONST.MFUNCID.Edit) {
+    //   this.codxOmService
+    //     .editKRTargets(this.kr?.recID, this.kr?.targets)
+    //     .subscribe((res) => {});
+    // }
+    this.kr.targets=[];
+    for (let i = 0; i < this.editTargets.length; i++) {
+      this.kr.targets.push({ ...this.editTargets[i] });
     }
     this.dialogTargets?.close();
     this.dialogTargets = null;
@@ -460,32 +472,35 @@ export class PopupAddKRComponent extends UIComponent {
     if (this.kr?.checkIn == null) {
       this.kr.checkIn = { day: '', time: '' };
     }
-    this.kr.checkIn.day = this.tempDay;
-    this.kr.checkIn.time = this.tempTime;
-
-    this.dialogTargets?.close();
+    this.kr.checkIn.day = this.tempDay != this.kr.checkIn.day && this.tempDay!=""? this.tempDay :this.kr.checkIn.day;
+    this.kr.checkIn.time = this.tempTime != this.kr.checkIn.time && this.tempTime!=""? this.tempTime :this.kr.checkIn.time;
+    if(this.kr.frequence =="M" && this.kr.checkIn.day=="0"){
+      this.kr.checkIn.day="1";
+    }
+    this.detectorRef.detectChanges();
+    this.dialogCheckIn?.close();
   }
 
   valuePlanTargetChange(evt: any, index: number) {
     if (index != null && evt?.data != null) {
-      this.kr.targets[index].target = evt.data;
-      this.kr.targets[index].edited = true;
+      this.editTargets[index].target = evt.data;
+      this.editTargets[index].edited = true;
       //Tính lại target tự động
       let targetsNotChanged = [];
       let totalTargetsEdited = 0;
 
-      for (let i = 0; i < this.kr.targets.length; i++) {
-        if (this.kr.targets[i]?.edited != true) {
+      for (let i = 0; i < this.editTargets.length; i++) {
+        if (this.editTargets[i]?.edited != true) {
           targetsNotChanged.push(i);
         } else {
-          totalTargetsEdited += this.kr.targets[i]?.target;
+          totalTargetsEdited += this.editTargets[i]?.target;
         }
       }
       let avgTarget =
         (this.kr.target - totalTargetsEdited) / targetsNotChanged.length;
-      for (let i = 0; i < this.kr.targets.length; i++) {
-        if (this.kr.targets[i]?.edited != true) {
-          this.kr.targets[i].target = avgTarget;
+      for (let i = 0; i < this.editTargets.length; i++) {
+        if (this.editTargets[i]?.edited != true) {
+          this.editTargets[i].target = avgTarget;
         }
       }
     }

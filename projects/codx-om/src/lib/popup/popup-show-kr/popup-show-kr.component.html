@@ -260,7 +260,8 @@
             </ng-template>
             <ng-template #content>
               <div class="d-flex justify-content-center">
-                Công việc
+                <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [dataValue]="dataKR.recID" [predicate]="'RefID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
+            
               </div>
             </ng-template>
           </e-tabitem>
@@ -272,7 +273,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+              <lib-okr-reviews [formModel]="view?.formModel" ></lib-okr-reviews>
             </ng-template>
           </e-tabitem>
           <e-tabitem>

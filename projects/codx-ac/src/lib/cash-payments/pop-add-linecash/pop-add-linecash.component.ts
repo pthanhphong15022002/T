@@ -110,6 +110,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       if (res) {
         res.rowNo = idx + 1;
         this.cashpaymentline = res;
+        this.form.formGroup.patchValue(res);
       }
     });
   }

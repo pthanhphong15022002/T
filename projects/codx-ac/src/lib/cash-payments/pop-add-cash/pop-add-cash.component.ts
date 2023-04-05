@@ -39,7 +39,6 @@ import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Template } from '@angular/compiler/src/render3/r3_ast';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 @Component({
@@ -745,38 +744,32 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.cashpaymentline = this.gridCashPaymentLine.dataSource;
+      if (this.modegrid == 1) {
+        this.cashpaymentline = this.gridCashPaymentLine.dataSource;
+      }
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [this.cashpayment];
+          opt.data = [
+            this.cashpayment,
+            this.cashpaymentline,
+            this.voucherLineRefs,
+          ];
           return true;
         })
         .subscribe((res) => {
           if (res.save) {
-            this.acService
-              .addData(
-                'ERM.Business.AC',
-                'CashPaymentsLinesBusiness',
-                'AddAsync',
-                [this.cashpaymentline]
-              )
+            this.clearCashpayment();
+            this.dialog.dataService.clear();
+            this.dialog.dataService
+              .addNew((o) => this.setDefault(o))
               .subscribe((res) => {
-                if (res) {
-                  this.clearCashpayment();
-                  this.dialog.dataService.clear();
-                  this.dialog.dataService
-                    .addNew((o) => this.setDefault(o))
-                    .subscribe((res) => {
-                      this.form.formGroup.patchValue(res);
-                      this.cashpayment = this.dialog.dataService!.dataSelected;
-                    });
-                }
+                this.form.formGroup.patchValue(res);
+                this.cashpayment = this.dialog.dataService!.dataSelected;
               });
-          } else {
           }
         });
     }
