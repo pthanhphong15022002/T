@@ -559,8 +559,8 @@ export class InstancesComponent
               });
           });
         });
-      });
-  }
+      }
+
 
   //End
 
