@@ -1,23 +1,50 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
-import { CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
-import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  Util,
+} from 'codx-core';
+import {
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+} from 'projects/codx-dp/src/lib/models/models';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { firstValueFrom } from 'rxjs';
+import { CM_Tasks_Roles } from '../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-popup-task',
   templateUrl: './popup-task.component.html',
-  styleUrls: ['./popup-task.component.scss']
+  styleUrls: ['./popup-task.component.scss'],
 })
 export class PopupTaskComponent implements OnInit {
-
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  REQUIRE = ['taskName','endDate','startDate'];
+  REQUIRE = ['taskName', 'endDate', 'startDate'];
   title = '';
   typeTask = '';
   dialog!: DialogRef;
   frmModel: FormModel;
+  task = {};
+  parentID = '';
+  action = '';
+
+  user: any;
+  userID = '';
 
   formModelMenu: FormModel;
   stepType = '';
@@ -30,7 +57,6 @@ export class PopupTaskComponent implements OnInit {
   recIdEmail = '';
   isNewEmails = true;
   groupTackList = [];
-  stepsTasks: DP_Instances_Steps_Tasks;
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
   tasksItem = '';
@@ -45,13 +71,15 @@ export class PopupTaskComponent implements OnInit {
   isHaveFile = false;
   funcIDparent: any;
   folderID = '';
-  groupTaskID = ''
+  groupTaskID = '';
   view = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
+    private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -59,68 +87,41 @@ export class PopupTaskComponent implements OnInit {
     this.frmModel = this.dialog?.formModel;
     this.title = dt?.data?.taskType?.text;
     this.typeTask = dt?.data?.taskType?.value;
-    console.log(this.typeTask);
-    
-    // this.status = dt?.data[0];
-    // this.title = dt?.data[1]['text'];
-    // this.stepType = dt?.data[1]['id'];
-    // this.stepID = dt?.data[2];
-    // this.groupTackList = dt?.data[3];
-    // this.dialog = dialog;
-
-    // if (this.status == 'add') {
-    //   this.stepsTasks = new DP_Instances_Steps_Tasks();
-    //   this.stepsTasks['taskType'] = this.stepType;
-    //   this.stepsTasks['stepID'] = this.stepID;
-    //   this.stepsTasks['progress'] = 0;
-    //   this.stepsTasks['taskGroupID'] = dt?.data[7];
-    // }else {
-    //   this.showLabelAttachment = true;
-    //   this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
-    //   this.stepType = this.stepsTasks.taskType;
-    // }
-    // this.taskList = dt?.data[5];
-    // this.taskName = dt?.data[6];
-    // this.groupTaskID = dt?.data[7];
+    this.parentID = dt?.data?.parentID;
+    this.action = dt?.data?.action;
   }
 
   ngOnInit(): void {
-    // this.listOwner = this.stepsTasks['roles'];
-    // this.getFormModel();
-    // if (this.stepsTasks['parentID']) {
-    //   this.litsParentID = this.stepsTasks['parentID'].split(';');
-    // }
-    // if (this.taskList?.length > 0) {
-    //   this.dataCombobox = this.taskList.map((data) => {
-    //     if (this.litsParentID.some((x) => x == data.recID)) {
-    //       return {
-    //         key: data.recID,
-    //         value: data.taskName,
-    //         checked: true,
-    //       };
-    //     } else {
-    //       return {
-    //         key: data.recID,
-    //         value: data.taskName,
-    //         checked: false,
-    //       };
-    //     }
-    //   });
-    //   if (this.status == 'edit') {
-    //     let index = this.dataCombobox.findIndex(
-    //       (x) => x.key === this.stepsTasks.recID
-    //     );
-    //     this.dataCombobox.splice(index, 1);
-    //     this.taskGroupName = this.groupTackList.find(
-    //       (x) => x.recID === this.stepsTasks.taskGroupID
-    //     )['taskGroupName'];
-    //   }
-    //   this.valueInput = this.dataCombobox
-    //     .filter((x) => x.checked)
-    //     .map((y) => y.value)
-    //     .join('; ');
-    // }
+    this.getFormModel();
+    this.user = this.authStore.get();
+    this.userID = this.user?.userID;
   }
+  // common
+  valueChangeText(event) {
+    this.task[event?.field] = event?.data;
+  }
+
+  valueChangeCombobox(event) {
+    this.task[event?.field] = event?.data;
+  }
+
+  filterText(value, key) {
+    if (value) {
+      this.task[key] = value;
+      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
+        'taskGroupName'
+      ];
+    }
+  }
+
+  valueChangeAlert(event) {
+    this.task[event?.field] = event?.data;
+  }
+
+  changeValueDate(event) {
+    this.task[event?.field] = event?.data?.fromDate;
+  }
+  // end common
 
   getFormModel() {
     this.cache
@@ -136,27 +137,6 @@ export class PopupTaskComponent implements OnInit {
       });
   }
 
-  valueChangeText(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-  valueChangeCombobox(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-
-  filterText(value, key) {
-    if (value) {
-      this.stepsTasks[key] = value;
-      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
-        'taskGroupName'
-      ];
-    }
-  }
-  valueChangeAlert(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-  changeValueDate(event) {
-    this.stepsTasks[event?.field] = event?.data?.fromDate;
-  }
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -172,10 +152,10 @@ export class PopupTaskComponent implements OnInit {
     });
   }
 
-   //  khảo sát
-   changeQuestion(e) {
+  //  khảo sát
+  changeQuestion(e) {
     if (e?.data) {
-      this.stepsTasks['reference'] = e?.data;
+      this.task['reference'] = e?.data;
       let url = window.location.href;
       let index = url.indexOf('/bp/');
       if (index != -1)
@@ -200,39 +180,6 @@ export class PopupTaskComponent implements OnInit {
     if (index != -1) data.splice(index, 1);
   }
 
-  async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
-    this.stepsTasks['parentID'] = this.litsParentID.join(';');
-
-    let message = [];
-    for (let key of this.REQUIRE) {
-      if (!this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
-        message.push(this.view[key]);
-      }
-    }
-    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
-      message.push(this.view['durationDay']);
-    }
-    if (message.length > 0) {
-      this.notiService.notifyCode('SYS009', 0, message.join(', '));
-    }else{
-      if (this.attachment && this.attachment.fileUploadList.length){
-        (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          if (res) {
-            if(this.status === 'copy'){
-              this.stepsTasks['recID'] = Util.uid();
-            }
-            this.dialog.close({ data: this.stepsTasks, status: this.status });
-          }
-        });
-      } else {
-        if(this.status === 'copy'){
-          this.stepsTasks['recID'] = Util.uid();
-        }
-        this.dialog.close({ data: this.stepsTasks, status: this.status });
-      } 
-    }
-  }
   handelMail() {
     let data = {
       dialog: this.dialog,
@@ -274,4 +221,78 @@ export class PopupTaskComponent implements OnInit {
     event.data.length;
   }
 
+  async handlSaveTask() {
+    if (this.checkRequire()) {
+      let file = await this.saveFile();
+      if (this.action == 'edit' || this.action == 'add') {
+        this.task['recID'] = Util.uid();
+        this.task['role'] = [this.setRole()];
+        this.AddTaskAsync('CM_Customers').subscribe((res) => {
+          if(res){
+            this.dialog.close({ data: res, status: this.status });
+          }          
+        });
+      } else {
+        this.editTaskAsync('CM_Customers');
+      }
+    }
+  }
+
+  setRole(){
+    let role = new CM_Tasks_Roles();
+    role.recID = Util.uid();
+    role.objectID = this.userID;
+    role.objectName = this.user?.userName;
+    role.objectType = 'O';
+    return role;
+  }
+
+  AddTaskAsync(mode: string) {
+    let dataRequest = [this.task, this.parentID, mode];
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddTaskAsync',
+      dataRequest
+    );
+  }
+
+  editTaskAsync(mode: string) {
+    let dataRequest = [this.task, this.parentID, mode];
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'AddTaskAsync',
+      dataRequest
+    );
+  }
+
+  async saveFile() {
+    if (this.attachment && this.attachment.fileUploadList.length) {
+      const res = await firstValueFrom(
+        await this.attachment.saveFilesObservable()
+      );
+      return res;
+    }
+    return null;
+  }
+
+  checkRequire(): boolean {
+    let message = [];
+    for (let key of this.REQUIRE) {
+      if (!this.task[key] || this.task[key]?.length === 0) {
+        message.push(this.view[key]);
+      }
+    }
+    if (!this.task['durationDay'] && !this.task['durationHour']) {
+      message.push(this.view['durationDay']);
+    }
+
+    if (message.length > 0) {
+      this.notiService.notifyCode('SYS009', 0, message.join(', '));
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

@@ -132,7 +132,7 @@
                   item?.notes ? item?.notes.length : 0 }}</span>
               </button>
               <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item" class="ms-4"
-                (clickMF)="clickMF($event,item)"></codx-mfunc>
+                (clickMF)="clickMF($event,item)"  (changeDataMF)="changeDataOBMF($event,item)"></codx-mfunc>
             </div>
           </div>
         </div>

@@ -183,6 +183,7 @@ export class InstancesComponent
       .subscribe((grv) => {
         if (grv) {
           this.grvSetup = grv;
+          this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -659,7 +660,7 @@ export class InstancesComponent
   //#popup roles
 
   changeDataMF(e, data, isStart?) {
-    if (e != null && data != null && isStart) {
+    if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':

@@ -46,7 +46,7 @@
         >
         </codx-vll>
       </div>
-      <div class="w-125px min-w-125px">
+      <div class="w-125px min-w-125px btn-noborder">
         <div
           *ngIf="data.memo"
           class="dropdown"
@@ -194,6 +194,7 @@
             <codx-attachment-temp
               [objectID]="data.recID"
               [formModel]="formModel"
+              referType="source"
             ></codx-attachment-temp>
           </span>
         </div>

@@ -1,47 +1,20 @@
-<codx-views #view [views]="views" [autoLoad]="false"  [funcID]="funcID" (filterReportChange)="filterChange($event)" (onActions)="onActions($event)">
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  [funcID]="funcID"
+  (filterReportChange)="filterChange($event)"
+  (onActions)="onActions($event)"
+>
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-40px">
-    <div class="bg-white px-5">
-      <ul class="d-flex flex-wrap">
-        <li
-          class="menu-item m-2"
-          *ngFor="let item of dashboard"
-          (click)="loadContent($event, item)"
-        >
-          <codx-card-img
-            cardCss="border border-left-5 border-primary  w-200px h-100 card-vpp border-left: 5px solid rgb(78, 134, 236);"
-            [imageId]="item?.recID"
-            [rootData]="item"
-            [footer]="cardItemFooter"
-            [imageWidth]="700"
-          >
-          </codx-card-img>
-        </li>
-      </ul>
-    </div>
-    <div>
-      <div class="d-flex justify-content-center">
-        <codx-input
-          type="combobox"
-          field="employee"
-          refValue="Employee_DB"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
-        <codx-input
-          type="combobox"
-          field="organization"
-          refValue="Organization_DB"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
-      </div>
-      <codx-dashboard
-        [templates]="templates2"
-        [panels]="panels"
-        [datas]="datas"
-      ></codx-dashboard>
-    </div>
+  <div class="w-100 h-100">
+    <codx-dashboard
+      [templates]="templates2"
+      [panels]="panels"
+      [datas]="datas"
+    ></codx-dashboard>
   </div>
 </ng-template>
 
