@@ -18,7 +18,7 @@
               <div class="d-flex col-4">
                 <div class="me-2">
                   <codx-label class="text-gray-500 text-nowrap" [setRequire]="false" fiedName="CreatedOn" [formModel]="formModel"
-                    default="Ngày tạo: ">
+                    >
                   </codx-label>
                 </div>
                 <div class="text-dark"  [innerHTML]="dataSelect.createdOn
@@ -27,7 +27,7 @@
               <div class="d-flex col-4">
                 <div class="me-2">
                   <codx-label class="text-gray-500 text-nowrap" fiedName="StartDate" [formModel]="formModel"
-                    default="Ngày bắt đầu: ">
+                    >
                   </codx-label>
                 </div>
                 <div class="text-dark" [innerHTML]="dataSelect.startDate
@@ -36,10 +36,10 @@
               <div class="d-flex col-4">
                 <div class="me-2">
                   <codx-label class="text-gray-500 text-nowrap" fiedName="EndDate" [setRequire]="false"
-                    [formModel]="formModel" default="Ngày đến hạn: ">
+                    [formModel]="formModel">
                   </codx-label>
                 </div>
-                <div class="text-dark" [innerHTML]="dataSelect.endDate
+                <div class="text-dark" style="width: 170px" [innerHTML]="(dataSelect.status != '1' ? dataSelect.endDate : null)
               | formatvalue : formModel : 'EndDate' | async"></div>
               </div>
 
