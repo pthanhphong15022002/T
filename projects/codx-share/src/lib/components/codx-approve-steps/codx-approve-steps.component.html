@@ -102,10 +102,10 @@
                         <div class="d-flex flex-wrap">
                           <ng-container *ngFor="let approver of item.approvers">
                             <div
-                              class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                              class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
                             >
                               <codx-temp-full
-                                cardCss="card-template px-2 pt-4 pb-2"
+                                cardCss="card-template p-3"
                                 *ngIf="
                                   approver.roleType?.length == 1 ||
                                   approver.roleType == 'PA'
@@ -125,7 +125,7 @@
                               </codx-temp-full>
 
                               <codx-temp-full
-                                cardCss="card-template px-2 pt-4 pb-2"
+                                cardCss="card-template p-3"
                                 *ngIf="
                                   approver.roleType.length > 1 &&
                                   approver.roleType != 'PA'
@@ -294,10 +294,10 @@
                   <div class="d-flex flex-wrap">
                     <ng-container *ngFor="let approver of item.approvers">
                       <div
-                        class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                        class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
                       >
                         <codx-temp-full
-                          cardCss="card-template px-2 pt-4 pb-2"
+                          cardCss="card-template p-3"
                           *ngIf="
                             approver.roleType?.length == 1 ||
                             approver.roleType == 'PA'
@@ -315,7 +315,7 @@
                         </codx-temp-full>
 
                         <codx-temp-full
-                          cardCss="card-template px-2 pt-4 pb-2"
+                          cardCss="card-template p-3"
                           *ngIf="
                             approver.roleType.length > 1 &&
                             approver.roleType != 'PA'
