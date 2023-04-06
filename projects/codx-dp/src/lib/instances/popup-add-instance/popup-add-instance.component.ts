@@ -116,7 +116,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
-      this.lstParticipants = dt?.data[8];
+      this.lstParticipants = dt?.data?.lstParticipants;
       this.owner = this.instance?.owner;
       if (
         this.instance.permissions != null &&
