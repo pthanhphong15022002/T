@@ -21,6 +21,8 @@
   --gray-200: #cad0d3;
   --gray-150: #e1e6e7;
   --gray-100: #f5f8fa;
+
+  --bs-border-color:#e1e6e7;
 }
 
 /*** css for theme********/
@@ -756,5 +758,9 @@
 .badge-light-primary {
   color: var(--primary);
   background-color: var(--primary-lighter);
+}
+
+.separator {
+  border-bottom-color:var(--gray-150);
 }
 /// end 22/12/2022
