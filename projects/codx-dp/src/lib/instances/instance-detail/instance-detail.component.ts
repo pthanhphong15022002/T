@@ -51,8 +51,10 @@ export class InstanceDetailComponent implements OnInit {
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
-  @Input() moreFunc :any;
-  @Input() stepStart :any;
+  @Input() moreFunc: any;
+  @Input() reloadData = false;
+  @Input() dataReload: any = null;
+  @Input() stepStart: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
@@ -85,7 +87,7 @@ export class InstanceDetailComponent implements OnInit {
     color: 'color',
   };
   dialogPopupDetail: DialogRef;
-  currentElmID: any
+  currentElmID: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -110,7 +112,6 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
-
 
   constructor(
     private callfc: CallFuncService,
@@ -148,21 +149,23 @@ export class InstanceDetailComponent implements OnInit {
         this.instanceStatus = this.dataSelect.status;
         this.instance = this.dataSelect;
         // sort theo by step
-        this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+        // this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+        this.GetStepsByInstanceIDAsync();
         // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
         this.getDataGanttChart(
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-        // this.rollHeight();
       }
-    }
-    if(changes['stepStart']){
-      this.getStageByStep(this.stepStart);
+    } else if (changes['reloadData'] && changes['reloadData'].currentValue) {
+      this.GetStepsByInstanceIDAsync();
+      this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     }
   }
-  GetStepsByInstanceIDAsync(insID, proccessID) {
-    var data = [insID, proccessID, this.instanceStatus];
+
+
+  GetStepsByInstanceIDAsync() {
+    var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
@@ -181,7 +184,8 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getStageByStep(listSteps) {
-    this.isStart = listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
+    this.isStart =
+      listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
     var total = 0;
     for (var i = 0; i < listSteps.length; i++) {
       var stepNo = i;
@@ -197,19 +201,17 @@ export class InstanceDetailComponent implements OnInit {
           backgroundColor: data.backgroundColor,
           icon: data.icon,
           iconColor: data.iconColor,
-        }
+        };
       }
       total += data.progress;
       stepNo = i + 1;
     }
-    if (listSteps != null && (listSteps.length - 2) > 0) {
+    if (listSteps != null && listSteps.length - 2 > 0) {
       this.progress = (total / (listSteps.length - 2)).toFixed(1).toString();
     } else {
       this.progress = '0';
     }
-    this.currentStep = listSteps.findIndex(
-      (x) => x.stepStatus === '1'
-    );
+    this.currentStep = listSteps.findIndex((x) => x.stepStatus === '1');
     this.checkCompletedInstance(this.instanceStatus);
   }
 
@@ -231,10 +233,10 @@ export class InstanceDetailComponent implements OnInit {
       return x.stepNo > 0 && y.stepNo > 0
         ? x.stepNo - y.stepNo
         : x.stepNo > 0
-          ? -1
-          : y.stepNo > 0
-            ? 1
-            : x.stepNo - y.stepNo;
+        ? -1
+        : y.stepNo > 0
+        ? 1
+        : x.stepNo - y.stepNo;
     });
     ins = listStep
       .reduce((result, x) => {
@@ -284,7 +286,12 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps, isStart: this.isStart});
+    this.changeMF.emit({
+      e: e,
+      data: data,
+      listStepCbx: this.listSteps,
+      isStart: data.status == '1',
+    });
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -327,7 +334,7 @@ export class InstanceDetailComponent implements OnInit {
   //   this.changeDetec.detectChanges();
   // }
 
-  setHTMLCssStages(oldStage, newStage) { }
+  setHTMLCssStages(oldStage, newStage) {}
 
   //ganttchar
   getDataGanttChart(instanceID, processID) {
@@ -340,14 +347,14 @@ export class InstanceDetailComponent implements OnInit {
         if (res && res?.length > 0) {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
-          let test = this.ganttDsClone.map(i => {
+          let test = this.ganttDsClone.map((i) => {
             return {
               name: i.name,
               start: i.startDate,
               end: i.endDate,
-            }
-          })
-          console.log("thuan", test);
+            };
+          });
+          console.log('thuan', test);
 
           this.changeDetec.detectChanges();
         }
@@ -371,7 +378,9 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getbackgroundColor(step) {
-    return step?.backgroundColor ? '--primary-color:' + step?.backgroundColor : '--primary-color: #23468c';
+    return step?.backgroundColor
+      ? '--primary-color:' + step?.backgroundColor
+      : '--primary-color: #23468c';
   }
 
   getColorStepName(status: string) {
@@ -425,8 +434,8 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     let classViewDetail: any;
-    var heighOut = 25
-    if ((this.viewType == 'd')) {
+    var heighOut = 25;
+    if (this.viewType == 'd') {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;
@@ -459,8 +468,8 @@ export class InstanceDetailComponent implements OnInit {
   saveAssign(e) {
     if (e) {
       this.loadTree(this.listSteps);
-      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
-    };
+      this.GetStepsByInstanceIDAsync();
+    }
   }
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
@@ -478,12 +487,12 @@ export class InstanceDetailComponent implements OnInit {
     this.isSaving = e;
   }
   clickMenu(e) {
-    this.viewModelDetail = e
+    this.viewModelDetail = e;
     this.isSaving = false;
     this.currentElmID = null;
   }
 
-  startInstances(){
-    this.clickStartInstances.emit(true)
+  startInstances() {
+    this.clickStartInstances.emit(true);
   }
 }
