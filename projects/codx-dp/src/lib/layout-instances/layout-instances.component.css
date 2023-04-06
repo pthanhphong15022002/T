@@ -3,6 +3,6 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    max-width: 450px;
+    max-width: 600px;
     max-height: 25px;
 }
