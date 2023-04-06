@@ -761,6 +761,8 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('DP023', 0, taskName);
         return;
       }
+    }else{
+      this.actualEndMax =this.step?.actualStart;
     }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
