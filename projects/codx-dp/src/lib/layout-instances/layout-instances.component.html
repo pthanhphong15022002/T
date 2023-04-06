@@ -21,10 +21,6 @@
       </div>
     </div>
   </div>
-  <ng-template #headerTmp>
-    <span>NAM MÔ A DI ĐÀ PHẬT</span>
-  </ng-template>
-
   <codx-scripts-init></codx-scripts-init>
   <codx-scroll-top></codx-scroll-top>
 
@@ -128,3 +124,11 @@
   </ng-template>
   <!-- end::TOPBAR -->
 </ng-container>
+
+<ng-template #headerTmp>
+  <span
+    class="line-clamp-processname cursor-pointer align-items-center text-dark fw-bolder fs-3 m-3"
+    [ngbTooltip]="nameProcess" 
+    >{{nameProcess}}</span
+  >
+</ng-template>

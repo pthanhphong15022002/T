@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
 import {
   CallFuncService,
   DialogRef,
@@ -25,6 +25,7 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
   nameProcess = '';
   constructor(
     inject: Injector,
+    private changDef : ChangeDetectorRef,
     private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
@@ -44,10 +45,8 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     option.Width = '550px';
     this.callfc.openSide(NoteDrawerComponent, '', option);
   }
-  viewNameProcess() {
-    this.dataProcess.subscribe((data) => {
-      this.nameProcess = data.title;
-      return this.nameProcess
-    });
+  viewNameProcess(name) {
+  this.nameProcess = name;
+  this.changDef.detectChanges();
   }
 }

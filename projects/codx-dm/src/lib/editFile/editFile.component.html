@@ -148,7 +148,7 @@
 
                 <div class="form-group">
                     <codx-label [formModel]="formModel" fiedName="Excerpts"></codx-label>
-                    <codx-input placeholder="{{titleExcerpts}}..." class="form-control test-datetime aqua"
+                    <codx-input placeholder="{{titleExcerpts}}..." class="form-control test-datetime h-100"
                         type="textarea" format="ed3" [crrValue]="fileEditing?.excerpts"
                         (valueChange)="txtValue($event, 'excerpts')"></codx-input>
                     <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
@@ -156,7 +156,7 @@
                 </div>
                 <div class="form-group">
                     <codx-label [formModel]="formModel" fiedName="Description"></codx-label>
-                    <codx-input placeholder="{{titleDescription}}..." class="form-control test-datetime red" type="text"
+                    <codx-input placeholder="{{titleDescription}}..." class="form-control test-datetime" type="text"
                         format="ed3" [crrValue]="fileEditing?.description"
                         (valueChange)="txtValue($event, 'description')"></codx-input>
                     <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
