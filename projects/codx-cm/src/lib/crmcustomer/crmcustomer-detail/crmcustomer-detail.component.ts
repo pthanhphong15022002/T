@@ -14,6 +14,8 @@ import {
   DialogModel,
   FormModel,
   CacheService,
+  AlertConfirmInputConfig,
+  NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 
@@ -51,7 +53,8 @@ export class CrmcustomerDetailComponent implements OnInit {
     private callFc: CallFuncService,
     private cache: CacheService,
     private cmSv: CodxCmService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private notiService: NotificationsService,
   ) {}
 
   async ngOnInit() {
@@ -212,6 +215,8 @@ export class CrmcustomerDetailComponent implements OnInit {
     this.clickMoreFunc.emit({ e: e, data: data });
   }
 
+
+  //#region Crud contacts crm
   clickAddContact(action, data) {
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -234,23 +239,65 @@ export class CrmcustomerDetailComponent implements OnInit {
     dialog.closed.subscribe((e) => {
       if (e && e.event != null) {
         var contactsPerson = e.event;
-        contactsPerson.contactType = '2';
+        if (
+          this.dataSelected.contacts != null &&
+          this.dataSelected.contacts.length > 0
+        ) {
+          var check = this.dataSelected.contacts.filter(
+            (x) => x.recID == contactsPerson.recID
+          );
+          if (check == null) {
+            contactsPerson.contactType = '2';
+          }
+        } else {
+          contactsPerson.contactType = '2';
+        }
         this.cmSv
           .updateContactCrm(
             contactsPerson,
             this.funcID,
-            this.dataSelected.recID
+            this.dataSelected?.recID
           )
           .subscribe((res) => {
-            if (res) {
-              this.dataSelected.contacts.push(contactsPerson);
+            if (res && res.length > 0) {
+              this.dataSelected.contacts = res;
             }
           });
+
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
+  delete(data){
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        var check = this.dataSelected.contacts.some(x => x.recID == data.recID && x.contactType == '1');
+        if(!check){
+          this.cmSv
+          .updateContactCrm(
+            data,
+            this.funcID,
+            this.dataSelected?.recID,
+            true
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) {
+              this.dataSelected.contacts = res;
+              this.changeDetectorRef.detectChanges();
+            }
+          });
+        }else{
+          this.notiService.notifyCode('Liên hệ này đang là liên hệ chính! Không xóa được');
+          return;
+        }
+
+
+      }})
+  }
+  //#endregion
   getNameCrm(data) {
     if (this.funcID == 'CM0101') {
       return data.customerName;
@@ -263,14 +310,14 @@ export class CrmcustomerDetailComponent implements OnInit {
     }
   }
 
-  clickMFContact(e, data){
+  clickMFContact(e, data) {
     this.moreFuncAdd = e.text;
     switch (e.functionID) {
       case 'SYS03':
         this.clickAddContact('edit', data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
         break;
       case 'SYS04':
         // this.copy(data);

@@ -117,38 +117,27 @@ export class JournalNamesComponent extends UIComponent {
   edit(e, data): void {
     console.log('edit', { data });
 
-    this.api
-      .exec(
-        'ERM.Business.AC',
-        'JournalsBusiness',
-        'IsEditableAsync',
-        data.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (data.dataValue) {
-            data = { ...data, ...JSON.parse(data.dataValue) };
-          }
+    if (data.dataValue) {
+      data = { ...data, ...JSON.parse(data.dataValue) };
+    }
 
-          this.view.dataService.dataSelected = data;
-          this.view.dataService.edit(data).subscribe(() => {
-            const options = new SidebarModel();
-            options.Width = '800px';
-            options.DataService = this.view.dataService;
-            options.FormModel = this.view.formModel;
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
 
-            this.callfc.openSide(
-              PopupAddJournalComponent,
-              {
-                formType: 'edit',
-                formTitle: `${e.text} ${this.functionName}`,
-              },
-              options,
-              this.view.funcID
-            );
-          });
-        }
-      });
+      this.callfc.openSide(
+        PopupAddJournalComponent,
+        {
+          formType: 'edit',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
 
   copy(e, data): void {

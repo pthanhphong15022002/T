@@ -7,7 +7,7 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModelMenu"
-  [data]="stepsTasks"
+  [data]="task"
   [openMore]="false"
 ></codx-form>
 
@@ -46,7 +46,7 @@
           field="taskName"
           [formModel]="frmModel"
           type="text"
-          [crrValue]="stepsTasks?.taskName"
+          [crrValue]="task['taskName']"
           (valueChange)="valueChangeText($event)"
         >
         </codx-input>
@@ -66,7 +66,7 @@
           field="callType"
           type="valuelist"
           refValue="DP023"
-          [crrValue]="stepsTasks?.callType"
+          [crrValue]="task['callType']"
           (valueChange)="valueChangeCombobox($event)"
         >
         </codx-input>
@@ -87,7 +87,7 @@
           <codx-input
             type="switch"
             class="test-check"
-            [checked]="stepsTasks?.isOnline"
+            [checked]="task['isOnline']"
             field="isOnline"
             (valueChange)="valueChangeAlert($event)"
           >
@@ -139,7 +139,7 @@
         ></codx-label>
         <a
           class="d-flex justify-content-end align-items-center cursor-pointer"
-          *ngIf="stepsTasks?.reference"
+          *ngIf="task['reference']"
           (click)="viewDetailSurveys()"
         >
           <span
@@ -174,7 +174,7 @@
         <codx-input
           field="startDate"
           (valueChange)="changeValueDate($event)"
-          [crrValue]="stepsTasks?.startDate"
+          [crrValue]="task['startDate']"
           type="datetime"
           format="F"
         >
@@ -190,7 +190,7 @@
         <codx-input
           field="endDate"
           (valueChange)="changeValueDate($event)"
-          [crrValue]="stepsTasks?.endDate"
+          [crrValue]="task['endDate']"
           type="datetime"
           format="F"
         >
@@ -231,7 +231,7 @@
               <codx-input
                 field="durationDay"
                 [formModel]="frmModel"
-                [crrValue]="stepsTasks?.durationDay"
+                [crrValue]="task['durationDay']"
                 type="text"
                 (valueChange)="valueChangeText($event)"
               >
@@ -250,7 +250,7 @@
                 field="durationHour"
                 [formModel]="frmModel"
                 type="text"
-                [crrValue]="stepsTasks?.durationHour"
+                [crrValue]="task['durationHour']"
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>
@@ -275,7 +275,7 @@
             <codx-input
               field="reminders"
               [formModel]="frmModel"
-              [crrValue]="stepsTasks?.reminders"
+              [crrValue]="task['reminders']"
               refValue="DP030"
               type="valuelist"
               (valueChange)="valueChangeText($event)"
@@ -327,7 +327,7 @@
       <codx-input
         field="memo"
         [formModel]="frmModel"
-        [crrValue]="stepsTasks?.memo"
+        [crrValue]="task['memo']"
         [Group]=""
         format="ed"
         type="text"
@@ -341,7 +341,7 @@
       <codx-input
         type="switch"
         class="test-check"
-        [checked]="stepsTasks?.createTask"
+        [checked]="task['createTask']"
         field="createTask"
         (valueChange)="valueChangeAlert($event)"
       >
@@ -377,7 +377,7 @@
     <div>
       <codx-attachment
         #attachment
-        [objectId]="stepsTasks?.recID"
+        [objectId]="task['recID']"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
@@ -392,9 +392,8 @@
         displayThumb="full"
         showMessage="0"
         [fdID]="folderID"
-        [fdName]="stepsTasks?.stepID"
         [parentID]="folderID"
-        [dataSelected]="stepsTasks"
+        [dataSelected]="task"
       >
       </codx-attachment>
     </div>
@@ -418,7 +417,7 @@
       ></codx-label>
     </span>
   </button>
-  <button type="button" class="btn btn-primary" (click)="saveData()">
+  <button type="button" class="btn btn-primary" (click)="handlSaveTask()">
     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
   </button>
 </ng-template>
