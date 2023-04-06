@@ -512,7 +512,6 @@ export class InstancesComponent
         this.dataSelected = data;
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
@@ -855,7 +854,6 @@ export class InstancesComponent
       '',
       option
     );
-    console.log(this.detailViewPopup)
     this.popup.closed.subscribe((e) => {
       
     });
@@ -1006,7 +1004,6 @@ export class InstancesComponent
 
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
               }
 
@@ -1118,7 +1115,6 @@ export class InstancesComponent
 
             if (this.detailViewInstance) {
               this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.instance = this.dataSelected;
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
 
@@ -1226,7 +1222,6 @@ export class InstancesComponent
 
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
