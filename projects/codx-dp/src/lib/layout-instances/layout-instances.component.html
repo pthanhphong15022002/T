@@ -126,9 +126,12 @@
 </ng-container>
 
 <ng-template #headerTmp>
-  <span
-    class="line-clamp-processname cursor-pointer align-items-center text-dark fw-bolder fs-3 m-3"
+  <div class="w-100 text-dark align-items-center w-bolder fs-3 my-4" >
+    <span
+    class="line-clamp-processname cursor-pointer" 
     [ngbTooltip]="nameProcess" 
     >{{nameProcess}}</span
   >
+  </div>
+ 
 </ng-template>
