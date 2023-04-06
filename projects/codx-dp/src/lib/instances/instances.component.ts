@@ -75,7 +75,7 @@ export class InstancesComponent
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
-  dataReload :any
+  dataReload: any;
   //Setting load list
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
@@ -157,7 +157,7 @@ export class InstancesComponent
   user: any;
   isAdminRoles = false;
   listInstanceStep = [];
-  reloadData = false ;
+  reloadData = false;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -508,7 +508,7 @@ export class InstancesComponent
           }
         }
         this.dataSelected = data;
-        if(this.detailViewInstance){
+        if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
@@ -638,14 +638,13 @@ export class InstancesComponent
     this.codxDpService.startInstance(data.recID).subscribe((res) => {
       if (res) {
         this.listInstanceStep = res;
-        data.status ='2'     
+        data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
-        this.dataSelected= data;
-        this.reloadData = true
+        this.dataSelected = data;
+        this.reloadData = true;
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-       
-      }else  this.reloadData = false;
+      } else this.reloadData = false;
       this.detectorRef.detectChanges();
     });
   }
@@ -691,96 +690,94 @@ export class InstancesComponent
 
   //#popup roles
   changeDataMF(e, data) {
-    if (e != null && data != null && data.status == '2') {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS003':
-            if ((data.status != '1' && data.status != '2') || data.closed)
-              res.disabled = true;
-            break;
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          //more core - thay doi nhieu dong, bo chon, chon tat ca..
-          case 'SYS005':
-          case 'SYS007':
-          case 'SYS006':
-            res.disabled = true;
-            break;
-          //Chỉnh sửa, chuyển tiếp, thất bại, thành công
-          case 'SYS103':
-          case 'SYS03':
-          case 'DP09':
-            let isUpdate = data.write;
-            if (
-              !isUpdate ||
-              (data.status !== '1' && data.status !== '2') ||
-              data.closed
-            )
-              res.disabled = true;
-            break;
-          //Copy
-          case 'SYS104':
-          case 'SYS04':
-            let isCopy = this.isCreate ? true : false;
-            if (!isCopy || data.closed) res.disabled = true;
-            break;
-          //xóa
-          case 'SYS102':
-          case 'SYS02':
-            let isDelete = data.delete;
-            if (!isDelete || data.closed) res.disabled = true;
-            break;
-          //Đóng nhiệm vụ = true
-          case 'DP14':
-            if (data.closed) res.disabled = true;
-            break;
-          //Mở nhiệm vụ = false
-          case 'DP15':
-            if (!data.closed) res.disabled = true;
-            break;
-          case 'DP02':
-            let isUpdateFail = data.write;
-            if (
-              !isUpdateFail ||
-              (data.status !== '1' && data.status !== '2') ||
-              data.closed ||
-              !this.isUseFail
-            ) {
-              res.disabled = true;
-            }
+    if (e != null && data != null) {
+      if (data.status != '1') {
+        e.forEach((res) => {
+          switch (res.functionID) {
+            case 'SYS003':
+              if (data.status != '2' || data.closed) res.disabled = true;
+              break;
+            // case 'SYS004':
+            // case 'SYS001':
+            // case 'SYS002':
+            // //more core - thay doi nhieu dong, bo chon, chon tat ca..
+            // case 'SYS005':
+            // case 'SYS007':
+            // case 'SYS006':
+            //   res.disabled = true;
+            //   break;
+            //Chỉnh sửa, chuyển tiếp, thất bại, thành công
+            case 'SYS103':
+            case 'SYS03':
+            case 'DP09':
+              let isUpdate = data.write;
+              if (!isUpdate || data.status != '2' || data.closed)
+                res.disabled = true;
+              break;
+            //Copy
+            case 'SYS104':
+            case 'SYS04':
+              let isCopy = this.isCreate ? true : false;
+              if (!isCopy || data.closed) res.disabled = true;
+              break;
+            //xóa
+            case 'SYS102':
+            case 'SYS02':
+              let isDelete = data.delete;
+              if (!isDelete || data.closed) res.disabled = true;
+              break;
+            //Đóng nhiệm vụ = true
+            case 'DP14':
+              if (data.closed) res.disabled = true;
+              break;
+            //Mở nhiệm vụ = false
+            case 'DP15':
+              if (!data.closed) res.disabled = true;
+              break;
+            case 'DP02':
+              let isUpdateFail = data.write;
+              if (
+                !isUpdateFail ||
+                data.status != '2' ||
+                data.closed ||
+                !this.isUseFail
+              ) {
+                res.disabled = true;
+              }
 
-            break;
-          case 'DP10':
-            let isUpdateSuccess = data.write;
-            if (
-              !isUpdateSuccess ||
-              (data.status !== '1' && data.status !== '2') ||
-              data.closed ||
-              !this.isUseSuccess
-            ) {
+              break;
+            case 'DP10':
+              let isUpdateSuccess = data.write;
+              if (
+                !isUpdateSuccess ||
+                data.status != '2' ||
+                data.closed ||
+                !this.isUseSuccess
+              ) {
+                res.disabled = true;
+              }
+              break;
+            case 'DP21':
               res.disabled = true;
-            }
-            break;
-          case 'DP21':
-            res.disabled = true;
-            break;
-        }
-      });
-    } else {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'DP21':
-            break;
-          case 'DP09':
-          case 'DP10':
-          case 'DP02':
-            res.disabled = true;
-            break;
-          default:
-            res.isblur = true;
-        }
-      });
+              break;
+          }
+        });
+       
+      } else {
+        e.forEach((mf) => {
+          switch (mf.functionID) {
+            case 'DP21':
+              break;
+            case 'DP09':
+            case 'DP10':
+            case 'DP02':
+              mf.disabled = true;
+              break;
+            default:
+              mf.isblur = true;
+          }
+        });
+      }
     }
   }
   //End
@@ -865,7 +862,7 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if(data.status=="1"){
+    if (data.status == '1') {
       this.notificationsService.notify(
         'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
         '2'
@@ -1061,13 +1058,11 @@ export class InstancesComponent
   autoMoveStage(dataInstance) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    this.notificationsService
-      .alertCode('DP034', config)
-      .subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.handleMoveStage(dataInstance);
-        }
-      });
+    this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.handleMoveStage(dataInstance);
+      }
+    });
   }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;
