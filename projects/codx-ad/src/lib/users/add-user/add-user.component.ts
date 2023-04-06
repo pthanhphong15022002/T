@@ -345,7 +345,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         false,
         false,
         // this.lstChangeModule,
-        this.saveSuccess,
+        this.checkBtnAdd,
       ];
     }
     if (this.formType == 'edit') {
@@ -374,7 +374,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       false,
       false,
       // this.lstChangeModule,
-      this.saveSuccess,
+      this.checkBtnAdd,
     ];
     op.data = data;
     return true;
@@ -432,17 +432,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.dialog.close(res.update);
               });
           }
-          res.update.chooseRoles = res.update.functions;
+          res.update.chooseRoles = this.viewChooseRole;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
           this.changeDetector.detectChanges();
+        } else {
+          this.saveSuccess = false;
+          this.detectorRef.detectChanges();
         }
       });
   }
 
   onSave() {
-    if (!this.saveSuccess) {
+    if (!this.checkBtnAdd) {
       this.saveSuccess = true;
       var formGroup = this.form.formGroup.controls;
       if (!this.adUser.buid) formGroup.buid.setValue(null);
@@ -470,8 +473,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
                       .update(res)
                       .subscribe();
                     this.dialog.close(res);
-                    this.changeDetector.detectChanges();
+                  } else {
+                    this.saveSuccess = false;
                   }
+                  this.changeDetector.detectChanges();
                 });
             }
             // this.notification.notifyCode('SYS006');
