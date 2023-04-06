@@ -18,14 +18,15 @@
         ></i>
       </div>
       <div>
-        <codx-mfunc
-          [formModel]="frmModel"
-          (clickMF)="clickMFStep($event, dataStep)"
-          [dataItem]="moreDefaut"
-          [type]="'hover'"
-          (changeDataMF)="changeDataMFStep($event)"
+        <button
+          type="button"
+          class="btn btn-primary btn-sm d-flex align-items-center cursor-pointer"
+          (click)="openUpdateProgress(dataStep)"
+          [disabled]="dataStep?.startDate && dataStep?.endDate ? false : true"
         >
-        </codx-mfunc>
+          <span class="icon-16 icon-update me-1"></span>
+          <span>Cập nhật tiến độ</span>
+        </button>
       </div>
     </div>
     <div class="mb-3">
@@ -35,6 +36,7 @@
             fiedName="ActualStart"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
+            [setRequire]="false"
             default="Ngày chuyển đến giai đoạn: "
           >
           </codx-label>
@@ -47,6 +49,7 @@
             fiedName="StartDate"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
+            [setRequire]="false"
             default="Bắt đầu dự kiến:"
           ></codx-label
           ><span class="ms-1">{{ startDate }}</span>
@@ -65,7 +68,7 @@
             [ngStyle]="
               +progress < 10 ? { position: 'relative', left: '15px' } : {}
             "
-            >{{progress || 0 }}%</span
+            >{{ progress || 0 }}%</span
           >
         </div>
       </div>
@@ -76,6 +79,7 @@
             fiedName="DurationDay"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
+            [setRequire]="false"
             default="Kỳ vọng:"
           ></codx-label
           ><span class="ms-1 me-1">{{ dataStep?.durationDay }} </span>
@@ -259,7 +263,7 @@
                       style="flex-grow: 1"
                     >
                       <!-- show hiden group task -->
-                      <span class="me-4">
+                      <span class="">
                         <button
                           type="button"
                           class="btn btn-icon btn-light-primary"
@@ -268,8 +272,7 @@
                           <i class="icon-horizontal_rule icon-18"></i>
                         </button>
                       </span>
-                      ...
-                      <div class="steplist-hearder ms-5">
+                      <div class="steplist-hearder ms-3">
                         <div class="text-dark fw-bold fs-6">
                           {{ taskList?.taskGroupName }}
                         </div>
@@ -292,6 +295,7 @@
                         </div>
                       </div>
                       <codx-mfunc
+                        *ngIf="taskList?.startDate && taskList?.endDate"
                         [formModel]="frmModel"
                         (changeDataMF)="changeDataMF($event, 'group')"
                         (clickMF)="clickMFTaskGroup($event, taskList)"
@@ -396,6 +400,7 @@
                               </codx-attachment>
                             </div>
                             <codx-mfunc
+                              *ngIf="taskList?.startDate && taskList?.endDate"
                               [formModel]="frmModel"
                               (clickMF)="
                                 clickMFTask($event, taskList?.task, task)
@@ -454,7 +459,11 @@
       </div>
       <div
         class="d-flex justify-content-center mt-3"
-        *ngIf="!isClosed && (instance.status == '1' || instance.status == '2')"
+        *ngIf="
+          !isClosed &&
+          (instance.status == '1' || instance.status == '2') &&
+          isStart
+        "
       >
         <button
           type="button"
@@ -489,12 +498,13 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date">
+    <span class="date" *ngIf="data?.startDate && data?.endDate">
       {{ data?.startDate | date : dateFomat }} -
       {{ data?.endDate | date : dateFomat }}</span
     >
     <div
       class="disabled-inline"
+      *ngIf="data?.startDate && data?.endDate"
       (click)="
         checkEventProgress(data) &&
         (instance.status == 1 || instance.status == 2) &&
@@ -504,22 +514,7 @@
       "
       [ngClass]="checkEventProgress(data) && !isClosed ? 'cursor-pointer' : ''"
     >
-      <ejs-progressbar
-        [id]="data?.recID"
-        type="Circular"
-        height="55"
-        width="55"
-        trackThickness="4"
-        progressThickness="4"
-        [value]="data?.progress"
-        [progressColor]="'#005DC7'"
-        trackColor="#d8d8d8"
-        progressValueColor="red"
-        [labelStyle]="{ color: '#005DC7' }"
-        [showProgressValue]="true"
-        [animation]="{ enable: true, duration: 1000, delay: 0 }"
-      >
-      </ejs-progressbar>
+      <codx-progress [progress]="data?.progress"> </codx-progress>
     </div>
     <span>
       <codx-img

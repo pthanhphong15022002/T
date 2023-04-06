@@ -52,6 +52,7 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
   @Input() moreFunc :any;
+  @Input() stepStart :any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
@@ -156,8 +157,10 @@ export class InstanceDetailComponent implements OnInit {
         // this.rollHeight();
       }
     }
+    if(changes['stepStart']){
+      this.getStageByStep(this.stepStart);
+    }
   }
-
   GetStepsByInstanceIDAsync(insID, proccessID) {
     var data = [insID, proccessID, this.instanceStatus];
     //   var data = [insID];

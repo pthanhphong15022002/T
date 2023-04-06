@@ -160,7 +160,7 @@
   <codx-form [body]="detailPopupClick" [dialog]="dialog">
     <ng-template #detailPopupClick>
       <codx-instance-detail
-        #detailViewInstance1
+        #detailViewPopup
         [dataService]="view.dataService"
         [formModel]="view.formModel"
         [dataSelect]="dataSelected"
@@ -173,6 +173,7 @@
         [moreFunc]="moreFuncStart"
         (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
+        [stepStart]="listInstanceStep"
       >
       </codx-instance-detail>
     </ng-template>
@@ -203,8 +204,8 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div class="flex-body d-flex justify-content-between mt-2">
-    <div>
+  <div class="flex-body">
+    <!-- <div> d-flex justify-content-between mt-2
       <codx-vll
         [name]="vllStatus"
         [field]="'Status'"
@@ -214,7 +215,7 @@
         class="badge badge-light badge-md fs-7"
       >
       </codx-vll>
-    </div>
+    </div> -->
     <div class="d-flex justify-content-end">
       <span
         #pCrDT="ngbPopover"
@@ -247,22 +248,35 @@
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <div>
-        <div *ngFor="let item of listSteps">
-          <div
-            *ngIf="item.stepID === data.stepID"
-            [ngStyle]="{ 'background-color': item['backgroundColor'] }"
-            class="me-2 badge badge-primary"
-          >
-            <span
-              [ngClass]="item['icon']"
-              [ngStyle]="{ color: item['iconColor'] }"
-              class="me-2"
-            ></span>
-            <span [ngStyle]="{ color: item['textColor'] }">
-              {{ item.stepName }}</span
+        <ng-container *ngIf="data.status != '1'">
+          <div *ngFor="let item of listSteps">
+            <div
+              *ngIf="item.stepID === data.stepID"
+              [ngStyle]="{ 'background-color': item['backgroundColor'] }"
+              class="me-2 badge badge-primary"
             >
+              <span
+                [ngClass]="item['icon']"
+                [ngStyle]="{ color: item['iconColor'] }"
+                class="me-2"
+              ></span>
+              <span [ngStyle]="{ color: item['textColor'] }">
+                {{ item.stepName }}</span
+              >
+            </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="data.status == '1'">
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7"
+          >
+          </codx-vll>
+        </ng-container>
       </div>
       <div
         class="d-flex align-items-center text-gray-600"

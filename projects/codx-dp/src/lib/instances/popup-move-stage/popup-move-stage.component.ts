@@ -15,16 +15,12 @@ import {
   CallFuncService,
   CacheService,
 } from 'codx-core';
-import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import {
   DP_Instances,
   DP_Instances_Steps,
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
-import { InstancesComponent } from '../instances.component';
-import moment from 'moment';
-import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -224,7 +220,8 @@ export class PopupMoveStageComponent implements OnInit {
 
   onSave() {
     this.instancesStepOld.owner = this.owner;
-    if (this.checkSpaceInStep(this.stepIdClick, this.stepIdOld)) {
+    var isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld)
+    if (isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
         return;
@@ -297,14 +294,9 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    !this.listTask &&
-      this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-    !this.listTaskGroup &&
-      this.upadteProgessIsDone(
-        this.listTaskGroupDone,
-        this.listTaskGroup,
-        'taskGroup'
-      );
+    this.listTaskDone && this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+    this.listTaskGroupDone && this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup,'taskGroup');
+    this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
@@ -604,5 +596,11 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  updateProgressInstance(){
+    if(this.listTaskDone.length == this.listTask.length && this.listTaskGroupDone.length == this.listTaskGroup.length ) {
+      this.instancesStepOld.progress = 100;
+    }
   }
 }
