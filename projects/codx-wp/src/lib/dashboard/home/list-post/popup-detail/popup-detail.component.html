@@ -4,59 +4,58 @@
         <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
             <codx-image-viewer #codxImageViewer 
                 [idContainer]="'idOnHTML'" 
-                [objectID]="postID" 
+                [objectID]="parentID" 
                 [loadOnInit]="true"
                 [dialog]="dialogRef"
                 [fileID]="fileID"
                 (onPrevious)="changeImage($event)"
                 (onNext)="changeImage($event)">
             </codx-image-viewer>
-            <!-- <ng-container *ngIf="files.length > 1">
-                <div class="next-previrous">
-                    <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
-                    <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
-                </div>
-            </ng-container> -->
         </div>
     </div>
     <!-- post -->
     <div class="col-4 mt-5 ps-6">
-        <ng-container *ngIf="post">
+        <ng-container *ngIf="parentPost">
             <div class="d-flex">
                 <div class="me-2">
-                    <codx-img [objectId]="post.createdBy" [objectName]="post.createdName" [imageType]="'circle'"
+                    <codx-img [objectId]="parentPost.createdBy" [objectName]="parentPost.createdName" [imageType]="'circle'"
                         objectType="AD_Users" [width]="40">
                     </codx-img>
                 </div>
                 <div class="text-info-date ms-2">
                     <div class="">
-                        <span class="fw-bolder fs-7 me-2">{{post.createdName}}</span>
-                        <ng-container *ngIf="post.tagName">
-                            <span [innerHTML]="post.tagName"></span>
+                        <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
+                        <ng-container *ngIf="parentPost.tagName">
+                            <span [innerHTML]="parentPost.tagName"></span>
                         </ng-container>
                     </div>
                     <div class="mt-2">
-                        <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
-                        <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
-                            <codx-vll [name]="'WP001'" [value]="post.shareControl" [showText]="true" [showIcon]="true"
+                        <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | timefrom}}</span>
+                        <span *ngIf="parentPost.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
+                            <codx-vll [name]="'WP001'" [value]="parentPost.shareControl" [showText]="true" [showIcon]="true"
                                 [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
                                 [showBgColor]="true">
                             </codx-vll>
                         </span>
-                        <ng-container *ngIf="post.shareName">
-                            <span [innerHTML]="post.shareName"></span>
+                        <ng-container *ngIf="parentPost.shareName">
+                            <span [innerHTML]="parentPost.shareName"></span>
                         </ng-container>
                     </div>
                 </div>
             </div>
-            <!-- comment -->
+            
+        </ng-container>
+        <!-- comment -->
+        <ng-container *ngIf="chilPost">
             <div>
                 <treeview-comment 
                     [funcID]="'WP'" 
                     [fromModel]="dialogRef.formModel" 
                     [objectType]="'WP_Comments'"
-                    [data]="post" 
-                    [objectID]="post.recID">
+                    [data]="chilPost" 
+                    [activeParent]="activeChildPost"
+                    (pushCommentEvt)="createdChilPost()"
+                    [objectID]="chilPost.recID">
                 </treeview-comment>
             </div>
         </ng-container>

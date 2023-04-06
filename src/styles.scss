@@ -2231,6 +2231,9 @@ codx-calendar {
     font-size: 16px !important;
   }
 }
+.border{
+  border: 1px var(--gray-150) solid;
+}
 .border.border-gray-200 {
   border: 1px var(--gray-150) solid !important;
 }

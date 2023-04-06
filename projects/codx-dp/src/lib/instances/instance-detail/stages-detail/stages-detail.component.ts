@@ -744,7 +744,6 @@ export class StagesDetailComponent implements OnInit {
       //check công việc liên kết hoàn thành trước
       let check = false;
       let taskName = '';
-      this.actualEndMax =this.step?.actualStart;
       let listID = data?.parentID.split(';');
       listID?.forEach((item) => {
         let taskFind = this.taskList?.find((task) => task.refID == item);
@@ -762,6 +761,8 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('DP023', 0, taskName);
         return;
       }
+    }else{
+      this.actualEndMax =this.step?.actualStart;
     }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
