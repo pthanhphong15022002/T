@@ -197,7 +197,6 @@ export class PopupAddInstanceComponent implements OnInit {
 
   valueChange($event) {
     if ($event) {
-      debugger;
       this.instance[$event.field] = $event.data;
     }
   }
@@ -357,25 +356,13 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   checkEndDayInstance(endDate, endDateCondition) {
 
-    var dateFormatEndDay = new Date(endDateCondition);
-    var dateStr1 = new Date( endDate).toISOString();
-    var dateStr2 = endDateCondition.toISOString();
+    var date1 = new Date(endDate)
+    var date2 = new Date(endDateCondition);
+    this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
 
-
-    var formatDate1 = new Date(dateStr1).toLocaleDateString('en-AU');
-
-    var formatDate2 = new Date(dateStr2).toLocaleDateString('en-AU');
-    if (formatDate1 >= formatDate2) {
-      return false;
-    }
-    return true;
-    // var date1 = new Date(endDate)
-    // var date2 = new Date(endDateCondition);
-    // this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
-    // date1.setHours(0, 0, 0, 0);
-    // date2.setHours(0, 0, 0, 0);
-
-    // return date1 < date2;
+    return date1 < date2;
 
   }
 
