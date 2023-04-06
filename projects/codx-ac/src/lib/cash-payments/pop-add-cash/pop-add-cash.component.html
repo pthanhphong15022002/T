@@ -242,7 +242,7 @@
       </div>
     </div>
     <div class="table-responsive mt-4"
-      style="height: 380px; border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+      style="height: 380px; border-radius: 5px;">
       <table id="myTable" class="table table-hover">
         <thead style="
             position: sticky;
@@ -360,7 +360,7 @@
   </ng-container>
   <ng-container *ngIf="( cashpaymentline | search : searchText) as result">
     <div *ngIf="result.length > 0" class="container w-90 h-90 mt-2">
-      <div style="background-color: transparent;" class="list-empty card card-flush h-100">
+      <div class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
           <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="result.length"></ngb-pagination>
         </div>
