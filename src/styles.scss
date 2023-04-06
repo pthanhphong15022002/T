@@ -2203,16 +2203,11 @@ codx-calendar {
 .btn:focus {
   border-color: transparent !important;
 }
-.e-pane.e-static-pane {
-  ejs-listview {
-    .e-list-parent.e-ul .e-list-item {
-      border-bottom: 1px var(--gray-150) solid !important;
-    }
-  }
-}
-.form-control.codx-textarea {
-  padding: 0;
-}
+
+// .form-control.codx-textarea {
+//   padding: 0;
+// }
+
 .btn-extend {
   span.btn {
     border-top-right-radius: 0 !important;
@@ -2233,11 +2228,23 @@ codx-calendar {
     font-size: 16px !important;
   }
 }
+
+
+
 .border{
-  border: 1px var(--gray-150) solid;
+  border-width: 1px!important;
 }
-.border.border-gray-200 {
-  border: 1px var(--gray-150) solid !important;
+.border-bottom{
+  border-bottom-width: 1px!important;
+}
+.border-top{
+  border-top-width: 1px!important;
+}
+.border-gray-200 {
+  border-color: var(--gray-200)!important;
+}
+.border-gray-150 {
+  border-color: var(--gray-150)!important;
 }
 .card.border {
   border: 1px var(--gray-150) solid !important;
@@ -2250,6 +2257,6 @@ codx-calendar {
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
-codx-view-list .e-listview .e-list-item{
-  border-bottom: 1px var(--gray-150) solid !important;
-}
+// codx-view-list .e-listview .e-list-item{
+//   border-bottom: 1px var(--gray-150) solid !important;
+// }
