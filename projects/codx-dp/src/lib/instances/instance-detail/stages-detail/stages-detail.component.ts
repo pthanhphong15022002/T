@@ -84,6 +84,7 @@ export class StagesDetailComponent implements OnInit {
   comment: string;
   listTypeTask = [];
   //nvthuan
+  isStart = false;
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
   progressOld = 0;
@@ -567,6 +568,7 @@ export class StagesDetailComponent implements OnInit {
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
+    this.isStart = step?.endDate && step?.startDate ? true : false;
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
