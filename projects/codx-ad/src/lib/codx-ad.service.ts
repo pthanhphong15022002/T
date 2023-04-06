@@ -219,13 +219,13 @@ export class CodxAdService {
     );
   }
 
-  getListValidOrderForModules(lstTNMD) {
+  getListValidOrderForModules(lstAD_UserRoles, userID) {
     return this.api.execSv(
       'Tenant',
       'ERM.Business.Tenant',
       'TenantModulesBusiness',
       'GetListValidRecIDAsync',
-      [lstTNMD]
+      [lstAD_UserRoles, userID]
     );
   }
 

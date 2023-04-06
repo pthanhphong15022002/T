@@ -218,69 +218,70 @@ export class AddApproversComponent extends UIComponent {
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
 
-    if (this.members?.length > 0) {
-      let lstMemID = [];
-      this.members?.forEach((mem) => {
-        mem.groupID = this.master.groupID;
-        lstMemID.push(mem.memberID);
-      });
-      //co phan quyen
+    // if (this.members?.length > 0) {
+    //   let lstMemID = [];
+    //   this.members?.forEach((mem) => {
+    //     mem.groupID = this.master.groupID;
+    //     lstMemID.push(mem.memberID);
+    //   });
+    //   //co phan quyen
 
-      if (groupType == '3') {
-        if (this.lstChangeFunc.length != 0) {
-          this.adService
-            .getListValidOrderForModules(this.lstChangeFunc)
-            .subscribe((lstTNMDs: tmpTNMD[]) => {
-              this.lstChangeFunc = lstTNMDs;
-              if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                let lstErrorName = [];
-                lstTNMDs.forEach((md) => {
-                  if (md.isError) {
-                    lstErrorName.push(md.moduleName);
-                  }
-                });
-                this.notiService.notifyCode(
-                  'AD017',
-                  null,
-                  lstErrorName.join(';')
-                );
-                this.dialog.dataService.hasSaved = true;
-              } else {
-                this.saveMember(groupType);
-              }
-            });
-        } else {
-          this.saveMember(groupType);
-        }
-        // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
-        //   if (res != null) {
-        //     this.notiService.notifyCode('AD022', null, res);
-        //   } else {
-        //     if (this.lstChangeFunc.length != 0) {
-        //       this.adService
-        //         .getListValidOrderForModules(
-        //           this.lstChangeFunc,
-        //           this.members?.length
-        //         )
-        //         .subscribe((lstTNMDs: tmpTNMD[]) => {
-        //           this.lstChangeFunc = lstTNMDs;
-        //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-        //             this.notiService.notifyCode('AD017');
-        //           } else {
-        //             this.saveMember(groupType);
-        //           }
-        //         });
-        //     } else {
-        //       this.saveMember(groupType);
-        //     }
-        //   }
-        // });
-      } else {
-        this.saveMember(groupType);
-      }
-    } else {
-      this.saveMember(groupType);
-    }
+    //   if (groupType == '3') {
+    //     if (this.lstChangeFunc.length != 0) {
+    //       this.adService
+    //         .getListValidOrderForModules(this.lstChangeFunc)
+    //         .subscribe((lstTNMDs: tmpTNMD[]) => {
+    //           this.lstChangeFunc = lstTNMDs;
+    //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+    //             let lstErrorName = [];
+    //             lstTNMDs.forEach((md) => {
+    //               if (md.isError) {
+    //                 lstErrorName.push(md.moduleName);
+    //               }
+    //             });
+    //             this.notiService.notifyCode(
+    //               'AD017',
+    //               null,
+    //               lstErrorName.join(';')
+    //             );
+    //             this.dialog.dataService.hasSaved = true;
+    //           } else {
+    //             this.saveMember(groupType);
+    //           }
+    //         });
+    //     } else {
+    //       this.saveMember(groupType);
+    //     }
+    //     // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
+    //     //   if (res != null) {
+    //     //     this.notiService.notifyCode('AD022', null, res);
+    //     //   } else {
+    //     //     if (this.lstChangeFunc.length != 0) {
+    //     //       this.adService
+    //     //         .getListValidOrderForModules(
+    //     //           this.lstChangeFunc,
+    //     //           this.members?.length
+    //     //         )
+    //     //         .subscribe((lstTNMDs: tmpTNMD[]) => {
+    //     //           this.lstChangeFunc = lstTNMDs;
+    //     //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+    //     //             this.notiService.notifyCode('AD017');
+    //     //           } else {
+    //     //             this.saveMember(groupType);
+    //     //           }
+    //     //         });
+    //     //     } else {
+    //     //       this.saveMember(groupType);
+    //     //     }
+    //     //   }
+    //     // });
+    //   } else {
+    //     this.saveMember(groupType);
+    //   }
+    // }
+    //  else {
+    // }
+    this.saveMember(groupType);
   }
 
   beforeSave(opt: RequestOption) {

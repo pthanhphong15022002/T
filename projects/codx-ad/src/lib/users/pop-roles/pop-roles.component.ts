@@ -52,7 +52,7 @@ export class PopRolesComponent implements OnInit {
   isCheck = true;
   checkRoleIDNull = false;
   userID: any;
-  lstChangeFunc: tmpTNMD[] = [];
+  // lstChangeFunc: tmpTNMD[] = [];
   quantity = 1;
   isUserGroup = false;
   user: UserModel;
@@ -279,28 +279,10 @@ export class PopRolesComponent implements OnInit {
       !this.ermSysTenant.includes(this.user.tenant)
     ) {
       if (this.isUserGroup) {
-        this.onSave(this.lstChangeFunc);
-
-        // this.dialogSecond.close([this.listChooseRole, this.lstChangeFunc]);
+        this.onSave();
       } else {
-        let lstNeedValidateRoles = this.listChooseRole.filter((chooseRole) => {
-          let tmp = this.lstAddedRoles.find(
-            (addedRole) =>
-              addedRole.moduleSales == chooseRole.moduleSales &&
-              addedRole.recIDofRole == chooseRole.recIDofRole
-          );
-          return tmp ? null : chooseRole;
-        });
-
-        lstNeedValidateRoles.forEach((role) => {
-          let tmp: tmpTNMD = new tmpTNMD();
-          tmp.moduleName = role.customName;
-          tmp.moduleSales = role.moduleSales;
-          this.lstChangeFunc.push(tmp);
-        });
-
         this.adService
-          .getListValidOrderForModules(this.lstChangeFunc)
+          .getListValidOrderForModules(this.listChooseRole, this.userID)
           .subscribe((lstTNMDs: tmpTNMD[]) => {
             let errorMD = [];
             lstTNMDs?.filter((tnmd) => {
@@ -311,16 +293,16 @@ export class PopRolesComponent implements OnInit {
             if (lstTNMDs == null || errorMD.length > 0) {
               this.notiService.notifyCode('AD017', null, errorMD.join(', '));
             } else {
-              this.onSave(lstTNMDs);
+              this.onSave();
             }
           });
       }
     } else {
-      this.onSave([]);
+      this.onSave();
     }
   }
 
-  onSave(lstTNMDs: tmpTNMD[]) {
+  onSave() {
     this.checkRoleIDNull = false;
     if (this.listChooseRole) {
       this.listChooseRole.forEach((res) => {
@@ -344,11 +326,11 @@ export class PopRolesComponent implements OnInit {
       if (this.CheckListUserRoles() === this.optionFirst) {
         this.notiService.notifyCode('AD006');
       } else if (this.CheckListUserRoles() === this.optionSecond) {
-        this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
+        this.dialogSecond.close([this.listChooseRole]);
         this.changeDec.detectChanges();
       } else {
         // this.notiService.notifyCode('Không có gì thay đổi');
-        this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
+        this.dialogSecond.close([this.listChooseRole]);
       }
     }
   }

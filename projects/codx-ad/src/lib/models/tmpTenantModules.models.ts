@@ -7,5 +7,7 @@ export class tmpTNMD {
   moduleName: string;
   startDate?: Date;
   endDate?: Date;
+  ssed: number = 1;
   orderModuleRecID;
+  isAddNew: boolean = false;
 }
