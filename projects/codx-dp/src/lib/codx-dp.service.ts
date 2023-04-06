@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class CodxDpService {
   dataProcess = new BehaviorSubject<any>(null);
+  
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -534,6 +535,13 @@ export class CodxDpService {
       'ProcessesBusiness',
       'GetProcessByProcessIDAsync',
       processID
+    );
+  }
+
+  getAdminRoleDP(userID){
+    return this.api.exec<any>(
+      'AD', 'UserRolesBusiness', 'CheckUserRolesAsync',
+      [userID, 'DP']
     );
   }
 }

@@ -206,11 +206,8 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <!-- <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule == '1'">
-              </codx-input> -->
               <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+                (valueChange)="valueChange($event)" [disabled]="journal?.voucherNoRule == '1'">
               </codx-input>
             </div>
           </div>
@@ -445,7 +442,7 @@
       </div>
       <div class="d-flex justify-content-end me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-light-primary">
+          <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
             <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
               [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
           </button>

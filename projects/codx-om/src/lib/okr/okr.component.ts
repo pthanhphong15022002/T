@@ -4,40 +4,27 @@ import { OMCONST } from './../codx-om.constant';
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Injector,
-  Input,
-  Output,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  ButtonModel,
   UIComponent,
   ViewModel,
   ViewType,
   AuthStore,
-  CallFuncService,
   DialogModel,
   DataRequest,
-  SidebarModel,
   FormModel,
-  AuthService,
   Util,
   NotificationsService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
-import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { OkrAddComponent } from './okr-add/okr-add.component';
 import { ActivatedRoute } from '@angular/router';
-import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
-const _isAdd = true;
-const _isSubKR = true;
-const _notSubKR = false;
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -125,6 +112,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   curOrgName: any;
   periodName: any;
   orgUnitTree: any[];
+  refIDMeeting:any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -157,10 +145,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    
     this.getCacheData();
     this.getOKRModel();
     this.funcIDChanged();
     this.formModelChanged();
+    this.createCOObject();
     this.setTitle();
     if (
       this.periodID != null &&
@@ -290,6 +280,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+  //Tạo thông tin cho CO
+  createCOObject(){
+    this.refIDMeeting = {
+      projectID: this.dataOKRPlans?.recID ? this.dataOKRPlans?.recID : '',
+    };
+  }
   //Lấy OKR Plan
   getOKRPlanForComponent(event: any) {
     if (event) {
@@ -318,6 +314,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.dataOKRPlans = item;
             this.planNull = false;
             this.isAfterRender = true;
+            this.createCOObject();
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((item1: any) => {
@@ -359,8 +356,7 @@ getOrgTreeOKR() {
           break;
       }
       this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,tempOrgID).subscribe((listOrg: any) => {
-        if (listOrg) {          
-
+        if (listOrg) { 
             this.orgUnitTree=[listOrg];
         }
       });
@@ -450,6 +446,20 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.SharesPlanPER:
         this.sharePlan(evt?.text);
         break;
+    }
+  }
+  changeDataMF(evt:any){
+    if(evt !=null){
+      if(this.dataOKR.length<1 || this.dataOKR==null){
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
   //Hàm click

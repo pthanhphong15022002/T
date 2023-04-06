@@ -51,6 +51,9 @@ export class InstanceDetailComponent implements OnInit {
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
+  @Input() moreFunc :any;
+  @Input() stepStart :any;
+  @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -108,6 +111,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
 
+
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -153,8 +157,10 @@ export class InstanceDetailComponent implements OnInit {
         // this.rollHeight();
       }
     }
+    if(changes['stepStart']){
+      this.getStageByStep(this.stepStart);
+    }
   }
-
   GetStepsByInstanceIDAsync(insID, proccessID) {
     var data = [insID, proccessID, this.instanceStatus];
     //   var data = [insID];
@@ -475,5 +481,9 @@ export class InstanceDetailComponent implements OnInit {
     this.viewModelDetail = e
     this.isSaving = false;
     this.currentElmID = null;
+  }
+
+  startInstances(){
+    this.clickStartInstances.emit(true)
   }
 }

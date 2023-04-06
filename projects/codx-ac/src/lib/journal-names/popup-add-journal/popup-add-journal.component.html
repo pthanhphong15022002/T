@@ -772,6 +772,7 @@
             field="approver"
             refValue="AC068"
             [showInput]="false"
+            [disabled]="!journal.approval"
             (valueChange)="handleInputChange($event)"
           >
           </codx-input>
