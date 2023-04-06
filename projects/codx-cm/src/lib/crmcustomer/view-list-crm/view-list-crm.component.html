@@ -98,9 +98,9 @@
       <div class="col-4" style="margin-left: 15px">
         <div>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-            class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
+            class="icon-contact_phone icon-18 text-gray-700 me-2">{{data?.contacts?.length}}</span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
-            class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
+            class="icon-format_list_numbered icon-18 text-gray-700 me-2">{{( data?.tasks != null && data?.tasks?.length > 0 ) ? data?.tasks?.length : 0}}  </span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
             class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
