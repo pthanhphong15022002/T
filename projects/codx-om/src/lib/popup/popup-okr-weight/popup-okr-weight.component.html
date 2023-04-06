@@ -28,7 +28,6 @@
           <th scope="col" class="w-150px text-center">
             <codx-label default="Tiến độ theo trọng số" name="lblProgressByWeight"></codx-label>
           </th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -52,33 +51,42 @@
               [value]="child?.weight ">
             </codx-inplace>
           </td>
-  
-          <td class="text-center">
-            <codx-inplace [type]="'text'" emptyText="" format="0.00" [disabled]="true"
-              cssClass=" text-center w-100 " class="text-center w-100" [value]="child?.progress">
-            </codx-inplace>
-          </td>
-          <td class="text-center">
-            <codx-inplace [type]="'text'" emptyText="" format="0.00" cssClass=" text-center w-100 "
-              class="text-center w-100" [value]="child?.progress*child?.weight" [disabled]="true">
-            </codx-inplace>
-            
-          </td>
-          <td class="aqua">
-            <div class="min-h-table d-flex align-items-center">
-              <span *ngIf="child?.edited==true" class="icon-i-info-circle text-danger"></span>
+          <td>
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <span *ngIf="child?.progress!=0"
+                [innerHTML]="child?.progress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+              <span *ngIf="child?.progress==0" [innerHTML]="child?.progress"></span>
             </div>
           </td>
+          
+
+          <td class="text-center">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <span *ngIf="child?.progress*child?.weight!=0"
+                [innerHTML]="child?.progress*child?.weight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+              <span *ngIf="child?.progress*child?.weight==0" [innerHTML]="child?.progress*child?.weight"></span>
+            </div>
+          </td>         
+
+            <div class="min-h-table d-flex align-items-center w-50px">
+              <span *ngIf="child?.edited==true" class="icon-i-info-circle text-danger"></span>
+            </div>
   
         </tr>
         <tr>
-          <td colspan="3" class="text-center">
+          <td  class="text-center">
             <codx-label default="Tổng cộng" name="lbl" class="fs-5"></codx-label>
           </td>
-          <td class="text-center">
-            <div class="fs-4 fw-bold text-primary">{{totalProgress}}%</div>
+          <td class="d-flex flex-row justify-content-center align-items-center">
+            <span class="fs-3 fw-bold "  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
           </td>
-          <td></td>
+          <td class="text-center">
+          </td>
+          <td class="d-flex flex-row justify-content-center align-items-center">
+            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress!=0"
+              [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress==0" [innerHTML]="totalProgress"></span>
+          </td>
         </tr>
       </tbody>
     </table>

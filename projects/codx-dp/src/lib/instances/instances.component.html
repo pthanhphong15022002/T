@@ -173,7 +173,8 @@
         [moreFunc]="moreFuncStart"
         (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
-        [stepStart]="listInstanceStep"
+        [reloadData]="reloadData"
+        [listSteps]="listInstanceStep"
       >
       </codx-instance-detail>
     </ng-template>
@@ -216,7 +217,7 @@
       >
       </codx-vll>
     </div> -->
-    <div class="d-flex justify-content-end">
+    <!-- <div class="d-flex justify-content-end">
       <span
         #pCrDT="ngbPopover"
         [ngbPopover]="popperCreatedOn"
@@ -240,7 +241,7 @@
           "
         ></span>
       </span>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 
