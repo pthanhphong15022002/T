@@ -159,8 +159,7 @@ export class InstancesComponent
   listInstanceStep = [];
   reloadData = false;
   popup: DialogRef;
-  
-  
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -764,7 +763,6 @@ export class InstancesComponent
               break;
           }
         });
-       
       } else {
         e.forEach((mf) => {
           switch (mf.functionID) {
@@ -845,7 +843,7 @@ export class InstancesComponent
     option.IsFull = true;
     option.zIndex = 999;
     this.viewType = 'p';
-     this.popup = this.callFunc.openForm(
+    this.popup = this.callFunc.openForm(
       this.popDetail,
       '',
       Util.getViewPort().width,
@@ -855,9 +853,7 @@ export class InstancesComponent
       '',
       option
     );
-    this.popup.closed.subscribe((e) => {
-      
-    });
+    this.popup.closed.subscribe((e) => {});
   }
 
   dropInstance(data) {
@@ -1391,6 +1387,16 @@ export class InstancesComponent
       [gridModel, this.dataSelected.recID],
       null
     );
+    // let datas = '';
+    // let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
+    // this.api
+    //   .exec<any>('ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
+    //     datas,
+    //     id,
+    //   ])
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {

@@ -71,7 +71,7 @@ export class InstanceDetailComponent implements OnInit {
   listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
-  instance: any;
+
   listTypeTask = [];
   //gantchat
   ganttDs = [];
