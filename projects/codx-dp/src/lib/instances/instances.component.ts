@@ -650,6 +650,13 @@ export class InstancesComponent
         this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+        
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.instance = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -695,7 +702,6 @@ export class InstancesComponent
   }
 
   //#popup roles
-  i = 0;
   changeDataMF(e, data) {
     if (e != null && data != null && data.status == '2') {
       e.forEach((res) => {
@@ -776,6 +782,8 @@ export class InstancesComponent
     } else {
       e.forEach((res) => {
         switch (res.functionID) {
+          case 'DP21':
+            break;
           case 'DP09':
           case 'DP10':
           case 'DP02':

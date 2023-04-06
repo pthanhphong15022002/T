@@ -744,6 +744,7 @@ export class StagesDetailComponent implements OnInit {
       //check công việc liên kết hoàn thành trước
       let check = false;
       let taskName = '';
+      this.actualEndMax =this.step?.actualStart;
       let listID = data?.parentID.split(';');
       listID?.forEach((item) => {
         let taskFind = this.taskList?.find((task) => task.refID == item);
@@ -1144,33 +1145,6 @@ export class StagesDetailComponent implements OnInit {
       data['actualEnd'] = null;
     }
     this.disabledProgressInput = event?.data;
-  }
-
-  async changeDataMFStep(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
-          case 'DP07':
-          case 'DP08':
-          case 'DP12':
-          case 'DP13':
-            res.disabled = true;
-            break;
-        }
-      });
-    }
-  }
-  clickMFStep(e, data) {
-    if (e != null) {
-      switch (e.functionID) {
-        case 'DP20':
-          this.openUpdateProgress(data);
-          break;
-      }
-    }
   }
 
   async changeDataMF(e, type, data = null) {
