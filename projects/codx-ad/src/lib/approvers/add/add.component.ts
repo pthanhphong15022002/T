@@ -51,6 +51,7 @@ export class AddApproversComponent extends UIComponent {
   dialogRoles: DialogRef;
   //#endregion
   date = new Date();
+  showPopup: boolean = false;
   constructor(
     private inject: Injector,
     // private api: ApiHttpService,
@@ -87,7 +88,6 @@ export class AddApproversComponent extends UIComponent {
         mem.isRemoved = false;
       });
       this.members = this.master?.members;
-      console.log('details', this.members);
 
       this.detailIDs = this.master.memberIDs;
     }
@@ -102,9 +102,6 @@ export class AddApproversComponent extends UIComponent {
           });
         }
       }
-      // if (this.isTemp) {
-      //   this.dialog.close(this.master);
-      // }
       this.dialog.dataService.clear();
     });
   }
@@ -124,7 +121,10 @@ export class AddApproversComponent extends UIComponent {
   //#endregion
 
   //#region event
+  width = 720;
+  height = window.innerHeight;
   eventApply(e) {
+    this.showPopup = !this.showPopup;
     if (!e.data || e.data.length == 0) return;
     else {
       e?.data.dataSelected.forEach((modelShare) => {
@@ -198,12 +198,12 @@ export class AddApproversComponent extends UIComponent {
           // this.dialog.dataService.update(this.master).subscribe((res2) => {
           this.dialog.close(this.master);
           this.imageUpload
-          .updateFileDirectReload(this.master.recID)
-          .subscribe((result) => {
-            if (result) {
-              console.log('res', result);
-            }
-          });
+            .updateFileDirectReload(this.master.recID)
+            .subscribe((result) => {
+              if (result) {
+                console.log('res', result);
+              }
+            });
           // });
         } else {
           this.dialog.dataService.hasSaved = true;
@@ -217,63 +217,71 @@ export class AddApproversComponent extends UIComponent {
 
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
-   
-    if (this.members?.length > 0) {
-      let lstMemID = [];
-      this.members?.forEach((mem) => {
-        mem.groupID = this.master.groupID;
-        lstMemID.push(mem.memberID);
-      });
-      //co phan quyen
 
-      if (groupType == '3') {
-        if (this.lstChangeFunc.length != 0) {
-          this.adService
-            .getListValidOrderForModules(
-              this.lstChangeFunc,
-              this.members?.length
-            )
-            .subscribe((lstTNMDs: tmpTNMD[]) => {
-              this.lstChangeFunc = lstTNMDs;
-              if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-                this.notiService.notifyCode('AD017');
-                this.dialog.dataService.hasSaved = true;
-              } else {
-                this.saveMember(groupType);
-              }
-            });
-        } else {
-          this.saveMember(groupType);
-        }
-        // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
-        //   if (res != null) {
-        //     this.notiService.notifyCode('AD022', null, res);
-        //   } else {
-        //     if (this.lstChangeFunc.length != 0) {
-        //       this.adService
-        //         .getListValidOrderForModules(
-        //           this.lstChangeFunc,
-        //           this.members?.length
-        //         )
-        //         .subscribe((lstTNMDs: tmpTNMD[]) => {
-        //           this.lstChangeFunc = lstTNMDs;
-        //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-        //             this.notiService.notifyCode('AD017');
-        //           } else {
-        //             this.saveMember(groupType);
-        //           }
-        //         });
-        //     } else {
-        //       this.saveMember(groupType);
-        //     }
-        //   }
-        // });
-      } else {
-        this.saveMember(groupType);
-      }
-    } else {
-      this.saveMember(groupType);
-    }
+    // if (this.members?.length > 0) {
+    //   let lstMemID = [];
+    //   this.members?.forEach((mem) => {
+    //     mem.groupID = this.master.groupID;
+    //     lstMemID.push(mem.memberID);
+    //   });
+    //   //co phan quyen
+
+    //   if (groupType == '3') {
+    //     if (this.lstChangeFunc.length != 0) {
+    //       this.adService
+    //         .getListValidOrderForModules(this.lstChangeFunc)
+    //         .subscribe((lstTNMDs: tmpTNMD[]) => {
+    //           this.lstChangeFunc = lstTNMDs;
+    //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+    //             let lstErrorName = [];
+    //             lstTNMDs.forEach((md) => {
+    //               if (md.isError) {
+    //                 lstErrorName.push(md.moduleName);
+    //               }
+    //             });
+    //             this.notiService.notifyCode(
+    //               'AD017',
+    //               null,
+    //               lstErrorName.join(';')
+    //             );
+    //             this.dialog.dataService.hasSaved = true;
+    //           } else {
+    //             this.saveMember(groupType);
+    //           }
+    //         });
+    //     } else {
+    //       this.saveMember(groupType);
+    //     }
+    //     // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
+    //     //   if (res != null) {
+    //     //     this.notiService.notifyCode('AD022', null, res);
+    //     //   } else {
+    //     //     if (this.lstChangeFunc.length != 0) {
+    //     //       this.adService
+    //     //         .getListValidOrderForModules(
+    //     //           this.lstChangeFunc,
+    //     //           this.members?.length
+    //     //         )
+    //     //         .subscribe((lstTNMDs: tmpTNMD[]) => {
+    //     //           this.lstChangeFunc = lstTNMDs;
+    //     //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+    //     //             this.notiService.notifyCode('AD017');
+    //     //           } else {
+    //     //             this.saveMember(groupType);
+    //     //           }
+    //     //         });
+    //     //     } else {
+    //     //       this.saveMember(groupType);
+    //     //     }
+    //     //   }
+    //     // });
+    //   } else {
+    //     this.saveMember(groupType);
+    //   }
+    // }
+    //  else {
+    // }
+    this.saveMember(groupType);
   }
 
   beforeSave(opt: RequestOption) {
@@ -313,5 +321,10 @@ export class AddApproversComponent extends UIComponent {
       this.lstRoles = e?.event[0] ?? [];
       this.lstChangeFunc = e?.event[1] ?? [];
     });
+  }
+
+  clickAddMemeber() {
+    this.showPopup = !this.showPopup;
+    this.changeDetectorRef.detectChanges();
   }
 }

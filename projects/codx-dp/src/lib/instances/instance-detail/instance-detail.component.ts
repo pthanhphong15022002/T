@@ -49,11 +49,12 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
   @Input() viewType = 'd';
-  @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
+  @Input() reloadData = false;
   @Input() stepStart: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
@@ -89,6 +90,7 @@ export class InstanceDetailComponent implements OnInit {
   dialogPopupDetail: DialogRef;
   currentElmID: any;
   frmModelInstancesTask: FormModel;
+  moreFuncCrr: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -157,26 +159,24 @@ export class InstanceDetailComponent implements OnInit {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.dataSelect = changes['dataSelect'].currentValue;
-        // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
         this.instanceStatus = this.dataSelect.status;
-        this.instance = this.dataSelect;
-        // sort theo by step
-        this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
-        // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+        this.GetStepsByInstanceIDAsync();
         this.getDataGanttChart(
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-        // this.rollHeight();
       }
-    }
-    if (changes['stepStart']) {
-      this.getStageByStep(this.stepStart);
+    } else if (changes['reloadData'] && this.reloadData) {
+      this.instanceStatus = this.dataSelect.status;
+      // if (this.moreFuncCrr)changes['dataSelect'].currentValue = this.dataSelect
+      // this.viewDetail.ngOnChanges(changes)
+      this.getStageByStep(this.listSteps);
+      this.changeDetec.detectChanges();
     }
   }
-  GetStepsByInstanceIDAsync(insID, proccessID) {
-    var data = [insID, proccessID, this.instanceStatus];
-    //   var data = [insID];
+
+  GetStepsByInstanceIDAsync() {
+    var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
@@ -296,6 +296,8 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
+    if (this.viewsCurrent == 'k-')
+      this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,
@@ -478,7 +480,7 @@ export class InstanceDetailComponent implements OnInit {
   saveAssign(e) {
     if (e) {
       this.loadTree(this.listSteps);
-      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+      this.GetStepsByInstanceIDAsync();
     }
   }
   showColumnControl(stepID) {

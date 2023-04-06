@@ -267,7 +267,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         if (this.indexImage < 0) {
             this.indexImage = this.totalImagens - 1;
         }
-        this.onNext.emit(this.images[this.indexImage]);
+        this.onPrevious.emit(this.images[this.indexImage]);
         this.showImage();
     }
 

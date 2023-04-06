@@ -1,88 +1,90 @@
-<div class="d-flex align-items-center justify-content-between mt-1 mb-2">
-    <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(data)">
-        <ng-container *ngIf="data.totalVote > 0">
-            <div class="flex align-items-center">
-                <div *ngFor="let votedType of data.listVoteType">
-                    <a *ngIf="dVll[votedType]?.icon">
-                        <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
-                            style="width: 15px; height: 15x;">
-                    </a>
+<ng-container *ngIf="data">
+    <div class="d-flex align-items-center justify-content-between mt-1 mb-2">
+        <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(data)">
+            <ng-container *ngIf="data.totalVote > 0">
+                <div class="flex align-items-center">
+                    <div *ngFor="let votedType of data.listVoteType">
+                        <a *ngIf="dVll[votedType]?.icon">
+                            <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
+                                style="width: 15px; height: 15x;">
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <span class="ms-2 fs-6">{{data.totalVote}}</span>
-        </ng-container>
+                <span class="ms-2 fs-6">{{data.totalVote}}</span>
+            </ng-container>
+        </div>
+        <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments()">
+            <ng-container *ngIf="data.totalComment > 0">
+                <span>{{data.totalComment}}</span>
+                <span class="ms-1">
+                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                </span>
+            </ng-container>
+        </div>
     </div>
-    <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments()">
-        <ng-container *ngIf="data.totalComment > 0">
-            <span>{{data.totalComment}}</span>
-            <span class="ms-1">
-                <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
-            </span>
-        </ng-container>
-    </div>
-</div>
-<div class="row m-0 btn-comment py-2 border-top border-bottom">
-    <div class="col-6 p-0">
-        <div class="btn-like btn-feed delay-500">
-            <div *ngIf="!data.myVoted;else myVoted">
-                <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <span class="fw-bold text-dark">
-                        <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex mod icon-like">
-                <ng-container *ngFor="let item of vllL1480">
-                    <a class="mod-icon" (click)="votePost(data, item.value)">
-                        <img src="assets/themes/wp/default/img/{{item.icon}}"></a>
-                </ng-container>
-            </div>
-            <ng-template #myVoted>
-                <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img *ngIf="dVll[data.myVoteType]?.icon"
-                        src="assets/themes/wp/default/img/{{dVll[data.myVoteType]?.icon}}"
-                        style="width: 18px; height: 18px">
-                    <div>
-                        <span class="fw-bold ms-2" [style.color]="dVll[data.myVoteType]?.textColor">
-                            {{dVll[data.myVoteType]?.text}}
+    <div class="row m-0 btn-comment py-2 border-top border-bottom">
+        <div class="col-6 p-0">
+            <div class="btn-like btn-feed delay-500">
+                <div *ngIf="!data.myVoted;else myVoted">
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                        <span class="fw-bold text-dark">
+                            <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                         </span>
                     </div>
                 </div>
-            </ng-template>
+                <div class="d-flex mod icon-like">
+                    <ng-container *ngFor="let item of vllL1480">
+                        <a class="mod-icon" (click)="votePost(data, item.value)">
+                            <img src="assets/themes/wp/default/img/{{item.icon}}"></a>
+                    </ng-container>
+                </div>
+                <ng-template #myVoted>
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                        <img *ngIf="dVll[data.myVoteType]?.icon"
+                            src="assets/themes/wp/default/img/{{dVll[data.myVoteType]?.icon}}"
+                            style="width: 18px; height: 18px">
+                        <div>
+                            <span class="fw-bold ms-2" [style.color]="dVll[data.myVoteType]?.textColor">
+                                {{dVll[data.myVoteType]?.text}}
+                            </span>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
         </div>
-    </div>
-    <div class="col-6 p-0">
-        <div class="btn-feed" (click)="showComments()">
-            <div class="d-flex align-items-center justify-content-center">
-                <span class="text-dark fw-bold">
-                    <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
-                </span>
+        <div class="col-6 p-0">
+            <div class="btn-feed" (click)="showComments()">
+                <div class="d-flex align-items-center justify-content-center">
+                    <span class="text-dark fw-bold">
+                        <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="isHiden border-top" [class.isShow]="data.isShowComment">
-    <codx-comments 
-        [parent]="data"
-        [refID]="data.recID"
-        [new]="true" 
-        [funcID]="funcID" 
-        [formModel]="formModel" 
-        (evtSendComment)="sendComment($event)">
-    </codx-comments>
-    <ng-container *ngIf="data.listComment">
-        <ng-container *ngFor="let cm of data.listComment">
-            <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
+    <div class="isHiden border-top" [class.isShow]="data.isShowComment">
+        <codx-comments 
+            [parent]="data"
+            [refID]="data.recID"
+            [new]="true" 
+            [funcID]="funcID" 
+            [formModel]="formModel" 
+            (evtSendComment)="sendComment($event)">
+        </codx-comments>
+        <ng-container *ngIf="data.listComment">
+            <ng-container *ngFor="let cm of data.listComment">
+                <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
+            </ng-container>
         </ng-container>
-    </ng-container>
-    <ng-container *ngIf="pageIndex < totalPage">
-        <div class="ms-16">
-            <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(true)">
-                <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
-            </span>
-        </div>
-    </ng-container>
-</div>
+        <ng-container *ngIf="pageIndex < totalPage">
+            <div class="ms-16">
+                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(true)">
+                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+                </span>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>
 <!-- lv1 -->
 <ng-template #cmt1 let-comment1>
     <div class="c1" [attr.dt]="setDicData(comment1)" id="{{comment1.recID}}">
