@@ -87,7 +87,7 @@
     [format]="formatDate"
     [placeholder]="customField.note || ''"
     [crrValue]="customField.dataValue"
-    (controlBlur)="controlBlur($event)"
+    (valueChange)="valueChangeTime($event)"
     [disabled]="disable"
   >
   </codx-input>

@@ -68,7 +68,18 @@
   >
   </codx-temp-full>
   <ng-template #descTmp>
-    <div class="flex-body">
+    <div class="flex-body d-flex justify-content-between mt-2">
+      <div>
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
+        </codx-vll>
+      </div>
       <div class="d-flex justify-content-end">
         <span
           #pCr="ngbPopover"
@@ -99,7 +110,7 @@
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <div class="d-flex justify-content-between align-items-center mt-1">
+    <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <!-- <ng-container>
         <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data.status" [showText]="true" [showBgColor]="true"
@@ -149,6 +160,7 @@
   <codx-form [body]="detailPopupClick" [dialog]="dialog">
     <ng-template #detailPopupClick>
       <codx-instance-detail
+        #detailViewInstance
         [dataService]="view.dataService"
         [formModel]="view.formModel"
         [dataSelect]="dataSelected"
@@ -158,7 +170,10 @@
         [listCbxProccess]="listProccessCbx"
         [viewModelDetail]="this.process.viewModeDetail"
         [tabInstances]="tabInstances"
+        [moreFunc]="moreFuncStart"
+        (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
+        [stepStart]="listInstanceStep"
       >
       </codx-instance-detail>
     </ng-template>
@@ -189,7 +204,18 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div class="flex-body">
+  <div class="flex-body d-flex justify-content-between mt-2">
+    <div>
+      <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+    </div>
     <div class="d-flex justify-content-end">
       <span
         #pCrDT="ngbPopover"
@@ -290,6 +316,8 @@
     [listCbxProccess]="listProccessCbx"
     [viewModelDetail]="this.process.viewModeDetail"
     [tabInstances]="tabInstances"
+    [moreFunc]="moreFuncStart"
+    (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
   >
   </codx-instance-detail>
@@ -316,16 +344,57 @@
   </span>
 </ng-template>
 <ng-template #footerButton>
-  <codx-dropdown-select
-    [cssClass]="'rounded-pill border-1'"
-    cssPopup="h-350px w-300px"
-    [emptyText]="grvSetup['Status']?.headerText"
-    [isMulti]="grvSetup.Status?.multiSelect"
-    type="valuelist"
-    [field]="'Status'"
-    [refValue]="grvSetup.Status?.referedValue"
-    (valueChange)="valueChangeFilterStatus($event)"
-  ></codx-dropdown-select>
+  <span class="mx-1">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [emptyText]="grvSetup['Status']?.headerText"
+      [isMulti]="grvSetup.Status?.multiSelect"
+      type="valuelist"
+      [field]="'Status'"
+      [refValue]="grvSetup.Status?.referedValue"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="valuelist"
+      [emptyText]="grvSetup.StepID.headerText"
+      field="StepID"
+      [dataSource]="stepsResource"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="combobox"
+      [emptyText]="grvSetup.Owner.headerText"
+      field="Owner"
+      [refValue]="'Users'"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+  <!--<span class="mx-1">
+    <codx-dropdown-select
+      *ngIf="process"
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="false"
+      type="valuelist"
+      [emptyText]="grvSetup.Permissions.headerText"
+      field="Permissions"
+      [dataSource]="stepsResource"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span> -->
 
   <!-- <codx-dropdown-select
     (valueChange)="valueToolbarChange($event, item.fieldName)"
@@ -341,16 +410,4 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
- 
-  <codx-dropdown-select
-    *ngIf="process"
-    [cssClass]="'rounded-pill border-1'"
-    cssPopup="h-350px w-300px"
-    [isMulti]="false"
-    type="valuelist"
-    [emptyText]="grvSetup.StepID.headerText"
-    field="StepID"
-    [dataSource]="stepsResource"
-    (valueChange)="valueChangFilterStepID($event)"
-  ></codx-dropdown-select>
 </ng-template>

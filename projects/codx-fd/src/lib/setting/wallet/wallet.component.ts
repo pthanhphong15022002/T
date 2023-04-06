@@ -40,6 +40,32 @@ export class WalletComponent extends UIComponent implements OnInit {
   funcID: any;
   functionList: any;
 
+  transType: any;
+
+  title: any;
+  description: any;
+  field: any;
+
+  quantitySettingValues: any;
+  titleSettingValues: any;
+  descriptionSettingValues: any;
+  fieldSettingValues: any;
+
+  quantityActiveCoins: any;
+  titleActiveCoins: any;
+  descriptionActiveCoins: any;
+  fieldActiveCoins: any;
+
+  quantityActiveCoCoins: any;
+  titleActiveCoCoins: any;
+  descriptionActiveCoCoins: any;
+  fieldActiveCoCoins: any;
+
+  quantityActiveMyKudos: any;
+  titleActiveMyKudos: any;
+  descriptionActiveMyKudos: any;
+  fieldActiveMyKudos: any;
+
   constructor(
     private at: ActivatedRoute,
     private location: Location,
@@ -103,10 +129,7 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
   }
 
-  changValueListPopup(e) {
-    this.objectUpdateCoin[e.field] = e.data;
-    this.fieldUpdateCoin = e.field;
-  }
+
 
   valueChangeVoucher(e) {
     if (e) {
@@ -167,30 +190,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   // handleTrueFalse(value) {
   //   return value == '1' ? true : false;
   // }
-
-  title: any;
-  description: any;
-  field: any;
-
-  quantitySettingValues: any;
-  titleSettingValues: any;
-  descriptionSettingValues: any;
-  fieldSettingValues: any;
-
-  quantityActiveCoins: any;
-  titleActiveCoins: any;
-  descriptionActiveCoins: any;
-  fieldActiveCoins: any;
-
-  quantityActiveCoCoins: any;
-  titleActiveCoCoins: any;
-  descriptionActiveCoCoins: any;
-  fieldActiveCoCoins: any;
-
-  quantityActiveMyKudos: any;
-  titleActiveMyKudos: any;
-  descriptionActiveMyKudos: any;
-  fieldActiveMyKudos: any;
 
   LoadDataNew() {
     this.api
@@ -270,6 +269,15 @@ export class WalletComponent extends UIComponent implements OnInit {
             'fieldValue'
           );
 
+          console.log('activeCocoins:', this.quantityActiveCoCoins.ActiveCoCoins);
+
+          if (this.quantityActiveCoCoins.ActiveCoCoins == '1') {
+            this.disableGroupFund = false;
+          } else {
+            this.disableGroupFund = true;
+          }
+
+
           //Transtype ActiveCoCoins
           let dataActiveMyKudos = res.msgBodyData[0][3];
           this.quantityActiveMyKudos = this.fdSV.convertListToObject(
@@ -292,6 +300,7 @@ export class WalletComponent extends UIComponent implements OnInit {
             'fieldName',
             'fieldValue'
           );
+          this.changedr.detectChanges();
         }
       });
   }
@@ -403,12 +412,18 @@ export class WalletComponent extends UIComponent implements OnInit {
 
   openFormChangeCoinWithType(content, typeContent, type) {
     this.fieldUpdateCoin = typeContent;
-    if (type == "1")
+    if (type == "1") {
       this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveCoins[this.fieldUpdateCoin];
-    else if (type == "2")
+      this.transType = "ActiveCoins";
+    }
+    else if (type == "2") {
       this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveCoCoins[this.fieldUpdateCoin];
-    else if (type == "3")
+      this.transType = "ActiveCoCoins";
+    }
+    else if (type == "3") {
       this.objectUpdateCoin[this.fieldUpdateCoin] = this.quantityActiveMyKudos[this.fieldUpdateCoin];
+      this.transType = "ActiveMyKudos";
+    }
 
     this.changedr.detectChanges();
     this.modalService.open(content, {
@@ -417,7 +432,6 @@ export class WalletComponent extends UIComponent implements OnInit {
       size: 'sm',
     });
   }
-
 
   valueChangeCoin(e) {
     if (e) {
@@ -451,9 +465,20 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  changValueListPopup(e) {
+    console.log('field:', e.field);
+    console.log('data:', e.data);
+
+    this.objectUpdateCoin[e.field] = e.data;
+    this.fieldUpdateCoin = e.field;
+
+    this.handleSaveParameterWithTransType('ActiveCoins');
+  }
+
   handleSaveParameterWithTransType(transType) {
     this.onSaveCMParameterWithTransType(this.objectUpdateCoin, transType);
   }
+
   onSaveCMParameterWithTransType(objectUpdate, transType) {
     this.api
       .callSv('SYS', 'ERM.Business.SYS', 'SettingValuesBusiness', 'SaveParamsOfPolicyAsync',
@@ -461,7 +486,12 @@ export class WalletComponent extends UIComponent implements OnInit {
           if (res && res.msgBodyData.length > 0) {
             if (res.msgBodyData[0] === true) {
               for (const property in objectUpdate) {
-                this.quantity[property] = objectUpdate[property];
+                if (transType == 'ActiveCoins')
+                  this.quantityActiveCoins[property] = objectUpdate[property];
+                else if (transType == 'ActiveCoCoins')
+                  this.quantityActiveCoCoins[property] = objectUpdate[property];
+                else if (transType == 'ActiveMyKudos')
+                  this.quantityActiveMyKudos[property] = objectUpdate[property];
               }
               this.changedr.detectChanges();
               this.objectUpdateCoin = {};

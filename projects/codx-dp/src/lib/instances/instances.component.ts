@@ -32,6 +32,7 @@ import {
   PageTitleService,
   LayoutService,
   CRUDService,
+  AuthStore,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -42,6 +43,7 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
+import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 
 @Component({
   selector: 'codx-instances',
@@ -67,7 +69,7 @@ export class InstancesComponent
   @Output() valueListID = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  moreFuncs: Array<ButtonModel> = [];
+
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -89,6 +91,7 @@ export class InstancesComponent
   instanceID: string;
   dialog: any;
   moreFunc: any;
+  moreFuncStart: any;
   instanceNo: string;
   listSteps = [];
   listStepInstances = [];
@@ -148,20 +151,25 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
-
+  user: any;
+  isAdminRoles = false;
+  listInstanceStep = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private layoutInstance: LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.user = this.authStore.get();
     //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
@@ -183,6 +191,7 @@ export class InstancesComponent
       .subscribe((grv) => {
         if (grv) {
           this.grvSetup = grv;
+          this.vllStatus = grv['Status'].referedValue ?? this.vllStatus;
         }
       });
     this.cache.valueList('DP034').subscribe((res) => {
@@ -200,10 +209,11 @@ export class InstancesComponent
     });
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.pageTitle.setSubTitle(f?.customName);
+      // if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
+           this.moreFuncStart = this.moreFuncInstance.filter(x=>x.functionID =='DP21')[0]
         }
       });
     });
@@ -285,11 +295,11 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          this.getSumDurationDayOfSteps(this.listStepsCbx);
+         // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //this.getPermissionProcess(this.processID);
-
+      this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -329,6 +339,14 @@ export class InstancesComponent
     console.log(dataColumns);
 
     return dataColumns;
+  }
+
+  getAdminRoleDP() {
+    if (!this.user.administrator) {
+      this.codxDpService.getAdminRoleDP(this.user.userID).subscribe((res) => {
+        this.isAdminRoles = res;
+      });
+    }
   }
 
   getPropertiesHeader(data, type) {
@@ -461,6 +479,7 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
+    var endDate = new Date();
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
       [
@@ -470,11 +489,12 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        endDate = this.HandleEndDate(this.listStepsCbx),
         this.lstParticipants,
         this.oldIdInstance,
         this.autoName,
-        (this.sumHourSteps = this.getSumDurationHourOfSteps(this.listStepsCbx)),
+        this.isAdminRoles
+
       ],
       option
     );
@@ -529,6 +549,8 @@ export class InstancesComponent
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
+                      var endDate =this.view.dataService.dataSelected.endDate;
+
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
                       [
@@ -538,10 +560,10 @@ export class InstancesComponent
                         this.titleAction,
                         formMD,
                         this.listStepsCbx,
-                        (this.sumDaySteps = this.getSumDurationDayOfSteps(
-                          this.listStepsCbx
-                        )),
+                        endDate = this.HandleEndDate(this.listStepsCbx),
                         this.autoName,
+                        this.lstParticipants,
+
                       ],
                       option
                     );
@@ -558,6 +580,8 @@ export class InstancesComponent
         //  });
       });
   }
+
+
 
   //End
 
@@ -603,7 +627,7 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance([data.recID, this.process.recID]);
+        this.startInstance([data.recID]);
         break;
     }
   }
@@ -611,7 +635,16 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
-        this.detailViewInstance.getStageByStep(res);
+        this.listInstanceStep = res;
+        // if(this.detailViewInstance){
+        //   this.detailViewInstance.getStageByStep(res);
+        // }else{
+        //   this.listInstanceStep = res;
+        // }
+        this.dataSelected.status ='2';
+        this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
+        this.view.dataService.update(this.dataSelected).subscribe() ;
+        if(this.kanban)this.kanban.updateCard(this.dataSelected);
         this.detectorRef.detectChanges();
       }
     });
@@ -657,9 +690,9 @@ export class InstancesComponent
   }
 
   //#popup roles
-
-  changeDataMF(e, data, isStart?) {
-    if (e != null && data != null && isStart) {
+  i = 0;
+  changeDataMF(e, data) {
+    if (e != null && data != null && data.status == "2") {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -730,36 +763,27 @@ export class InstancesComponent
               res.disabled = true;
             }
             break;
+            case 'DP21':
+              res.disabled = true;
+              break;
         }
       });
-    }
-    // else{
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       case 'DP09':
-    //       case 'DP10':
-    //       case 'DP02':
-    //         res.disabled = true;
-    //         break;
-    //       default:
-    //         res.isblur = true;
-    //         }
-    //       })
-    // }
+    }else{
+        e.forEach((res) => {
+          switch (res.functionID) {
+            case 'DP09':
+            case 'DP10':
+            case 'DP02':
+              res.disabled = true;
+              break;
+            default:
+              res.isblur = true;
+              }
+            })
+      }
   }
   //End
 
-  // getPermissionProcess(id) {
-  //   this.codxDpService.getProcess(id).subscribe((res) => {
-  //     if (res) {
-  //       if (res.permissions != null && res.permissions.length > 0) {
-  //         this.lstParticipants = res.permissions.filter(
-  //           (x) => x.roleType === 'P'
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -921,7 +945,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -1226,7 +1250,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data, e.isStart);
+    this.changeDataMF(e.e, e.data);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
@@ -1249,29 +1273,29 @@ export class InstancesComponent
     );
   }
 
-  getSumDurationDayOfSteps(listStepCbx: any) {
-    let totalDay = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce(
-        (sum, f) =>
-          sum +
-          f?.durationDay +
-          f?.durationHour +
-          this.setTimeHoliday(f?.excludeDayoff),
-        0
-      );
-    return totalDay;
-  }
-  getSumDurationHourOfSteps(listStepCbx: any) {
-    let totalHour = listStepCbx
-      .filter((x) => !x.isSuccessStep && !x.isFailStep)
-      .reduce((sum, f) => sum + f?.durationHour, 0);
-    return totalHour;
-  }
-  setTimeHoliday(dayOffs: string): number {
-    let listDays = dayOffs.split(';');
-    return listDays.length;
-  }
+  // getSumDurationDayOfSteps(listStepCbx: any) {
+  //   let totalDay = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce(
+  //       (sum, f) =>
+  //         sum +
+  //         f?.durationDay +
+  //         f?.durationHour +
+  //         this.setTimeHoliday(f?.excludeDayoff),
+  //       0
+  //     );
+  //   return totalDay;
+  // }
+  // getSumDurationHourOfSteps(listStepCbx: any) {
+  //   let totalHour = listStepCbx
+  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
+  //     .reduce((sum, f) => sum + f?.durationHour, 0);
+  //   return totalHour;
+  // }
+  // setTimeHoliday(dayOffs: string): number {
+  //   let listDays = dayOffs.split(';');
+  //   return listDays.length;
+  // }
 
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {
@@ -1283,6 +1307,49 @@ export class InstancesComponent
     }
     return '';
   }
+
+  HandleEndDate(listSteps: any){
+    var dateNow = new Date();
+    var endDate = new Date();
+    for(let i = 0; i < listSteps.length; i++){
+      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+      endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(dateNow,endDate,listSteps[i]?.excludeDayoff);
+      dateNow = endDate;
+    }
+    return endDate;
+  }
+
+  setTimeHoliday(startDay: Date,endDay: Date, dayOff: string )
+  {
+    if (
+      !dayOff ||
+      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
+    ) {
+      const isSaturday = dayOff.includes("7");
+      const isSunday = dayOff.includes("8");
+      let day = 0;
+
+      for (let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1) ) {
+        if (currentDate.getDay() === 6 && isSaturday) {
+          ++day;
+        }
+        if (currentDate.getDay() === 0 && isSunday) {
+          ++day;
+        }
+      }
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+      endDay.setDate(endDay.getDate() + day);
+      if (endDay.getDay() === 0 && isSunday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+    }
+    return endDay;
+  }
+
   #endregion;
 
   //Export file
@@ -1372,10 +1439,11 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.layoutInstance.viewNameProcess(ps.processName)
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
-        color: x?.backgroundColor,
+        color: x?.iconColor,
         text: x.stepName,
         value: x.recID,
       };
@@ -1402,48 +1470,44 @@ export class InstancesComponent
     }
   }
   //filter- tam
-  valueChangFilterStepID(e) {
+  valueChangeFilter(e) {
     this.dataSelected = null;
-    this.dataValueByStepIDArr = e.data;
-    let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStepIDArr?.length <= 0) {
-      if (idxField != -1) {
-        this.arrFieldFilter.splice(idxField, 1);
-      }
-    } else {
-      if (idxField == -1) this.arrFieldFilter.push(e.field);
+    switch (e.field) {
+      case 'Status':
+        this.dataValueByStatusArr = e.data;
+        break;
+      case 'StepID':
+        this.dataValueByStepIDArr = e.data;
+        break;
+      case 'Owner':
+        this.dataValueByOwnerArr = e.data;
+        break;
     }
-    this.loadDataFiler();
-  }
-  valueChangeFilterStatus(e) {
-    this.dataSelected = null;
-    this.dataValueByStatusArr = e.data;
     let idxField = this.arrFieldFilter.findIndex((x) => x == e.field);
-    if (this.dataValueByStatusArr?.length <= 0) {
-      if (idxField != -1) {
-        this.arrFieldFilter.splice(idxField, 1);
-      }
-    } else {
+    if (e.data?.length > 0) {
       if (idxField == -1) this.arrFieldFilter.push(e.field);
+    } else {
+      if (idxField != -1) this.arrFieldFilter.splice(idxField, 1);
     }
+
     this.loadDataFiler();
   }
 
   updatePredicate(field, dataValueFiler) {
     let predicates = '';
     let predicate = field + '=@';
-
     let toltalData = this.dataValueFilterArr?.length;
-    for (var i = 0; i < dataValueFiler.length - 1; i++) {
-      predicates += predicate + (i + toltalData) + 'or ';
-    }
-
-    predicates += predicate + (this.dataValueFilterArr.length + toltalData);
+    if (dataValueFiler.length > 1) {
+      for (var i = 0; i < dataValueFiler.length - 1; i++) {
+        predicates += predicate + (i + toltalData) + 'or ';
+      }
+      predicates += predicate + (dataValueFiler.length + toltalData);
+    } else predicates = predicate + toltalData;
 
     if (this.arrFieldFilter.length > 0) {
       let idx = this.arrFieldFilter.findIndex((x) => x == field);
       if (idx == 0) {
-        this.filterInstancePredicates ="( " + predicates + " )";
+        this.filterInstancePredicates = '( ' + predicates + ' )';
         this.dataValueFilterArr = dataValueFiler;
       } else if (idx > 0) {
         this.filterInstancePredicates += ' and ( ' + predicates + ' )';
@@ -1458,9 +1522,9 @@ export class InstancesComponent
 
   //loading Data filter
   loadDataFiler() {
+    this.filterInstancePredicates = '';
+    this.dataValueFilterArr = [];
     if (this.arrFieldFilter.length > 0) {
-      this.filterInstancePredicates = '';
-      this.dataValueFilterArr = [];
       this.arrFieldFilter.forEach((field) => {
         switch (field) {
           case 'Status':
@@ -1474,10 +1538,10 @@ export class InstancesComponent
             break;
         }
       });
-    } else {
-      this.filterInstancePredicates = '';
-      this.dataValueFilterArr = [];
     }
+    if (this.filterInstancePredicates)
+      this.filterInstancePredicates =
+        '( ' + this.filterInstancePredicates + ' )';
     (this.view.dataService as CRUDService)
       .setPredicates(
         [this.filterInstancePredicates],
@@ -1495,4 +1559,10 @@ export class InstancesComponent
     //   this.view.currentView['kanban'].refresh();
     // }
   }
+  clickStartInstances(e){
+    //goij ham start ma dang sai
+    if(e)
+    this.startInstance([this.dataSelected.recID])
+  }
 }
+

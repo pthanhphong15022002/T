@@ -7,6 +7,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  CacheService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-quickadd-contact/popup-quickadd-contact.component';
 
@@ -21,10 +22,11 @@ export class PopupListContactsComponent implements OnInit {
 
   lstContacts = [];
   currentContact = 0;
-
+  moreFuncAdd = '';
   contact: CM_Contacts;
   lstSearch = [];
   constructor(
+    private cache: CacheService,
     private callFc: CallFuncService,
     private changeDet: ChangeDetectorRef,
     private cmSv: CodxCmService,
@@ -32,6 +34,7 @@ export class PopupListContactsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+
   }
 
   ngOnInit(): void {
@@ -40,6 +43,12 @@ export class PopupListContactsComponent implements OnInit {
         this.lstContacts = res;
         this.lstSearch = this.lstContacts;
         this.changeContacts(0, this.lstSearch[0]);
+      }
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncAdd = m.defaultName;
       }
     });
   }
@@ -69,7 +78,7 @@ export class PopupListContactsComponent implements OnInit {
       500,
       500,
       '',
-      '',
+      [this.moreFuncAdd, 'add', null],
       '',
       opt
     );

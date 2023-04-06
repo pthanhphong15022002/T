@@ -5,15 +5,12 @@
 
 <!-- Schedule view -->
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-row justify-content-between align-items-center w-100">
-    <div class="d-flex flex-column col-9">
-      <span>{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
-      <span class="fw-bold w-100 " style=" overflow: hidden; text-overflow: ellipsis"
-        [innerHTML]="data?.title | formatvalue : view?.formModel : 'Title' | async"></span>
-    </div>
-    <div class="col-3 d-flex flex-row justify-content-end">
-      <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
-      </codx-img>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-2 d-flex col-8 flex-column ">
+      <span class="w-100 text-truncate">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
+      <span class="fw-bold w-100 text-truncate">{{data?.title}}</span>
     </div>
   </div>
 </ng-template>

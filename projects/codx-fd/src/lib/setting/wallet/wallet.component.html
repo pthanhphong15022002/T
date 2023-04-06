@@ -418,7 +418,8 @@
                     [gridViewName]="functionList?.gridViewName" default='Giới hạn xu đổi E-voucher'>
                 </codx-label>
             </h4>
-            <button type="button" class="btn btn-icon btn-sm btn-white" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <button type="button" class="btn btn-icon btn-sm btn-white" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
                 <span class="icon-close icon-18"></span>
             </button>
         </div>
@@ -511,7 +512,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="handleSaveParameter()">
+            <button type="button" class="btn btn-primary" (click)="handleSaveParameterWithTransType(transType)">
                 <codx-label fiedName="Save" [formName]="functionList?.formName"
                     [gridViewName]="functionList?.gridViewName" default='Lưu'>
                 </codx-label>

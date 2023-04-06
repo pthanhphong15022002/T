@@ -3,6 +3,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -27,8 +28,10 @@ import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.com
   styleUrls: ['./purchaseinvoices.component.css'],
 })
 export class PurchaseinvoicesComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
@@ -38,6 +41,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
   width: any;
   height: any;
   innerWidth: any;
+  itemSelected: any;
+  objectname:any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -54,10 +59,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
       if (res && res?.recID) this.parentID = res.recID;
     });
   }
+  //#endregion
 
-  onInit(): void {
-    this.innerWidth = window.innerWidth;
-  }
+  //#region Init
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -72,8 +77,20 @@ export class PurchaseinvoicesComponent extends UIComponent {
           template2: this.templateMore,
         },
       },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
     ];
   }
+  //#endregion
+
+  //#region Event
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -198,12 +215,37 @@ export class PurchaseinvoicesComponent extends UIComponent {
         }
       });
   }
+  //#endregion
+
+  //#region Function
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'PurchaseInvoicesBusiness';
     opt.assemblyName = 'PS';
     opt.service = 'PS';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
+
+  clickChange(data) {
+    this.itemSelected = data;
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync',[this.itemSelected.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res;
+        }
+      });
+  }
+  changeDataMF() {
+    this.itemSelected = this.view.dataService.dataSelected;
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync',[this.itemSelected.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res;
+        }
+      });
+  }
+  //#endregion
 }

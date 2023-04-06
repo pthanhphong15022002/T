@@ -5,6 +5,7 @@ import {
   DialogData,
   AuthService,
   NotificationsService,
+  AuthStore,
 } from 'codx-core';
 @Component({
   selector: 'lib-codx-clear-cache',
@@ -16,11 +17,14 @@ export class CodxClearCacheComponent implements OnInit {
   listCache: any[] = [];
   cacheName: string = '';
   isAll = false;
+  clearAllTeant = false;
+  user: any = null;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
     private notifyService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private authstore: AuthStore,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -28,6 +32,7 @@ export class CodxClearCacheComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = this.authstore.get();
     this.api
       .execSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'GetListCacheName')
       .subscribe((res: any) => {
@@ -41,6 +46,8 @@ export class CodxClearCacheComponent implements OnInit {
     if (field === 'All') {
       this.isAll = value;
       if (value) this.cacheName = field;
+    } else if (field === 'AllTeant') {
+      this.clearAllTeant = value;
     } else if (!this.isAll) {
       if (this.cacheName.includes('All'))
         this.cacheName = this.cacheName.replace('All', '');
