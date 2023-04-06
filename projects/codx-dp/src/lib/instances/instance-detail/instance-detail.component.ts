@@ -157,7 +157,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.processID
         );
       }
-    } else if (changes['reloadData'] && changes['reloadData'].currentValue) {
+    } else if (changes['reloadData'] && this.reloadData) {
       this.GetStepsByInstanceIDAsync();
       this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     }
@@ -290,7 +290,7 @@ export class InstanceDetailComponent implements OnInit {
       e: e,
       data: data,
       listStepCbx: this.listSteps,
-      isStart: data.status == '1',
+      isStart: this.isStart,
     });
     // console.log(e);
     // if (e) {
