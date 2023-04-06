@@ -2244,12 +2244,12 @@ codx-calendar {
 }
 
 //
-
+.e-listview .e-list-item{
+  border-bottom: 0;
+}
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
-
-
-.user-selected .e-listview .e-list-item{
-border: 0;
+codx-view-list .e-listview .e-list-item{
+  border-bottom: 1px var(--gray-150) solid !important;
 }

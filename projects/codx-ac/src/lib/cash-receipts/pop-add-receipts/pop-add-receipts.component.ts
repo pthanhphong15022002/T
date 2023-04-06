@@ -180,7 +180,11 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     options.pageLoading = false;
     this.acService
       .loadDataAsync('AC', options)
-      .subscribe((res) => (this.journal = res[0]));
+      .subscribe((res) => {
+        this.journal = res[0]?.dataValue
+        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
+        : res[0];
+      });
   }
 
   ngAfterViewInit() {
