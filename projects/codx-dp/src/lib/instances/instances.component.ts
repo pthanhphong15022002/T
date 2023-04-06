@@ -160,6 +160,7 @@ export class InstancesComponent
   reloadData = false;
   popup: DialogRef;
   
+  
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
