@@ -175,9 +175,9 @@
                       (dataSelect.status == '1' || dataSelect.status == '2') &&
                       tmpTeps.stepStatus < '2'
                     " [isCreate]="dataSelect.create" [isClosed]="dataSelect.closed" [titleDefault]="titleDefault"
-                    [listStep]="listSteps" [instance]="instance" [lstIDInvo]="lstInv"
+                    [listStep]="listSteps" [instance]="dataSelect" [lstIDInvo]="lstInv"
                     [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-                    [stepNameEnd]="getStepNameIsComlepte(instance)" [proccesNameMove]="proccesNameMove"
+                    [stepNameEnd]="getStepNameIsComlepte(dataSelect)" [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)" [viewsCurrent]="viewsCurrent"></codx-stages-detail>
                 </ng-container>
               </ng-container>

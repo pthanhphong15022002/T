@@ -670,7 +670,7 @@ getOrgTreeOKR() {
       null,
       null,
       null,
-      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll],
+      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll,this.okrFM],
       '',
       dModel
     );

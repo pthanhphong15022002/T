@@ -120,15 +120,17 @@ textarea.e-input,
 .e-input-group,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
-  color: var(--gray-800) !important;
-  line-height: 32px;
+  //color: var(--gray-800) !important;
+ // line-height: 32px;
 }
-input.e-input,
-.e-input-group,
-.e-input-group.e-control-wrapper {
+// input.e-input,
+// .e-input-group,
+// .e-input-group.e-control-wrapper {
+//   height: 32px !important;
+// }
+input.e-input{
   height: 32px !important;
 }
-
 input.e-input::placeholder,
 textarea.e-input::placeholder,
 .e-input-group::placeholder,
@@ -2242,7 +2244,9 @@ codx-calendar {
 }
 
 //
-
+.e-listview .e-list-item{
+  border-bottom: 0;
+}
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }

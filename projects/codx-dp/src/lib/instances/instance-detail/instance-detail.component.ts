@@ -47,7 +47,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
   @Input() viewType = 'd';
-  @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail;
   @Input() viewsCurrent = '';
@@ -144,24 +144,17 @@ export class InstanceDetailComponent implements OnInit {
       if (changes['dataSelect'].currentValue?.recID != null) {
         this.id = changes['dataSelect'].currentValue.recID;
         this.dataSelect = changes['dataSelect'].currentValue;
-        // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
         this.instanceStatus = this.dataSelect.status;
-        this.instance = this.dataSelect;
-        // sort theo by step
-        // this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
         this.GetStepsByInstanceIDAsync();
-        // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
         this.getDataGanttChart(
           this.dataSelect.recID,
           this.dataSelect.processID
         );
       }
     }
-    // else if (changes['reloadData'] && this.reloadData) {
-    //   this.cache.moreFunction('DPInstances', 'grvDPInstances').subscribe((res) => {
-    //    this.changeMF.emit({e:res,data:this.dataSelect})
-    //   });
-    // }
+     else if (changes['reloadData'] && this.reloadData) {
+      this.getStageByStep(this.listSteps);
+     }
   }
 
   GetStepsByInstanceIDAsync() {

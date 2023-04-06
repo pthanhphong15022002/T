@@ -51,6 +51,7 @@ export class PopupOKRWeightComponent
   editWeight: any;
   totalWeight: number;
   okrVll: any;
+  okrFM: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -66,6 +67,7 @@ export class PopupOKRWeightComponent
     this.popupTitle = dialogData.data[2];
     this.subTitle = dialogData.data[3];
     this.okrVll = dialogData.data[4];
+    this.okrFM= dialogData.data[5];
   }
 
   //-----------------------Base Func-------------------------//
@@ -105,6 +107,7 @@ export class PopupOKRWeightComponent
       this.okrChild[evt.field].weight = parseFloat(evt.data);
       this.okrChild[evt.field].edited=true;
       this.totalProgress=0;
+      this.totalWeight=0;
       let weightNotChanged=[];
       let totalWeightEdited=0;
       for(let i=0;i<this.okrChild.length;i++){        
@@ -123,6 +126,7 @@ export class PopupOKRWeightComponent
       }      
       for(let i=0;i<this.okrChild.length;i++){        
         
+        this.totalWeight += this.okrChild[i].weight;
         this.totalProgress += this.okrChild[i].weight*this.okrChild[i].progress;
       }  
       this.detectorRef.detectChanges();
@@ -140,8 +144,10 @@ export class PopupOKRWeightComponent
             this.dataOKR = res;
             this.okrChild = res.items;
             this.totalProgress = 0;
+            this.totalWeight=0;
             Array.from(this.okrChild).forEach((kr: any) => {
               this.totalProgress += kr?.weight*kr?.progress;
+              this.totalWeight += kr?.weight;
             });
             this.detectorRef.detectChanges();
           }
@@ -156,8 +162,10 @@ export class PopupOKRWeightComponent
             this.okrChild = res.items;
             this.totalProgress = this.dataOKR.progress;
             this.totalProgress = 0;
+            this.totalWeight=0;
             Array.from(this.okrChild).forEach((ob: any) => {
               this.totalProgress += ob?.weight * ob?.progress;
+              this.totalWeight += ob?.weight;
             });
             this.detectorRef.detectChanges();
           }
