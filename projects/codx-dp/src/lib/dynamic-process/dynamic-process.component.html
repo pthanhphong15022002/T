@@ -92,9 +92,9 @@
               [openDelay]="500" (mouseenter)="steps.open()" (mouseleave)="steps.close()" placement="right">&nbsp;{{totalSteps(data)}}</span>
             </div>
             <div class="me-2 mt-1">
-              <span class="icon-format_list_bulleted icon-14"  #instances="ngbPopover"
-              [ngbPopover]="popperInstances" [openDelay]="500" (mouseenter)="instances.open()"
-              (mouseleave)="instances.close()" placement="right ">&nbsp;{{data?.totalInstance}}</span>
+              <span class="icon-format_list_bulleted icon-14 " #instances="ngbPopover" [ngbPopover]="popperInstances"
+              [openDelay]="500" (mouseenter)="instances.open()"
+              (mouseleave)="instances.close()" placement="right">&nbsp;{{data?.totalInstance ?? 0}}</span>
             </div>
             <div class="ms-auto">
               <codx-imgs
