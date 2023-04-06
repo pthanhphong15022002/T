@@ -214,7 +214,6 @@ img.w-20px.h-20px,
   }
 
   .h2-title {
-    font-family: "Roboto";
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -662,10 +661,6 @@ lib-company-setting .e-content {
 
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn.pe-0 {
   padding-right: 0 !important;
-}
-
-.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-  font-family: "Roboto";
 }
 
 codx-tmmeetings .toolbar {
@@ -2215,4 +2210,30 @@ codx-calendar {
 }
 .form-control.codx-textarea {
   padding: 0;
+}
+.btn-extend {
+  span.btn {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .dropdown-toggle.dropdown-toggle-split {
+    min-width: 30px !important;
+    position: relative;
+    border-left: 1px #fff3 solid !important;
+    text-align: center;
+  }
+  .dropdown-toggle:before {
+    font-family: "icomoon" !important;
+    content: "\ef7b" !important;
+    left: 6px !important;
+    border-left: 0 !important;
+    margin-top: -3px;
+    font-size: 16px !important;
+  }
+}
+.border.border-gray-200 {
+  border: 1px var(--gray-150) solid !important;
+}
+.card.border {
+  border: 1px var(--gray-150) solid !important;
 }

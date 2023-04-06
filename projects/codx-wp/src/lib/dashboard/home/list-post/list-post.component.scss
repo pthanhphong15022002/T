@@ -327,9 +327,9 @@ ejs-listview .e-ul>li {
 }
 
 .WP_News-contents {
-    padding: 4px;
+    padding: 5px 12px;
     border-radius: 0px 0px 4px 4px;
-    background: rgb(240, 248, 255);
+    background: var(--primary-lightest);
 }
 
 .WP_News-images>codx-img>div>img {
