@@ -704,7 +704,6 @@ export class InstancesComponent
   }
 
   //#popup roles
-  i = 0;
   changeDataMF(e, data) {
     if (e != null && data != null && data.status == '2') {
       e.forEach((res) => {
