@@ -456,7 +456,7 @@
       </div>
       <div
         class="d-flex justify-content-center mt-3"
-        *ngIf="!isClosed && (instance.status == '1' || instance.status == '2')"
+        *ngIf="!isClosed && (instance.status == '1' || instance.status == '2') && isStart"
       >
         <button
           type="button"
@@ -507,22 +507,8 @@
       "
       [ngClass]="checkEventProgress(data) && !isClosed ? 'cursor-pointer' : ''"
     >
-      <ejs-progressbar
-        [id]="data?.recID"
-        type="Circular"
-        height="55"
-        width="55"
-        trackThickness="4"
-        progressThickness="4"
-        [value]="data?.progress"
-        [progressColor]="'#005DC7'"
-        trackColor="#d8d8d8"
-        progressValueColor="red"
-        [labelStyle]="{ color: '#005DC7' }"
-        [showProgressValue]="true"
-        [animation]="{ enable: true, duration: 1000, delay: 0 }"
-      >
-      </ejs-progressbar>
+      <codx-progress [progress]="data?.progress">
+      </codx-progress>
     </div>
     <span>
       <codx-img
