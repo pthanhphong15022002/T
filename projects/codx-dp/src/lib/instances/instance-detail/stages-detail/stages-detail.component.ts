@@ -84,6 +84,7 @@ export class StagesDetailComponent implements OnInit {
   comment: string;
   listTypeTask = [];
   //nvthuan
+  isStart = false;
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
   progressOld = 0;
@@ -567,6 +568,7 @@ export class StagesDetailComponent implements OnInit {
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
+    this.isStart = step?.endDate && step?.startDate ? true : false;
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
@@ -1142,33 +1144,6 @@ export class StagesDetailComponent implements OnInit {
       data['actualEnd'] = null;
     }
     this.disabledProgressInput = event?.data;
-  }
-
-  async changeDataMFStep(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
-          case 'DP07':
-          case 'DP08':
-          case 'DP12':
-          case 'DP13':
-            res.disabled = true;
-            break;
-        }
-      });
-    }
-  }
-  clickMFStep(e, data) {
-    if (e != null) {
-      switch (e.functionID) {
-        case 'DP20':
-          this.openUpdateProgress(data);
-          break;
-      }
-    }
   }
 
   async changeDataMF(e, type, data = null) {

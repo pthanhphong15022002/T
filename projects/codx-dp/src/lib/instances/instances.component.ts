@@ -62,6 +62,7 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
+  @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   InstanceDetailComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
@@ -213,7 +214,9 @@ export class InstancesComponent
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
-           this.moreFuncStart = this.moreFuncInstance.filter(x=>x.functionID =='DP21')[0]
+          this.moreFuncStart = this.moreFuncInstance.filter(
+            (x) => x.functionID == 'DP21'
+          )[0];
         }
       });
     });
@@ -295,11 +298,11 @@ export class InstancesComponent
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-         // this.getSumDurationDayOfSteps(this.listStepsCbx);
+          // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //this.getPermissionProcess(this.processID);
-      this.getAdminRoleDP();
+    this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -482,19 +485,20 @@ export class InstancesComponent
       listSteps: 'add' ? this.listSteps : this.listStepInstances,
       titleAction: this.titleAction,
       formMD: formMD,
-      endDate: this.HandleEndDate(this.listStepsCbx,action,null),
-      lstParticipants:this.lstParticipants,
+      endDate: this.HandleEndDate(this.listStepsCbx, action, null),
+      lstParticipants: this.lstParticipants,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
-    }
+    };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
-        obj, option
+      obj,
+      option
     );
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-       var data = e.event;
+        var data = e.event;
         if (this.kanban) {
           this.kanban.updateCard(data);
           if (this.kanban?.dataSource?.length == 1) {
@@ -502,9 +506,19 @@ export class InstancesComponent
           }
         }
         this.dataSelected = data;
-        this.detailViewInstance.dataSelect = this.dataSelected;
-        this.detailViewInstance.instance = this.dataSelected;
-        this.detailViewInstance.listSteps = this.listStepInstances;
+        if(this.detailViewInstance){
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.instance = this.dataSelected;
+          this.detailViewInstance.listSteps = this.listStepInstances;
+        }
+
+        if(this.detailViewPopup){
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.instance = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+        
+
         this.detectorRef.detectChanges();
       }
     });
@@ -540,39 +554,41 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                      option.Width = '800px';
-                      option.zIndex = 1001;
-                      this.view.dataService.dataSelected.processID =
-                        this.process.recID;
-                      var obj = {
-                       action: 'edit',
-                       applyFor: applyFor,
-                       listStep: this.listStepInstances,
-                       titleAction: titleAction,
-                       formMD: formMD,
-                       endDate:  this.HandleEndDate(this.listStepsCbx,'edit',this.view.dataService?.dataSelected?.createdOn),
-                       autoName: this.autoName,
-                       lstParticipants:this.lstParticipants,
+                    option.Width = '800px';
+                    option.zIndex = 1001;
+                    this.view.dataService.dataSelected.processID =
+                      this.process.recID;
+                    var obj = {
+                      action: 'edit',
+                      applyFor: applyFor,
+                      listStep: this.listStepInstances,
+                      titleAction: titleAction,
+                      formMD: formMD,
+                      endDate: this.HandleEndDate(
+                        this.listStepsCbx,
+                        'edit',
+                        this.view.dataService?.dataSelected?.createdOn
+                      ),
+                      autoName: this.autoName,
+                      lstParticipants: this.lstParticipants,
+                    };
+                    var dialogEditInstance = this.callfc.openSide(
+                      PopupAddInstanceComponent,
+                      obj,
+                      option
+                    );
+                    dialogEditInstance.closed.subscribe((e) => {
+                      if (e && e.event != null) {
+                        //xu ly data đổ về
+                        this.detectorRef.detectChanges();
                       }
-                      var dialogEditInstance = this.callfc.openSide(
-                        PopupAddInstanceComponent,
-                        obj,
-                        option
-                      );
-                      dialogEditInstance.closed.subscribe((e) => {
-                        if (e && e.event != null) {
-                          //xu ly data đổ về
-                          this.detectorRef.detectChanges();
-                        }
-                      });
-                    }
-                  });
-              });
-          });
+                    });
+                  }
+                });
+            });
         });
-      }
-
-
+      });
+  }
 
   //End
 
@@ -632,10 +648,17 @@ export class InstancesComponent
         // }else{
         //   this.listInstanceStep = res;
         // }
-        this.dataSelected.status ='2';
+        this.dataSelected.status = '2';
         this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
-        this.view.dataService.update(this.dataSelected).subscribe() ;
-        if(this.kanban)this.kanban.updateCard(this.dataSelected);
+        this.view.dataService.update(this.dataSelected).subscribe();
+        if (this.kanban) this.kanban.updateCard(this.dataSelected);
+        
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.instance = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -681,9 +704,8 @@ export class InstancesComponent
   }
 
   //#popup roles
-  i = 0;
   changeDataMF(e, data) {
-    if (e != null && data != null && data.status == "2") {
+    if (e != null && data != null && data.status == '2') {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -754,27 +776,26 @@ export class InstancesComponent
               res.disabled = true;
             }
             break;
-            case 'DP21':
-              res.disabled = true;
-              break;
+          case 'DP21':
+            res.disabled = true;
+            break;
         }
       });
-    }else{
-        e.forEach((res) => {
-          switch (res.functionID) {
-            case 'DP09':
-            case 'DP10':
-            case 'DP02':
-              res.disabled = true;
-              break;
-            default:
-              res.isblur = true;
-              }
-            })
-      }
+    } else {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'DP09':
+          case 'DP10':
+          case 'DP02':
+            res.disabled = true;
+            break;
+          default:
+            res.isblur = true;
+        }
+      });
+    }
   }
   //End
-
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -936,7 +957,6 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -985,9 +1005,19 @@ export class InstancesComponent
               this.view.dataService.update(data).subscribe();
               if (this.kanban) this.kanban.updateCard(data);
               this.dataSelected = data;
-              this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.instance = this.dataSelected;
-              this.detailViewInstance.listSteps = this.listStepInstances;
+
+              if (this.detailViewInstance) {
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.instance = this.dataSelected;
+                this.detailViewInstance.listSteps = this.listStepInstances;
+              }
+
+              if (this.detailViewPopup) {
+                this.detailViewPopup.dataSelect = this.dataSelected;
+                this.detailViewPopup.instance = this.dataSelected;
+                this.detailViewPopup.listSteps = this.listStepInstances;
+              }
+
               this.detectorRef.detectChanges();
             }
           });
@@ -1099,9 +1129,18 @@ export class InstancesComponent
             this.dataSelected = dataInstance.instance;
             this.view.dataService.update(this.dataSelected).subscribe();
             if (this.kanban) this.kanban.updateCard(this.dataSelected);
-            this.detailViewInstance.dataSelect = this.dataSelected;
-            this.detailViewInstance.instance = this.dataSelected;
-            this.detailViewInstance.listSteps = this.listStepInstances;
+
+            if (this.detailViewInstance) {
+              this.detailViewInstance.dataSelect = this.dataSelected;
+              this.detailViewInstance.instance = this.dataSelected;
+              this.detailViewInstance.listSteps = this.listStepInstances;
+            }
+
+            if (this.detailViewPopup) {
+              this.detailViewPopup.dataSelect = this.dataSelected;
+              this.detailViewPopup.instance = this.dataSelected;
+              this.detailViewPopup.listSteps = this.listStepInstances;
+            }
             this.detectorRef.detectChanges();
           }
         });
@@ -1203,9 +1242,18 @@ export class InstancesComponent
         this.view.dataService.update(data).subscribe();
         if (this.kanban) this.kanban.updateCard(data);
         this.dataSelected = data;
-        this.detailViewInstance.dataSelect = this.dataSelected;
-        this.detailViewInstance.instance = this.dataSelected;
-        this.detailViewInstance.listSteps = this.listStepInstances;
+
+        if (this.detailViewInstance) {
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.instance = this.dataSelected;
+          this.detailViewInstance.listSteps = this.listStepInstances;
+        }
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.instance = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -1299,29 +1347,35 @@ export class InstancesComponent
     return '';
   }
 
-  HandleEndDate(listSteps: any, action:string, endDateValue:any){
-    var dateNow = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
-    var endDate = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
-    for(let i = 0; i < listSteps.length; i++){
+  HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+    var dateNow =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var endDate =
+      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(dateNow,endDate,listSteps[i]?.excludeDayoff);
+      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+      endDate = this.setTimeHoliday(
+        dateNow,
+        endDate,
+        listSteps[i]?.excludeDayoff
+      );
       dateNow = endDate;
     }
     return endDate;
   }
 
-  setTimeHoliday(startDay: Date,endDay: Date, dayOff: string )
-  {
-    if (
-      !dayOff ||
-      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
-    ) {
-      const isSaturday = dayOff.includes("7");
-      const isSunday = dayOff.includes("8");
+  setTimeHoliday(startDay: Date, endDay: Date, dayOff: string) {
+    if (!dayOff || (dayOff && (dayOff.includes('7') || dayOff.includes('8')))) {
+      const isSaturday = dayOff.includes('7');
+      const isSunday = dayOff.includes('8');
       let day = 0;
 
-      for (let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1) ) {
+      for (
+        let currentDate = new Date(startDay);
+        currentDate <= endDay;
+        currentDate.setDate(currentDate.getDate() + 1)
+      ) {
         if (currentDate.getDay() === 6 && isSaturday) {
           ++day;
         }
@@ -1329,7 +1383,7 @@ export class InstancesComponent
           ++day;
         }
       }
-      endDay.setDate(endDay.getDate()+day);
+      endDay.setDate(endDay.getDate() + day);
       if (endDay.getDay() === 6 && isSaturday) {
         endDay.setDate(endDay.getDate() + 1);
       }
@@ -1337,7 +1391,6 @@ export class InstancesComponent
       if (endDay.getDay() === 0 && isSunday) {
         endDay.setDate(endDay.getDate() + 1);
       }
-
     }
     return endDay;
   }
@@ -1431,7 +1484,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    this.layoutInstance.viewNameProcess(ps.processName)
+    this.layoutInstance.viewNameProcess(ps.processName);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -1551,10 +1604,8 @@ export class InstancesComponent
     //   this.view.currentView['kanban'].refresh();
     // }
   }
-  clickStartInstances(e){
+  clickStartInstances(e) {
     //goij ham start ma dang sai
-    if(e)
-    this.startInstance([this.dataSelected.recID])
+    if (e) this.startInstance([this.dataSelected.recID]);
   }
 }
-
