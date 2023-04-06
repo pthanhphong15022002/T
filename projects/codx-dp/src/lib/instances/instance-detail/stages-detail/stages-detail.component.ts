@@ -761,6 +761,8 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('DP023', 0, taskName);
         return;
       }
+    }else{
+      this.actualEndMax =this.step?.actualStart;
     }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
@@ -1144,33 +1146,6 @@ export class StagesDetailComponent implements OnInit {
       data['actualEnd'] = null;
     }
     this.disabledProgressInput = event?.data;
-  }
-
-  async changeDataMFStep(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
-          case 'DP07':
-          case 'DP08':
-          case 'DP12':
-          case 'DP13':
-            res.disabled = true;
-            break;
-        }
-      });
-    }
-  }
-  clickMFStep(e, data) {
-    if (e != null) {
-      switch (e.functionID) {
-        case 'DP20':
-          this.openUpdateProgress(data);
-          break;
-      }
-    }
   }
 
   async changeDataMF(e, type, data = null) {

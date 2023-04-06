@@ -466,7 +466,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      debugger
       if(!this.isReferType)
       {
         this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'

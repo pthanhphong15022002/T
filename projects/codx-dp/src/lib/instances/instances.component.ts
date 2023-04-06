@@ -44,6 +44,7 @@ import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instan
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
+import { debug } from 'util';
 
 @Component({
   selector: 'codx-instances',
@@ -64,7 +65,7 @@ export class InstancesComponent
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
   @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  InstanceDetailComponent;
+
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
@@ -74,6 +75,7 @@ export class InstancesComponent
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
+  dataReload :any
   //Setting load list
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
@@ -155,6 +157,7 @@ export class InstancesComponent
   user: any;
   isAdminRoles = false;
   listInstanceStep = [];
+  reloadData = false ;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -339,7 +342,6 @@ export class InstancesComponent
           textColor: column['dataColums']?.textColor || null,
         };
       }) || [];
-    console.log(dataColumns);
 
     return dataColumns;
   }
@@ -512,13 +514,6 @@ export class InstancesComponent
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
-        if(this.detailViewPopup){
-          this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.instance = this.dataSelected;
-          this.detailViewPopup.listSteps = this.listStepInstances;
-        }
-        
-
         this.detectorRef.detectChanges();
       }
     });
@@ -634,33 +629,24 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance([data.recID]);
+        this.startInstance(data);
         break;
     }
   }
 
   startInstance(data) {
-    this.codxDpService.startInstance(data).subscribe((res) => {
+    this.codxDpService.startInstance(data.recID).subscribe((res) => {
       if (res) {
         this.listInstanceStep = res;
-        // if(this.detailViewInstance){
-        //   this.detailViewInstance.getStageByStep(res);
-        // }else{
-        //   this.listInstanceStep = res;
-        // }
-        this.dataSelected.status = '2';
-        this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
+        data.status ='2'     
+        data.startDate = res?.length > 0 ? res[0].startDate : null;
+        this.dataSelected= data;
+        this.reloadData = true
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-        
-        if (this.detailViewPopup) {
-          this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.instance = this.dataSelected;
-          this.detailViewPopup.listSteps = this.listStepInstances;
-        }
-
-        this.detectorRef.detectChanges();
-      }
+       
+      }else  this.reloadData = false;
+      this.detectorRef.detectChanges();
     });
   }
 
@@ -704,13 +690,12 @@ export class InstancesComponent
   }
 
   //#popup roles
-  i = 0;
   changeDataMF(e, data) {
     if (e != null && data != null && data.status == '2') {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
-            if ((data.status !== '1' && data.status !== '2') || data.closed)
+            if ((data.status != '1' && data.status != '2') || data.closed)
               res.disabled = true;
             break;
           case 'SYS004':
@@ -785,6 +770,8 @@ export class InstancesComponent
     } else {
       e.forEach((res) => {
         switch (res.functionID) {
+          case 'DP21':
+            break;
           case 'DP09':
           case 'DP10':
           case 'DP02':
@@ -875,6 +862,14 @@ export class InstancesComponent
   dropInstance(data) {
     data.stepID = this.crrStepID;
     if (this.moreFuncInstance?.length == 0) {
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    if(data.status=="1"){
+      this.notificationsService.notify(
+        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
+        '2'
+      );
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1013,12 +1008,6 @@ export class InstancesComponent
                 this.detailViewInstance.listSteps = this.listStepInstances;
               }
 
-              if (this.detailViewPopup) {
-                this.detailViewPopup.dataSelect = this.dataSelected;
-                this.detailViewPopup.instance = this.dataSelected;
-                this.detailViewPopup.listSteps = this.listStepInstances;
-              }
-
               this.detectorRef.detectChanges();
             }
           });
@@ -1073,12 +1062,8 @@ export class InstancesComponent
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notificationsService
-      .alert(
-        'Chị khanh ơi thiết lập message code yesno cho em với',
-        'Chị khanh ơi thiết lập message code yesno cho em với',
-        config
-      )
-      .closed.subscribe((x) => {
+      .alertCode('DP034', config)
+      .subscribe((x) => {
         if (x.event.status == 'Y') {
           this.handleMoveStage(dataInstance);
         }
@@ -1137,11 +1122,6 @@ export class InstancesComponent
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
 
-            if (this.detailViewPopup) {
-              this.detailViewPopup.dataSelect = this.dataSelected;
-              this.detailViewPopup.instance = this.dataSelected;
-              this.detailViewPopup.listSteps = this.listStepInstances;
-            }
             this.detectorRef.detectChanges();
           }
         });
@@ -1248,11 +1228,6 @@ export class InstancesComponent
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
-        }
-        if (this.detailViewPopup) {
-          this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.instance = this.dataSelected;
-          this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
         this.detectorRef.detectChanges();
@@ -1607,6 +1582,6 @@ export class InstancesComponent
   }
   clickStartInstances(e) {
     //goij ham start ma dang sai
-    if (e) this.startInstance([this.dataSelected.recID]);
+    if (e) this.startInstance(this.dataSelected);
   }
 }

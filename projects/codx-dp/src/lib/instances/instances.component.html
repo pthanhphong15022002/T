@@ -173,7 +173,7 @@
         [moreFunc]="moreFuncStart"
         (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
-        [stepStart]="listInstanceStep"
+        [reloadData]="reloadData"
       >
       </codx-instance-detail>
     </ng-template>
@@ -376,7 +376,7 @@
       cssPopup="h-350px w-300px"
       [isMulti]="false"
       type="valuelist"
-      [emptyText]="grvSetup.StepID.headerText"
+      [emptyText]="grvSetup?.StepID?.headerText"
       field="StepID"
       [dataSource]="stepsResource"
       (valueChange)="valueChangeFilter($event)"
@@ -389,7 +389,7 @@
       cssPopup="h-350px w-300px"
       [isMulti]="false"
       type="combobox"
-      [emptyText]="grvSetup.Owner.headerText"
+      [emptyText]="grvSetup?.Owner?.headerText"
       field="Owner"
       [refValue]="'Users'"
       (valueChange)="valueChangeFilter($event)"
