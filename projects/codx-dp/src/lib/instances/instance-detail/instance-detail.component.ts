@@ -87,6 +87,7 @@ export class InstanceDetailComponent implements OnInit {
   };
   dialogPopupDetail: DialogRef;
   currentElmID: any;
+  moreFuncCrr: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -151,15 +152,17 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.processID
         );
       }
-    }
-     else if (changes['reloadData'] && this.reloadData) {
+    } else if (changes['reloadData'] && this.reloadData) {
+      this.instanceStatus = this.dataSelect.status;
+      // if (this.moreFuncCrr)changes['dataSelect'].currentValue = this.dataSelect
+      // this.viewDetail.ngOnChanges(changes)
       this.getStageByStep(this.listSteps);
-     }
+      this.changeDetec.detectChanges();
+    }
   }
 
   GetStepsByInstanceIDAsync() {
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
-    //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
@@ -279,12 +282,13 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
+    if (this.viewsCurrent == 'k-')
+      this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,
       listStepCbx: this.listSteps,
       isStart: this.isStart,
-      meogi: 'popup',
     });
     // console.log(e);
     // if (e) {
