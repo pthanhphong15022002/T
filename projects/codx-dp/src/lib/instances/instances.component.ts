@@ -158,6 +158,8 @@ export class InstancesComponent
   isAdminRoles = false;
   listInstanceStep = [];
   reloadData = false;
+  popup: DialogRef;
+  
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -843,7 +845,7 @@ export class InstancesComponent
     option.IsFull = true;
     option.zIndex = 999;
     this.viewType = 'p';
-    let popup = this.callFunc.openForm(
+     this.popup = this.callFunc.openForm(
       this.popDetail,
       '',
       Util.getViewPort().width,
@@ -853,7 +855,10 @@ export class InstancesComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {});
+    console.log(this.detailViewPopup)
+    this.popup.closed.subscribe((e) => {
+      
+    });
   }
 
   dropInstance(data) {
