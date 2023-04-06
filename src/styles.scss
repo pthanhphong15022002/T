@@ -2250,3 +2250,6 @@ codx-calendar {
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
+codx-view-list .e-listview .e-list-item{
+  border-bottom: 1px var(--gray-150) solid !important;
+}
