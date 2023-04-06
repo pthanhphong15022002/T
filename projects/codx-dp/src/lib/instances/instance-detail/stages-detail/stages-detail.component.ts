@@ -43,6 +43,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { InstancesComponent } from '../../instances.component';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -74,7 +75,8 @@ export class StagesDetailComponent implements OnInit {
   @Input() showColumnControl = 1;
   @Input() listStep: any;
   @Input() viewsCurrent = '';
-  @Input()currentElmID :string
+  @Input() currentElmID: string;
+  @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
 
   dateActual: any;
@@ -113,13 +115,9 @@ export class StagesDetailComponent implements OnInit {
   };
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
-  frmModel: FormModel = {
-    entityName: 'DP_Instances_Steps_Tasks',
-    formName: 'DPInstancesStepsTasks',
-    gridViewName: 'grvDPInstancesStepsTasks',
-    entityPer: 'DP_Instance',
-    funcID: 'DPT04',
-  };
+  frmModelInstancesSteps: FormModel;
+  frmModelInstancesGroup: FormModel;
+  headerTextInsStep = {};
   popupJob: DialogRef;
   popupTaskGroup: DialogRef;
   popupUpdateProgress: DialogRef;
@@ -147,18 +145,8 @@ export class StagesDetailComponent implements OnInit {
     this.user = this.authStore.get();
     this.viewCrr = this.viewsCurrent;
   }
-  // ngOnChange() {
-  //   if(this.viewCrr != this.viewsCurrent){
-  //     this.cu
-  //   }
-  // }
 
-  ngOnInit(): void {
-    this.grvTaskGroupsForm = {
-      entityName: 'DP_Instances_Steps_TaskGroups',
-      formName: 'DPInstancesStepsTaskGroups',
-      gridViewName: 'grvDPInstancesStepsTaskGroups',
-    };
+  async ngOnInit(): Promise<void> {
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         let data = [];
@@ -182,6 +170,25 @@ export class StagesDetailComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+    this.frmModelInstancesGroup = {
+      entityName: 'DP_Instances_Steps_TaskGroups',
+      formName: 'DPInstancesStepsTaskGroups',
+      gridViewName: 'grvDPInstancesStepsTaskGroups',
+    };
+    this.getgridViewSetup(this.frmModelInstancesGroup);
+    this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
+  }
+
+  getgridViewSetup(data) {
+    this.cache
+      .gridViewSetup(data?.formName, data?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          for (let item in res) {
+            this.headerTextInsStep[item] = res[item]['headerText'];
+          }
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -189,20 +196,6 @@ export class StagesDetailComponent implements OnInit {
       if (res) {
         this.titleMemo = res?.Memo?.headerText;
       }
-    });
-  }
-
-  getFormModel() {
-    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
-        .subscribe((res) => {
-          this.grvTaskGroupsForm = {
-            entityName: 'DP_Instances_Steps_TaskGroups',
-            formName: 'DPInstancesStepsTaskGroups',
-            gridViewName: 'grvDPInstancesStepsTaskGroups',
-          };
-        });
     });
   }
 
@@ -510,7 +503,7 @@ export class StagesDetailComponent implements OnInit {
       task: task,
     };
     let option = new SidebarModel();
-    option.FormModel = this.frmModel;
+    option.FormModel = this.frmModelInstancesTask;
     option.Width = '550px';
     var dialogAssign = this.callfc.openSide(
       AssignInfoComponent,
@@ -587,7 +580,9 @@ export class StagesDetailComponent implements OnInit {
       this.taskGroupList = step['taskGroups'];
       if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
         let taskGroup = new DP_Instances_Steps_TaskGroups();
-        taskGroup['task'] = taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
+        taskGroup['task'] =
+          taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
+          [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
@@ -761,8 +756,8 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('DP023', 0, taskName);
         return;
       }
-    }else{
-      this.actualEndMax =this.step?.actualStart;
+    } else {
+      this.actualEndMax = this.step?.actualStart;
     }
     if (data) {
       this.dataProgress = JSON.parse(JSON.stringify(data));
@@ -787,11 +782,22 @@ export class StagesDetailComponent implements OnInit {
 
   async handelProgress() {
     if (this.dataProgress?.progress == 100 && !this.dataProgress?.actualEnd) {
-      this.notiService.notifyCode('SYS009', 0, 'Ngày hoàn thành thực tế');
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
       return;
     }
-    if (new Date(this.actualEndMax) > new Date(this.dataProgress?.actualEnd)) {
-      this.notiService.notifyCode('Ngày hoàn thành thực tế không phù hợp');
+    if (
+      this.dataProgress?.actualEnd &&
+      new Date(this.actualEndMax) > new Date(this.dataProgress?.actualEnd)
+    ) {
+      this.notiService.notifyCode(
+        'DP035',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
       return;
     }
     if (this.attachment && this.attachment.fileUploadList.length) {
@@ -981,15 +987,14 @@ export class StagesDetailComponent implements OnInit {
 
           // tiến độ của nhiệm vụ 100% thì cho auto chuyển tiếp
           // sửa false thành điều kiện
-          if(false){
-          let dataInstance = {
-            instance:this.instance,
-            listStep:this.listStep,
-            step:this.step
-          }
+          if (false) {
+            let dataInstance = {
+              instance: this.instance,
+              listStep: this.listStep,
+              step: this.step,
+            };
             this.serviceInstance.autoMoveStage(dataInstance);
           }
-
         }
       });
   }
@@ -1255,6 +1260,17 @@ export class StagesDetailComponent implements OnInit {
   getfileDelete(event) {
     event.data.length;
   }
+
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = JSON.parse(JSON.stringify(this.formModel)) || {};
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
+
   //End task -- nvthuan
 
   openPopupReason() {

@@ -36,7 +36,6 @@ export class PopupJobComponent implements OnInit {
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   title = '';
   dialog!: DialogRef;
-  formModelMenu: FormModel;
   taskType = '';
   vllShare = 'DP0331';
   stepName = '';
