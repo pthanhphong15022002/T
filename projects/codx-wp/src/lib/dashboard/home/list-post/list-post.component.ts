@@ -313,13 +313,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   //xem chi tiết bài viết
   clickViewDetail(file: any){
-    debugger
-    if (file){
-      let data = {
-        objectID:file.objectID,
-        recID:file.recID,
-        referType:file.referType
-      };
+    if(file){
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
@@ -331,7 +325,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         0,
         0,
         '',
-        data,
+        file,
         '',
         option
       );

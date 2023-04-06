@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Post } from '@shared/models/post';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel, AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
-import { Pos } from '@syncfusion/ej2-angular-progressbar';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 
 @Component({
@@ -15,7 +13,7 @@ import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
   styleUrls: ['./codx-comments.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCommentsComponent implements OnInit {
+export class CodxCommentsComponent implements OnInit,OnChanges {
   @Input() data :any = null;
   @Input() parent :any = null;
   @Input() refID: string = null;
@@ -52,6 +50,8 @@ export class CodxCommentsComponent implements OnInit {
   )
   {
     this.user = this.auth.get();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
   }
   ngOnInit(): void {
     if(this.new)
@@ -114,6 +114,8 @@ export class CodxCommentsComponent implements OnInit {
     debugger
     if(!this.loading)
     {
+      this.data.refID = this.refID;
+      this.data.parentID = this.parent.recID;
       if(!this.data.parentID){
         this.notifySvr.notifyCode('SYS009',0,this.grvWP['ParentID']['headerText']);
         return;

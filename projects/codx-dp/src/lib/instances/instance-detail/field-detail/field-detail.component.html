@@ -4,12 +4,19 @@
   >
     <div class="d-flex align-items-center">
       <span class="fs-" *ngIf="titleDefault">
-        <codx-label
+        <!-- <codx-label
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          default="{{ titleDefault }}"
-        ></codx-label>
+          [default]="titleDefault"
+        ></codx-label> -->
+        <codx-label
+          class="title"
+          [formModel]="formModelDefault"
+          fiedName="titleDefault"
+          [default]="titleDefault"
+        >
+        </codx-label>
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
     </div>
