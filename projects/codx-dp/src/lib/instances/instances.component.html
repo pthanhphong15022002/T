@@ -156,11 +156,11 @@
   </div>
 </ng-template>
 
-<ng-template #popDetail let-dialog>
-  <codx-form [body]="detailPopupClick" [dialog]="dialog">
+<ng-template #popDetail >
+  <codx-form [body]="detailPopupClick" [dialog]="popup">
     <ng-template #detailPopupClick>
       <codx-instance-detail
-        #detailViewInstance
+        #detailViewPopup
         [dataService]="view.dataService"
         [formModel]="view.formModel"
         [dataSelect]="dataSelected"
