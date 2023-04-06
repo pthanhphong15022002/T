@@ -517,8 +517,6 @@ export class InstancesComponent
           this.detailViewPopup.instance = this.dataSelected;
           this.detailViewPopup.listSteps = this.listStepInstances;
         }
-        
-
         this.detectorRef.detectChanges();
       }
     });
@@ -1074,12 +1072,8 @@ export class InstancesComponent
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notificationsService
-      .alert(
-        'Chị khanh ơi thiết lập message code yesno cho em với',
-        'Chị khanh ơi thiết lập message code yesno cho em với',
-        config
-      )
-      .closed.subscribe((x) => {
+      .alertCode('DP034', config)
+      .subscribe((x) => {
         if (x.event.status == 'Y') {
           this.handleMoveStage(dataInstance);
         }
