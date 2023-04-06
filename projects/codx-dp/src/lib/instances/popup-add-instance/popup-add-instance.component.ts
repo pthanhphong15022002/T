@@ -197,7 +197,6 @@ export class PopupAddInstanceComponent implements OnInit {
 
   valueChange($event) {
     if ($event) {
-      debugger;
       this.instance[$event.field] = $event.data;
     }
   }
