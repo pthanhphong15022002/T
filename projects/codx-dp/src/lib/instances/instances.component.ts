@@ -353,7 +353,6 @@ export class InstancesComponent
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-        // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
@@ -387,7 +386,6 @@ export class InstancesComponent
                 });
           });
       });
-      // });
     });
   }
   copy(data, titleAction) {
@@ -405,7 +403,6 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -461,41 +458,40 @@ export class InstancesComponent
                 });
             });
         });
-        // });
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
     var endDate = new Date();
+    var obj = {
+      action: action === 'add' ? 'add' : 'copy',
+      applyFor: applyFor,
+      listSteps: 'add' ? this.listSteps : this.listStepInstances,
+      titleAction: this.titleAction,
+      formMD: formMD,
+      endDate: this.HandleEndDate(this.listStepsCbx,action,null),
+      lstParticipants:this.lstParticipants,
+      oldIdInstance: this.oldIdInstance,
+      autoName: this.autoName,
+    }
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
-      [
-        action === 'add' ? 'add' : 'copy',
-        applyFor,
-        'add' ? this.listSteps : this.listStepInstances,
-        this.titleAction,
-        formMD,
-        this.listStepsCbx,
-        endDate = this.HandleEndDate(this.listStepsCbx),
-        this.lstParticipants,
-        this.oldIdInstance,
-        this.autoName,
-      ],
-      option
+        obj, option
     );
     dialogCustomField.closed.subscribe((e) => {
-      if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
+       var data = e.event;
         if (this.kanban) {
+          this.kanban.updateCard(data);
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
         }
+        this.dataSelected = data;
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.instance = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
         this.detectorRef.detectChanges();
       }
-      // var ojb = {
-      //   totalInstance: 100
-      // };
-      // this.dialog.close(ojb);
     });
   }
 
@@ -533,19 +529,18 @@ export class InstancesComponent
                       option.zIndex = 1001;
                       this.view.dataService.dataSelected.processID =
                         this.process.recID;
-                      var endDate =this.view.dataService.dataSelected.endDate;
+                      var obj = {
+                       action: 'edit',
+                       applyFor: applyFor,
+                       listStep: this.listStepInstances,
+                       titleAction: titleAction,
+                       formMD: formMD,
+                       endDate:  this.HandleEndDate(this.listStepsCbx,'edit',this.view.dataService?.dataSelected?.createdOn),
+                       autoName: this.autoName,
+                      }
                       var dialogEditInstance = this.callfc.openSide(
                         PopupAddInstanceComponent,
-                        [
-                          'edit',
-                          applyFor,
-                          this.listStepInstances,
-                          this.titleAction,
-                          formMD,
-                          this.listStepsCbx,
-                          endDate = this.HandleEndDate(this.listStepsCbx),
-                          this.autoName,
-                        ],
+                        obj,
                         option
                       );
                       dialogEditInstance.closed.subscribe((e) => {
@@ -1288,9 +1283,9 @@ export class InstancesComponent
     return '';
   }
 
-  HandleEndDate(listSteps: any){
-    var dateNow = new Date();
-    var endDate = new Date();
+  HandleEndDate(listSteps: any, action:string, endDateValue:any){
+    var dateNow = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
+    var endDate = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
     for(let i = 0; i < listSteps.length; i++){
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
@@ -1318,6 +1313,7 @@ export class InstancesComponent
           ++day;
         }
       }
+      endDay.setDate(endDay.getDate()+day);
       if (endDay.getDay() === 6 && isSaturday) {
         endDay.setDate(endDay.getDate() + 1);
       }
