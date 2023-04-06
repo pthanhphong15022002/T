@@ -267,19 +267,19 @@
         </codx-img>
       </ng-container>
     </div>
-    <div class="WP_News-contents">
+    <div class="WP_News-contents mb-2">
       <ng-container *ngIf="news.subject">
-        <div class="fw-bolder">
+        <div class="fw-bold text-dark fs-5 mt-2">
           {{news.subject}}
         </div>
       </ng-container>
       <ng-container *ngIf="news.subContent">
-        <div>
+        <div class="text-gray-600 mt-1">
           {{news.subContent}}
         </div>
       </ng-container>
       <ng-container *ngIf="news.createdOn">
-        <div class="text-gray-600" [innerHTML]="news.createdOn | formatvalue:formModel:'CreatedOn' | async">
+        <div class="text-gray-400 mt-1" [innerHTML]="news.createdOn | formatvalue:formModel:'CreatedOn' | async">
         </div>
       </ng-container>
     </div>

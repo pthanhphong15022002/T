@@ -66,6 +66,7 @@ const routes: Routes = [
   //thao tesst chuyen popup sang page
   {
     path: '',
+    //component: LayoutNoAsideComponent,
     component: LayoutInstancesComponent,
     children: [
       {
@@ -88,6 +89,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
   declarations: [
     CodxDpComponent,
     LayoutComponent,
+    LayoutInstancesComponent,
     DynamicProcessComponent,
     PopupAddDynamicProcessComponent,
     PopupJobComponent,
@@ -111,8 +113,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     UserComponent,
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
-    PopupParticipantsComponent,
-    LayoutInstancesComponent,
+    PopupParticipantsComponent,  
   ],
   imports: [
     RouterModule.forChild(routes),

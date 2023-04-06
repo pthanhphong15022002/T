@@ -249,6 +249,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   errorMessage = '';
   listPermissions: any;
   listPermissionsSaved: any;
+  lstTmp: DP_Processes_Permission[] = [];
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -271,7 +273,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
     this.lstGroup = dt.data?.lstGroup;
-  
+
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
     this.getValueYesNo();
@@ -298,7 +300,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.action == 'edit') {
       // this.showID = true;
-      this.checkGroup = this.lstGroup.some(x=>x.groupID == this.process?.groupID)
+      this.checkGroup = this.lstGroup.some(
+        (x) => x.groupID == this.process?.groupID
+      );
       this.processNameBefore = this.process?.processName;
       this.permissions = this.process.permissions;
       if (this.permissions.length > 0) {
@@ -381,7 +385,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   // }
 
   ngAfterViewInit(): void {
-  //  this.GetListProcessGroups();
+    //  this.GetListProcessGroups();
   }
 
   GetListProcessGroups() {
@@ -461,6 +465,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepEdit || [],
         this.listStepDelete || [],
         listStepDrop || [],
+        this.lstTmp,
       ];
     }
     op.data = data;
@@ -547,12 +552,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
     if (e.field === 'groupID') {
-      if(!this.process.groupID){
+      if (!this.process.groupID) {
         this.cache.message('SYS028').subscribe((res) => {
           if (res) this.errorMessage = res.customName || res.defaultName;
-          this.checkGroup = false ;
+          this.checkGroup = false;
         });
-      }else{
+      } else {
         this.checkGroup = this.lstGroup.some(
           (x) => x.groupID == this.process.groupID
         );
@@ -562,7 +567,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
         }
       }
-     
     }
   }
 
@@ -1158,10 +1162,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   removeUser(index) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    var tmps = [];
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
         var i = -1;
+        var tmp = this.process.permissions[index];
+        var checkDelete = this.lstTmp?.some((x) => x.objectID == tmp.objectID && x.roleType == 'F');
+
         i = this.lstParticipants.findIndex(
           (x) => x.objectID === this.process.permissions[index].objectID
         );
@@ -1186,6 +1192,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   }
                 }
                 this.process.permissions.splice(index, 1);
+                if (!checkDelete) {
+                  if (tmp.roleType != 'F') this.lstTmp.push(tmp);
+                }
                 if (i > -1) {
                   this.lstParticipants.splice(i, 1);
                 }
@@ -1193,12 +1202,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             });
           } else {
             this.process.permissions.splice(index, 1);
+            if (!checkDelete) {
+              if (tmp.roleType != 'F') this.lstTmp.push(tmp);
+            }
             if (i > -1) {
               this.lstParticipants.splice(i, 1);
             }
           }
         } else {
           this.process.permissions.splice(index, 1);
+          if (!checkDelete) {
+            if (tmp.roleType != 'F') this.lstTmp.push(tmp);
+          }
           if (i > -1) {
             this.lstParticipants.splice(i, 1);
           }
@@ -1599,7 +1614,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.fieldCrr = e.event;
               this.fieldCrr.sorting = this.step.fields.length;
               this.stepList.forEach((x) => {
-                if (x.recID == this.fieldCrr.stepID){
+                if (x.recID == this.fieldCrr.stepID) {
                   x.fields.push(this.fieldCrr);
                   if (this.action == 'edit') {
                     let check = this.listStepEdit.some((id) => id == x?.recID);
@@ -1607,7 +1622,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                       this.listStepEdit.push(x?.recID);
                     }
                   }
-                } 
+                }
               });
               this.changeDetectorRef.detectChanges();
             }
@@ -2711,6 +2726,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             (permissions) => permissions.objectID == roleOld['objectID']
           );
           if (index > -1) {
+            var tmp = this.process.permissions[index];
+            var checkDelete = this.lstTmp?.some(
+              (x) => x.objectID == tmp.objectID && x.roleType != 'F'
+            );
+            if (!checkDelete) {
+              this.lstTmp.push(tmp);
+            }
             this.process['permissions']?.splice(index, 1);
           }
         }

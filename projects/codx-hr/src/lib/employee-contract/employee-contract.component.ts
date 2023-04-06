@@ -37,7 +37,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
   formGroup: FormGroup;
   editStatusObj: any;
-
+  cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
   
@@ -156,11 +156,16 @@ export class EmployeeContractComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       // console.log('res sau khi update status', res);
-      
-      this.view.dataService.update(res.event[0]).subscribe((res) => {
-      })
+      if(res?.event){
+        this.view.dataService.update(res.event[0]).subscribe((res) => {
+        })
+      }
       this.df.detectChanges();
     });
+  }
+
+  ValueChangeComment(evt){
+    this.cmtStatus = evt.data;
   }
 
   onSaveUpdateForm(){
@@ -168,6 +173,18 @@ export class EmployeeContractComponent extends UIComponent {
       if(res != null){
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
+        debugger
+        this.view.formModel.entityName
+        this.hrService.addBGTrackLog(
+          res[0].recID,
+          this.cmtStatus,
+          this.view.formModel.entityName,
+          'C1',
+          null
+        ).subscribe((res) => {
+          console.log('kq luu track log', res);
+          
+        });
         this.dialogEditStatus && this.dialogEditStatus.close(res);
       }
     })

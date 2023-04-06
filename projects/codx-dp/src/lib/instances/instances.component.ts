@@ -32,6 +32,7 @@ import {
   PageTitleService,
   LayoutService,
   CRUDService,
+  AuthStore,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -150,22 +151,25 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
-
-
+  user: any;
+  isAdminRoles = false;
+  listInstanceStep = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance : LayoutInstancesComponent,
+    private layoutInstance: LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.user = this.authStore.get();
     //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
@@ -295,7 +299,7 @@ export class InstancesComponent
         }
       });
     //this.getPermissionProcess(this.processID);
-
+      this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -337,6 +341,14 @@ export class InstancesComponent
     return dataColumns;
   }
 
+  getAdminRoleDP() {
+    if (!this.user.administrator) {
+      this.codxDpService.getAdminRoleDP(this.user.userID).subscribe((res) => {
+        this.isAdminRoles = res;
+      });
+    }
+  }
+
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
@@ -355,7 +367,6 @@ export class InstancesComponent
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-        // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
@@ -389,7 +400,6 @@ export class InstancesComponent
                 });
           });
       });
-      // });
     });
   }
   copy(data, titleAction) {
@@ -407,7 +417,6 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -463,41 +472,41 @@ export class InstancesComponent
                 });
             });
         });
-        // });
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
     var endDate = new Date();
+    var obj = {
+      action: action === 'add' ? 'add' : 'copy',
+      applyFor: applyFor,
+      listSteps: 'add' ? this.listSteps : this.listStepInstances,
+      titleAction: this.titleAction,
+      formMD: formMD,
+      endDate: this.HandleEndDate(this.listStepsCbx,action,null),
+      lstParticipants:this.lstParticipants,
+      oldIdInstance: this.oldIdInstance,
+      autoName: this.autoName,
+      isAdminRoles: this.isAdminRoles,
+    }
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
-      [
-        action === 'add' ? 'add' : 'copy',
-        applyFor,
-        'add' ? this.listSteps : this.listStepInstances,
-        this.titleAction,
-        formMD,
-        this.listStepsCbx,
-        endDate = this.HandleEndDate(this.listStepsCbx),
-        this.lstParticipants,
-        this.oldIdInstance,
-        this.autoName,
-      ],
-      option
+        obj, option
     );
     dialogCustomField.closed.subscribe((e) => {
-      if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
+       var data = e.event;
         if (this.kanban) {
+          this.kanban.updateCard(data);
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
         }
+        this.dataSelected = data;
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.instance = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
         this.detectorRef.detectChanges();
       }
-      // var ojb = {
-      //   totalInstance: 100
-      // };
-      // this.dialog.close(ojb);
     });
   }
 
@@ -535,19 +544,19 @@ export class InstancesComponent
                       option.zIndex = 1001;
                       this.view.dataService.dataSelected.processID =
                         this.process.recID;
-                      var endDate =this.view.dataService.dataSelected.endDate;
+                      var obj = {
+                       action: 'edit',
+                       applyFor: applyFor,
+                       listStep: this.listStepInstances,
+                       titleAction: titleAction,
+                       formMD: formMD,
+                       endDate:  this.HandleEndDate(this.listStepsCbx,'edit',this.view.dataService?.dataSelected?.createdOn),
+                       autoName: this.autoName,
+                       lstParticipants:this.lstParticipants,
+                      }
                       var dialogEditInstance = this.callfc.openSide(
                         PopupAddInstanceComponent,
-                        [
-                          'edit',
-                          applyFor,
-                          this.listStepInstances,
-                          this.titleAction,
-                          formMD,
-                          this.listStepsCbx,
-                          endDate = this.HandleEndDate(this.listStepsCbx),
-                          this.autoName,
-                        ],
+                        obj,
                         option
                       );
                       dialogEditInstance.closed.subscribe((e) => {
@@ -617,9 +626,16 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
-        this.detailViewInstance.getStageByStep(res);
+        this.listInstanceStep = res;
+        // if(this.detailViewInstance){
+        //   this.detailViewInstance.getStageByStep(res);
+        // }else{
+        //   this.listInstanceStep = res;
+        // }
         this.dataSelected.status ='2';
+        this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
         this.view.dataService.update(this.dataSelected).subscribe() ;
+        if(this.kanban)this.kanban.updateCard(this.dataSelected);
         this.detectorRef.detectChanges();
       }
     });
@@ -665,9 +681,9 @@ export class InstancesComponent
   }
 
   //#popup roles
-
-  changeDataMF(e, data, isStart?) {
-    if (e != null && data != null) {
+  i = 0;
+  changeDataMF(e, data) {
+    if (e != null && data != null && data.status == "2") {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -738,36 +754,27 @@ export class InstancesComponent
               res.disabled = true;
             }
             break;
+            case 'DP21':
+              res.disabled = true;
+              break;
         }
       });
-    }
-    // else{
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       case 'DP09':
-    //       case 'DP10':
-    //       case 'DP02':
-    //         res.disabled = true;
-    //         break;
-    //       default:
-    //         res.isblur = true;
-    //         }
-    //       })
-    // }
+    }else{
+        e.forEach((res) => {
+          switch (res.functionID) {
+            case 'DP09':
+            case 'DP10':
+            case 'DP02':
+              res.disabled = true;
+              break;
+            default:
+              res.isblur = true;
+              }
+            })
+      }
   }
   //End
 
-  // getPermissionProcess(id) {
-  //   this.codxDpService.getProcess(id).subscribe((res) => {
-  //     if (res) {
-  //       if (res.permissions != null && res.permissions.length > 0) {
-  //         this.lstParticipants = res.permissions.filter(
-  //           (x) => x.roleType === 'P'
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -929,7 +936,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -1234,7 +1241,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data, e.isStart);
+    this.changeDataMF(e.e, e.data);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
@@ -1292,9 +1299,9 @@ export class InstancesComponent
     return '';
   }
 
-  HandleEndDate(listSteps: any){
-    var dateNow = new Date();
-    var endDate = new Date();
+  HandleEndDate(listSteps: any, action:string, endDateValue:any){
+    var dateNow = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
+    var endDate = action == 'add' || action == 'copy' ?  new Date():new Date(endDateValue) ;
     for(let i = 0; i < listSteps.length; i++){
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours( endDate.getHours() + listSteps[i].durationHour);
@@ -1322,6 +1329,7 @@ export class InstancesComponent
           ++day;
         }
       }
+      endDay.setDate(endDay.getDate()+day);
       if (endDay.getDay() === 6 && isSaturday) {
         endDay.setDate(endDay.getDate() + 1);
       }
@@ -1423,8 +1431,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    this.layoutInstance.dataProcess.next(ps);
-    this.layoutInstance.nameProcess = ps.title
+    this.layoutInstance.viewNameProcess(ps.processName)
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
