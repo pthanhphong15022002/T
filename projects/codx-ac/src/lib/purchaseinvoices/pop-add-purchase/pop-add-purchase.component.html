@@ -1,10 +1,17 @@
-<codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" [data]="purchaseinvoices" [customToolbar]="subToolbar" [openMore]="false">
+<codx-form
+  #form
+  [subHeader]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [data]="purchaseinvoices"
+  [customToolbar]="subToolbar"
+  [openMore]="false"
+>
 </codx-form>
 <ng-template #subHeader>
-  <ng-container *ngIf="form?.formGroup">
-
-  </ng-container>
+  <ng-container *ngIf="form?.formGroup"> </ng-container>
 </ng-template>
 <ng-template #body>
   <div class="card-add mt-5" #cardbodyRef>
@@ -53,7 +60,11 @@
         <!-- Tab Thông tin hóa đơn -->
         <e-tabitem>
           <ng-template #headerText>
-            <div *ngIf="VATType == '2'" class="d-flex align-items-top" (click)="detaiClick(2)">
+            <div
+              *ngIf="VATType == '2'"
+              class="d-flex align-items-top"
+              (click)="detaiClick(2)"
+            >
               <i class="icon-description icon-18 me-2"></i>
               <div class="fw-bold fs-6 text-uppercase">Thông tin hóa đơn</div>
             </div>
@@ -79,29 +90,56 @@
         </div>
         <div class="card-title">
           <div class="d-flex flex-column">
-            <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+            <div
+              class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase"
+            >
+              {{ headerText }}
+            </div>
           </div>
         </div>
         <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          <codx-input
+            class="badge badge-danger"
+            [Group]="form.formGroup"
+            field="status"
+            [formModel]="form.formModel"
+          >
           </codx-input>
         </div>
       </div>
       <div class="d-flex justify-content-end me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
           <button type="button" class="btn btn-light-primary">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            <codx-label
+              class="fs-6 fw-normal"
+              fiedName="lblSave"
+              [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName"
+              default="Lưu & thêm"
+            ></codx-label>
           </button>
         </div>
         <div class="ms-2 me-2">
-          <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 60px"
+            (click)="onSave()"
+          >
+            <codx-label
+              class="fs-6 fw-normal"
+              fiedName="lblSave"
+              [formName]="formModel?.formName"
+              [gridViewName]="formModel?.gridViewName"
+              default="Lưu"
+            ></codx-label>
           </button>
         </div>
         <div class="ms-2">
-          <div class="mt-1 btn btn-icon btn-sm btn-light-primary btn-circle bg" (click)="close()">
+          <div
+            class="mt-1 btn btn-icon btn-sm btn-light-primary btn-circle bg"
+            (click)="close()"
+          >
             <i class="icon-close icon-16"></i>
           </div>
         </div>
@@ -120,8 +158,12 @@
               <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="objectID" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="objectID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -130,9 +172,18 @@
             <div class="form-group">
               <!-- tên nhà cung cấp -->
               <div class="form-group">
-                <codx-label fiedName="ObjectID" [formModel]="form.formModel" default="Tên nhà cung cấp">
+                <codx-label
+                  fiedName="ObjectID"
+                  [formModel]="form.formModel"
+                  default="Tên nhà cung cấp"
+                >
                 </codx-label>
-                <codx-input [disabled]="true" type="text" field="objectID" [crrValue]="objectName"></codx-input>
+                <codx-input
+                  [disabled]="true"
+                  type="text"
+                  field="objectID"
+                  [crrValue]="objectName"
+                ></codx-input>
               </div>
             </div>
           </div>
@@ -142,8 +193,12 @@
               <div class="form-group">
                 <codx-label fiedName="PmtMethodID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="pmtMethodID" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="pmtMethodID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -156,8 +211,12 @@
               <div class="form-group">
                 <codx-label fiedName="PmtTermID" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="pmtTermID" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="pmtTermID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -168,8 +227,12 @@
               <div class="form-group">
                 <codx-label fiedName="Buyer" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="buyer" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="buyer"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -178,10 +241,17 @@
             <div class="form-group">
               <!-- hạn thanh toán -->
               <div class="form-group">
-                <codx-label fiedName="InvoiceDueDate" [formModel]="form.formModel">
+                <codx-label
+                  fiedName="InvoiceDueDate"
+                  [formModel]="form.formModel"
+                >
                 </codx-label>
-                <codx-input [Group]="form.formGroup" field="invoiceDueDate" [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)">
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="invoiceDueDate"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
                 </codx-input>
               </div>
             </div>
@@ -192,8 +262,12 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="memo"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -206,8 +280,12 @@
             <div class="form-group">
               <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="currencyID"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -216,8 +294,12 @@
             <div class="form-group">
               <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="exchangeRate"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -228,8 +310,12 @@
             <div class="form-group">
               <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="voucherDate"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -238,8 +324,12 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="voucherNo"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -258,8 +348,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceForm" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="invoiceForm" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="invoiceForm"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -270,8 +364,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceSeri" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="invoiceSeri" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)"></codx-input>
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="invoiceSeri"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              ></codx-input>
             </div>
           </div>
         </div>
@@ -281,8 +379,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceNo" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="invoiceNo" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="invoiceNo"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -293,8 +395,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceDate" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="invoiceDate" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="invoiceDate"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -305,8 +411,12 @@
             <div class="form-group">
               <codx-label fiedName="ObjectID" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="objectID" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="objectID"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -319,8 +429,12 @@
             <div class="form-group">
               <codx-label fiedName="Goods" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="goods" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="goods"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -331,8 +445,12 @@
             <div class="form-group">
               <codx-label fiedName="UMID" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="umid" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="umid"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -343,8 +461,12 @@
             <div class="form-group">
               <codx-label fiedName="Quantity" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="quantity" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="quantity"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -355,8 +477,12 @@
             <div class="form-group">
               <codx-label fiedName="UnitPrice" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="unitPrice" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="unitPrice"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -367,8 +493,12 @@
             <div class="form-group">
               <codx-label fiedName="TaxBase" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="taxBase" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="taxBase"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -379,8 +509,12 @@
             <div class="form-group">
               <codx-label fiedName="VATID" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="vatid" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="vatid"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -391,8 +525,12 @@
             <div class="form-group">
               <codx-label fiedName="TaxAmt" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input [Group]="fgVATInvoices" field="taxAmt" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                [Group]="fgVATInvoices"
+                field="taxAmt"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -405,8 +543,13 @@
             <div class="form-group">
               <codx-label fiedName="TaxNote" [formModel]="fmVATInvoices">
               </codx-label>
-              <codx-input id="taxNote" [Group]="fgVATInvoices" field="taxNote" [formModel]="fmVATInvoices"
-                (valueChange)="valueChangeVAT($event)">
+              <codx-input
+                id="taxNote"
+                [Group]="fgVATInvoices"
+                field="taxNote"
+                [formModel]="fmVATInvoices"
+                (valueChange)="valueChangeVAT($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -417,115 +560,243 @@
 </ng-template>
 <ng-template #tabLine>
   <div *ngIf="modegrid == 0" class="h-100 w-100 border">
-    <codx-gridview-v2 class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
-      [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
-      [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
-      [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event)"
-      [allowTextWrap]="false"></codx-gridview-v2>
+    <codx-gridview-v2
+      #grid
+      class="tabLine"
+      #gridPurchase
+      autoLoad="true"
+      [formName]="fmPurchaseInvoicesLines.formName"
+      [gridViewName]="fmPurchaseInvoicesLines.gridViewName"
+      [entityName]="fmPurchaseInvoicesLines.entityName"
+      [templateMore]="morefunction"
+      [editSettings]="editSettings"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      [dataSource]="purchaseInvoicesLines"
+      service="PS"
+      [height]="gridHeight"
+      [autoLoad]="false"
+      rowHeight="40"
+      (cellChanged)="cellChangedPurchase($event)"
+      (created)="gridCreated($event, grid)"
+      [allowTextWrap]="false"
+    ></codx-gridview-v2>
   </div>
   <ng-container *ngIf="form?.formGroup && modegrid == 1">
     <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{pageCount}}
+        Tất cả {{ pageCount }}
       </div>
       <div class="mt-2">
-        <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
+        <codx-searchbar
+          (searchEvent)="searchName($event)"
+          type="slide"
+          class="me-1"
+        ></codx-searchbar>
       </div>
-
     </div>
-    <div class="table-responsive mt-3" style="height: 400px;border-radius: 5px;">
-      <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-        color: white;">
+    <div
+      class="table-responsive mt-3"
+      style="height: 400px; border-radius: 5px"
+    >
+      <table id="myTable" class="table table-hover">
+        <thead
+          style="
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-active);
+            color: white;
+          "
+        >
           <tr>
             <th></th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;"
-              *ngFor="let item of columnGrids">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+              *ngFor="let item of columnGrids"
+            >
               <div class="d-flex">
-                <span class="fs-5 fw-bold">{{item.headerText}}</span>
+                <span class="fs-5 fw-bold">{{ item.headerText }}</span>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6;"
-          *ngFor="let item of purchaseInvoicesLines | slice: (page-1) * pageSize : page * pageSize ">
+        <tbody
+          style="border-bottom: 1px solid #dee2e6"
+          *ngFor="
+            let item of purchaseInvoicesLines
+              | slice : (page - 1) * pageSize : page * pageSize
+          "
+        >
           <tr>
             <td>
               <div class="d-flex align-items-center justify-content-end">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-                  (click)="editPopupLine(item)">
+                <span
+                  ngbTooltip="Chỉnh sửa"
+                  type="button"
+                  class="btn btn-icon btn-light-primary ms-1"
+                  (click)="editPopupLine(item)"
+                >
                   <i class="icon-edit_square icon-16"></i>
                 </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-                  (click)="deleteRow(item)">
+                <span
+                  ngbTooltip="Xóa"
+                  type="button"
+                  class="btn btn-icon btn-light-danger ms-1"
+                  (click)="deleteRow(item)"
+                >
                   <i class="icon-delete icon-16"></i>
                 </span>
               </div>
             </td>
-            <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
-              <div *ngFor="let keymodel of keymodel"
-                style="width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            <td
+              class="fs-5"
+              style="padding: 10px 10px"
+              *ngFor="let items of columnGrids"
+            >
+              <div
+                *ngFor="let keymodel of keymodel"
+                style="
+                  width: 100px;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
                 <!-- rowno line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'rowno'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'rowno'
+                  "
+                >
                   <div
-                    style="background: var(--primary-active);width: 31px;height: 30px;align-items: center;border-radius: 50px;"
-                    class="d-flex justify-content-start">
-                    <span style="display: block;margin: auto;color: white;"
-                      class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    style="
+                      background: var(--primary-active);
+                      width: 31px;
+                      height: 30px;
+                      align-items: center;
+                      border-radius: 50px;
+                    "
+                    class="d-flex justify-content-start"
+                  >
+                    <span
+                      style="display: block; margin: auto; color: white"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
                 <!-- items line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'itemid'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'itemid'
+                  "
+                >
                   <div class="d-flex justify-content-start">
                     <i class="bi bi-boxes icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    <span
+                      [ngbTooltip]="item[keymodel].toString()"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
                 <!-- unitprice line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'unitprice'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'unitprice'
+                  "
+                >
                   <div class="d-flex justify-content-start">
                     <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    <span
+                      [ngbTooltip]="item[keymodel].toString()"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
                 <!-- netAmt line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'netamt'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'netamt'
+                  "
+                >
                   <div class="d-flex justify-content-start">
                     <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    <span
+                      [ngbTooltip]="item[keymodel].toString()"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
                 <!-- vatAmt line -->
-                <span *ngIf="items.field == keymodel.toLowerCase() && items.field == 'vatamt'">
+                <span
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field == 'vatamt'
+                  "
+                >
                   <div class="d-flex justify-content-start">
                     <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{item[keymodel]}}</span>
+                    <span
+                      [ngbTooltip]="item[keymodel].toString()"
+                      class="fs-5 fw-bold"
+                      >{{ item[keymodel] }}</span
+                    >
                   </div>
                 </span>
                 <!-- other line -->
-                <span [ngbTooltip]="item[keymodel]"
-                  *ngIf="items.field == keymodel.toLowerCase() && items.field != 'unitprice' && items.field != 'netamt'
-                  && items.field != 'vatamt' && items.field != 'itemid' && items.field != 'rowno'">{{item[keymodel]}}</span>
+                <span
+                  [ngbTooltip]="item[keymodel]"
+                  *ngIf="
+                    items.field == keymodel.toLowerCase() &&
+                    items.field != 'unitprice' &&
+                    items.field != 'netamt' &&
+                    items.field != 'vatamt' &&
+                    items.field != 'itemid' &&
+                    items.field != 'rowno'
+                  "
+                  >{{ item[keymodel] }}</span
+                >
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
+      <div
+        *ngIf="purchaseInvoicesLines.length == 0"
+        class="container w-90 h-90"
+      >
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
           </div>
         </div>
       </div>
-      <div id="mySearch" style="display: none;" class="container w-90 h-90">
+      <div id="mySearch" style="display: none" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS010" | mssg | async }}
             </div>
@@ -535,7 +806,12 @@
       <div id="myBtn" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px;" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+            <button
+              style="border-radius: 49px"
+              type="button"
+              class="btn btn-light-primary mt-2"
+              (click)="addRow()"
+            >
               <div class="d-flex align-items-center">
                 <i class="icon-add_box icon-18"></i>
                 <span class="fs-5">Thêm dòng</span>
@@ -549,191 +825,391 @@
   <ng-container *ngIf="form?.formGroup && modegrid == 2 && gridViewLines">
     <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{pageCount}}
+        Tất cả {{ pageCount }}
       </div>
       <div class="mt-2">
-        <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
+        <codx-searchbar
+          (searchEvent)="searchName($event)"
+          type="slide"
+          class="me-1"
+        ></codx-searchbar>
       </div>
-
     </div>
-    <div class="table-responsive mt-3" style="height: 400px;border-radius: 5px;">
-      <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-        color: white;">
+    <div
+      class="table-responsive mt-3"
+      style="height: 400px; border-radius: 5px"
+    >
+      <table id="myTable" class="table table-hover">
+        <thead
+          style="
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-active);
+            color: white;
+          "
+        >
           <tr>
             <th *ngIf="purchaseInvoicesLines.length > 0"></th>
-            <th style="width: 50px;position: sticky;top: 0;padding: 10px 10px;">
+            <th
+              style="width: 50px; position: sticky; top: 0; padding: 10px 10px"
+            >
               <div class="d-flex">
                 <span class="fs-5 fw-bold">STT</span>
               </div>
             </th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+            >
               <div class="d-flex">
-                <i style="color: white;" class="icon-i-box-seam icon-18 me-2"></i>
+                <i
+                  style="color: white"
+                  class="icon-i-box-seam icon-18 me-2"
+                ></i>
                 <span class="fs-5 fw-bold">Mặt hàng</span>
               </div>
             </th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+            >
               <div class="d-flex">
-                <i style="color: white;" class="bi bi-cash-coin icon-18 me-2"></i>
+                <i
+                  style="color: white"
+                  class="bi bi-cash-coin icon-18 me-2"
+                ></i>
                 <span class="fs-5 fw-bold">Thông tin mua hàng</span>
               </div>
             </th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+            >
               <div class="d-flex">
-                <i style="color: white;" class="bi bi-journal-text icon-18 me-2"></i>
+                <i
+                  style="color: white"
+                  class="bi bi-journal-text icon-18 me-2"
+                ></i>
                 <span class="fs-5 fw-bold">Thông tin thuế</span>
               </div>
             </th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+            <th
+              style="
+                width: 200px;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                padding: 10px 10px;
+              "
+            >
               <div class="d-flex">
-                <i style="color: white;" class="icon-analytics icon-18 me-2"></i>
+                <i style="color: white" class="icon-analytics icon-18 me-2"></i>
                 <span class="fs-5 fw-bold">Thông tin phân tích</span>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6;"
-          *ngFor="let item of purchaseInvoicesLines | slice: (page-1) * pageSize : page * pageSize ">
+        <tbody
+          style="border-bottom: 1px solid #dee2e6"
+          *ngFor="
+            let item of purchaseInvoicesLines
+              | slice : (page - 1) * pageSize : page * pageSize
+          "
+        >
           <tr>
-            <td style="width: 30px;">
+            <td style="width: 30px">
               <div class="d-flex align-items-center justify-content-start">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-                  (click)="editPopupLine(item)">
+                <span
+                  ngbTooltip="Chỉnh sửa"
+                  type="button"
+                  class="btn btn-icon btn-light-primary ms-1"
+                  (click)="editPopupLine(item)"
+                >
                   <i class="icon-edit_square icon-16"></i>
                 </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-                  (click)="deleteRow(item)">
+                <span
+                  ngbTooltip="Xóa"
+                  type="button"
+                  class="btn btn-icon btn-light-danger ms-1"
+                  (click)="deleteRow(item)"
+                >
                   <i class="icon-delete icon-16"></i>
                 </span>
               </div>
             </td>
             <td class="fs-5" style="padding: 10px 10px">
               <span>
-                <div style="
-                background: var(--primary-active);
-                width: 31px;
-                height: 30px;
-                align-items: center;
-                border-radius: 50px;
-              " class="d-flex justify-content-start">
-                  <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">{{item.rowNo}}</span>
+                <div
+                  style="
+                    background: var(--primary-active);
+                    width: 31px;
+                    height: 30px;
+                    align-items: center;
+                    border-radius: 50px;
+                  "
+                  class="d-flex justify-content-start"
+                >
+                  <span
+                    style="display: block; margin: auto; color: white"
+                    class="fs-5 fw-bold"
+                    >{{ item.rowNo }}</span
+                  >
                 </div>
               </span>
             </td>
             <td style="padding: 10px 10px">
               <ng-container *ngFor="let name of itemName">
-                <span *ngIf="name.itemID == item.itemID" class="fs-4 fw-bold">{{name.itemName}}</span>
+                <span *ngIf="name.itemID == item.itemID" class="fs-4 fw-bold">{{
+                  name.itemName
+                }}</span>
               </ng-container>
-              <br>
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
-                <span *ngIf="item.idiM0 != null && item.idiM0 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM0'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM0}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+              <br />
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start"
+              >
+                <span
+                  *ngIf="item.idiM0 != null && item.idiM0 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM0"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.idiM0
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM1 != null && item.idiM1 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM1'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                <span
+                  *ngIf="item.idiM1 != null && item.idiM1 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM1"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.idiM1
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM2 != null && item.idiM2 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM2'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                <span
+                  *ngIf="item.idiM2 != null && item.idiM2 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM2"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.idiM2
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM3 != null && item.idiM3 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM3'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM3}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                <span
+                  *ngIf="item.idiM3 != null && item.idiM3 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM3"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.idiM3
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM4 != null && item.idiM4 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM4'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM4}}</span>
+                <span
+                  *ngIf="item.idiM4 != null && item.idiM4 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM4"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM4 }}</span
+                  >
                 </span>
               </div>
 
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.idiM5 != null && item.idiM5 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM5'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM5}}</span>
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
+                <span
+                  *ngIf="item.idiM5 != null && item.idiM5 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM5"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM5 }}</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM6 != null && item.idiM6 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM6'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM6}}</span>
+                <span
+                  *ngIf="item.idiM6 != null && item.idiM6 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM6"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM6 }}</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM7 != null && item.idiM7 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM7'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM7}}</span>
+                <span
+                  *ngIf="item.idiM7 != null && item.idiM7 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM7"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM7 }}</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM8 != null && item.idiM8 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM8'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM8}}</span>
+                <span
+                  *ngIf="item.idiM8 != null && item.idiM8 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM8"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM8 }}</span
+                  >
                 </span>
 
-                <span *ngIf="item.idiM9 != null && item.idiM9 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM9'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM6}}</span>
+                <span
+                  *ngIf="item.idiM9 != null && item.idiM9 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["IDIM9"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.idiM6 }}</span
+                  >
                 </span>
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap;"
-                class="d-flex align-items-center justify-content-start mt-1">
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
                 <span class="text-gray-600 fs-5">Tiền hàng:</span>
-                <span class="fs-5 fw-bold">&nbsp;{{item.quantity}} {{item.umid}} x
-                  {{item.unitPrice.toLocaleString('it-IT')}} = {{item.netAmt.toLocaleString('it-IT')}}</span>
+                <span class="fs-5 fw-bold"
+                  >&nbsp;{{ item.quantity }} {{ item.umid }} x
+                  {{ item.unitPrice.toLocaleString("it-IT") }} =
+                  {{ item.netAmt.toLocaleString("it-IT") }}</span
+                >
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
                 <span class="text-gray-600 fs-5">Thuế nhập khẩu:</span>
                 <!-- <span class="fs-5 fw-bold">&nbsp;10 cái x 230.000.000 = 20555</span> -->
               </div>
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
                 <span class="text-gray-600 fs-5">VAT:</span>
                 <ng-container *ngFor="let vat of lsVatCode">
                   <span *ngIf="vat.vatid == item.vatid" class="fs-5 fw-bold">
-                    &nbsp;{{vat.taxRate}}% x {{item.netAmt.toLocaleString('it-IT')}} =
-                    {{item.vatAmt.toLocaleString('it-IT')}}
+                    &nbsp;{{ vat.taxRate }}% x
+                    {{ item.netAmt.toLocaleString("it-IT") }} =
+                    {{ item.vatAmt.toLocaleString("it-IT") }}
                   </span>
                 </ng-container>
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['DIM2'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
+                <span
+                  *ngIf="item.diM2 != null && item.diM2 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["DIM2"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.diM2
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
-                <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['DIM3'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.diM3}}</span>
+                <span
+                  *ngIf="item.diM3 != null && item.diM3 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["DIM3"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.diM3 }}</span
+                  >
                 </span>
               </div>
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['DIM1'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.diM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+              <div
+                style="white-space: nowrap"
+                class="d-flex align-items-center justify-content-start mt-1"
+              >
+                <span
+                  *ngIf="item.diM1 != null && item.diM1 != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["DIM1"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{
+                      item.diM1
+                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span
+                  >
                 </span>
-                <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['ProjectID'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.projectID}}</span>
+                <span
+                  *ngIf="item.projectID != null && item.projectID != ''"
+                  class="text-gray-600 fs-5"
+                >
+                  {{ gridViewLines["ProjectID"].headerText }}:<span
+                    class="fs-5 fw-bold"
+                    >&nbsp;{{ item.projectID }}</span
+                  >
                 </span>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
+      <div
+        *ngIf="purchaseInvoicesLines.length == 0"
+        class="container w-90 h-90"
+      >
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
           </div>
         </div>
       </div>
-      <div id="mySearch" style="display: none;" class="container w-90 h-90">
+      <div id="mySearch" style="display: none" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS010" | mssg | async }}
             </div>
@@ -743,7 +1219,12 @@
       <div id="myBtn" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px;" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+            <button
+              style="border-radius: 49px"
+              type="button"
+              class="btn btn-light-primary mt-2"
+              (click)="addRow()"
+            >
               <div class="d-flex align-items-center">
                 <i class="icon-add_box icon-18"></i>
                 <span class="fs-5">Thêm dòng</span>
@@ -757,29 +1238,47 @@
   <div *ngIf="purchaseInvoicesLines.length > 0" class="container w-90 h-90">
     <div class="list-empty card card-flush h-100 mt-2">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-          [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="purchaseInvoicesLines.length"
+        ></ngb-pagination>
       </div>
     </div>
   </div>
   <div class="d-flex align-items-center justify-content-start me-10 mt-3">
-    <span class="fs-5 fw-bold me-10">Tổng tiền: {{totalnet}}</span>
-    <span class="fs-5 fw-bold me-10">Tổng thuế: {{totalvat}}</span>
-    <span class="fs-5 fw-bold me-10">Tổng cộng: {{total}}</span>
+    <span class="fs-5 fw-bold me-10">Tổng tiền: {{ totalnet }}</span>
+    <span class="fs-5 fw-bold me-10">Tổng thuế: {{ totalvat }}</span>
+    <span class="fs-5 fw-bold me-10">Tổng cộng: {{ total }}</span>
   </div>
 </ng-template>
 <ng-template #tabLineBill>
-  <codx-gridview-v2 *ngIf="VATType == '2'" #gridInvoices [formName]="fmVATInvoices.formName"
-    [gridViewName]="fmVATInvoices.gridViewName" [entityName]="fmVATInvoices.entityName" [templateMore]="morefunction"
-    [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true" [dataSource]="objectvatinvoices"
-    service="AC" [height]="gridHeight" rowHeight="40" (cellChanged)="cellChangedInvoice($event)"
-    (created)="gridCreated($event)"></codx-gridview-v2>
+  <codx-gridview-v2
+    *ngIf="VATType == '2'"
+    #gridInvoices
+    [formName]="fmVATInvoices.formName"
+    [gridViewName]="fmVATInvoices.gridViewName"
+    [entityName]="fmVATInvoices.entityName"
+    [templateMore]="morefunction"
+    [editSettings]="editSettings"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [dataSource]="objectvatinvoices"
+    service="AC"
+    [height]="gridHeight"
+    rowHeight="40"
+    (cellChanged)="cellChangedInvoice($event)"
+    (created)="gridCreated($event, gridInvoices)"
+  ></codx-gridview-v2>
 </ng-template>
 <ng-template #addLine let-data>
   <ng-container *ngIf="form?.formGroup">
     <div *ngIf="countDetail > 0">
       <div class="mt-4 mb-3 text-primary fw-bold fs-5">
-        <codx-label [formModel]="form.formModel" default="Thông tin hóa đơn tham chiếu"></codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          default="Thông tin hóa đơn tham chiếu"
+        ></codx-label>
       </div>
       <div class="row">
         <div class="col-2">
@@ -788,8 +1287,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceForm" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="invoiceForm" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="invoiceForm"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -800,8 +1303,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceSeri" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="invoiceSeri" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"></codx-input>
+              <codx-input
+                [Group]="form.formGroup"
+                field="invoiceSeri"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
             </div>
           </div>
         </div>
@@ -811,8 +1318,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="invoiceNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="invoiceNo"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -823,8 +1334,12 @@
             <div class="form-group">
               <codx-label fiedName="InvoiceDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="invoiceDate" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="invoiceDate"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -834,7 +1349,10 @@
   </ng-container>
 </ng-template>
 <ng-template #morefunction let-data>
-  <div class="col-6 d-flex align-items-center justify-content-end" (click)="deleteRow(data)">
+  <div
+    class="col-6 d-flex align-items-center justify-content-end"
+    (click)="deleteRow(data)"
+  >
     <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1">
       <i class="icon-delete icon-16"></i>
     </span>
@@ -850,7 +1368,12 @@
 </ng-template>
 <ng-template #tabRef>
   <div #tab id="codx-tab">
-    <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="purchaseinvoices.recID"
-      [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+    <codx-tabs
+      [entityName]="form.formModel.entityName"
+      [formModel]="form.formModel"
+      [objectID]="purchaseinvoices.recID"
+      [funcID]="form.formModel.funcID"
+      [TabControl]="tabInfo"
+    ></codx-tabs>
   </div>
 </ng-template>

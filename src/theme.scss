@@ -410,6 +410,7 @@
     .e-pane.e-static-pane{
         .e-listview .e-list-item.e-active {
             background-color: var(--primary-lightest);
+            color: var(--text-dark) !important;
         }
     }
     .e-listview .e-list-item:hover {
@@ -417,7 +418,6 @@
     }
 
     div#newfeed{
-         
         ejs-listview {
             background-color: transparent;
             .e-list-item.e-active {

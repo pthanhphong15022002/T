@@ -140,9 +140,7 @@
 
     .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
       display: inherit;
-      font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI",
-        "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--bs-body-font-family);
       font-size: 14px;
       font-weight: 500;
       text-transform: none;

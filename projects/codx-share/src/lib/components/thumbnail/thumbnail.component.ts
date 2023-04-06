@@ -29,6 +29,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() isScroll = '0';
   @Input() permissions :any ;
   @Input() objectID = ""; 
+  @Input() isReferType : boolean = false; 
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();

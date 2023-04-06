@@ -133,49 +133,30 @@
         <div class="right_Toolbar d-flex justify-content-end align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item (click)="changeZoom('out', $event)" [disabled]="zoomValue <= 10"
-                prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
+              <e-item prefixIcon='e-icons e-zoom-out' (click)="changeZoom('out', $event)" [disabled]="zoomValue <= 10" tooltipText='Zoom-Out' text='Zoom-Out' showTextOn='Overflow' align="Left"></e-item>
+              <e-item>
+                <e-item cssClass="percentage" align="Left">
+                  <ng-template #template>
+                      <div style="width: 80px">
+                        <ejs-dropdownlist popupWidth="80px" [dataSource]="lstZoomValue" [placeholder]="zoomValue" [value]="zoomValue" (change)="changeZoom('to', $event)">
+                        </ejs-dropdownlist>
+                      </div>     
+                  </ng-template>
+              </e-item> 
               </e-item>
-            </e-items>
-          </ejs-toolbar>
-          <!-- id="zoomValuesDropdownList" -->
-          <ejs-dropdownlist style="width: 100%; min-width: 70px" [(dataSource)]="lstZoomValue"
-            [(placeholder)]="zoomValue" [value]="zoomValue" (change)="changeZoom('to', $event)">
-            <!-- [fields]="zoomFields" -->
-          </ejs-dropdownlist>
-
-          <ejs-toolbar>
-            <e-items>
-              <e-item (click)="changeZoom('in', $event)" [disabled]="zoomValue >= 100"
-                prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom">
-              </e-item>
-            </e-items>
-          </ejs-toolbar>
-          <ejs-toolbar class="border-start">
-            <e-items>
-              <e-item *ngIf="hasPermission" prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="print">
-              </e-item>
-              <e-item prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom" id="download">
-              </e-item>
-
-              <e-item (click)="clickHighlightText()"
-                prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
-              <!-- <e-item (click)="confirmHighlightText(false)" prefixIcon="e-circle-check
-                btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
-              <e-item (click)="removeUnsaveHLA()" prefixIcon="e-close
-              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item> -->
-
-              <e-item (click)="changeEditMode()"
-                prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
-              </e-item>
+              <e-item prefixIcon='e-icons e-zoom-in' (click)="changeZoom('in', $event)" [disabled]="zoomValue >= 100" tooltipText='Zoom-In' text='Zoom-In' showTextOn='Overflow' align="Left"></e-item>
+              <e-item type='Separator'></e-item>
+              <e-item *ngIf="hasPermission" prefixIcon="e-icons e-print" id="print" tooltipText='Print' text='Print' showTextOn='Overflow' align="Left"></e-item>
+              <e-item *ngIf="hasPermission" prefixIcon="e-icons e-download" id="download" tooltipText='Download' text='Download' showTextOn='Overflow' align="Left"></e-item>
+              <e-item (click)="clickHighlightText()" prefixIcon="e-icons e-style" tooltipText='Highlight' text='Highlight' showTextOn='Overflow' align="Left"></e-item>
+              <e-item (click)="changeEditMode()" prefixIcon="e-icons e-repeat" tooltipText='Edit' text='Edit' showTextOn='Overflow' align="Left"></e-item>
               <!-- <e-item (click)="changeRemoveHLAMode()"
                 prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
               </e-item> -->
               <e-item *ngIf="isEditable" [prefixIcon]="
                   !hideActions
-                    ? 'btn btn-icon btn-light btn-sm border-0 btn-active-primary icon-arrow_forward'
-                    : 'icon-arrow_back btn btn-icon btn-light btn-sm border-0 btn-active-primary  rotate-180'
+                    ? 'e-icons icon-arrow_forward'
+                    : 'e-icons icon-arrow_back rotate-180'
                 " (click)="changeShowActionsState()"></e-item>
             </e-items>
           </ejs-toolbar>

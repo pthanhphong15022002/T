@@ -7,7 +7,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { PopupVoteComponent } from 'projects/codx-share/src/lib/components/treeview-comment/popup-vote/popup-vote.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { interval, map } from 'rxjs';
+import { findIndex, interval, map } from 'rxjs';
 import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
@@ -163,25 +163,61 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     });
     //vote message
     this.signalR.voteChat.subscribe((res:any) => {
+      debugger
       if(res.groupID == this.groupID){
         let mssg = this.arrMessages.find(x => x.recID == res.recID);
         if(mssg){
-          let vote = {
-            voteType : res.voteType,
-            listVote : [{
+          // kiểm tra myVote
+          if(mssg.myVote){
+            let myVote = mssg.myVote;
+            let index = mssg.votes.findIndex(x => x.voteType == myVote.voteType);
+            //remove
+            if(myVote.voteType == res.voteType)
+            {
+              mssg.myVote = null;
+            }
+            //update
+            else
+            {
+              mssg.myVote.voteType = res.voteType
+            }
+          }
+          // chưa vote
+          else
+          {
+            mssg.myVote = {
+              voteType : res.voteType,
               createdBy: res.createdBy,
-              createdName: res.createdName,
-              voteType : res.voteType
-            }]
-          };
-          if(!Array.isArray(mssg.votes)){
-            mssg.votes.push(vote);
+              createdName: res.createdName
+            }
+          }
+          // cập nhật ds vote
+          if(mssg.votes && mssg.votes.length > 0){
+            let index = mssg.votes.findIndex(x => x.voteType == res.voteType);
+            if(index != -1){
+              if(mssg.myVote && mssg.myVote.createdBy == res.createdBy){
+                
+              }
+              mssg.votes[index].count++;
+            }
+            else
+            {
+              let newVote = {
+                voteType : res.voteType,
+                count : 1
+              };
+              mssg.votes.push(newVote);
+            }
           }
           else
           {
-                        
+            let newVote = {
+              voteType : res.voteType,
+              count : 1
+            };
+            mssg.votes = [];
+            mssg.votes.push(newVote);
           }
-          this.dt.detectChanges();
         }
       }
     });

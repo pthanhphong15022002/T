@@ -110,7 +110,7 @@
 </ng-template>
 
 <ng-template #footerKanban let-data>
-  <div class="d-flex justify-content-between align-items-center mt-1">
+    <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <!-- <ng-container>
         <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data.status" [showText]="true" [showBgColor]="true"
@@ -160,6 +160,7 @@
   <codx-form [body]="detailPopupClick" [dialog]="dialog">
     <ng-template #detailPopupClick>
       <codx-instance-detail
+        #detailViewInstance
         [dataService]="view.dataService"
         [formModel]="view.formModel"
         [dataSelect]="dataSelected"
@@ -172,6 +173,7 @@
         [moreFunc]="moreFuncStart"
         (clickStartInstances)="clickStartInstances($event)"
         [viewsCurrent]="'k-'"
+        [stepStart]="listInstanceStep"
       >
       </codx-instance-detail>
     </ng-template>

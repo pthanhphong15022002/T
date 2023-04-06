@@ -32,6 +32,7 @@ import {
   PageTitleService,
   LayoutService,
   CRUDService,
+  AuthStore,
 } from 'codx-core';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -42,6 +43,7 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
+import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 
 @Component({
   selector: 'codx-instances',
@@ -149,21 +151,25 @@ export class InstancesComponent
   dataValueByStepIDArr: any = [];
   fieldsResource = { text: 'stepName', value: 'recID' };
   stepsResource = [];
-
-
+  user: any;
+  isAdminRoles = false;
+  listInstanceStep = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
+    private layoutInstance: LayoutInstancesComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.user = this.authStore.get();
     //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
@@ -203,7 +209,7 @@ export class InstancesComponent
     });
 
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.pageTitle.setSubTitle(f?.customName);
+      // if (f) this.pageTitle.setSubTitle(f?.customName);
       this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
         if (res && res.length > 0) {
           this.moreFuncInstance = res;
@@ -293,7 +299,7 @@ export class InstancesComponent
         }
       });
     //this.getPermissionProcess(this.processID);
-
+      this.getAdminRoleDP();
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -333,6 +339,14 @@ export class InstancesComponent
     console.log(dataColumns);
 
     return dataColumns;
+  }
+
+  getAdminRoleDP() {
+    if (!this.user.administrator) {
+      this.codxDpService.getAdminRoleDP(this.user.userID).subscribe((res) => {
+        this.isAdminRoles = res;
+      });
+    }
   }
 
   getPropertiesHeader(data, type) {
@@ -472,6 +486,7 @@ export class InstancesComponent
       lstParticipants:this.lstParticipants,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
+      isAdminRoles: this.isAdminRoles,
     }
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -537,6 +552,7 @@ export class InstancesComponent
                        formMD: formMD,
                        endDate:  this.HandleEndDate(this.listStepsCbx,'edit',this.view.dataService?.dataSelected?.createdOn),
                        autoName: this.autoName,
+                       lstParticipants:this.lstParticipants,
                       }
                       var dialogEditInstance = this.callfc.openSide(
                         PopupAddInstanceComponent,
@@ -610,7 +626,16 @@ export class InstancesComponent
   startInstance(data) {
     this.codxDpService.startInstance(data).subscribe((res) => {
       if (res) {
-        this.detailViewInstance.getStageByStep(res);
+        this.listInstanceStep = res;
+        // if(this.detailViewInstance){
+        //   this.detailViewInstance.getStageByStep(res);
+        // }else{
+        //   this.listInstanceStep = res;
+        // }
+        this.dataSelected.status ='2';
+        this.dataSelected.startDate = res?.length > 0 ? res[0].startDate : null;
+        this.view.dataService.update(this.dataSelected).subscribe() ;
+        if(this.kanban)this.kanban.updateCard(this.dataSelected);
         this.detectorRef.detectChanges();
       }
     });
@@ -656,9 +681,9 @@ export class InstancesComponent
   }
 
   //#popup roles
-
-  changeDataMF(e, data, isStart?) {
-    if (e != null && data != null) {
+  i = 0;
+  changeDataMF(e, data) {
+    if (e != null && data != null && data.status == "2") {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS003':
@@ -729,36 +754,27 @@ export class InstancesComponent
               res.disabled = true;
             }
             break;
+            case 'DP21':
+              res.disabled = true;
+              break;
         }
       });
-    }
-    // else{
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       case 'DP09':
-    //       case 'DP10':
-    //       case 'DP02':
-    //         res.disabled = true;
-    //         break;
-    //       default:
-    //         res.isblur = true;
-    //         }
-    //       })
-    // }
+    }else{
+        e.forEach((res) => {
+          switch (res.functionID) {
+            case 'DP09':
+            case 'DP10':
+            case 'DP02':
+              res.disabled = true;
+              break;
+            default:
+              res.isblur = true;
+              }
+            })
+      }
   }
   //End
 
-  // getPermissionProcess(id) {
-  //   this.codxDpService.getProcess(id).subscribe((res) => {
-  //     if (res) {
-  //       if (res.permissions != null && res.permissions.length > 0) {
-  //         this.lstParticipants = res.permissions.filter(
-  //           (x) => x.roleType === 'P'
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -920,7 +936,7 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
@@ -1225,7 +1241,7 @@ export class InstancesComponent
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
-    this.changeDataMF(e.e, e.data, e.isStart);
+    this.changeDataMF(e.e, e.data);
   }
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
@@ -1415,6 +1431,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.layoutInstance.viewNameProcess(ps.processName)
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -1536,7 +1553,8 @@ export class InstancesComponent
   }
   clickStartInstances(e){
     //goij ham start ma dang sai
-    this.startInstance([this.dataSelected.recID,this.process.recID])
+    if(e)
+    this.startInstance([this.dataSelected.recID])
   }
 }
 
