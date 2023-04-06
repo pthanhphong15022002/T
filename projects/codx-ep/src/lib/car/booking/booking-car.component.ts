@@ -247,15 +247,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
                 textAlign: 'center',
               },
             ];
-            this.columnGrids = [
-              {
-                field: '',
-                headerText: '',
-                width: 120,
-                template: this.gridMF,
-                textAlign: 'center',
-              },
-            ];
             this.views = [
               {
                 sameData: false,

@@ -105,6 +105,11 @@ export class BookingStationeryComponent
           panelRightRef: this.panelRight,
         },
       },
+      {
+        type: ViewType.report,
+        sameData: false,
+        active: false,
+      },
     ];
 
     this.detectorRef.detectChanges();

@@ -13,7 +13,12 @@ import {
   ViewEncapsulation,
   Injector,
 } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -36,6 +41,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { environment } from 'src/environments/environment';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
+import { log } from 'console';
 
 @Component({
   selector: 'codx-approval',
@@ -45,7 +51,7 @@ import { CodxShareService } from '../../codx-share.service';
 })
 export class CodxApprovalComponent
   extends UIComponent
-  implements OnChanges, AfterViewInit 
+  implements OnChanges, AfterViewInit
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
@@ -135,40 +141,42 @@ export class CodxApprovalComponent
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      var sa = new URL(environment.apiUrl + "/" + this.routers.url);
-      var check = sa.searchParams.get("dataValue");
-      //Lấy params không có dataValue 
-      let r = "";
-      if(check) 
-      {
-        var arrPath = sa.pathname.split("/");
+      var sa = new URL(environment.apiUrl + '/' + this.routers.url);
+      var check = sa.searchParams.get('dataValue');
+      //Lấy params không có dataValue
+      let r = '';
+      if (check) {
+        var arrPath = sa.pathname.split('/');
         var slicePath = arrPath.slice(3);
-        r = slicePath.join("/") + '/';
-      }
-      else
-      {
+        r = slicePath.join('/') + '/';
+      } else {
         var s = this.routers.url.split('/');
         s = s.slice(2, 5);
         r = '/' + s.join('/').toString() + '/';
       }
-      
+
       //var c = this.routers.routerState.subscribe()
       if (fuc) {
         if (fuc?.url) {
           var params = fuc?.url.split('/');
-          if(r && params[1] != null && params[1] != ""  && fuc?.functionID != null && fuc?.functionID != "" && this.dataItem?.transID != null && this.dataItem?.transID != "")
-          {
+          if (
+            r &&
+            params[1] != null &&
+            params[1] != '' &&
+            fuc?.functionID != null &&
+            fuc?.functionID != '' &&
+            this.dataItem?.transID != null &&
+            this.dataItem?.transID != ''
+          ) {
             var url =
-            r +
-            params[1] +
-            '/' +
-            fuc?.functionID +
-            '/' +
-            this.dataItem?.transID;
-            debugger
-            if(url) this.codxService.navigate('', url);
+              r +
+              params[1] +
+              '/' +
+              fuc?.functionID +
+              '/' +
+              this.dataItem?.transID;
+            if (url) this.codxService.navigate('', url);
           }
-          
         }
 
         ///es/approvals/EST021/
@@ -184,10 +192,23 @@ export class CodxApprovalComponent
     this.selectedChange.emit([this.dataItem, this.view]);
   }
 
+  vllApproval: any;
+
   getGridViewSetup(funcID: any) {
-    this.cache.valueList('ES022').subscribe((item) => {
-      this.dvlApproval = item?.datas[0];
-      //this.ref.detectChanges();
+    this.cache.valueList('SYS055').subscribe((result) => {
+      if (result?.datas?.length > 0) {
+        var obj: { [key: string]: any } = {};
+
+        let lstData = result?.datas;
+        lstData.forEach((element) => {
+          let key = element?.value;
+          obj[key] = element;
+        });
+
+        this.vllApproval = obj as Object;
+        this.dvlApproval = result?.datas[0];
+        //this.ref.detectChanges();
+      }
     });
     /*  this.cache.functionList('ODT31').subscribe((fuc) => {
 
@@ -240,10 +261,12 @@ export class CodxApprovalComponent
         )
           list[i].disabled = true;
       }
-      this.listApproveMF = list.filter((p) => p.data.functionID == 'SYS208' || p.disabled == false );
+      this.listApproveMF = list.filter(
+        (p) => p.data.functionID == 'SYS208' || p.disabled == false
+      );
 
       console.log(this.listApproveMF);
-      
+
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>

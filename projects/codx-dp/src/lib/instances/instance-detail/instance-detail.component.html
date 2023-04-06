@@ -1,5 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp
+    #viewDetail
     style="height: 100%"
     [header]="header"
     [formModel]="formModel"
@@ -10,6 +11,19 @@
     (clickMF)="clickMF($event, dataSelect)"
     [footer]="tabs"
   >
+    <!-- (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)" -->
+    <!-- <ng-template #tempMoreFunc>
+      <codx-mfunc
+        #moreFun
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, dataSelect)"
+        [isBookMark]="true"
+        [dataItem]="dataSelect"
+        [type]="'hover'"
+        (changeDataMF)="changeDataMF($event, dataSelect)"
+      >
+      </codx-mfunc>
+    </ng-template> -->
     <ng-template #header>
       <div class="container_detail mt-2">
         <div class="d-flex justify-content-between">
@@ -26,16 +40,70 @@
               >
               </codx-tag>
             </div>
-            <div class="d-flex flex-column" *ngIf="dataSelect.memo">
-              <div class="mt-1">
-                <codx-label
-                  class="text-gray-500 text-nowrap"
-                  fiedName="Memo"
-                  [formModel]="formModel"
-                  default="Mô tả: "
-                >
-                </codx-label>
+            <div class="d-flex mt-2">
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedOn"
+                    [formModel]="formModel"
+                    default="Ngày tạo: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    dataSelect.createdOn
+                      | formatvalue : formModel : 'CreatedOn'
+                      | async
+                  "
+                ></div>
               </div>
+              <div class="d-flex col-4">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    fiedName="StartDate"
+                    [formModel]="formModel"
+                    default="Ngày bắt đầu: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    dataSelect.startDate
+                      | formatvalue : formModel : 'StartDate'
+                      | async
+                  "
+                ></div>
+              </div>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    fiedName="EndDate"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                    default="Ngày đến hạn: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    (dataSelect.status != '1' ? dataSelect.endDate : null)
+                      | formatvalue : formModel : 'EndDate'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+            <div class="me-2">
               <div
                 class="text-dark"
                 *ngIf="dataSelect?.memo"
@@ -112,9 +180,6 @@
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
                   }}</span>
-                </div>
-                <div class="text-gray-500 my-1">
-                  {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy" }}
                 </div>
               </div>
               <div class="ms-3">
@@ -229,10 +294,10 @@
                     [isClosed]="dataSelect.closed"
                     [titleDefault]="titleDefault"
                     [listStep]="listSteps"
-                    [instance]="instance"
+                    [instance]="dataSelect"
                     [lstIDInvo]="lstInv"
                     [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-                    [stepNameEnd]="getStepNameIsComlepte(instance)"
+                    [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
                     [viewsCurrent]="viewsCurrent"
@@ -353,9 +418,7 @@
 
         <div class="mt-5">
           <button class="btn btn-light-primary" (click)="startInstances()">
-            <span
-              [class]="moreFunc?.largeIcon"
-              [style.color]="moreFunc?.color">
+            <span [class]="moreFunc?.largeIcon" [style.color]="moreFunc?.color">
               <span>
                 {{ moreFunc?.custormName || moreFunc?.description }}</span
               ></span

@@ -1,5 +1,3 @@
-import { GridModels } from 'projects/codx-es/src/public-api';
-declare var window: any;
 import {
   Component,
   Injector,
@@ -20,6 +18,17 @@ import {
 import { UIComponent, ViewModel, ViewType, DataRequest } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
 
+export class GridModels {
+  pageSize: number;
+  entityName: string;
+  entityPermission: string;
+  formName: string;
+  gridViewName: string;
+  funcID: string;
+  dataValues: string;
+  predicates: string;
+}
+
 @Component({
   selector: 'app-tmdashboard',
   templateUrl: './tmdashboard.component.html',
@@ -31,8 +40,11 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('team_dashboard') templates2: QueryList<any>;
   @ViewChildren('asign_dashboard') templates3: QueryList<any>;
 
-  @Input() panels: any;
-  @Input() datas: any;
+  @Input() panels1: any;
+  @Input() datas1: any;
+
+  @Input() panels2: any;
+  @Input() datas2: any;
 
   viewType = ViewType;
   views: Array<ViewModel> = [];
@@ -342,32 +354,28 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       },
     ],
   };
+  predicates: any;
+  dataValues: any;
 
   constructor(inject: Injector) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.reportID = this.router.snapshot.queryParams['reportID'];
   }
 
   onInit(): void {
-    let request = new DataRequest();
-    request.funcID = this.funcID;
-    request.entityName = 'SYS_ReportList';
-    request.entityPermission = 'TM_DashBoard';
-    request.formName = 'TMDashBoard';
-    request.page = 1;
-    request.pageSize = 20;
-
-    this.loadDashboard(request);
-
-    this.getTeamDashboardData();
-
-    this.panels = JSON.parse(
+    this.panels1 = JSON.parse(
+      '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5801149283702021_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6937258303982936_layout","row":4,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5667390469747078_layout","row":4,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4199281088325755_layout","row":0,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","row":0,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.14683256767762543_layout","row":16,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.36639064171709834_layout","row":16,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","row":8,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","row":8,"col":0,"sizeX":16,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.3516224838830073_layout","row":20,"col":0,"sizeX":32,"sizeY":12,"minSizeX":32,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.36601875176456145_layout","row":8,"col":32,"sizeX":16,"sizeY":24,"minSizeX":16,"minSizeY":24,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datas1 = JSON.parse(
+      '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"2"},{"panelId":"0.6937258303982936_layout","data":"3"},{"panelId":"0.5667390469747078_layout","data":"4"},{"panelId":"0.4199281088325755_layout","data":""},{"panelId":"0.4592017601751599_layout","data":""},{"panelId":"0.14683256767762543_layout","data":""},{"panelId":"0.36639064171709834_layout","data":""},{"panelId":"0.06496875406606994_layout","data":""},{"panelId":"0.21519762020962552_layout","data":""},{"panelId":"0.3516224838830073_layout","data":""},{"panelId":"0.36601875176456145_layout","data":""}]'
+    );
+    this.panels2 = JSON.parse(
       '[{"id":"dfeb663a-185a-4fef-85b0-25613979133d","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"30a29412-9253-4033-a5e4-617246359357","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.9435262123249284_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31200119842251084_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5547337482348278_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4533692938771181_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.23559424577365373_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5314304532149856_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
     );
-    this.datas = JSON.parse(
+    this.datas2 = JSON.parse(
       '[{"panelId":"dfeb663a-185a-4fef-85b0-25613979133d","data":"1"},{"panelId":"30a29412-9253-4033-a5e4-617246359357","data":"2"},{"panelId":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","data":"3"},{"panelId":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","data":"4"},{"panelId":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","data":"5"},{"panelId":"0.9435262123249284_layout","data":"6"},{"panelId":"0.31200119842251084_layout","data":"7"},{"panelId":"0.5547337482348278_layout","data":"8"},{"panelId":"0.4533692938771181_layout","data":"9"},{"panelId":"0.23559424577365373_layout","data":"10"},{"panelId":"0.5314304532149856_layout","data":"11"}]'
     );
+    this.getTeamDashboardData(this.predicates, this.dataValues);
   }
 
   ngAfterViewInit(): void {
@@ -376,9 +384,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         type: ViewType.content,
         active: true,
         sameData: false,
-        //reportType:'D',
-        reportView:true,
-        showFilter:true,
+        reportType: 'D',
+        reportView: true,
+        showFilter: true,
 
         model: {
           panelRightRef: this.template,
@@ -389,28 +397,12 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  loadDashboard(request: any) {}
-
-  loadContent(event: any, item: any) {
-    this.api
-      .exec('SYS', 'ReportListBusiness', 'GetByReportIDAsync', item.functionID)
-      .subscribe((res: any) => {
-        // if (res) {
-        //   this.reportID = res.reportID;
-        //   this.codxService.navigate('', 'tm/tmdashboard/TMD/' + this.reportID);
-        // }
-      });
-  }
-
-  getTeamDashboardData() {
+  getTeamDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
-    // model.entityPermission = '';
     model.entityName = 'TM_Tasks';
-    // model.formName = 'TeamDashBoard';
-    // model.gridViewName = '';
-    model.predicate = '';
-    model.dataValue = '';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
     this.api
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', model)
       .subscribe((res) => {
@@ -431,10 +423,16 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  filterChange(e:any){
-    debugger
+  filterChange(e: any) {
+    const [predicates, dataValues] = e[0];
+    this.predicates = predicates;
+    this.dataValues = dataValues;
+    this.getTeamDashboardData(predicates, dataValues);
+    this.detectorRef.detectChanges();
   }
-  onActions(e:any){
-    debugger
+  onActions(e: any) {
+    this.reportID = e.data;
+    this.getTeamDashboardData(this.predicates, this.dataValues);
+    this.detectorRef.detectChanges();
   }
 }

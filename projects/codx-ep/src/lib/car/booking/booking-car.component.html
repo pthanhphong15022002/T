@@ -6,13 +6,12 @@
 </codx-views>
 <!--List View-->
 <ng-template #subTitleTmp let-data>
-  
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
-      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+      <span [innerHTML]="data?.title"></span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
@@ -41,7 +40,7 @@
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
-      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+      <span [innerHTML]="data?.title"></span>
     </div>
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">
@@ -64,11 +63,11 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (click)="click(data)" [typeMF]="'hover'"
-    [title]="data?.requester | formatvalue : formModel : 'requester' | async" [subTitleTmp]="subTitleTmp" [icoCss]="
+    [title]="data?.requester" [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
     imageObjType="AD_Users" [resources]="data?.bookingAttendees" [titleLine]="2" [dataItem]="data"
-    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)" typeMF="hover" 
+    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)" typeMF="hover"
     (changeDataMF)="changeDataMF($event, data)">
   </codx-temp-full>
 </ng-template>
@@ -88,7 +87,7 @@
       <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName
         }}<span *ngIf="data?.resourceData?.code != null">
           - {{ data?.resourceData?.code }}</span></span>
-     
+
     </div>
   </div>
 </ng-template>
@@ -101,9 +100,9 @@
   <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
     <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
     </codx-img>
-    <div class="ps-2 d-flex col-8 flex-column ">
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
       <span class="w-100 text-truncate">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
-      <span class="fw-bold w-100 text-truncate">{{data?.title}}</span>
+      <span class="text-dark w-100 text-truncate">{{data?.title}}</span>
     </div>
   </div>
 </ng-template>
@@ -120,9 +119,8 @@
 
 <!-- GridView Template -->
 <ng-template #gridMF let-data>
-  <codx-mfunc [type]="'hover'" [formModel]="formModel"
-   [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
-    (changeDataMF)="changeDataMF($event, data)">
+  <codx-mfunc [type]="'hover'" [formModel]="formModel" [formModel]="formModel" (clickMF)="clickMF($event, data)"
+    [dataItem]="data" (changeDataMF)="changeDataMF($event, data)">
   </codx-mfunc>
 </ng-template>
 <ng-template #gridResourceName let-data>

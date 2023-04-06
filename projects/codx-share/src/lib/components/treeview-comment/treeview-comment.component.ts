@@ -3,8 +3,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -18,13 +20,14 @@ import { ImageGridComponent } from '../image-grid/image-grid.component';
   styleUrls: ['./treeview-comment.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TreeviewCommentComponent implements OnInit {
+export class TreeviewCommentComponent implements OnInit,OnChanges {
   @Input() data:any = null;
+  @Input() activeParent:boolean = false;
   @Input() funcID:string = "";
   @Input() objectID:string = "";
   @Input() objectType:string = "";
   @Input() formModel:FormModel = null;
-  @Output() pushComment = new EventEmitter;
+  @Output() pushCommentEvt = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
@@ -33,8 +36,6 @@ export class TreeviewCommentComponent implements OnInit {
 
   crrId = '';
   checkVoted = false;
-  comments = "";
-  repComment = "";
   dicDatas = {};
   user: any;
   votes: any;
@@ -54,11 +55,15 @@ export class TreeviewCommentComponent implements OnInit {
   {
     this.user = this.auth.userValue;
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getCommentsAsync();
+  }
 
   ngOnInit(): void {
     this.getCommentsAsync();
     this.getValueIcon();
   }
+  
   // get vll icon
   getValueIcon(){
     this.cache.valueList("L1480")
@@ -123,39 +128,8 @@ export class TreeviewCommentComponent implements OnInit {
         this.dt.detectChanges();
       })
   }
-  //reploy comment
-  replyComment(post: any, value: any) {
-    if (!value.trim()) {
-      this.notifySvr.notifyCode('E0315');
-      return;
-    }
-    if (post.recID) {
-      var type = "WP_Comments";
-      this.api
-        .execSv<any>(
-          'WP',
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'PublishCommentAsync',
-          [post.recID, value, this.data.recID, type]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.data.totalComment += 1;
-            this.comments = "";
-            this.repComment = "";
-            post.showReply = false;
-            this.crrId = "";
-            this.setNodeTree(res);
-            this.dt.detectChanges();
-          }
-        });
-    }
-  }
   // send comment
   sendComment(event:any,data:any = null){
-    this.comments = "";
-    this.repComment = "";
     this.data.totalComment += 1;
     event.showReply = false;
     if(data){
@@ -164,14 +138,16 @@ export class TreeviewCommentComponent implements OnInit {
     this.crrId = "";
     this.dicDatas[event["recID"]] = event;
     this.setNodeTree(event);
+    // bài viết chi tiết - tạo bài viết khi comment lần đầu
+    if(this.activeParent){
+      this.pushCommentEvt.emit(event);
+      this.activeParent = false;
+    }
     this.dt.detectChanges();
   }
   // reply to
   replyTo(data) {
     data.showReply = !data.showReply;
-  }
-  votePostEmit(event:any){
-    this.voteCommentEvt.emit();
   }
   // votes post
   votePost(data: any, voteType = null) {
@@ -192,7 +168,8 @@ export class TreeviewCommentComponent implements OnInit {
               data.myVoted = false;
               this.checkVoted = false;
             }
-            else {
+            else
+            {
               data.myVoteType = voteType;
               data.myVoted = true;
               this.checkVoted = true;
@@ -202,25 +179,6 @@ export class TreeviewCommentComponent implements OnInit {
   
         });
     }
-  }
-  //voet comment
-  voteComment(data: any) {
-    if (!data.recID) return;
-    this.api
-      .execSv<any>(
-        'WP',
-        'ERM.Business.WP',
-        'VotesBusiness',
-        'VotePostAsync',
-        [data.recID, "1"]
-      )
-      .subscribe((res) => {
-        if (res) {
-          data.myVoted = true;
-          data.totalVote += 1;
-          this.dt.detectChanges();
-        }
-      });
   }
   // load subcomment
   loadSubComment(data:any) {
@@ -242,19 +200,6 @@ export class TreeviewCommentComponent implements OnInit {
   // click show comment
   showComments() {
     this.data.isShowComment = !this.data.isShowComment;
-  }
-  // value change
-  valueChange(value: any, type) {
-    var text = value.data.toString().trim();
-    if (text) {
-      if (type == "comments") {
-        this.comments = text;
-      }
-      else {
-        this.repComment = text;
-      }
-      this.dt.detectChanges();
-    }
   }
   //set tree
   setDicData(data) {
@@ -326,7 +271,6 @@ export class TreeviewCommentComponent implements OnInit {
     }
     this.dt.detectChanges();
   }
-
   // delete comment
   deleteComment(data: any) {
     if(data?.recID){
@@ -346,63 +290,5 @@ export class TreeviewCommentComponent implements OnInit {
       this.data.totalComment = res;
       this.dt.detectChanges();
     });
-  }
-  //click edit comment
-  clickEditComment(comment: any) {
-    comment.isEditComment = true;
-    this.dt.detectChanges();
-  }
-  // value change
-  valueChangeComment(event: any, comment: any) {
-    comment.content = event.data
-    this.dt.detectChanges();
-  }
-  //edit comment
-  editComment(value: string, comment: any) {
-    comment.content = value;
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      "UpdateCommentPostAsync",
-      [comment.recID, value])
-      .subscribe((res: boolean) => {
-        if (res) {
-          comment.isEditComment = false;
-          this.notifySvr.notifyCode("SYS007");
-          this.dt.detectChanges();
-        }
-        else {
-          this.notifySvr.notifyCode("SYS021");
-        }
-      })
-  }
-  //upload file
-  upLoadFile(){
-    this.codxATM.uploadFile();
-  }
-  //attachment return
-  fileUpload:any[] = [];
-  fileCount(files:any){
-    if(files && files.data.length > 0){
-      this.fileUpload = files.data;
-      this.codxFile.addFiles(this.fileUpload);
-      this.dt.detectChanges();
-    }
-  }
-  // add file
-  addFile(files: any) {
-    if (this.fileUpload.length == 0) {
-      this.fileUpload = files;
-    }
-    else {
-      this.fileUpload.concat(files);
-    }
-    this.dt.detectChanges();
-  }
-  // remove file
-  removeFile(file: any) {
-    this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
-    this.dt.detectChanges();
   }
 }

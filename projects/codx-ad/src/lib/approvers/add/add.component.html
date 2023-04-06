@@ -71,15 +71,34 @@
           </div>
         </div>
         <!-- [disabled]="form?.formGroup?.status === 'INVALID'" -->
-        <codx-input
+        <!-- <codx-input
           type="combobox"
           [refType]="'P'"
           refValue="Share_Users"
           field="groupmember"
           [showInput]="false"
+          [value]="'2303270043;2303270044'"
           (valueChange)="eventApply($event)"
         >
-        </codx-input>
+        </codx-input> -->
+        <button
+          type="button"
+          class="cursor-pointer btn btn-icon btn-sm btn-light"
+          (click)="clickAddMemeber()"
+        >
+          <span class="icon-group_add icon-16"></span>
+        </button>
+        <ng-container *ngIf="showPopup">
+          <codx-combobox-popup
+            [comboboxName]="'Share_Users'"
+            [multiple]="true"
+            [width]="width"
+            [height]="height"
+            [value]="detailIDs"
+            (clickSave)="eventApply($event)"
+          >
+          </codx-combobox-popup>
+        </ng-container>
       </div>
       <div class="form-group">
         <ng-container *ngFor="let item of members">

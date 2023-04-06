@@ -27,37 +27,7 @@ import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-i
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
 import { map, tap } from 'rxjs/operators';
 
-const dataValueProps: string[] = [
-  'journalType',
-  'postedLayer',
-  'periodControl',
-  'periodID',
-  'transCount',
-  'transactionText',
-  'direction',
-  'voucherNoFormat',
-  'assignRule',
-  'allowEdited',
-  'invoiceType',
-  'invoiceForm',
-  'invoiceSeriNo',
-  'invoiceNo',
-  'invoiceRule',
-  'invoiceName',
-  'invoiceEdited',
-  'currencyControl',
-  'currencyID',
-  'exchangeRate',
-  'cashBookID',
-  'vATID',
-  'warehouseIssue',
-  'warehouseReceipt',
-  'mixedPayment',
-  'postSubControl',
-  'postSubDetail',
-  'objectControl',
-  'settlementRule',
-  'brigdeAcctControl',
+const irrPropNames: string[] = [
   'drAcctControl',
   'drAcctID',
   'crAcctControl',
@@ -65,40 +35,13 @@ const dataValueProps: string[] = [
   'diM1Control',
   'diM2Control',
   'diM3Control',
+  'diM1',
+  'diM2',
+  'diM3',
   'idimControl',
-  'approval',
-  'approver',
-  'approvedBy',
-  'approvedOn',
-  'inUsed',
-  'isAllocation',
-  'isTransfer',
-  'isSettlement',
-  'exported',
-  'postControl',
-  'qtyControl',
-  'assetControl',
-  'loanControl',
-  'projectControl',
-  'inputControl',
-  'invoiceControl',
-  'productionControl',
-  'noteControl',
-  'personalControl',
-  'illegalControl',
-  'attachment',
-  'otherControl',
   'vatType',
-  'cashPaymentType',
-  'duplicateVoucherNo',
-  'voucherNoRule',
-  'creater',
-  'poster',
-  'unpostControl',
-  'unposter',
-  'unpostTime',
-  'sharer',
 ];
+
 @Component({
   selector: 'lib-popup-add-journal',
   templateUrl: './popup-add-journal.component.html',
@@ -141,6 +84,7 @@ export class PopupAddJournalComponent
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
   disabledFields: string[] = [];
+  dataValueProps: string[] = [];
 
   vllDateFormat: any;
   vllStringFormat: any;
@@ -155,7 +99,7 @@ export class PopupAddJournalComponent
   ) {
     super(injector);
 
-    this.journal = dialogRef.dataService?.dataSelected;
+    this.journal = { ...this.journal, ...dialogRef.dataService?.dataSelected };
     this.oldJournal = { ...this.journal };
     this.journal.approval = this.journal.approval == '1' ? true : false;
     this.journal.postControl = ['1', '2'].includes(this.journal.postControl)
@@ -167,14 +111,13 @@ export class PopupAddJournalComponent
 
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
-      try {
-        this.tempIDIMControls = JSON.parse(this.journal.idimControl);
-        this.journal.creater = JSON.parse(this.journal.creater);
-        this.journal.approver = JSON.parse(this.journal.approver);
-        this.journal.poster = JSON.parse(this.journal.poster);
-        this.journal.unposter = JSON.parse(this.journal.unposter);
-        this.journal.sharer = JSON.parse(this.journal.sharer);
-      } catch {}
+
+      this.tempIDIMControls = this.journal.idimControl ? JSON.parse(this.journal.idimControl) : "";
+      this.journal.creater = this.journal.creater ? JSON.parse(this.journal.creater) : "";
+      this.journal.approver = this.journal.approver ? JSON.parse(this.journal.approver) : "";
+      this.journal.poster = this.journal.poster ? JSON.parse(this.journal.poster) : "";
+      this.journal.unposter = this.journal.unposter ? JSON.parse(this.journal.unposter) : "";
+      this.journal.sharer = this.journal.sharer ? JSON.parse(this.journal.sharer) : "";
     }
   }
   //#endregion
@@ -190,6 +133,21 @@ export class PopupAddJournalComponent
         console.log(res);
         this.gvs = res;
       });
+
+    this.cache
+      .valueList('AC088')
+      .pipe(
+        map((v) =>
+          v.datas.map(
+            (d) =>
+              irrPropNames.find(
+                (i) => i.toLowerCase() === d.value.toLowerCase()
+              ) ?? this.acService.toCamelCase(d.value)
+          )
+        ),
+        tap((t) => console.log(t))
+      )
+      .subscribe((res) => (this.dataValueProps = res));
 
     if (this.isEdit) {
       this.cache
@@ -254,7 +212,7 @@ export class PopupAddJournalComponent
   handleInputChange(e): void {
     console.log(e);
 
-    const irFields = ['creater'];
+    const irFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
     if (irFields.includes(e.field)) {
       this.journal[e.field] = e.data.map((d) => {
         const { dataSelected, ...rest } = d;
@@ -324,7 +282,7 @@ export class PopupAddJournalComponent
       : this.journal.sharer;
 
     const dataValueObj = {};
-    for (const prop of dataValueProps) {
+    for (const prop of this.dataValueProps) {
       dataValueObj[prop] = tempJournal[prop];
     }
     tempJournal.dataValue = JSON.stringify(dataValueObj);
