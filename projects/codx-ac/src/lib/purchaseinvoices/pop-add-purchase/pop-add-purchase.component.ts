@@ -325,13 +325,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   valueChangeVAT(e: any) {
     this.vatinvoices[e.field] = e.data;
   }
-  gridCreated(e) {
+  gridCreated(e, grid) {
     let hBody, hTab, hNote;
     if (this.cardbodyRef)
       hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
     if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
     this.gridHeight = hBody - (hTab + hNote + 100); //40 là header của tab
+    grid.disableField(this.lockFields);
   }
   expandTab() {}
   cellChangedPurchase(e: any) {
@@ -794,7 +795,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 .exec('PS', 'PurchaseInvoicesLinesBusiness', 'UpdateAsync', [
                   this.purchaseinvoices,
                   this.purchaseInvoicesLines,
-                  this.purchaseInvoicesLinesDelete
+                  this.purchaseInvoicesLinesDelete,
                 ])
                 .subscribe((res: any) => {
                   if (res) {

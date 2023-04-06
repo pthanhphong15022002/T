@@ -20,13 +20,13 @@ import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.
 export class JournalNamesComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-
   views: Array<ViewModel> = [];
   button: ButtonModel = {
     id: 'btnAdd',
   };
   functionName: string;
-
+  vll86 = [];
+  vll85 = [];
   constructor(
     inject: Injector,
     private route: Router,
@@ -38,7 +38,18 @@ export class JournalNamesComponent extends UIComponent {
   //#region Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.valueList('AC086').subscribe((res) => {
+      if (res) {
+        this.vll86 = res.datas;
+      }
+    });
+    this.cache.valueList('AC085').subscribe((res) => {
+      if (res) {
+        this.vll85 = res.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.views = [

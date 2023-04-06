@@ -7,7 +7,7 @@
 :root {
   --fs-body: 13px;
 
-  .e-grid .e-rowcell{
+  .e-grid .e-rowcell {
     font-size: var(--fs-body);
   }
 }
@@ -42,14 +42,15 @@ erm-quick-links-inner .dropdown-menu {
   width: 1100px !important;
 }
 
-.btn-noborder .btn{
+.btn-noborder .btn {
   border: 0;
 }
-.table-bordered tr th, .table-bordered tr td {
+.table-bordered tr th,
+.table-bordered tr td {
   border: 1px var(--gray-150) solid;
 }
-.table.table-bordered tbody tr:last-child td{
-  border: 1px var(--gray-150) solid!important;
+.table.table-bordered tbody tr:last-child td {
+  border: 1px var(--gray-150) solid !important;
 }
 /***** end theme ****/
 ::-webkit-scrollbar {
@@ -125,7 +126,7 @@ textarea.e-input,
 input.e-input,
 .e-input-group,
 .e-input-group.e-control-wrapper {
-  height: 32px!important;
+  height: 32px !important;
 }
 
 input.e-input::placeholder,
@@ -402,9 +403,9 @@ codx-views > .container-fluid.h-100 {
 }
 
 hr {
- // background-color: var(--gray-200);
- border-color: var(--gray-150);
- opacity: 1;
+  // background-color: var(--gray-200);
+  border-color: var(--gray-150);
+  opacity: 1;
 }
 
 .is-invalid .ng-invalid,
@@ -1892,9 +1893,9 @@ codx-header #chat-box {
   padding-right: 0px !important;
 }
 
-// .e-dlg-target .e-tab .e-content.e-lib {
-//   padding-left: 0;
-// }
+.e-dlg-target .e-tab .e-content.e-lib {
+  padding-left: 0;
+}
 .input-circle.input-sm .e-input-group.e-ddl {
   border-radius: 26px !important;
   padding-left: 5px !important;
@@ -2186,7 +2187,6 @@ codx-valuelist .btn.select-icon {
     overflow: auto;
     padding: 0 15px;
     display: block;
-
   }
   .icon-login {
     rotate: 180deg;
@@ -2203,16 +2203,16 @@ codx-calendar {
 
 //
 
-.btn:focus{
-  border-color: transparent!important;
+.btn:focus {
+  border-color: transparent !important;
 }
-.e-pane.e-static-pane{
-  ejs-listview{
+.e-pane.e-static-pane {
+  ejs-listview {
     .e-list-parent.e-ul .e-list-item {
-      border-bottom: 1px var(--gray-150) solid!important;
+      border-bottom: 1px var(--gray-150) solid !important;
     }
   }
 }
-.form-control.codx-textarea{
+.form-control.codx-textarea {
   padding: 0;
 }
