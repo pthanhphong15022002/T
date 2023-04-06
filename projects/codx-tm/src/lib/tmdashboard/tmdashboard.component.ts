@@ -377,8 +377,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         active: true,
         sameData: false,
         //reportType:'D',
-        reportView:true,
-        showFilter:true,
+        reportView: true,
+        showFilter: true,
 
         model: {
           panelRightRef: this.template,
@@ -431,10 +431,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  filterChange(e:any){
-    debugger
+  filterChange(e: any) {
+    debugger;
   }
-  onActions(e:any){
-    debugger
+  onActions(e: any) {
+    debugger;
   }
 }

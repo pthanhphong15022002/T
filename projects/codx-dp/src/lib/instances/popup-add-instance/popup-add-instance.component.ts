@@ -89,6 +89,7 @@ export class PopupAddInstanceComponent implements OnInit {
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   oldEndDate: Date;
+  endDate: Date;
   oldIdInstance: string;
   user: any;
   autoName: string = '';
@@ -103,39 +104,45 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-    this.action = dt?.data[0];
-    this.isApplyFor = dt?.data[1];
-    this.listStep = dt?.data[2];
-    this.titleAction = dt?.data[3];
-    this.formModelCrr = dt?.data[4];
-    this.listStepCbx = dt?.data[5];
-    this.totalDaySteps = dt?.data[6];
-    this.autoName = dt?.data[9];
-    this.totalHourSteps = dt?.data[10];
+    this.action = dt?.data?.action;
+    this.isApplyFor = dt?.data?.applyFor;
+    this.listStep = dt?.data?.listSteps;
+    this.titleAction = dt?.data?.titleAction;
+    this.formModelCrr = dt?.data?.formMD;
+    this.autoName = dt?.data?.autoName;
+    this.endDate = new Date(dt?.data?.endDate);
+    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.user = this.authStore.get();
     if (this.action === 'edit') {
-      this.autoName = dt?.data[7];
-      this.lstParticipants = dt?.data[8];
+      this.autoName = dt?.data?.autoName;
+      this.lstParticipants = dt?.data?.lstParticipants;
       this.owner = this.instance?.owner;
-    }else{
-      this.lstParticipants = dt?.data[7];
-      var isAdmin = dt?.data[10];
+      if (
+        this.instance.permissions != null &&
+        this.instance.permissions.length > 0
+      ) {
+        this.lstParticipants = this.instance.permissions.filter(
+          (x) => x.roleType === 'P'
+        );
+      }
+    }
+    else {
+      this.lstParticipants =dt?.data?.lstParticipants;
+      this.instance.endDate = this.endDate;
+      var isAdmin  = dt?.data.isAdminRoles;
       if(this.user.administrator || isAdmin){
         this.owner = '';
-      }else{
+      }
+      else{
         this.owner = this.user.userID
       }
     }
 
 
     if (this.action === 'copy') {
-      this.oldIdInstance = dt?.data[8];
+      this.oldIdInstance = dt?.data?.oldIdInstance;
     }
-    // if (this.instance.owner != null) {
-    //   this.getNameAndPosition(this.instance.owner);
-    // }
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -151,7 +158,6 @@ export class PopupAddInstanceComponent implements OnInit {
   ngOnInit(): void {
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
-      this.handleEndDayInstnace(this.totalDaySteps,this.totalHourSteps);
     } else if (this.action === 'edit') {
       this.oldEndDate = this.instance?.endDate;
     }
@@ -191,6 +197,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   valueChange($event) {
     if ($event) {
+      debugger;
       this.instance[$event.field] = $event.data;
     }
   }
@@ -270,12 +277,9 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     } else if (
-      this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
+      this.checkEndDayInstance(this.instance?.endDate, this.endDate)
     ) {
-      // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
-      this.notificationsService.notifyCode(
-        `Ngày đến hạn phải lớn hơn hoặc bằng ${this.dateMessage} `
-      );
+      this.notificationsService.notifyCode('DP032', 0, '"' + this.dateMessage + '"');
       return;
     }
     //khong check custom field nua - nhung ko xóa
@@ -311,10 +315,10 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   onAdd() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res && res.save) {
-          this.dialog.close(res);
+          this.dialog.close(res.save);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -351,35 +355,28 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return true;
   }
-  handleEndDayInstnace(durationDay: any, totalHourSteps:any) {
-    this.instance.endDate = new Date();
-    // this.instance.endDate.setDate(
-    //   this.instance.endDate.getDate() + durationDay
-    // );
-    // this.instance.endDate.setHours(
-    //   this.instance.endDate.getHours() + totalHourSteps
-    // );
+  checkEndDayInstance(endDate, endDateCondition) {
 
-    this.dateOfDuration = JSON.parse(JSON.stringify(this.instance?.endDate));
-  }
-  checkEndDayInstance(endDate, durationDay) {
-    if (this.action === 'edit') {
-      var timeEndDay =
-        moment(new Date(this.instance.createdOn)).toDate().getTime() +
-        durationDay * 24 * 3600000;
-      var dateFormatCreate = moment(new Date(timeEndDay)).toDate();
+    var dateFormatEndDay = new Date(endDateCondition);
+    var dateStr1 = new Date( endDate).toISOString();
+    var dateStr2 = endDateCondition.toISOString();
+
+
+    var formatDate1 = new Date(dateStr1).toLocaleDateString('en-AU');
+
+    var formatDate2 = new Date(dateStr2).toLocaleDateString('en-AU');
+    if (formatDate1 >= formatDate2) {
+      return false;
     }
-    var dateFormatDuration = new Date(
-      this.action === 'edit' ? dateFormatCreate : this.dateOfDuration
-    );
-    var dateFormatEndDay = new Date(endDate);
-    var dateStr1 = dateFormatDuration.toISOString().slice(0, 10);
-    var dateStr2 = dateFormatEndDay.toISOString().slice(0, 10);
-    this.dateMessage = new Date(dateFormatDuration).toLocaleDateString('en-AU');
-    if (dateStr1 > dateStr2) {
-      return true;
-    }
-    return false;
+    return true;
+    // var date1 = new Date(endDate)
+    // var date2 = new Date(endDateCondition);
+    // this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    // date1.setHours(0, 0, 0, 0);
+    // date2.setHours(0, 0, 0, 0);
+
+    // return date1 < date2;
+
   }
 
   openPopupParticipants(popupParticipants) {

@@ -410,12 +410,11 @@
     .e-pane.e-static-pane{
         .e-listview .e-list-item.e-active {
             background-color: var(--primary-lightest);
-            color: var(--title-color) !important;
+            color: var(--text-dark) !important;
         }
     }
     .e-listview .e-list-item:hover {
         background-color: var(--primary-lighter);
-        color: var(--title-color) !important;
     }
 
     div#newfeed{
