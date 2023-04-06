@@ -1367,36 +1367,36 @@ export class InstancesComponent
 
   //Export file
   exportFile() {
-    // var gridModel = new DataRequest();
-    // gridModel.formName = this.view.formModel.formName;
-    // gridModel.entityName = this.view.formModel.entityName;
-    // gridModel.funcID = this.view.formModel.funcID;
-    // gridModel.gridViewName = this.view.formModel.gridViewName;
-    // gridModel.page = this.view.dataService.request.page;
-    // gridModel.pageSize = this.view.dataService.request.pageSize;
-    // gridModel.predicate = this.view.dataService.request.predicates;
-    // gridModel.dataValue = this.view.dataService.request.dataValues;
-    // gridModel.entityPermission = this.view.formModel.entityPer;
-    // //
-    // this.callfc.openForm(
-    //   CodxExportComponent,
-    //   null,
-    //   null,
-    //   800,
-    //   '',
-    //   [gridModel, this.dataSelected.recID],
-    //   null
-    // );
-    let datas = '';
-    let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
-    this.api
-      .exec<any>('ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
-        datas,
-        id,
-      ])
-      .subscribe((res) => {
-        console.log(res);
-      });
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+    // let datas = '';
+    // let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
+    // this.api
+    //   .exec<any>('ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
+    //     datas,
+    //     id,
+    //   ])
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
