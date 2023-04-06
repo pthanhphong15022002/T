@@ -53,7 +53,6 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
   @Input() reloadData = false;
-  @Input() dataReload: any = null;
   @Input() stepStart: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
@@ -157,12 +156,13 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.processID
         );
       }
-    } else if (changes['reloadData'] && this.reloadData) {
-      this.GetStepsByInstanceIDAsync();
-      this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     }
+    // else if (changes['reloadData'] && this.reloadData) {
+    //   this.cache.moreFunction('DPInstances', 'grvDPInstances').subscribe((res) => {
+    //    this.changeMF.emit({e:res,data:this.dataSelect})
+    //   });
+    // }
   }
-
 
   GetStepsByInstanceIDAsync() {
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
@@ -291,6 +291,7 @@ export class InstanceDetailComponent implements OnInit {
       data: data,
       listStepCbx: this.listSteps,
       isStart: this.isStart,
+      meogi: 'popup',
     });
     // console.log(e);
     // if (e) {
