@@ -15,16 +15,12 @@ import {
   CallFuncService,
   CacheService,
 } from 'codx-core';
-import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import {
   DP_Instances,
   DP_Instances_Steps,
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
-import { InstancesComponent } from '../instances.component';
-import moment from 'moment';
-import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-move-stage',
