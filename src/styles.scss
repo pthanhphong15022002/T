@@ -2244,12 +2244,9 @@ codx-calendar {
 }
 
 //
-
+.e-listview .e-list-item{
+  border-bottom: 0;
+}
  .e-listview li.e-list-item.e-active {
   color: inherit;
-}
-
-
-.user-selected .e-listview .e-list-item{
-border: 0;
 }
