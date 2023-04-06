@@ -1146,33 +1146,6 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
 
-  async changeDataMFStep(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
-          case 'DP07':
-          case 'DP08':
-          case 'DP12':
-          case 'DP13':
-            res.disabled = true;
-            break;
-        }
-      });
-    }
-  }
-  clickMFStep(e, data) {
-    if (e != null) {
-      switch (e.functionID) {
-        case 'DP20':
-          this.openUpdateProgress(data);
-          break;
-      }
-    }
-  }
-
   async changeDataMF(e, type, data = null) {
     if (e != null) {
       e.forEach((res) => {
