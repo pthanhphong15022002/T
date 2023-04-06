@@ -7,6 +7,8 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { Post } from '@shared/models/post';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 import { ImageViewerComponent2 } from 'projects/codx-share/src/lib/components/ImageViewer2/imageViewer2.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
@@ -23,9 +25,9 @@ export class PopupDetailComponent implements OnInit {
 
   dialogRef: any;
   dialogData:any = null;
-  post: WP_Comments= new WP_Comments();
-  postID:string ="";
-  files:any[] = [];
+  parentPost: any = null;
+  chilPost: any = null;
+  parentID:string ="";
   fileID:string = "";
   fileReferType:string = "";
   fileSelected: any = null;
@@ -34,6 +36,7 @@ export class PopupDetailComponent implements OnInit {
   vllL1480:any = null;
   dVll:any = {};
   data:any = null;
+  activeChildPost:boolean = false;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -50,46 +53,88 @@ export class PopupDetailComponent implements OnInit {
   {
     this.dialogRef = dialogRef;
     this.dialogData = dd.data;
+    this.fileSelected = dd.data;
+
   }
 
   ngOnInit(): void {
-    if(this.dialogData)
+    if(this.fileSelected)
     {
-      this.postID = this.dialogData.objectID;
-      this.fileID = this.dialogData.recID;
-      this.fileReferType = this.dialogData.referType;
-      this.getPostByID(this.postID,this.fileID,this.fileReferType);
+      this.parentID = this.fileSelected.objectID;
+      this.fileID = this.fileSelected.recID;
+      this.fileReferType = this.fileSelected.referType;
+      this.getParentPost(this.parentID);
+      this.getChilPost(this.fileID);
     }
   }
   
-  //get post by postID
-  getPostByID(postID: string,fileID:string,referType:string) {
-    if(postID && fileID && referType)
-    {
+  //get parent post by objectID DM_FileInfor 
+  getParentPost(objectID:string) {
+    if(objectID){
       this.api
       .execSv(
         "WP",
         "ERM.Business.WP",
         "CommentsBusiness",
-        'GetDetailPostByIDAsync',
-        [postID,fileID,referType])
+        'GetParentPostAsync',
+        [objectID])
         .subscribe((res: any) => {
         if(res) 
         {
-          this.post = JSON.parse(JSON.stringify(res));
+          this.parentPost = JSON.parse(JSON.stringify(res));
           this.dt.detectChanges();
         }
+      });
+    }
+  }
+  // get child post by recID DM_FileInfor
+  getChilPost(objectID:string){
+    if(objectID){
+      this.api
+      .execSv(
+        "WP",
+        "ERM.Business.WP",
+        "CommentsBusiness",
+        'GetChildPostAsync',
+        [objectID])
+        .subscribe((res:any) => {
+          debugger
+          if(res){
+            this.chilPost = JSON.parse(JSON.stringify(res));
+          }
+          else // chưa có bài viết 
+          {
+            this.chilPost = new Post();
+            this.chilPost.refID = this.fileSelected.recID;
+            if(this.fileSelected.referType == this.FILE_REFERTYPE.IMAGE)
+              this.chilPost.category = "9";
+            else if(this.fileSelected.referType == this.FILE_REFERTYPE.IMAGE)
+              this.chilPost.category = "10";
+            else this.chilPost.category = "11";
+            this.activeChildPost = true;
+          }
+          this.dt.detectChanges();
       });
     }
   }
   //change image
   changeImage(file:any){
     if(file){
-      this.postID = file.objectID;
       this.fileID = file.recID;
-      this.fileReferType = file.referType;
-      this.getPostByID(this.postID,this.fileID,this.fileReferType);
+      this.fileSelected = file;
+      this.getChilPost(file.recID);
     }
-    
+  }
+  // create chilPost
+  createdChilPost(){
+    this.api.execSv( 
+      "WP",
+      "ERM.Business.WP",
+      "CommentsBusiness",
+      'InsertChilPostAsync',
+      [this.chilPost])
+      .subscribe((res:any) => {
+        this.activeChildPost = false;
+      });
   }
 }

@@ -27,6 +27,7 @@ export class Post {
   modifiedOn: string;
   modifiedBy: string;
   picture: string;
+  votes:any[];
   voted: boolean;
   totalComment: number = 0;
   totalVote: number = 0;
@@ -57,6 +58,9 @@ export class Post {
   subContent:string ;
   medias:number ;
   attachments:number ;
+  myVoteType:string;
+  myVoted:string;
+  listVoteType:string;
 
 
   constructor(){
@@ -67,6 +71,8 @@ export class Post {
     this.listComment = [];
     this.medias = 0;
     this.attachments = 0;
+    this.totalComment = 0;
+    this.votes = [];
 
 }
 

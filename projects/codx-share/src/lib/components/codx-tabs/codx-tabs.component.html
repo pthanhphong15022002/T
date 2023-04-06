@@ -69,7 +69,7 @@
         [isTab]="true"
         [hideDelete]="isEdit ? 0 : 1"
         [hideMoreF]="isEdit ? 1 : 0"
-        [referType]="referType"
+        [referType]="!referType ? 'attach':referType"
         [addPermissions]="addPermissions"
         [isReferType]="true"
       >

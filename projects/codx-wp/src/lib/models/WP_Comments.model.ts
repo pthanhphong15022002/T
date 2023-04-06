@@ -77,7 +77,7 @@ export class WP_Comments{
         this.fileSize = 0;
         this.refType = "";
         this.parentID = "";
-        this.votes = null;
+        this.votes = [];
         this.shareControl = "9";
         this.permissions = null;
         this.approveControl = "";

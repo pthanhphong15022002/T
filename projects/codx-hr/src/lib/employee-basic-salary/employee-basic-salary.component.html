@@ -1,0 +1,136 @@
+<codx-views #view [funcID]="funcID" service="HR" assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
+  className="EBasicSalariesBusiness" [method]="method" [views]="views" [autoLoad]="true" idField="recID"
+  [button]="buttonAdd" (buttonClick)="addBasicSalaries($event)" (selectedChange)="changeItemDetail($event)">
+</codx-views>
+
+<ng-template #headerTemplate let-data>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblEBasicSalaries" [default]="'Lương cơ bản - Đóng BHXH | Hiệu lực'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+  </div>
+</ng-template>
+
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center min-h-100px">
+    <!-- employee info -->
+    <div class="w-25 p-3 fs-5 fw-500">
+      <div class="d-flex align-items-start">
+        <div class="d-flex flex-column">
+          <codx-img [width]="35" class="me-3" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
+            [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
+          </codx-img>
+          <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="data?.emp?.gender" [showText]="false"
+            [showIcon]="true" [showBgColor]="true">
+          </codx-vll>
+        </div>
+        <div class="d-flex flex-column">
+          <div>
+            <div class="fw-bold">
+              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
+              <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+              <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+            </div>
+          </div>
+          <div class="text-gray-700">
+            <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
+          </div>
+          <div class="text-gray-700">
+            <span [innerHTML]="data?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end employee info -->
+    <!-- Salary -->
+    <div class="w-25 p-3 fs-5 fw-500">
+      <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'">
+        <div class="d-flex flex-row">
+          <div class="align-self-center fw-bold">
+            <span class="icon-attach_money icon-15 me-1 align-self-center"></span>
+            <span class="align-self-center fw-bold"
+              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+            </span>
+            <span> - </span>
+            <span class="icon-monetization_on icon-15 align-self-senter me-1"></span>
+            <span class="align-self-center fw-bold"
+              [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
+            </span>
+          </div>
+
+        </div>
+        <!-- EffectedDate -->
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row">
+            <span class="icon-calendar_today icon-15 me-1"></span>
+            <div class="align-self-center fw-bold">
+              <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
+                {{ data?.effectedDate | fmDT }}
+              </span>
+              <span> - </span>
+              <span [title]="eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''">
+                {{ data?.expiredDate | fmDT }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- end EffectedDate -->
+      </div>
+    </div>
+    <!-- end salaty -->
+    <!-- DecisionNO -->
+    <div class="w-25 p-3 fs-5 fw-500">
+      <div class="d-flex flex-column">
+        <div class="text-gray-700 d-flex flex-row">
+          <span class="icon-event_notes icon-15 me-1"></span>
+          <div class="align-self-center fw-bold">
+            <span [title]="eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''">
+              {{ data?.decisionNo }}
+            </span>
+            <span> - </span>
+            <span [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : ''">
+              {{ data?.signedDate | fmDT }}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-row">
+          <div>
+            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+              <i class="icon-attach_file text-primary icon-15"></i>
+              <div class="align-self-center notification-count me-4 bg-primary">
+                {{ data?.attachments }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName"
+                hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
+                allowMultiFile="1" [formModel]="view.formModel" displayThumb="full" showMessage="0">
+            </codx-attachment> -->
+    </div>
+    <!-- end decision -->
+    <!-- status -->
+    <div class="w-25 p-3 fs-5 fw-500">
+      <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus" [showText]="true"
+        [showIcon]="false" [showBgColor]="true">
+      </codx-vll>
+    </div>
+    <!-- end status -->
+    <!-- more function -->
+    <div class="align-self-center">
+      <div style="height: 35px" class="has-action-menu">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)" [dataItem]="data" type="hover">
+        </codx-mfunc>
+      </div>
+    </div>
+    <!-- end more function -->
+  </div>
+</ng-template>

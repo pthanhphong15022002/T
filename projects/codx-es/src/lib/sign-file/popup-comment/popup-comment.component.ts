@@ -109,4 +109,8 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
       this.result[e.field] = e.data;
     }
   }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  }
 }
