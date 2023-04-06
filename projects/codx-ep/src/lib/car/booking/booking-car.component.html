@@ -101,9 +101,9 @@
   <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
     <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
     </codx-img>
-    <div class="ps-2 d-flex col-8 flex-column ">
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
       <span class="w-100 text-truncate">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
-      <span class="fw-bold w-100 text-truncate">{{data?.title}}</span>
+      <span class="text-dark w-100 text-truncate">{{data?.title}}</span>
     </div>
   </div>
 </ng-template>
