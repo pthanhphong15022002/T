@@ -801,7 +801,7 @@
 
 <ng-template #viewReason let-dialog="dialogPopupReason">
   <codx-form
-    headerText="Chọn lý do thành công"
+    [headerText]="titleReason"
     [body]="bodyFormReName"
     [footer]="footerFormReName"
     [dialog]="dialogPopupReason"
@@ -811,7 +811,7 @@
 
 <ng-template #bodyFormReName>
   <div class="form-group mt-3">
-    <div *ngFor="let item of listStepReason.reasons">
+    <div *ngFor="let item of listStepReason">
       <div class="form-check py-2">
         <input
           class="form-check-input rounded-circle"

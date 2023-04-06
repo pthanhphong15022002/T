@@ -133,6 +133,9 @@ export class StagesDetailComponent implements OnInit {
   viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
+  stepNameSuccess: string = '';
+  stepNameFail : string = '';
+  stepNameReason : string = '';
 
   constructor(
     private callfc: CallFuncService,
@@ -176,6 +179,7 @@ export class StagesDetailComponent implements OnInit {
       gridViewName: 'grvDPInstancesStepsTaskGroups',
     };
     this.getgridViewSetup(this.frmModelInstancesGroup);
+    this.getValueListReason();
     this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
   }
 
@@ -233,9 +237,9 @@ export class StagesDetailComponent implements OnInit {
         this.dataStep = null;
       }
       this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ? 'Lý do thành công'
+        ?  this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameSuccess))
         : changes['dataStep'].currentValue?.isFailStep
-        ? 'Lý do thất bại'
+        ? this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameFail))
         : '';
     }
   }
@@ -1308,23 +1312,11 @@ export class StagesDetailComponent implements OnInit {
   }
   checkValue($event, data) {
     if ($event && $event.currentTarget.checked) {
-      var reason = this.handleReason(data, this.dataStep);
-      this.listReasonsClick.push(reason);
+      this.listReasonsClick.push(data);
     } else {
       let idx = this.listReasonsClick.findIndex((x) => x.recID === data.recID);
       if (idx >= 0) this.listReasonsClick.splice(idx, 1);
     }
-  }
-  handleReason(
-    reason: DP_Instances_Steps_Reasons,
-    instanceStep: DP_Instances_Steps
-  ) {
-    reason.stepID = instanceStep.stepID;
-    reason.instanceID = instanceStep.recID;
-    reason.createdBy = this.user.userID;
-    reason.processID = this.instance.processID;
-    // reason.reasonType = this.isReason ? '1' : '2';
-    return reason;
   }
   onSaveReason() {
     var data = [
@@ -1364,6 +1356,31 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
+  getValueListReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.stepNameSuccess = item?.text;
+          } else if (item.value === 'F') {
+            this.stepNameFail = item?.text;
+          } else if (item.value === 'R') {
+            this.stepNameReason = item?.text;
+          }
+        }
+      }
+    });
+  }
+  joinTwoString(valueFrist, valueTwo) {
+    valueTwo = this.LowercaseFirstPipe(valueTwo);
+    if (!valueFrist || !valueTwo) return '';
+    return valueFrist + ' ' + valueTwo;
+  }
+  LowercaseFirstPipe(value) {
+    if (!value) return '';
+    return value.charAt(0).toLowerCase() + value.slice(1);
+  }
+
   //detail field
   // inputElmIDCustomField(e){
   //   this.currentElmID = e ;
