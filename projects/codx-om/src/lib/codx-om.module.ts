@@ -13,10 +13,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { OkrPlansComponent } from './okr/okr-plans/okr-plans.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
-import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
@@ -74,7 +72,6 @@ const routes: Routes = [
     DashboardComponent,
     ReportsComponent,
     ReviewsComponent,
-    OkrPlansComponent,
     PopupAddKRComponent,
     PopupAddOBComponent,
     PopupShowKRComponent,
@@ -82,7 +79,6 @@ const routes: Routes = [
     PopupDistributeOKRComponent,
     PopupAssignmentOKRComponent,
     OkrTargetsComponent,
-    OkrAddComponent,
     OkrReviewsComponent,
     PopupCheckInComponent,
     PopupSaveVersionComponent,

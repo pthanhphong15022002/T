@@ -19,6 +19,7 @@ import { CacheService, FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
+  @Input() referType="source"
   listRoles = [];
   vllStatusAssign = 'TM007';
   vllStatus = 'TM004';
@@ -26,6 +27,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   isClose = true;
   isShow = false;
   vllRole = 'TM002';
+
 
   constructor(
     private dt: ChangeDetectorRef,

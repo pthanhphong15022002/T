@@ -15,10 +15,12 @@ import {
 })
 export class PopupQuickaddContactComponent implements OnInit {
   dialog: any;
-  data = new tmpCrm();
+  data = new CM_Contacts();
   firstName: any;
   lastName: any;
   gridViewSetup: any;
+  title = '';
+  action = '';
   contact: CM_Contacts;
   constructor(
     private notiService: NotificationsService,
@@ -28,6 +30,12 @@ export class PopupQuickaddContactComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.title = dt?.data[0];
+    this.action = dt?.data[1];
+    if (this.action == 'edit') {
+      this.data = JSON.parse(JSON.stringify(dt?.data[2]));
+      this.getLastAndFirstName(this.data.contactName);
+    }
   }
   ngOnInit(): void {
     this.cache
@@ -40,6 +48,18 @@ export class PopupQuickaddContactComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+  }
+
+  getLastAndFirstName(contactName) {
+    if (contactName != null) {
+      var nameArr = contactName.split(' ');
+      if (nameArr != null && nameArr.length > 1) {
+        this.lastName = nameArr.slice(0, -1).join(' ');
+        this.firstName = nameArr[nameArr.length - 1];
+      } else {
+        this.firstName = contactName;
+      }
+    }
   }
 
   beforeSave(op) {
@@ -62,21 +82,25 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       this.data.contactName = '';
     }
-    data = [
-      this.data,
-      this.dialog.formModel.formName,
-      this.dialog.formModel.funcID,
-      this.dialog.formModel.entityName,
-    ];
+    if (this.action == 'add' || this.action == 'copy') {
+      data = [
+        this.data,
+        this.dialog.formModel.formName,
+        this.dialog.formModel.funcID,
+        this.dialog.formModel.entityName,
+      ];
 
-    this.cmSv.quickAddContacts(data).subscribe((res) => {
-      if (res) {
-        this.contact = res;
-        this.dialog.close(this.contact);
-      } else {
-        this.dialog.close();
-      }
-    });
+      this.cmSv.quickAddContacts(data).subscribe((res) => {
+        if (res) {
+          this.contact = res;
+          this.dialog.close(this.contact);
+        } else {
+          this.dialog.close();
+        }
+      });
+    } else {
+      this.dialog.close(this.data);
+    }
   }
 
   onSave() {
@@ -94,6 +118,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     if (this.data.email != null && this.data.email.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
     }
+
     this.onAdd();
   }
 

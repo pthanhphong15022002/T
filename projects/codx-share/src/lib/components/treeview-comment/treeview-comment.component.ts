@@ -3,64 +3,46 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { WPService } from '@core/services/signalr/apiwp.service';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
-import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
-import { CodxShareService } from '../../codx-share.service';
-import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
   styleUrls: ['./treeview-comment.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TreeviewCommentComponent implements OnInit {
+export class TreeviewCommentComponent implements OnInit,OnChanges {
+  @Input() data:any = null;
+  @Input() activeParent:boolean = false;
   @Input() funcID:string = "";
   @Input() objectID:string = "";
   @Input() objectType:string = "";
   @Input() formModel:FormModel = null;
-  @Input() rootData: any = null;
-  @Input() dataComment: any = null;
-  @Output() pushComment = new EventEmitter;
+  @Output() pushCommentEvt = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
-
-
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
+  
+  
 
-  data:any = null;
-  pageIndex:number = 0 ;
   crrId = '';
-  checkValueInput = false;
-  lstData: any;
-  lstUserVoted: any;
-  countVote_Like: number;
-  countVote_Amazing: number;
-  countVote_Happy: number;
-  countVote_Sad: number;
-  countVote_Angry: number;
-  votedTypeUpdated: string;
-  pennant = 0;
   checkVoted = false;
-  comments = "";
-  repComment = "";
   dicDatas = {};
   user: any;
   votes: any;
   lstUserVote: any;
-  dataSelected: any[];
-  vllL1480:any = null;
   dVll: any = {};
   totalComment:number = 0;
-
+  vllL1480:any[] = [];
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
@@ -69,20 +51,25 @@ export class TreeviewCommentComponent implements OnInit {
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
 
-  ) {
+  ) 
+  {
     this.user = this.auth.userValue;
-    
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getCommentsAsync();
   }
 
   ngOnInit(): void {
+    this.getCommentsAsync();
     this.getValueIcon();
-    this.getDataComment();
   }
+  
   // get vll icon
   getValueIcon(){
-    this.cache.valueList("L1480").subscribe((res) => {
-      if (res) {
-        this.vllL1480 = res.datas as any[];
+    this.cache.valueList("L1480")
+    .subscribe((res) => {
+      if(Array.isArray(res.datas)) {
+        this.vllL1480 = Array.from<any>(res.datas);
         if(this.vllL1480.length > 0){
           this.dVll["0"] = null;
           this.vllL1480.forEach(element => {
@@ -92,24 +79,37 @@ export class TreeviewCommentComponent implements OnInit {
       }
     });
   }
-  // get total comment
-  getDataComment(){ 
-    if(this.objectID){
-      this.api.execSv
-      ("WP",
+  // get comment
+  pageIndex:number = 1 ;
+  totalPage:number = 0;
+  pageSize:number = 10;
+  getCommentsAsync(scrolled:boolean = false){ 
+    if(scrolled){
+      this.pageIndex++;
+      if(this.pageIndex > this.totalPage){
+        return
+      }
+    }
+    this.api.execSv(
+      "WP",
       "ERM.Business.WP",
       "CommentsBusiness",
-      "GetCommentsByOjectIDAsync",
-      [this.objectID, this.pageIndex])
+      "GetCommentsAsync",
+      [this.data.recID, this.pageIndex,true])
       .subscribe((res:any[]) => {
-        if(res){
-          this.dataComment.listComment = res[0];
-          this.totalComment = res[1];
+        if(res && res[0].length > 0){
+          if(scrolled)
+          {
+            this.data.listComment = this.data.listComment.concat(res[0]);
+          }
+          else
+          {
+            this.totalPage = Math.ceil(res[1]/this.pageSize);
+            this.data.listComment = res[0];
+          }
           this.dt.detectChanges();
         }
       });
-    } 
-    
   }
   // click show votes
   showVotes(data: any) {
@@ -128,40 +128,9 @@ export class TreeviewCommentComponent implements OnInit {
         this.dt.detectChanges();
       })
   }
-  //reploy comment
-  replyComment(post: any, value: any) {
-    if (!value.trim()) {
-      this.notifySvr.notifyCode('E0315');
-      return;
-    }
-    if (post.recID) {
-      var type = "WP_Comments";
-      this.api
-        .execSv<any>(
-          'WP',
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'PublishCommentAsync',
-          [post.recID, value, this.dataComment.recID, type]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.dataComment.totalComment += 1;
-            this.comments = "";
-            this.repComment = "";
-            post.showReply = false;
-            this.crrId = "";
-            this.setNodeTree(res);
-            this.dt.detectChanges();
-          }
-        });
-    }
-  }
   // send comment
   sendComment(event:any,data:any = null){
-    this.comments = "";
-    this.repComment = "";
-    this.dataComment.totalComment += 1;
+    this.data.totalComment += 1;
     event.showReply = false;
     if(data){
       data.showReply = false;
@@ -169,18 +138,16 @@ export class TreeviewCommentComponent implements OnInit {
     this.crrId = "";
     this.dicDatas[event["recID"]] = event;
     this.setNodeTree(event);
+    // bài viết chi tiết - tạo bài viết khi comment lần đầu
+    if(this.activeParent){
+      this.pushCommentEvt.emit(event);
+      this.activeParent = false;
+    }
     this.dt.detectChanges();
   }
   // reply to
   replyTo(data) {
     data.showReply = !data.showReply;
-    this.dt.detectChanges();
-  }
-  votePostEmit(event:any){
-    if(event)
-    {
-      this.voteCommentEvt.emit();
-    }
   }
   // votes post
   votePost(data: any, voteType = null) {
@@ -201,7 +168,8 @@ export class TreeviewCommentComponent implements OnInit {
               data.myVoted = false;
               this.checkVoted = false;
             }
-            else {
+            else
+            {
               data.myVoteType = voteType;
               data.myVoted = true;
               this.checkVoted = true;
@@ -212,62 +180,26 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-  //voet comment
-  voteComment(data: any) {
-    if (!data.recID) return;
-    this.api
-      .execSv<any>(
-        'WP',
-        'ERM.Business.WP',
-        'VotesBusiness',
-        'VotePostAsync',
-        [data.recID, "1"]
-      )
-      .subscribe((res) => {
-        if (res) {
-          data.myVoted = true;
-          data.totalVote += 1;
-          this.dt.detectChanges();
-        }
-      });
-  }
   // load subcomment
   loadSubComment(data:any) {
-    data.isShowComment = !data.isShowComment;
-    data.totalSubComment  = 0 ;
+    data.isShowComment = true;
     this.api.execSv(
       'WP',
       'ERM.Business.WP',
       'CommentsBusiness',
       "GetSubCommentAsync",
-      [data.recID, 0]
-    ).subscribe((res: any[]) =>
-      {
+      [data.recID])
+      .subscribe((res: any[]) =>{
         if(res){
+          data.listComment = res;
           res.map((e:any) => {this.setNodeTree(e)});
+          this.dt.detectChanges();
         }
       })
   }
   // click show comment
-  showComments(data: any) {
-    this.dataComment.isShowComment = !this.dataComment.isShowComment;
-    this.dt.detectChanges();
-    if(this.dataComment.isShowComment){
-      this.getDataComment();
-    }
-  }
-  // value change
-  valueChange(value: any, type) {
-    var text = value.data.toString().trim();
-    if (text) {
-      if (type == "comments") {
-        this.comments = text;
-      }
-      else {
-        this.repComment = text;
-      }
-      this.dt.detectChanges();
-    }
+  showComments() {
+    this.data.isShowComment = !this.data.isShowComment;
   }
   //set tree
   setDicData(data) {
@@ -283,11 +215,15 @@ export class TreeviewCommentComponent implements OnInit {
     if (parent)
       this.addNode(parent, newNode, id);
     else
+    {
       this.addNode(null, newNode, id);
+
+    }
     this.dt.detectChanges();
   }
   // add tree
   addNode(dataNode: any, newNode: any, id: string) {
+    debugger
     let idx = -1;
     let node = null;
     if(dataNode)
@@ -308,101 +244,51 @@ export class TreeviewCommentComponent implements OnInit {
       }
       else 
       {
-        dataNode.listComment.push(newNode);
+        dataNode.listComment.unshift(newNode);
       }
     }
-    else {
-      this.dataComment.listComment.push(newNode);
+    else 
+    {
+      if(!Array.isArray(this.data.listComment)){
+        this.data.listComment = [];
+      }
+      this.data.listComment.unshift(newNode);
     }
     this.dt.detectChanges();   
   }
   //remove tree
   removeNodeTree(id: string) {
     if (!id) return;
-    var data = this.dicDatas[id],
-      parentId = data["refID"];
+    var data = this.dicDatas[id]
+    var parentId = data["refID"];
     if (data) {
       var parent = this.dicDatas[parentId];
-      if (parent) {
-        parent.listComment = parent.listComment.filter(function (element: any, index: any) {
-          return element["recID"] != id;
-        });
-      } else {
-        if (!this.dataComment) return;
-        this.dataComment.listComment = this.dataComment.listComment.filter(function (element: any, index: any) {
-          return element["recID"] != id;
-        });
-      }
+      if (parent)
+        parent.listComment = parent.listComment.filter((element: any) => element["recID"] != id);
+      else 
+        this.data.listComment = this.data.listComment.filter((element: any) => element["recID"] != id);
       delete this.dicDatas[id];
     }
     this.dt.detectChanges();
   }
-
   // delete comment
-  deleteComment(event: any) {
-    this.removeNodeTree(event.data.recID);
-    this.dataComment.totalComment -= event;
-    if(this.dataComment.totalComment < 0)
-      this.dataComment.totalComment = 0;
-    this.notifySvr.notifyCode('SYS008');
-    this.dt.detectChanges();
+  deleteComment(data: any) {
+    if(data?.recID){
+      this.removeNodeTree(data.recID);
+      this.getTotalComment();
+    }
   }
-  //click edit comment
-  clickEditComment(comment: any) {
-    comment.isEditComment = true;
-    this.dt.detectChanges();
-  }
-  // value change
-  valueChangeComment(event: any, comment: any) {
-    comment.content = event.data
-    this.dt.detectChanges();
-  }
-  //edit comment
-  editComment(value: string, comment: any) {
-    comment.content = value;
+  //get total comment
+  getTotalComment(){
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
       "CommentsBusiness",
-      "UpdateCommentPostAsync",
-      [comment.recID, value])
-      .subscribe((res: boolean) => {
-        if (res) {
-          comment.isEditComment = false;
-          this.notifySvr.notifyCode("SYS007");
-          this.dt.detectChanges();
-        }
-        else {
-          this.notifySvr.notifyCode("SYS021");
-        }
-      })
-  }
-  //upload file
-  upLoadFile(){
-    this.codxATM.uploadFile();
-  }
-  //attachment return
-  fileUpload:any[] = [];
-  fileCount(files:any){
-    if(files && files.data.length > 0){
-      this.fileUpload = files.data;
-      this.codxFile.addFiles(this.fileUpload);
+      "GetTotalCommentsAsync",
+      [this.data.recID])
+    .subscribe((res:number) => {
+      this.data.totalComment = res;
       this.dt.detectChanges();
-    }
-  }
-  // add file
-  addFile(files: any) {
-    if (this.fileUpload.length == 0) {
-      this.fileUpload = files;
-    }
-    else {
-      this.fileUpload.concat(files);
-    }
-    this.dt.detectChanges();
-  }
-  // remove file
-  removeFile(file: any) {
-    this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
-    this.dt.detectChanges();
+    });
   }
 }

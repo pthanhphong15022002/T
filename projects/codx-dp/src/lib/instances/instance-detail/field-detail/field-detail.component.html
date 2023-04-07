@@ -4,12 +4,19 @@
   >
     <div class="d-flex align-items-center">
       <span class="fs-" *ngIf="titleDefault">
-        <codx-label
+        <!-- <codx-label
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          default="{{ titleDefault }}"
-        ></codx-label>
+          [default]="titleDefault"
+        ></codx-label> -->
+        <codx-label
+          class="title"
+          [formModel]="formModelDefault"
+          fiedName="titleDefault"
+          [default]="titleDefault"
+        >
+        </codx-label>
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
     </div>
@@ -80,9 +87,20 @@
       )
     "
   >
-    <div class="fw-bold mb-1">
-      {{ data.title }}
+    <div>
+      <span class="fw-bold mb-1">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
+      </span>
     </div>
+
     <div class="">
       <ng-container *ngIf="!data.dataValue">
         <span class="place-holder margin-l" *ngIf="data.dataType != 'R'">
@@ -151,7 +169,7 @@
           </ngb-rating>
         </ng-container>
 
-        <ng-container *ngIf="data.dataType == 'P'">
+        <ng-container *ngIf="data.dataType == 'P' ">
           <codx-imgs
             [width]="35"
             [objectId]="data.dataValue"

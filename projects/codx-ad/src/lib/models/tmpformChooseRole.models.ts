@@ -5,7 +5,6 @@ export class tmpformChooseRole {
   largeIcon: string;
   smallIcon: string;
   functionID: string;
-  module: string;
   moduleSales: string;
   roleNames: string;
   recIDofRole: string;

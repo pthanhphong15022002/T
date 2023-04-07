@@ -2,14 +2,14 @@
 </codx-views>
 
 <ng-template #panelContent>
-    <div class="fd-pagehome bg-body p-5 pb-0 h-100" style="overflow: hidden;">
-        <div class="d-flex h-100">
-            <div class="home-center w-100">
+    <div class="fd-pagehome h-100 w-100">
+        <div class="d-flex h-100 w-100">
+            <div class="w-100 home-left">
                 <app-list-post [module]="'FD'" [dataService]="dataServiceWP" [isShowCreate]="false"
                     [formModel]="view.formModel">
                 </app-list-post>
             </div>
-            <div class="home-right w-350px min-w-350px ms-6">
+            <div class="w-350px min-w-350px ms-4 home-right bg-body p-5 rounded-3">
                 <div class="fd_cards">
                     <div class="mb-5 fs-4 fw-bold text-dark">
                         <codx-label [formModel]="view.formModel" name="lblFeedbackMessage"

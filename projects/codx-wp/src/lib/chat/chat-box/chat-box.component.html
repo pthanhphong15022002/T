@@ -8,6 +8,7 @@
                     [objectName]="group.groupType == '1' ? group.groupName2 : group.groupName" 
                     [objectType]="group.groupType == '1'? 'AD_Users' : 'WP_Groups'"
                     [width]="35"
+                    [updateDirect]="true"
                     [isAllowEdit]="group.groupType == '2'">
                 </codx-img>
                 <ng-container *ngIf="group.isOnline">
@@ -49,12 +50,8 @@
         <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let i = index">
                 <ng-container *ngIf="item.messageType == '3';else tmpMessage">
-                    <div class="message-system" >
-                        <ng-container [ngSwitch]="item.jsMessage.mssgCode">
-                            <ng-container *ngSwitchCase="'WP038'">
-                                <div [innerHTML]="item.jsMessage | mssgSYS | async"></div>
-                            </ng-container>
-                        </ng-container>
+                    <div class="message-system" [id]="item.recID">
+                        {{item | mssgSYS:tmpMssg1:tmpMssg2 | async}}
                     </div>
                 </ng-container>
                 <ng-template #tmpMessage>
@@ -66,7 +63,7 @@
                                         class="icon-more_vert me-2 cursor-pointer text-gray-600">
                                         <ul ngbDropdownMenu>
                                             <li ngbDropdownItem>
-                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                                                 </a>
@@ -85,7 +82,7 @@
                                         [ngbTooltip]="tooltipEmojiMssg">
                                     </span>
                                 </div>
-                                <ng-container *ngIf="item.messageType == '1' || item.messageType == '4'">
+                                <ng-container *ngIf="item.messageType != '2'">
                                     <div class="message-send-message">
                                         <!-- message reply -->
                                         <ng-container *ngIf="item.refID">
@@ -108,7 +105,12 @@
                                         </ng-container>
                                         <ng-container *ngIf="item.message">
                                             <div class="message-send_content">
-                                                <span>{{item.message}}</span>
+                                                <ng-container *ngIf="item.messageType == '5';else messageContent">
+                                                    <span>Tin nhắn đã bị xóa.</span>
+                                                </ng-container>
+                                                <ng-template #messageContent>
+                                                    <span>{{item.message}}</span>
+                                                </ng-template>
                                                 <!-- time -->
                                                 <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
                                                     <span class="d-block">{{item.createdOn | date:'hh:mm'}}</span>
@@ -136,15 +138,18 @@
                                 <!-- votes -->
                                 <ng-container *ngIf="item.votes">
                                     <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <div *ngFor="let vote of item.votes">
-                                            <codx-vll 
+                                        <ng-container *ngFor="let voteItem of item.votes">
+                                            <ng-container *ngIf="voteItem.count > 0">
+                                                <codx-vll 
                                                 [path]="'assets/themes/wp/default/img/'"
                                                 [name]="'L1480'" 
-                                                [value]="vote.voteType" 
+                                                [value]="voteItem.voteType" 
                                                 [showIcon]="true" 
                                                 [icoCss]="'w-15px h-15px'">
                                             </codx-vll>
-                                        </div>
+                                            <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
+                                            </ng-container>
+                                        </ng-container>
                                     </div>
                                 </ng-container>
                             </div>
@@ -160,7 +165,7 @@
                                     </codx-img>
                                 </div>
                                 <!-- text -->
-                                <ng-container *ngIf="item.messageType == '1' || item.messageType == '4'">
+                                <ng-container *ngIf="item.messageType != '2' ">
                                     <div class="message-reciver-message">
                                         <!-- message reply -->
                                         <ng-container *ngIf="item.refID">
@@ -183,7 +188,12 @@
                                         </ng-container>
                                         <ng-container *ngIf="item.message">
                                             <div class="reciver-message">
-                                                <span>{{item.message}}</span>
+                                                <ng-container *ngIf="item.messageType == '5';else tmpReciverContent">
+                                                    <span>Tin nhắn đã bị xóa.</span>
+                                                </ng-container>
+                                                <ng-template #tmpReciverContent>
+                                                    <span>{{item.message}}</span>
+                                                </ng-template>
                                                 <!-- time -->
                                                 <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
                                                     <span class="d-block text-start">{{item.createdOn | date:'hh:mm'}}</span>
@@ -211,17 +221,19 @@
                                 <!-- votes -->
                                 <ng-container *ngIf="item.votes">
                                     <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <ng-container *ngFor="let vote of item.votes">
-                                            <div class="d-flex">
-                                                <codx-vll 
-                                                    [path]="'assets/themes/wp/default/img/'"
-                                                    [name]="'L1480'" 
-                                                    [value]="vote.voteType" 
-                                                    [showIcon]="true" 
-                                                    [icoCss]="'w-15px h-15px'">
-                                                </codx-vll>
-                                                <span *ngIf="vote.listVote.length > 1">{{vote.listVote.length}}</span>
-                                            </div>
+                                        <ng-container *ngFor="let voteItem of item.votes">
+                                            <ng-container *ngIf="voteItem.count > 0">
+                                                <div class="d-flex">
+                                                    <codx-vll 
+                                                        [path]="'assets/themes/wp/default/img/'"
+                                                        [name]="'L1480'" 
+                                                        [value]="voteItem.voteType" 
+                                                        [showIcon]="true" 
+                                                        [icoCss]="'w-15px h-15px'">
+                                                    </codx-vll>
+                                                    <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
+                                                </div>
+                                            </ng-container>
                                         </ng-container>
                                     </div>
                                 </ng-container>
@@ -241,7 +253,7 @@
                                         class="icon-more_vert me-2 cursor-pointer text-gray-600">
                                         <ul ngbDropdownMenu>
                                             <li ngbDropdownItem>
-                                                <a (click)="deleteMessage(i)"  href="javascript:void(0)">
+                                                <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                                                 </a>
@@ -432,4 +444,19 @@
             <div [ngbNavOutlet]="nav"></div>
         </div>
     </div>
+</ng-template>
+
+<ng-template #tmpMssg1 let-data>
+    <ng-container *ngFor="let item of data">
+        <span class="mssg-item" (click)="click(item)">
+            <codx-img [objectId]="item.UserID" [objectName]="data.UserName" [objectType]="'AD_Users'" [width]="15"></codx-img>
+            {{item.UserName}}
+        </span>
+    </ng-container>
+</ng-template>
+<ng-template #tmpMssg2 let-data>
+    <span (click)="click(data)" class="mssg-item">
+        <codx-img [objectId]="data.UserID" [objectName]="data.UserName" [objectType]="'AD_Users'" [width]="15"></codx-img>
+        {{data.UserName}}
+    </span>
 </ng-template>

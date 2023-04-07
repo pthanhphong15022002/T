@@ -3,27 +3,44 @@ import {
   Component,
   Injector,
   Optional,
+  Pipe,
+  PipeTransform,
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
   CodxFormComponent,
   CodxInputComponent,
-  CRUDService,
-  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { filter, map, Observable } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journal-names.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
+import { map, tap } from 'rxjs/operators';
+
+const irrPropNames: string[] = [
+  'drAcctControl',
+  'drAcctID',
+  'crAcctControl',
+  'crAcctID',
+  'diM1Control',
+  'diM2Control',
+  'diM3Control',
+  'diM1',
+  'diM2',
+  'diM3',
+  'idimControl',
+  'vatType',
+];
 
 @Component({
   selector: 'lib-popup-add-journal',
@@ -44,6 +61,7 @@ export class PopupAddJournalComponent
     postControl: false,
     approval: false,
   } as IJournal;
+  oldJournal: IJournal;
   formTitle: string;
   gvs: any;
   tabInfo: any[] = [
@@ -63,7 +81,10 @@ export class PopupAddJournalComponent
   isMultiSelectPopupDrHidden: boolean = true;
   isMultiSelectPopupCrHidden: boolean = true;
   isEdit: boolean = false;
+  hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
+  disabledFields: string[] = [];
+  dataValueProps: string[] = [];
 
   vllDateFormat: any;
   vllStringFormat: any;
@@ -72,12 +93,14 @@ export class PopupAddJournalComponent
     private injector: Injector,
     private acService: CodxAcService,
     private journalService: JournalService,
+    private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() private dialogData: DialogData
   ) {
     super(injector);
 
-    this.journal = dialogRef.dataService?.dataSelected;
+    this.journal = { ...this.journal, ...dialogRef.dataService?.dataSelected };
+    this.oldJournal = { ...this.journal };
     this.journal.approval = this.journal.approval == '1' ? true : false;
     this.journal.postControl = ['1', '2'].includes(this.journal.postControl)
       ? true
@@ -88,14 +111,13 @@ export class PopupAddJournalComponent
 
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
-      try {
-        this.tempIDIMControls = JSON.parse(this.journal.idimControl);
-        this.journal.creater = JSON.parse(this.journal.creater);
-        this.journal.approver = JSON.parse(this.journal.approver);
-        this.journal.poster = JSON.parse(this.journal.poster);
-        this.journal.unposter = JSON.parse(this.journal.unposter);
-        this.journal.sharer = JSON.parse(this.journal.sharer);
-      } catch {}
+
+      this.tempIDIMControls = this.journal.idimControl ? JSON.parse(this.journal.idimControl) : "";
+      this.journal.creater = this.journal.creater ? JSON.parse(this.journal.creater) : "";
+      this.journal.approver = this.journal.approver ? JSON.parse(this.journal.approver) : "";
+      this.journal.poster = this.journal.poster ? JSON.parse(this.journal.poster) : "";
+      this.journal.unposter = this.journal.unposter ? JSON.parse(this.journal.unposter) : "";
+      this.journal.sharer = this.journal.sharer ? JSON.parse(this.journal.sharer) : "";
     }
   }
   //#endregion
@@ -111,6 +133,40 @@ export class PopupAddJournalComponent
         console.log(res);
         this.gvs = res;
       });
+
+    this.cache
+      .valueList('AC088')
+      .pipe(
+        map((v) =>
+          v.datas.map(
+            (d) =>
+              irrPropNames.find(
+                (i) => i.toLowerCase() === d.value.toLowerCase()
+              ) ?? this.acService.toCamelCase(d.value)
+          )
+        ),
+        tap((t) => console.log(t))
+      )
+      .subscribe((res) => (this.dataValueProps = res));
+
+    if (this.isEdit) {
+      this.cache
+        .valueList('AC087')
+        .pipe(
+          map((v) => v.datas.map((d) => d.value)),
+          tap((t) => console.log(t))
+        )
+        .subscribe((res) => (this.disabledFields = res));
+
+      this.api
+        .exec(
+          'ERM.Business.AC',
+          'JournalsBusiness',
+          'IsEditableAsync',
+          this.journal.recID
+        )
+        .subscribe((res: boolean) => (this.hasVouchers = !res));
+    }
 
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
@@ -156,7 +212,7 @@ export class PopupAddJournalComponent
   handleInputChange(e): void {
     console.log(e);
 
-    const irFields = ['creater'];
+    const irFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
     if (irFields.includes(e.field)) {
       this.journal[e.field] = e.data.map((d) => {
         const { dataSelected, ...rest } = d;
@@ -180,7 +236,13 @@ export class PopupAddJournalComponent
   handleClickSave(): void {
     console.log(this.journal);
 
-    if (!this.acService.validateFormData(this.form.formGroup, this.gvs)) {
+    if (
+      !this.acService.validateFormData(this.form.formGroup, this.gvs, [
+        'DIM1Control',
+        'DIM2Control',
+        'DIM3Control',
+      ])
+    ) {
       return;
     }
 
@@ -190,37 +252,64 @@ export class PopupAddJournalComponent
       this.journal.invoiceSeriNo = null;
     }
 
-    let temp: IJournal = { ...this.journal };
+    let tempJournal: IJournal = { ...this.journal };
     if (this.journal.approval) {
-      temp.postControl = this.journal.postControl ? 1 : 0;
-      temp.approval = 1;
+      tempJournal.postControl = this.journal.postControl ? 1 : 0;
+      tempJournal.approval = 1;
     } else {
-      temp.postControl = this.journal.postControl ? 2 : 0;
-      temp.approval = 0;
+      tempJournal.postControl = this.journal.postControl ? 2 : 0;
+      tempJournal.approval = 0;
     }
-    temp.projectControl = this.journal.projectControl == '1' ? true : false;
-    temp.assetControl = this.journal.assetControl == '1' ? true : false;
-    temp.postSubControl = this.journal.postSubControl == '1' ? true : false;
-    temp.creater = this.journal.creater
+    tempJournal.projectControl =
+      this.journal.projectControl == '1' ? true : false;
+    tempJournal.assetControl = this.journal.assetControl == '1' ? true : false;
+    tempJournal.postSubControl =
+      this.journal.postSubControl == '1' ? true : false;
+    tempJournal.creater = this.journal.creater
       ? JSON.stringify(this.journal.creater)
       : this.journal.creater;
-    temp.approver = this.journal.approver
+    tempJournal.approver = this.journal.approver
       ? JSON.stringify(this.journal.approver)
       : this.journal.approver;
-    temp.poster = this.journal.poster
+    tempJournal.poster = this.journal.poster
       ? JSON.stringify(this.journal.poster)
       : this.journal.poster;
-    temp.unposter = this.journal.unposter
+    tempJournal.unposter = this.journal.unposter
       ? JSON.stringify(this.journal.unposter)
       : this.journal.unposter;
-    temp.sharer = this.journal.sharer
+    tempJournal.sharer = this.journal.sharer
       ? JSON.stringify(this.journal.sharer)
       : this.journal.sharer;
 
-    const { dataValue, ...rest } = temp;
-    temp.dataValue = JSON.stringify(rest);
+    const dataValueObj = {};
+    for (const prop of this.dataValueProps) {
+      dataValueObj[prop] = tempJournal[prop];
+    }
+    tempJournal.dataValue = JSON.stringify(dataValueObj);
 
-    console.log(temp);
+    // don't allow editting some fields if this journal has any vouchers.
+    if (this.isEdit && this.hasVouchers) {
+      const changedProps: string[] = this.findChangedProps(
+        this.oldJournal,
+        tempJournal
+      ).map((f) => f.toLowerCase());
+      const changedFields: string[] = this.disabledFields
+        .filter((d) => changedProps.includes(d.toLowerCase()))
+        .map((d) => this.gvs?.[d]?.headerText);
+
+      if (changedFields.length > 0) {
+        this.notiService.notifyCode(
+          'AC0008',
+          0,
+          `"${tempJournal.journalName}"`,
+          `"${changedFields.join(', ')}"`
+        );
+
+        return;
+      }
+    }
+
+    console.log(tempJournal);
 
     this.dialogRef.dataService
       .save((req: RequestOption) => {
@@ -230,7 +319,7 @@ export class PopupAddJournalComponent
         req.className = 'JournalsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
-        req.data = temp;
+        req.data = tempJournal;
 
         return true;
       })
@@ -345,7 +434,7 @@ export class PopupAddJournalComponent
         (screen.width * 40) / 100,
         '',
         {
-          autoNoCode: this.journal.recID,
+          autoNoCode: this.journal.journalNo,
           description: this.dialogRef.formModel?.entityName,
         }
       )
@@ -479,6 +568,12 @@ export class PopupAddJournalComponent
     }
 
     return autoNumberFormat.substring(0, autoNumber?.maxLength);
+  }
+
+  findChangedProps(oldJournal: IJournal, newJournal: IJournal): string[] {
+    return Object.keys(oldJournal).filter(
+      (k) => oldJournal[k] !== newJournal[k]
+    );
   }
   //#endregion
 }

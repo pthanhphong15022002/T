@@ -39,6 +39,46 @@
                 "input": "node_modules/ngx-extended-pdf-viewer/assets/",
                 "output": "/assets/"
               },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/additional-locale",
+                "output": "/assets/additional-locale"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/cmaps",
+                "output": "/assets/cmaps"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/images",
+                "output": "/assets/images"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/inline-locale-files",
+                "output": "/assets/inline-locale-files"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale",
+                "output": "/assets/locale"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale/vi",
+                "output": "/assets/locale/vi"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale/en-US",
+                "output": "/assets/locale/en-US"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/standard_fonts",
+                "output": "/assets/standard_fonts"
+              },
               "src/favicon.ico",
               "src/assets",
               {
@@ -67,9 +107,7 @@
               "crypto-js",
               "object-path",
               "clipboard.js",
-              "jquery",
-              "moment",
-              "jquery.orgchart.js"
+              "moment"
             ]
           },
           "configurations": {
@@ -777,6 +815,5 @@
         }
       }
     }
-  },
-  "defaultProject": "CodxUI"
+  }
 }

@@ -605,7 +605,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       itemData,
       this.isAdd,
       this.tmpAttendeesList,
-      null,
       this.tmplstStationery,
     ];
     return true;

@@ -126,6 +126,7 @@ export class EmployeesComponent extends UIComponent {
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
+          hideMoreFunc:true
         },
       },
       // {

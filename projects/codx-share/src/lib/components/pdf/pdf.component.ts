@@ -63,8 +63,8 @@ export class PdfComponent
     private datePipe: DatePipe,
     private notificationsService: NotificationsService
   ) {
-    pdfDefaultOptions.renderInteractiveForms = false;
-    pdfDefaultOptions.annotationEditorEnabled = false;
+    // pdfDefaultOptions.renderInteractiveForms = false;
+    // pdfDefaultOptions.annotationEditorEnabled = false;
     pdfDefaultOptions.doubleTapZoomFactor = null;
 
     super(inject);
@@ -287,6 +287,7 @@ export class PdfComponent
           this.user?.userID,
           this.isApprover,
           this.isEditable,
+          this.transRecID,
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
@@ -1220,19 +1221,19 @@ export class PdfComponent
   }
 
   getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
-    if (txtLayer?.source.textLayerDiv?.nextElementSibling != null) {
-      (
-        txtLayer?.source.textLayerDiv?.nextElementSibling as HTMLElement
-      ).style.zIndex = '-1';
-    }
-    if (txtLayer.pageNumber == this.pageMax) {
-      txtLayer?.source.textDivs.forEach((div) => {
-        if (Number(div.style.top.replace('px', '')) > this.maxTop) {
-          this.maxTop = Number(div.style.top.replace('px', ''));
-          this.maxTopDiv = div;
-        }
-      });
-    }
+    // if (txtLayer?.source.textLayerDiv?.nextElementSibling != null) {
+    //   (
+    //     txtLayer?.source.textLayerDiv?.nextElementSibling as HTMLElement
+    //   ).style.zIndex = '-1';
+    // }
+    // if (txtLayer.pageNumber == this.pageMax) {
+    //   txtLayer?.source.textDivs.forEach((div) => {
+    //     if (Number(div.style.top.replace('px', '')) > this.maxTop) {
+    //       this.maxTop = Number(div.style.top.replace('px', ''));
+    //       this.maxTopDiv = div;
+    //     }
+    //   });
+    // }
   }
   //create area
   /*
@@ -1576,6 +1577,7 @@ export class PdfComponent
         curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
+        curImgEle.src = curArea.labelValue;
         let min = 0;
         let scale = 1;
         curImgEle.onload = () => {

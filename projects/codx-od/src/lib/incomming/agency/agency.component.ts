@@ -1,12 +1,7 @@
 import {
   Component,
   OnInit,
-  TemplateRef,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
   Input,
-  Optional,
 } from '@angular/core';
 
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
@@ -50,8 +45,9 @@ export class AgencyComponent implements OnInit {
     this.codxService
       .getAutoNumber('ODT3', 'OD_Agencies', 'AgencyID')
       .subscribe((dt: any) => {
-        this.agencyForm.value.agencyID = dt;
-        this.agService.SaveAgency(this.agencyForm.value).subscribe((item) => {
+        let agency:any= this.agencyForm.value;
+        agency.agencyID = dt;
+        this.agService.SaveAgency(agency).subscribe((item) => {
           if (item.status == 0) this.dialog.close();
           this.notifySvr.notify(item.message);
         });

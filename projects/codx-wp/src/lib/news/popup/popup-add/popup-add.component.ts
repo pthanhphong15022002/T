@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
 import { ViewsComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_News } from '../../../models/WP_News.model';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add',
@@ -29,6 +30,8 @@ export class PopupAddComponent implements OnInit {
   grvSetup:any = {};
   arrFieldRequire:any[] = [];
   headerText:string = "";
+  loading:boolean = false;
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -75,8 +78,9 @@ export class PopupAddComponent implements OnInit {
     @Optional() dialogRef?: DialogRef
   ) 
   {
-    this.newsType = dialogData.data;
     this.dialogRef = dialogRef;
+    this.data = new WP_News();
+    this.newsType = dialogData.data;
     this.user = auth.userValue;
   }
   ngOnInit(): void {
@@ -86,28 +90,27 @@ export class PopupAddComponent implements OnInit {
   }
   // set data
   setDataDefault() {
-    this.data = new WP_News();
     this.data.newsType = this.newsType;
     this.data.shareControl = "9";
     this.cache.message('WP017').subscribe((mssg: any) => {
-      if(mssg?.customName){
-        this.messageImage = mssg.customName;
+      if(mssg?.defaultName){
+        this.messageImage = mssg.defaultName;
       }
     });
     this.cache.functionList(this.dialogRef.formModel.funcID)
     .subscribe((func:any) => {
       if(func){
-        this.headerText = `Thêm ${func.customName}`;
+        this.headerText = `Thêm ${func.defaultName}`;
         let formName = func.formName;
         let grvName = func.gridViewName;
         this.cache.gridViewSetup(formName, grvName)
         .subscribe((grv:any) => {
           if(grv){
             this.grvSetup = grv;
-              let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
-              if(arrField){
-                this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
-              }
+            let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
+            if(arrField){
+              this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+            }
           }
         });
       }
@@ -117,52 +120,38 @@ export class PopupAddComponent implements OnInit {
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  loading:boolean = false;
   // insert post
   clickInsertNews(){
+    debugger
+    if(this.checkValidate()){
+      return;
+    }
+    // if(this.data.endDate)
+    // {
+    //   let startDate = new Date(this.data.startDate);
+    //   let endDate = new Date(this.data.endDate);
+    //   if(startDate > endDate) 
+    //   {
+    //     this.notifSV.notifyCode('WP012');
+    //     return;   
+    //   }  
+    // }
     this.loading = true;
-    if(this.arrFieldRequire.length > 0)
-    {
-      let arrFieldUnValid:string = "";
-      this.arrFieldRequire.forEach((field) => {
-        let key = Util.camelize(field);
-        if (!this.data[key])
-        {
-          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
-        }
-      });
-      if(arrFieldUnValid) return this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
-    }
-    if(this.data.endDate) // check endDate
-    {
-      let startDate = new Date(this.data.startDate);
-      let endDate = new Date(this.data.endDate);
-      if(startDate > endDate) return this.notifSV.notifyCode('WP012');  
-    }
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'InsertNewsAsync',
-        [this.data])
-        .subscribe(async (res:boolean) => {
-        if (res) {
-          debugger
-          if (this.fileUpload.length > 0) {
-            this.codxATM.objectId = this.data.recID;
-            this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));
-            this.codxATM.saveFilesMulObservable().subscribe((res2: any) => {
+    if(this.fileUpload.length > 0){
+      this.codxATM.objectId = this.data.recID;
+      this.codxATM.fileUploadList = Array.from<any>(this.fileUpload);
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res: any) => {
+        if(res){
+          this.api.execSv(
+            'WP',
+            'ERM.Business.WP',
+            'NewsBusiness',
+            'InsertNewsAsync',
+            [this.data]).subscribe((res2) => {
               this.loading = false;
-              this.dialogRef.close();
-              }
-            );
-          }
-          else 
-          {
-            this.loading = false;
-            this.dialogRef.close();
-          }
+              this.dialogRef.close(res2 ? this.data : null);
+            });
         }
         else
         {
@@ -170,67 +159,70 @@ export class PopupAddComponent implements OnInit {
           this.dialogRef.close();
         }
       });
+    }
   }
   // release post
   releaseNews() {
-    if(this.arrFieldRequire.length > 0)
-    {
-      let arrFieldUnValid:string = "";
-      this.arrFieldRequire.forEach((field) => {
-        let key = Util.camelize(field);
-        if (!this.data[key])
-        {
-          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
-        }
-      });
-      if(arrFieldUnValid) return this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
+    debugger
+    if(this.checkValidate()){
+      return;
     }
-    if(this.data.endDate) // check endDate
-    {
-      let startDate = new Date(this.data.startDate);
-      let endDate = new Date(this.data.endDate);
-      if(startDate > endDate) return this.notifSV.notifyCode('WP012');  
-    }
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'ReleaseNewsAsync',
-        [this.data])
-        .subscribe(async (res:any[]) => {
-        if (res) {
-          let data = res[1];
-          if (this.fileUpload.length) {
-            this.codxATM.objectId = data.recID;
-            this.codxATM.fileUploadList = this.fileUpload;
-            (await this.codxATM.saveFilesObservable()).subscribe(
-              (res2: any) => {
-                if (res2) 
-                {
-                  this.dialogRef.close(data);
-                }
-              }
-            );
-          }
-          else
-          {
-            this.dialogRef.close(data);
-          }
+    this.loading = true;
+    if(this.fileUpload.length > 0){
+      this.codxATM.objectId = this.data.recID;
+      this.codxATM.fileUploadList = Array.from<any>(this.fileUpload);
+      this.codxATM.saveFilesMulObservable()
+      .subscribe((res: any) => {
+        if(res){
+          this.api.execSv(
+            'WP',
+            'ERM.Business.WP',
+            'NewsBusiness',
+            'ReleaseNewsAsync',
+            [this.data])
+            .subscribe((res2:any) => {
+              this.loading = false;
+              this.dialogRef.close(res2);
+            });
         }
         else
         {
+          this.loading = false;
           this.dialogRef.close();
         }
       });
+    }
   }
+  // check validate
+  checkValidate(){
+    if(this.arrFieldRequire.length > 0){
+      let arrFieldUnValid:string = "";
+      this.arrFieldRequire.forEach((key) => {
+        let field = Util.camelize(key);
+        if (!this.data[field])
+        {
+          arrFieldUnValid += this.grvSetup[key]['headerText'] + ";";
+        }
+      });
+      if(arrFieldUnValid){
+        this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
+        return true;
+      }
+    }
+    return false;
+  }
+  // value change
   valueChange(event: any) {
     if(event){
-      let field = event.field;
+      let field = Util.camelize(event.field);
       let value = event.data;
-      field = field[0].toLowerCase() + field.slice(1);
-      if(field === "startDate" ||  field == "endDate"){
-        value = value.toDate;
+      if((typeof value) == 'object'){
+        value = value.fromDate;
+        if(this.data["startDate"] && this.data["endDate"] && this.data["startDate"] > this.data["endDate"]){
+          this.data[field] = null;
+          this.notifSV.notifyCode('WP012');
+          return;
+        }
       }
       this.data[field] = value;
     }
@@ -296,65 +288,39 @@ export class PopupAddComponent implements OnInit {
   // attachment return files
   addFiles(files: any) {
     debugger
-    if (files.data){
+    if (Array.isArray(files.data)){
       let file = files.data[0]; 
       if(file.mimeType.indexOf("image") >= 0){
-        file["source"] = file.avatar;
         file['referType'] = this.FILE_REFERTYPE.IMAGE;
         this.fileImage = JSON.parse(JSON.stringify(file));
+        this.fileImage["source"] = file.avatar;
       }
-      // else if (file.mimeType.indexOf("video") >= 0) {
-      //   file['referType'] = this.FILE_REFERTYPE.VIDEO;
-      //   this.fileVideo = JSON.parse(JSON.stringify(file));
-      // }
-      if(this.fileUpload.length > 0){
-        let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
-        if(index != -1)
-          this.fileUpload[index] = file;
-        else
-          this.fileUpload.push(file);
-      }
-      else
-      {
-        this.fileUpload.push(file);
-      }
-      this.data.image = this.fileUpload.length;
-      this.changedt.detectChanges();
-    }
-  }
-  // attachment return files
-  addFilesVideo(files: any) {
-    if (files.data){
-      let file = files.data[0]; 
-      if (file.mimeType.indexOf("video") >= 0) {
+      else if(file.mimeType.indexOf("video") >= 0){
         file['referType'] = this.FILE_REFERTYPE.VIDEO;
-        file['source'] = file.data.changingThisBreaksApplicationSecurity;
         this.fileVideo = JSON.parse(JSON.stringify(file));
+        this.fileVideo['source'] = file.data.changingThisBreaksApplicationSecurity;
       }
-      if(this.fileUpload.length > 0){
-        let index = this.fileUpload.findIndex(x => x['referType'] === this.FILE_REFERTYPE.VIDEO)
-        if(index != -1)
-          this.fileUpload[index] = file;
-        else
-          this.fileUpload.push(file);
-      }
+      let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
+      if(index != -1)
+          this.fileUpload[index] =  JSON.parse(JSON.stringify(file));
       else
-      {
         this.fileUpload.push(file);
-      }
       this.data.image = this.fileUpload.length;
       this.changedt.detectChanges();
     }
   }
-  //close popup
-  clickClosePopup() {
-    this.dialogRef.close();
-  }
+  //upload image
   clickUploadImage() {
     this.codxATM.uploadFile();
   }
+  //upload video
   clickUploadVideo() {
     this.codxATMVideo.uploadFile();
+  }
+
+  //close popup
+  clickClosePopup() {
+    this.dialogRef.close();
   }
 
 }

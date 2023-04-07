@@ -3,6 +3,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -20,6 +21,8 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
+import { PurchaseInvoicesLines } from '../models/PurchaseInvoicesLines.model';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -27,8 +30,10 @@ import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.com
   styleUrls: ['./purchaseinvoices.component.css'],
 })
 export class PurchaseinvoicesComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
@@ -38,9 +43,24 @@ export class PurchaseinvoicesComponent extends UIComponent {
   width: any;
   height: any;
   innerWidth: any;
+  itemSelected: any;
+  objectname: any;
+  oData: any;
+  page: any = 1;
+  pageSize = 5;
+  itemName: any;
+  lsVatCode:any;
+  gridViewLines: any;
+  purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   constructor(
     private inject: Injector,
@@ -53,10 +73,39 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.recID) this.parentID = res.recID;
     });
+    this.cache
+      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewLines = res;
+        }
+      });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
-    this.innerWidth = window.innerWidth;
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.oData = res;
+        }
+      });
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.itemName = res;
+        }
+      });
+    this.api
+      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.lsVatCode = res;
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -72,8 +121,20 @@ export class PurchaseinvoicesComponent extends UIComponent {
           template2: this.templateMore,
         },
       },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
     ];
   }
+  //#endregion
+
+  //#region Event
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -198,12 +259,39 @@ export class PurchaseinvoicesComponent extends UIComponent {
         }
       });
   }
+  //#endregion
+
+  //#region Function
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'PurchaseInvoicesBusiness';
     opt.assemblyName = 'PS';
     opt.service = 'PS';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
+
+  clickChange(data) {
+    this.itemSelected = data;
+    this.loadDatadetail(data);
+  }
+  changeDataMF() {
+    this.itemSelected = this.view.dataService.dataSelected;
+    this.loadDatadetail(this.itemSelected);
+  }
+  loadDatadetail(data) {
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res[0].objectName;
+        }
+      });
+    this.api
+      .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.purchaseInvoicesLines = res;
+      });
+  }
+  //#endregion
 }

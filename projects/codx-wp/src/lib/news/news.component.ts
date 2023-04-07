@@ -63,7 +63,6 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
-      debugger
       if (param["category"] !== "home")
         this.category = param["category"];
       else
@@ -247,18 +246,32 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
         debugger
         if (res?.event) {
           let data = res.event;
+          //post
           if(data.newsType == this.NEWSTYPE.POST){
             this.posts.unshift(data);
             if(this.posts.length > 4){
               this.posts.splice(-1);
             }
           }
+          //video
           else if(data.newsType == this.NEWSTYPE.VIDEO)
           {
-            this.videos.unshift(data);
-            if(this.videos.length > 3){
-              this.showNavigation = true;
+            if(this.videos.length > 0){
+              this.videos.unshift(data);
             }
+            let slide = 0;
+            for (let index = 0; index < this.videos.length; index += 3) {
+              this.slides[slide] = [];
+              this.slides[slide] = this.videos.slice(index,index+3);
+              slide ++;
+            }
+            let ins = setInterval(()=>{
+              if(this.carousel){
+                this.carousel.pause();
+                this.detectorRef.detectChanges();
+                clearInterval(ins);
+              }
+            },100);
           }
           this.detectorRef.detectChanges();
         }

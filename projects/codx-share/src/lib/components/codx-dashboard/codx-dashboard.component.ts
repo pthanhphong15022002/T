@@ -88,7 +88,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() datas: any = [];
 
   dialog: any;
-  isChart: boolean = false;
+  isEditMode: boolean = true;
 
   annotations: ChartAnnotationSettingsModel[] = [];
 
@@ -561,6 +561,12 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     //this.datas = JSON.parse('[{"panelId":"0.9272112695591359_layout","data":"{\\"serieSetting\\":{\\"type\\":\\"Line\\",\\"marker\\":{\\"visible\\":true,\\"width\\":10,\\"height\\":10},\\"tooltip\\":{\\"enable\\":true},\\"xName\\":\\"bookingNo\\",\\"yName\\":\\"attendees\\",\\"name\\":\\"kkkk\\"},\\"axisX\\":{\\"valueType\\":\\"Category\\",\\"edgeLabelPlacement\\":\\"Shift\\",\\"majorGridLines\\":{\\"width\\":0}},\\"axisY\\":{\\"title\\":\\" \\",\\"minimum\\":0,\\"maximum\\":30,\\"interval\\":4,\\"lineStyle\\":{\\"width\\":0},\\"majorTickLines\\":{\\"width\\":0}},\\"legendSetting\\":{\\"visible\\":true,\\"enableHighlight\\":true}}"},{"panelId":"0.2912252785831644_layout","data":"TextCLGT"}]');
 
     if (this.panels && this.panels.length > 0) {
+      if (!this.objDashboard) {
+        let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
+        this.objDashboard = window.ng.getComponent(
+          component
+        ) as DashboardLayoutComponent;
+      }
       this.objDashboard.panels = this.panels;
       let iGenPanels = setInterval(() => {
         if (

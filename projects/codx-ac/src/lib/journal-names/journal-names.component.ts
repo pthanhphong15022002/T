@@ -20,13 +20,13 @@ import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.
 export class JournalNamesComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-
   views: Array<ViewModel> = [];
   button: ButtonModel = {
     id: 'btnAdd',
   };
   functionName: string;
-
+  vll86 = [];
+  vll85 = [];
   constructor(
     inject: Injector,
     private route: Router,
@@ -38,7 +38,18 @@ export class JournalNamesComponent extends UIComponent {
   //#region Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.valueList('AC086').subscribe((res) => {
+      if (res) {
+        this.vll86 = res.datas;
+      }
+    });
+    this.cache.valueList('AC085').subscribe((res) => {
+      if (res) {
+        this.vll85 = res.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -93,8 +104,36 @@ export class JournalNamesComponent extends UIComponent {
   add(e): void {
     console.log(`${e.text} ${this.functionName}`);
 
-    this.view.dataService.addNew().subscribe((res) => {
-      console.log(res);
+    this.view.dataService
+      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync'))
+      .subscribe((res) => {
+        console.log(res);
+        const options = new SidebarModel();
+        options.Width = '800px';
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
+
+        this.callfc.openSide(
+          PopupAddJournalComponent,
+          {
+            formType: 'add',
+            formTitle: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        );
+      });
+  }
+
+  edit(e, data): void {
+    console.log('edit', { data });
+
+    if (data.dataValue) {
+      data = { ...data, ...JSON.parse(data.dataValue) };
+    }
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe(() => {
       const options = new SidebarModel();
       options.Width = '800px';
       options.DataService = this.view.dataService;
@@ -103,50 +142,13 @@ export class JournalNamesComponent extends UIComponent {
       this.callfc.openSide(
         PopupAddJournalComponent,
         {
-          formType: 'add',
+          formType: 'edit',
           formTitle: `${e.text} ${this.functionName}`,
         },
         options,
         this.view.funcID
       );
     });
-  }
-
-  edit(e, data): void {
-    console.log('edit', { data });
-
-    this.api
-      .exec(
-        'ERM.Business.AC',
-        'JournalsBusiness',
-        'IsEditableAsync',
-        data.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (data.dataValue) {
-            data = { ...data, ...JSON.parse(data.dataValue) };
-          }
-
-          this.view.dataService.dataSelected = data;
-          this.view.dataService.edit(data).subscribe(() => {
-            const options = new SidebarModel();
-            options.Width = '800px';
-            options.DataService = this.view.dataService;
-            options.FormModel = this.view.formModel;
-
-            this.callfc.openSide(
-              PopupAddJournalComponent,
-              {
-                formType: 'edit',
-                formTitle: `${e.text} ${this.functionName}`,
-              },
-              options,
-              this.view.funcID
-            );
-          });
-        }
-      });
   }
 
   copy(e, data): void {

@@ -928,9 +928,9 @@ export class PopupAddSignFileComponent implements OnInit {
         ) {
           if (this.attachment.fileUploadList?.length > 0) {
             this.disableContinue = true;
-            for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
-              this.attachment.fileUploadList[i].referType = 'sign';
-            }
+            // for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
+            //   this.attachment.fileUploadList[i].referType = 'sign';
+            // }
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 this.disableContinue = false;

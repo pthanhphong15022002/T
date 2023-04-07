@@ -1,5 +1,3 @@
-import { title } from 'process';
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -9,16 +7,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  CircularGaugeComponent,
   GaugeTheme,
-  IAxisLabelRenderEventArgs,
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-circulargauge';
 
 import {
   AuthService,
   DialogData,
-  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -30,8 +25,6 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { ChartSettings } from '../../model/chart.model';
-import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
-import { PopupDistributeOKRComponent } from '../popup-distribute-okr/popup-distribute-okr.component';
 import { OMCONST } from '../../codx-om.constant';
 import { PopupAddKRComponent } from '../popup-add-kr/popup-add-kr.component';
 
@@ -224,7 +217,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Align)
+        .getListAlign(this.oldKR?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
@@ -233,7 +226,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAssign(){
     this.codxOmService
-        .getListAlignAssign(this.oldKR?.recID, OMCONST.VLL.RefType_Link.Assign)
+        .getListAssign(this.oldKR?.recID)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           

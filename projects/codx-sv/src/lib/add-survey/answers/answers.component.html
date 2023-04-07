@@ -26,8 +26,54 @@
             </div>
           </ng-template>
           <ng-template #content class="pd-t-20">
-            <div class="scroll-y ques-scroll">
-            </div>
+            <ng-container *ngIf="lstCountQuestion && lstCountQuestion.length > 0">
+              <div class="bg-white mt-5 border rounded p-7" *ngFor="let item of lstCountQuestion">
+                <div class="fs-5">{{extractContent(item.question)}}</div>
+                <div class="mt-2">{{countAnswer(item.answers)}} câu trả lời</div>
+
+                <ng-container *ngIf="!item.isChart ; else isChart">
+                  <ng-container [ngSwitch]="item?.answerType">
+                    <ng-container  *ngFor="let an of item.answers">
+                      <ng-container *ngIf="an.answer">
+                         <!-- Trả lời ngắn -->
+                        <ng-container *ngSwitchCase="'T'">
+                          <div class="p-3 bg-gray-100 rounded-1 mt-5">{{an.answer}}</div>
+                        </ng-container>
+                         <!-- Trả lời trắc nghiệm -->
+                        <ng-container *ngSwitchCase="'O'">
+                          <div class="d-flex align-items-center">
+                            <codx-input [type]="'radio'" [disabled]="true" [checked]="true"></codx-input>
+                            <span class="ms-7 mt-4">{{an.answer}}</span>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+                <ng-template #isChart>
+                  <ng-container *ngIf="item.answers && item.answers.length>0">
+                    <div class="p-3 mt-5">
+                      <codx-chart 
+                        [height]="settingChart(item?.answerType,'height')" 
+                        [primaryXAxis]="settingChart(item?.answerType,'primaryXAxis')" 
+                        [primaryYAxis]="settingChart(item?.answerType,'primaryYAxis')" 
+                        [seriesSetting]="settingChart(item?.answerType,'seriesSetting')"
+                        [chartArea]="settingChart(item?.answerType,'chartArea')"
+                        [legendSettings]="settingChart(item?.answerType,'legendSettings')"
+                        [dataSource]="item.dataChart"
+                        [palettes]="palettes" 
+                      > 
+                      </codx-chart>
+                    </div>
+                  </ng-container>
+                </ng-template>
+              </div>
+            </ng-container>
+           
+            <!-- <div>
+              
+              <codx-chart [accumulation]="true"></codx-chart>
+            </div> -->
           </ng-template>
         </e-tabitem>
         <e-tabitem>
@@ -73,7 +119,7 @@
                   <div id="div-pervious" class="disabled p-5 mx-3 cur-point" title="Câu hỏi trước" (click)="changeQuestion('pervious')"><i class="icon-14 icon-arrow_back_ios"></i></div>
                   <codx-input [ngClass]="['ip-number']" type="number" [min]="1" [max]="respondents ? respondents.responds.length : 1" [showSpinButton]="true" [crrValue]="indexQ" (valueChange)="valueChangeIndex($event)"></codx-input>
                   <span class="ms-2"> / {{respondents?.responds.length}}</span>
-                  <div id="div-next" class="div-back-cricle p-5 mx-3 cur-point" title="Câu hỏi tiếp theo" (click)="changeQuestion('next')"><i class="icon-14 icon-arrow_forward_ios"></i></div>
+                  <div id="div-next" [class.div-back-cricle]="respondents.responds && respondents.responds.length > 1" [class.disabled]="respondents.responds && respondents.responds.length <= 1" class="p-5 mx-3 cur-point" title="Câu hỏi tiếp theo" (click)="changeQuestion('next')"><i class="icon-14 icon-arrow_forward_ios"></i></div>
                 </div>
               </div>
             </div>
@@ -106,8 +152,8 @@
                 </ng-container>
               </div>
             </div>
-            <ng-container *ngIf="lstCountQuestion[(indexQ - 1)] && lstCountQuestion[(indexQ - 1)].listAnswer &&  lstCountQuestion[(indexQ - 1)].listAnswer.length > 0">
-              <div *ngFor="let item of lstCountQuestion[(indexQ - 1)].listAnswer">
+            <ng-container *ngIf="lstCountQuestion[(indexQ - 1)] && lstCountQuestion[(indexQ - 1)].answers &&  lstCountQuestion[(indexQ - 1)].answers.length > 0">
+              <div *ngFor="let item of lstCountQuestion[(indexQ - 1)].answers">
                 <div class="bg-white mt-5 border rounded p-7">
                   <div class="d-flex align-items-center border-bottom pb-3" *ngIf="item.answer ; else elseAnswer">
                     <ng-container *ngIf="question?.answerType" [ngSwitch]="question?.answerType">

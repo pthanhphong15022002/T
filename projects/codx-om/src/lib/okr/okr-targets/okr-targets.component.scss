@@ -158,22 +158,14 @@
 }
 
 .om-p-chart {
-    height: 170px !important;
+    height: fit-content !important;
 }
 
 .ob-kr:hover {
     cursor: pointer;
     color: var(--text-primary) !important;
-    text-decoration: underline;
 }
 
-.ob-name{
-    font-size: 1.04em; 
-    font-weight: 500;
-}
-.kr-name{
-    font-weight: 450;
-}
 
 .bg-color {
     background-color: var(--text-primary) !important;
@@ -188,26 +180,3 @@
         padding-left: 0px !important;
     }
 }
-
-// .ob-background {
-//     background-color: var(--primary-lighter) !important;
-// }
-
-// .kr-background {
-
-//     background-color: var(--primary-lightest) !important;
-// }
-
-// .skr-background {
-
-//     //background-color: var(--primary-lightest) !important;
-// }
-.px-25{
-    padding-right: 10rem !important;
-    padding-left: 10rem !important;
-}
-// ::ng-deep{
-//     .collapse-conent{
-//         padding-top: 15px !important;
-//     }
-// }

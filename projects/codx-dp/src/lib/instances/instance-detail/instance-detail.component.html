@@ -26,16 +26,70 @@
               >
               </codx-tag>
             </div>
-            <div class="d-flex flex-column" *ngIf="dataSelect.memo">
-              <div class="mt-1">
-                <codx-label
-                  class="text-gray-500 text-nowrap"
-                  fiedName="Memo"
-                  [formModel]="formModel"
-                  default="Mô tả: "
-                >
-                </codx-label>
+            <div class="d-flex mt-2">
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedOn"
+                    [formModel]="formModel"
+                    default="Ngày tạo: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    dataSelect.createdOn
+                      | formatvalue : formModel : 'CreatedOn'
+                      | async
+                  "
+                ></div>
               </div>
+              <div class="d-flex col-4">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    fiedName="StartDate"
+                    [formModel]="formModel"
+                    default="Ngày bắt đầu: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    dataSelect.startDate
+                      | formatvalue : formModel : 'StartDate'
+                      | async
+                  "
+                ></div>
+              </div>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 text-nowrap"
+                    fiedName="EndDate"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                    default="Ngày đến hạn: "
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark"
+                  [innerHTML]="
+                    (dataSelect.status != '1' ? dataSelect.endDate : null)
+                      | formatvalue : formModel : 'EndDate'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+            <div class="me-2">
               <div
                 class="text-dark"
                 *ngIf="dataSelect?.memo"
@@ -113,9 +167,6 @@
                     stepName
                   }}</span>
                 </div>
-                <div class="text-gray-500 my-1">
-                  {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy" }}
-                </div>
               </div>
               <div class="ms-3">
                 <codx-imgs
@@ -175,50 +226,12 @@
         <div class="">
           <div class="">
             <div>
-              <ng-container *ngIf="viewModelDetail == 'G'">
-                <codx-gantt-chart
-                  [dataSource]="ganttDs"
-                  [taskFields]="taskFields"
-                  [taskbarHeight]="60"
-                  [rowHeight]="60"
-                  [readOnly]="true"
-                  [templateTaskbar]="ganttItems"
-                  [toolbar]="[]"
-                ></codx-gantt-chart>
-                <ng-template #ganttItems let-data>
-                  <div
-                    class="d-flex justify-content-center align-items-center"
-                    (click)="clickDetailGanchart(data.recID)"
-                    [ngStyle]="{
-                      'background-color': getColor(data.recID),
-                      'min-height': '35px',
-                      'border-radius': '5px',
-                      'min-width': '20px'
-                    }"
-                  >
-                    <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
-                      {{ data.name }}
-                    </div>
-                  </div>
-                </ng-template>
-                <!-- mô tả -->
-                <div>
-                  <ul class="d-flex align-items-center">
-                    <li
-                      *ngFor="let item of listTypeTask"
-                      class="d-flex align-items-center"
-                    >
-                      <span class="me-1 fs-5 font-weight-bold"
-                        >{{ item?.text }}:
-                      </span>
-                      <div
-                        class="me-5"
-                        [ngStyle]="{ 'background-color': item?.color }"
-                        style="height: 20px; width: 60px; border-radius: 5px"
-                      ></div>
-                    </li>
-                  </ul>
-                </div>
+              <ng-container
+                *ngIf="viewModelDetail == 'G'"
+                [ngTemplateOutlet]="
+                  dataSelect.status == 1 ? emptyTemplate : tempGanchart
+                "
+              >
               </ng-container>
               <ng-container *ngIf="viewModelDetail == 'S'">
                 <div
@@ -260,19 +273,21 @@
                     [isUpdate]="
                       dataSelect.write &&
                       !dataSelect.closed &&
-                      (dataSelect.status == '1' || dataSelect.status == '2') && tmpTeps.stepStatus <'2'
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      tmpTeps.stepStatus < '2'
                     "
                     [isCreate]="dataSelect.create"
                     [isClosed]="dataSelect.closed"
                     [titleDefault]="titleDefault"
                     [listStep]="listSteps"
-                    [instance]="instance"
+                    [instance]="dataSelect"
                     [lstIDInvo]="lstInv"
-                    [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-                    [stepNameEnd]="getStepNameIsComlepte(instance)"
+                    [listStepReason]="getReasonByStepId(dataSelect.status)"
+                    [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
                     [viewsCurrent]="viewsCurrent"
+                    [frmModelInstancesTask]="frmModelInstancesTask"
                   ></codx-stages-detail>
                 </ng-container>
               </ng-container>
@@ -285,8 +300,8 @@
                     [isUpdate]="
                       dataSelect.write &&
                       !dataSelect.closed &&
-                      (dataSelect.status == '1' || dataSelect.status == '2')
-                      && item.stepStatus <'2'
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      item.stepStatus < '2'
                     "
                     [currentElmID]="currentElmID"
                     (inputElmIDCF)="inputElmIDCustomField($event)"
@@ -334,3 +349,70 @@
     </div>
   </div>
 </ng-container>
+
+<ng-template #tempGanchart>
+  <codx-gantt-chart
+    [dataSource]="ganttDs"
+    [taskFields]="taskFields"
+    [taskbarHeight]="60"
+    [rowHeight]="60"
+    [readOnly]="true"
+    [templateTaskbar]="ganttItems"
+    [toolbar]="[]"
+  ></codx-gantt-chart>
+  <ng-template #ganttItems let-data>
+    <div
+      class="d-flex justify-content-center align-items-center"
+      (click)="clickDetailGanchart(data.recID)"
+      [ngStyle]="{
+        'background-color': getColor(data.recID),
+        'min-height': '35px',
+        'border-radius': '5px',
+        'min-width': '20px'
+      }"
+    >
+      <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">
+        {{ data.name }}
+      </div>
+    </div>
+  </ng-template>
+  <!-- mô tả -->
+  <div>
+    <ul class="d-flex align-items-center">
+      <li *ngFor="let item of listTypeTask" class="d-flex align-items-center">
+        <span class="me-1 fs-5 font-weight-bold">{{ item?.text }}: </span>
+        <div
+          class="me-5"
+          [ngStyle]="{ 'background-color': item?.color }"
+          style="height: 20px; width: 60px; border-radius: 5px"
+        ></div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #emptyTemplate>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-250px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+
+        <div class="mt-5">
+          <button class="btn btn-light-primary" (click)="startInstances()">
+            <span [class]="moreFunc?.largeIcon" [style.color]="moreFunc?.color">
+              <span>
+                {{ moreFunc?.custormName || moreFunc?.description }}</span
+              ></span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

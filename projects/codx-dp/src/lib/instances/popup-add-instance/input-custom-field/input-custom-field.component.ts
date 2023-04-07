@@ -45,6 +45,9 @@ export class InputCustomFieldComponent implements OnInit {
   messCodeEmail = 'SYS037'; // Email ko hợp lê
   messCodePhoneNum = 'RS030';
   listIdUser: string = '';
+  arrIdUser = [];
+  numChange = 0 ;
+
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef
@@ -71,6 +74,7 @@ export class InputCustomFieldComponent implements OnInit {
         break;
       case 'P':
         this.listIdUser = this.customField?.dataValue ?? '';
+        this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
         break;
       case 'A':
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
@@ -95,8 +99,6 @@ export class InputCustomFieldComponent implements OnInit {
         if (this.customField.dataFormat == 'E') {
           let email = e.data;
           var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-          // var mailformat =
-          //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
           if (!email.toLocaleLowerCase().match(mailformat)) {
             this.cache.message(this.messCodeEmail).subscribe((res) => {
               if (res) {
@@ -106,7 +108,8 @@ export class InputCustomFieldComponent implements OnInit {
             });
             this.showErrMess = true;
 
-            if (!this.checkValid) return;
+            //if (!this.checkValid) return;
+             return;
           } else this.showErrMess = false;
         }
         //format so dien thoai
@@ -114,9 +117,6 @@ export class InputCustomFieldComponent implements OnInit {
           let phone = e.data;
           var phonenumberFormat =
             /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-          // //Thêm trường hợp +84
-          // var phonenumberFormat =
-          //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
           if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
             this.cache.message(this.messCodePhoneNum).subscribe((res) => {
               if (res) {
@@ -125,7 +125,8 @@ export class InputCustomFieldComponent implements OnInit {
               this.changeDef.detectChanges();
             });
             this.showErrMess = true;
-            if (!this.checkValid) return;
+            //if (!this.checkValid) return;
+            return;
           } else this.showErrMess = false;
         }
         break;
@@ -144,11 +145,25 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
+      this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
 
-  valueChangeTime() {}
+  deleteUser(id) {
+    let index = this.arrIdUser.indexOf(id);
+    if (index > -1) {
+      this.arrIdUser.splice(index, 1);
+      if (this.arrIdUser?.length > 0)
+        this.listIdUser = this.arrIdUser.join(';');
+      else this.listIdUser = '';
+    }
+    this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
+  }
+
+  valueChangeTime(e) {
+    if(this.numChange > 0)  this.valueChangeCustom.emit({ e: e, data: this.customField });else this.numChange +=1 ;
+  }
 
   addFile() {
     this.attachment.uploadFile();
@@ -174,7 +189,7 @@ export class InputCustomFieldComponent implements OnInit {
     //  return;
     //}//
   }
-  controlBlur(e){
-   if(e.crrValue) this.valueChange(e.crrValue)
+  controlBlur(e) {
+   // if (e.crrValue) this.valueChange(e.crrValue);
   }
 }

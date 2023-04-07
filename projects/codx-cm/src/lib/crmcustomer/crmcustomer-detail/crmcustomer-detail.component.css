@@ -9,3 +9,10 @@ codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
 	padding-top: 5px;
 	clear: both;
 }
+.action-menu-od {
+  opacity: 0;
+}
+
+.has-action-menu-od:hover .action-menu-od {
+  opacity: 1;
+}

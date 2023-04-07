@@ -1,12 +1,29 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { UIComponent, CodxFormComponent, DialogRef, FormModel, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogData } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  UIComponent,
+  CodxFormComponent,
+  DialogRef,
+  FormModel,
+  CacheService,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
+  DialogData,
+} from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
 
 @Component({
   selector: 'lib-pop-add-line',
   templateUrl: './pop-add-line.component.html',
-  styleUrls: ['./pop-add-line.component.css']
+  styleUrls: ['./pop-add-line.component.css'],
 })
 export class PopAddLineComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
@@ -16,8 +33,11 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   validate: any = 0;
   type: any;
-  itemName:any;
-  purchaseInvoicesLines:PurchaseInvoicesLines;
+  itemName: any;
+  lsVatCode: any;
+  journals:any;
+  objectIdim:any;
+  purchaseInvoicesLines: PurchaseInvoicesLines;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -28,12 +48,16 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.purchaseInvoicesLines = dialogData.data?.data;
+    this.journals = dialogData.data?.journals;
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
+    // if (this.journals.idimControl != null) {
+    //   this.objectIdim = JSON.parse(this.journals.idimControl);
+    // }
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
@@ -41,15 +65,22 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-      this.api
-        .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
-          this.purchaseInvoicesLines.itemID,
-        ])
-        .subscribe((res: any) => {
-          if (res != null) {
-            this.itemName = res.itemName;
-          }
-        })
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
+        this.purchaseInvoicesLines.itemID,
+      ])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.itemName = res.itemName;
+        }
+      });
+    this.api
+      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.lsVatCode = res;
+        }
+      });
   }
 
   onInit(): void {}
@@ -57,22 +88,39 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.purchaseInvoicesLines);
   }
-  
-  valueChange(e){
-    switch(e.field){
-      case 'itemID':
-        this.api
-        .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
-          e.data,
-        ])
-        .subscribe((res: any) => {
-          if (res != null) {
-            this.itemName = res.itemName;
-          }
-        })
-      break;
+
+  valueChange(e) {
+    if (e.data) {
+      this.purchaseInvoicesLines[e.field] = e.data;
+      switch (e.field) {
+        case 'itemID':
+          this.api
+            .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data])
+            .subscribe((res: any) => {
+              if (res != null) {
+                this.itemName = res.itemName;
+              }
+            });
+          break;
+        case 'unitPrice':
+        case 'quantity':
+          this.purchaseInvoicesLines.netAmt = this.purchaseInvoicesLines.quantity * this.purchaseInvoicesLines.unitPrice;
+          this.lsVatCode.forEach((element) => {
+            if (element.vatid == this.purchaseInvoicesLines.vatid) {
+              this.purchaseInvoicesLines.vatAmt =
+                element.taxRate * this.purchaseInvoicesLines.netAmt;
+            }
+          });
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          break;
+        case 'vatid':
+          var vat = e.component.itemsSelected[0];
+          this.purchaseInvoicesLines.vatAmt =
+            vat.TaxRate * this.purchaseInvoicesLines.netAmt;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          break;
+      } 
     }
-    this.purchaseInvoicesLines[e.field] = e.data;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -99,17 +147,19 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       }
     }
   }
-  close(){
+  close() {
     this.dialog.close();
   }
-  onSave(){
-    
+  onSave() {
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
-      window.localStorage.setItem('dataline', JSON.stringify(this.purchaseInvoicesLines));
+      window.localStorage.setItem(
+        'dataline',
+        JSON.stringify(this.purchaseInvoicesLines)
+      );
       this.dialog.close();
     }
   }

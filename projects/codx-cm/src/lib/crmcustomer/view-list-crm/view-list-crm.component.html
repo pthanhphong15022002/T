@@ -44,7 +44,7 @@
         </div>
       </ng-template>
     </div>
-    <div class="col-4 d-flex align-items-center justify-content-center">
+    <div class="col-4 d-flex align-items-center">
       <div *ngIf="funcID == 'CM0102' || funcID == 'CM0104'">
         <codx-tag [entityName]="entityName" [disabled]="true" [isEdit]="false" [value]="data?.field">
         </codx-tag>
@@ -53,7 +53,7 @@
         <ng-container *ngFor="let item of data.contacts">
           <div *ngIf="item.contactType == '1'" class="d-flex">
             <div class="me-3">
-              <codx-img [objectId]="item.recID" [objectName]="getNameCrm(data)" [objectType]="entityName" [width]="35">
+              <codx-img [objectId]="item.recID" [objectName]="item.contactName" [objectType]="'CM_Contacts'" [width]="35">
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
@@ -95,12 +95,12 @@
         <span class="icon-star_border icon-18">
         </span>
       </div>
-      <div class="col-4 d-flex justify-content-end">
+      <div class="col-4" style="margin-left: 15px">
         <div>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-            class="icon-contact_phone icon-18 text-gray-700 me-2">0</span>
+            class="icon-contact_phone icon-18 text-gray-700 me-2">{{data?.contacts?.length}}</span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
-            class="icon-format_list_numbered icon-18 text-gray-700 me-2">0</span>
+            class="icon-format_list_numbered icon-18 text-gray-700 me-2">{{( data?.tasks != null && data?.tasks?.length > 0 ) ? data?.tasks?.length : 0}}  </span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
             class="icon-add_shopping_cart icon-18 text-gray-700 me-2">0</span>
           <span *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"

@@ -17,8 +17,6 @@ import moment from 'moment';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
 
-// import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
-// imports: [NgbRatingModule];
 @Component({
   selector: 'codx-field-detail',
   templateUrl: './field-detail.component.html',

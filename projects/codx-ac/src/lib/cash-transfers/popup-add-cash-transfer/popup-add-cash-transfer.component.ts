@@ -12,8 +12,10 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { map, Observable, tap } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
+import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
+import { JournalService } from '../../journal-names/journal-names.service';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -46,11 +48,13 @@ export class PopupAddCashTransferComponent extends UIComponent {
   gvsVATInvoices: any;
   isEdit: boolean = false;
   tabName$: Observable<string>;
+  journal: IJournal;
 
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
     private acService: CodxAcService,
+    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -88,6 +92,17 @@ export class PopupAddCashTransferComponent extends UIComponent {
       map((t) => t.datas?.[0].default),
       tap((t) => console.log(t))
     );
+
+    const options = new DataRequest();
+    options.entityName = 'AC_Journals';
+    options.predicates = 'JournalNo=@0';
+    options.dataValues = this.cashTransfer.journalNo;
+    options.pageLoading = false;
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
+        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
+        : res[0];
+    });
 
     this.cache
       .gridViewSetup(
@@ -195,17 +210,22 @@ export class PopupAddCashTransferComponent extends UIComponent {
   close() {
     this.dialogRef.close();
   }
-  //#endregion
 
-  //#region Method
-  save(closeAfterSaving: boolean): void {
+  handleClickSave(closeAfterSaving: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
+
+    let ignoredFields = [];
+    if (this.journal.voucherNoRule === '2') {
+      ignoredFields.push('VoucherNo');
+    }
 
     if (
       !this.acService.validateFormData(
         this.form.formGroup,
-        this.gvsCashTransfers
+        this.gvsCashTransfers,
+        [],
+        ignoredFields
       )
     ) {
       return;
@@ -223,7 +243,23 @@ export class PopupAddCashTransferComponent extends UIComponent {
       (this.cashTransfer?.payAmount || 0) +
       (this.cashTransfer?.paymentFees || 0) +
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
+    this.cashTransfer.voucherNo = this.cashTransfer.voucherNo ?? '';
 
+    // if this voucherNo already exists,
+    // the system will automatically suggest another voucherNo
+    this.journalService.handleVoucherNoAndSave(
+      this.journal,
+      this.cashTransfer,
+      'AC_CashTranfers',
+      this.form,
+      this.isEdit,
+      () => this.save(closeAfterSaving)
+    );
+  }
+  //#endregion
+
+  //#region Method
+  save(closeAfterSaving: boolean): void {
     this.dialogRef.dataService
       .save((req: RequestOption) => {
         req.methodName = !this.isEdit

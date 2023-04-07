@@ -35,6 +35,7 @@ export class CashReceiptsComponent extends UIComponent {
   headerText: any;
   funcName: any;
   parentID: string;
+  journalNo: string;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -47,8 +48,9 @@ export class CashReceiptsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+    this.routerActive.queryParams.subscribe((params) => {
+      this.parentID = params?.recID;
+      this.journalNo = params?.journalNo;
     });
   }
 //#endregion
@@ -58,7 +60,6 @@ export class CashReceiptsComponent extends UIComponent {
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
-      this.view.dataService.setPredicates(['JournalNo=@0'], [this.funcName]).subscribe();
     });
     this.views = [
       {
@@ -196,7 +197,7 @@ export class CashReceiptsComponent extends UIComponent {
     opt.className = 'CashReceiptsBusiness';
     opt.assemblyName = 'AC';
     opt.service = 'AC';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
   //#endregion

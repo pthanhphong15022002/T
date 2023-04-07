@@ -2,7 +2,7 @@ import { ViewEncapsulation } from '@angular/core';
 
 import { catchError, finalize } from 'rxjs/operators';
 import { Observable, map, of } from 'rxjs';
-import { LayoutService, AuthService, ApiHttpService, CacheService } from 'codx-core';
+import { LayoutService, AuthService, ApiHttpService, CacheService, AuthStore } from 'codx-core';
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
@@ -39,7 +39,7 @@ export class MyTeamComponent implements OnInit {
   searchField = "";
   online: any;
   offline: any;
-
+  user:any = null;
   @ViewChild("ktAside", { static: true }) ktAside: ElementRef;
   @ViewChild("ktHeaderMobile", { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild("ktHeader", { static: true }) ktHeader: ElementRef;
@@ -47,32 +47,25 @@ export class MyTeamComponent implements OnInit {
   constructor(router: Router,
     private layout: LayoutService,
     private auth: AuthService,
+    private authStore: AuthStore,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     protected cache: CacheService,
     //private cbxsv: ComboboxpopupService,
     private codx_mwp_service: CodxMwpService,
-  ) {
+  ) 
+  {
+    this.user = authStore.get();
+  }
+
+  dataSelcected: any = [];
+  ngOnInit(): void {
     this.cache.valueList('L1490').subscribe(res => {
       if (res) {
         this.online = res.datas[1];
         this.offline = res.datas[0];
       }
     });
-  }
-
-  dataSelcected: any = [];
-  ngOnInit(): void {
-    //var body = $("#kt_body");
-    // if (body.length == 0) return;
-    // if (body.hasClass("aside-minimize")) body.removeClass("aside-minimize");
-    // console.log(this.auth.userValue);
-    // this.cbxsv.loadSelected.subscribe((data: any) => {
-    //   if (data) {
-    //     this.dataSelcected = data;
-    //     this.dt.detectChanges();
-    //   }
-    // });
     this.selfLayout = this.layout.getProp("self.layout");
     this.asideSelfDisplay = this.layout.getProp("aside.self.display");
     this.asideMenuStatic = this.layout.getProp("aside.menu.static");
@@ -91,18 +84,12 @@ export class MyTeamComponent implements OnInit {
     this.headerCSSClasses = this.layout.getStringCSSClasses("header");
     this.headerHTMLAttributes = this.layout.getHTMLAttributes("header");
     this.api
-      .call("ERM.Business.HR", "EmployeesBusiness", "GetEmpUsers", [
-        this.auth.userValue.userID,
+      .execSv("HR","ERM.Business.HR", "EmployeesBusiness", "GetEmpUsers", [
+        this.user.userID,
       ])
-      .subscribe((res) => {
-        if (
-          res &&
-          res.msgBodyData.length > 0 &&
-          res.msgBodyData[0] &&
-          res.msgBodyData[0].employeeID
-        ) {
-          let id = res.msgBodyData[0].employeeID;
-          this.employeeMyTeam = null;
+      .subscribe((res:any) => {
+        if (res){
+          let id = res.employeeID;
           this.codx_mwp_service
             .LoadData(id, '', "3")
             .subscribe((response: any) => {
@@ -122,7 +109,6 @@ export class MyTeamComponent implements OnInit {
                         }
                       });
                   });
-                  console.log("check employeeMyTeam", this.employeeMyTeam)
                 }
               }
             });
@@ -160,7 +146,6 @@ export class MyTeamComponent implements OnInit {
     // Init Content
     //KTLayoutContent.init("kt_content");
   }
-
   // ItemClick(id, isList) {
   //   var chk = $('input[data-id="' + id + '"]');
   //   var datas = this.cbxsv.data;

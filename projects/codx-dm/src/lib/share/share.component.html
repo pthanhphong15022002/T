@@ -190,8 +190,8 @@
             </div>
 
             <div class="request-box mt-4">
-                <codx-input class="form-control" [placeholder]="titleShareContent" [class]="validate('shareContent')"
-                    type="textarea" [height]="'400px'"  [crrValue]="shareContent"
+                <codx-input [placeholder]="titleShareContent" [class]="validate('shareContent')"
+                    type="textarea" [height]="'200px'"  [crrValue]="shareContent"
                     (valueChange)="txtValue($event, 'shareContent')"></codx-input>
             </div>
             <div *ngIf="errorshow && !checkContent()" class="d-flex mb-2 invalid-feedback">

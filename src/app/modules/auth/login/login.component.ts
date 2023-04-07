@@ -416,8 +416,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
         if (this.returnUrl) {
           this.returnUrl = decodeURIComponent(this.returnUrl);
-          // if (this.returnUrl.indexOf('/') > 1)
-          //   this.returnUrl = '/' + this.returnUrl;
         }
 
         if (

@@ -46,7 +46,7 @@ export class PopupRescheduleBookingComponent
   endDate: any;
   funcID: any;
   comment = '';
-  showAllResource = false;
+  showAllResource = true;
   formModel: any;
   headerText: any;
   calendarStartTime: string;
@@ -333,7 +333,7 @@ export class PopupRescheduleBookingComponent
       this.changeDetectorRef.detectChanges();
     }
 
-    this.getResourceForCurrentTime();
+    //this.getResourceForCurrentTime();
     return true;
   }
 
@@ -425,7 +425,7 @@ export class PopupRescheduleBookingComponent
   showAllResourceChange(evt: any) {
     if (evt != null) {
       this.showAllResource = evt;
-      this.getResourceForCurrentTime();
+      //this.getResourceForCurrentTime();
       this.detectorRef.detectChanges();
     }
   }

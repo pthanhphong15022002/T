@@ -20,6 +20,6 @@ export class AD_Roles {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  
-  }
-  
+  module: string;
+  moduleSales: string;
+}
