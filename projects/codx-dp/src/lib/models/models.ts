@@ -46,8 +46,6 @@ export class DP_Processes {
   viewModeDetail: string;
   autoName: string;
   steps: DP_Steps[] = [];
-  addFieldsControl: string = '1';
-  allowCopy: boolean = true;
 }
 
 export class DP_Processes_Permission {
