@@ -482,13 +482,12 @@ export class CrmCustomerComponent
   }
 
   copy(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
     this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
-      this.view.dataService.dataSelected = data;
-      option.DataService = data;
+      option.DataService = this.view.dataService;
       this.cache.functionList(this.funcID).subscribe((fun) => {
         var formMD = new FormModel();
         formMD.entityName = fun.entityName;

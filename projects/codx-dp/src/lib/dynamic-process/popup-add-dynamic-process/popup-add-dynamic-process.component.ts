@@ -2218,34 +2218,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (e?.event) {
             let taskData = e?.event?.data;
             if (e.event?.status === 'add' || e.event?.status === 'copy') {
-              let index = this.taskGroupList.findIndex(
-                (group) => group.recID == taskData.taskGroupID
-              );
-              if (this.taskGroupList?.length == 0 && index < 0) {
-                let taskGroupNull = new DP_Steps_TaskGroups();
-                taskGroupNull['task'] = [];
-                taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
-                this.taskGroupList.push(taskGroupNull);
-                this.taskGroupList[0]['task']?.push(taskData);
-              } else {
-                this.taskGroupList[index]['task']?.push(taskData);
-              }
-              this.taskList?.push(taskData);
-              taskData['roles']?.forEach((role) => {
-                this.addRole(role);
-              });
+              this.addTassk(taskData);
             } else {
-              for (const key in taskData) {
-                data[key] = taskData[key];
-              }
-              data['modifiedOn'] = new Date();
-              data['modifiedBy'] = this.userId;
-              if (data?.taskGroupID != taskGroupIdOld) {
-                this.changeGroupTaskOfTask(data, taskGroupIdOld);
-              }
-              data['roles']?.forEach((role, index) => {
-                this.addRole(data['roles'][index], roleOld[index]);
-              });
+              this.editTask(taskData, taskGroupIdOld, roleOld);
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
             if (!check && taskData?.stepID) {
@@ -2256,6 +2231,65 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
         this.groupTaskID = null;
       });
+    });
+  }
+
+  addTassk(taskData) {
+    let index = this.taskGroupList.findIndex(
+      (group) => group.recID == taskData.taskGroupID
+    );
+    if (this.taskGroupList?.length == 0 && index < 0) {
+      let taskGroupNull = new DP_Steps_TaskGroups();
+      taskGroupNull['task'] = [];
+      taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+      this.taskGroupList.push(taskGroupNull);
+      this.taskGroupList[0]['task']?.push(taskData);
+    } else {
+      this.taskGroupList[index]['task']?.push(taskData);
+    }
+    this.taskList?.push(taskData);
+    taskData['roles']?.forEach((role) => {
+      this.addRole(role);
+    });
+  }
+
+  editTask(taskData, taskGroupIdOld, roleOld) {
+    let indexTask = this.taskList?.findIndex(
+      (task) => task.recID == taskData.recID
+    );
+    let indexGroup = this.taskGroupList?.findIndex(
+      (group) => group.recID == taskData.taskGroupID
+    );
+    let indexGroupOld =
+      taskData?.taskGroupID != taskGroupIdOld
+        ? this.taskGroupList?.findIndex(
+            (group) => group.recID == taskGroupIdOld
+          )
+        : -1;
+    let indexTaskGroup = this.taskGroupList[indexGroup]['task']?.findIndex(
+      (task) => task.recID == taskData.recID
+    );
+
+    taskData['modifiedOn'] = new Date();
+    taskData['modifiedBy'] = this.userId;
+
+    if (indexGroupOld >= 0) {
+      let indexTaskGroupOld = this.taskGroupList[indexGroupOld][
+        'task'
+      ]?.findIndex((task) => task.recID == taskData.recID);
+      this.taskGroupList[indexGroupOld]['task']?.splice(indexTaskGroupOld, 1);
+      this.taskGroupList[indexGroup]['task']?.push(taskData);
+    } else {
+      this.taskGroupList[indexGroup]['task']?.splice(
+        indexTaskGroup,
+        1,
+        taskData
+      );
+    }
+    this.taskList.splice(indexTask, 1, taskData);
+    
+    taskData['roles']?.forEach((role, index) => {
+      this.addRole(taskData['roles'][index], roleOld[index]);
     });
   }
 
@@ -2850,6 +2884,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   changeIcon(event, field, data) {
     if (event) {
       data[field] = event;
+    }
+  }
+  getObjectIdRole(task) {
+    if (task?.taskType != 'M') {
+      let objectId =
+        task?.roles.find((role) => role.roleType == 'P')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    } else {
+      let objectId =
+        task?.roles.find((role) => role.roleType == 'O')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    }
+  }
+  getObjectNameRole(task) {
+    if (task?.taskType != 'M') {
+      let objectName =
+        task?.roles.find((role) => role.roleType == 'P')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    } else {
+      let objectName =
+        task?.roles.find((role) => role.roleType == 'O')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
     }
   }
   //#End stage -- nvthuan

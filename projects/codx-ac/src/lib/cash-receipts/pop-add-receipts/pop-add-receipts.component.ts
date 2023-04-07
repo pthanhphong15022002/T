@@ -639,17 +639,11 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     var totals = 0;
     this.cashreceiptslines.forEach((element) => {
       totals = totals + element.dr;
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
     });
-    if (this.cashreceiptslines.length == 0) {
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-    }
+    this.total = totals.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
   //#endregion
 
@@ -714,6 +708,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashreceipts,
+        "AC",
         'AC_CashReceipts',
         this.form,
         this.formType === 'edit',

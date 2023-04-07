@@ -290,7 +290,7 @@ export class InstancesComponent
       this.codxDpService
         .getProcessByProcessID(this.processID)
         .subscribe((ps) => {
-          if (ps && ps.read) {
+          if (ps && ps.read && !ps.isDelete) {
             this.loadData(ps);
             this.getListCbxProccess(ps?.applyFor);
           } else {
@@ -1496,7 +1496,7 @@ export class InstancesComponent
   loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
-    this.layoutInstance.viewNameProcess(ps.processName);
+    this.layoutInstance.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,

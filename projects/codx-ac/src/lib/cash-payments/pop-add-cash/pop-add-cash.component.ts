@@ -678,6 +678,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashpayment,
+        "AC",
         'AC_CashPayments',
         this.form,
         this.formType === 'edit',
