@@ -182,7 +182,7 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if (!!this.autoName) {
+    if (this.autoName) {
       this.title = this.titleAction + ' ' + this.autoName;
     } else {
       this.title = this.titleAction + ' ' + e;

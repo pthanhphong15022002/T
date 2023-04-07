@@ -35,6 +35,7 @@ import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-t
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { ok } from 'assert';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -545,6 +546,9 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.umid = newOKR?.umid;
     oldOKR.confidence = newOKR?.confidence;
     oldOKR.category = newOKR?.category;
+    if(newOKR?.okrTasks !=null && newOKR?.okrTasks.length>0){
+      oldOKR.okrTasks= newOKR?.okrTasks;
+    }
   }
   renderSKR(skr: any, isAdd: boolean) {
     if (skr != null) {
@@ -638,20 +642,33 @@ export class OkrTargetsComponent implements OnInit {
           assignModel,
           option
         );
-        // dialog.closed.subscribe((e) => {
-        //   if (e?.event && e?.event[0]) {
-        //     datas.status = '3';
-        //     // debugger;
-        //     // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
-        //     //   if(item) that.data.tasks= item;
-        //     // })
-        //     that.odService.updateDispatch(datas , "", false , this.referType).subscribe((item) => {
-        //       if (item.status == 0) {
-        //         that.view.dataService.update(e.data).subscribe();
-        //       } else that.notifySvr.notify(item.message);
-        //     });
-        //   }
-        // });
+
+        dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            if(kr.okrTasks==null){
+              kr.okrTasks=[];
+            }
+            kr.okrTasks.push(task);
+            
+            if(kr.okrType==this.krType){
+              this.renderKR(kr,false);
+            }
+            else if(kr.okrType==this.skrType){                  
+              this.renderSKR(kr,false);
+            }
+              
+            // this.codxOmService.getListOKRTasks(kr?.recID).subscribe((res:any)=>{
+            //   if(res){
+            //     if(kr.okrType==this.krType){
+            //       this.renderKR(kr,false);
+            //     }
+            //     else if(kr.okrType==this.skrType){                  
+            //       this.renderSKR(kr,false);
+            //     }
+            //   }
+            // })
+          }
+        });
     
   }
   editOKRWeight(ob: any, popupTitle: any) {

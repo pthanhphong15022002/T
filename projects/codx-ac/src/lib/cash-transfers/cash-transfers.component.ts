@@ -25,23 +25,19 @@ export class CashTransfersComponent
     id: 'btnAdd',
   };
   functionName: string;
-  parentID: string;
   journalNo: string;
 
   constructor(inject: Injector) {
     super(inject);
 
     this.router.queryParams.subscribe((params) => {
-      console.log(params);
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
   //#endregion
 
   //#region Init
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -83,7 +79,7 @@ export class CashTransfersComponent
     this.view.dataService
       .addNew(() =>
         this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
-          this.parentID,
+          this.journalNo,
         ])
       )
       .subscribe((res: any) => {
@@ -102,7 +98,7 @@ export class CashTransfersComponent
                 PopupAddCashTransferComponent,
                 {
                   formType: 'add',
-                  parentID: this.parentID,
+                  parentID: this.journalNo,
                   formTitle: `${e.text} ${this.functionName}`,
                 },
                 options,
