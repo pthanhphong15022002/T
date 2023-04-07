@@ -160,6 +160,7 @@ export class InstancesComponent
   reloadData = false;
   popup: DialogRef;
   reasonStepsObject: any;
+  addFieldsControl = '1';
 
   constructor(
     private inject: Injector,
@@ -375,6 +376,15 @@ export class InstancesComponent
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          this.titleAction =
+            this.titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
@@ -383,8 +393,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width =
-              this.process?.addFieldsControl == '1' ? '800px' : '550px';
+            option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -426,6 +435,15 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            this.titleAction =
+              this.titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
+          }
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -440,7 +458,7 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
                     option.Width =
-                      this.process?.addFieldsControl == '1' ? '800px' : '550px';
+                    this.addFieldsControl == '1'  ? '800px' : '550px';
                     option.zIndex = 1001;
                     if (!this.process.instanceNoSetting) {
                       this.codxDpService
@@ -487,7 +505,7 @@ export class InstancesComponent
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
-      addFieldsControl: this.process?.addFieldsControl ?? '1',
+      addFieldsControl: this.addFieldsControl,
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -529,7 +547,15 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            titleAction =
+              titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
+          }
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -545,7 +571,7 @@ export class InstancesComponent
                     formMD.gridViewName = fun.gridViewName;
 
                     option.Width =
-                      this.process?.addFieldsControl == '1' ? '800px' : '550px';
+                      this.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
@@ -562,7 +588,7 @@ export class InstancesComponent
                       ),
                       autoName: this.autoName,
                       lstParticipants: this.lstParticipants,
-                      addFieldsControl: this.process?.addFieldsControl ?? '1',
+                      addFieldsControl: this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
@@ -1469,6 +1495,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.addFieldsControl = ps?.addFieldsControl;
     this.layoutInstance.viewNameProcess(ps.processName);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
