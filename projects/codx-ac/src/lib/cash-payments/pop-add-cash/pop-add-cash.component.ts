@@ -207,13 +207,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.cashpayment.journalNo;
     options.pageLoading = false;
-    this.acService
-      .loadDataAsync('AC', options)
-      .subscribe((res) => {
-        this.journal = res[0]?.dataValue
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-      });
+    });
   }
 
   ngAfterViewInit() {
@@ -239,8 +237,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
   }
 
-  created(e) {
-    this.changeType();
+  created(e: any, ele: TabComponent) {
+    this.changeType(null, ele);
   }
 
   select(e) {
@@ -263,20 +261,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  changeType(e?: any) {
+  changeType(e?: any, ele?: TabComponent) {
     let i;
     if (e) i = e.data;
     if (!e && this.cashpayment.voucherType) i = this.cashpayment.voucherType;
-
+    if (!ele) ele = this.tabObj;
     switch (i) {
       case '1':
-        this.tabObj.hideTab(0, false);
-        this.tabObj.hideTab(1, true);
+        ele.hideTab(0, false);
+        ele.hideTab(1, true);
         this.cashpaymentline = [];
         break;
       default:
-        this.tabObj.hideTab(0, true);
-        this.tabObj.hideTab(1, false);
+        ele.hideTab(0, true);
+        ele.hideTab(1, false);
         this.voucherLineRefs = [];
         break;
     }

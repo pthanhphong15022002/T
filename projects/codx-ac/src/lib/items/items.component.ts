@@ -106,19 +106,19 @@ export class ItemsComponent extends UIComponent {
             {
               width: '33%',
               headerTemplate: this.header1,
-              headerText: 'Item Header',
+              headerText: 'Mặt hàng',
               field: 'itemHeader',
             },
             {
               width: '33%',
               headerTemplate: this.header2,
-              headerText: 'Inventory Header',
+              headerText: 'Mô hình tồn kho',
               field: 'inventoryHeader',
             },
             {
               width: '33%',
               headerTemplate: this.header3,
-              headerText: 'Dim Header',
+              headerText: 'Yếu tố tồn kho',
               field: 'dimHeader',
             },
             { width: '1%', field: 'statusHeader', headerText: '' },
