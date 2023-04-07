@@ -152,8 +152,8 @@
                 </ng-container>
               </div>
             </div>
-            <ng-container *ngIf="lstCountQuestion[(indexQ - 1)] && lstCountQuestion[(indexQ - 1)].answers &&  lstCountQuestion[(indexQ - 1)].answers.length > 0">
-              <div *ngFor="let item of lstCountQuestion[(indexQ - 1)].answers">
+            <ng-container *ngIf="lstCountQuestion[indexRepons] && lstCountQuestion[indexRepons].answers &&  lstCountQuestion[indexRepons].answers.length > 0">
+              <div *ngFor="let item of lstCountQuestion[indexRepons].answers">
                 <div class="bg-white mt-5 border rounded p-7">
                   <div class="d-flex align-items-center border-bottom pb-3" *ngIf="item.answer ; else elseAnswer">
                     <ng-container *ngIf="question?.answerType" [ngSwitch]="question?.answerType">
