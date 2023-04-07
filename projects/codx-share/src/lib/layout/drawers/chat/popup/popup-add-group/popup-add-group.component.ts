@@ -1,14 +1,14 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService, Util } from 'codx-core';
-import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
-import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
+import { WP_Groups } from 'projects/codx-share/src/lib/layout/drawers/chat/models/WP_Groups.model';
+import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 
 @Component({
-  selector: 'wp-popup-add-group',
+  selector: 'chat-popup-add',
   templateUrl: './popup-add-group.component.html',
   styleUrls: ['./popup-add-group.component.css']
 })
-export class PopupAddGroupComponent implements OnInit,AfterViewInit {
+export class AddGroupChatComponent implements OnInit,AfterViewInit {
 
   dialogData:any = null;
   dialogRef:any = null;

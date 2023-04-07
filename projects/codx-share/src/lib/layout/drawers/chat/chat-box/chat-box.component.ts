@@ -1,26 +1,20 @@
 import { E } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit, Output, EventEmitter, OnDestroy, ApplicationRef, TemplateRef } from '@angular/core';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { content } from '@syncfusion/ej2-angular-grids';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
+import { ChangeDetectorRef, Component, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, ApplicationRef, TemplateRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { PopupVoteComponent } from 'projects/codx-share/src/lib/components/treeview-comment/popup-vote/popup-vote.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { findIndex, interval, map } from 'rxjs';
-import { PopupDetailComponent } from '../../dashboard/home/list-post/popup-detail/popup-detail.component';
-import { WP_Messages } from '../../models/WP_Messages.model';
-import { SignalRService } from '../../services/signalr.service';
+import { SignalRService } from '../services/signalr.service';
 import { MessageSystemPipe } from './mssgSystem.pipe';
-import { log } from 'console';
-import { resizeStart } from '@syncfusion/ej2-angular-richtexteditor';
+import { WP_Messages } from '../models/WP_Messages.model';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss']
 })
 
-export class ChatBoxComponent implements OnInit, AfterViewInit{
+export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   @HostListener('click')
   onClick() {
     this.checkActive(this.groupID);
