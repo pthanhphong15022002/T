@@ -2922,6 +2922,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.step.reasonControl = false;
       }
+    } else if (view === 'AllowCopyView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowCopy = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowCopy = false;
+      }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {
         this.step.reasonControl = true;
