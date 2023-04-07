@@ -25,6 +25,7 @@ import {
   DialogRef,
   FormModel,
   AuthStore,
+  CodxDetailTmpComponent
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -53,7 +54,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
-  @ViewChild('viewDetail') viewDetail;
+  @ViewChild('viewDetail') viewDetail : CodxDetailTmpComponent ;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
   @Input() reloadData = false;
@@ -177,8 +178,12 @@ export class InstanceDetailComponent implements OnInit {
       }
     } else if (changes['reloadData'] && this.reloadData) {
       this.instanceStatus = this.dataSelect.status;
-      // if (this.moreFuncCrr)changes['dataSelect'].currentValue = this.dataSelect
-      // this.viewDetail.ngOnChanges(changes)
+      //muon change ma ko chang dc
+      if(this.viewDetail && this.moreFuncCrr){
+        this.viewDetail.dataItem = this.dataSelect ;
+        this.viewDetail.changedataMFs(this.moreFuncCrr)
+      }
+      
       this.getStageByStep(this.listSteps);
       this.changeDetec.detectChanges();
     }

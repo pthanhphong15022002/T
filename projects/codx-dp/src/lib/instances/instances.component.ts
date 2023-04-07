@@ -44,7 +44,6 @@ import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instan
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
-import { debug } from 'util';
 
 @Component({
   selector: 'codx-instances',
@@ -160,7 +159,7 @@ export class InstancesComponent
   listInstanceStep = [];
   reloadData = false;
   popup: DialogRef;
-  reasonStepsObject:any;
+  reasonStepsObject: any;
 
   constructor(
     private inject: Injector,
@@ -384,7 +383,8 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width = '800px';
+            option.Width =
+              this.process?.addFieldsControl == '1' ? '800px' : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -439,7 +439,8 @@ export class InstancesComponent
                     formMD.entityName = fun.entityName;
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
-                    option.Width = '800px';
+                    option.Width =
+                      this.process?.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     if (!this.process.instanceNoSetting) {
                       this.codxDpService
@@ -451,12 +452,7 @@ export class InstancesComponent
                         .subscribe((res) => {
                           if (res) {
                             this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              'copy'
-                            );
+                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
                           }
                         });
                     } else {
@@ -468,12 +464,7 @@ export class InstancesComponent
                           if (isNo) {
                             this.view.dataService.dataSelected.instanceNo =
                               isNo;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              'copy'
-                            );
+                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
                           }
                         });
                     }
@@ -496,6 +487,7 @@ export class InstancesComponent
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
+      addFieldsControl: this.process?.addFieldsControl ?? '1',
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -552,7 +544,8 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                    option.Width = '800px';
+                    option.Width =
+                      this.process?.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
@@ -569,6 +562,7 @@ export class InstancesComponent
                       ),
                       autoName: this.autoName,
                       lstParticipants: this.lstParticipants,
+                      addFieldsControl: this.process?.addFieldsControl ?? '1',
                     };
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
@@ -1369,36 +1363,47 @@ export class InstancesComponent
 
   //Export file
   exportFile() {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      null,
-      800,
-      '',
-      [gridModel, this.dataSelected.recID],
-      null
-    );
-    // let datas = '';
-    // let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
-    // this.api
-    //   .exec<any>('ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
-    //     datas,
-    //     id,
-    //   ])
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
+    // var gridModel = new DataRequest();
+    // gridModel.formName = this.view.formModel.formName;
+    // gridModel.entityName = this.view.formModel.entityName;
+    // gridModel.funcID = this.view.formModel.funcID;
+    // gridModel.gridViewName = this.view.formModel.gridViewName;
+    // gridModel.page = this.view.dataService.request.page;
+    // gridModel.pageSize = this.view.dataService.request.pageSize;
+    // gridModel.predicate = this.view.dataService.request.predicates;
+    // gridModel.dataValue = this.view.dataService.request.dataValues;
+    // gridModel.entityPermission = this.view.formModel.entityPer;
+    // //
+    // this.callfc.openForm(
+    //   CodxExportComponent,
+    //   null,
+    //   null,
+    //   800,
+    //   '',
+    //   [gridModel, this.dataSelected.recID],
+    //   null
+    // );
+
+    //data test
+    let datas = [
+      { san_pham: 'Sản phẩm quần què test' },
+      { dien_tich: 'Diện tích quần què test' },
+      { so_luong: 'Số lượng quần què test' },
+      { don_gia: 'Đơn giá quần què test' },
+    ];
+    let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.Core',
+        'CMBusiness',
+        'ExportExcelDataAsync',
+        [JSON.stringify(datas), id]
+      )
+      .subscribe((res) => {
+        console.log(res);
+        debugger;
+      });
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
@@ -1480,8 +1485,8 @@ export class InstancesComponent
     this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
     this.reasonStepsObject = {
       stepReasonSuccess: this.stepSuccess.reasons,
-      stepReasonFail: this.stepFail.reasons
-    }
+      stepReasonFail: this.stepFail.reasons,
+    };
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;

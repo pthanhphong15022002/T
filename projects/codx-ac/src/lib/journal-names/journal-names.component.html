@@ -1,5 +1,5 @@
 <div class="h-100 bg-white">
-  <div class="card-body my-2 py-2">
+  <div class="card-body my-2 py-2 d-none">
     <div class="container-fluid">
       <div class="d-block" *ngIf="vll86 && vll86.length">
         <ng-container *ngFor="let item of vll86; let i = index">
@@ -44,8 +44,8 @@
     [typeMF]="'hover'"
     [title]="data?.journalName"
     [desc]="data?.description"
-    (dblclick)="dbClick($event, data)"
     (clickMF)="clickMF($event, data)"
+    (click)="dbClick($event, data)"
   >
   </codx-card-img>
 </ng-template>

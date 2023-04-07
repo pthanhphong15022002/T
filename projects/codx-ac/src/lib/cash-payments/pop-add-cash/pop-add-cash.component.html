@@ -24,18 +24,6 @@
           (valueChange)="changeType($event)"
         >
         </codx-input>
-        <!-- <codx-input
-          type="valuelist"
-          refValue="AC063"
-      <div class="mt-2 col-2">
-        <codx-input
-          [disabled]="formType === 'edit'"
-          [Group]="form.formGroup"
-          field="voucherType"
-          [formModel]="form.formModel"
-          (valueChange)="changeType($event)"
-        >
-        </codx-input> -->
       </div>
     </div>
   </ng-container>
@@ -67,7 +55,11 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event)">
+    <ejs-tab
+      #tabObj
+      (selecting)="select($event)"
+      (created)="created($event, tabObj)"
+    >
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
@@ -109,6 +101,9 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
+    <div class="row mb-2">
+      <ng-container *ngTemplateOutlet="addLine"></ng-container>
+    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -335,8 +330,10 @@
         </div>
       </div>
     </div>
-    <div class="table-responsive mt-4"
-      style="height: 380px; border-radius: 5px;">
+    <div
+      class="table-responsive mt-4"
+      style="height: 380px; border-radius: 5px"
+    >
       <table id="myTable" class="table table-hover">
         <thead
           style="
@@ -524,9 +521,9 @@
       </div>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-start me-10 mt-4">
+  <!-- <div class="d-flex align-items-center justify-content-start me-10 mt-4">
     <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: CashPaymentLine -->
 
@@ -617,6 +614,7 @@
       <div class="d-flex justify-content-start me-2">
         <div class="btn btn-icon btn-lg btn-primary btn-circle me-4 bg">
           <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'copy' " class="icon-content_copy icon-16"></i>
           <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
         </div>
         <div
@@ -679,3 +677,24 @@
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->
+
+<!-- Start: addline -->
+<ng-template #addLine let-data>
+  <div
+    *ngIf="cashpayment.voucherType === '1' && modegrid == 1"
+    class="mt-5 mb-2"
+  >
+    <button
+      id="btn-add"
+      type="button"
+      class="btn btn-light-primary"
+      (click)="addRow()"
+    >
+      <div class="d-flex align-items-center">
+        <i class="icon-add_box icon-18"></i>
+        <span class="fs-5">Thêm dòng</span>
+      </div>
+    </button>
+  </div>
+</ng-template>
+<!-- End: addline -->

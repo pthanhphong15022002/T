@@ -1,8 +1,7 @@
-import { ApplicationRef, ChangeDetectorRef, Component, HostBinding, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { ApiHttpService } from 'codx-core';
-import { SignalRService } from '../../services/signalr.service';
-import { ChatBoxComponent } from '../chat-box/chat-box.component';
+import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
+
 declare var window: any;
 
 @Component({
@@ -11,7 +10,7 @@ declare var window: any;
   styleUrls: ['./chat-container.component.scss'],
 
 })
-export class ChatContainerComponent implements OnInit {
+export class CodxChatContainerComponent implements OnInit {
   @HostBinding('style') get myStyle(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(`
     width: 100%;
