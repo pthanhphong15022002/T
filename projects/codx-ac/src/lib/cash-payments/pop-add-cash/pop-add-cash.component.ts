@@ -58,7 +58,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   validate: any = 0;
   parentID: string;
   moreFunction: any;
-  modegrid: any = 1;
+  modegrid: any = 0;
   columnGrids = [];
   keymodel: any;
   cashpaymentline: Array<CashPaymentLine> = [];
@@ -226,44 +226,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   close() {
     this.dialog?.close();
   }
-  searchName(e) {
-    var filter, table, tr, td, i, txtValue, mySearch, myBtn, myPag;
-    filter = e.toUpperCase();
-    table = document.getElementById('myTable');
-    tr = table.getElementsByTagName('tr');
-    if (String(e).match(/^ *$/) !== null) {
-      myBtn = document.getElementById('myBtn');
-      myBtn.style.display = 'block';
-      mySearch = document.getElementById('mySearch');
-      mySearch.style.display = 'none';
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName('td')[2];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          tr[i].style.display = '';
-        }
-      }
-    } else {
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName('td')[2];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          myBtn = document.getElementById('myBtn');
-          myBtn.style.display = 'none';
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = '';
-            mySearch = document.getElementById('mySearch');
-            mySearch.style.display = 'none';
-          } else {
-            tr[i].style.display = 'none';
-            mySearch = document.getElementById('mySearch');
-            mySearch.style.display = 'block';
-          }
-        }
-      }
-    }
-  }
-
   loadTotal() {
     var totals = 0;
     this.cashpaymentline.forEach((element) => {

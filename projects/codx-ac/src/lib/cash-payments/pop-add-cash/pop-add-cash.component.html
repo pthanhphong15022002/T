@@ -101,6 +101,9 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
+    <div class="row mb-2">
+      <ng-container *ngTemplateOutlet="addLine"></ng-container>
+    </div>
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -305,25 +308,6 @@
       (cellChanged)="cashPaymentLineChanged($event)"
       (created)="gridCreated($event, gridCashPaymentLine)"
     ></codx-gridview-v2>
-    <div class="form-group mt-6 mb-0 row">
-      <div class="col-12">
-        <div class="form-group mb-0 row">
-          <div class="col-2">
-            <button
-              type="button"
-              class="btn btn-light-primary"
-              (click)="addRow()"
-            >
-              <codx-label
-                name="btnAdd"
-                formName="System"
-                default="Thêm dòng"
-              ></codx-label>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <ng-container
     *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0"
@@ -692,3 +676,24 @@
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->
+
+<!-- Start: addline -->
+<ng-template #addLine let-data>
+  <div
+    *ngIf="cashpayment.voucherType === '1' && modegrid == 1"
+    class="mt-5 mb-2"
+  >
+    <button
+      id="btn-add"
+      type="button"
+      class="btn btn-light-primary"
+      (click)="addRow()"
+    >
+      <div class="d-flex align-items-center">
+        <i class="icon-add_box icon-18"></i>
+        <span class="fs-5">Thêm dòng</span>
+      </div>
+    </button>
+  </div>
+</ng-template>
+<!-- End: addline -->
