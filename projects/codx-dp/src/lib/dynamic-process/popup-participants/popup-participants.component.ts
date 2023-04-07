@@ -37,12 +37,12 @@ export class PopupParticipantsComponent implements OnInit {
   constructor(private dpSv: CodxDpService) {}
 
   ngOnInit(): void {
+    this.getListUserByOrg(this.lstParticipants);
     // if (this.lstParticipants != null && this.lstParticipants.length > 0)
     //   this.valueChangeLeft(0, this.lstParticipants[this.currentLeft]);
   }
 
   async ngAfterViewInit() {
-    this.getListUserByOrg(this.lstParticipants);
 
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
@@ -168,6 +168,7 @@ export class PopupParticipantsComponent implements OnInit {
   // }
 
   async getListUserByOrg(list = []) {
+    this.lstOrg = [];
     if (list != null && list.length > 0) {
       var userOrgID = list
         .filter((x) => x.objectType == 'O')
