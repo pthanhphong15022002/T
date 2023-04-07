@@ -24,18 +24,6 @@
           (valueChange)="changeType($event)"
         >
         </codx-input>
-        <!-- <codx-input
-          type="valuelist"
-          refValue="AC063"
-      <div class="mt-2 col-2">
-        <codx-input
-          [disabled]="formType === 'edit'"
-          [Group]="form.formGroup"
-          field="voucherType"
-          [formModel]="form.formModel"
-          (valueChange)="changeType($event)"
-        >
-        </codx-input> -->
       </div>
     </div>
   </ng-container>
@@ -67,7 +55,11 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab #tabObj (selecting)="select($event)" (created)="created($event)">
+    <ejs-tab
+      #tabObj
+      (selecting)="select($event)"
+      (created)="created($event, tabObj)"
+    >
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
         <e-tabitem>
@@ -354,8 +346,10 @@
         </div>
       </div>
     </div>
-    <div class="table-responsive mt-4"
-      style="height: 380px; border-radius: 5px;">
+    <div
+      class="table-responsive mt-4"
+      style="height: 380px; border-radius: 5px"
+    >
       <table id="myTable" class="table table-hover">
         <thead
           style="
@@ -543,9 +537,9 @@
       </div>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-start me-10 mt-4">
+  <!-- <div class="d-flex align-items-center justify-content-start me-10 mt-4">
     <span class="fs-5 fw-bold">Tổng tiền: {{ total }}</span>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: CashPaymentLine -->
 
