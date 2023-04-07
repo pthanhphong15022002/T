@@ -1,7 +1,5 @@
 import { Component, HostBinding, OnInit, AfterViewInit} from '@angular/core';
-
 import { ApiHttpService, CallFuncService, CodxService, SidebarModel, } from 'codx-core';
-import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 import { NotifyDrawerSliderComponent } from './notify-drawer-slider/notify-drawer-slider.component';
 @Component({
   selector: 'codx-notify-drawer',
@@ -16,7 +14,6 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
     private api:ApiHttpService,
     public codxService:CodxService,
     private callFc:CallFuncService,
-    private signalRSV : SignalRService
   ) 
   { }
  

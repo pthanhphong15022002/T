@@ -46,10 +46,12 @@ export class DP_Processes {
   viewModeDetail: string;
   autoName: string;
   steps: DP_Steps[] = [];
+  addFieldsControl: string = '1';
+  allowCopy: boolean = true;
 }
 
 export class DP_Processes_Permission {
-  recID:  string = Util.uid();
+  recID: string = Util.uid();
   transID: string;
   roleType: string;
   objectType: string;
@@ -80,10 +82,9 @@ export class DP_Processes_Permission {
   approveStatus: String;
   approvedOn: Date;
   isActive: boolean = true;
-
 }
 
-export class DP_Processes_Ratings{
+export class DP_Processes_Ratings {
   id: string;
   recID: string;
   objectID: string;
@@ -130,10 +131,10 @@ export class DP_Steps {
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;
-  backgroundColor:	String;
-  textColor:	String;
-  icon:	String;
-  iconColor:	String;
+  backgroundColor: String;
+  textColor: String;
+  icon: String;
+  iconColor: String;
   progressTaskGroupControl: boolean = true;
   progressStepControl: boolean = true;
 }
@@ -280,7 +281,7 @@ export class DP_Instances {
   comments: number;
   refType: string;
   refID: string;
-  startDate: Date
+  startDate: Date;
   endDate: Date;
   objectType: string;
   objectID: string;
@@ -355,14 +356,14 @@ export class DP_Instances_Steps {
   memo: string;
   requireCompleted: boolean;
   reasonControl: boolean = false;
-  isSuccessStep: boolean =  false;
+  isSuccessStep: boolean = false;
   isFailStep: boolean = false;
   durationControl: boolean;
   leadtimeControl: boolean;
-  backgroundColor:	String;
-  textColor:	String;
-  icon:	String;
-  iconColor:	String;
+  backgroundColor: String;
+  textColor: String;
+  icon: String;
+  iconColor: String;
   progressTaskGroupControl: boolean = false;
   progressStepControl: boolean = false;
 }
@@ -511,7 +512,7 @@ export class DP_Instance_Steps_Fields {
 }
 
 export class DP_Instances_Steps_Reasons {
-  recID: string = Util.uid();;
+  recID: string = Util.uid();
   processID: string;
   instanceID: string;
   stepID: string;

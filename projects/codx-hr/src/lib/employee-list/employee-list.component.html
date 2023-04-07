@@ -102,8 +102,8 @@
         >
         </codx-img>
         <div class="d-flex flex-column flex-grow-1">
-          <div class="d-flex align-items-center">
-            <div class="text-dark fw-bold fs-6 me-2 text-nowrap">
+          <div class="d-flex align-items-center mb-1">
+            <div class="text-dark fw-bold fs-6 me-3 text-nowrap">
               {{ data.employeeName }}
             </div>
             <div
@@ -115,32 +115,28 @@
             </div>
           </div>
 
-          <span class="text-dark">
+          <span class="text-gray-500 fs-7 mb-1">
             <span #positionName [innerHTML]=" data?.positionID
             | formatvalue : view.formModel : 'positionID'
             | async"></span>
           </span>
 
-          <span class="text-dark">
+          <span class="text-gray-700 mb-1">
             <span #organizationName [innerHTML]="data?.orgUnitID
             | formatvalue : view.formModel : 'orgUnitID'
             | async"></span>
           </span>
 
-          <div>
-            <span class="text-dark">
-              <span #departmentName [innerHTML]="data?.departmentID
+          <div class="text-gray-700 fs-7">
+            <span #departmentName [innerHTML]="data?.departmentID
               | formatvalue : view.formModel : 'departmentID'
               | async"></span>
-            </span>
 
-            <span class="text-gray-400"> | </span>
+            <span class="text-gray-400 mx-1">|</span>
 
-            <span class="text-dark">
-              <span #divisionName [innerHTML]="data?.divisionID
+            <span #divisionName [innerHTML]="data?.divisionID
               | formatvalue : view.formModel : 'divisionID'
               | async"></span>
-            </span>
           </div>
         </div>
       </div>
@@ -151,21 +147,21 @@
 <ng-template #itemContact let-data>
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-add">
-      <div class="d-flex align-items-center">
-        <span class="icon-email icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-email icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark">
           <span #email [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async"></span>
         </span>
       </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-phone_android icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark">
           <span #phone [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async"></span>
         </span>
       </div>
       <div class="d-flex align-items-center">
-        <span class="icon-place icon-16 text-gray-800 me-1"></span>
-        <span class="text-dark fw-bold">
+        <span class="icon-place icon-16 text-gray-600 me-2"></span>
+        <span class="text-dark">
           <span #street [innerHTML]="            data.street
           | formatvalue : view.formModel : 'street'
           | async"></span>
@@ -178,7 +174,7 @@
 <ng-template #itemInfoPersonal let-data>
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
-      <div class="align-items-center1 fs-7">
+      <div class="align-items-center1 fs-7 mb-1">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblBirthday"
@@ -192,7 +188,7 @@
           | async"></span>
         </span>
       </div>
-      <div class="align-items-center fs-7">
+      <div class="align-items-center fs-7 mb-1">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblBirthPlace"
@@ -229,7 +225,7 @@
 <ng-template #itemStatusName let-data>
   <div (dblclick)="doubleClick(data)" class="w-100 has-action-menu">
     <div class="d-flex flex-column employee-info">
-      <div class="d-flex">
+      <div class="d-flex mb-1">
         <span
         [ngClass]="data.status == 50 ? 'badge badge-success badge-sm badge-inline' : 'badge badge-secondary badge-sm badge-inline' "
         [innerHTML]="data.status | formatvalue : view.formModel : 'status' | async"
@@ -237,7 +233,7 @@
        </span>
       </div>
 
-      <div class="align-items-center fs-7 mt-1">
+      <div class="align-items-center fs-7 mb-1">
         <span class="text-gray-600 me-1">
           <codx-label
             name="lblJoinedOn"
