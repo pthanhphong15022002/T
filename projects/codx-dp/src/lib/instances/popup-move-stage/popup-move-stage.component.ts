@@ -599,8 +599,11 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   updateProgressInstance(){
-    if(this.listTaskDone.length == this.listTask.length && this.listTaskGroupDone.length == this.listTaskGroup.length ) {
-      this.instancesStepOld.progress = 100;
+    if(this.listTaskDone?.length > 0 && this.listTask?.length > 0 && this.listTaskGroup?.length > 0 && this.listTaskGroupDone?.length > 0 ) {
+      if( this.listTaskDone.length == this.listTask.length && this.listTaskGroupDone.length == this.listTaskGroup.length ) {
+        this.instancesStepOld.progress = 100;
+      }
     }
+
   }
 }

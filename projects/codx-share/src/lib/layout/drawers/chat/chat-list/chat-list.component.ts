@@ -14,15 +14,15 @@ import {
   CRUDService,
   FormModel,
 } from 'codx-core';
-import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
+import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { MessageSystemPipe } from '../chat-box/mssgSystem.pipe';
 
 @Component({
-  selector: 'wp-chat-list',
+  selector: 'codx-chat-list',
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.scss'],
 })
-export class ChatListComponent implements OnInit, AfterViewInit {
+export class CodxChatListComponent implements OnInit, AfterViewInit {
   funcID: string = 'WPT11';
   function: any = null;
   formModel: FormModel = null;
