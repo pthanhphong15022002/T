@@ -18,7 +18,6 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
-import { ChatListComponent } from './chat/chat-list/chat-list.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -35,15 +34,8 @@ import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-
 import { LayoutComponent } from './_layout/layout.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
-import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add-post.component';
-import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
-import { LayoutChatComponent } from './layout-chat/layout-chat.component';
-import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
-import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
-import { ScrollPipe } from './chat/chat-box/scrollPipe.pipe';
-import { MessageSystemPipe } from './chat/chat-box/mssgSystem.pipe';
 
 export const routes: Routes = [
   {
@@ -124,18 +116,10 @@ const Component: Type<any>[] = [
   CompanyEditComponent,
   PopupTitleComponent,
   PopupSearchPostComponent,
-  ChatListComponent,
-  CodxChatComponent,
   LayoutComponent,
   PopupAddPostComponent,
-  PopupAddGroupComponent,
-  LayoutChatComponent,
-  ChatBoxComponent,
   ApproveComponent,
   ApproveDetailComponent,
-  ChatContainerComponent,
-  ScrollPipe,
-  MessageSystemPipe
 ];
 
 @NgModule({
