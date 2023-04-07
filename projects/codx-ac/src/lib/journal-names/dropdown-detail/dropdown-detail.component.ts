@@ -29,7 +29,7 @@ export class DropdownDetailComponent extends UIComponent implements OnChanges {
   onInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.modelShares) {
+    if (changes.modelShares && Array.isArray(this.modelShares)) {
       this.ids = this.modelShares?.map((d) => d.id).join(';');
     }
   }

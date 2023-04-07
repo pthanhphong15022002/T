@@ -139,6 +139,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   titleRadioNo: string = '';
   noteSuccess: string = '';
   noteFail: string = '';
+  noteResult: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -1166,7 +1167,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (x.event.status == 'Y') {
         var i = -1;
         var tmp = this.process.permissions[index];
-        var checkDelete = this.lstTmp?.some((x) => x.objectID == tmp.objectID && x.roleType == 'F');
+        var checkDelete = this.lstTmp?.some(
+          (x) => x.objectID == tmp.objectID && x.roleType == 'F'
+        );
 
         i = this.lstParticipants.findIndex(
           (x) => x.objectID === this.process.permissions[index].objectID
@@ -2859,6 +2862,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.step.reasonControl = false;
       }
+    } else if (view === 'AllowCopyView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowCopy = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowCopy = false;
+      }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {
         this.step.reasonControl = true;
@@ -3387,10 +3396,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.iconReasonFail = item;
           } else if (item.value === 'R') {
             var reasonValue = item;
-          } else if (parseInt(item.value) % 2 === 0) {
+          } else if (item.value == '0') {
             this.noteSuccess = item.text;
-          } else if (parseInt(item.value) % 2 !== 0) {
+          } else if (item.value == '1') {
             this.noteFail = item.text;
+          } else if (item.value == '2') {
+            this.noteResult = item.text;
           }
         }
 

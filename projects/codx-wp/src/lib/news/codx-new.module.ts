@@ -17,8 +17,6 @@ import { PopupEditComponent } from './popup/popup-edit/popup-edit.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 import { NewsTagComponent } from './news-tag/view-tag.component';
 import { ViewVideoComponent } from './view-video/view-video.component';
-import { CodxChatComponent } from '../chat/codx-chat/codx-chat.component';
-import { CodxWpModule } from '../codx-wp.module';
 
 export const routes: Routes = [
   {

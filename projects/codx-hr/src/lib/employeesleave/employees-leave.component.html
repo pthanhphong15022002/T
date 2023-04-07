@@ -37,8 +37,8 @@
         objectType="HR_Employees">
       </codx-img>
       <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex align-items-center">
-          <div class="text-dark fw-bold fs-6 me-2 text-nowrap">
+        <div class="d-flex align-items-center mb-1">
+          <div class="text-dark fw-bold fs-6 me-3 text-nowrap">
             {{ data.employeeName }}
           </div>
           <ng-container *ngIf="data.gender">
@@ -60,12 +60,12 @@
         <!-- <div class="" *ngIf="data.organizationName || data.orgUnitID ; else organizationName">
                     {{data.organizationName }}
                 </div> -->
-        <div class="" [innerHtml]="
+        <div class="text-gray-500 fs-7 mb-1" [innerHtml]="
             data?.positionID
               | formatvalue : view.formModel : 'positionID'
               | async
           "></div>
-        <div class="" [innerHtml]="
+        <div class="text-gray-700 fs-7 mb-1" [innerHtml]="
             data?.orgUnitID | formatvalue : view.formModel : 'orgUnitID' | async
           "></div>
 
@@ -75,16 +75,16 @@
                         </codx-label>
                     </div>
                 </ng-template> -->
-        <div>
+        <div class="fs-7">
           <!-- <span class="fs-7" *ngIf="data.departmentName;else departmentName">{{data.departmentName}} |
                     </span> -->
-          <span class="fs-7" *ngIf="data.departmentID != data.orgUnitID" [innerHtml]="
+          <span *ngIf="data.departmentID != data.orgUnitID" [innerHtml]="
               data?.departmentID
                 | formatvalue : view.formModel : 'departmentID'
                 | async
             ">
           </span>
-          <span class="fs-7" *ngIf="data.departmentID != data.orgUnitID">
+          <span class="mx-1 text-gray-400" *ngIf="data.departmentID != data.orgUnitID">
             |
           </span>
           <!-- <ng-template #departmentName>
@@ -94,7 +94,7 @@
                         </span>
                     </ng-template> -->
           <!-- <span class="fs-7" *ngIf="data.divisionName;else divisionName">{{data.divisionName}}</span> -->
-          <span class="fs-7" [innerHtml]="
+          <span class="text-gray-700" [innerHtml]="
               data?.divisionID
                 | formatvalue : view.formModel : 'divisionID'
                 | async

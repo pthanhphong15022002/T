@@ -55,9 +55,9 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     this.journals = dialogData.data?.journals;
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
-    if (this.journals.idimControl != null) {
-      this.objectIdim = JSON.parse(this.journals.idimControl);
-    }
+    // if (this.journals.idimControl != null) {
+    //   this.objectIdim = JSON.parse(this.journals.idimControl);
+    // }
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
@@ -90,34 +90,36 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.purchaseInvoicesLines[e.field] = e.data;
-    switch (e.field) {
-      case 'itemID':
-        this.api
-          .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data])
-          .subscribe((res: any) => {
-            if (res != null) {
-              this.itemName = res.itemName;
+    if (e.data) {
+      this.purchaseInvoicesLines[e.field] = e.data;
+      switch (e.field) {
+        case 'itemID':
+          this.api
+            .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data])
+            .subscribe((res: any) => {
+              if (res != null) {
+                this.itemName = res.itemName;
+              }
+            });
+          break;
+        case 'unitPrice':
+        case 'quantity':
+          this.purchaseInvoicesLines.netAmt = this.purchaseInvoicesLines.quantity * this.purchaseInvoicesLines.unitPrice;
+          this.lsVatCode.forEach((element) => {
+            if (element.vatid == this.purchaseInvoicesLines.vatid) {
+              this.purchaseInvoicesLines.vatAmt =
+                element.taxRate * this.purchaseInvoicesLines.netAmt;
             }
           });
-        break;
-      case 'unitPrice':
-      case 'quantity':
-        this.purchaseInvoicesLines.netAmt = this.purchaseInvoicesLines.quantity * this.purchaseInvoicesLines.unitPrice;
-        this.lsVatCode.forEach((element) => {
-          if (element.vatid == this.purchaseInvoicesLines.vatid) {
-            this.purchaseInvoicesLines.vatAmt =
-              element.taxRate * this.purchaseInvoicesLines.netAmt;
-          }
-        });
-        this.form.formGroup.patchValue(this.purchaseInvoicesLines);
-        break;
-      case 'vatid':
-        var vat = e.component.itemsSelected[0];
-        this.purchaseInvoicesLines.vatAmt =
-          vat.TaxRate * this.purchaseInvoicesLines.netAmt;
-        this.form.formGroup.patchValue(this.purchaseInvoicesLines);
-        break;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          break;
+        case 'vatid':
+          var vat = e.component.itemsSelected[0];
+          this.purchaseInvoicesLines.vatAmt =
+            vat.TaxRate * this.purchaseInvoicesLines.netAmt;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          break;
+      } 
     }
   }
   checkValidate() {
