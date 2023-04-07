@@ -82,12 +82,14 @@ export class SignFileComponent extends UIComponent {
   assemblyName = 'ES';
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
+  method = 'LoadDataSignFileAsync';
   idField = 'recID';
 
   predicate = '';
   datavalue = '';
   dataSelected = '';
   SidebarModel;
+  lstSignfiles: any;
 
   dialog: DialogRef;
 
@@ -196,14 +198,17 @@ export class SignFileComponent extends UIComponent {
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
+    if (event?.data?.recID) this.getDetailSignFile(event?.data.recID);
   }
 
   getDetailSignFile(id: any) {
+    this.lstSignfiles = null;
     this.esService
       .getDetailSignFile(this.itemDetail?.recID)
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;
+          this.lstSignfiles = res;
           this.df.detectChanges();
         }
       });
@@ -309,7 +314,9 @@ export class SignFileComponent extends UIComponent {
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
     var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
-    var release = e.filter((x: { functionID: string }) => x.functionID == 'EST01105');
+    var release = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01105'
+    );
 
     if (bookmarked == true) {
       if (bm?.length) bm[0].disabled = true;

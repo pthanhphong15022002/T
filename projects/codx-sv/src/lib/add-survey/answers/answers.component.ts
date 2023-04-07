@@ -35,7 +35,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   lstCountQuestion = [];
   lstQuestion : any;
   indexQuesAns: number = 0;
-  
+  indexRepons: number = 0;
   chartSettingsT: ChartSettings = {
     title: '',
     seriesSetting: [
@@ -163,6 +163,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   loadQuestionByID(id:any)
   {
     this.question = this.lstQuestion.filter(x=>x.recID == id)[0];
+    if(this.lstCountQuestion) this.indexRepons = this.lstCountQuestion.findIndex(x=>x.recID == id);
   }
   //Thay đổi câu hỏi kế tiếp hoặc câu hỏi trước đó
   changeQuestion(type:any)

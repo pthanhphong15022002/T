@@ -90,7 +90,7 @@ export class WalletComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.LoadDataNew();
-    this.LoadData();
+    //this.LoadData();
     this.LoadDataPolicies('2');
     this.LoadDataPolicies('1');
     // this.getSettingRunPolicyCoCoin();
@@ -271,7 +271,7 @@ export class WalletComponent extends UIComponent implements OnInit {
 
           console.log('activeCocoins:', this.quantityActiveCoCoins.ActiveCoCoins);
 
-          if (this.quantityActiveCoCoins.ActiveCoCoins == '1') {
+          if (this.quantityActiveCoCoins.ActiveCoCoins == 1) {
             this.disableGroupFund = false;
           } else {
             this.disableGroupFund = true;
