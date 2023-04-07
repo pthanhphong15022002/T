@@ -160,6 +160,7 @@ export class InstancesComponent
   reloadData = false;
   popup: DialogRef;
   reasonStepsObject: any;
+  addFieldsControl ='1';
 
   constructor(
     private inject: Injector,
@@ -384,7 +385,7 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             option.Width =
-              this.process?.addFieldsControl == '1' ? '800px' : '550px';
+              this.addFieldsControl == '1' ? '800px' : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -487,7 +488,7 @@ export class InstancesComponent
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
-      addFieldsControl: this.process?.addFieldsControl ?? '1',
+      addFieldsControl:  this.addFieldsControl,
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -545,7 +546,7 @@ export class InstancesComponent
                     formMD.gridViewName = fun.gridViewName;
 
                     option.Width =
-                      this.process?.addFieldsControl == '1' ? '800px' : '550px';
+                    this.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
@@ -562,7 +563,7 @@ export class InstancesComponent
                       ),
                       autoName: this.autoName,
                       lstParticipants: this.lstParticipants,
-                      addFieldsControl: this.process?.addFieldsControl ?? '1',
+                      addFieldsControl:  this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
@@ -1469,6 +1470,7 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
+    this.addFieldsControl = ps?.addFieldControl ;
     this.layoutInstance.viewNameProcess(ps.processName);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
