@@ -53,6 +53,11 @@ export class CashPaymentsComponent extends UIComponent {
   pageSize = 6;
   transactionText:any;
   cashpaymentline: Array<CashPaymentLine> = [];
+  fmCashPaymentsLines: FormModel = {
+    formName: 'CashPaymentsLines',
+    gridViewName: 'grvCashPaymentsLines',
+    entityName: 'AC_CashPaymentsLines',
+  };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
