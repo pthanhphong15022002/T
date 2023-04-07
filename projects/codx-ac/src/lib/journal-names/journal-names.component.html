@@ -44,8 +44,8 @@
     [typeMF]="'hover'"
     [title]="data?.journalName"
     [desc]="data?.description"
-    (dblclick)="dbClick($event, data)"
     (clickMF)="clickMF($event, data)"
+    (click)="dbClick($event, data)"
   >
   </codx-card-img>
 </ng-template>
