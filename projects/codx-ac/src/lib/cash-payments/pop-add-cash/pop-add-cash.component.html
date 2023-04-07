@@ -313,6 +313,25 @@
       (cellChanged)="cashPaymentLineChanged($event)"
       (created)="gridCreated($event, gridCashPaymentLine)"
     ></codx-gridview-v2>
+    <div class="form-group mt-6 mb-0 row">
+      <div class="col-12">
+        <div class="form-group mb-0 row">
+          <div class="col-2">
+            <button
+              type="button"
+              class="btn btn-light-primary"
+              (click)="addRow()"
+            >
+              <codx-label
+                name="btnAdd"
+                formName="System"
+                default="Thêm dòng"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <ng-container
     *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 0"
