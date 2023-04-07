@@ -82,6 +82,7 @@ export class SignFileComponent extends UIComponent {
   assemblyName = 'ES';
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
+  method = 'LoadDataSignFileAsync';
   idField = 'recID';
 
   predicate = '';
