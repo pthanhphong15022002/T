@@ -384,7 +384,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width = '800px';
+            option.Width = this.process?.addFieldsControl=='1' ? '800px' : '550px' ;
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -439,7 +439,7 @@ export class InstancesComponent
                     formMD.entityName = fun.entityName;
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
-                    option.Width = '800px';
+                    option.Width = this.process?.addFieldsControl=='1' ? '800px' : '550px' ;
                     option.zIndex = 1001;
                     if (!this.process.instanceNoSetting) {
                       this.codxDpService
@@ -496,6 +496,7 @@ export class InstancesComponent
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
+      addFieldsControl : this.process?.addFieldsControl??'1'
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -552,7 +553,7 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                    option.Width = '800px';
+                    option.Width =this.process?.addFieldsControl=='1' ? '800px' : '550px' ;
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
@@ -569,6 +570,7 @@ export class InstancesComponent
                       ),
                       autoName: this.autoName,
                       lstParticipants: this.lstParticipants,
+                      addFieldsControl : this.process?.addFieldsControl??'1'
                     };
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
