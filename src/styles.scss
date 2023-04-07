@@ -2257,6 +2257,13 @@ codx-calendar {
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
+
+codx-view-grid{
+  #gridViewV2.e-grid .e-rowcell {
+    padding: 8px 12px;
+}
+}
+
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }
