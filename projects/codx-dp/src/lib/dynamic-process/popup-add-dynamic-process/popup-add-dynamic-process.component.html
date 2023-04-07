@@ -1673,9 +1673,9 @@
                             <div class="mx-3">
                               <codx-img
                                 [width]="30"
-                                [objectId]="task?.roles[0]?.objectID"
+                                [objectId]="getObjectIdRole(task)"
                                 objectType="AD_Users"
-                                [objectName]="task?.roles[0]?.objectName"
+                                [objectName]="getObjectNameRole(task)"
                               >
                               </codx-img>
                             </div>
@@ -1708,7 +1708,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="task-att">
+                          <!-- <div class="task-att">
                             <codx-attachment
                               #attachment
                               hideFolder="1"
@@ -1722,7 +1722,7 @@
                               showMessage="1"
                             >
                             </codx-attachment>
-                          </div>
+                          </div> -->
                           <codx-mfunc
                             [formModel]="grvMoreFunction"
                             (clickMF)="
