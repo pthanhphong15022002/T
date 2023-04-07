@@ -52,6 +52,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
+  fileNameArr =[];
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
@@ -67,6 +69,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.titleAction = dt?.data?.titleAction;
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup
+    if(this.stepList?.length > 0){
+      this.stepList.forEach(obj=>{
+        if(obj?.fields?.length>0){
+          let arrFn = obj?.fields.map(x=>x.fieldName)
+          this.fileNameArr =this.fileNameArr.concat(arrFn)
+        }
+      })
+    }
     //this.field.rank = 5;
     // this.cache
     //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
@@ -120,6 +130,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveData() {
+    
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -141,6 +152,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
         '"' + this.grvSetup['FieldName']?.headerText + '"'
       );
       return;
+    }
+    if(this.fileNameArr.length>0){
+     let check = this.fileNameArr.some(x=>x.toLowerCase() == this.field.fieldName.toLowerCase())
+     if(check){
+      this.notiService.notify(
+        "Field name không được trùng nhau ! - Thêm messCode Khanh !! ",'2'
+      );
+      return;
+     }
     }
     if (!this.field.dataType && this.grvSetup['DataType']?.isRequire) {
       this.notiService.notifyCode(
