@@ -27,12 +27,12 @@
     <div class="d-flex align-items-center py-4 px-5 border-bottom">
         <div  class="d-flex justify-content-between align-items-center w-100">
             <!-- HR_Positions infor -->
-            <div class="reportingline-cell-positioninfo">
+            <div class="reportingline-cell-positioninfo w-100">
                 <div class="text-start w-100">
-                    <div class="fw-bold fs-6">
+                    <div class="fw-bold text-dark fs-6 mb-1">
                         {{data.positionName}}
                     </div>
-                    <div>
+                    <div class="mb-1 text-gray-500">
                         <ng-container *ngIf="data.orgUnitName">
                             <span>{{data.orgUnitName}}</span>
                         </ng-container>
@@ -69,14 +69,14 @@
         <!-- HR_Positions job -->
         <div class="w-250px min-w-250px ms-6">
             <div class="text-start w-100">
-                <div class="text-gray-700">
+                <div class="text-gray-700 mb-1">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" fiedName="JobID" default="Nhóm chức danh:">
                         </codx-label>
                     </span>
                     <span class="text-dark" *ngIf="data.jobName">{{data.jobName}}</span>
                 </div>
-                <div class="text-gray-700 mt-1">
+                <div class="text-gray-500">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" fiedName="JobLevel" default="Chức vụ:">
                         </codx-label>
@@ -90,14 +90,14 @@
         </div>
         <div class="w-250px min-w-250px ms-6">
             <div class="text-start w-100">
-                <div class="text-gray-700">
+                <div class="text-gray-700 mb-1">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" fiedName="ReportTo" default="Báo cáo trực tiếp:">
                         </codx-label>
                     </span>
                     <span *ngIf="data.reportToName">{{data.reportToName}}</span>
                 </div>
-                <div class="text-gray-700 mt-1">
+                <div class="text-gray-500">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" fiedName="ReportTo2" default="Báo cáo gián tiếp:">
                         </codx-label>
@@ -113,7 +113,7 @@
                     <codx-label [formModel]="view.formModel" default="Nhân viên">
                     </codx-label>
                 </div>
-                <div class="pos-number text-primary fs-2 fw-bold">
+                <div class="pos-number text-primary fs-2 fw-bold mb-2">
                     <span>{{data.staff > 0? data.staff : 0}}</span>
                 </div>
                 <ng-container *ngIf="data.staffEmp">
