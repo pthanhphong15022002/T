@@ -1,7 +1,10 @@
-<codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
+
+<div class="okr-treeview ">
+    <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
     idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
     (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
 </codx-treeview>
+</div>
 <ng-template #templateTreeView let-item>
     <div (click)="clickTreeNode($event)" class="mb-2">
         <div class="d-flex flex-row align-items-center h-50px" >

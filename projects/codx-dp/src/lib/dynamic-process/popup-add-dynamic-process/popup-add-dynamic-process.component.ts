@@ -139,6 +139,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   titleRadioNo: string = '';
   noteSuccess: string = '';
   noteFail: string = '';
+  noteResult: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -3387,10 +3388,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.iconReasonFail = item;
           } else if (item.value === 'R') {
             var reasonValue = item;
-          } else if (parseInt(item.value) % 2 === 0) {
+          } else if (item.value == '0') {
             this.noteSuccess = item.text;
-          } else if (parseInt(item.value) % 2 !== 0) {
+          } else if (item.value == '1') {
             this.noteFail = item.text;
+          }else if(item.value == '2') {
+            this.noteResult = item.text;
           }
         }
 
