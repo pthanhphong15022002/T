@@ -278,7 +278,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           {
             case "height":
             {
-              return "250"
+              return "auto"
               break;
             }
             case 'primaryXAxis':
@@ -320,7 +320,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
             }
             case 'legendSettings':
             {
-              return null;
+              return {
+                width: 50,
+                textOverflow : 'Ellipsis',
+                textWrap: 'Wrap'
+              };
             }
           }
           break;

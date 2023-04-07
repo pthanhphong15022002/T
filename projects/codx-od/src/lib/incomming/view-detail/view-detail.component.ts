@@ -654,7 +654,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Copy
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
-        this.view.dataService.copy(0).subscribe((res: any) => {
+        this.view.dataService.copy().subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
           this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo;
           this.view.dataService.dataSelected.owner = res?.owner;
