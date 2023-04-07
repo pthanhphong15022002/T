@@ -24,201 +24,205 @@
         </ng-template>
         <ng-template #content>
           <div class="row mt-6">
-            <div class="col-9">
-              <div class="row">
-                <div class="col-4 form-group">
-                  <codx-label
-                    fiedName="cashBookID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashBookID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
-                  ></codx-input>
-                </div>
-                <div class="col-4 form-group">
-                  <codx-label
-                    fiedName="cashBookName"
-                    [formModel]="form.formModel"
-                    default="Đối tượng chuyển"
-                  ></codx-label>
-                  <codx-input
-                    type="text"
-                    field="cashBookName"
-                    [disabled]="true"
-                    [formModel]="form.formModel"
-                    [crrValue]="cashBookName1"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="transactionText"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="transactionText"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-4 form-group">
-                  <codx-label
-                    fiedName="cashBookID2"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashBookID2"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
-                  ></codx-input>
-                </div>
-                <div class="col-6 form-group">
-                  <codx-label
-                    fiedName="cashBookName2"
-                    [formModel]="form.formModel"
-                    default="Đối tượng nhận"
-                  ></codx-label>
-                  <codx-input
-                    type="text"
-                    field="cashBookName2"
-                    [disabled]="true"
-                    [formModel]="form.formModel"
-                    [crrValue]="cashBookName2"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-10 form-group">
-                  <codx-label
-                    fiedName="note"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="note"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="cashAcctID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="cashAcctID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="offsetAcctID"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="offsetAcctID"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="payAmount"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="payAmount"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (controlBlur)="payAmountChanged($event)"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="paymentFees"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <codx-input
-                    field="paymentFees"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                  ></codx-input>
-                </div>
-                <div class="col-2 form-group">
-                  <codx-label
-                    fiedName="feeControl"
-                    [formModel]="form.formModel"
-                  ></codx-label>
-                  <div>
+            <div class="col-7 ac-left">
+              <div class="mw-750px">
+                <div class="row">
+                  <div class="col-4 form-group">
+                    <codx-label
+                      fiedName="cashBookID"
+                      [formModel]="form.formModel"
+                    ></codx-label>
                     <codx-input
-                      field="feeControl"
+                      field="cashBookID"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      (valueChange)="handleInputChange($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="col-4 form-group">
+                    <codx-label
+                      fiedName="cashBookName"
+                      [formModel]="form.formModel"
+                      default="Đối tượng chuyển"
+                    ></codx-label>
+                    <codx-input
+                      type="text"
+                      field="cashBookName"
+                      [disabled]="true"
+                      [formModel]="form.formModel"
+                      [crrValue]="cashBookName1"
+                    ></codx-input>
+                  </div>
+                  <div class="col-4 form-group">
+                    <codx-label
+                      fiedName="transactionText"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="transactionText"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                     ></codx-input>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-4 form-group">
+                    <codx-label
+                      fiedName="cashBookID2"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="cashBookID2"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      (valueChange)="handleInputChange($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="col-8 form-group">
+                    <codx-label
+                      fiedName="cashBookName2"
+                      [formModel]="form.formModel"
+                      default="Đối tượng nhận"
+                    ></codx-label>
+                    <codx-input
+                      type="text"
+                      field="cashBookName2"
+                      [disabled]="true"
+                      [formModel]="form.formModel"
+                      [crrValue]="cashBookName2"
+                    ></codx-input>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 form-group">
+                    <codx-label
+                      fiedName="note"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="note"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-3 form-group">
+                    <codx-label
+                      fiedName="cashAcctID"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="cashAcctID"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                  <div class="col-3 form-group">
+                    <codx-label
+                      fiedName="offsetAcctID"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="offsetAcctID"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                  <div class="col-2 form-group">
+                    <codx-label
+                      fiedName="payAmount"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="payAmount"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      (controlBlur)="payAmountChanged($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="col-2 form-group">
+                    <codx-label
+                      fiedName="paymentFees"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="paymentFees"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                  <div class="col-2 form-group">
+                    <codx-label
+                      fiedName="feeControl"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <div>
+                      <codx-input
+                        field="feeControl"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
+                      ></codx-input>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+            <div class="col-2 ac-bettween"></div>
+            <div class="col-3 ac-right d-flex justify-content-end">
+              <div class="d-flex flex-column mw-300px">
+                <div class="row">
+                  <div class="col-6 form-group">
+                    <codx-label
+                      fiedName="currencyID"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="currencyID"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                      (valueChange)="handleInputChange($event)"
+                    ></codx-input>
+                  </div>
+                  <div class="col-6 form-group">
+                    <codx-label
+                      fiedName="exchangeRate"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                    <codx-input
+                      field="exchangeRate"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
+                    ></codx-input>
+                  </div>
+                </div>
 
-            <div class="col-3">
-              <div class="row">
-                <div class="col-6 form-group">
+                <div class="form-group">
                   <codx-label
-                    fiedName="currencyID"
+                    fiedName="voucherDate"
                     [formModel]="form.formModel"
                   ></codx-label>
                   <codx-input
-                    field="currencyID"
+                    field="voucherDate"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
                   ></codx-input>
                 </div>
-                <div class="col-6 form-group">
+                <div class="form-group">
                   <codx-label
-                    fiedName="exchangeRate"
+                    fiedName="voucherNo"
                     [formModel]="form.formModel"
                   ></codx-label>
                   <codx-input
-                    field="exchangeRate"
+                    field="voucherNo"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
+                    [disabled]="journal?.voucherNoRule == '1'"
                   ></codx-input>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <codx-label
-                  fiedName="voucherDate"
-                  [formModel]="form.formModel"
-                ></codx-label>
-                <codx-input
-                  field="voucherDate"
-                  [formModel]="form.formModel"
-                  [Group]="form.formGroup"
-                ></codx-input>
-              </div>
-              <div class="form-group">
-                <codx-label
-                  fiedName="voucherNo"
-                  [formModel]="form.formModel"
-                ></codx-label>
-                <codx-input
-                  field="voucherNo"
-                  [formModel]="form.formModel"
-                  [Group]="form.formGroup"
-                  [disabled]="journal?.voucherNoRule == '1'"
-                ></codx-input>
               </div>
             </div>
           </div>
