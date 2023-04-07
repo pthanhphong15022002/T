@@ -3,8 +3,7 @@ import { CacheService, Util } from 'codx-core';
 import { map, Observable, of } from 'rxjs';
 
 @Pipe({
-  name: 'mssgSYS',
-  pure : true
+  name: 'mssgSYS'
 })
 export class MessageSystemPipe implements PipeTransform {
   constructor(
