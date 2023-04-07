@@ -112,7 +112,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data?.formMD;
     this.autoName = dt?.data?.autoName;
     this.endDate = new Date(dt?.data?.endDate);
-    this.addFieldsControl = dt?.data?.addFieldsControl ?? this.addFieldsControl;
+    this.addFieldsControl = dt?.data?.addFieldsControl 
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.user = this.authStore.get();
     if (this.action === 'edit') {
@@ -182,7 +182,7 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if (!!this.autoName) {
+    if (this.autoName) {
       this.title = this.titleAction + ' ' + this.autoName;
     } else {
       this.title = this.titleAction + ' ' + e;
