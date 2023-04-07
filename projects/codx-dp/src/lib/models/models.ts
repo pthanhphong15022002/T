@@ -40,6 +40,8 @@ export class DP_Processes {
   modifiedOn: Date;
   modifiedBy: string;
   instanceNoSetting: string;
+  addFieldsControl: string;
+  allowCopy: boolean;
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
