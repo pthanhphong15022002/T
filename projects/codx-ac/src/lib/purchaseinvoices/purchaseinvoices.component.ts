@@ -71,7 +71,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+      if (res && res?.journalNo) this.parentID = res.journalNo;
     });
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
