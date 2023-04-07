@@ -38,7 +38,7 @@ import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
-import { DP_Instances } from '../models/models';
+import { DP_Instances, DP_Instances_Steps_Reasons } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
@@ -69,6 +69,7 @@ export class InstancesComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   views: Array<ViewModel> = [];
 
@@ -159,6 +160,7 @@ export class InstancesComponent
   listInstanceStep = [];
   reloadData = false;
   popup: DialogRef;
+  reasonStepsObject:any;
 
   constructor(
     private inject: Injector,
@@ -453,7 +455,7 @@ export class InstancesComponent
                               applyFor,
                               formMD,
                               option,
-                              titleAction
+                              'copy'
                             );
                           }
                         });
@@ -470,7 +472,7 @@ export class InstancesComponent
                               applyFor,
                               formMD,
                               option,
-                              titleAction
+                              'copy'
                             );
                           }
                         });
@@ -1390,7 +1392,7 @@ export class InstancesComponent
     // let datas = '';
     // let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     // this.api
-    //   .exec<any>('ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
+    //   .execSv<any>('SYS','ERM.Business.Core', 'CMBusiness', 'ExportExcelDataAsync', [
     //     datas,
     //     id,
     //   ])
@@ -1476,6 +1478,10 @@ export class InstancesComponent
     this.autoName = this.process?.autoName;
     this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
     this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+    this.reasonStepsObject = {
+      stepReasonSuccess: this.stepSuccess.reasons,
+      stepReasonFail: this.stepFail.reasons
+    }
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;

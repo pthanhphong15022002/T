@@ -150,6 +150,7 @@ export class IncommingComponent
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void {}
+
   onInit(): void {
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -166,7 +167,6 @@ export class IncommingComponent
     this.userID = this.authStore.get().userID;
    
   }
- 
  
   ngAfterViewInit(): void {
     this.views = [
@@ -202,6 +202,7 @@ export class IncommingComponent
     };
     this.detectorRef.detectChanges();
   }
+
   click(evt: ButtonModel) {
     if(!this.textLabelAdd) this.textLabelAdd = evt.text;
     switch (evt.id) {
@@ -245,6 +246,7 @@ export class IncommingComponent
       });
     });
   }
+  
   changeDataMF(e: any, data: any) {
     //Bookmark
     var bm = e.filter(

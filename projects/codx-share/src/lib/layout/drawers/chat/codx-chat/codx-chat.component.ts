@@ -1,10 +1,9 @@
-import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, AlertConfirmComponent, AlertConfirmConfig,  } from 'codx-core';
-import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
-import { ChatListComponent } from '../chat-list/chat-list.component';
-import { ChatBoxComponent } from '../chat-box/chat-box.component';
+import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
+import { CodxService, CallFuncService, ApiHttpService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel} from 'codx-core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
+import { CodxChatListComponent } from '../chat-list/chat-list.component';
 declare var window: any;
 
 @Component({
@@ -27,7 +26,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   autoClose:boolean = true;
   lstBoxChat:any[] = [];
   @ViewChild("codxChatContainer",{static:true}) codxChatContainer:TemplateRef<any>;
-  @ViewChild("listChat") listChat:ChatListComponent;
+  @ViewChild("listChat") listChat:CodxChatListComponent;
   @ViewChild(NgbDropdown) ngbDropdown:NgbDropdown;
   constructor(
     private injector:Injector,
@@ -125,7 +124,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       gridViewSetUp: this.grdViewSetUp,
     };
     let popup = this.callFCSV.openForm(
-      PopupAddGroupComponent,
+      AddGroupChatComponent,
       '',
       0,
       window.innerHeight,

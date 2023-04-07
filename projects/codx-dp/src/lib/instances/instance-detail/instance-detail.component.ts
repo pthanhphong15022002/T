@@ -2,6 +2,7 @@ import {
   DP_Steps,
   DP_Instances_Steps,
   DP_Instances,
+  DP_Instances_Steps_Reasons,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import {
@@ -23,6 +24,8 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  AuthStore,
+  CodxDetailTmpComponent
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -51,11 +54,12 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
-  @ViewChild('viewDetail') viewDetail;
+  @ViewChild('viewDetail') viewDetail : CodxDetailTmpComponent ;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
   @Input() reloadData = false;
   @Input() stepStart: any;
+  @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
@@ -91,7 +95,8 @@ export class InstanceDetailComponent implements OnInit {
   currentElmID: any;
   frmModelInstancesTask: FormModel;
   moreFuncCrr: any;
-
+  listReasonSuccess: DP_Instances_Steps_Reasons[] = [];
+  listReasonFail: DP_Instances_Steps_Reasons[] = [];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -115,6 +120,7 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
+  user:any;
 
   constructor(
     private callfc: CallFuncService,
@@ -124,11 +130,14 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    private authStore: AuthStore,
+
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
+    this.user = this.authStore.get();
   }
 
   async ngOnInit(): Promise<void> {
@@ -165,11 +174,16 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
+        this.listReasonBySteps(this.reasonStepsObject);
       }
     } else if (changes['reloadData'] && this.reloadData) {
       this.instanceStatus = this.dataSelect.status;
-      // if (this.moreFuncCrr)changes['dataSelect'].currentValue = this.dataSelect
-      // this.viewDetail.ngOnChanges(changes)
+      //muon change ma ko chang dc
+      if(this.viewDetail && this.moreFuncCrr){
+        this.viewDetail.dataItem = this.dataSelect ;
+        this.viewDetail.changedataMFs(this.moreFuncCrr)
+      }
+      
       this.getStageByStep(this.listSteps);
       this.changeDetec.detectChanges();
     }
@@ -410,9 +424,29 @@ export class InstanceDetailComponent implements OnInit {
     return 'step';
   }
 
-  getReasonByStepId(stepId: string) {
-    var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
-    return this.listSteps[idx];
+  getReasonByStepId(status: string) {
+    if(status == '3' || status == '4') return this.listReasonSuccess;
+    if(status == '5' || status == '6') return this.listReasonFail;
+    return null;
+  }
+  listReasonBySteps(reasonStepsObject){
+    if(reasonStepsObject) {
+      this.listReasonSuccess = this.convertStepsReason(reasonStepsObject.stepReasonSuccess);
+      this.listReasonFail = this.convertStepsReason( reasonStepsObject.stepReasonFail);
+    }
+  }
+  convertStepsReason(reasons:any){
+    var listReasonInstance =  [];
+    for(let item of reasons ) {
+      var  reasonInstance= new DP_Instances_Steps_Reasons();
+      reasonInstance.processID = this.dataSelect.processID;
+      reasonInstance.stepID = item.stepID;
+      reasonInstance.reasonName = item.reasonName;
+      reasonInstance.reasonType = item.reasonType;
+      reasonInstance.createdBy = item.createdBy;
+      listReasonInstance.push(reasonInstance);
+    }
+    return listReasonInstance;
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(

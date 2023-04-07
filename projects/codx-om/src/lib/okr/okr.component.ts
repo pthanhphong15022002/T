@@ -450,16 +450,27 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      if(this.dataOKR.length<1 || this.dataOKR==null){
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-            func.disabled = true;
-          }
-        });
-      }
+      // if(this.dataOKR!=null && this.dataOKR.length>0){
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = false;
+      //     }
+      //   });
+      // }
+      // else{
+      //   //nếu ko có OKR thì ẩn MF phân bổ trọng số
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = true;
+      //     }
+      //   });
+      // }
     }
   }
   //Hàm click
