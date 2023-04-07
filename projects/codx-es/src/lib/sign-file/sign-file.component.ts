@@ -88,6 +88,7 @@ export class SignFileComponent extends UIComponent {
   datavalue = '';
   dataSelected = '';
   SidebarModel;
+  lstSignfiles: any;
 
   dialog: DialogRef;
 
