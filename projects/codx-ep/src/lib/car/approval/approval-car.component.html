@@ -6,14 +6,12 @@
 
 <!--List View-->
 <ng-template #subTitleTmp let-data>
-  
- 
   <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
-      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+      <span [innerHTML]="data?.title"></span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
@@ -42,7 +40,7 @@
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="mb-2">
-      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+      <span [innerHTML]="data?.title"></span>
     </div>
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">
@@ -65,7 +63,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (click)="click(data)" [typeMF]="'hover'"
-    [title]="data?.requester | formatvalue : formModel : 'requester' | async" [subTitleTmp]="subTitleTmp" [icoCss]="
+    [title]="data?.requester" [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
     imageObjType="AD_Users" [resources]="data?.bookingAttendees" [titleLine]="2" [dataItem]="data"
@@ -98,18 +96,7 @@
       <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName
         }}<span *ngIf="data?.resourceData?.code != null">
           - {{ data?.resourceData?.code }}</span></span>
-      <!-- <div class="d-flex flex-row">
-        <codx-label name="lblRanking" default="Phân loại" class="text-gray-600"></codx-label>
-        <span class="me-1 fw-bold">:</span>
-        <span class="fw-bold">{{
-          data?.resourceData?.ranking | vll : "EP005" : "text" | async
-          }}</span>
-      </div>
-      <div class="d-flex flex-row">
-        <codx-label name="lblCapacity" default="Chỗ ngồi" class="text-gray-600"></codx-label>
-        <span class="me-1 fw-bold">:</span>
-        <span class="fw-bold">{{ data?.resourceData?.capacity }}</span>
-      </div> -->
+     
     </div>
   </div>
 </ng-template>
@@ -119,15 +106,12 @@
 
 </ng-template>
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-row justify-content-between align-items-center w-100">
-    <div class="d-flex flex-column col-9">
-      <span>{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span>
-      <span class="fw-bold w-100 " style=" overflow: hidden; text-overflow: ellipsis"
-        [innerHTML]="data?.title | formatvalue : view?.formModel : 'Title' | async"></span>
-    </div>
-    <div class="col-3 d-flex flex-row justify-content-end">
-      <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
-      </codx-img>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-2 d-flex col-8 flex-column ">
+      <span class="w-100 text-truncate">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
+      <span class="fw-bold w-100 text-truncate">{{data?.title}}</span>
     </div>
   </div>
 </ng-template>

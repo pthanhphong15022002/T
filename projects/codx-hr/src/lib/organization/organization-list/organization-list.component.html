@@ -68,12 +68,12 @@
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column p-4 border-bottom">
-    <div class="d-flex align-items-center org-header mt-1 mb-3">
+    <div class="d-flex align-items-center org-header mt-1 mb-1">
       <div class="text-dark fw-bold fs-6 me-3">
         {{ item.orgUnitName }}
       </div>
       <codx-vll [name]="'L0605'" [value]="item.orgUnitType" [showText]="true" [showBgColor]="true" [showIcon]="true"
-        class="badge badge-light badge-md fs-7 me-2">
+        class="badge badge-light badge-md me-2">
       </codx-vll>
       <div *ngIf="item.parentID" class="text-gray-600 me-2">
         <codx-label [formModel]="formModel" default="Trực thuộc:"> </codx-label>

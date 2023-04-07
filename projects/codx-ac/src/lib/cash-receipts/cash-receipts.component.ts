@@ -34,7 +34,6 @@ export class CashReceiptsComponent extends UIComponent {
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   funcName: any;
-  parentID: string;
   journalNo: string;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
@@ -49,13 +48,12 @@ export class CashReceiptsComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
-//#endregion
+  //#endregion
 
-//#region Init
+  //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -189,7 +187,7 @@ export class CashReceiptsComponent extends UIComponent {
   //#region Function
   setDefault(o) {
     return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
   beforeDelete(opt: RequestOption, data) {
@@ -197,7 +195,7 @@ export class CashReceiptsComponent extends UIComponent {
     opt.className = 'CashReceiptsBusiness';
     opt.assemblyName = 'AC';
     opt.service = 'AC';
-    opt.data = data.recID;
+    opt.data = data;
     return true;
   }
   //#endregion

@@ -69,8 +69,9 @@
         [isTab]="true"
         [hideDelete]="isEdit ? 0 : 1"
         [hideMoreF]="isEdit ? 1 : 0"
-        [referType]="referType"
+        [referType]="!referType ? 'attach':referType"
         [addPermissions]="addPermissions"
+        [isReferType]="true"
       >
       </codx-attachment>
       <!-- [allowExtensions]="allowExtensions" -->
@@ -94,6 +95,7 @@
         <codx-view-assign
           [dataTree]="dataTree"
           [formModel]="formModel"
+          referType="source"
         ></codx-view-assign>
       </div>
       <div class="container h-100" *ngIf="dataTree.length == 0">

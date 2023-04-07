@@ -119,9 +119,7 @@
 
   .e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
     display: inline-block;
-    font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI",
-      "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
-      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: var(--bs-body-font-family);
     font-size: 14px;
     margin: 0;
   }

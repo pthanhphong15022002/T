@@ -749,6 +749,30 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
+            <codx-label
+              fiedName="AddFieldsControl"
+              [formModel]="dialog.formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-6">
+              <codx-input
+                field="addFieldsControl"
+                type="valuelist"
+                [crrValue]="process?.addFieldsControl"
+                [refValue]="gridViewSetup?.AddFieldsControl?.referedValue"
+                (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['AddFieldsControl']?.description"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
             <codx-label fiedName="ViewMode" [formModel]="dialog.formModel">
             </codx-label>
           </div>
@@ -854,6 +878,47 @@
           </div>
         </div>
       </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label fiedName="AllowCopy" [formModel]="dialog.formModel">
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="success-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="success-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
@@ -906,7 +971,6 @@
           height="150"
           [crrValue]="process?.memo"
           (valueChange)="valueChange($event)"
-          [placeholder]="gridViewSetup['Memo']?.description"
         >
         </codx-input>
       </div>
@@ -1373,7 +1437,7 @@
           <div class="stage-fix">
             <!-- Step Reason successs -->
             <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
-              Kết quả
+              {{ noteResult }}
             </div>
             <div
               class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"

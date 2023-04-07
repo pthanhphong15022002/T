@@ -1,4 +1,4 @@
-<div class="">
+<div class="okr-treeview ">
   <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="dataOKR" [enableCheck]="false"
     idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
     (selectionChange)="selectionChange($event)" >
@@ -53,8 +53,8 @@
           <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
             <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
             <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-              [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-              item?.updates ? item?.updates.length : 0 }}</span>
+              [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? 'bg-color': 'bg-gray-300'">{{
+              item?.okrTasks ? item?.okrTasks.length : 0 }}</span>
           </button>
           <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
             <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
@@ -111,8 +111,8 @@
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
           <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
           <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-            [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-            item?.updates ? item?.updates?.length : 0 }}</span>
+            [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? 'bg-color': 'bg-gray-300'">{{
+            item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
         </button>
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
           <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>
@@ -164,8 +164,8 @@
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Công việc">
           <span class="icon-format_list_bulleted icon-20 text-gray-800 text-hover-primary"></span>
           <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-            [ngClass]="item?.updates  && item?.updates.length>0 ? 'bg-color': 'bg-gray-300'">{{
-            item?.updates ? item?.updates?.length : 0 }}</span>
+            [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? 'bg-color': 'bg-gray-300'">{{
+            item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
         </button>
         <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Bình luận">
           <span class="icon-chat_bubble_outline icon-20 text-gray-800 text-hover-primary"></span>

@@ -50,7 +50,7 @@ export class PopupAddInstanceComponent implements OnInit {
   instance: DP_Instances;
 
   isApplyFor: string = ''; // this is instance opportunity general
-
+  addFieldsControl = '1';
   totalDaySteps: number;
   totalHourSteps: number;
   dateOfDuration: any;
@@ -89,6 +89,7 @@ export class PopupAddInstanceComponent implements OnInit {
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   oldEndDate: Date;
+  endDate: Date;
   oldIdInstance: string;
   user: any;
   autoName: string = '';
@@ -103,20 +104,20 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-    this.action = dt?.data[0];
-    this.isApplyFor = dt?.data[1];
-    this.listStep = dt?.data[2];
-    this.titleAction = dt?.data[3];
-    this.formModelCrr = dt?.data[4];
-    this.listStepCbx = dt?.data[5];
-    this.totalDaySteps = dt?.data[6];
-    this.autoName = dt?.data[9];
-    this.totalHourSteps = dt?.data[10];
+    this.action = dt?.data?.action;
+    this.isApplyFor = dt?.data?.applyFor;
+    this.listStep = dt?.data?.listSteps;
+    this.titleAction = dt?.data?.titleAction;
+    this.formModelCrr = dt?.data?.formMD;
+    this.autoName = dt?.data?.autoName;
+    this.endDate = new Date(dt?.data?.endDate);
+    this.addFieldsControl = dt?.data?.addFieldsControl 
+    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.user = this.authStore.get();
     if (this.action === 'edit') {
-      this.autoName = dt?.data[7];
+      this.autoName = dt?.data?.autoName;
+      this.lstParticipants = dt?.data?.lstParticipants;
       this.owner = this.instance?.owner;
       if (
         this.instance.permissions != null &&
@@ -126,30 +127,20 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    }
-    else if (this.action === 'add' || this.action === 'copy') {
-      this.lstParticipants = dt?.data[7];
-      if (this.lstParticipants != null && this.lstParticipants.length > 0)
-        var check = this.lstParticipants.some(
-          (x) => x.objectID === this.user.userID
-        );
-      if (!check) {
-        let tmp = {};
-        tmp['objectID'] = this.user.userID;
-        tmp['objectName'] = this.user.userName;
-        tmp['objectType'] = 'U';
-
-        this.lstParticipants.push(tmp);
+    } else {
+      this.lstParticipants = dt?.data?.lstParticipants;
+      this.instance.endDate = this.endDate;
+      var isAdmin = dt?.data.isAdminRoles;
+      if (this.user.administrator || isAdmin) {
+        this.owner = '';
+      } else {
+        this.owner = this.user.userID;
       }
-      this.owner = this.user.userID;
     }
 
     if (this.action === 'copy') {
-      this.oldIdInstance = dt?.data[8];
+      this.oldIdInstance = dt?.data?.oldIdInstance;
     }
-    // if (this.instance.owner != null) {
-    //   this.getNameAndPosition(this.instance.owner);
-    // }
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -165,7 +156,6 @@ export class PopupAddInstanceComponent implements OnInit {
   ngOnInit(): void {
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
-      this.handleEndDayInstnace(this.totalDaySteps,this.totalHourSteps);
     } else if (this.action === 'edit') {
       this.oldEndDate = this.instance?.endDate;
     }
@@ -192,7 +182,7 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if (!!this.autoName) {
+    if (this.autoName) {
       this.title = this.titleAction + ' ' + this.autoName;
     } else {
       this.title = this.titleAction + ' ' + e;
@@ -230,9 +220,11 @@ export class PopupAddInstanceComponent implements OnInit {
           let idxField = this.listStep[index].fields.findIndex(
             (x) => x.recID == event.data.recID
           );
-          if (idxField != -1){
+          if (idxField != -1) {
             this.listStep[index].fields[idxField].dataValue = result;
-            let idxEdit = this.listCustomFile.findIndex((x) => x.recID == this.listStep[index].fields[idxField].recID);
+            let idxEdit = this.listCustomFile.findIndex(
+              (x) => x.recID == this.listStep[index].fields[idxField].recID
+            );
             if (idxEdit != -1) {
               this.listCustomFile[idxEdit] =
                 this.listStep[index].fields[idxField];
@@ -262,7 +254,6 @@ export class PopupAddInstanceComponent implements OnInit {
       option.data = [this.instance, this.listCustomFile];
     }
 
-
     return true;
   }
   saveInstances() {
@@ -281,12 +272,11 @@ export class PopupAddInstanceComponent implements OnInit {
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    } else if (
-      this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
-    ) {
-      // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
+    } else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
       this.notificationsService.notifyCode(
-        `Ngày đến hạn phải lớn hơn hoặc bằng ${this.dateMessage} `
+        'DP032',
+        0,
+        '"' + this.dateMessage + '"'
       );
       return;
     }
@@ -323,10 +313,10 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   onAdd() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res && res.save) {
-          this.dialog.close(res);
+          this.dialog.close(res.save);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -363,35 +353,14 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return true;
   }
-  handleEndDayInstnace(durationDay: any, totalHourSteps:any) {
-    this.instance.endDate = new Date();
-    // this.instance.endDate.setDate(
-    //   this.instance.endDate.getDate() + durationDay
-    // );
-    // this.instance.endDate.setHours(
-    //   this.instance.endDate.getHours() + totalHourSteps
-    // );
+  checkEndDayInstance(endDate, endDateCondition) {
+    var date1 = new Date(endDate);
+    var date2 = new Date(endDateCondition);
+    this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
 
-    this.dateOfDuration = JSON.parse(JSON.stringify(this.instance?.endDate));
-  }
-  checkEndDayInstance(endDate, durationDay) {
-    if (this.action === 'edit') {
-      var timeEndDay =
-        moment(new Date(this.instance.createdOn)).toDate().getTime() +
-        durationDay * 24 * 3600000;
-      var dateFormatCreate = moment(new Date(timeEndDay)).toDate();
-    }
-    var dateFormatDuration = new Date(
-      this.action === 'edit' ? dateFormatCreate : this.dateOfDuration
-    );
-    var dateFormatEndDay = new Date(endDate);
-    var dateStr1 = dateFormatDuration.toISOString().slice(0, 10);
-    var dateStr2 = dateFormatEndDay.toISOString().slice(0, 10);
-    this.dateMessage = new Date(dateFormatDuration).toLocaleDateString('en-AU');
-    if (dateStr1 > dateStr2) {
-      return true;
-    }
-    return false;
+    return date1 < date2;
   }
 
   openPopupParticipants(popupParticipants) {
@@ -411,41 +380,5 @@ export class PopupAddInstanceComponent implements OnInit {
         this.positionName = res.positionName;
       }
     });
-  }
-
-  setTimeHoliday(
-    startDay: Date,
-    endDay: Date,
-    dayOff: string
-  ): Date {
-    if (
-      !dayOff ||
-      (dayOff && (dayOff.includes("7") || dayOff.includes("8")))
-    ) {
-      const isSaturday = dayOff.includes("7");
-      const isSunday = dayOff.includes("8");
-      // let day = 0;
-
-      // for ( let currentDate = new Date(startDay);currentDate <= endDay; currentDate.setDate(currentDate.getDate() + 1)) {
-      //   if (currentDate.getDay() === 6 && isSaturday) {
-      //     ++day;
-      //   }
-      //   if (currentDate.getDay() === 0 && isSunday) {
-      //     ++day;
-      //   }
-      // }
-
-      // endDay.setDate(endDay.getDate() + day);
-
-      // if (endDay.getDay() === 0 && isSunday) {
-      //   endDay.setDate(endDay.getDate() + 1);
-      // }
-      // for(let currentDate = new Date(startDay);  )
-
-      // endDay = new Date();
-      // for(let i=0; i < )
-
-    }
-    return endDay;
   }
 }

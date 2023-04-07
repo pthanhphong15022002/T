@@ -124,6 +124,8 @@ export class DynamicProcessComponent
 
   isChecked: boolean = false;
   totalInstance: number = 0;
+  lstGroup: any = [];
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -141,6 +143,7 @@ export class DynamicProcessComponent
     // this.genAutoNumber();
     this.getListAppyFor();
     this.getValueFormCopy();
+    this.getListProcessGroups();
     this.user = this.authStore.get();
   }
 
@@ -156,7 +159,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    //this.showButtonAdd = this.funcID == 'DP0101';
+    this.showButtonAdd = this.funcID == 'DP01';
   }
 
   //chang data
@@ -225,6 +228,7 @@ export class DynamicProcessComponent
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -279,6 +283,7 @@ export class DynamicProcessComponent
                 action: 'edit',
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
+                lstGroup: this.lstGroup,
               };
               var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
@@ -299,7 +304,6 @@ export class DynamicProcessComponent
               });
             }
           });
-
       });
   }
   copy(data: any) {
@@ -332,6 +336,7 @@ export class DynamicProcessComponent
               newIdProccess: this.view.dataService.dataSelected.recID,
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -526,7 +531,8 @@ export class DynamicProcessComponent
               this.funcID == 'DP0201' ||
               this.funcID == 'DP0202' ||
               this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
+              this.funcID === 'DP04' ||
+              !data.allowCopy
             )
               res.disabled = true;
             break;
@@ -693,10 +699,9 @@ export class DynamicProcessComponent
 
   viewDetailProcess(data) {
     //thao test khong dc xoa
-    if(!data.read) return
+    if (!data.read) return;
     this.dpService.dataProcess.next(data);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
-
 
     // let isRead = this.checkPermissionRead(data);
     // if (!isRead) {
@@ -824,6 +829,14 @@ export class DynamicProcessComponent
         this.notificationsService.notifyCode('DP002');
       } else {
         this.notificationsService.notifyCode('DP003');
+      }
+    });
+  }
+
+  getListProcessGroups() {
+    this.dpService.getListProcessGroups().subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstGroup = res;
       }
     });
   }

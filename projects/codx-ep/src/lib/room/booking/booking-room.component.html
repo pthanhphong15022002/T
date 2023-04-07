@@ -7,15 +7,12 @@
 
 <!-- Schedule view -->
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-row justify-content-between align-items-center w-100">
-    <div class="d-flex flex-column col-9">
-      <span>{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
-      <span class="fw-bold w-100 " style=" overflow: hidden; text-overflow: ellipsis"
-        [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
-    </div>
-    <div class="col-3 d-flex flex-row justify-content-end">
-      <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
-      </codx-img>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span>
+      <span class="text-dark w-100 text-truncate">{{data?.title}}</span>
     </div>
   </div>
 </ng-template>
@@ -27,16 +24,6 @@
     <div class="ms-4 d-flex flex-column" style="width: 160px">
       <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName
         }}</span>
-      <!-- <div class="d-flex flex-row fs-7">
-        <codx-label name="lblArea" default="Diện tích (m2)" class="text-gray-600"></codx-label>
-        <span class="me-1 text-gray-800">:</span>
-        <span class="fw-bold ms-1">{{ data?.resourceData?.area }}</span>
-      </div>
-      <div class="d-flex flex-row">
-        <codx-label name="lblCapacity" default="Sức chứa (người)" class="text-gray-600"></codx-label>
-        <span class="me-1 text-gray-800">:</span>
-        <span class="fw-bold ms-1">{{ data?.resourceData?.capacity }}</span>
-      </div> -->
     </div>
   </div>
 </ng-template>
@@ -53,12 +40,12 @@
       <span *ngIf="data?.positionName" [innerHTML]="data?.positionName"></span>
     </div>
     <div class="">
-      <span [innerHTML]="data?.title | formatvalue : formModel : 'Title' | async"></span>
+      <span [innerHTML]="data?.title "></span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="text-gray-800" [innerHTML]="data?.bookingOn | formatvalue : formModel : 'BookingOn' | async">
+        <span class="text-gray-800" [innerHTML]="data?.bookingOn | fmDT : 'dmy'">
 
         </span>
       </div>
@@ -80,28 +67,26 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 " (click)="click(data)" [typeMF]="'hover'"
-    [title]="data?.createdBy | formatvalue : formModel : 'createdBy' | async" [subTitleTmp]="subTitleTmp" [icoCss]="
+    [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
-    imageObjType="AD_Users"  [titleLine]="2" [dataItem]="data"
-    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)" typeMF="hover" [dataItem]="data">
+    imageObjType="AD_Users" [titleLine]="2" [dataItem]="data" [formModel]="formModel" [footer]="footerTmp"
+    (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" typeMF="hover" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <booking-room-view-detail #viewdetail [type]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
-    [formModel]="formModel" (reschedule)="reschedule($event)" (cancel)="cancel($event)" (invite)="invite($event)"
-    (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)"
-    (setPopupTitle)="setPopupTitle($event)"
+  <booking-room-view-detail #viewdetail [type]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel"
+    (reschedule)="reschedule($event)" (cancel)="cancel($event)" (invite)="invite($event)" (edit)="edit($event)"
+    (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"></booking-room-view-detail>
 </ng-template>
 
 <!-- GridView Template -->
 <ng-template #gridMF let-data>
-  <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+  <codx-mfunc [type]="'hover'" [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
     (changeDataMF)="changeDataMF($event, data)">
   </codx-mfunc>
 </ng-template>
@@ -141,4 +126,3 @@
       (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
   </div>
 </ng-template>
-
