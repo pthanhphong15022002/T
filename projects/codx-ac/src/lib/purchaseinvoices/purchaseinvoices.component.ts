@@ -40,6 +40,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   headerText: any;
   funcName: any;
   parentID: string;
+  journalNo: string;
   width: any;
   height: any;
   innerWidth: any;
@@ -70,8 +71,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+    this.routerActive.queryParams.subscribe((params) => {
+      this.parentID = params?.recID;
+      this.journalNo = params?.journalNo;
     });
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
