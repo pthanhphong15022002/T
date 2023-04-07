@@ -19,126 +19,112 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
-    <span class="fs-5 fw-bold text-uppercase">{{data.voucherNo}}</span>
+    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data.voucherNo}}</span>
   </div>
   <div>
-    <span class="fs-5 fw-bold text-uppercase">{{data.paymentAmt.toLocaleString('it-IT',{style: 'currency',currency:
+    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data.paymentAmt.toLocaleString('it-IT',{style:
+      'currency',currency:
       'VND'})}}</span>
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
   <ng-container *ngIf="oData">
     <ng-container *ngFor="let item of oData">
-      <span class="text-gray-600" *ngIf="item.objectID == data.objectID">
+      <span class="text-gray-700 line-clamp line-clamp-1" *ngIf="item.objectID == data.objectID">
         {{item.objectName}}
       </span>
     </ng-container>
   </ng-container>
 </ng-template>
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-600">{{data.memo}}</span>
+  <span class="text-gray-700 line-clamp line-clamp-1">{{data.memo}}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase">
-            {{itemSelected.voucherNo}}
-          </span>
+    <div class="d-flex justify-content-between flex-grow-1 mb-3">
+      <div class="d-flex align-items-center">
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-2 sm">
+          <i class="icon-i-file-earmark-text icon-14"></i>
         </div>
+        <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
+          {{itemSelected.voucherNo}}
+        </span>
       </div>
     </div>
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <span>
-            <i class="icon-apartment icon-20 me-2"></i>
-          </span>
-          <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase">
-            {{objectname}}
-          </span>
-        </div>
-        <div class="d-flex justify-content-start align-items-end me-2 mb-2">
-          <span>
-            <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected.status"
-              [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-3">
-            </codx-vll>
-          </span>
-        </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-3">
+      <div class="d-flex align-items-center">
+        <span>
+          <i class="me-2 icon-apartment icon-16 text-gray-700"></i>
+        </span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase">
+          {{objectname}}
+        </span>
+      </div>
+      <div class="d-flex align-self-center">
+        <span>
+          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-3">
+          </codx-vll>
+        </span>
       </div>
     </div>
   </ng-container>
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <div class="me-10">
-            <i style="color: var(--primary-active);" class="bi bi-calendar2-event icon-16 me-2"></i>
-            <span class="fw-bold fs-5">Ngày:&nbsp;</span>
-            <span #createdOn class="text-gray-600 fs-5" [innerHTML]="itemSelected.createdOn
-            | formatvalue : view.formModel : 'createdOn' : createdOn
-            | async"></span>
-          </div>
-        </div>
-        <div class="d-flex justify-content-start align-items-end me-2 mb-2">
-          <span class="badge badge-pill badge-primary">
-            <span class="fs-5">{{itemSelected.paymentAmt.toLocaleString('it-IT',{style: 'currency',currency:
-              'VND'})}}</span>
-          </span>
-        </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-3">
+      <div class="d-flex flex-wrap">
+        <div class="d-flex align-items-center me-5 mb-1">
+          <span class="icon-i-calendar2-event-fill icon-16 me-2"></span>
+          <span class="fw-bold line-clamp line-clamp-1 fs-6">Ngày:&nbsp;</span>
+          <span #createdOn class="text-gray-700 mt-1" [innerHTML]="itemSelected.createdOn
+              | formatvalue : view.formModel : 'createdOn' : createdOn
+              | async"></span>
+        </div>  
+      </div>
+      <div class="d-flex align-self-center">
+        <span class="badge badge-pill badge-primary">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6">{{itemSelected.paymentAmt.toLocaleString('it-IT',{style: 'currency',currency:
+            'VND'})}}</span>
+        </span>
       </div>
     </div>
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <div class="me-10">
-            <i style="color: var(--primary-active);" class="bi bi-wallet2 icon-16 me-2"></i>
-            <span class="fw-bold fs-5">Lí do chi:&nbsp;</span>
-            <span #transactionText class="text-gray-600 fs-5" [innerHTML]="itemSelected.transactionText
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-1">
+        <span class="icon-i-wallet2 icon-16 me-2"></span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-6">Lí do chi:&nbsp;</span>
+        <span #transactionText class="text-gray-700" [innerHTML]="itemSelected.transactionText
             | formatvalue : view.formModel : 'transactionText' : transactionText
             | async"></span>
-          </div>
-          <div>
-            <i style="color: var(--primary-active);" class="bi bi-person-circle icon-16 me-2"></i>
-            <span class="fw-bold fs-5">Người nhận tiền:&nbsp;</span>
-            <span #payee [innerHTML]="itemSelected.payee
+      </div>  
+      <div class="d-flex align-items-center me-5 mb-1">
+        <span class="icon-i-person-circle icon-16 me-2"></span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-6">Người nhận tiền:&nbsp;</span>
+        <span #payee [innerHTML]="itemSelected.payee
           | formatvalue : view.formModel : 'payee' : payee
-          | async" class="text-gray-600 fs-5"></span>
-          </div>
-        </div>
-      </div>
+          | async" class="text-gray-700"></span>
+      </div>  
     </div>
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <div class="me-10">
-            <i style="color: var(--primary-active);" class="bi bi-journal-bookmark-fill icon-16 me-2"></i>
-            <span class="fw-bold fs-5">Sổ quỹ:&nbsp;</span>
-            <ng-container *ngFor="let item of cashbook">
-              <span *ngIf="item.cashBookID == itemSelected.cashBookID" #cashBookID class="text-gray-600 fs-5"
-                [innerHTML]="item.cashBookName
-            | formatvalue : view.formModel : 'cashBookID' : cashBookID
-            | async"></span>
-            </ng-container>
-          </div>
-        </div>
-      </div>
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-1">
+        <span class="icon-i-journal-album icon-16 me-2"></span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-6">Sổ quỹ:&nbsp;</span>
+        <ng-container *ngFor="let item of cashbook">
+          <span *ngIf="item.cashBookID == itemSelected.cashBookID" #cashBookID class="text-gray-700"
+            [innerHTML]="item.cashBookName
+        | formatvalue : view.formModel : 'cashBookID' : cashBookID
+        | async"></span>
+        </ng-container>
+      </div>  
     </div>
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-2">
-        <div class="d-flex justify-content-start align-items-end me-2">
-          <div class="me-10">
-            <i style="color: var(--primary-active);" class="bi bi-brush icon-16 me-2"></i>
-            <span class="fw-bold fs-5">Diễn giải:&nbsp;</span>
-            <span #memo class="text-gray-600 fs-5" [innerHTML]="itemSelected.memo
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-1">
+        <span class="icon-brush icon-16 me-2"></span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-6">Diễn giải:&nbsp;</span>
+        <span #memo class="text-gray-700" [innerHTML]="itemSelected.memo
             | formatvalue : view.formModel : 'memo' : memo
             | async"></span>
-          </div>
-        </div>
-      </div>
+      </div>  
     </div>
     <div class="card-add mt-5" #cardbodyRef>
       <ejs-tab #cashRef>
@@ -148,7 +134,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <div class="fw-bold fs-6 text-uppercase">Chi tiết</div>
+                <div class="fw-bold fs-6">Chi tiết</div>
               </div>
             </ng-template>
             <ng-template #content>
@@ -164,7 +150,7 @@
 <ng-template #footer>
   <ng-container *ngIf="itemSelected">
     <codx-tabs [entityName]="view.formModel.entityName" [formModel]="view.formModel" [objectID]="itemSelected.recID"
-    [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+      [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </ng-container>
 </ng-template>
 <ng-template #footerList let-data>
@@ -173,11 +159,12 @@
       <div class="d-flex justify-content-start align-items-end me-2">
         <span>
           <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-3">
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-4">
           </codx-vll>
         </span>
-        <span>
-          <span class="fs-6 text-gray-600 mt-5" #createdOn [innerHTML]="
+        <span class="d-flex align-items-center">
+          <span class="bi bi-calendar2-event icon-16 me-2 text-dark-50"></span>
+          <span class="text-dark-50 mt-1" #createdOn [innerHTML]="
               data.createdOn
                 | formatvalue : view.formModel : 'createdOn' : createdOn
                 | async
@@ -194,34 +181,26 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="cashpaymentline">
-    <div class="table-responsive mt-5"
-      style="height: 450px;border-radius: 5px;">
+    <div class="table-responsive mt-2" style="height: 450px;border-radius: 5px;">
       <table id="myTable" class="table table-hover ">
-        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
-      color: white;">
+        <thead style="position: sticky;top: 0;">
           <tr>
-            <!-- <th ></th> -->
-            <th style="width: 100px;position: sticky;top: 0;padding: 10px 10px;">
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
               <div class="d-flex">
-                <span class="fs-5 fw-bold">STT</span>
+                <i style="color: var(--primary-active);" class="bi bi-brush icon-16 me-2"></i>
+                <span class="fw-bold line-clamp line-clamp-1 fs-6">Ghi chú</span>
               </div>
             </th>
             <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
               <div class="d-flex">
-                <i style="color: white;" class="bi bi-brush icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Ghi chú</span>
+                <i style="color: var(--primary-active);" class="bi bi-cash-coin icon-16 me-2"></i>
+                <span class="fw-bold line-clamp line-clamp-1 fs-6">Số tiền</span>
               </div>
             </th>
             <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
               <div class="d-flex">
-                <i style="color: white;" class="bi bi-cash-coin icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Số tiền</span>
-              </div>
-            </th>
-            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-              <div class="d-flex">
-                <i style="color: white;" class="bi bi-graph-up icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Thông tin phân tích</span>
+                <i style="color: var(--primary-active);" class="bi bi-graph-up icon-16 me-2"></i>
+                <span class="fw-bold line-clamp line-clamp-1 fs-6">Thông tin phân tích</span>
               </div>
             </th>
           </tr>
@@ -229,35 +208,38 @@
         <tbody style="border-bottom: 1px solid #dee2e6;"
           *ngFor="let item of cashpaymentline | slice: (page-1) * pageSize : page * pageSize ">
           <tr>
-            <td class="fs-5" style="padding: 10px 10px">
-              <span>
-                <div style="
-              background: var(--primary-active);
-              width: 31px;
-              height: 30px;
-              align-items: center;
-              border-radius: 50px;
-            " class="d-flex justify-content-start">
-                  <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">{{item.rowNo}}</span>
-                </div>
-              </span>
-            </td>
             <td style="padding: 10px 10px">
-              <span *ngIf="item.note != null && item.note != ''" class="fs-4 fw-bold">{{item.note}}</span>
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
-                <span *ngIf="item.transactionText != null && item.transactionText != ''" class="text-gray-600 fs-5">
-                  Lí do:
-                  <ng-container *ngFor="let otran of transactionText">
-                    <span *ngIf="otran.textID == item.transactionText" class="fs-5 fw-bold">&nbsp;{{otran.textName}}</span>
-                  </ng-container>
-                </span>
+              <div  *ngIf="item.note != null && item.note != ''"  class="d-flex flex-wrap">
+                <div class="d-flex align-items-center me-5 mb-1">
+                  <span [ngbTooltip]="item.note" class="fw-bold line-clamp line-clamp-1 fs-5">{{item.note}}</span>
+                </div>  
+              </div>
+              <div  *ngIf="item.transactionText != null && item.transactionText != ''"  class="d-flex flex-wrap">
+                <div class="d-flex align-items-center me-5 mb-1">
+                  <span class="fw-bold line-clamp line-clamp-1 fs-6">Lí do chi :&nbsp;</span>
+                  <span #transactionText class="text-gray-700 mt-1" [innerHTML]="itemSelected.transactionText
+                      | formatvalue : view.formModel : 'transactionText' : transactionText
+                      | async"></span>
+                </div>  
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <span class="fs-4 fw-bold">{{item.dr.toLocaleString('it-IT')}}</span>
+              <span  *ngIf="item.dr != null && item.dr != ''" class="fw-bold line-clamp line-clamp-1 fs-5">{{item.dr.toLocaleString('it-IT')}}</span>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
+              <div class="d-flex flex-wrap">
+                <div class="d-flex align-items-center me-5 mb-1">
+                  <span *ngIf="item.diM2 != null && item.diM2 != ''" class="fw-bold line-clamp line-clamp-1 fs-6">
+                    TTCP :
+                  </span>
+                  <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-700 mt-1">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  <span *ngIf="item.diM3 != null && item.diM3 != ''" class="fw-bold line-clamp line-clamp-1 fs-6">
+                    Mục phí :
+                  </span>
+                  <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-700 mt-1">&nbsp;{{item.diM3}}</span>
+                </div>
+              </div>
+              <!-- <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
                 <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-600 fs-5">
                   TTCP:
                   <span class="fs-5 fw-bold">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
@@ -276,15 +258,15 @@
                   Dự án:
                   <span class="fs-5 fw-bold">&nbsp;{{item.projectID}}</span>
                 </span>
-              </div>             
+              </div> -->
             </td>
           </tr>
         </tbody>
       </table>
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
+        <div class="list-empty card card-flush h-100 mt-20">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
