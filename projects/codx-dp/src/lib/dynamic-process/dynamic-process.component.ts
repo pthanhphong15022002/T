@@ -124,7 +124,7 @@ export class DynamicProcessComponent
 
   isChecked: boolean = false;
   totalInstance: number = 0;
-  lstGroup: any =[];
+  lstGroup: any = [];
 
   constructor(
     private inject: Injector,
@@ -228,7 +228,7 @@ export class DynamicProcessComponent
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
-              lstGroup : this.lstGroup
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -283,7 +283,7 @@ export class DynamicProcessComponent
                 action: 'edit',
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
-                lstGroup : this.lstGroup
+                lstGroup: this.lstGroup,
               };
               var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
@@ -304,7 +304,6 @@ export class DynamicProcessComponent
               });
             }
           });
-
       });
   }
   copy(data: any) {
@@ -337,7 +336,7 @@ export class DynamicProcessComponent
               newIdProccess: this.view.dataService.dataSelected.recID,
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
-              lstGroup : this.lstGroup
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -532,7 +531,8 @@ export class DynamicProcessComponent
               this.funcID == 'DP0201' ||
               this.funcID == 'DP0202' ||
               this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
+              this.funcID === 'DP04' ||
+              !data.allowCopy
             )
               res.disabled = true;
             break;
@@ -699,10 +699,9 @@ export class DynamicProcessComponent
 
   viewDetailProcess(data) {
     //thao test khong dc xoa
-    if(!data.read) return
+    if (!data.read) return;
     this.dpService.dataProcess.next(data);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
-
 
     // let isRead = this.checkPermissionRead(data);
     // if (!isRead) {
