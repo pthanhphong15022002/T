@@ -51,31 +51,29 @@
               [value]="child?.weight ">
             </codx-inplace>
           </td>
-          <td>
-            <div class="d-flex flex-row justify-content-center align-items-center">
-              <span *ngIf="child?.progress!=0"
-                [innerHTML]="child?.progress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-              <span *ngIf="child?.progress==0" [innerHTML]="child?.progress"></span>
-            </div>
+          <td class="text-center" >
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
+            [value]="child?.progress ">
+          </codx-inplace>
           </td>
           
 
-          <td class="text-center">
-            <div class="d-flex flex-row justify-content-center align-items-center">
-              <span *ngIf="child?.progress*child?.weight!=0"
-                [innerHTML]="child?.progress*child?.weight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-              <span *ngIf="child?.progress*child?.weight==0" [innerHTML]="child?.progress*child?.weight"></span>
-            </div>
+          <td class="text-center " >
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
+            [value]="child?.weight* child?.progress ">
+          </codx-inplace>
           </td>         
 
-            <div class="min-h-table d-flex align-items-center w-50px">
-              <span *ngIf="child?.edited==true" class="icon-i-info-circle text-danger"></span>
+            <div class="min-h-table d-flex align-items-center w-30px">
+              <span *ngIf="child?.edited==true" class="icon-edit_square text-danger" ngbTooltip="Đã chỉnh sửa"></span>
             </div>
   
         </tr>
         <tr>
           <td  class="text-center">
-            <codx-label default="Tổng cộng" name="lbl" class="fs-5"></codx-label>
+            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5"></codx-label>
           </td>
           <td class="d-flex flex-row justify-content-center align-items-center">
             <span class="fs-3 fw-bold "  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
@@ -93,7 +91,7 @@
 
 
     <div class="d-flex justify-content-end w-100 my-5">
-      <span type="button" (click)="onSaveForm()" class="btn btn-primary">
+      <span type="button" (click)="onSaveForm()" class="btn btn-primary pe-5">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </span>
 

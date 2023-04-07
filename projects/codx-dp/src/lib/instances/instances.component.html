@@ -333,6 +333,7 @@
     [moreFunc]="moreFuncStart"
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
+    [reasonStepsObject]="reasonStepsObject"
   >
   </codx-instance-detail>
 </ng-template>
@@ -363,10 +364,10 @@
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [emptyText]="grvSetup['Status']?.headerText"
-      [isMulti]="grvSetup.Status?.multiSelect"
+      [isMulti]="grvSetup?.Status?.multiSelect"
       type="valuelist"
       [field]="'Status'"
-      [refValue]="grvSetup.Status?.referedValue"
+      [refValue]="grvSetup?.Status?.referedValue"
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
@@ -377,7 +378,7 @@
       cssPopup="h-350px w-300px"
       [isMulti]="false"
       type="valuelist"
-      [emptyText]="grvSetup.StepID.headerText"
+      [emptyText]="grvSetup?.StepID?.headerText"
       field="StepID"
       [dataSource]="stepsResource"
       (valueChange)="valueChangeFilter($event)"
@@ -390,7 +391,7 @@
       cssPopup="h-350px w-300px"
       [isMulti]="false"
       type="combobox"
-      [emptyText]="grvSetup.Owner.headerText"
+      [emptyText]="grvSetup?.Owner?.headerText"
       field="Owner"
       [refValue]="'Users'"
       (valueChange)="valueChangeFilter($event)"

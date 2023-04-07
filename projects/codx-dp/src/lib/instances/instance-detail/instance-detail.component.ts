@@ -2,6 +2,7 @@ import {
   DP_Steps,
   DP_Instances_Steps,
   DP_Instances,
+  DP_Instances_Steps_Reasons,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import {
@@ -22,11 +23,14 @@ import {
   CallFuncService,
   DialogModel,
   DialogRef,
+  FormModel,
+  AuthStore,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -54,6 +58,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() moreFunc: any;
   @Input() reloadData = false;
   @Input() stepStart: any;
+  @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   id: any;
   totalInSteps: any;
@@ -71,7 +76,7 @@ export class InstanceDetailComponent implements OnInit {
   listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
-  instance: any;
+
   listTypeTask = [];
   //gantchat
   ganttDs = [];
@@ -87,7 +92,10 @@ export class InstanceDetailComponent implements OnInit {
   };
   dialogPopupDetail: DialogRef;
   currentElmID: any;
-
+  frmModelInstancesTask: FormModel;
+  moreFuncCrr: any;
+  listReasonSuccess: DP_Instances_Steps_Reasons[] = [];
+  listReasonFail: DP_Instances_Steps_Reasons[] = [];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -111,6 +119,7 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
+  user:any;
 
   constructor(
     private callfc: CallFuncService,
@@ -120,19 +129,33 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    private authStore: AuthStore,
+
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
+    this.user = this.authStore.get();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
+    this.frmModelInstancesTask = await this.getFormModel("DPT040102");
+  }
+
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = new FormModel;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
   }
 
   ngAfterViewInit(): void {
@@ -150,16 +173,19 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
+        this.listReasonBySteps(this.reasonStepsObject);
       }
-    }
-     else if (changes['reloadData'] && this.reloadData) {
+    } else if (changes['reloadData'] && this.reloadData) {
+      this.instanceStatus = this.dataSelect.status;
+      // if (this.moreFuncCrr)changes['dataSelect'].currentValue = this.dataSelect
+      // this.viewDetail.ngOnChanges(changes)
       this.getStageByStep(this.listSteps);
-     }
+      this.changeDetec.detectChanges();
+    }
   }
 
   GetStepsByInstanceIDAsync() {
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
-    //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
@@ -279,12 +305,13 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
+    if (this.viewsCurrent == 'k-')
+      this.moreFuncCrr = JSON.parse(JSON.stringify(e));
     this.changeMF.emit({
       e: e,
       data: data,
       listStepCbx: this.listSteps,
       isStart: this.isStart,
-      meogi: 'popup',
     });
     // console.log(e);
     // if (e) {
@@ -392,9 +419,29 @@ export class InstanceDetailComponent implements OnInit {
     return 'step';
   }
 
-  getReasonByStepId(stepId: string) {
-    var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
-    return this.listSteps[idx];
+  getReasonByStepId(status: string) {
+    if(status == '3' || status == '4') return this.listReasonSuccess;
+    if(status == '5' || status == '6') return this.listReasonFail;
+    return null;
+  }
+  listReasonBySteps(reasonStepsObject){
+    if(reasonStepsObject) {
+      this.listReasonSuccess = this.convertStepsReason(reasonStepsObject.stepReasonSuccess);
+      this.listReasonFail = this.convertStepsReason( reasonStepsObject.stepReasonFail);
+    }
+  }
+  convertStepsReason(reasons:any){
+    var listReasonInstance =  [];
+    for(let item of reasons ) {
+      var  reasonInstance= new DP_Instances_Steps_Reasons();
+      reasonInstance.processID = this.dataSelect.processID;
+      reasonInstance.stepID = item.stepID;
+      reasonInstance.reasonName = item.reasonName;
+      reasonInstance.reasonType = item.reasonType;
+      reasonInstance.createdBy = item.createdBy;
+      listReasonInstance.push(reasonInstance);
+    }
+    return listReasonInstance;
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
