@@ -2263,10 +2263,15 @@ codx-calendar {
     padding: 8px 15px;
   }
 }
-lib-popup-add-cash-transfer{
+ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
   height: auto;
 }
+}
+ejs-datepicker{
+  .e-input-group.e-control-wrapper{
+    height: auto;
+  }
 }
 
 // codx-view-list .e-listview .e-list-item{
