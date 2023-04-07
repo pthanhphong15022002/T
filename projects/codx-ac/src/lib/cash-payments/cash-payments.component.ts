@@ -43,15 +43,14 @@ export class CashPaymentsComponent extends UIComponent {
   headerText: any;
   moreFuncName: any;
   funcName: any;
-  parentID: string;
   journalNo: string;
-  itemSelected:any;
-  objectname:any;
+  itemSelected: any;
+  objectname: any;
   oData: any;
-  cashbook:any;
+  cashbook: any;
   page: any = 1;
   pageSize = 6;
-  transactionText:any;
+  transactionText: any;
   cashpaymentline: Array<CashPaymentLine> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
@@ -78,7 +77,6 @@ export class CashPaymentsComponent extends UIComponent {
       }
     });
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
@@ -93,7 +91,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.oData = res;
         }
       });
-      this.api
+    this.api
       .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
       .subscribe((res: any) => {
         if (res != null) {
@@ -120,7 +118,7 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-        
+
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -128,7 +126,7 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
 
-    this.detectorRef.detectChanges()
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -161,7 +159,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
 
@@ -292,12 +290,12 @@ export class CashPaymentsComponent extends UIComponent {
     return true;
   }
 
-  changeDataMF(){
+  changeDataMF() {
     this.itemSelected = this.view.dataService.dataSelected;
     this.loadDatadetail(this.itemSelected);
   }
 
-  clickChange(data){
+  clickChange(data) {
     this.itemSelected = data;
     this.loadDatadetail(data);
   }
