@@ -68,7 +68,20 @@
             >
             </div>
           </div>
-          <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
+          <div class="me-2">
+            <span *ngIf="!checkPermissionRead(data)" class="icon-eye-off text-primary icon-18" #pCr="ngbPopover"
+            [ngbPopover]="popperRead"
+            (mouseenter)="pCr.open()"
+            (mouseleave)="pCr.close()"
+            placement="left"></span>
+          </div>
+          <div>
+            <span *ngIf="!data.allowCopy" class="icon-privacy_tip text-primary icon-18" #pEd="ngbPopover"
+            [ngbPopover]="popperAllowCopy"
+            (mouseenter)="pEd.open()"
+            (mouseleave)="pEd.close()"
+            placement="right"></span>
+          </div>
 
         </div>
         <div class="footerCard-item">
@@ -111,6 +124,26 @@
 
     </div>
   </ng-template>
+</ng-template>
+
+<ng-template #popperRead>
+  <span>
+    <codx-label
+      [name]="'lblRead'"
+      [formModel]="view.formModel"
+      default="Không có quyền xem"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popperAllowCopy>
+  <span>
+    <codx-label
+    [name]="'lblAllowCopy'"
+    [formModel]="view.formModel"
+    default="Không cho phép sao chép quy trình"
+  ></codx-label>
+  </span>
 </ng-template>
 
 <ng-template #editNameProcess>
