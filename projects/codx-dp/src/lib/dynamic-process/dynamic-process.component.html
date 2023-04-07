@@ -307,3 +307,19 @@
       lượng nhiệm vụ"></codx-label>
   </span>
 </ng-template>
+
+<ng-template #footerButton>
+  <span class="mx-1">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [emptyText]="grvSetup['GroupID']?.headerText"
+      [isMulti]="grvSetup?.GroupID?.multiSelect"
+      type="combobox"
+      [field]="'GroupID'"
+      [refValue]="grvSetup?.GroupID?.referedValue"
+      (valueChange)="valueChangeFilter($event)"
+    ></codx-dropdown-select>
+  </span>
+</ng-template>
+
