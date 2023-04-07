@@ -62,7 +62,7 @@
                                     <span ngbDropdown ngbDropdownToggle 
                                         class="icon-more_vert me-2 cursor-pointer text-gray-600">
                                         <ul ngbDropdownMenu>
-                                            <li ngbDropdownItem>
+                                            <li ngbDropdownItem *ngIf="item.createdBy == user.userID">
                                                 <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
@@ -252,7 +252,7 @@
                                 <span ngbDropdown ngbDropdownToggle 
                                         class="icon-more_vert me-2 cursor-pointer text-gray-600">
                                         <ul ngbDropdownMenu>
-                                            <li ngbDropdownItem>
+                                            <li ngbDropdownItem *ngIf="item.createdBy == user.userID">
                                                 <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
