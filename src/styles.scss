@@ -2257,6 +2257,18 @@ codx-calendar {
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
+
+.layout-hr{
+  #gridViewV2.e-grid .e-rowcell {
+    padding: 8px 15px;
+  }
+}
+lib-popup-add-cash-transfer{
+.e-input-group.e-control-wrapper{
+  height: auto;
+}
+}
+
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

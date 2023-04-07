@@ -117,18 +117,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
+
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      // {
-      //   name: 'ReferencesOD',
-      //   textDefault: 'Tham chiếu',
-      //   isActive: false,
-      //   template: this.reference,
-      // },
-      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
     if (this.view?.funcID == 'ODT41' || this.xd)
       this.tabControl.push({
@@ -172,6 +166,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
     this.setHeight();
+    this.convertPermiss();
   }
 
   ngOnInit(): void {
@@ -184,6 +179,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.dataRq.funcID = this.formModel?.funcID;
     this.getGridViewSetup(this.pfuncID);
   }
+
   setHeight() {
     let main = 0,
       header = 0;
@@ -214,6 +210,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       )[0].style.height = main - header - 115 - a + 'px';
     }
   }
+
   getGridViewSetup(funcID: any) {
     var funcList = this.codxODService.loadFunctionList(funcID);
 
@@ -561,7 +558,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.odService.checkUserPermiss(recID, this.userID).subscribe((item) => {
       if (item.status == 0) this.checkUserPer = item.data;
     });
+
   }
+
+ 
+
   openFormFuncID(val: any, datas: any = null, isData = false) {
     let that = this;
     var funcID = val?.functionID;
@@ -1658,6 +1659,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   clickTemp(e) {
     e.stopPropagation();
   }
+
   checkDeadLine(time: any) {
     if (new Date(time).getTime() < new Date().getTime() || !time) {
       return 'icon-access_alarm';
@@ -1667,5 +1669,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   //Từ chối
   refuse(datas: any) {
     //datas = this.
+  }
+
+  convertPermiss()
+  {
+    debugger
+    var a = this.dataItem.relations
   }
 }

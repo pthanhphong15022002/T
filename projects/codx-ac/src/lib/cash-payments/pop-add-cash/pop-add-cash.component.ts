@@ -1,5 +1,4 @@
 import { VoucherComponent } from './../../popup/voucher/voucher.component';
-import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,18 +6,12 @@ import {
   Injector,
   OnInit,
   Optional,
-  PipeTransform,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  EditSettingsModel,
-  GridComponent,
-} from '@syncfusion/ej2-angular-grids';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
-  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
@@ -38,9 +31,6 @@ import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
 import { JournalService } from '../../journal-names/journal-names.service';
 @Component({
@@ -105,6 +95,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   searchText: any;
   key: any;
   reverse: boolean = false;
+  columnChange: string;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -293,6 +284,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     let field = e.field.toLowerCase();
+    if (
+      field == 'currencyid' &&
+      this.columnChange.toLowerCase() == 'cashbookid'
+    ) {
+      this.columnChange = '';
+      return;
+    }
     if (e.data) {
       let sArray = [
         'currencyid',
@@ -316,12 +314,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ])
           .subscribe((res) => {
             if (res) {
+              this.columnChange = res.updateColumns;
               this.form.formGroup.patchValue(res);
             }
           });
       }
 
-      if (field === 'exchangerate')
+      if (field === 'exchangerate' && this.cashpaymentline.length)
         this.api
           .exec<any>(
             'AC',

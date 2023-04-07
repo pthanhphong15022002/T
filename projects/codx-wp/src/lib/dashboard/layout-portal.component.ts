@@ -17,7 +17,6 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   //override asideKeepActive = false;
   override toolbar = false;
   dialog!: DialogRef;
-  showCodxChat:boolean = false;
   constructor(
     inject: Injector,
     private route: ActivatedRoute,
@@ -29,14 +28,8 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   }
 
   onInit() {
-    this.checkShowCodxChat();
   }
   onAfterViewInit(): void {}
-  checkShowCodxChat(){
-    this.cache.functionList("WPT11").subscribe((func:any) => {
-      this.showCodxChat = func ? true : false;
-    });
-  }
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';

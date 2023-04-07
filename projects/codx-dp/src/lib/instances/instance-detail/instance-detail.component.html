@@ -30,11 +30,10 @@
               <div class="d-flex me-5">
                 <div class="me-2">
                   <codx-label
-                    class="text-gray-500 text-nowrap"
+                    class="text-gray-500 label-colon text-nowrap"
                     [setRequire]="false"
                     fiedName="CreatedOn"
                     [formModel]="formModel"
-                    default="Ngày tạo: "
                   >
                   </codx-label>
                 </div>
@@ -47,13 +46,12 @@
                   "
                 ></div>
               </div>
-              <div class="d-flex col-4">
+              <div class="d-flex me-5">
                 <div class="me-2">
                   <codx-label
-                    class="text-gray-500 text-nowrap"
+                    class="text-gray-500 label-colon text-nowrap"
                     fiedName="StartDate"
                     [formModel]="formModel"
-                    default="Ngày bắt đầu: "
                   >
                   </codx-label>
                 </div>
@@ -69,11 +67,10 @@
               <div class="d-flex me-5">
                 <div class="me-2">
                   <codx-label
-                    class="text-gray-500 text-nowrap"
+                    class="text-gray-500 label-colon text-nowrap"
                     fiedName="EndDate"
                     [setRequire]="false"
                     [formModel]="formModel"
-                    default="Ngày đến hạn: "
                   >
                   </codx-label>
                 </div>
@@ -87,9 +84,15 @@
                 ></div>
               </div>
             </div>
-          </div>
-          <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
-            <div class="me-2">
+            <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  fiedName="Memo"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+              </div>
               <div
                 class="text-dark"
                 *ngIf="dataSelect?.memo"
