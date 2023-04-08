@@ -92,6 +92,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   ];
   page: any = 1;
   pageSize = 5;
+  columnChange: any;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -236,8 +237,15 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     let field = e.field.toLowerCase();
-    if (field === 'voucherdate' && e.data) this.cashreceipts[e.field] = e.data;
-    else this.cashreceipts[e.field] = e.data;
+
+    if (
+      field == 'currencyid' &&
+      this.columnChange.toLowerCase() == 'cashbookid'
+    ) {
+      this.columnChange = '';
+      return;
+    }
+
     let sArray = [
       'currencyid',
       'voucherdate',
@@ -262,7 +270,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res) {
-            this.cashreceipts = res;
+            this.columnChange = res.updateColumns;
             this.form.formGroup.patchValue(this.cashreceipts);
           }
         });
@@ -631,17 +639,11 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     var totals = 0;
     this.cashreceiptslines.forEach((element) => {
       totals = totals + element.dr;
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
     });
-    if (this.cashreceiptslines.length == 0) {
-      this.total = totals.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND',
-      });
-    }
+    this.total = totals.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
   //#endregion
 
@@ -706,6 +708,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashreceipts,
+        "AC",
         'AC_CashReceipts',
         this.form,
         this.formType === 'edit',

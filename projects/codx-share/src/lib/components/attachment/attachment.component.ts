@@ -368,8 +368,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
 
     if(this.allowMultiFile == "0") this.fileUploadList = [];
-
-    this.handleFileInput(args.filesData);
+    this.fileService.getAllowSizeUpload().subscribe((item) => {
+      if (item != null) {
+        this.maxFileSizeUploadMB = item.len;
+        this.maxFileSizeUpload = item.len * 1014 * 1024;
+        this.handleFileInput(args.filesData);
+      }
+    });
     args.cancel = true;
   }
 
@@ -496,18 +501,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     this.setFormModel();
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
-    this.fileService.getAllowSizeUpload().subscribe((item) => {
-      if (item != null) {
-        this.maxFileSizeUploadMB = item.len;
-        this.maxFileSizeUpload = item.len * 1014 * 1024;
-      }
-    });
+   
 
-    this.cache.message(this.codeMaxFileSize).subscribe((item) => {
-      if (item != null) {
-        this.titleMaxFileSiate = item.customName;
-      }
-    });
+    // this.cache.message(this.codeMaxFileSize).subscribe((item) => {
+    //   if (item != null) {
+    //     this.titleMaxFileSiate = item.customName;
+    //   }
+    // });
 
     this.atSV.isSetDisableSave.subscribe((res) => {
       this.disableSave = res;
@@ -515,7 +515,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     });
 
     this.cache.message(this.codetitle).subscribe((item) => {
-      if (item != null) {
+      if (item) {
         this.title = item.customName;
       }
     });
@@ -530,15 +530,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // alert(1);
       if (item == true) this.openPopup();
     });
-    this.fileService.getTotalHdd().subscribe((item) => {
-      if (item) {
-        this.infoHDD.totalHdd = item?.totalHdd;
-        this.infoHDD.totalUsed = item?.TotalUsedBytes;
-      }
-      //  totalUsed: any;
-      // totalHdd: any;
-      // this.getHDDInformaton(item);
-    });
+   
     //this.getFolderNameByFuncList();
 
     //Kiểm tra tenant đã có chưa
@@ -741,24 +733,41 @@ export class AttachmentComponent implements OnInit, OnChanges {
       mergeMap((value, i) => { 
         if(typeof value == 'object' && value.AppId)
         {
-          return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
-            return res
+          return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+            if(hdd)
+            {
+              this.infoHDD.totalHdd = hdd?.totalHdd;
+              this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+              return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                return res
+              }))
+            }
+            return of(null);
           }))
         }
         else
         {
-          var tenants = from(this.RegisterTenantFile(this.user.tenant))
-          return tenants.pipe(mergeMap((val,i)=>{
-            if(typeof val == 'object' && val.Data.AppId) {
-              return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
-                return res
+          return from(this.fileService.getTotalHdd()).pipe(mergeMap(hdd=>{
+            if(hdd)
+            {
+              this.infoHDD.totalHdd = hdd?.totalHdd;
+              this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+              var tenants = from(this.RegisterTenantFile(this.user.tenant))
+              return tenants.pipe(mergeMap((val,i)=>{
+                if(typeof val == 'object' && val.Data.AppId) {
+                  return from(this.onMultiFileSaveObservableAfterTenant()).pipe(mergeMap(res => {
+                    return res
+                  }))
+                } 
+                else {
+                  this.notificationsService.notify("Đăng ký tenant không thành công");
+                  return [];
+                }
               }))
-            } 
-            else {
-              this.notificationsService.notify("Đăng ký tenant không thành công");
-              return [];
             }
-          }))
+            return of(null);
+          }));
+          
         } 
        }));
     }
@@ -889,238 +898,245 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiSaveAfterTenant()
   {
-    this.getFolder();
-    if (
-      this.dataFolder &&
-      this.dataFolder?.copyrights &&
-      this.isCopyRight > 0
-    ) {
-      this.notificationsService.notifyCode('DM067');
-      return;
-    }
-    if (this.data == undefined) this.data = [];
-    let total = this.fileUploadList.length;
-    var toltalUsed = 0; //bytes
-    var remainingStorage = -1;
-    if (this.infoHDD.totalHdd >= 0)
-      remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
-    var that = this;
-    for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectID = this.objectId;
-      this.fileUploadList[i].description = this.description[i];
-      this.fileUploadList[i].avatar = null;
-      this.fileUploadList[i].data = '';
-      if(this.isTab) this.fileUploadList[i].createdOn = this.date;
-      else this.fileUploadList[i].createdOn = new Date();
-      toltalUsed += this.fileUploadList[i].fileSize;
-      if (total > 1)
-        this.fileUploadList[i] = await this.addFileLargeLong(
-          this.fileUploadList[i],
-          false
-        );
-    }
-    this.addPermissionA();
-    if (remainingStorage >= 0 && toltalUsed > remainingStorage)
-      return this.notificationsService.notifyCode('DM053');
-    this.atSV.fileListAdded = [];
-    if (total > 1) {
-      var done = this.fileService
-        .addMultiFile(
-          this.fileUploadList,
-          this.actionType,
-          this.formModel?.entityName,
-          this.isDM,
-          this.folder,
-          this.fdID,
-          this.fdName,
-          this.parentID,
-          this.idField
-        )
-        .toPromise()
-        .then((res) => {
-          if (res) {
-            var newlist = res.filter((x) => x.status == 6);
-            var newlistNot = res.filter((x) => x.status == -1);
-            var addList = res.filter((x) => x.status == 0 || x.status == 9);
-            if (addList.length > 0) {
-              this.fileSave.emit(addList);
-              addList.forEach((item) => {
-                this.data.push(Object.assign({}, item));
-                if (item.status == 0)
-                  this.dmSV.updateHDD.next(item.messageHddUsed);
-                var files = this.dmSV.listFiles;
-                if (files == null) files = [];
-
-                if (item.status == 0) {
-                  if (item.data.fileName != null && item.data.fileName != '') {
-                    //'../../../assets/img/loader.gif';
-                    that.displayThumbnail(item.data);
-                    if (!item.data.thumbnail)
-                      item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
-                        item.data.extension
-                      )}`;
-                    files.push(Object.assign({}, item.data));
-                  } else {
-                    if (
-                      item.data.folderName != null &&
-                      item.data.folderName != ''
-                    ) {
-                      var folders = this.dmSV.listFolder;
-                      var idx = folders.findIndex(
-                        (x) => x.recID == item.data.recID
+    this.fileService.getTotalHdd().subscribe(async (hdd) => {
+      if (hdd) {
+        this.infoHDD.totalHdd = hdd?.totalHdd;
+        this.infoHDD.totalUsed = hdd?.TotalUsedBytes;
+        this.getFolder();
+        if (
+          this.dataFolder &&
+          this.dataFolder?.copyrights &&
+          this.isCopyRight > 0
+        ) {
+          this.notificationsService.notifyCode('DM067');
+          return;
+        }
+        if (this.data == undefined) this.data = [];
+        let total = this.fileUploadList.length;
+        var toltalUsed = 0; //bytes
+        var remainingStorage = -1;
+        if (this.infoHDD.totalHdd >= 0)
+          remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+        var that = this;
+        for (var i = 0; i < total; i++) {
+          this.fileUploadList[i].objectID = this.objectId;
+          this.fileUploadList[i].description = this.description[i];
+          this.fileUploadList[i].avatar = null;
+          this.fileUploadList[i].data = '';
+          if(this.isTab) this.fileUploadList[i].createdOn = this.date;
+          else this.fileUploadList[i].createdOn = new Date();
+          toltalUsed += this.fileUploadList[i].fileSize;
+          if (total > 1)
+            this.fileUploadList[i] = await this.addFileLargeLong(
+              this.fileUploadList[i],
+              false
+            );
+        }
+        this.addPermissionA();
+        if (remainingStorage >= 0 && toltalUsed > remainingStorage)
+          return this.notificationsService.notifyCode('DM053');
+        this.atSV.fileListAdded = [];
+        if (total > 1) {
+          var done = this.fileService
+            .addMultiFile(
+              this.fileUploadList,
+              this.actionType,
+              this.formModel?.entityName,
+              this.isDM,
+              this.folder,
+              this.fdID,
+              this.fdName,
+              this.parentID,
+              this.idField
+            )
+            .toPromise()
+            .then((res) => {
+              if (res) {
+                var newlist = res.filter((x) => x.status == 6);
+                var newlistNot = res.filter((x) => x.status == -1);
+                var addList = res.filter((x) => x.status == 0 || x.status == 9);
+                if (addList.length > 0) {
+                  this.fileSave.emit(addList);
+                  addList.forEach((item) => {
+                    this.data.push(Object.assign({}, item));
+                    if (item.status == 0)
+                      this.dmSV.updateHDD.next(item.messageHddUsed);
+                    var files = this.dmSV.listFiles;
+                    if (files == null) files = [];
+    
+                    if (item.status == 0) {
+                      if (item.data.fileName != null && item.data.fileName != '') {
+                        //'../../../assets/img/loader.gif';
+                        that.displayThumbnail(item.data);
+                        if (!item.data.thumbnail)
+                          item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                            item.data.extension
+                          )}`;
+                        files.push(Object.assign({}, item.data));
+                      } else {
+                        if (
+                          item.data.folderName != null &&
+                          item.data.folderName != ''
+                        ) {
+                          var folders = this.dmSV.listFolder;
+                          var idx = folders.findIndex(
+                            (x) => x.recID == item.data.recID
+                          );
+                          if (idx == -1) {
+                            folders.push(Object.assign({}, item.data));
+                            this.dmSV.listFolder = folders;
+                            // that.changeDetectorRef.detectChanges();
+                          }
+                        }
+                      }
+                    } 
+                    else {
+                      let index = files.findIndex(
+                        (d) => d.recID.toString() === item.data.recID
                       );
-                      if (idx == -1) {
-                        folders.push(Object.assign({}, item.data));
-                        this.dmSV.listFolder = folders;
-                        // that.changeDetectorRef.detectChanges();
+                      if (index != -1) {
+                        files[index] = item.data;
+                        files[index].recID = item.data.recID;
                       }
                     }
+    
+                    this.dmSV.listFiles = files;
+    
+                    this.dmSV.addFile.next(true);
+                    //this.dmSV.ChangeData.next(true);
+                  });
+    
+                  //Có upload file theo cấp thư mục
+                  if(this.dataFolder?.hasSubFolder)
+                  {
+                    this.dmSV.folderID = this.dataFolder.recID
+                    this.dmSV.refeshData.next(true);
                   }
-                } 
-                else {
-                  let index = files.findIndex(
-                    (d) => d.recID.toString() === item.data.recID
+    
+                  this.notificationsService.notifyCode(
+                    'DM061',
+                    null,
+                    addList.length
                   );
-                  if (index != -1) {
-                    files[index] = item.data;
-                    files[index].recID = item.data.recID;
+                }
+    
+                // for (var i = 0; i < addList.length; i++) {
+                //   this.data.push(Object.assign({}, addList[i]));
+                // }
+    
+                if (addList.length == this.fileUploadList.length) {
+                  this.atSV.fileList.next(this.fileUploadList);
+                  this.atSV.fileListAdded = addList;
+                  // this.notificationsService.notify(this.title);
+                  this.closePopup();
+                  this.fileUploadList = [];
+                } else {
+                  var item = newlist[0];
+                  var newUploadList = [];
+                  //   this.fileUploadList = [];
+                  //   this.fileUploadList = addList;
+                  // copy list
+                  for (var i = 0; i < this.fileUploadList.length; i++) {
+                    var file = this.fileUploadList[i];
+                    var index = newlist.findIndex(
+                      (x) => x.data.fileName == file.fileName
+                    );
+                    if (index > -1) {
+                      newUploadList.push(Object.assign({}, file));
+                    }
                   }
-                }
-
-                this.dmSV.listFiles = files;
-
-                this.dmSV.addFile.next(true);
-                //this.dmSV.ChangeData.next(true);
-              });
-
-              //Có upload file theo cấp thư mục
-              if(this.dataFolder?.hasSubFolder)
-              {
-                this.dmSV.folderID = this.dataFolder.recID
-                this.dmSV.refeshData.next(true);
-              }
-
-              this.notificationsService.notifyCode(
-                'DM061',
-                null,
-                addList.length
-              );
-            }
-
-            // for (var i = 0; i < addList.length; i++) {
-            //   this.data.push(Object.assign({}, addList[i]));
-            // }
-
-            if (addList.length == this.fileUploadList.length) {
-              this.atSV.fileList.next(this.fileUploadList);
-              this.atSV.fileListAdded = addList;
-              // this.notificationsService.notify(this.title);
-              this.closePopup();
-              this.fileUploadList = [];
-            } else {
-              var item = newlist[0];
-              var newUploadList = [];
-              //   this.fileUploadList = [];
-              //   this.fileUploadList = addList;
-              // copy list
-              for (var i = 0; i < this.fileUploadList.length; i++) {
-                var file = this.fileUploadList[i];
-                var index = newlist.findIndex(
-                  (x) => x.data.fileName == file.fileName
-                );
-                if (index > -1) {
-                  newUploadList.push(Object.assign({}, file));
-                }
-              }
-              if (newlistNot.length > 0) {
-                this.notificationsService.notify(newlistNot[0].message);
-                this.closePopup();
-              } else {
-                this.fileUploadList = newUploadList;
-                var config = new AlertConfirmInputConfig();
-                config.type = 'checkBox';
-
-                this.notificationsService
-                  .alert(this.titlemessage, item?.message, config)
-                  .closed.subscribe((x) => {
-                    if (x.event.status == 'Y') {
-                      // save all
-                      if (x.event.data) {
-                        for (var i = 0; i < this.fileUploadList.length; i++) {
-                          //this.fileUploadList[i].reWrite = true;
-                          this.fileUploadList[i].description =
-                            this.description[i];
-                        }
-                        this.fileService
-                          .addMultiFile(
-                            this.fileUploadList,
-                            this.actionType,
-                            this.formModel?.entityName,
-                            this.isDM,
-                            this.folder,
-                            this.fdID,
-                            this.fdName,
-                            this.parentID,
-                            this.idField
-                          )
-                          .toPromise()
-                          .then((result) => {
-                            var mess = '';
-                            for (var i = 0; i < result.length; i++) {
-                              var f = result[i];
-                              mess =
-                                mess + (mess != '' ? '<br/>' : '') + f.message;
+                  if (newlistNot.length > 0) {
+                    this.notificationsService.notify(newlistNot[0].message);
+                    this.closePopup();
+                  } else {
+                    this.fileUploadList = newUploadList;
+                    var config = new AlertConfirmInputConfig();
+                    config.type = 'checkBox';
+    
+                    this.notificationsService
+                      .alert(this.titlemessage, item?.message, config)
+                      .closed.subscribe((x) => {
+                        if (x.event.status == 'Y') {
+                          // save all
+                          if (x.event.data) {
+                            for (var i = 0; i < this.fileUploadList.length; i++) {
+                              //this.fileUploadList[i].reWrite = true;
+                              this.fileUploadList[i].description =
+                                this.description[i];
                             }
-                            this.notificationsService.notify(mess);
+                            this.fileService
+                              .addMultiFile(
+                                this.fileUploadList,
+                                this.actionType,
+                                this.formModel?.entityName,
+                                this.isDM,
+                                this.folder,
+                                this.fdID,
+                                this.fdName,
+                                this.parentID,
+                                this.idField
+                              )
+                              .toPromise()
+                              .then((result) => {
+                                var mess = '';
+                                for (var i = 0; i < result.length; i++) {
+                                  var f = result[i];
+                                  mess =
+                                    mess + (mess != '' ? '<br/>' : '') + f.message;
+                                }
+                                this.notificationsService.notify(mess);
+                                this.fileUploadList = [];
+                                this.closePopup();
+                              });
+                          } else {
+                            // save 1
+                            var index = this.fileUploadList.findIndex(
+                              (x) => x.fileName == item.data.fileName
+                            );
+                            //this.fileUploadList[index].reWrite = true;
+                            this.onMultiFileSave();
+                          }
+                        } else if (x.event.status == 'N') {
+                          // cancel all
+                          if (x.event.data) {
                             this.fileUploadList = [];
                             this.closePopup();
-                          });
-                      } else {
-                        // save 1
-                        var index = this.fileUploadList.findIndex(
-                          (x) => x.fileName == item.data.fileName
-                        );
-                        //this.fileUploadList[index].reWrite = true;
-                        this.onMultiFileSave();
-                      }
-                    } else if (x.event.status == 'N') {
-                      // cancel all
-                      if (x.event.data) {
-                        this.fileUploadList = [];
-                        this.closePopup();
-                      } else {
-                        // cancel 1
-                        var index = this.fileUploadList.findIndex(
-                          (x) => x.fileName == item.data.fileName
-                        );
-                        this.fileUploadList.splice(index, 1); //remove element from array
-                        if (this.fileUploadList.length > 0)
-                          this.onMultiFileSave();
-                      }
-                    }
-                  });
+                          } else {
+                            // cancel 1
+                            var index = this.fileUploadList.findIndex(
+                              (x) => x.fileName == item.data.fileName
+                            );
+                            this.fileUploadList.splice(index, 1); //remove element from array
+                            if (this.fileUploadList.length > 0)
+                              this.onMultiFileSave();
+                          }
+                        }
+                      });
+                  }
+                }
               }
-            }
+            });
+        } else if (total == 1) {
+          if(!this.fileUploadList[0]) 
+          {
+            this.notificationsService.notifyCode("DM006",0,this.fileUploadList[0].fileName)
+            return null;
           }
-        });
-    } else if (total == 1) {
-      if(!this.fileUploadList[0]) 
-      {
-        this.notificationsService.notifyCode("DM006",0,this.fileUploadList[0].fileName)
-        return null;
+          this.fileUploadList[0].description = this.description[0];
+          this.fileUploadList[0].data = '';
+          this.addFileLargeLong(this.fileUploadList[0]);
+          this.lstRawFile = [];
+          //this.addFile(this.fileUploadList[0]);
+    
+          this.atSV.fileList.next(this.fileUploadList);
+        } else {
+          // this.cacheService.message('DM001')
+          // this.notificationsService.notifyCode("");
+          this.notificationsService.notify(this.title2);
+        }
       }
-      this.fileUploadList[0].description = this.description[0];
-      this.fileUploadList[0].data = '';
-      this.addFileLargeLong(this.fileUploadList[0]);
-      this.lstRawFile = [];
-      //this.addFile(this.fileUploadList[0]);
-
-      this.atSV.fileList.next(this.fileUploadList);
-    } else {
-      // this.cacheService.message('DM001')
-      // this.notificationsService.notifyCode("");
-      this.notificationsService.notify(this.title2);
-    }
+    });
+   
   }
   addPermissionA()
   {
@@ -1811,6 +1827,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var count = this.fileUploadList.length;
     //this.getFolderPath();
     //console.log(files);
+   
     for (var i = 0; i < files.length; i++) {
       if (
         files[i].size >= this.maxFileSizeUpload &&

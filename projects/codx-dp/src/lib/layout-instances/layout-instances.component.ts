@@ -1,6 +1,7 @@
-import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef, ViewChild } from '@angular/core';
 import {
   CallFuncService,
+  DialogModel,
   DialogRef,
   LayoutBaseComponent,
   SidebarModel,
@@ -15,17 +16,23 @@ import { BehaviorSubject, Observable } from 'rxjs';
   styleUrls: ['./layout-instances.component.css'],
 })
 export class LayoutInstancesComponent extends LayoutBaseComponent {
+  @ViewChild('popupGuide') popupGuide;
+  vllApplyFor = 'DP002';
   module = '';
   override aside = false;
   override toolbarFixed = false;
+  
   //override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   //override toolbar = false;
-  dataProcess = new BehaviorSubject<any>(null);
-  nameProcess = '';
+  //dataProcess = new BehaviorSubject<any>(null);
+  processView: any;
+  stepNames = [];
+  dialogGuide: DialogRef;
+  
   constructor(
     inject: Injector,
-    private changDef : ChangeDetectorRef,
+    private changDef: ChangeDetectorRef,
     private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
@@ -45,8 +52,27 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     option.Width = '550px';
     this.callfc.openSide(NoteDrawerComponent, '', option);
   }
-  viewNameProcess(name) {
-  this.nameProcess = name;
-  this.changDef.detectChanges();
+  viewNameProcess(ps) {
+    this.processView = ps;
+    if (this.processView?.steps?.length > 0)
+      this.stepNames = this.processView.steps.map((x) => x.stepName);
+    this.changDef.detectChanges();
+  }
+
+  showGuide(p) {
+    p.close();
+    let option = new DialogModel();
+    option.zIndex = 1001;
+
+   this.dialogGuide = this.callfc.openForm(
+      this.popupGuide,
+      '',
+      500,
+      300,
+      '',
+      null,
+      '',
+      option
+    );
   }
 }

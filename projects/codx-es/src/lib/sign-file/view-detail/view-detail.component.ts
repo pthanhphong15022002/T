@@ -50,6 +50,7 @@ export class ViewDetailComponent implements OnInit {
     this.user = this.authStore.get();
   }
 
+  @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -123,6 +124,12 @@ export class ViewDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes?.data &&
+      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
+    ) {
+      this.data = changes.data?.currentValue;
+    }
     if (this.formModel) {
       this.initForm();
     } else {

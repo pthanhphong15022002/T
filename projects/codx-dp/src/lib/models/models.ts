@@ -40,12 +40,12 @@ export class DP_Processes {
   modifiedOn: Date;
   modifiedBy: string;
   instanceNoSetting: string;
+  addFieldsControl: string;
+  allowCopy: boolean;
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
   steps: DP_Steps[] = [];
-  addFieldsControl: string = '1';
-  allowCopy: boolean = true;
 }
 
 export class DP_Processes_Permission {
