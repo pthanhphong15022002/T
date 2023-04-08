@@ -46,6 +46,7 @@ import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties
 import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
 import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
 import { ProgressComponent } from './instances/instance-detail/stages-detail/progress/progress.component';
+import { CarouselStageComponent } from './instances/instance-detail/carousel-stage/carousel-stage.component';
 
 
 const routes: Routes = [
@@ -115,7 +116,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
     PopupParticipantsComponent,
-    ProgressComponent,  
+    ProgressComponent,
+    CarouselStageComponent,  
   ],
   imports: [
     RouterModule.forChild(routes),
