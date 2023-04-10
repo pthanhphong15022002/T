@@ -84,7 +84,7 @@ export class EmployeesComponent extends UIComponent {
         }
       }
     });
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -234,7 +234,7 @@ export class EmployeesComponent extends UIComponent {
   }
   // edit
   edit(event: any, data: any) {
-    if (event && data) 
+    if (event && data)
     {
       this.view.dataService.dataSelected = data;
       let option = new SidebarModel();

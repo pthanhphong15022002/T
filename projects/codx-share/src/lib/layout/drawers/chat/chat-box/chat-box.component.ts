@@ -8,6 +8,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { SignalRService } from '../services/signalr.service';
 import { MessageSystemPipe } from './mssgSystem.pipe';
 import { WP_Messages } from '../models/WP_Messages.model';
+import moment from 'moment';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -62,12 +63,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   @ViewChild("codxViewFile") codxViewFile:AttachmentComponent;
   @ViewChild("tmpMssgFunc") tmpMssgFunc:TemplateRef<any>;
   @ViewChild("templateVotes") popupVoted:TemplateRef<any>;
-
-
-
-  @ViewChild("tmpMssg1",{read:true,static : true}) mssg1:TemplateRef<any>;
-  @ViewChild("tmpMssg2",{read:true,static : true}) mssg2:TemplateRef<any>;
-
   constructor
   (
     private api:ApiHttpService,
@@ -234,7 +229,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
       "WP",
       "ERM.Business.WP",
       "ChatBusiness",
-      "GetMessageByGroupIDAsync",
+      "GetMessageAsync",
       [this.groupID,this.pageIndex])
       .subscribe((res:any[]) => {
         this.arrMessages = res[0];
@@ -259,7 +254,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         "WP",
         "ERM.Business.WP",
         "ChatBusiness",
-        "GetMessageByGroupIDAsync",
+        "GetMessageAsync",
         [this.group.groupID,this.pageIndex])
         .subscribe((res:any[]) => {
           if(res[1] > 0)
@@ -482,7 +477,13 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
 
   // group by tin nhắn theo ngày
   checkDate(index:number){
-
+    var mssg1 = this.arrMessages[index];
+    var mssg2 = this.arrMessages[index+1];
+    if(mssg1 && mssg2){
+      let a = moment(mssg2.createdOn).diff(moment(mssg1.createdOn),"days");
+      return a > 0;
+    }
+    return false;
   }
 
   //

@@ -40,6 +40,10 @@ export class CodxViewFilesComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+
+  defaultImage = "../../../assets/media/svg/files/blank-image.svg"
+  readonly loaderImage = '../../../assets/media/img/loader.gif';
+  
   constructor(
     private api:ApiHttpService,
     private auth: AuthStore,

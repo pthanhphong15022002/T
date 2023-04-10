@@ -294,7 +294,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
     }
     else this.ms023 = ms023;
-    
+
     var dvlRelType =  this.codxODService.loadValuelist('OD008')
     if(isObservable(dvlRelType))
     {
@@ -303,8 +303,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
     }
     else this.dvlRelType = dvlRelType;
-  
-   
+
+
   }
   ///////////////Các function format valuelist///////////////////////
   fmTextValuelist(val: any, type: any) {
@@ -430,7 +430,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
     }
     else this.dvlStatusRel = vllStatusRel;
-   
+
     var vllReCall = this.codxODService.loadValuelist('OD010');
     if(isObservable(vllReCall))
     {
@@ -563,7 +563,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   }
 
- 
+
 
   openFormFuncID(val: any, datas: any = null, isData = false) {
     let that = this;
@@ -1004,7 +1004,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                   .subscribe((item) => {
                     //this.getChildTask(id);
                      //Có thiết lập bước duyệt
-                      if (item.bsCategory.approval) 
+                      if (item.bsCategory.approval)
                       {
                         this.api
                           .execSv(
@@ -1028,7 +1028,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                         if (res2?.eSign == true) {
                                           this.cancelAproval(item);
                                           //this.callfunc.openForm();
-                                        } 
+                                        }
                                         else if (res2?.eSign == false)
                                           {
                                             this.api
@@ -1058,7 +1058,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                           }
                                       });
                                     }});
-                            } 
+                            }
                       else
                       {
                         this.data.approveStatus = '1';
@@ -1072,7 +1072,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                           else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
                         })
                       }
-                     
+
                 });
             }});
         break;
@@ -1158,7 +1158,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         // this.refuse(datas);
         break;
       }
-      //Tạo công văn đi 
+      //Tạo công văn đi
       case "ODT115":{
         this.view.dataService.addNew().subscribe((res: any) => {
           var obj = {
@@ -1390,11 +1390,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         return 'Gửi đến ' + agencyName;
       }
     }
-    
+
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
-      shareBy 
+      shareBy
     );
   }
   updateNotCallFuntion(data: any) {
@@ -1412,9 +1412,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //Unbookmark
     var unbm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
+        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211"
     );
-   
+
     if (data?.isBookmark) {
       if (bm[0]) bm[0].disabled = true;
       if (unbm[0]) unbm[0].disabled = false;
@@ -1429,7 +1429,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       data?.approveStatus != '2' &&
       (data?.status == '3' && data?.approveStatus != '1')
     ) {
-     
+
     }
 
     if((this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51'))
@@ -1438,7 +1438,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       {
          //Chức năng Gửi duyệt
         var approvel = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+          (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101'
         );
         if (approvel[0]) approvel[0].disabled = true;
       }
@@ -1468,7 +1468,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       {
           //Chức năng Gửi duyệt
           var approvel = e.filter(
-            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101'
           );
           if (approvel[0]) approvel[0].disabled = false;
       }
@@ -1569,7 +1569,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   //new công văn nội bộ đến
   addInternalIncoming(datas:any)
   {
-    
+
     let dataSave = datas;
     let departmentID = datas.agencyID;
     dataSave.dispatchType = '4'
@@ -1691,8 +1691,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.listPermission.push(p);
         }
       })
-     
+
     }
   }
- 
+
 }
