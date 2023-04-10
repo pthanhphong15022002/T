@@ -63,7 +63,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
-
+    this.cashTransfer.acountID = '123';
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
     );
@@ -250,7 +250,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.cashTransfer,
-      "AC",
+      'AC',
       'AC_CashTranfers',
       this.form,
       this.isEdit,

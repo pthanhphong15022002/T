@@ -5,7 +5,7 @@
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "appName": "hps-file-test",
   "office365": "",
-  "saas": 0,
+  "saas": 1,
   "layoutCZ": "",
   "themeMode": "body",
   "captchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
