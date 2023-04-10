@@ -111,7 +111,6 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   loading:boolean = false;
   // send comment
   sendComment(){
-    debugger
     if(!this.loading)
     {
       this.data.refID = this.refID;
@@ -209,7 +208,6 @@ export class CodxCommentsComponent implements OnInit,OnChanges {
   }
   // update comments
   updateComment(data){
-    debugger
     //check deleted file
     if(this.fileDelete)
     {

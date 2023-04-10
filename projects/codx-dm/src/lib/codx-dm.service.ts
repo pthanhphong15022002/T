@@ -363,8 +363,13 @@ export class CodxDMService {
     return observable;
   }
 
-  getRight(folder: FolderInfo) {
-    debugger
+  getRight(folder: FolderInfo , funcID:any = "") {
+
+    if(funcID && funcID != 'DMT00' && funcID != 'DMT02' && funcID != 'DMT03') {
+      this.disableUpload.next(true);
+      this.disableInput.next(true);
+      return
+    }
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
