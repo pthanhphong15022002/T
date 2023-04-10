@@ -1796,7 +1796,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
-    var stepIDPrevious = event.previousContainer.id;
+    var stepIDPrevious = event.previousContainer.id; 
+    if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
+      stepIDContain =stepIDContain.substring(2) ;
+    }
+
+    if(stepIDPrevious[0]=='v' && stepIDPrevious[1]=='-'){
+      stepIDPrevious =stepIDPrevious.substring(2) ;
+    }
     // var data = event.item?.data;
     if (this.action == 'edit') {
       let check = this.listStepEdit.some((id) => id == stepIDContain);
@@ -1810,6 +1817,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepEdit.push(stepIDPrevious);
       }
     }
+   
     event.item.data.stepID = stepIDContain;
     transferArrayItem(
       event.previousContainer.data,
