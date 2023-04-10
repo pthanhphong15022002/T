@@ -1822,13 +1822,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   valueChangeQuestionEJS(e, itemSession, itemQuestion, field) {
-    debugger
     if (e && e != itemQuestion[field]) {
-      let dataTemp = JSON.parse(JSON.stringify(this.questions));
-      dataTemp[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
+      this.questions[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
       this.SVServices.signalSave.next('saving');
       this.setTimeoutSaveData(
-        [dataTemp[itemSession.seqNo].children[itemQuestion.seqNo]],
+        [this.questions[itemSession.seqNo].children[itemQuestion.seqNo]],
         false
       );
     }
