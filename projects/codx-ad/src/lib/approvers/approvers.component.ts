@@ -49,7 +49,6 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
         if (m) this.moreFuncName = m.defaultName;
-        console.log(this.moreFuncName);
       }
     });
   }
@@ -82,7 +81,6 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   }
 
   moreFunction(e: any, data) {
-    console.log(e);
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);

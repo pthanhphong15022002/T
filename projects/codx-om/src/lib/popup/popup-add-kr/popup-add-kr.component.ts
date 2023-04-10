@@ -73,7 +73,9 @@ export class PopupAddKRComponent extends UIComponent {
   oldPlan: any;
   editTargets = [];
   groupModel: any;
+  modelCbb:any;
   dialogCheckIn: DialogRef;
+  okrPlan: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -90,6 +92,8 @@ export class PopupAddKRComponent extends UIComponent {
     this.oldKR = dialogData.data[3];
     this.isSubKR = dialogData.data[4];
     this.groupModel = dialogData.data[5];
+    this.okrPlan = dialogData.data[6];
+    this.modelCbb={TransID:this.okrPlan?.recID,};
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;
     if (
@@ -335,7 +339,7 @@ export class PopupAddKRComponent extends UIComponent {
         this.detectorRef.detectChanges();
       }
     }
-  }
+  }  
 
   closeEditTargets(dialog: any) {
     // this.kr.targets = [];
@@ -352,6 +356,7 @@ export class PopupAddKRComponent extends UIComponent {
     else{      
       this.kr = { ...this.groupModel?.krModel };
     }
+    this.kr.transID= this.okrPlan?.recID;
   }
   fullTargets(planVLL:any, targets:any, plan:string){
     if(planVLL!=null && targets!=null){
@@ -436,8 +441,9 @@ export class PopupAddKRComponent extends UIComponent {
     this.dialogTargets = this.callfc.openForm(
       template,
       '',
-      550,
-      popUpHeight,
+      650,
+      500,
+//      popUpHeight,
       null
     );
     this.detectorRef.detectChanges();
@@ -504,10 +510,10 @@ export class PopupAddKRComponent extends UIComponent {
     }
   }
   refreshPlanTargets() {
-    if (this.kr.target && this.kr.targets && this.kr.targets.length > 0) {
-      let avgTarget = this.kr.target / this.kr.targets.length;
-      for (let i = 0; i < this.kr.targets.length; i++) {
-        this.kr.targets[i].target = avgTarget;
+    if (this.kr.target && this.editTargets && this.editTargets.length > 0) {
+      let avgTarget = this.kr.target / this.editTargets.length;
+      for (let i = 0; i < this.editTargets.length; i++) {
+        this.editTargets[i].target = avgTarget;
       }
       this.detectorRef.detectChanges();
     }

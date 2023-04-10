@@ -439,54 +439,56 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         } else {
           this.saveSuccess = false;
+          this.checkBtnAdd = false;
           this.detectorRef.detectChanges();
         }
       });
   }
 
   onSave() {
-    if (!this.checkBtnAdd) {
-      this.saveSuccess = true;
-      var formGroup = this.form.formGroup.controls;
-      if (!this.adUser.buid) formGroup.buid.setValue(null);
-      if (
-        formGroup.userID.status == 'VALID' &&
-        formGroup.userName.status == 'VALID' &&
-        formGroup.buid.status == 'VALID' &&
-        formGroup.email.status == 'VALID'
-      ) {
-        if (this.isAddMode) {
-          if (this.checkBtnAdd == false) {
-            this.onAdd();
-          } else {
-            this.updateAfterAdd();
-            if (
-              this.countListViewChooseRoleApp > 0 ||
-              this.countListViewChooseRoleService > 0
-            ) {
-              this.adService
-                .addUserRole(this.dataAfterSave, this.viewChooseRole)
-                .subscribe((res: any) => {
-                  if (res) {
-                    res.chooseRoles = res?.functions;
-                    (this.dialog.dataService as CRUDService)
-                      .update(res)
-                      .subscribe();
-                    this.dialog.close(res);
-                  } else {
-                    this.saveSuccess = false;
-                  }
-                  this.changeDetector.detectChanges();
-                });
-            }
-            // this.notification.notifyCode('SYS006');
+    // if (!this.checkBtnAdd) {
+    this.saveSuccess = true;
+    var formGroup = this.form.formGroup.controls;
+    if (!this.adUser.buid) formGroup.buid.setValue(null);
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.buid.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    ) {
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) {
+          this.checkBtnAdd = true;
+          this.onAdd();
+        } else {
+          this.updateAfterAdd();
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe();
+                  this.dialog.close(res);
+                } else {
+                  this.saveSuccess = false;
+                }
+                this.changeDetector.detectChanges();
+              });
           }
-        } else this.onUpdate();
-      } else {
-        this.saveSuccess = false;
-        this.adService.notifyInvalid(this.form.formGroup, this.formModel);
-      }
+          // this.notification.notifyCode('SYS006');
+        }
+      } else this.onUpdate();
+    } else {
+      this.saveSuccess = false;
+      this.adService.notifyInvalid(this.form.formGroup, this.formModel);
     }
+    // }
   }
 
   src = '';

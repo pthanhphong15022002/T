@@ -18,13 +18,13 @@
         >
         </codx-label>
         <ejs-combobox
+          [enabled]="enabled"
           [dataSource]="stepList"
           [fields]="fieldsResource"
           [value]="field.stepID"
           [allowFiltering]='true'
           [placeholder]="grvSetup['StepID'].description"
-          (valueChange)="cbxChange($event)"
-          [disabled]="true"
+          (valueChange)="cbxChange($event)" 
         ></ejs-combobox>
       </div>
       <div class="form-group row">

@@ -5,9 +5,16 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  DataRequest,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { map, Observable, tap } from 'rxjs';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-cash-transfers',
@@ -71,6 +78,9 @@ export class CashTransfersComponent
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
         break;
     }
   }
@@ -189,5 +199,28 @@ export class CashTransfersComponent
   //#endregion
 
   //#region Function
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
   //#endregion
 }

@@ -71,6 +71,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
 
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
+  @ViewChild('itemMoreFunc', { static: true }) itemMoreFunc: TemplateRef<any>;
 
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
@@ -81,6 +82,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private authStore: AuthStore,
+    private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private tmService: CodxTMService
   ) {
@@ -117,29 +119,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   titleAction = '';
 
   onInit(): void {
-    this.columnsGrid = [
-      { headerTemplate: this.itemTaskGroupID, width: 150 },
-      { headerTemplate: this.itemTaskGroupName, width: 200 },
-      { headerTemplate: this.itemTaskGroupName2, width: 200 },
-      { headerTemplate: this.itemNote, width: 200 },
-      { headerTemplate: this.itemProjectControl, width: 140 },
-      { headerTemplate: this.itemLocationControl, width: 140 },
-      { headerTemplate: this.itemPlanControl, width: 180 },
-      { headerTemplate: this.itemUpdateControl, width: 180 },
-      { headerTemplate: this.itemCheckListControl, width: 180 },
-      { headerTemplate: this.itemVerifyControl, width: 180 },
-      { headerTemplate: this.itemApproveControl, width: 180 },
-      { headerTemplate: this.itemMaxHoursControl, width: 140 },
-      { headerTemplate: this.itemEditControl, width: 180 },
-      { headerTemplate: this.itemDueDateControl, width: 180 },
-      { headerTemplate: this.itemAutoCompleted, width: 180 },
-      { headerTemplate: this.itemCompletedControl, width: 180 },
-      { headerTemplate: this.itemExtendControl, width: 180 },
-      { headerTemplate: this.itemConfirmControl, width: 180 },
-      { headerTemplate: this.itemCreatedBy, width: 200 },
-      { headerTemplate: this.itemCreatedOn, width: 100 },
-      { field: '', headerText: '', width: 30 },
-    ];
     this.button = {
       id: 'btnAdd',
     };
@@ -156,6 +135,194 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
         text: 'more 2',
       },
     ];
+  }
+
+  onLoading(e) {
+    let formModel = this.view.formModel;
+    if (formModel) {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnsGrid = [
+            {
+              field: 'taskGroupID',
+              headerText: gv
+                ? gv['TaskGroupID'].headerText || 'TaskGroupID'
+                : 'TaskGroupID',
+              template: this.itemTaskGroupID,
+              width: 150,
+            },
+            {
+              field: 'taskGroupName',
+              headerText: gv
+                ? gv['TaskGroupName'].headerText || 'TaskGroupName'
+                : 'TaskGroupName',
+              template: this.itemTaskGroupName,
+              width: 200,
+            },
+            {
+              field: 'taskGroupName2',
+              headerText: gv
+                ? gv['TaskGroupName2'].headerText || 'TaskGroupName2'
+                : 'TaskGroupName2',
+              template: this.itemTaskGroupName2,
+              width: 200,
+            },
+            {
+              field: 'note',
+              headerText: gv ? gv['Note'].headerText || 'Note' : 'Note',
+              template: this.itemNote,
+              width: 200,
+            },
+            {
+              field: 'projectControl',
+              headerText: gv
+                ? gv['ProjectControl'].headerText || 'ProjectControl'
+                : 'ProjectControl',
+              template: this.itemProjectControl,
+              width: 140,
+            },
+            {
+              field: 'locationControl',
+              headerText: gv
+                ? gv['LocationControl'].headerText || 'LocationControl'
+                : 'LocationControl',
+              template: this.itemLocationControl,
+              width: 140,
+            },
+            {
+              field: 'planControl',
+              headerText: gv
+                ? gv['PlanControl'].headerText || 'PlanControl'
+                : 'PlanControl',
+              template: this.itemPlanControl,
+              width: 180,
+            },
+            {
+              field: 'updateControl',
+              headerText: gv
+                ? gv['UpdateControl'].headerText || 'UpdateControl'
+                : 'UpdateControl',
+              template: this.itemUpdateControl,
+              width: 180,
+            },
+            {
+              field: 'checkListControl',
+              headerText: gv
+                ? gv['CheckListControl'].headerText || 'CheckListControl'
+                : 'CheckListControl',
+              template: this.itemCheckListControl,
+              width: 180,
+            },
+            {
+              field: 'verifyControl',
+              headerText: gv
+                ? gv['VerifyControl'].headerText || 'VerifyControl'
+                : 'VerifyControl',
+              template: this.itemVerifyControl,
+              width: 180,
+            },
+            {
+              field: 'approveControl',
+              headerText: gv
+                ? gv['ApproveControl'].headerText || 'ApproveControl'
+                : 'ApproveControl',
+              template: this.itemApproveControl,
+              width: 180,
+            },
+            {
+              field: 'maxHoursControl',
+              headerText: gv
+                ? gv['MaxHoursControl'].headerText || 'MaxHoursControl'
+                : 'MaxHoursControl',
+              template: this.itemMaxHoursControl,
+              width: 140,
+            },
+            {
+              field: 'editControl',
+              headerText: gv
+                ? gv['EditControl'].headerText || 'EditControl'
+                : 'EditControl',
+              template: this.itemEditControl,
+              width: 180,
+            },
+            {
+              field: 'dueDateControl',
+              headerText: gv
+                ? gv['DueDateControl'].headerText || 'DueDateControl'
+                : 'DueDateControl',
+              template: this.itemDueDateControl,
+              width: 180,
+            },
+            {
+              field: 'autoCompleted',
+              headerText: gv
+                ? gv['AutoCompleted'].headerText || 'AutoCompleted'
+                : 'AutoCompleted',
+              template: this.itemAutoCompleted,
+              width: 180,
+            },
+            {
+              field: 'completedControl',
+              headerText: gv
+                ? gv['CompletedControl'].headerText || 'CompletedControl'
+                : 'CompletedControl',
+              template: this.itemCompletedControl,
+              width: 180,
+            },
+            {
+              field: 'extendControl',
+              headerText: gv
+                ? gv['ExtendControl'].headerText || 'ExtendControl'
+                : 'ExtendControl',
+              template: this.itemExtendControl,
+              width: 180,
+            },
+            {
+              field: 'confirmControl',
+              headerText: gv
+                ? gv['ConfirmControl'].headerText || 'ConfirmControl'
+                : 'ConfirmControl',
+              template: this.itemConfirmControl,
+              width: 180,
+            },
+            {
+              field: 'createdBy',
+              headerText: gv
+                ? gv['CreatedBy'].headerText || 'CreatedBy'
+                : 'CreatedBy',
+              template: this.itemCreatedBy,
+              width: 200,
+            },
+            {
+              field: 'createdOn',
+              headerText: gv
+                ? gv['CreatedOn'].headerText || 'CreatedOn'
+                : 'CreatedOn',
+              template: this.itemCreatedOn,
+              width: 100,
+            },
+            {
+              field: '',
+              headerText: '',
+              template: this.itemMoreFunc,
+              width: 30,
+            },
+          ];
+        });
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnsGrid,
+            hideMoreFunc: true,
+          },
+        },
+      ];
+      this.detectorRef.detectChanges();
+    }
   }
 
   clickMF(e: any, data?: any) {
@@ -183,17 +350,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
     }
   }
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-          template: this.grid,
-        },
-      },
-    ];
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
     this.view.dataService.methodDelete = 'DeleteTaskGroupAsync';
@@ -275,7 +431,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
           this.view.dataService.update(e.event).subscribe();
           this.detectorRef.detectChanges();
         }
-
       });
     });
   }
