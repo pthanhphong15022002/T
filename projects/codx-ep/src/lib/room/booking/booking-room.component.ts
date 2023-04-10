@@ -183,7 +183,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (grv) {
             this.grView = Util.camelizekeyObj(grv);
             this.columnGrids = [
-              
               {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
@@ -264,9 +263,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 model: {
                   resources: this.columnGrids,
                   template2: this.mfButton,
-                  hideMoreFunc:true
+                  hideMoreFunc: true,
                 },
-              }
+              },
             ];
             if (this.queryParams?.predicate && this.queryParams?.dataValue) {
               this.codxEpService
@@ -280,13 +279,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             this.detectorRef.detectChanges();
           }
         });
-        
-        this.detectorRef.detectChanges();
+
+      this.detectorRef.detectChanges();
     }
   }
-  ngAfterViewInit(): void {
-        
-  }
+  ngAfterViewInit(): void {}
 
   navigate(date) {
     if (!this.navigated) {
@@ -453,9 +450,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
-      if(event?.data.approveStatus == '1'){
+      if (event?.data.approveStatus == '1') {
         this.edit(event.data);
-
       }
     }
   }
@@ -777,7 +773,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         meetingStartDate,
         meetingStartTime
       )
-      .subscribe((url) => {
+      .then((url) => {
         if (url) {
           window.open(url, '_blank');
         }
