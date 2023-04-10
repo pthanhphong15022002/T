@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
 import { CodxEsService } from '../../codx-es.service';
 
-export class defaultRecource { }
+export class defaultRecource {}
 @Component({
   selector: 'signature',
   templateUrl: './signature.component.html',
@@ -139,7 +139,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'fullName',
-              controlName:'lblFullName',
+              controlName: 'lblFullName',
               fieldName: 'FullName',
               headerText: gv
                 ? gv['FullName'].headerText || 'FullName'
@@ -217,7 +217,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               active: true,
               model: {
                 resources: this.columnsGrid,
-                hideMoreFunc:true,
+                hideMoreFunc: true,
               },
             },
           ];
@@ -273,7 +273,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   edit(evt?) {
     if (evt) {
       this.viewBase.dataService.dataSelected = evt?.data;
-      debugger
+      debugger;
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
@@ -388,7 +388,5 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeDataMF(evt){
-
-  }
+  changeDataMF(evt) {}
 }

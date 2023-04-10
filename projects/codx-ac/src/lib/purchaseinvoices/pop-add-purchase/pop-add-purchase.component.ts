@@ -28,7 +28,6 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { resolve } from 'dns';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';

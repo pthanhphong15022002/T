@@ -80,9 +80,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // add mesage
     this.signalRSV.chat.subscribe((res: any) => {
-      if (res.data.groupID){
+      if (res){
+        let groupID = res.data.groupID
         let data = this.codxListView.dataService.data;
-        let _index = data.findIndex(e => e['groupID'] === res.groupID);
+        let _index = data.findIndex(e => e['groupID'] === groupID);
         if(_index > -1){
           let group = data[_index]; 
           if(res.messageType !== "3"){
