@@ -54,7 +54,7 @@
           <td class="text-center" >
             <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
             [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-            [value]="child?.progress ">
+            [value]="child?.progress "  [disabled]="true">
           </codx-inplace>
           </td>
           
@@ -62,7 +62,7 @@
           <td class="text-center " >
             <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
             [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-            [value]="child?.weight* child?.progress ">
+            [value]="child?.weight* child?.progress"  [disabled]="true">
           </codx-inplace>
           </td>         
 
@@ -75,15 +75,14 @@
           <td  class="text-center">
             <codx-label default="Tổng cộng" name="lblTotal" class="fs-5"></codx-label>
           </td>
-          <td class="d-flex flex-row justify-content-center align-items-center">
-            <span class="fs-3 fw-bold "  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+          <td class="">
+            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
           </td>
           <td class="text-center">
           </td>
-          <td class="d-flex flex-row justify-content-center align-items-center">
-            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress!=0"
+          <td class="">
+            <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" *ngIf="totalProgress!=0"
               [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-            <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress==0" [innerHTML]="totalProgress"></span>
           </td>
         </tr>
       </tbody>
