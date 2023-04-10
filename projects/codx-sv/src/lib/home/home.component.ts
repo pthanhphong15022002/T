@@ -40,6 +40,9 @@ export class HomeComponent extends UIComponent implements OnInit {
 
   constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);
+  }
+
+  onInit(): void {
     this.router.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
@@ -47,8 +50,6 @@ export class HomeComponent extends UIComponent implements OnInit {
       if (res) this.functionList = res;
     });
   }
-
-  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [

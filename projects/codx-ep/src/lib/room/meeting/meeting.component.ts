@@ -69,6 +69,26 @@ export class MeetingComponent extends UIComponent {
     });
   }
 
+  // createMeeting() {
+  //   if (this.meetingUrl) {
+  //     return this.meetingUrl;
+  //   }
+  //   this.codxEpService
+  //     .createMeeting(
+  //       this.meetingUrl,
+  //       this.meetingTitle,
+  //       this.meetingDescription,
+  //       this.meetingStartDate,
+  //       this.meetingStartTime,
+  //       this.meetingDuration,
+  //       this.meetingPassword
+  //     )
+  //     .subscribe((url) => {
+  //       this.meetingUrl = url;
+  //       this.detectorRef.detectChanges();
+  //       return url;
+  //     });
+  // }
   createMeeting() {
     if (this.meetingUrl) {
       return this.meetingUrl;
@@ -83,28 +103,26 @@ export class MeetingComponent extends UIComponent {
         this.meetingDuration,
         this.meetingPassword
       )
-      .subscribe((url) => {
+      .then((url) => {
         this.meetingUrl = url;
         this.detectorRef.detectChanges();
         return url;
       });
   }
-
   changeHost(imgUrl) {
     this.curHost = imgUrl;
   }
-  urlChange(evt:any){
-    if(evt && evt?.data !=null){
-      this.meetingUrl= evt?.data;
+  urlChange(evt: any) {
+    if (evt && evt?.data != null) {
+      this.meetingUrl = evt?.data;
       this.detectorRef.detectChanges();
     }
   }
   closeDialog(isSave: boolean) {
     if (isSave) {
-      this.data[0].onlineUrl = this.meetingUrl;      
+      this.data[0].onlineUrl = this.meetingUrl;
       this.dialog.close(this.meetingUrl);
-    }
-    else{         
+    } else {
       this.dialog.close();
     }
   }
