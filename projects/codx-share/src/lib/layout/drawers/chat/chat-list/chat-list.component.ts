@@ -81,12 +81,12 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     // add mesage
     this.signalRSV.chat.subscribe((res: any) => {
       if (res){
-        let groupID = res.data.groupID
+        let mssg = res.data;
         let data = this.codxListView.dataService.data;
-        let _index = data.findIndex(e => e['groupID'] === groupID);
-        if(_index > -1){
+        let _index = data.findIndex(e => e['groupID'] === mssg.groupID);
+        if(_index != -1){
           let group = data[_index]; 
-          if(res.messageType !== "3"){
+          if(mssg.messageType && mssg.messageType !== "3"){
             group.message = res.message;
             group.modifiedOn = res.modifiedOn;
             group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);

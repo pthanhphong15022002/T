@@ -139,6 +139,18 @@ export class InstanceDetailComponent implements OnInit {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
+    this.cache.functionList("DPT040102").subscribe((res) => {
+      if(res){
+        let formModel = new FormModel;
+        formModel.formName = res?.formName;
+        formModel.gridViewName = res?.gridViewName;
+        formModel.entityName = res?.entityName;
+        formModel.funcID = "DPT040102";
+        this.frmModelInstancesTask = formModel;
+        console.log(this.frmModelInstancesTask);
+        
+      }            
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -147,17 +159,6 @@ export class InstanceDetailComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-    this.frmModelInstancesTask = await this.getFormModel("DPT040102");
-  }
-
-  async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = new FormModel;
-    formModel.formName = f?.formName;
-    formModel.gridViewName = f?.gridViewName;
-    formModel.entityName = f?.entityName;
-    formModel.funcID = functionID;
-    return formModel;
   }
 
   ngAfterViewInit(): void {
