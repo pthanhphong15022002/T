@@ -224,6 +224,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     delete: true,
   };
   //data test Thao
+  isChange = false
   formModelField: FormModel;
   fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
@@ -276,7 +277,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.titleAction = dt.data.titleAction;
     this.lstGroup = dt.data?.lstGroup;
 
-    this.formModelField = dialog.formModel;
+    this.formModelField = JSON.parse(JSON.stringify(dialog.formModel));
     this.formModelField.formName = 'DPStepsFields';
     this.formModelField.gridViewName = 'grvDPStepsFields';
     this.formModelField.entityName = 'DP_Steps_Fields';
@@ -553,6 +554,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   valueChange(e) {
+    if(this.process[e.field] != e.data && !this.isChange) this.isChange=true
     this.process[e.field] = e.data;
     if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
@@ -589,16 +591,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // if (x?.event?.status == 'Y') {
     //       this.dialog.close();
     // } else return;
-    this.notiService.alertCode('DP013').subscribe((e) => {
-      if (e?.event?.status == 'Y') {
-        if (this.listFileTask?.length > 0) {
-          this.dpService
-            .deleteFileTask([this.listFileTask])
-            .subscribe((rec) => {});
-        }
-        this.dialog.close();
-      } else return;
-    });
+    if(this.isChange){
+      this.notiService.alertCode('DP013').subscribe((e) => {
+        if (e?.event?.status == 'Y') {
+          if (this.listFileTask?.length > 0) {
+            this.dpService
+              .deleteFileTask([this.listFileTask])
+              .subscribe((rec) => {});
+          }
+          this.dialog.close();
+        } else return;
+      });
+    }else this.dialog.close();
+    
   }
 
   //#region Change Tab
