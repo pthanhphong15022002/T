@@ -224,6 +224,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     delete: true,
   };
   //data test Thao
+  isChange = false;
   formModelField: FormModel;
   fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
@@ -276,7 +277,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.titleAction = dt.data.titleAction;
     this.lstGroup = dt.data?.lstGroup;
 
-    this.formModelField = dialog.formModel;
+    this.formModelField = JSON.parse(JSON.stringify(dialog.formModel));
     this.formModelField.formName = 'DPStepsFields';
     this.formModelField.gridViewName = 'grvDPStepsFields';
     this.formModelField.entityName = 'DP_Steps_Fields';
@@ -553,6 +554,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   valueChange(e) {
+    if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
     this.process[e.field] = e.data;
     if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
@@ -589,16 +591,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // if (x?.event?.status == 'Y') {
     //       this.dialog.close();
     // } else return;
-    this.notiService.alertCode('DP013').subscribe((e) => {
-      if (e?.event?.status == 'Y') {
-        if (this.listFileTask?.length > 0) {
-          this.dpService
-            .deleteFileTask([this.listFileTask])
-            .subscribe((rec) => {});
-        }
-        this.dialog.close();
-      } else return;
-    });
+    if (!this.isChange && this.action == 'edit') {
+      this.isChange =
+        this.listStepAdd?.length > 0 ||
+        this.listStepEdit?.length > 0 ||
+        this.listStepDelete?.length > 0 ||
+        this.listStepDrop?.length > 0;
+    }
+    if (this.isChange) {
+      this.notiService.alertCode('DP013').subscribe((e) => {
+        if (e?.event?.status == 'Y') {
+          if (this.listFileTask?.length > 0) {
+            this.dpService
+              .deleteFileTask([this.listFileTask])
+              .subscribe((rec) => {});
+          }
+          this.dialog.close();
+        } else return;
+      });
+    } else this.dialog.close();
   }
 
   //#region Change Tab
@@ -1361,6 +1372,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupAutoNum.closed.subscribe((res) => {
       if (res?.event) {
+        if (
+          this.process.instanceNoSetting != res?.event?.autoNoCode &&
+          !this.isChange
+        )
+          this.isChange = true;
         this.process.instanceNoSetting = res?.event?.autoNoCode;
         this.setViewAutoNumber(res?.event);
         let input: any;
@@ -1511,21 +1527,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //add trường tùy chỉnh
 
-  clickMFFields(e, data,enabled) {
+  clickMFFields(e, data, enabled) {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteCustomField(data);
         break;
       case 'SYS03':
-        this.editCustomField(data, e.text,enabled);
+        this.editCustomField(data, e.text, enabled);
         break;
       case 'SYS04':
-        this.copyCustomField(data, e.text,enabled);
+        this.copyCustomField(data, e.text, enabled);
         break;
     }
   }
 
-  addCustomField(stepID, processID,enabled) {
+  addCustomField(stepID, processID, enabled) {
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
@@ -1541,7 +1557,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // formModel.formName = 'DPStepsFields';
           // formModel.gridViewName = 'grvDPStepsFields';
           // formModel.entityName = 'DP_Steps_Fields';
-           // formModel.funcID = 'DPT0301';
+          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1555,7 +1571,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
-            enabled : enabled
+            enabled: enabled,
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -1581,7 +1597,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   }
                 }
               });
-
+              if (!this.isChange) this.isChange = true;
               this.changeDetectorRef.detectChanges();
             }
           });
@@ -1589,7 +1605,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  copyCustomField(field, textTitle,enabled) {
+  copyCustomField(field, textTitle, enabled) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
@@ -1601,7 +1617,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // formModel.gridViewName = 'grvDPStepsFields';
           // formModel.entityName = 'DP_Steps_Fields';
           // formModel.funcID = 'DPT0301';
-          option.FormModel =  this.formModelField ;
+          option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
           let object = {
@@ -1614,7 +1630,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
-            enabled: enabled
+            enabled: enabled,
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -1644,7 +1660,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  editCustomField(field, textTitle,enabled) {
+  editCustomField(field, textTitle, enabled) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
@@ -1656,7 +1672,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // formModel.gridViewName = 'grvDPStepsFields';
           // formModel.entityName = 'DP_Steps_Fields';
           // formModel.funcID = 'DPT0301';
-          option.FormModel =  this.formModelField ;
+          option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
           let object = {
@@ -1669,7 +1685,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
-            enabled :enabled
+            enabled: enabled,
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -1727,6 +1743,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             }
           }
         });
+        // if(!this.isChange) this.isChange=true ;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1751,6 +1768,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
     });
+
+    if (this.action == 'edit') {
+      let check = this.listStepEdit.some((id) => id == this.fieldCrr?.stepID);
+      if (!check) {
+        this.listStepEdit.push(this.fieldCrr?.stepID);
+      }
+    }
   }
   popoverSelectView(p, data) {
     this.stepOfFields = data;
@@ -1797,6 +1821,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
     var stepIDPrevious = event.previousContainer.id;
+    if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
+      stepIDContain =stepIDContain.substring(2) ;
+    }
+
+    if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
+      stepIDPrevious = stepIDPrevious.substring(2);
+    }
     // var data = event.item?.data;
     if (this.action == 'edit') {
       let check = this.listStepEdit.some((id) => id == stepIDContain);
@@ -1810,7 +1841,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepEdit.push(stepIDPrevious);
       }
     }
+
     event.item.data.stepID = stepIDContain;
+
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,

@@ -63,6 +63,7 @@ export class DecentralizedGroupComponent extends UIComponent {
         break;
     }
   }
+
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       if (res) {
@@ -70,11 +71,14 @@ export class DecentralizedGroupComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.Width = '850px';
-        let action = 'add';
         let title = this.moreFuncName + ' ' + this.func.description;
         let dialogAddGroup = this.callfc.openSide(
           AddDecentralGroupMemComponent,
-          [title, action],
+          {
+            title: title,
+            formType: 'add',
+            groupID: res.groupID,
+          },
           option
         );
         dialogAddGroup.closed.subscribe((e) => {
@@ -83,6 +87,7 @@ export class DecentralizedGroupComponent extends UIComponent {
       }
     });
   }
+
   edit(data, text) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.edit(data).subscribe((res) => {

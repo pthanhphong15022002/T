@@ -344,4 +344,16 @@ export class CodxAdService {
       [userID, tenant, mailType]
     );
   }
+
+  //#region UserGroupBusiness
+  addUserGroupAsync(userGroupModel) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'AddAsync',
+      [userGroupModel]
+    );
+  }
+  //#endregion
 }

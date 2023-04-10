@@ -184,6 +184,7 @@ export class OkrTargetsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.isCollapsed = false;
     this.createBase();
     this.getCacheData();
     this.getData();
@@ -493,6 +494,26 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
+  //Lọc OKR
+  filterOKR(okrType:string, listOKR:any[])
+  {
+    let listOKRFilter=[];
+    if(listOKR!=null && listOKR.length>0){
+      let result = listOKR.filter((item) => item.okrType == okrType);
+      if(result!=null && result.length>0){
+        for (let okr of result) {
+          listOKRFilter.push({
+            recID:okr?.recID,
+            okrName:okr?.okrName,
+            meno: okr?.meno,
+          })
+        }
+        return listOKRFilter;
+      }
+    }
+    return null;
+  }
+
   // Dataservice mod
   renderOB(ob: any, isAdd: boolean) {
     if (ob != null) {
@@ -532,8 +553,7 @@ export class OkrTargetsComponent implements OnInit {
                 return;
               }
             }
-            // đổi mục tiêu cho kr
-            
+            // đổi mục tiêu cho kr            
           }
         }
       }
@@ -814,6 +834,7 @@ export class OkrTargetsComponent implements OnInit {
   }
   //KeyResults && SubKeyResult
   addKR(popupTitle: any, isSubKR = false) {
+    let listParent = this.filterOKR(this.obType, this.dataOKR);
     let option = new SidebarModel();
     option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;    
     let baseModel= {...this.groupModel};
@@ -821,7 +842,7 @@ export class OkrTargetsComponent implements OnInit {
     baseModel.skrModel.owner=this.defaultOwner;
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel],
+      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel,this.dataOKRPlans],
       option
     );
     dialogKR.closed.subscribe((res) => {
