@@ -1,5 +1,4 @@
 import { VoucherComponent } from './../../popup/voucher/voucher.component';
-import { waitForAsync } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,18 +6,12 @@ import {
   Injector,
   OnInit,
   Optional,
-  PipeTransform,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  EditSettingsModel,
-  GridComponent,
-} from '@syncfusion/ej2-angular-grids';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
-  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
@@ -38,9 +31,6 @@ import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { Transactiontext } from '../../models/transactiontext.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
 import { JournalService } from '../../journal-names/journal-names.service';
 @Component({
@@ -68,7 +58,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   validate: any = 0;
   parentID: string;
   moreFunction: any;
-  modegrid: any = 1;
+  modegrid: any = 0;
   columnGrids = [];
   keymodel: any;
   cashpaymentline: Array<CashPaymentLine> = [];
@@ -105,6 +95,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   searchText: any;
   key: any;
   reverse: boolean = false;
+  columnChange: string;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -216,13 +207,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.cashpayment.journalNo;
     options.pageLoading = false;
-    this.acService
-      .loadDataAsync('AC', options)
-      .subscribe((res) => {
-        this.journal = res[0]?.dataValue
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-      });
+    });
   }
 
   ngAfterViewInit() {
@@ -237,44 +226,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   close() {
     this.dialog?.close();
   }
-  searchName(e) {
-    var filter, table, tr, td, i, txtValue, mySearch, myBtn, myPag;
-    filter = e.toUpperCase();
-    table = document.getElementById('myTable');
-    tr = table.getElementsByTagName('tr');
-    if (String(e).match(/^ *$/) !== null) {
-      myBtn = document.getElementById('myBtn');
-      myBtn.style.display = 'block';
-      mySearch = document.getElementById('mySearch');
-      mySearch.style.display = 'none';
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName('td')[2];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          tr[i].style.display = '';
-        }
-      }
-    } else {
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName('td')[2];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          myBtn = document.getElementById('myBtn');
-          myBtn.style.display = 'none';
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = '';
-            mySearch = document.getElementById('mySearch');
-            mySearch.style.display = 'none';
-          } else {
-            tr[i].style.display = 'none';
-            mySearch = document.getElementById('mySearch');
-            mySearch.style.display = 'block';
-          }
-        }
-      }
-    }
-  }
-
   loadTotal() {
     var totals = 0;
     this.cashpaymentline.forEach((element) => {
@@ -286,8 +237,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
   }
 
-  created(e) {
-    this.changeType();
+  created(e: any, ele: TabComponent) {
+    this.changeType(null, ele);
   }
 
   select(e) {
@@ -310,20 +261,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  changeType(e?: any) {
+  changeType(e?: any, ele?: TabComponent) {
     let i;
     if (e) i = e.data;
     if (!e && this.cashpayment.voucherType) i = this.cashpayment.voucherType;
-
+    if (!ele) ele = this.tabObj;
     switch (i) {
       case '1':
-        this.tabObj.hideTab(0, false);
-        this.tabObj.hideTab(1, true);
+        ele.hideTab(0, false);
+        ele.hideTab(1, true);
         this.cashpaymentline = [];
         break;
       default:
-        this.tabObj.hideTab(0, true);
-        this.tabObj.hideTab(1, false);
+        ele.hideTab(0, true);
+        ele.hideTab(1, false);
         this.voucherLineRefs = [];
         break;
     }
@@ -331,6 +282,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     let field = e.field.toLowerCase();
+    if (
+      field == 'currencyid' &&
+      this.columnChange.toLowerCase() == 'cashbookid'
+    ) {
+      this.columnChange = '';
+      return;
+    }
     if (e.data) {
       let sArray = [
         'currencyid',
@@ -354,12 +312,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ])
           .subscribe((res) => {
             if (res) {
+              this.columnChange = res.updateColumns;
               this.form.formGroup.patchValue(res);
             }
           });
       }
 
-      if (field === 'exchangerate')
+      if (field === 'exchangerate' && this.cashpaymentline.length)
         this.api
           .exec<any>(
             'AC',
@@ -719,6 +678,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashpayment,
+        "AC",
         'AC_CashPayments',
         this.form,
         this.formType === 'edit',

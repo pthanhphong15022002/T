@@ -1,28 +1,49 @@
 <codx-views #view idField="recID" [views]="views" [button]="button" entityName="PS_PurchaseInvoices"
-  (buttonClick)="toolBarClick($event)">
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
 </codx-views>
 <ng-template #templateMore let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+    type="hover"></codx-mfunc>
 </ng-template>
 <ng-template #itemTemplate let-data>
-  <codx-temp-full [desc]="data.objectID" [desc2]="data.memo" [subTitleTmp]="subTitleTmp"
+  <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
     cardCss="card-template border-bottom p-3 list-task" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
     [dataItem]="data" [footer]="footerList" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeDataMF()" (click)="clickChange(data)">
-  </codx-temp-full>
+    (changeDataMF)="changeDataMF()" (click)="clickChange(data)" (clickMF)="clickMF($event, data)">
+  </codx-temp-full> 
 </ng-template>
 <ng-template #templateDetail>
   <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
-    [dataItem]="itemSelected" [footer]="footer">
+    [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)">
   </codx-detail-tmp>
+</ng-template>
+<ng-template #titleTmp let-data>
+  <div class="d-flex align-items-center">
+    <span class="fs-5 fw-bold text-uppercase">{{data.voucherNo}}</span>
+  </div>
+  <div>
+    <span class="fs-5 fw-bold text-uppercase">{{data.totalAmt.toLocaleString('it-IT',{style: 'currency',currency:
+      'VND'})}}</span>
+  </div>
+</ng-template>
+<ng-template #descTmp let-data>
+  <ng-container *ngIf="oData">
+    <ng-container *ngFor="let item of oData">
+      <span class="text-gray-600" *ngIf="item.objectID == data.objectID">
+        {{item.objectName}}
+      </span>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #desc2Tmp let-data>
+  <span class="text-gray-600">{{data.memo}}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
     <div class="w-100">
       <div class="d-flex align-items-center justify-content-between pt-2">
         <div class="d-flex justify-content-start align-items-end me-2">
-          <span class="fw-bold line-clamp line-clamp-1 fs-4">
+          <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase">
             {{itemSelected.voucherNo}}
           </span>
         </div>
@@ -31,7 +52,7 @@
     <div class="w-100">
       <div class="d-flex align-items-center justify-content-between pt-2">
         <div class="d-flex justify-content-start align-items-end me-2">
-          <span class="fw-bold line-clamp line-clamp-1 fs-4">
+          <span class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase">
             {{objectname}}
           </span>
         </div>
@@ -130,16 +151,10 @@
   </ng-container>
 </ng-template>
 <ng-template #footer>
-
-</ng-template>
-<ng-template #subTitleTmp let-data>
-  <div class="d-flex align-items-center">
-    <span class="fs-5 fw-bold text-uppercase">{{data.voucherNo}}</span>
-  </div>
-  <div>
-    <span class="fs-5 fw-bold text-uppercase">{{data.totalAmt.toLocaleString('it-IT',{style: 'currency',currency:
-      'VND'})}}</span>
-  </div>
+  <ng-container *ngIf="itemSelected">
+  <codx-tabs [entityName]="view.formModel.entityName" [formModel]="view.formModel" [objectID]="itemSelected.recID"
+  [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+</ng-container>
 </ng-template>
 <ng-template #footerList let-data>
   <div class="w-100">
@@ -167,70 +182,59 @@
   </div>
 </ng-template>
 <ng-template #tabBasic>
-  <div class="table-responsive mt-5"
-    style="height: 450px;border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
-    <table id="myTable" class="table table-hover ">
-      <thead style="position: sticky;top: 0;background-color: var(--primary-active);
+  <ng-container *ngIf="purchaseInvoicesLines">
+    <div class="table-responsive mt-5"
+      style="height: 450px;border-radius: 5px;">
+      <table id="myTable" class="table table-hover ">
+        <thead style="position: sticky;top: 0;background-color: var(--primary-active);
       color: white;">
-        <tr>
-          <!-- <th ></th> -->
-          <th style="width: 100px;position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <span class="fs-5 fw-bold">STT</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="icon-i-box-seam icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Mặt hàng</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="bi bi-graph-up-arrow icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Số lượng</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="bi bi-coin icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Đơn giá</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="bi bi-cash-coin icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Thành tiền</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="icon-analytics icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Thuế suất</span>
-            </div>
-          </th>
-          <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
-            <div class="d-flex">
-              <i style="color: white;" class="icon-i-cash icon-18 me-2"></i>
-              <span class="fs-5 fw-bold">Tiền thuế</span>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody style="border-bottom: 1px solid #dee2e6;">
-        <!-- <tr>
-          <td style="width: 30px;">
-            <div class="d-flex align-items-center justify-content-start">
-              <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-              >
-                <i class="icon-edit_square icon-16"></i>
-              </span>
-              <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-              >
-                <i class="icon-delete icon-16"></i>
-              </span>
-            </div>
-          </td>
+          <tr>
+            <!-- <th ></th> -->
+            <th style="width: 100px;position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <span class="fs-5 fw-bold">STT</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="icon-i-box-seam icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Mặt hàng</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="bi bi-graph-up-arrow icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Số lượng</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="bi bi-coin icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Đơn giá</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="bi bi-cash-coin icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Thành tiền</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="icon-analytics icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Thuế suất</span>
+              </div>
+            </th>
+            <th style="width: 200px;white-space: nowrap; position: sticky;top: 0;padding: 10px 10px;">
+              <div class="d-flex">
+                <i style="color: white;" class="icon-i-cash icon-18 me-2"></i>
+                <span class="fs-5 fw-bold">Tiền thuế</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody style="border-bottom: 1px solid #dee2e6;" *ngFor="let item of purchaseInvoicesLines | slice: (page-1) * pageSize : page * pageSize ">
+          <tr>
           <td class="fs-5" style="padding: 10px 10px">
             <span>
               <div style="
@@ -262,94 +266,82 @@
 
               <span *ngIf="item.idiM2 != null && item.idiM2 != ''" class="text-gray-600 fs-5">
                 {{gridViewLines['IDIM2'].headerText}}:<span
-                  class="fs-5 fw-bold">&nbsp;{{item.idiM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  class="fs-5 fw-bold">&nbsp;{{item.idiM2}}</span>
               </span>
-
+            </div>
+            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
               <span *ngIf="item.idiM3 != null && item.idiM3 != ''" class="text-gray-600 fs-5">
                 {{gridViewLines['IDIM3'].headerText}}:<span
                   class="fs-5 fw-bold">&nbsp;{{item.idiM3}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
               </span>
 
               <span *ngIf="item.idiM4 != null && item.idiM4 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['IDIM4'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM4}}</span>
+                {{gridViewLines['IDIM4'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM4}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
               </span>
-            </div>
 
-            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
               <span *ngIf="item.idiM5 != null && item.idiM5 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['IDIM5'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM5}}</span>
-              </span>
-
-              <span *ngIf="item.idiM6 != null && item.idiM6 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['IDIM6'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM6}}</span>
+                {{gridViewLines['IDIM5'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM5}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
               </span>
 
               <span *ngIf="item.idiM7 != null && item.idiM7 != ''" class="text-gray-600 fs-5">
                 {{gridViewLines['IDIM7'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM7}}</span>
               </span>
+            </div>
+            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
+              <span class="badge badge-pill badge-dark me-2">
+                <span class="fs-5">{{item.lineType | vll : 'AC089' : 'text' | async}}</span>
+              </span>
+              
+              <span *ngIf="item.idiM6 != null && item.idiM6 != ''" class="text-gray-600 fs-5">
+                {{gridViewLines['IDIM6'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM6}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+              </span>
 
               <span *ngIf="item.idiM8 != null && item.idiM8 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['IDIM8'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM8}}</span>
+                {{gridViewLines['IDIM8'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM8}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
               </span>
 
               <span *ngIf="item.idiM9 != null && item.idiM9 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['IDIM9'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM6}}</span>
+                {{gridViewLines['IDIM9'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.idiM9}}</span>
               </span>
             </div>
           </td>
           <td style="padding: 10px 10px">
-            <div style="white-space: nowrap;"
-              class="d-flex align-items-center justify-content-start mt-1">
-              <span class="text-gray-600 fs-5">Tiền hàng:</span>
-              <span class="fs-5 fw-bold">&nbsp;{{item.quantity}} {{item.umid}} x
-                {{item.unitPrice.toLocaleString('it-IT')}} = {{item.netAmt.toLocaleString('it-IT')}}</span>
-            </div>
+            <span class="fs-4 fw-bold">{{item.quantity}}</span>
           </td>
           <td style="padding: 10px 10px">
-            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-              <span class="text-gray-600 fs-5">Thuế nhập khẩu:</span>
-            </div>
-            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-              <span class="text-gray-600 fs-5">VAT:</span>
-              <ng-container *ngFor="let vat of lsVatCode">
-                <span *ngIf="vat.vatid == item.vatid" class="fs-5 fw-bold">
-                  &nbsp;{{vat.taxRate}}% x {{item.netAmt.toLocaleString('it-IT')}} =
-                  {{item.vatAmt.toLocaleString('it-IT')}}
-                </span>
-              </ng-container>
-            </div>
+            <span class="fs-4 fw-bold">{{item.unitPrice.toLocaleString('it-IT')}}</span>
           </td>
           <td style="padding: 10px 10px">
-            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-              <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['DIM2'].headerText}}:<span
-                  class="fs-5 fw-bold">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-              </span>
-              <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['DIM3'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.diM3}}</span>
-              </span>
-            </div>
-            <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-              <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['DIM1'].headerText}}:<span
-                  class="fs-5 fw-bold">&nbsp;{{item.diM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-              </span>
-              <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-600 fs-5">
-                {{gridViewLines['ProjectID'].headerText}}:<span class="fs-5 fw-bold">&nbsp;{{item.projectID}}</span>
-              </span>
-            </div>
+            <span class="fs-4 fw-bold">{{item.netAmt.toLocaleString('it-IT')}}</span>
           </td>
-        </tr> -->
-      </tbody>
-    </table>
-    <div class="container w-90 h-90">
-      <div class="list-empty card card-flush h-100">
-        <div class="d-flex flex-column flex-center justify-content-center">
-          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
-          <div class="fs-5 text-dark fw-bold mt-2 text-center">
-            {{ "SYS011" | mssg | async }}
+          <td style="padding: 10px 10px">
+            <ng-container *ngFor="let vat of lsVatCode">
+              <span *ngIf="vat.vatid == item.vatid" class="fs-5 fw-bold"></span>
+            </ng-container>
+          </td>
+          <td style="padding: 10px 10px">
+            <span class="fs-4 fw-bold">{{item.vatAmt.toLocaleString('it-IT')}}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
+        <div class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+            <div class="fs-5 text-dark fw-bold mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </ng-container>
+  <div *ngIf="purchaseInvoicesLines.length > 0" class="container w-90 h-90">
+    <div class="list-empty card card-flush h-100 mt-3">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
+          [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
       </div>
     </div>
   </div>

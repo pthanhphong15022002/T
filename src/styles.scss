@@ -2257,6 +2257,39 @@ codx-calendar {
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
+
+.layout-hr{
+  #gridViewV2.e-grid .e-rowcell {
+    padding: 8px 15px;
+  }
+}
+ejs-numerictextbox{
+.e-input-group.e-control-wrapper{
+  height: auto;
+}
+}
+ejs-datepicker{
+  .e-input-group.e-control-wrapper{
+    height: auto;
+  }
+}
+
+
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
+// }
+//
+
+// menu left 
+
+// .aside.aside-extended .aside-secondary{
+
+//     left: -360px!important;
+// }
+// .aside.aside-extended .aside-primary:hover + .aside-secondary,
+// .aside.aside-extended .aside-secondary:hover{
+//   overflow: visible!important;
+//   position: absolute!important;
+//     left: 60px!important;
+//     transition: all .2s;
 // }

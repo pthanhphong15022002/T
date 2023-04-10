@@ -139,6 +139,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   titleRadioNo: string = '';
   noteSuccess: string = '';
   noteFail: string = '';
+  noteResult: string = '';
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -223,6 +224,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     delete: true,
   };
   //data test Thao
+  formModelField: FormModel;
   fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
   isHover = '';
@@ -273,6 +275,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
     this.lstGroup = dt.data?.lstGroup;
+
+    this.formModelField = dialog.formModel;
+    this.formModelField.formName = 'DPStepsFields';
+    this.formModelField.gridViewName = 'grvDPStepsFields';
+    this.formModelField.entityName = 'DP_Steps_Fields';
+    this.formModelField.funcID = 'DPT0301';
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
@@ -1166,7 +1174,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (x.event.status == 'Y') {
         var i = -1;
         var tmp = this.process.permissions[index];
-        var checkDelete = this.lstTmp?.some((x) => x.objectID == tmp.objectID && x.roleType == 'F');
+        var checkDelete = this.lstTmp?.some(
+          (x) => x.objectID == tmp.objectID && x.roleType == 'F'
+        );
 
         i = this.lstParticipants.findIndex(
           (x) => x.objectID === this.process.permissions[index].objectID
@@ -1501,21 +1511,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //add trường tùy chỉnh
 
-  clickMFFields(e, data) {
+  clickMFFields(e, data,enabled) {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteCustomField(data);
         break;
       case 'SYS03':
-        this.editCustomField(data, e.text);
+        this.editCustomField(data, e.text,enabled);
         break;
       case 'SYS04':
-        this.copyCustomField(data, e.text);
+        this.copyCustomField(data, e.text,enabled);
         break;
     }
   }
 
-  addCustomField(stepID, processID) {
+  addCustomField(stepID, processID,enabled) {
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
@@ -1527,11 +1537,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.rank = 5;
 
           let option = new SidebarModel();
-          let formModel = this.dialog?.formModel;
-          formModel.formName = 'DPStepsFields';
-          formModel.gridViewName = 'grvDPStepsFields';
-          formModel.entityName = 'DP_Steps_Fields';
-          option.FormModel = formModel;
+          // let formModel = this.dialog?.formModel;
+          // formModel.formName = 'DPStepsFields';
+          // formModel.gridViewName = 'grvDPStepsFields';
+          // formModel.entityName = 'DP_Steps_Fields';
+           // formModel.funcID = 'DPT0301';
+          option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
           let object = {
@@ -1544,6 +1555,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
+            enabled : enabled
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -1577,19 +1589,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  copyCustomField(field, textTitle) {
+  copyCustomField(field, textTitle,enabled) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          let formModel = this.dialog?.formModel;
-          formModel.formName = 'DPStepsFields';
-          formModel.gridViewName = 'grvDPStepsFields';
-          formModel.entityName = 'DP_Steps_Fields';
-          formModel.funcID = 'DPT0301';
-          option.FormModel = formModel;
+          // let formModel = this.dialog?.formModel;
+          // formModel.formName = 'DPStepsFields';
+          // formModel.gridViewName = 'grvDPStepsFields';
+          // formModel.entityName = 'DP_Steps_Fields';
+          // formModel.funcID = 'DPT0301';
+          option.FormModel =  this.formModelField ;
           option.Width = '550px';
           option.zIndex = 1010;
           let object = {
@@ -1602,6 +1614,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
+            enabled: enabled
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -1631,19 +1644,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  editCustomField(field, textTitle) {
+  editCustomField(field, textTitle,enabled) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          let formModel = this.dialog?.formModel;
-          formModel.formName = 'DPStepsFields';
-          formModel.gridViewName = 'grvDPStepsFields';
-          formModel.entityName = 'DP_Steps_Fields';
-          formModel.funcID = 'DPT0301';
-          option.FormModel = formModel;
+          // let formModel = this.dialog?.formModel;
+          // formModel.formName = 'DPStepsFields';
+          // formModel.gridViewName = 'grvDPStepsFields';
+          // formModel.entityName = 'DP_Steps_Fields';
+          // formModel.funcID = 'DPT0301';
+          option.FormModel =  this.formModelField ;
           option.Width = '550px';
           option.zIndex = 1010;
           let object = {
@@ -1656,6 +1669,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.titleDefaultCF.slice(1),
             stepList: this.stepList,
             grvSetup: res,
+            enabled :enabled
           };
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2215,34 +2229,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (e?.event) {
             let taskData = e?.event?.data;
             if (e.event?.status === 'add' || e.event?.status === 'copy') {
-              let index = this.taskGroupList.findIndex(
-                (group) => group.recID == taskData.taskGroupID
-              );
-              if (this.taskGroupList?.length == 0 && index < 0) {
-                let taskGroupNull = new DP_Steps_TaskGroups();
-                taskGroupNull['task'] = [];
-                taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
-                this.taskGroupList.push(taskGroupNull);
-                this.taskGroupList[0]['task']?.push(taskData);
-              } else {
-                this.taskGroupList[index]['task']?.push(taskData);
-              }
-              this.taskList?.push(taskData);
-              taskData['roles']?.forEach((role) => {
-                this.addRole(role);
-              });
+              this.addTassk(taskData);
             } else {
-              for (const key in taskData) {
-                data[key] = taskData[key];
-              }
-              data['modifiedOn'] = new Date();
-              data['modifiedBy'] = this.userId;
-              if (data?.taskGroupID != taskGroupIdOld) {
-                this.changeGroupTaskOfTask(data, taskGroupIdOld);
-              }
-              data['roles']?.forEach((role, index) => {
-                this.addRole(data['roles'][index], roleOld[index]);
-              });
+              this.editTask(taskData, taskGroupIdOld, roleOld);
             }
             let check = this.listStepEdit.some((id) => id == taskData?.stepID);
             if (!check && taskData?.stepID) {
@@ -2253,6 +2242,65 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
         this.groupTaskID = null;
       });
+    });
+  }
+
+  addTassk(taskData) {
+    let index = this.taskGroupList.findIndex(
+      (group) => group.recID == taskData.taskGroupID
+    );
+    if (this.taskGroupList?.length == 0 && index < 0) {
+      let taskGroupNull = new DP_Steps_TaskGroups();
+      taskGroupNull['task'] = [];
+      taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+      this.taskGroupList.push(taskGroupNull);
+      this.taskGroupList[0]['task']?.push(taskData);
+    } else {
+      this.taskGroupList[index]['task']?.push(taskData);
+    }
+    this.taskList?.push(taskData);
+    taskData['roles']?.forEach((role) => {
+      this.addRole(role);
+    });
+  }
+
+  editTask(taskData, taskGroupIdOld, roleOld) {
+    let indexTask = this.taskList?.findIndex(
+      (task) => task.recID == taskData.recID
+    );
+    let indexGroup = this.taskGroupList?.findIndex(
+      (group) => group.recID == taskData.taskGroupID
+    );
+    let indexGroupOld =
+      taskData?.taskGroupID != taskGroupIdOld
+        ? this.taskGroupList?.findIndex(
+            (group) => group.recID == taskGroupIdOld
+          )
+        : -1;
+    let indexTaskGroup = this.taskGroupList[indexGroup]['task']?.findIndex(
+      (task) => task.recID == taskData.recID
+    );
+
+    taskData['modifiedOn'] = new Date();
+    taskData['modifiedBy'] = this.userId;
+
+    if (indexGroupOld >= 0) {
+      let indexTaskGroupOld = this.taskGroupList[indexGroupOld][
+        'task'
+      ]?.findIndex((task) => task.recID == taskData.recID);
+      this.taskGroupList[indexGroupOld]['task']?.splice(indexTaskGroupOld, 1);
+      this.taskGroupList[indexGroup]['task']?.push(taskData);
+    } else {
+      this.taskGroupList[indexGroup]['task']?.splice(
+        indexTaskGroup,
+        1,
+        taskData
+      );
+    }
+    this.taskList.splice(indexTask, 1, taskData);
+
+    taskData['roles']?.forEach((role, index) => {
+      this.addRole(taskData['roles'][index], roleOld[index]);
     });
   }
 
@@ -2849,6 +2897,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data[field] = event;
     }
   }
+  getObjectIdRole(task) {
+    if (task?.taskType != 'M') {
+      let objectId =
+        task?.roles.find((role) => role.roleType == 'P')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    } else {
+      let objectId =
+        task?.roles.find((role) => role.roleType == 'O')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    }
+  }
+  getObjectNameRole(task) {
+    if (task?.taskType != 'M') {
+      let objectName =
+        task?.roles.find((role) => role.roleType == 'P')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    } else {
+      let objectName =
+        task?.roles.find((role) => role.roleType == 'O')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    }
+  }
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
@@ -2858,6 +2932,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.step.reasonControl = false;
+      }
+    } else if (view === 'AllowCopyView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowCopy = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowCopy = false;
       }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {
@@ -3387,10 +3467,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.iconReasonFail = item;
           } else if (item.value === 'R') {
             var reasonValue = item;
-          } else if (parseInt(item.value) % 2 === 0) {
+          } else if (item.value == '0') {
             this.noteSuccess = item.text;
-          } else if (parseInt(item.value) % 2 !== 0) {
+          } else if (item.value == '1') {
             this.noteFail = item.text;
+          } else if (item.value == '2') {
+            this.noteResult = item.text;
           }
         }
 

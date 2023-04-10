@@ -21,6 +21,8 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
+import { PurchaseInvoicesLines } from '../models/PurchaseInvoicesLines.model';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -38,14 +40,28 @@ export class PurchaseinvoicesComponent extends UIComponent {
   headerText: any;
   funcName: any;
   parentID: string;
+  journalNo: string;
   width: any;
   height: any;
   innerWidth: any;
   itemSelected: any;
-  objectname:any;
+  objectname: any;
+  oData: any;
+  page: any = 1;
+  pageSize = 5;
+  itemName: any;
+  lsVatCode:any;
+  gridViewLines: any;
+  purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   constructor(
     private inject: Injector,
@@ -55,14 +71,44 @@ export class PurchaseinvoicesComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+    this.routerActive.queryParams.subscribe((params) => {
+      this.parentID = params?.recID;
+      this.journalNo = params?.journalNo;
     });
+    this.cache
+      .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewLines = res;
+        }
+      });
   }
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.oData = res;
+        }
+      });
+    this.api
+      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.itemName = res;
+        }
+      });
+    this.api
+      .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.lsVatCode = res;
+        }
+      });
+  }
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -229,22 +275,24 @@ export class PurchaseinvoicesComponent extends UIComponent {
 
   clickChange(data) {
     this.itemSelected = data;
-    this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync',[this.itemSelected.objectID])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res;
-        }
-      });
+    this.loadDatadetail(data);
   }
   changeDataMF() {
     this.itemSelected = this.view.dataService.dataSelected;
+    this.loadDatadetail(this.itemSelected);
+  }
+  loadDatadetail(data) {
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync',[this.itemSelected.objectID])
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
       .subscribe((res: any) => {
         if (res != null) {
-          this.objectname = res;
+          this.objectname = res[0].objectName;
         }
+      });
+    this.api
+      .exec('PS', 'PurchaseInvoicesLinesBusiness', 'GetAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.purchaseInvoicesLines = res;
       });
   }
   //#endregion

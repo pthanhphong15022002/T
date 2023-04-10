@@ -32,6 +32,7 @@ export class JournalService {
   handleVoucherNoAndSave(
     journal: IJournal,
     model: any,
+    service: string,
     entityName: string,
     form: CodxFormComponent,
     isEdit: boolean,
@@ -49,7 +50,7 @@ export class JournalService {
       options.predicates = !isEdit ? 'VoucherNo=@0' : "VoucherNo=@0&&RecID!=@1";
       options.dataValues = !isEdit ? model.voucherNo : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;
-      this.acService.loadDataAsync('AC', options).subscribe((res: any[]) => {
+      this.acService.loadDataAsync(service, options).subscribe((res: any[]) => {
         if (res.length > 0) {
           this.api
             .exec(

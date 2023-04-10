@@ -328,16 +328,37 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+  //Lấy Task theo OKR recID
+  getListOKRTasks(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetListOKRTasksAsync',
+      [recID]
+    );
+  }
+
+  //KTra trc khi thu hồi plan
+  beforeUnReleasePlan(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'BeforeUnReleaseOKRPlanAsync',
+      [recID]
+    );
+  }
   //Lấy model
-getOKRModel(funcID:string) {
-  return this.api.execSv(
-    OMCONST.SERVICES,
-    OMCONST.ASSEMBLY,
-    OMCONST.BUSINESS.OKR,
-    'GetModelAsync',
-    [funcID]
-  );
-}
+  getOKRModel(funcID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetModelAsync',
+      [funcID]
+    );
+  }
   //Thêm, sửa okr plan
   addEditOKRPlans(okrPlan: any, listOKR =[],isAdd:boolean) {
     return this.api.execSv(
