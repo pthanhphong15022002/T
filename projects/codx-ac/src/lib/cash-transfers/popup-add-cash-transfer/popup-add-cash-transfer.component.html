@@ -220,7 +220,8 @@
                     field="voucherNo"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
-                    [disabled]="journal?.voucherNoRule == '1'"
+                    [disabled]="journal?.voucherNoRule != '0'"
+                    [placeholder]="journal?.voucherNoRule == '2' ? 'Số chứng từ được tạo tự động' : ''"
                   ></codx-input>
                 </div>
               </div>
@@ -399,7 +400,7 @@
               </div>
               <div class="col-8">
                 <div class="row">
-                  <div class="col-4 form-group">
+                  <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
                     <codx-label
                       fiedName="diM3"
                       [formModel]="fmVATInvoice"
@@ -412,7 +413,7 @@
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
-                  <div class="col-4 form-group">
+                  <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
                     <codx-label
                       fiedName="diM1"
                       [formModel]="fmVATInvoice"
@@ -425,7 +426,7 @@
                       [disabled]="!hasInvoice"
                     ></codx-input>
                   </div>
-                  <div class="col-4 form-group">
+                  <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')"> 
                     <codx-label
                       fiedName="diM2"
                       [formModel]="fmVATInvoice"
