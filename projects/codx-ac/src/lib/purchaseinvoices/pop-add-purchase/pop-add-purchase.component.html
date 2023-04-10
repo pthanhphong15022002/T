@@ -238,8 +238,14 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input
+                [Group]="form.formGroup"
+                field="voucherNo"
+                [formModel]="form.formModel"
+                [disabled]="journal?.voucherNoRule != '0'"
+                [placeholder]="journal?.voucherNoRule == '2' ? 'Số chứng từ được tạo tự động' : ''"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </div>
           </div>

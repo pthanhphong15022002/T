@@ -281,7 +281,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               if(res)
               {
                 this.dmSV.folderID = res2.recID
-                this.dmSV.getRight(res2);
+                this.dmSV.getRight(res2 , this.funcID);
                 this.refeshData();
                 this.getDataFolder(res2.recID);
                 var breadcumb = this.dmSV.breadcumb.getValue();
@@ -426,7 +426,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     //RefeshData
     this.dmSV.isRefeshData.subscribe(res=>{
-      debugger
       if(res)
       {
         this.refeshData();
@@ -794,20 +793,24 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.folderService.getFolders("").subscribe((res) => {
       if(res && res[0])
       {
-        this.getDataFolder(res[0][0].recID);
-        var breadcumb = [];
-        var breadcumbLink = [];
-        breadcumb.push(this.dmSV.menuActive.getValue(),res[0][0].folderName);
-        breadcumbLink.push("",res[0][0].recID);
-        this.dmSV.breadcumbLink = breadcumbLink;
-        this.dmSV.breadcumb.next(breadcumb);
-        this.dmSV.getRight(res[0][0]);
-        this.dmSV.folderName = res[0][0].folderName;
-        this.dmSV.parentFolderId = res[0][0].parentId;
-        this.dmSV.parentFolder.next(res[0][0]);
-        this.dmSV.level = res[0][0].level;
-        this.dmSV.folderID = res[0][0].recID;
-        this.dmSV.folderId.next(res[0][0].recID);
+        if(res[0][0].read)
+        {
+          this.getDataFolder(res[0][0].recID);
+          var breadcumb = [];
+          var breadcumbLink = [];
+          breadcumb.push(this.dmSV.menuActive.getValue(),res[0][0].folderName);
+          breadcumbLink.push("",res[0][0].recID);
+          this.dmSV.breadcumbLink = breadcumbLink;
+          this.dmSV.breadcumb.next(breadcumb);
+          this.dmSV.getRight(res[0][0]);
+          this.dmSV.folderName = res[0][0].folderName;
+          this.dmSV.parentFolderId = res[0][0].parentId;
+          this.dmSV.parentFolder.next(res[0][0]);
+          this.dmSV.level = res[0][0].level;
+          this.dmSV.folderID = res[0][0].recID;
+          this.dmSV.folderId.next(res[0][0].recID);
+        }
+       
       
         // var treeView = this.codxview?.currentView?.currentComponent?.treeView;
         // if(treeView)
@@ -1279,8 +1282,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.sortColumn = $event.field;
     this.sortDirection = $event.dir;
     this.dmSV.page = 1;
-    this.folderService.options.srtColumns = this.sortColumn;
-    this.folderService.options.srtDirections = this.sortDirection;
+    if(this.sortColumn == "FileSize")
+    {
+      this.folderService.options.srtColumns = "";
+      this.folderService.options.srtDirections = "";
+    }
+    else
+    {
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
+    }
+   
     this.fileService.options.srtColumns = this.sortColumn;
     this.fileService.options.srtDirections = this.sortDirection;
     if(this.folderService.options.srtColumns == "FileName") this.folderService.options.srtColumns = "FolderName"

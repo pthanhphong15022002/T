@@ -708,6 +708,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashreceipts,
+        "AC",
         'AC_CashReceipts',
         this.form,
         this.formType === 'edit',

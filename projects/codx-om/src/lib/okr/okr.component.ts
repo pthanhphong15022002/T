@@ -125,6 +125,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
 
     this.curUser = this.auth.get();
+    this.createCOObject()
   }
 
   //---------------------------------------------------------------------------------//
@@ -320,11 +321,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((item1: any) => {
                 if (item1) {                  
                   this.dataOKR = null;
-                  this.dataOKR = item1;
+                  this.dataOKR = item1;                  
+                  this.getOrgTreeOKR();
                 }
               });
-             this.getOrgTreeOKR();
           } else {
+            this.orgUnitTree=[];
             this.dataOKRPlans = null;
             this.dataOKR = null;
             this.planNull = true;
@@ -408,6 +410,7 @@ getOrgTreeOKR() {
 
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.createCOObject();
     this.getOKRModel();
     this.funcIDChanged();
     this.formModelChanged();
@@ -536,14 +539,35 @@ getOrgTreeOKR() {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    this.codxOmService
+    if(status==OMCONST.VLL.PlanStatus.NotStarted){
+      this.codxOmService.beforeUnReleasePlan(this.dataOKRPlans?.recID).subscribe((res=>{
+        if(res!=null){
+          this.notificationsService.notifyCode("Bộ mục tiêu hiện hành đã phát sinh dữ liệu liên quan. Vui lòng liên hệ với "+res+" để xử lí.");//OM_WAIT: Đợi mssgCode
+          return;
+        }    
+        else{
+          this.codxOmService
+          .changePlanStatus(this.dataOKRPlans.recID, status)
+          .subscribe((res) => {
+            if (res) {
+              this.dataOKRPlans.status = status;
+              this.notificationsService.notifyCode('SYS034'); //thành công
+            }
+          });
+        }        
+      }));      
+    }
+    else{
+      this.codxOmService
       .changePlanStatus(this.dataOKRPlans.recID, status)
       .subscribe((res) => {
         if (res) {
           this.dataOKRPlans.status = status;
-          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          this.notificationsService.notifyCode('SYS034'); //thành công
         }
       });
+    }
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//

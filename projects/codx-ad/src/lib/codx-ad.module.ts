@@ -47,6 +47,8 @@ import { PleaseUseComponent } from './users/please-use/please-use.component';
 import { PopupModuleDetailComponent } from './company-setting/popup-module-detail/popup-module-detail.component';
 import { PopupInfoComponent } from './company-setting/popup-info/popup-info.component';
 import { PopActiveAccountComponent } from './users/pop-active-account/pop-active-account.component';
+import { DecentralizedGroupComponent } from './decentralized-group/decentralized-group.component';
+import { AddDecentralGroupMemComponent } from './decentralized-group/add-decentral-group-mem/add-decentral-group-mem.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +72,10 @@ export const routes: Routes = [
       {
         path: 'roles/:funcID',
         component: RolesComponent,
+      },
+      {
+        path: 'grouppermissions/:funcID',
+        component: DecentralizedGroupComponent,
       },
     ],
   },
@@ -118,6 +124,8 @@ const T_Component: Type<any>[] = [
   PopupModuleDetailComponent,
   PopupInfoComponent,
   PopActiveAccountComponent,
+  DecentralizedGroupComponent,
+  AddDecentralGroupMemComponent,
 ];
 @NgModule({
   imports: [

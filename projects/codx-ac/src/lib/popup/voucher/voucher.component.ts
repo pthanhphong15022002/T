@@ -120,11 +120,6 @@ export class VoucherComponent implements OnInit {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
       this.mapDataValues.set('invoiceDueDate', new Date(e.data).toISOString());
     }
-
-    if (field === 'currencyID' && e.data) {
-      this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-      this.mapDataValues.set('currencyID', e.data);
-    }
   }
 
   gridCreated(e) {

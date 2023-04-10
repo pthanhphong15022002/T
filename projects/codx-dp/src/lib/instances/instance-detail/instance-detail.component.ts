@@ -121,6 +121,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
   user:any;
+  maxSize:number = 4;
 
   constructor(
     private callfc: CallFuncService,
@@ -138,6 +139,18 @@ export class InstanceDetailComponent implements OnInit {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
+    this.cache.functionList("DPT040102").subscribe((res) => {
+      if(res){
+        let formModel = new FormModel;
+        formModel.formName = res?.formName;
+        formModel.gridViewName = res?.gridViewName;
+        formModel.entityName = res?.entityName;
+        formModel.funcID = "DPT040102";
+        this.frmModelInstancesTask = formModel;
+        console.log(this.frmModelInstancesTask);
+        
+      }            
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -146,17 +159,6 @@ export class InstanceDetailComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-    this.frmModelInstancesTask = await this.getFormModel("DPT040102");
-  }
-
-  async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = new FormModel;
-    formModel.formName = f?.formName;
-    formModel.gridViewName = f?.gridViewName;
-    formModel.entityName = f?.entityName;
-    formModel.funcID = functionID;
-    return formModel;
   }
 
   ngAfterViewInit(): void {
@@ -175,6 +177,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.processID
         );
         this.listReasonBySteps(this.reasonStepsObject);
+        this.maxSize = 4;
       }
     } else if (changes['reloadData'] && this.reloadData) {
       this.instanceStatus = this.dataSelect.status;
@@ -183,7 +186,6 @@ export class InstanceDetailComponent implements OnInit {
         this.viewDetail.dataItem = this.dataSelect ;
         this.viewDetail.changedataMFs(this.moreFuncCrr)
       }
-      
       this.getStageByStep(this.listSteps);
       this.changeDetec.detectChanges();
     }
@@ -296,17 +298,6 @@ export class InstanceDetailComponent implements OnInit {
       data: data,
       lstStepCbx: this.listStepInstance,
     });
-    // console.log(e);
-    // switch (e.functionID) {
-    //   case 'DP09':
-    //   // API của bảo nha
-    //  //   this.continues(data);
-    //     this.popupInstances.moveStage(e,data,this.listSteps);
-    //     break;
-    //   case 'DP02':
-    //     this
-    //     break;
-    // }
   }
 
   changeDataMF(e, data) {
@@ -345,20 +336,25 @@ export class InstanceDetailComponent implements OnInit {
     this.lstInv = this.getInvolved(this.tmpTeps.roles);
     this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
   }
+  clickStage($event) {
+    if($event) {
+      var indexNo = $event?.indexNo
+      var stepId = $event?.id;
+      if (
+        this.currentStep < indexNo &&
+        (this.instanceStatus === '1' || this.instanceStatus === '2')
+      )
+        return;
+      this.currentNameStep = indexNo;
+      var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
+      this.tmpTeps = this.listSteps[indx];
+      this.lstInv = this.getInvolved(this.tmpTeps.roles);
+      this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
 
-  // continues(data) {
-  //   if (this.currentStep + 1 == this.listSteps.length) return;
-  //   this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
-  //     res.forEach((element) => {
-  //       if (element != null && element.recID == this.dataSelect.stepID) {
-  //         this.tmpTeps = element;
-  //       }
-  //     })
-  //   })
-  //   this.currentStep++;
-  //   this.currentNameStep = this.currentStep;
-  //   this.changeDetec.detectChanges();
-  // }
+    }
+
+  }
+
 
   setHTMLCssStages(oldStage, newStage) {}
 
@@ -479,6 +475,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   rollHeight() {
+    this.maxSize = 6;
     let classViewDetail: any;
     var heighOut = 25;
     if (this.viewType == 'd') {

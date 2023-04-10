@@ -25,6 +25,7 @@
     resourceObjType="AD_Users"
     [formModel]="view.formModel"
     [typeMF]="'hover'"
+    [hideMF]="true"
     [dataItem]="data"
   ></codx-temp-full>
 </ng-template>
@@ -72,6 +73,7 @@
           resourceObjType="AD_Users"
           [formModel]="view.formModel"
           [typeMF]="'hover'"
+          [hideMF]="true"
           [dataItem]="data"
         ></codx-temp-full>
         <!-- <div class="text-dark fs-6 fw-bold">{{ data?.groupName }}</div>
@@ -87,15 +89,16 @@
         autoClose="outside"
         [openDelay]="500"
       >
-        <codx-imgs
-          *ngIf="data.members && data.members.length"
-          [isToolTip]="false"
-          [width]="30"
-          [objectId]="data.memberIDs"
-          [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
-          [numberImages]="4"
-        >
-        </codx-imgs>
+        <ng-container *ngIf="data.members && data.members.length">
+          <codx-imgs
+            [isToolTip]="false"
+            [width]="30"
+            [objectId]="data.memberIDs"
+            [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
+            [numberImages]="4"
+          >
+          </codx-imgs>
+        </ng-container>
       </div>
     </div>
     <div class="w-10px min-w-10px">

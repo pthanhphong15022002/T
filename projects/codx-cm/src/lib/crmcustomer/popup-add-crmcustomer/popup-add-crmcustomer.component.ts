@@ -148,9 +148,9 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     }
     if (this.firstName != null && this.firstName.trim() != '') {
       if (this.lastName != null && this.lastName.trim() != '') {
-        this.data.contactName = this.lastName + ' ' + this.firstName;
+        this.data.contactName = this.lastName.trim() + ' ' + this.firstName.trim();
       } else {
-        this.data.contactName = this.firstName;
+        this.data.contactName = this.firstName.trim();
       }
     } else {
       this.data.contactName = '';

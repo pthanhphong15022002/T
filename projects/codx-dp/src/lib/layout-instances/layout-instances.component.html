@@ -178,8 +178,8 @@
       </button>
     </div>
   </div>
-  <div class="pb-2 px-7" style="max-height: 240px; overflow: auto">
-    <ng-container *ngFor="let item of stepNames; let i = index">
+  <div class="pb-2 px-7" style="max-height: 400px; overflow: auto" *ngIf="stepViews?.length > 0">
+    <ng-container *ngFor="let item of stepViews; let i = index">
       <div class="d-flex text-gray-700 pb-1 pt-2">
         <span class="me-2 fw-bold">
           <codx-label
@@ -190,8 +190,24 @@
           ></codx-label>
           {{ i + 1 + ":" }}
         </span>
-        <span>{{ item }}</span>
+        <span>{{ item.stepName }}</span>
       </div>
+    </ng-container>
+    <div>
+      <span class="text-dark fw-bold fs-4 me-6">
+        <codx-label
+          name="lblMemoDetail"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          default="Hướng dẫn chi tiết các giai đoạn"
+        ></codx-label>
+      </span>
+    </div>
+    <ng-container *ngFor="let item of stepViews">
+      <div class="text-dark fw-bold fs-5 me-6">
+        <span>{{ item.stepName }}</span>
+      </div>
+      <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.memo)"></div>
     </ng-container>
   </div>
 </ng-template>

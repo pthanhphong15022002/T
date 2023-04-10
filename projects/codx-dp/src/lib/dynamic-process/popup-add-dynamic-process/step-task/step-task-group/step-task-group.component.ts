@@ -77,7 +77,7 @@ export class StepTaskGroupComponent implements OnInit {
 
   changeUser(e) {
     let roles = e?.map((role) => {
-      return { ...role, roleType: 'P' };
+      return { ...role, roleType: 'O' };
     });
     this.taskGroup['roles'] = roles || [];
   }

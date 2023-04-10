@@ -966,9 +966,6 @@
         <codx-input
           field="memo"
           type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
           [crrValue]="process?.memo"
           (valueChange)="valueChange($event)"
         >
@@ -1107,7 +1104,9 @@
                 <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="addCustomField(item.recID, item.processID)"
+                  (click)="
+                    addCustomField(item.recID, item.processID, !haveTitle)
+                  "
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
@@ -1154,7 +1153,9 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary"
-                      (click)="addCustomField(item.recID, item.processID)"
+                      (click)="
+                        addCustomField(item.recID, item.processID, !haveTitle)
+                      "
                     >
                       <i class="icon-add icon-18 text-primary"></i>
                       <codx-label
@@ -1216,8 +1217,8 @@
                       >
                       </codx-input-custom-field>
                       <codx-mfunc
-                        [formModel]="dialog.formModel"
-                        (clickMF)="clickMFFields($event, item1)"
+                        [formModel]="formModelField"
+                        (clickMF)="clickMFFields($event, item1, !haveTitle)"
                         [dataItem]="action != 'edit' ? moreDefaut : item"
                         [type]="'hover'"
                       >
@@ -1738,9 +1739,9 @@
                             <div class="mx-3">
                               <codx-img
                                 [width]="30"
-                                [objectId]="task?.roles[0]?.objectID"
+                                [objectId]="getObjectIdRole(task)"
                                 objectType="AD_Users"
-                                [objectName]="task?.roles[0]?.objectName"
+                                [objectName]="getObjectNameRole(task)"
                               >
                               </codx-img>
                             </div>
@@ -1773,7 +1774,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="task-att">
+                          <!-- <div class="task-att">
                             <codx-attachment
                               #attachment
                               hideFolder="1"
@@ -1787,7 +1788,7 @@
                               showMessage="1"
                             >
                             </codx-attachment>
-                          </div>
+                          </div> -->
                           <codx-mfunc
                             [formModel]="grvMoreFunction"
                             (clickMF)="
