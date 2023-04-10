@@ -114,8 +114,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.auth.logout();
-    document.location.reload();
+    this.auth.logout('');
+    // document.location.reload();
   }
 
   updateSettting(lang: string, theme: string, themeMode: string) {

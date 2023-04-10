@@ -68,8 +68,7 @@ export class EmployeesComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService,
-
+    private notifiSV: NotificationsService
   ) {
     super(injector);
   }
@@ -84,7 +83,6 @@ export class EmployeesComponent extends UIComponent {
         }
       }
     });
-    
   }
 
   ngAfterViewInit(): void {
@@ -126,7 +124,7 @@ export class EmployeesComponent extends UIComponent {
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
-          hideMoreFunc:true
+          hideMoreFunc: true,
         },
       },
       // {
@@ -143,9 +141,9 @@ export class EmployeesComponent extends UIComponent {
     this.view.dataService.methodUpdate = 'UpdateAsync';
     this.detectorRef.detectChanges();
   }
-  changeDataMF(event:any){
-    event.forEach(element => {
-      if(element.functionID == "HR0032"){
+  changeDataMF(event: any) {
+    event.forEach((element) => {
+      if (element.functionID == 'HR0032') {
         element.disabled = true;
       }
     });
@@ -175,10 +173,9 @@ export class EmployeesComponent extends UIComponent {
 
   btnClick(event: any) {
     if (event?.text) {
-      this.view.dataService.addNew()
-      .subscribe((res: any) => {
+      this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {
-          debugger
+          debugger;
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
@@ -186,7 +183,7 @@ export class EmployeesComponent extends UIComponent {
           let object = {
             employee: res,
             isAdd: true,
-            funcID:this.view.funcID,
+            funcID: this.view.funcID,
             action: event.text,
           };
           let popup = this.callfc.openSide(
@@ -195,7 +192,7 @@ export class EmployeesComponent extends UIComponent {
             option
           );
           popup.closed.subscribe((res: any) => {
-            debugger
+            debugger;
             if (res?.event) {
               let data = res.event;
               this.view.dataService.add(data, 0).subscribe();
@@ -234,8 +231,7 @@ export class EmployeesComponent extends UIComponent {
   }
   // edit
   edit(event: any, data: any) {
-    if (event && data) 
-    {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -244,7 +240,7 @@ export class EmployeesComponent extends UIComponent {
       let object = {
         employee: data,
         isAdd: false,
-        funcID:this.view.funcID,
+        funcID: this.view.funcID,
         action: event.text,
       };
       let popup = this.callfc.openSide(
@@ -272,7 +268,7 @@ export class EmployeesComponent extends UIComponent {
         let object = {
           employee: res,
           isAdd: true,
-          funcID:this.view.funcID,
+          funcID: this.view.funcID,
           action: event.text,
         };
         debugger;
@@ -377,8 +373,7 @@ export class EmployeesComponent extends UIComponent {
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
-        if (emp.status === '90')
-          this.view.dataService.remove(emp).subscribe();
+        if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
         else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
