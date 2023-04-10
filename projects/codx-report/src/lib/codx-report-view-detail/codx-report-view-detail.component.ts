@@ -67,6 +67,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
+    this.viewBase.moreFuncs = this.moreFc;
   }
 
   onActions(e:any){
@@ -97,5 +98,26 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       '',
       option
     );
-}
+  }
+
+  filterReportChange(e:any){
+    // if(e[0]){
+    //   debugger
+    //   this.predicate = e[0].predicates;
+    //   this.dataValue = e[0].dataValues;
+    // }
+    let objParam:any = {};
+    if(e[1]){
+      for(let key in e[1]){
+        if(key.includes('Date')){
+          objParam['fromDate'] = e[1][key].fromDate;
+          objParam['toDate'] = e[1][key].toDate;
+        }
+        else{
+          objParam[key] = e[1][key]
+        }
+      }
+      this._paramString = JSON.stringify(objParam);
+    }
+  }
 }

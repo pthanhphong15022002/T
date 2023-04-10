@@ -162,10 +162,10 @@ export class PopupEBasicSalariesComponent
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
     if (this.EBasicSalaryObj.expiredDate < this.EBasicSalaryObj.effectedDate) {
       this.hrService.notifyInvalidFromTo(

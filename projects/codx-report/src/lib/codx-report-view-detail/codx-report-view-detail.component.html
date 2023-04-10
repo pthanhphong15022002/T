@@ -6,6 +6,8 @@
   [views]="views"
   (onActions)="onActions($event)"
   (buttonClick)="click($event)"
+  [moreFuncs]="moreFc"
+  (filterReportChange)="filterReportChange($event)"
   >
 </codx-views>
 <ng-template #report>
