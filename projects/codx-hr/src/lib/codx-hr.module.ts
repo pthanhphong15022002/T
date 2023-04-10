@@ -453,6 +453,8 @@ import { ViewContractDetailComponent } from './employee-contract/view-contracts-
 import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
+import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
+import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
 export const routes: Routes = [
   {
     path: '',
@@ -548,6 +550,10 @@ export const routes: Routes = [
           {
             path: 'ebasicsalaries/:funcID',
             component: EmployeeBasicSalaryComponent,
+          },
+          {
+            path: 'ejobsalaries/:funcID',
+            component: EmployeeJobSalaryComponent,
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -699,8 +705,10 @@ const T_Component: Type<any>[] = [
   EmployeeContractComponent,
   ScrollSpyDirective,
   PopupEProcessContractComponent,
+  PopupEmployeeJobsalaryComponent,
   ViewContractDetailComponent,
   EmployeeBasicSalaryComponent,
+  EmployeeJobSalaryComponent,
 ];
 @NgModule({
   imports: [
