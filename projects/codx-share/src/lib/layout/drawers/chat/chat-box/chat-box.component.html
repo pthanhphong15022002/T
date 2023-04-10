@@ -263,10 +263,12 @@
                             </div>
                         </ng-template>  
                     </div>
-                    <!-- <div class="d-block text-center">
+                </ng-template>  
+                <ng-container *ngIf="checkDate(i)">
+                    <div class="d-block text-center">
                         <span>{{item.createdOn | fmDT: 'dmy' : true}}</span>
-                    </div> -->
-                </ng-template>      
+                    </div>
+                </ng-container>
             </ng-container>
         </div>
         <div class="chat-box-footer border-top bg-body">
