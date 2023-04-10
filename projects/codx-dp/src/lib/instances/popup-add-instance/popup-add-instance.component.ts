@@ -50,7 +50,7 @@ export class PopupAddInstanceComponent implements OnInit {
   instance: DP_Instances;
 
   isApplyFor: string = ''; // this is instance opportunity general
-
+  addFieldsControl = '1';
   totalDaySteps: number;
   totalHourSteps: number;
   dateOfDuration: any;
@@ -112,6 +112,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data?.formMD;
     this.autoName = dt?.data?.autoName;
     this.endDate = new Date(dt?.data?.endDate);
+    this.addFieldsControl = dt?.data?.addFieldsControl 
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.user = this.authStore.get();
     if (this.action === 'edit') {
@@ -126,19 +127,16 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    }
-    else {
-      this.lstParticipants =dt?.data?.lstParticipants;
+    } else {
+      this.lstParticipants = dt?.data?.lstParticipants;
       this.instance.endDate = this.endDate;
-      var isAdmin  = dt?.data.isAdminRoles;
-      if(this.user.administrator || isAdmin){
+      var isAdmin = dt?.data.isAdminRoles;
+      if (this.user.administrator || isAdmin) {
         this.owner = '';
-      }
-      else{
-        this.owner = this.user.userID
+      } else {
+        this.owner = this.user.userID;
       }
     }
-
 
     if (this.action === 'copy') {
       this.oldIdInstance = dt?.data?.oldIdInstance;
@@ -163,8 +161,6 @@ export class PopupAddInstanceComponent implements OnInit {
     }
   }
 
-
-
   ngAfterViewInit(): void {
     if (this.isApplyFor === '1') {
       this.tabInfo = [
@@ -186,7 +182,7 @@ export class PopupAddInstanceComponent implements OnInit {
   buttonClick(e: any) {}
 
   setTitle(e: any) {
-    if (!!this.autoName) {
+    if (this.autoName) {
       this.title = this.titleAction + ' ' + this.autoName;
     } else {
       this.title = this.titleAction + ' ' + e;
@@ -224,9 +220,11 @@ export class PopupAddInstanceComponent implements OnInit {
           let idxField = this.listStep[index].fields.findIndex(
             (x) => x.recID == event.data.recID
           );
-          if (idxField != -1){
+          if (idxField != -1) {
             this.listStep[index].fields[idxField].dataValue = result;
-            let idxEdit = this.listCustomFile.findIndex((x) => x.recID == this.listStep[index].fields[idxField].recID);
+            let idxEdit = this.listCustomFile.findIndex(
+              (x) => x.recID == this.listStep[index].fields[idxField].recID
+            );
             if (idxEdit != -1) {
               this.listCustomFile[idxEdit] =
                 this.listStep[index].fields[idxField];
@@ -256,7 +254,6 @@ export class PopupAddInstanceComponent implements OnInit {
       option.data = [this.instance, this.listCustomFile];
     }
 
-
     return true;
   }
   saveInstances() {
@@ -275,10 +272,12 @@ export class PopupAddInstanceComponent implements OnInit {
         '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
-    } else if (
-      this.checkEndDayInstance(this.instance?.endDate, this.endDate)
-    ) {
-      this.notificationsService.notifyCode('DP032', 0, '"' + this.dateMessage + '"');
+    } else if (this.checkEndDayInstance(this.instance?.endDate, this.endDate)) {
+      this.notificationsService.notifyCode(
+        'DP032',
+        0,
+        '"' + this.dateMessage + '"'
+      );
       return;
     }
     //khong check custom field nua - nhung ko xóa
@@ -355,15 +354,13 @@ export class PopupAddInstanceComponent implements OnInit {
     return true;
   }
   checkEndDayInstance(endDate, endDateCondition) {
-
-    var date1 = new Date(endDate)
+    var date1 = new Date(endDate);
     var date2 = new Date(endDateCondition);
     this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
     date1.setHours(0, 0, 0, 0);
     date2.setHours(0, 0, 0, 0);
 
     return date1 < date2;
-
   }
 
   openPopupParticipants(popupParticipants) {
@@ -384,6 +381,4 @@ export class PopupAddInstanceComponent implements OnInit {
       }
     });
   }
-
-
 }

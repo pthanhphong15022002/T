@@ -28,6 +28,7 @@ import {
   DialogRef,
   CodxCardImgComponent,
   FormModel,
+  CRUDService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -62,6 +63,8 @@ export class DynamicProcessComponent
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton: TemplateRef<any>;
+  
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
@@ -121,10 +124,10 @@ export class DynamicProcessComponent
 
   // Get idField
   readonly idField = 'recID';
-
+  grvSetup :any
   isChecked: boolean = false;
   totalInstance: number = 0;
-  lstGroup: any =[];
+  lstGroup: any = [];
 
   constructor(
     private inject: Injector,
@@ -140,7 +143,15 @@ export class DynamicProcessComponent
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.genAutoNumber();
+    this.cache
+    .gridViewSetup(
+      'DPProcesses',
+      'grvDPProcesses'
+    )
+    .subscribe(grv=>{
+      this.grvSetup =grv
+    }) 
+
     this.getListAppyFor();
     this.getValueFormCopy();
     this.getListProcessGroups();
@@ -189,6 +200,7 @@ export class DynamicProcessComponent
         type: ViewType.card,
         sameData: true,
         active: true,
+        toolbarTemplate: this.footerButton,
         model: {
           template: this.templateViewCard,
           headerTemplate: this.headerTemplate,
@@ -228,7 +240,7 @@ export class DynamicProcessComponent
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
               gridViewSetup: this.gridViewSetup,
-              lstGroup : this.lstGroup
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -283,7 +295,7 @@ export class DynamicProcessComponent
                 action: 'edit',
                 titleAction: this.titleAction,
                 gridViewSetup: this.gridViewSetup,
-                lstGroup : this.lstGroup
+                lstGroup: this.lstGroup,
               };
               var dialog = this.callfc.openForm(
                 PopupAddDynamicProcessComponent,
@@ -304,7 +316,6 @@ export class DynamicProcessComponent
               });
             }
           });
-
       });
   }
   copy(data: any) {
@@ -337,7 +348,7 @@ export class DynamicProcessComponent
               newIdProccess: this.view.dataService.dataSelected.recID,
               listValueCopy: this.listClickedCoppy.map((x) => x.id),
               gridViewSetup: this.gridViewSetup,
-              lstGroup : this.lstGroup
+              lstGroup: this.lstGroup,
             };
             var dialog = this.callfc.openForm(
               PopupAddDynamicProcessComponent,
@@ -532,7 +543,8 @@ export class DynamicProcessComponent
               this.funcID == 'DP0201' ||
               this.funcID == 'DP0202' ||
               this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
+              this.funcID === 'DP04' ||
+              !data.allowCopy
             )
               res.disabled = true;
             break;
@@ -699,10 +711,9 @@ export class DynamicProcessComponent
 
   viewDetailProcess(data) {
     //thao test khong dc xoa
-    if(!data.read) return
+    if (!data.read) return;
     this.dpService.dataProcess.next(data);
     this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
-
 
     // let isRead = this.checkPermissionRead(data);
     // if (!isRead) {
@@ -840,5 +851,27 @@ export class DynamicProcessComponent
         this.lstGroup = res;
       }
     });
+  }
+
+  valueChangeFilter(e){
+    let predicates = '';
+    let predicate = e.field + '=@';
+    let dataValueFilter = e.data
+    if(dataValueFilter?.length >1){
+      for (var i = 0; i < dataValueFilter.length - 1; i++) {
+        predicates += predicate + i  + 'or ';
+      }
+      predicates += predicate + (dataValueFilter.length);
+    }else if(dataValueFilter?.length ==1){
+      predicates  = predicate +'0' ;
+    }
+    if(predicates) predicates = "( " + predicates+ ' )' ;
+      
+    (this.view.dataService as CRUDService)
+      .setPredicates(
+        [predicates],
+        [dataValueFilter.join(';')]
+      )
+      .subscribe();
   }
 }

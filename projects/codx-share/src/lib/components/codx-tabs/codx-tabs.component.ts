@@ -42,6 +42,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
+  @Input() dataSelected:any;
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess

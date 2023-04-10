@@ -250,6 +250,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.cashTransfer,
+      "AC",
       'AC_CashTranfers',
       this.form,
       this.isEdit,

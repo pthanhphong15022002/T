@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AuthStore,
   ButtonModel,
   CallFuncService,
   DataRequest,
@@ -43,16 +44,21 @@ export class CashPaymentsComponent extends UIComponent {
   headerText: any;
   moreFuncName: any;
   funcName: any;
-  parentID: string;
   journalNo: string;
-  itemSelected:any;
-  objectname:any;
+  itemSelected: any;
+  objectname: any;
   oData: any;
-  cashbook:any;
+  cashbook: any;
   page: any = 1;
   pageSize = 6;
-  transactionText:any;
+  userID: any;
+  transactionText: any;
   cashpaymentline: Array<CashPaymentLine> = [];
+  fmCashPaymentsLines: FormModel = {
+    formName: 'CashPaymentsLines',
+    gridViewName: 'grvCashPaymentsLines',
+    entityName: 'AC_CashPaymentsLines',
+  };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -63,6 +69,7 @@ export class CashPaymentsComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+  authStore: AuthStore;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -70,6 +77,7 @@ export class CashPaymentsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -78,7 +86,6 @@ export class CashPaymentsComponent extends UIComponent {
       }
     });
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
@@ -86,6 +93,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.userID = this.authStore.get().userID;
     this.api
       .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
       .subscribe((res: any) => {
@@ -93,7 +101,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.oData = res;
         }
       });
-      this.api
+    this.api
       .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
       .subscribe((res: any) => {
         if (res != null) {
@@ -120,7 +128,7 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-        
+
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -128,7 +136,7 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
 
-    this.detectorRef.detectChanges()
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -161,7 +169,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
 
@@ -292,12 +300,38 @@ export class CashPaymentsComponent extends UIComponent {
     return true;
   }
 
-  changeDataMF(){
+  changeDataMF(e: any, data: any) {
     this.itemSelected = this.view.dataService.dataSelected;
+    //Bookmark
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT041003' || x.functionID == 'ACT041002' || x.functionID == 'ACT041004');
+    // duyệt trước khi ghi sổ
+    if (data.status == '1' && data.approveStatus == '1') {
+      bm[1].disabled = true;
+      bm[2].disabled = true;
+    }
+    //ko duyệt trước khi ghi sổ
+    if (data.status == '1' && data.approveStatus == '0') {
+      bm[0].disabled = true;
+      bm[2].disabled = true;
+    }
+    //Chờ duyệt
+    if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+      bm[1].disabled = true;
+      bm[0].disabled = true;
+    }
+    //hủy duyệt
+    if (data?.approveStatus == '4') {
+      for(var i = 0 ; i< bm.length ; i++)
+        {
+          bm[i].disabled = true;
+        }
+    }
     this.loadDatadetail(this.itemSelected);
   }
 
-  clickChange(data){
+  clickChange(data) {
     this.itemSelected = data;
     this.loadDatadetail(data);
   }
