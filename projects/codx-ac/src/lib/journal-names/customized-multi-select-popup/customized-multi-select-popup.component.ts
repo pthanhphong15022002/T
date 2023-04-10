@@ -46,7 +46,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
       .viewSettingValues('AC1')
       .pipe(
         tap((o) => console.log(o)),
-        map((data) => JSON.parse(data.dataValue).ACS155.split(';')),
+        map((data) => JSON.parse(data.dataValue)?.ACS155?.split(';')),
         tap((o) => console.log(o))
       )
       .subscribe((settingValues) => {
@@ -56,7 +56,7 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
               value: d.value,
               text: d.text,
               checked: this.selectedOptions?.some((o) => o.value === d.value),
-              disabled: !settingValues.includes(d.value),
+              disabled: !settingValues?.includes(d.value),
             }))
           ),
           tap((data) => console.log(data))

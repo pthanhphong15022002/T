@@ -242,7 +242,8 @@
                 [Group]="form.formGroup"
                 field="voucherNo"
                 [formModel]="form.formModel"
-                [disabled]="journal?.voucherNoRule == '1'"
+                [disabled]="journal?.voucherNoRule != '0'"
+                [placeholder]="journal?.voucherNoRule == '2' ? 'Số chứng từ được tạo tự động' : ''"
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
