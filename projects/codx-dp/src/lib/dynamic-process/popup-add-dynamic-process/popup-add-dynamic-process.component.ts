@@ -224,6 +224,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     delete: true,
   };
   //data test Thao
+  formModelField: FormModel;
   fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
   isHover = '';
@@ -274,6 +275,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.gridViewSetup = dt.data.gridViewSetup;
     this.titleAction = dt.data.titleAction;
     this.lstGroup = dt.data?.lstGroup;
+
+    this.formModelField = dialog.formModel;
+    this.formModelField.formName = 'DPStepsFields';
+    this.formModelField.gridViewName = 'grvDPStepsFields';
+    this.formModelField.entityName = 'DP_Steps_Fields';
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.getIconReason();
@@ -2287,7 +2293,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
     }
     this.taskList.splice(indexTask, 1, taskData);
-    
+
     taskData['roles']?.forEach((role, index) => {
       this.addRole(taskData['roles'][index], roleOld[index]);
     });
