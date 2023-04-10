@@ -98,5 +98,23 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       '',
       option
     );
-}
+  }
+
+  filterReportChange(e:any){
+    // if(e[0]){
+    //   debugger
+    //   this.predicate = e[0].predicates;
+    //   this.dataValue = e[0].dataValues;
+    // }
+    let objParam:any = {};
+    if(e[1]){
+      for(let key in e[1]){
+        if(key.includes('Date')){
+          objParam['fromDate'] = e[1][key].fromDate;
+          objParam['toDate'] = e[1][key].toDate;
+        }
+      }
+      this._paramString = JSON.stringify(objParam);
+    }
+  }
 }
