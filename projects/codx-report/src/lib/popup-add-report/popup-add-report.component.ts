@@ -148,6 +148,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       if(res.event.status == 'Y'){
         let serviceName = this.data.service;
         if (!this.data.service) serviceName = 'rpt' + this.moduleName;
+        if(serviceName.includes('undefined')){
+          serviceName = 'rptsys';
+        }
          this.api
               .execSv(
                 serviceName,
@@ -173,19 +176,20 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.moduleName = res.module;
-        this.api
-          .execSv(
-            'SYS',
-            'ERM.Business.SYS',
-            'ReportListBusiness',
-            'CreateFunctionIDAsync',
-            [this.moduleName, 'R']
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.data.reportID = res;
-            }
-          });
+        // this.api
+        //   .execSv(
+        //     'SYS',
+        //     'ERM.Business.SYS',
+        //     'ReportListBusiness',
+        //     'CreateFunctionIDAsync',
+        //     [this.moduleName, 'R']
+        //   )
+        //   .subscribe((res) => {
+        //     if (res) {
+        //       this.data.reportID = res;
+        //     }
+        //   });
+        this.data.reportID = this.reportID;
       }
     });
   }
@@ -291,12 +295,14 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
         if (item2?.status == 0) {
         }
+
+
       });
       this.data.reportName = this.data.location =
-        this.attachment.fileUploadList[0].fileName;
+      this.attachment.fileUploadList[0].fileName;
     }
     if (!this.data.service) this.data.service = 'rpt' + this.moduleName;
-
+    if(this.data.assemblyName) this.data.service = this.data.assemblyName.split(".").pop();
     this.fuctionItem.functionID = this.data.reportID;
     this.fuctionItem.functionType = 'R';
     this.fuctionItem.parentID = this.funcID;
@@ -325,13 +331,14 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.setDataset();
         this.dialog.close();
       });
+
   }
   setDataset(){
     let serviceName = this.data.service;
     if (!this.data.service) serviceName = 'rpt' + this.moduleName;
      this.api
           .execSv(
-            serviceName,
+            'rptsys',
             'Codx.RptBusiness.CM',
             'LVReportHelper',
             'SetReportDatasetAsync',

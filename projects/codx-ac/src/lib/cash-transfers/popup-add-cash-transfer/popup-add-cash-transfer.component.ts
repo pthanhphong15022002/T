@@ -49,6 +49,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   isEdit: boolean = false;
   tabName$: Observable<string>;
   journal: IJournal;
+  hiddenFields: string[] = [];
 
   constructor(
     private injector: Injector,
@@ -63,6 +64,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
+    this.hiddenFields = this.cashTransfer?.unbounds?.lockFields ?? [];
 
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
@@ -102,6 +104,10 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
+
+      if (this.isEdit) {
+        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+      }
     });
 
     this.cache
@@ -250,7 +256,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.cashTransfer,
-      "AC",
+      'AC',
       'AC_CashTranfers',
       this.form,
       this.isEdit,

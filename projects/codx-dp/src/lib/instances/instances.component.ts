@@ -579,7 +579,7 @@ export class InstancesComponent
                     var obj = {
                       action: 'edit',
                       applyFor: applyFor,
-                      listStep: this.listStepInstances,
+                      listSteps: this.listStepInstances,
                       titleAction: titleAction,
                       formMD: formMD,
                       endDate: this.HandleEndDate(

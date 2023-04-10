@@ -114,8 +114,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.auth.logout();
-    document.location.reload();
+    this.auth.logout('');
+    // document.location.reload();
   }
 
   updateSettting(lang: string, theme: string, themeMode: string) {
@@ -254,6 +254,17 @@ export class UserInnerComponent implements OnInit, OnDestroy {
               console.log(res);
             });
         }
+      });
+  }
+
+  testFormatString() {
+    this.api
+      .callSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'ReplaceStringAsync', [
+        '',
+        null,
+      ])
+      .subscribe((res) => {
+        console.log(res);
       });
   }
 

@@ -281,7 +281,7 @@ const T_Component: Type<any>[] = [
   CodxChatBoxComponent,
   AddGroupChatComponent,
 
-  
+
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -295,49 +295,49 @@ const T_Pipe: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [
-    T_Component,
-    T_Pipe,
-    AttachmentComponent,
-    DialogthumbComponent,
-    CodxEmailComponent,
-    //CodxApproveStepsComponent,
-    AddEditApprovalStepComponent,
-    PopupAddApproverComponent,
-    CodxClearCacheComponent,
-    CalendarCenterComponent,
-  ],
-  imports: [
-    CommonModule,
-    NgbModule,
-    FormsModule,
-    SharedModule,
-    CodxCoreModule,
-    CalendarModule,
-    CoreModule,
-    DateRangePickerModule,
-    TabModule,
-    UploaderModule,
-    PickerModule,
-    ChartAllModule,
-    CircularGaugeModule,
-    // BoldReportsModule,
-    // BoldReportDesignerModule,
-    // BoldReportViewerModule,
-    ReactiveFormsModule,
-    DocumentEditorAllModule,
-    DocumentEditorContainerAllModule,
-    SpreadsheetAllModule,
-    DialogModule,
-    //pdf
-    ListViewAllModule,
-    NgxExtendedPdfViewerModule,
-    DashboardLayoutAllModule,
-    SliderModule,
-    LazyLoadImageModule,
-    DragDropModule,
-  ],
-  exports: [T_Component, T_Pipe],
+    declarations: [
+        T_Component,
+        T_Pipe,
+        AttachmentComponent,
+        DialogthumbComponent,
+        CodxEmailComponent,
+        //CodxApproveStepsComponent,
+        AddEditApprovalStepComponent,
+        PopupAddApproverComponent,
+        CodxClearCacheComponent,
+        CalendarCenterComponent,
+    ],
+    exports: [T_Component, T_Pipe],
+    imports: [
+        CommonModule,
+        NgbModule,
+        FormsModule,
+        SharedModule,
+        CodxCoreModule,
+        CalendarModule,
+        CoreModule,
+        DateRangePickerModule,
+        TabModule,
+        UploaderModule,
+        PickerModule,
+        ChartAllModule,
+        CircularGaugeModule,
+        // BoldReportsModule,
+        // BoldReportDesignerModule,
+        // BoldReportViewerModule,
+        ReactiveFormsModule,
+        DocumentEditorAllModule,
+        DocumentEditorContainerAllModule,
+        SpreadsheetAllModule,
+        DialogModule,
+        //pdf
+        ListViewAllModule,
+        NgxExtendedPdfViewerModule,
+        DashboardLayoutAllModule,
+        SliderModule,
+        LazyLoadImageModule,
+        DragDropModule,
+    ]
 })
 export class CodxShareModule {
   // public static forRoot(
