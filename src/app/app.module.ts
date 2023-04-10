@@ -176,7 +176,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxEp8Module.forRoot({ environment }),
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
-    CodxReportModule.forRoot({ environment }),
     CodxShareModule,
     AppRoutingModule,
     NgxSkeletonLoaderModule.forRoot({
