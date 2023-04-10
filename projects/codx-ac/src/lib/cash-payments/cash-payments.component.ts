@@ -338,21 +338,9 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res[0].objectName;
-        }
-      });
-    this.api
       .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
       .subscribe((res: any) => {
         this.cashpaymentline = res;
-      });
-    this.api
-      .exec('AC', 'TransactionTextsBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.transactionText = res;
       });
   }
   //#endregion

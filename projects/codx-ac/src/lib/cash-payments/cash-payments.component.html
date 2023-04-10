@@ -15,9 +15,12 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetail>
-  <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
-    [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeDataMF($event, itemSelected)">
-  </codx-detail-tmp>
+  <ng-container *ngIf="itemSelected">
+    <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
+      [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)"
+      (changeDataMF)="changeDataMF($event, itemSelected)">
+    </codx-detail-tmp>
+  </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
@@ -30,13 +33,11 @@
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
-  <ng-container *ngIf="oData">
-    <ng-container *ngFor="let item of oData">
-      <span class="text-gray-700 line-clamp line-clamp-1" *ngIf="item.objectID == data.objectID">
-        {{item.objectName}}
-      </span>
-    </ng-container>
-  </ng-container>
+  <span class="text-gray-700 line-clamp line-clamp-1" #objectID [innerHTML]="
+              data.objectID
+                | formatvalue : view.formModel : 'objectID' : objectID
+                | async
+            "></span>
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <span class="text-gray-700 line-clamp line-clamp-1">{{data.memo}}</span>
@@ -58,9 +59,11 @@
         <span>
           <i class="me-2 icon-apartment icon-16 text-gray-700"></i>
         </span>
-        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase">
-          {{objectname}}
-        </span>
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectID [innerHTML]="
+        itemSelected.objectID
+                | formatvalue : view.formModel : 'objectID' : objectID
+                | async
+            "></span>
       </div>
       <div class="d-flex align-self-center">
         <span>
@@ -229,8 +232,8 @@
                 <div class="d-flex align-items-center me-5 mb-1">
                   <codx-label class="fw-bold label-colon" fiedName="TransactionText" [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span #transactionText class="text-gray-700" [innerHTML]="itemSelected.transactionText
-                      | formatvalue : view.formModel : 'transactionText' : transactionText
+                  <span #transactionText class="text-gray-700" [innerHTML]="item.transactionText
+                      | formatvalue : fmCashPaymentsLines : 'transactionText' : transactionText
                       | async"></span>
                 </div>
               </div>
@@ -245,12 +248,23 @@
                   <codx-label *ngIf="item.diM2 != null && item.diM2 != ''" class="fw-bold label-colon" fiedName="DIM2"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span *ngIf="item.diM2 != null && item.diM2 != ''"
-                    class="text-gray-700">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-700">
+                    &nbsp;
+                    <span #diM2 class="text-gray-700" [innerHTML]="item.diM2
+                    | formatvalue : fmCashPaymentsLines : 'diM2' : diM2
+                    | async"></span>
+                    &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                  </span>
                   <codx-label *ngIf="item.diM3 != null && item.diM3 != ''" class="fw-bold label-colon" fiedName="DIM3"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-700">&nbsp;{{item.diM3}}</span>
+                  <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-700">
+                    &nbsp;
+                    <span #diM3 class="text-gray-700" [innerHTML]="item.diM3
+                    | formatvalue : fmCashPaymentsLines : 'diM3' : diM3
+                    | async"></span>
+                    &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                  </span>
                 </div>
               </div>
               <div class="d-flex flex-wrap">
@@ -258,35 +272,25 @@
                   <codx-label *ngIf="item.diM1 != null && item.diM1 != ''" class="fw-bold label-colon" fiedName="DIM1"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span *ngIf="item.diM1 != null && item.diM1 != ''"
-                    class="text-gray-700">&nbsp;{{item.diM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                  <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-700">
+                    &nbsp;
+                    <span #diM1 class="text-gray-700" [innerHTML]="item.diM1
+                    | formatvalue : fmCashPaymentsLines : 'diM1' : diM1
+                    | async"></span>
+                    &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                  </span>
                   <codx-label *ngIf="item.projectID != null && item.projectID != ''" class="fw-bold label-colon"
                     fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span *ngIf="item.projectID != null && item.projectID != ''"
-                    class="text-gray-700">&nbsp;{{item.projectID}}</span>
+                  <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-700">
+                    &nbsp;
+                    <span #projectID class="text-gray-700" [innerHTML]="item.projectID
+                    | formatvalue : fmCashPaymentsLines : 'projectID' : projectID
+                    | async"></span>
+                    &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                  </span>
                 </div>
               </div>
-              <!-- <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
-                <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-600 fs-5">
-                  TTCP:
-                  <span class="fs-5 fw-bold">&nbsp;{{item.diM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
-                <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-600 fs-5">
-                  Mục phí:
-                  <span class="fs-5 fw-bold">&nbsp;{{item.diM3}}</span>
-                </span>
-              </div>
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start">
-                <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-600 fs-5">
-                  Phòng ban:
-                  <span class="fs-5 fw-bold">&nbsp;{{item.diM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
-                <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-600 fs-5">
-                  Dự án:
-                  <span class="fs-5 fw-bold">&nbsp;{{item.projectID}}</span>
-                </span>
-              </div> -->
             </td>
           </tr>
         </tbody>
