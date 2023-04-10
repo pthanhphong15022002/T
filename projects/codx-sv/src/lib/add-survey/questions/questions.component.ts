@@ -1257,6 +1257,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addSession(itemActive, seqNoSession) {
+    debugger
     this.generateGuid();
     var tempQuestion = JSON.parse(JSON.stringify(itemActive));
     tempQuestion.answers = null;
@@ -1287,9 +1288,16 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       lstDown = lstMain.slice(itemActive.seqNo + 1, lstMain.length);
       //Update lại parentID cho đúng với session mới tạo
       lstUp.forEach((x) => (x.parentID = this.questions[seqNoSession].recID));
-      lstDown.forEach(
-        (x) => (x.parentID = this.questions[seqNoSession + 1].recID)
-      );
+     
+      if(lstDown.length > 0)
+      {
+        for(var i = 0 ; i < lstDown.length ; i++)
+        {
+          lstDown[i].parentID = this.questions[seqNoSession + 1].recID;
+          lstDown[i].seqNo = i ;
+        }
+      }
+    
       this.questions[seqNoSession + 1]['children'] = lstDown;
       this.questions[seqNoSession]['children'] = lstUp;
     }
