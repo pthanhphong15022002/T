@@ -32,7 +32,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   grvSetup: any;
   action = 'add';
   titleAction = 'Thêm';
-  disable = false;
+  enabled = false;
   //
   value: number = 5;
   min: number = 0;
@@ -64,6 +64,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.dialog = dialog;
     this.field = JSON.parse(JSON.stringify(dt?.data?.field));
     this.action = dt?.data?.action;
+    this.enabled = dt?.data?.enabled
     if (this.action=='add'|| this.action=='copy') this.field.recID = Util.uid();
     
     this.titleAction = dt?.data?.titleAction;

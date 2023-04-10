@@ -1,12 +1,13 @@
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector, inject, ChangeDetectorRef } from '@angular/core';
+import { Injector, inject, ChangeDetectorRef, Input } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -26,16 +27,59 @@ export class PopupEBasicSalariesComponent
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  EBasicSalaryObj: any;
+  EBasicSalaryObj: any | null;
   // lstEBSalary
   // indexSelected
   idField = 'RecID';
   actionType: string;
   funcID: string;
-  employeeId: string;
+  employeeId: string | null;
   isAfterRender = false;
   headerText: ' ';
   @ViewChild('form') form: CodxFormComponent;
+
+  //check where to open the form
+  employeeObj: any | null;
+  actionArray = ['add', 'edit', 'copy'];
+  fromListView: boolean = false; //check where to open the form
+  showEmpInfo: boolean = true;
+  //end
+  constructor(
+    injector: Injector,
+    private cr: ChangeDetectorRef,
+    private notify: NotificationsService,
+    private hrService: CodxHrService,
+    @Optional() dialog?: DialogRef,
+    @Optional() data?: DialogData
+  ) {
+    super(injector);
+    //catch input data
+    // debugger
+    this.dialog = dialog;
+    this.headerText = data?.data?.headerText;
+    this.funcID = data?.data?.funcID;
+    this.employeeId = data?.data?.employeeId;
+    this.actionType = data?.data?.actionType;
+    this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
+    console.log(this.EBasicSalaryObj);
+    this.formModel = dialog?.formModel;
+    this.employeeObj = data?.data?.employeeObj;
+    this.fromListView = data?.data?.fromListView;
+  }
+
+  allowToViewEmp(): boolean {
+    //check if show emp info or not
+    if (this.actionType == 'edit') {
+      if (this.fromListView) return true;
+      else return false;
+    }
+    if (this.actionType == 'copy') return true;
+    if (this.actionType == 'add') {
+      if (this.fromListView) return true; // add new from list view
+      else return false;
+    }
+    return true;
+  }
 
   onInit(): void {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
@@ -51,24 +95,32 @@ export class PopupEBasicSalariesComponent
           });
       }
     });
+    //get emp from beginning
+    if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId);
+    this.showEmpInfo = this.allowToViewEmp();
   }
 
-  constructor(
-    injector: Injector,
-    private cr: ChangeDetectorRef,
-    private notify: NotificationsService,
-    private hrService: CodxHrService,
-    @Optional() dialog?: DialogRef,
-    @Optional() data?: DialogData
-  ) {
-    super(injector);
-    this.dialog = dialog;
-    this.headerText = data?.data?.headerText;
-    this.funcID = data?.data?.funcID;
-    this.employeeId = data?.data?.employeeId;
-    this.actionType = data?.data?.actionType;
-    this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
-    this.formModel = dialog?.formModel;
+  //change employee
+  handleSelectEmp(evt) {
+    if (evt.data != null) {
+      this.employeeId = evt.data;
+      this.getEmployeeInfoById(this.employeeId);
+    }
+  }
+  //
+  getEmployeeInfoById(empId: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        this.employeeObj = emp[0][0];
+        //console.log('employee cua form', this.employeeObj);
+        this.cr.detectChanges();
+      }
+    });
   }
 
   ngAfterViewInit() {}

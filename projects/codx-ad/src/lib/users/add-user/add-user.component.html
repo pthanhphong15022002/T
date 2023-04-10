@@ -36,9 +36,9 @@
           </codx-label>
           <codx-input
             field="UserID"
-            [disabled]="true"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
+            [disabled]="formType == 'edit'"
           >
           </codx-input>
         </div>

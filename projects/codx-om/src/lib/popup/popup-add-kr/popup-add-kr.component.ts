@@ -440,8 +440,9 @@ export class PopupAddKRComponent extends UIComponent {
     this.dialogTargets = this.callfc.openForm(
       template,
       '',
-      550,
-      popUpHeight,
+      650,
+      500,
+//      popUpHeight,
       null
     );
     this.detectorRef.detectChanges();
