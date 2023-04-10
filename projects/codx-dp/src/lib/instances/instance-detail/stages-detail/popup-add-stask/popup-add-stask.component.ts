@@ -160,7 +160,6 @@ export class PopupAddStaskComponent implements OnInit {
             this.view[keyConvert] = res[key]['headerText'];
           }
         }
-        console.log(this.view);
       });
   }
 

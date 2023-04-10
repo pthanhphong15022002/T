@@ -316,7 +316,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   copy(evt) {
     this.viewBase.dataService.dataSelected = evt?.data;
-    this.viewBase.dataService.copy(evt?.data).subscribe((res: any) => {
+    this.viewBase.dataService.copy().subscribe((res: any) => {
       this.viewBase.dataService.dataSelected.recID = res?.recID;
       let option = new SidebarModel();
       option.Width = '550px';

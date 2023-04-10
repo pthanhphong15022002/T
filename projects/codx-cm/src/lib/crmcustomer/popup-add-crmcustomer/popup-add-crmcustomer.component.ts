@@ -51,7 +51,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected??dialog.dataService));
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.action = dt.data[0];
@@ -80,14 +80,6 @@ export class PopupAddCrmcustomerComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.action == 'copy') {
-      this.data.recID = Guid.newGuid();
-      this.data.contacts = [];
-      this.data.customerID = null;
-      this.data.contactID = null;
-      this.data.partnerID = null;
-      this.data.opponentID = null;
-    }
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {

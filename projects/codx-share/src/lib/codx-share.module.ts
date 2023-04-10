@@ -113,16 +113,12 @@ import { PopupAddChartComponent } from './components/codx-dashboard/popup-add-ch
 import { DashboardLayoutAllModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutPanelComponent } from './components/codx-dashboard/layout-panel/layout-panel.component';
 import { CodxAttachmentTempComponent } from './components/codx-attachment-temp/codx-attachment-temp.component';
-import { ChatListComponent } from './layout/components/chat-list/chat-list.component';
-import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
-import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
 import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 import { CodxCompetencesComponent } from './components/codx-competences/codx-competences.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 import { CoreModule } from '@core/core.module';
-import { LayoutListDetailComponent } from './layout/components/layout-list-detail/layout-list-detail.component';
 import { CodxApproveStepsComponent } from './components/codx-approve-steps/codx-approve-steps.component';
 import { AddEditApprovalStepComponent } from './components/codx-approve-steps/add-edit-approval-step/add-edit-approval-step.component';
 import { PopupAddApproverComponent } from './components/codx-approve-steps/popup-add-approver/popup-add-approver.component';
@@ -158,6 +154,13 @@ import { PopupStatusMeetingComponent } from './components/codx-tmmeetings/popup-
 import { PopupRescheduleMeetingComponent } from './components/codx-tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
 import { PopupAddResourcesComponent } from './components/codx-tmmeetings/popup-add-resources/popup-add-resources.component';
 import { MeetingDetailComponent } from './components/codx-tmmeetings/meeting-detail/meeting-detail.component';
+import { CodxChatComponent } from './layout/drawers/chat/codx-chat/codx-chat.component';
+import { CodxChatContainerComponent } from './layout/drawers/chat/chat-container/chat-container.component';
+import { CodxChatListComponent } from './layout/drawers/chat/chat-list/chat-list.component';
+import { CodxChatBoxComponent } from './layout/drawers/chat/chat-box/chat-box.component';
+import { MessageSystemPipe } from './layout/drawers/chat/chat-box/mssgSystem.pipe';
+import { ScrollPipe } from './layout/drawers/chat/chat-box/scrollPipe.pipe';
+import { AddGroupChatComponent } from './layout/drawers/chat/popup/popup-add-group/popup-add-group.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -231,9 +234,6 @@ const T_Component: Type<any>[] = [
   CodxPopupViewsComponent,
   CodxCommentTempComponent,
   CodxUserTempComponent,
-  ChatBoxComponent,
-  ChatListComponent,
-  ListChatBoxComponent,
   CodxCompetencesComponent,
   CodxTreeCommentComponent,
   //pdf
@@ -245,7 +245,7 @@ const T_Component: Type<any>[] = [
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
   ListPostComponent,
-  LayoutListDetailComponent,
+
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
@@ -272,7 +272,14 @@ const T_Component: Type<any>[] = [
   PopupStatusMeetingComponent,
   PopupRescheduleMeetingComponent,
   PopupAddResourcesComponent,
-  MeetingDetailComponent
+  MeetingDetailComponent,
+
+  // chatting
+  CodxChatComponent,
+  CodxChatContainerComponent,
+  CodxChatListComponent,
+  CodxChatBoxComponent,
+  AddGroupChatComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -280,6 +287,9 @@ const T_Pipe: Type<any>[] = [
   FileImage,
   DisplayValue,
   TextValuePipe,
+  // chatting
+  ScrollPipe,
+  MessageSystemPipe,
 ];
 
 @NgModule({
@@ -289,7 +299,6 @@ const T_Pipe: Type<any>[] = [
     AttachmentComponent,
     DialogthumbComponent,
     CodxEmailComponent,
-    LayoutListDetailComponent,
     //CodxApproveStepsComponent,
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,

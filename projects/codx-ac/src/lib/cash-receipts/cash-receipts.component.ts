@@ -19,6 +19,7 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'lib-cash-receipts',
@@ -29,16 +30,26 @@ export class CashReceiptsComponent extends UIComponent {
   //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   funcName: any;
-  parentID: string;
+  oData: any;
+  objectname:any;
+  itemSelected:any;
   journalNo: string;
+  cashbook: any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   constructor(
     private inject: Injector,
@@ -49,14 +60,28 @@ export class CashReceiptsComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
-//#endregion
+  //#endregion
 
-//#region Init
-  onInit(): void {}
+  //#region Init
+  onInit(): void {
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.oData = res;
+        }
+      });
+    this.api
+      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.cashbook = res;
+        }
+      });
+  }
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -69,6 +94,16 @@ export class CashReceiptsComponent extends UIComponent {
         model: {
           template2: this.templateMore,
           frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
       },
     ];
@@ -189,7 +224,7 @@ export class CashReceiptsComponent extends UIComponent {
   //#region Function
   setDefault(o) {
     return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
   beforeDelete(opt: RequestOption, data) {
@@ -199,6 +234,22 @@ export class CashReceiptsComponent extends UIComponent {
     opt.service = 'AC';
     opt.data = data;
     return true;
+  }
+  clickChange(data){
+
+  }
+  changeDataMF(e:any,data:any){
+    this.itemSelected = this.view.dataService.dataSelected;
+    this.loadDatadetail(data);
+  }
+  loadDatadetail(data) {
+    this.api
+    .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+    .subscribe((res: any) => {
+      if (res != null) {
+        this.objectname = res[0].objectName;
+      }
+    });
   }
   //#endregion
 }

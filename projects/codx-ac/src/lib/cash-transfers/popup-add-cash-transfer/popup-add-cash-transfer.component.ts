@@ -98,9 +98,11 @@ export class PopupAddCashTransferComponent extends UIComponent {
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.cashTransfer.journalNo;
     options.pageLoading = false;
-    this.acService
-      .loadDataAsync('AC', options)
-      .subscribe((res) => (this.journal = res[0]));
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
+        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
+        : res[0];
+    });
 
     this.cache
       .gridViewSetup(
@@ -248,6 +250,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.journalService.handleVoucherNoAndSave(
       this.journal,
       this.cashTransfer,
+      "AC",
       'AC_CashTranfers',
       this.form,
       this.isEdit,

@@ -38,13 +38,12 @@ import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
-import { DP_Instances } from '../models/models';
+import { DP_Instances, DP_Instances_Steps_Reasons } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
-import { debug } from 'util';
 
 @Component({
   selector: 'codx-instances',
@@ -69,6 +68,7 @@ export class InstancesComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   views: Array<ViewModel> = [];
 
@@ -159,7 +159,9 @@ export class InstancesComponent
   listInstanceStep = [];
   reloadData = false;
   popup: DialogRef;
-  
+  reasonStepsObject: any;
+  addFieldsControl = '1';
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -288,7 +290,7 @@ export class InstancesComponent
       this.codxDpService
         .getProcessByProcessID(this.processID)
         .subscribe((ps) => {
-          if (ps && ps.read) {
+          if (ps && ps.read && !ps.isDelete) {
             this.loadData(ps);
             this.getListCbxProccess(ps?.applyFor);
           } else {
@@ -374,6 +376,15 @@ export class InstancesComponent
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          this.titleAction =
+            this.titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
@@ -382,7 +393,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            option.Width = '800px';
+            option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
             option.zIndex = 1001;
             this.view.dataService.dataSelected.processID = this.process.recID;
             if (!this.process.instanceNoSetting) {
@@ -424,6 +435,15 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            this.titleAction =
+              this.titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
+          }
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -437,7 +457,8 @@ export class InstancesComponent
                     formMD.entityName = fun.entityName;
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
-                    option.Width = '800px';
+                    option.Width =
+                    this.addFieldsControl == '1'  ? '800px' : '550px';
                     option.zIndex = 1001;
                     if (!this.process.instanceNoSetting) {
                       this.codxDpService
@@ -449,12 +470,7 @@ export class InstancesComponent
                         .subscribe((res) => {
                           if (res) {
                             this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              titleAction
-                            );
+                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
                           }
                         });
                     } else {
@@ -466,12 +482,7 @@ export class InstancesComponent
                           if (isNo) {
                             this.view.dataService.dataSelected.instanceNo =
                               isNo;
-                            this.openPopUpAdd(
-                              applyFor,
-                              formMD,
-                              option,
-                              titleAction
-                            );
+                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
                           }
                         });
                     }
@@ -494,6 +505,7 @@ export class InstancesComponent
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
+      addFieldsControl: this.addFieldsControl,
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
@@ -512,7 +524,6 @@ export class InstancesComponent
         this.dataSelected = data;
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
@@ -536,7 +547,15 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          // this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            titleAction =
+              titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
+          }
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
@@ -551,7 +570,8 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
 
-                    option.Width = '800px';
+                    option.Width =
+                      this.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     this.view.dataService.dataSelected.processID =
                       this.process.recID;
@@ -568,6 +588,7 @@ export class InstancesComponent
                       ),
                       autoName: this.autoName,
                       lstParticipants: this.lstParticipants,
+                      addFieldsControl: this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
                       PopupAddInstanceComponent,
@@ -764,7 +785,6 @@ export class InstancesComponent
               break;
           }
         });
-       
       } else {
         e.forEach((mf) => {
           switch (mf.functionID) {
@@ -845,7 +865,7 @@ export class InstancesComponent
     option.IsFull = true;
     option.zIndex = 999;
     this.viewType = 'p';
-     this.popup = this.callFunc.openForm(
+    this.popup = this.callFunc.openForm(
       this.popDetail,
       '',
       Util.getViewPort().width,
@@ -855,10 +875,7 @@ export class InstancesComponent
       '',
       option
     );
-    console.log(this.detailViewPopup)
-    this.popup.closed.subscribe((e) => {
-      
-    });
+    this.popup.closed.subscribe((e) => {});
   }
 
   dropInstance(data) {
@@ -1006,7 +1023,6 @@ export class InstancesComponent
 
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
               }
 
@@ -1118,7 +1134,6 @@ export class InstancesComponent
 
             if (this.detailViewInstance) {
               this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.instance = this.dataSelected;
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
 
@@ -1226,7 +1241,6 @@ export class InstancesComponent
 
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.instance = this.dataSelected;
           this.detailViewInstance.listSteps = this.listStepInstances;
         }
 
@@ -1375,26 +1389,47 @@ export class InstancesComponent
 
   //Export file
   exportFile() {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      null,
-      800,
-      '',
-      [gridModel, this.dataSelected.recID],
-      null
-    );
+    // var gridModel = new DataRequest();
+    // gridModel.formName = this.view.formModel.formName;
+    // gridModel.entityName = this.view.formModel.entityName;
+    // gridModel.funcID = this.view.formModel.funcID;
+    // gridModel.gridViewName = this.view.formModel.gridViewName;
+    // gridModel.page = this.view.dataService.request.page;
+    // gridModel.pageSize = this.view.dataService.request.pageSize;
+    // gridModel.predicate = this.view.dataService.request.predicates;
+    // gridModel.dataValue = this.view.dataService.request.dataValues;
+    // gridModel.entityPermission = this.view.formModel.entityPer;
+    // //
+    // this.callfc.openForm(
+    //   CodxExportComponent,
+    //   null,
+    //   null,
+    //   800,
+    //   '',
+    //   [gridModel, this.dataSelected.recID],
+    //   null
+    // );
+
+    //data test
+    let datas = [
+      { san_pham: 'Sản phẩm quần què test' },
+      { dien_tich: 'Diện tích quần què test' },
+      { so_luong: 'Số lượng quần què test' },
+      { don_gia: 'Đơn giá quần què test' },
+    ];
+    let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.Core',
+        'CMBusiness',
+        'ExportExcelDataAsync',
+        [JSON.stringify(datas), id]
+      )
+      .subscribe((res) => {
+        console.log(res);
+        debugger;
+      });
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
@@ -1460,7 +1495,8 @@ export class InstancesComponent
   //load điều kiện
   loadData(ps) {
     this.process = ps;
-    this.layoutInstance.viewNameProcess(ps.processName);
+    this.addFieldsControl = ps?.addFieldsControl;
+    this.layoutInstance.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -1474,6 +1510,10 @@ export class InstancesComponent
     this.autoName = this.process?.autoName;
     this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
     this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+    this.reasonStepsObject = {
+      stepReasonSuccess: this.stepSuccess.reasons,
+      stepReasonFail: this.stepFail.reasons,
+    };
     this.isUseSuccess = this.stepSuccess?.isUsed;
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;

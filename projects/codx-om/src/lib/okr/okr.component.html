@@ -2,7 +2,6 @@
 </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-4 px-6 d-flex flex-column">
-    <!-- <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChartClick($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar> -->
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
         <div class="w-100px text-center bgC5C7D0 active py-2 om-rounded-pill-left" *ngIf="funcID!=compFuncID">
@@ -28,7 +27,7 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-center justify-content-end">
+      <div class="d-flex align-items-center justify-content-end col-3">
         <div *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-2" (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu" >
           <span class="symbol-label bg-om-gray">
             <i class="icon-create text-dark"></i>
@@ -131,7 +130,7 @@
             <ng-template #content>
               <div>
 
-                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting" [projectID]="dataOKRPlans.recID"></codx-tmmeetings>
+                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting" [projectID]="dataOKRPlans?.recID"></codx-tmmeetings>
               </div>
             </ng-template>
           </e-tabitem>

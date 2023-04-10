@@ -16,6 +16,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -36,7 +37,6 @@ export class PopupJobComponent implements OnInit {
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   title = '';
   dialog!: DialogRef;
-  formModelMenu: FormModel;
   taskType = '';
   vllShare = 'DP0331';
   stepName = '';
@@ -68,6 +68,7 @@ export class PopupJobComponent implements OnInit {
   view = [];
   step: DP_Steps;
   listFileTask: string[] = [];
+  user: any;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -80,7 +81,7 @@ export class PopupJobComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
-    private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -109,13 +110,25 @@ export class PopupJobComponent implements OnInit {
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
     this.listFileTask = dt?.data[7];
+    this.user = this.authStore.get();
   }
   async ngOnInit() {
     this.getTypeTask();
     this.getFormModel();
     this.roles = this.stepsTasks['roles'];
-    this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    if (this.status == 'add' && this.taskType !== 'M') {
+      let user = new DP_Steps_Tasks_Roles();
+      user.objectName = this.user['userName'];
+      user.objectID = this.user['userID'];
+      user.objectType = "U";
+      user.roleType = "O";
+      user.taskID = this.stepsTasks['recID'];
+      this.owner.push(user);
+    }else{
+      this.owner = this.roles?.filter((role) => role.roleType === 'O');
+      this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    }
+
     this.litsParentID = this.stepsTasks['parentID']
       ? this.stepsTasks['parentID']?.split(';')
       : [];
@@ -204,11 +217,6 @@ export class PopupJobComponent implements OnInit {
         });
     });
     this.participant = listRole;
-  }
-
-  onDeleteOwner(objectID, data) {
-    let index = data.findIndex((item) => item.objectID == objectID);
-    if (index != -1) data.splice(index, 1);
   }
 
   async changeCombobox(value, key) {
@@ -308,23 +316,29 @@ export class PopupJobComponent implements OnInit {
   changeQuestion(e) {
     if (e?.data) {
       this.stepsTasks['reference'] = e?.data;
-      let url = window.location.href;
-      let index = url.indexOf('/bp/');
-      if (index != -1)
-        this.linkQuesiton =
-          url.substring(0, index) +
-          Util.stringFormat(
-            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
-            'SVT01',
-            '',
-            e?.data
-          );
-      this.changeDef.detectChanges();
     }
   }
 
   viewDetailSurveys() {
-    if (this.linkQuesiton) window.open(this.linkQuesiton);
+    if (this.linkQuesiton){
+      this.setLink();
+      window.open(this.linkQuesiton);
+    } 
+  }
+
+  setLink(){
+    let url = window.location.href;
+    let index = url.indexOf('/dp/');
+    if (index != -1){
+      this.linkQuesiton =
+        url.substring(0, index) +
+        Util.stringFormat(
+          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+          'SVT01',
+          '',
+          this.stepsTasks['reference']
+        );
+    }
   }
   // file
   addFile(evt: any) {

@@ -125,6 +125,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
 
     this.curUser = this.auth.get();
+    this.createCOObject()
   }
 
   //---------------------------------------------------------------------------------//
@@ -408,6 +409,7 @@ getOrgTreeOKR() {
 
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.createCOObject();
     this.getOKRModel();
     this.funcIDChanged();
     this.formModelChanged();
@@ -450,16 +452,27 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      if(this.dataOKR.length<1 || this.dataOKR==null){
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-            func.disabled = true;
-          }
-        });
-      }
+      // if(this.dataOKR!=null && this.dataOKR.length>0){
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = false;
+      //     }
+      //   });
+      // }
+      // else{
+      //   //nếu ko có OKR thì ẩn MF phân bổ trọng số
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = true;
+      //     }
+      //   });
+      // }
     }
   }
   //Hàm click
@@ -525,14 +538,35 @@ getOrgTreeOKR() {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   changePlanStatus(status) {
-    this.codxOmService
+    if(status==OMCONST.VLL.PlanStatus.NotStarted){
+      this.codxOmService.beforeUnReleasePlan(this.dataOKRPlans?.recID).subscribe((res=>{
+        if(res!=null){
+          this.notificationsService.notifyCode("Bộ mục tiêu hiện hành đã phát sinh dữ liệu liên quan. Vui lòng liên hệ với "+res+" để xử lí.");//OM_WAIT: Đợi mssgCode
+          return;
+        }    
+        else{
+          this.codxOmService
+          .changePlanStatus(this.dataOKRPlans.recID, status)
+          .subscribe((res) => {
+            if (res) {
+              this.dataOKRPlans.status = status;
+              this.notificationsService.notifyCode('SYS034'); //thành công
+            }
+          });
+        }        
+      }));      
+    }
+    else{
+      this.codxOmService
       .changePlanStatus(this.dataOKRPlans.recID, status)
       .subscribe((res) => {
         if (res) {
           this.dataOKRPlans.status = status;
-          this.notificationsService.notifyCode('SYS034'); //đã duyệt
+          this.notificationsService.notifyCode('SYS034'); //thành công
         }
       });
+    }
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
@@ -670,7 +704,7 @@ getOrgTreeOKR() {
       null,
       null,
       null,
-      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll],
+      [this.dataOKRPlans, OMCONST.VLL.OKRType.Obj, popupTitle, subTitle,this.okrVll,this.okrFM],
       '',
       dModel
     );

@@ -198,7 +198,7 @@
       <div>
         <codx-label
           class="title"
-          [formModel]="frmModel"
+          [formModel]="frmModelInstancesTask"
           fiedName="Task"
           default="Công việc"
         >
@@ -281,7 +281,7 @@
                             class="title"
                             fiedName="updateTime"
                             default="Cập nhật:"
-                            [formModel]="frmModel"
+                            [formModel]="frmModelInstancesTask"
                           >
                           </codx-label>
                           <span>
@@ -296,7 +296,7 @@
                       </div>
                       <codx-mfunc
                         *ngIf="taskList?.startDate && taskList?.endDate"
-                        [formModel]="frmModel"
+                        [formModel]="frmModelInstancesTask"
                         (changeDataMF)="changeDataMF($event, 'group')"
                         (clickMF)="clickMFTaskGroup($event, taskList)"
                         [isBookMark]="true"
@@ -368,7 +368,7 @@
                                     class="title"
                                     fiedName="updateTime"
                                     default="Cập nhật:"
-                                    [formModel]="frmModel"
+                                    [formModel]="frmModelInstancesTask"
                                   >
                                   </codx-label>
                                   <!-- <span [innerHTML]="task?.modifiedOn | formatvalue: frmModel : 'ModifiedOn' | async"> -->
@@ -401,7 +401,7 @@
                             </div>
                             <codx-mfunc
                               *ngIf="taskList?.startDate && taskList?.endDate"
-                              [formModel]="frmModel"
+                              [formModel]="frmModelInstancesTask"
                               (clickMF)="
                                 clickMFTask($event, taskList?.task, task)
                               "
@@ -650,16 +650,15 @@
         <codx-label
           fiedName="note"
           [formModel]="grvTaskGroupsForm"
-          default="Ghi
-          chú"
+          default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
+        class="w-100"
         field="note"
         type="textarea"
-        headerposition="none"
         format="ed2"
-        height="100"
+        height="200"
         [crrValue]="dataProgress?.note"
         (valueChange)="changeValueInput($event, dataProgress)"
       >
@@ -763,7 +762,7 @@
       <div class="group-button">
         <button class="button-custom" (click)="openPopupReason()">
           <span
-            [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"
+            [ngClass]="isClosed?'':'icon-edit icon-20 text-primary-600 py-2'"
             style="font-weight: 500"
           ></span>
         </button>
@@ -802,7 +801,7 @@
 
 <ng-template #viewReason let-dialog="dialogPopupReason">
   <codx-form
-    headerText="Chọn lý do thành công"
+    [headerText]="titleReason"
     [body]="bodyFormReName"
     [footer]="footerFormReName"
     [dialog]="dialogPopupReason"
@@ -812,7 +811,7 @@
 
 <ng-template #bodyFormReName>
   <div class="form-group mt-3">
-    <div *ngFor="let item of listStepReason.reasons">
+    <div *ngFor="let item of listStepReason">
       <div class="form-check py-2">
         <input
           class="form-check-input rounded-circle"

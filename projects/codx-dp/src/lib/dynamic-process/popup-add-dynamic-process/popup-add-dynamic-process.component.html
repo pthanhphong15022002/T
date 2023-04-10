@@ -749,6 +749,30 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
+            <codx-label
+              fiedName="AddFieldsControl"
+              [formModel]="dialog.formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-6">
+              <codx-input
+                field="addFieldsControl"
+                type="valuelist"
+                [crrValue]="process?.addFieldsControl"
+                [refValue]="gridViewSetup?.AddFieldsControl?.referedValue"
+                (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['AddFieldsControl']?.description"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
             <codx-label fiedName="ViewMode" [formModel]="dialog.formModel">
             </codx-label>
           </div>
@@ -849,6 +873,47 @@
                 style="top: 7px; right: 13px"
               >
                 <codx-label fiedName="lblDate" default="Ngày"></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label fiedName="AllowCopy" [formModel]="dialog.formModel">
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="success-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="success-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
               </div>
             </div>
           </div>
@@ -1372,7 +1437,7 @@
           <div class="stage-fix">
             <!-- Step Reason successs -->
             <div class="fw-bold fs-5 text-dark pt-2 pb-1 mb-1 border-top">
-              Kết quả
+              {{ noteResult }}
             </div>
             <div
               class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom"
@@ -1673,9 +1738,9 @@
                             <div class="mx-3">
                               <codx-img
                                 [width]="30"
-                                [objectId]="task?.roles[0]?.objectID"
+                                [objectId]="getObjectIdRole(task)"
                                 objectType="AD_Users"
-                                [objectName]="task?.roles[0]?.objectName"
+                                [objectName]="getObjectNameRole(task)"
                               >
                               </codx-img>
                             </div>
@@ -1708,7 +1773,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="task-att">
+                          <!-- <div class="task-att">
                             <codx-attachment
                               #attachment
                               hideFolder="1"
@@ -1722,7 +1787,7 @@
                               showMessage="1"
                             >
                             </codx-attachment>
-                          </div>
+                          </div> -->
                           <codx-mfunc
                             [formModel]="grvMoreFunction"
                             (clickMF)="

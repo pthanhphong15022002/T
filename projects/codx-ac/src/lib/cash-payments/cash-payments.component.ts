@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AuthStore,
   ButtonModel,
   CallFuncService,
   DataRequest,
@@ -24,6 +25,8 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { of } from 'rxjs';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
+import { CashPaymentLine } from '../models/CashPaymentLine.model';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -34,18 +37,39 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
-  parentID: string;
   journalNo: string;
+  itemSelected: any;
+  objectname: any;
+  oData: any;
+  cashbook: any;
+  page: any = 1;
+  pageSize = 6;
+  userID: any;
+  transactionText: any;
+  cashpaymentline: Array<CashPaymentLine> = [];
+  fmCashPaymentsLines: FormModel = {
+    formName: 'CashPaymentsLines',
+    gridViewName: 'grvCashPaymentsLines',
+    entityName: 'AC_CashPaymentsLines',
+  };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  ];
+  authStore: AuthStore;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -53,6 +77,7 @@ export class CashPaymentsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -61,14 +86,29 @@ export class CashPaymentsComponent extends UIComponent {
       }
     });
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
   }
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.userID = this.authStore.get().userID;
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.oData = res;
+        }
+      });
+    this.api
+      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.cashbook = res;
+        }
+      });
+  }
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -84,7 +124,19 @@ export class CashPaymentsComponent extends UIComponent {
           frozenColumns: 1,
         },
       },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
     ];
+
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -117,7 +169,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Method
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
 
@@ -246,6 +298,62 @@ export class CashPaymentsComponent extends UIComponent {
     opt.service = 'AC';
     opt.data = data;
     return true;
+  }
+
+  changeDataMF(e: any, data: any) {
+    this.itemSelected = this.view.dataService.dataSelected;
+    //Bookmark
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT041003' || x.functionID == 'ACT041002' || x.functionID == 'ACT041004');
+    // duyệt trước khi ghi sổ
+    if (data.status == '1' && data.approveStatus == '1') {
+      bm[1].disabled = true;
+      bm[2].disabled = true;
+    }
+    //ko duyệt trước khi ghi sổ
+    if (data.status == '1' && data.approveStatus == '0') {
+      bm[0].disabled = true;
+      bm[2].disabled = true;
+    }
+    //Chờ duyệt
+    if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+      bm[1].disabled = true;
+      bm[0].disabled = true;
+    }
+    //hủy duyệt
+    if (data?.approveStatus == '4') {
+      for(var i = 0 ; i< bm.length ; i++)
+        {
+          bm[i].disabled = true;
+        }
+    }
+    this.loadDatadetail(this.itemSelected);
+  }
+
+  clickChange(data) {
+    this.itemSelected = data;
+    this.loadDatadetail(data);
+  }
+
+  loadDatadetail(data) {
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res[0].objectName;
+        }
+      });
+    this.api
+      .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.cashpaymentline = res;
+      });
+    this.api
+      .exec('AC', 'TransactionTextsBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.transactionText = res;
+      });
   }
   //#endregion
 }

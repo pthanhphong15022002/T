@@ -244,7 +244,7 @@
 </div>
 <!-- template view image -->
 <ng-template #image let-file>
-    <div class="files-image" (click)="clickViewDetail(file)" [ngStyle]="{'background-image': 'url(' + file.source + ')'}">
+    <div class="files-image" [defaultImage]="defaultImage" [lazyLoad]="file.source" (click)="clickViewDetail(file)">
         <ng-container *ngIf="allowEdit">
             <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
         </ng-container>

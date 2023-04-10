@@ -264,7 +264,7 @@ export class EmployeesComponent extends UIComponent {
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
-      this.view.dataService.copy(data).subscribe((res: any) => {
+      this.view.dataService.copy().subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;

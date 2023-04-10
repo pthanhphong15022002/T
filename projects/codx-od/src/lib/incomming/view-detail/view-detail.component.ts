@@ -56,6 +56,7 @@ import { RefuseComponent } from '../refuse/refuse.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
+import { Permission } from '@shared/models/file.model';
 
 @Component({
   selector: 'app-view-detail',
@@ -105,6 +106,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   vllStatusAssign = 'TM007';
   funcList: any;
   dataRq = new DataRequest();
+  listPermission = [];
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -117,18 +119,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     private shareService: CodxShareService,
   ) {}
   ngAfterViewInit(): void {
+
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      // {
-      //   name: 'ReferencesOD',
-      //   textDefault: 'Tham chiếu',
-      //   isActive: false,
-      //   template: this.reference,
-      // },
-      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
     if (this.view?.funcID == 'ODT41' || this.xd)
       this.tabControl.push({
@@ -172,6 +168,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
     this.setHeight();
+    this.addPermission();
   }
 
   ngOnInit(): void {
@@ -184,6 +181,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.dataRq.funcID = this.formModel?.funcID;
     this.getGridViewSetup(this.pfuncID);
   }
+
   setHeight() {
     let main = 0,
       header = 0;
@@ -214,6 +212,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       )[0].style.height = main - header - 115 - a + 'px';
     }
   }
+
   getGridViewSetup(funcID: any) {
     var funcList = this.codxODService.loadFunctionList(funcID);
 
@@ -561,7 +560,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.odService.checkUserPermiss(recID, this.userID).subscribe((item) => {
       if (item.status == 0) this.checkUserPer = item.data;
     });
+
   }
+
+
+
   openFormFuncID(val: any, datas: any = null, isData = false) {
     let that = this;
     var funcID = val?.functionID;
@@ -653,7 +656,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       //Copy
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
-        this.view.dataService.copy(datas).subscribe((res: any) => {
+        this.view.dataService.copy().subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
           this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo;
           this.view.dataService.dataSelected.owner = res?.owner;
@@ -1658,6 +1661,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   clickTemp(e) {
     e.stopPropagation();
   }
+
   checkDeadLine(time: any) {
     if (new Date(time).getTime() < new Date().getTime() || !time) {
       return 'icon-access_alarm';
@@ -1668,4 +1672,27 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   refuse(datas: any) {
     //datas = this.
   }
+
+  addPermission()
+  {
+    this.listPermission = [];
+    if(this.dataItem.relations && this.dataItem.relations.length>0)
+    {
+      this.dataItem.relations.forEach(elm=>{
+        if(elm.userID != this.userID)
+        {
+          var p = new Permission()
+          p.read = true;
+          p.share = true;
+          p.download = true;
+          p.objectID = elm.userID;
+          p.objectType = "U";
+          p.isActive = true
+          this.listPermission.push(p);
+        }
+      })
+
+    }
+  }
+
 }

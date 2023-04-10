@@ -120,15 +120,17 @@ textarea.e-input,
 .e-input-group,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
-  color: var(--gray-800) !important;
-  line-height: 32px;
+  //color: var(--gray-800) !important;
+ // line-height: 32px;
 }
-input.e-input,
-.e-input-group,
-.e-input-group.e-control-wrapper {
+// input.e-input,
+// .e-input-group,
+// .e-input-group.e-control-wrapper {
+//   height: 32px !important;
+// }
+input.e-input{
   height: 32px !important;
 }
-
 input.e-input::placeholder,
 textarea.e-input::placeholder,
 .e-input-group::placeholder,
@@ -2201,16 +2203,11 @@ codx-calendar {
 .btn:focus {
   border-color: transparent !important;
 }
-.e-pane.e-static-pane {
-  ejs-listview {
-    .e-list-parent.e-ul .e-list-item {
-      border-bottom: 1px var(--gray-150) solid !important;
-    }
-  }
-}
-.form-control.codx-textarea {
-  padding: 0;
-}
+
+// .form-control.codx-textarea {
+//   padding: 0;
+// }
+
 .btn-extend {
   span.btn {
     border-top-right-radius: 0 !important;
@@ -2231,18 +2228,68 @@ codx-calendar {
     font-size: 16px !important;
   }
 }
+
+
+
 .border{
-  border: 1px var(--gray-150) solid;
+  border-width: 1px!important;
 }
-.border.border-gray-200 {
-  border: 1px var(--gray-150) solid !important;
+.border-bottom{
+  border-bottom-width: 1px!important;
+}
+.border-top{
+  border-top-width: 1px!important;
+}
+.border-gray-200 {
+  border-color: var(--gray-200)!important;
+}
+.border-gray-150 {
+  border-color: var(--gray-150)!important;
 }
 .card.border {
   border: 1px var(--gray-150) solid !important;
 }
 
 //
-
+.e-listview .e-list-item{
+  border-bottom: 0;
+}
  .e-listview li.e-list-item.e-active {
   color: inherit;
 }
+
+.layout-hr{
+  #gridViewV2.e-grid .e-rowcell {
+    padding: 8px 15px;
+  }
+}
+ejs-numerictextbox{
+.e-input-group.e-control-wrapper{
+  height: auto;
+}
+}
+ejs-datepicker{
+  .e-input-group.e-control-wrapper{
+    height: auto;
+  }
+}
+
+
+// codx-view-list .e-listview .e-list-item{
+//   border-bottom: 1px var(--gray-150) solid !important;
+// }
+//
+
+// menu left 
+
+// .aside.aside-extended .aside-secondary{
+
+//     left: -360px!important;
+// }
+// .aside.aside-extended .aside-primary:hover + .aside-secondary,
+// .aside.aside-extended .aside-secondary:hover{
+//   overflow: visible!important;
+//   position: absolute!important;
+//     left: 60px!important;
+//     transition: all .2s;
+// }
