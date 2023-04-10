@@ -23,7 +23,6 @@ import {
   CodxScheduleComponent,
   Util,
 } from 'codx-core';
-import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
@@ -39,7 +38,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
-  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -183,7 +181,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (grv) {
             this.grView = Util.camelizekeyObj(grv);
             this.columnGrids = [
-              
+
               {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
@@ -280,12 +278,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             this.detectorRef.detectChanges();
           }
         });
-        
+
         this.detectorRef.detectChanges();
     }
   }
   ngAfterViewInit(): void {
-        
+
   }
 
   navigate(date) {
