@@ -2273,7 +2273,12 @@ ejs-datepicker{
     height: auto;
   }
 }
+codx-card-center{
+  .card .card-footer {
+      padding-bottom: 0;
 
+  }  
+}
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
