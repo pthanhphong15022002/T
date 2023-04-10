@@ -90,12 +90,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     console.log(event);
   }
   clickMF(event, data) {
-    debugger
     switch (event.functionID){
       // case 'SYS01':
         // break;
       case 'SYS02':
-        this.view.dataService.delete([data]);
+        this.view.dataService.delete([data]).subscribe(res=>{   });
+        this.df.detectChanges();
         break;
       case 'SYS03':
         this.currentEbasicSalaryDta = data;
@@ -104,7 +104,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         break;
       case 'SYS04':
         this.currentEbasicSalaryDta = data;
-        this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'copy',this.currentEbasicSalaryDta);
+        this.copyValue(event.text, this.currentEbasicSalaryDta);
+        //this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'copy',this.currentEbasicSalaryDta);
         this.df.detectChanges();
         break;
     }
@@ -112,7 +113,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   changeDataMF(event, data): void {}
   handlerEBasicSalary(headerText ,actionType: string, data: any) {
     let option = new SidebarModel();
-    option.Width = '800px';
+    option.Width = '550px';
     option.FormModel = this.view.formModel;
     
     //open form
@@ -135,15 +136,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if(actionType == 'add'){
-          // this.view.dataService.add(res.event[0],0)
+          
+          this.view.dataService.add(res.event[0],0).subscribe(res => {});
           this.df.detectChanges();
         }
         else if(actionType == 'copy'){
-          // this.view.dataService.add(res.event[0],0);
+          this.view.dataService.add(res.event[0],0).subscribe(res => {});
           this.df.detectChanges();
         }
         else if(actionType == 'edit'){
-          // this.view.dataService.update(res.event[0]);
+          this.view.dataService.update(res.event[0]).subscribe(res =>{});
           this.df.detectChanges();
         }
         else if(actionType == 'delete'){
@@ -153,4 +155,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       if (res?.event) this.view.dataService.clear();
     });
   }
+  copyValue(actionHeaderText, data) {
+    console.log('copy data',data)
+    this.hrService
+    .copy(data, this.view.formModel, 'RecID')
+    .subscribe((res) => {
+      console.log('result',res);
+        this.handlerEBasicSalary(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
+    });
+  }
+
 }

@@ -17,9 +17,11 @@ import {
   DialogModel,
   RequestOption,
   SidebarModel,
+  DataRequest,
 } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-cash-receipts',
@@ -37,8 +39,8 @@ export class CashReceiptsComponent extends UIComponent {
   headerText: any;
   funcName: any;
   oData: any;
-  objectname:any;
-  itemSelected:any;
+  objectname: any;
+  itemSelected: any;
   journalNo: string;
   cashbook: any;
   tabItem: any = [
@@ -128,6 +130,9 @@ export class CashReceiptsComponent extends UIComponent {
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
         break;
     }
   }
@@ -235,21 +240,45 @@ export class CashReceiptsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-  clickChange(data){
+  clickChange(data) {}
 
-  }
-  changeDataMF(e:any,data:any){
+  changeDataMF(e: any, data: any) {
     this.itemSelected = this.view.dataService.dataSelected;
     this.loadDatadetail(data);
   }
+
   loadDatadetail(data) {
     this.api
-    .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-    .subscribe((res: any) => {
-      if (res != null) {
-        this.objectname = res[0].objectName;
-      }
-    });
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res[0].objectName;
+        }
+      });
+  }
+
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
   }
   //#endregion
 }

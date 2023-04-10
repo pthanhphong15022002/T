@@ -304,6 +304,7 @@ export class InstancesComponent
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
+          debugger;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
@@ -493,7 +494,7 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
-    var endDate = new Date();
+    debugger;
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,

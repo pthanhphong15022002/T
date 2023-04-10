@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div class="okr-treeview mt-6">
+    <div class="okr-treeview mt-4">
       <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="dataOKR" [enableCheck]="false"
         idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
         (selectionChange)="selectionChange($event)" class="overflow-auto h-100">
@@ -82,12 +82,17 @@
           <div class="d-flex align-items-top w-100 okr-treegroup">
             <span class="me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
             <span class="ob-kr ob-name fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
-            <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
-              [value]="item?.category" class="me-2 badge badge-light badge-md fs-7">
-            </codx-vll>
-            <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
-              [value]="item?.confidence" class="me-2 badge badge-light badge-md fs-7">
-            </codx-vll>
+            <div class="d-flex flex-column">
+              <div class="d-flex flex-stack">
+                <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+                  [value]="item?.category" class="me-2 badge badge-light badge-md fs-7">
+                </codx-vll>
+                <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+                  [value]="item?.confidence" class="me-2 badge badge-light badge-md fs-7">
+                </codx-vll>
+              </div>
+            </div>
+            
           </div>
           <div class="d-flex align-items-center justify-content-end ms-6">
 
@@ -128,7 +133,7 @@
                   [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
                   item?.notes ? item?.notes.length : 0 }}</span>
               </button>
-              <span class="ms-6">
+              <span class="ms-6 me-2">
                 <codx-mfunc [formModel]="formModelOB" type="view" [dataItem]="item"
                   (clickMF)="clickMF($event,item)" (changeDataMF)="changeDataOBMF($event,item)"></codx-mfunc>
                 </span>
@@ -192,7 +197,7 @@
                 [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
-            <span class="ms-6">
+            <span class="ms-6 me-2">
               <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,false)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>
@@ -252,7 +257,7 @@
                 [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-color': 'bg-gray-300'">{{
                 item?.notes ? item?.notes?.length : 0 }}</span>
             </button>
-            <span class="ms-6">
+            <span class="ms-6 me-2">
               <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,true)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>

@@ -25,6 +25,7 @@
         type="text"
         [height]="'100'"
         (valueChange)="changeValueInput($event, taskGroup)"
+        [disabled]="true"
       >
       </codx-input>
     </div>
@@ -44,6 +45,7 @@
           [crrValue]="taskGroup?.startDate"
           type="datetime"
           format="F"
+          [disabled]="true"
         >
         </codx-input>
       </div>
@@ -130,6 +132,7 @@
             refValue="DP030"
             type="valuelist"
             (valueChange)="changeValueInput($event, taskGroup)"
+            [disabled]="true"
           >
           </codx-input>
         </div>
@@ -151,6 +154,7 @@
         height="100"
         [crrValue]="taskGroup?.memo"
         (valueChange)="changeValueInput($event, taskGroup)"
+        [disabled]="true"
       >
       </codx-input>
     </div>

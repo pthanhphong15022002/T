@@ -41,7 +41,15 @@ export class EmployeeContractComponent extends UIComponent {
   currentEmpObj: any = null;
   dialogEditStatus: any;
   
+  //#region eContractFuncID
+  
+  actionUpdateCanceled = 'HRTPro01AU0'
+  actionUpdateInProgress = 'HRTPro01AU3'
+  actionUpdateRejected = 'HRTPro01AU4'
+  actionUpdateApproved = 'HRTPro01AU5'
+  actionUpdateClosed = 'HRTPro01AU9'
 
+  //#endregion
   
   // moreFuncs = [
   //   {
@@ -138,13 +146,21 @@ export class EmployeeContractComponent extends UIComponent {
     // let option = new DialogModel();
     // option.zIndex = 999;
     // option.FormModel = this.view.formModel
-    if(funcID == 'HRT1001A7') data.signStatus = '5';
-    if(funcID == 'HRT1001A0') data.signStatus = '0';
-    if(funcID == 'HRT1001A9') data.signStatus = '9';
+    console.log('data trc khi mo form', data);
 
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    console.log('data sau khi mo form', data);
+
+    console.log('form model trc khi mo form', this.view.formModel);
+    console.log('form group trc khi mo form', this.formGroup);
+    
+    
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
+    console.log('form group sau khi mo form', this.formGroup);
+
     // console.log('edit object', this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -173,7 +189,6 @@ export class EmployeeContractComponent extends UIComponent {
       if(res != null){
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
-        debugger
         this.view.formModel.entityName
         this.hrService.addBGTrackLog(
           res[0].recID,
@@ -192,38 +207,7 @@ export class EmployeeContractComponent extends UIComponent {
   changeDataMf(event, data){
     // console.log('data changedata MF', event);
     // console.log('data di voi mf', data.signStatus);
-    if(data.signStatus == '4' || data.signStatus == '5' || data.signStatus == '9' || data.signStatus == '0'){
-      for(let i = 0; i < event.length; i++){
-        switch(event[i].functionID){
-          case 'HRT1001A7':
-            case 'HRT1001A0':
-              case 'HRT1001A9':
-              case 'HRT1001A3':
-                event[i].disabled = true;
-                break;
-      }
-    }
-  }
-    else if(data.signStatus == '6'){
-      for(let i = 0; i < event.length; i++){
-        switch(event[i].functionID){
-          case 'HRT1001A7':
-            case 'HRT1001A0':
-              case 'HRT1001A9':
-                event[i].disabled = true;
-                break;
-        }
-      }
-    }
-    else if(data.signStatus == '3'){
-      for(let i = 0; i < event.length; i++){
-        if(event[i].functionID == 'HRT1001A3'){
-          event[i].disabled = true;
-        }
-      }
-    }
-    // console.log('mf sau khi change', event);
-    
+    this.hrService.handleShowHideMF(event, data, this.view);
   }
 
   clickEvent(event, data){
@@ -232,19 +216,20 @@ export class EmployeeContractComponent extends UIComponent {
     this.clickMF(event?.event, event?.data);
   }
 
-  clickMF(event, data){
-    // console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', data);
-    // console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', event);
 
-    
+
+  clickMF(event, data){
     switch (event.functionID) {
       case 'HRT1001A3':
         this.beforeRelease();
         break;
-      case 'HRT1001A7': // cap nhat da ki
-      case 'HRT1001A0': // huy hop dong
-      case 'HRT1001A9': // thanh ly hop dong
+        case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+            case this.actionUpdateRejected:
+              case this.actionUpdateApproved:
+                case this.actionUpdateClosed:
       let oUpdate = JSON.parse(JSON.stringify(data));
+      debugger
       this.popupUpdateEContractStatus(event.functionID , oUpdate)
       break;
       case 'HRT1001A1': // de xuat hop dong tiep theo
@@ -417,7 +402,7 @@ export class EmployeeContractComponent extends UIComponent {
               // console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
-                this.itemDetail.signStatus = '3';
+                this.itemDetail.status = '3';
                 this.hrService
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {
