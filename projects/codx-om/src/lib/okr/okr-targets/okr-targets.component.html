@@ -81,7 +81,7 @@
         <div class="w-100 pt-4 pb-3 ob-background d-flex justify-content-between">
           <div class="d-flex align-items-center w-100 okr-treegroup">
             <span class="me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
-            <span class="ob-kr ob-name fs-5 fw-bold me-3" (click)="showKR(item,null)">{{ item?.okrName }}</span>
+            <span class="ob-kr ob-name fs-5 fw-bold me-3" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
               [value]="item?.category" class="me-2 badge badge-light badge-md fs-7">
             </codx-vll>
@@ -143,8 +143,8 @@
           <span class="d-flex flex-column">
             <span class="ob-kr fs-6 text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <span>
-              <span class="mx-2">{{okrGrv?.krGrv?.target?.headerText+': '}}</span>
-              <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+              <span class="me-1">{{okrGrv?.krGrv?.target?.headerText+': '}}</span>
+              <span class="me-1" *ngIf="item?.target">{{item?.target}}</span>
               <span [innerHTML]="item?.umid | formatvalue : formModelKR : 'UMID' | async"></span>
             </span>
           </span>
@@ -204,8 +204,8 @@
           <span class="d-flex flex-column">
             <span class="ob-kr fs-6 text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <span>
-              <span class="mx-2">{{okrGrv?.krGrv?.target?.headerText+': '}}</span>
-              <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>
+              <span class="me-1">{{okrGrv?.krGrv?.target?.headerText+': '}}</span>
+              <span class="me-1" *ngIf="item?.target">{{item?.target}}</span>
               <span [innerHTML]="item?.umid | formatvalue : formModelKR : 'UMID' | async"></span>
             </span>
           </span>

@@ -85,18 +85,6 @@ export class PopRolesComponent implements OnInit {
       // this.lstChangeFunc = [];
       this.listChooseRole = JSON.parse(JSON.stringify(this.data));
       this.lstAddedRoles = [...this.listChooseRole];
-      // this.listChooseRole.forEach((role) => {
-      //   let tmpMD: tmpTNMD = {
-      //     isAddAction: true,
-      //     isOriginal: true,
-      //     isError: false,
-      //     module: role.functionID,
-      //     moduleSales: '',
-      //     quantity: 1,
-      //     moduleName: role.customName ?? '',
-      //   };
-      //   this.lstChangeFunc.push(tmpMD);
-      // });
     }
     this.loadData();
   }
@@ -246,12 +234,6 @@ export class PopRolesComponent implements OnInit {
       item.roleName = curRole?.roleName;
       item.color = curRole?.color;
 
-      // this.listRoles.forEach((element) => {
-      //   if (element.recID == item.recIDofRole) {
-      //     item.roleName = element.roleName;
-      //     item.color = element.color;
-      //   }
-      // });
       let lstTemp = JSON.parse(JSON.stringify(this.listChooseRole));
       lstTemp.forEach((res) => {
         if (res.functionID == dataTemp.functionID) {
@@ -291,7 +273,7 @@ export class PopRolesComponent implements OnInit {
               }
             });
             if (lstTNMDs == null || errorMD.length > 0) {
-              this.notiService.notifyCode('AD017', null, errorMD.join(', '));
+              this.notiService.notifyCode('AD017', null, ...errorMD.join(', '));
             } else {
               this.onSave();
             }
@@ -315,11 +297,6 @@ export class PopRolesComponent implements OnInit {
           this.checkRoleIDNull = true;
           return;
         }
-        // let curTNMD = lstTNMDs?.find((x) => x.module == res.functionID);
-        // res.startDate = curTNMD?.startDate;
-        // res.endDate = curTNMD?.endDate;
-        // res.module = curTNMD?.module;
-        // res.moduleSales = curTNMD?.moduleSales;
       });
     }
     if (this.checkRoleIDNull == false) {
@@ -346,21 +323,4 @@ export class PopRolesComponent implements OnInit {
     }
     return this.optionThird;
   }
-
-  // addLine(template: any, data = null) {
-  //   this.dialog.dataService.save().subscribe(res => {
-  //     if (!res?.save?.error || !res?.update?.error) {
-  //       if (!this.dialog.dataService.dataSelected.isNew())
-  //         this.dialog.dataService.hasSaved = true;
-  //       if (data)
-  //         this.line = data;
-  //       else {
-  //         this.line.recID = Util.uid();
-  //         this.line.rangeID = this.master.rangeID;
-  //         this.codxService.setAddNew(this.line, 'recID')
-  //       }
-  //       this.callfc.openForm(template, '', 500, 400);
-  //     }
-  //   });
-  // }
 }

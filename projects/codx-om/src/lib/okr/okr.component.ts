@@ -321,11 +321,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
               .subscribe((item1: any) => {
                 if (item1) {                  
                   this.dataOKR = null;
-                  this.dataOKR = item1;
+                  this.dataOKR = item1;                  
+                  this.getOrgTreeOKR();
                 }
               });
-             this.getOrgTreeOKR();
           } else {
+            this.orgUnitTree=[];
             this.dataOKRPlans = null;
             this.dataOKR = null;
             this.planNull = true;
