@@ -1171,7 +1171,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
-    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
