@@ -280,8 +280,6 @@ const T_Component: Type<any>[] = [
   CodxChatListComponent,
   CodxChatBoxComponent,
   AddGroupChatComponent,
-
-  
 ];
 
 const T_Pipe: Type<any>[] = [

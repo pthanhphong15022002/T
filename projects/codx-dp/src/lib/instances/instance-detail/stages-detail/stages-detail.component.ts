@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -143,6 +144,7 @@ export class StagesDetailComponent implements OnInit {
     private cache: CacheService,
     private authStore: AuthStore,
     private dpService: CodxDpService,
+    private changeDetectorRef: ChangeDetectorRef,
     private serviceInstance: InstancesComponent
   ) {
     this.user = this.authStore.get();
@@ -150,6 +152,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         let data = [];
@@ -179,7 +182,6 @@ export class StagesDetailComponent implements OnInit {
       gridViewName: 'grvDPInstancesStepsTaskGroups',
     };
     this.getgridViewSetup(this.frmModelInstancesGroup);
-    this.getValueListReason();
     this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
   }
 
@@ -1368,6 +1370,7 @@ export class StagesDetailComponent implements OnInit {
             this.stepNameReason = item?.text;
           }
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
