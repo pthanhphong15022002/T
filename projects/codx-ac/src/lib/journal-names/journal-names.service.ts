@@ -47,8 +47,10 @@ export class JournalService {
     ) {
       const options = new DataRequest();
       options.entityName = entityName;
-      options.predicates = !isEdit ? 'VoucherNo=@0' : "VoucherNo=@0&&RecID!=@1";
-      options.dataValues = !isEdit ? model.voucherNo : `${model.voucherNo};${model.recID}`;
+      options.predicates = !isEdit ? 'VoucherNo=@0' : 'VoucherNo=@0&&RecID!=@1';
+      options.dataValues = !isEdit
+        ? model.voucherNo
+        : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;
       this.acService.loadDataAsync(service, options).subscribe((res: any[]) => {
         if (res.length > 0) {
@@ -84,5 +86,43 @@ export class JournalService {
     } else {
       saveFunction();
     }
+  }
+
+  getHiddenFields(journal: IJournal): string[] {
+    let hiddenFields: string[] = [];
+
+    if (journal?.diM1Control == '0') {
+      hiddenFields.push('DIM1');
+    }
+
+    if (journal?.diM2Control == '0') {
+      hiddenFields.push('DIM2');
+    }
+
+    if (journal?.diM3Control == '0') {
+      hiddenFields.push('DIM3');
+    }
+
+    if (Boolean(journal?.projectControl)) {
+      hiddenFields.push('ProjectID');
+    }
+
+    if (Boolean(journal?.assetControl)) {
+      hiddenFields.push('AssetID');
+    }
+
+    const tempIDIMControls: any[] = journal?.idimControl
+      ? JSON.parse(journal?.idimControl)
+      : [];
+
+    if (tempIDIMControls.length > 0) {
+      for (let i = 0; i < 10; i++) {
+        if (!tempIDIMControls.some((t) => t.value == i)) {
+          hiddenFields.push('IDIM' + i);
+        }
+      }
+    }
+
+    return hiddenFields;
   }
 }

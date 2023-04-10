@@ -67,4 +67,5 @@ export interface ICashTransfer {
     vATAmount: number;
     totalAmount: number;
     totalAmount2: number;
+    unbounds: any;
 }
