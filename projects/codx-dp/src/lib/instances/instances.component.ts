@@ -560,7 +560,7 @@ export class InstancesComponent
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
               this.codxDpService
-                .GetStepsByInstanceIDAsync([data.recID, data.processID])
+                .GetStepsByInstanceIDAsync([data.recID, data.processID,data.status])
                 .subscribe((res) => {
                   if (res && res?.length > 0) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
