@@ -39,6 +39,16 @@ export class CodxHrService {
   expression: RegExp =
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
+  //#region moreFuncAction
+  actionAddNew = 'A01'
+  actionSubmit = 'A03'
+  actionUpdateCanceled = 'AU0'
+  actionUpdateInProgress = 'AU3'
+  actionUpdateRejected = 'AU4'
+  actionUpdateApproved = 'AU5'
+  actionUpdateClosed = 'AU9'
+  //#endregion
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -1928,6 +1938,82 @@ export class CodxHrService {
     return this.expression.test(email);
   }
 
+
+  // actionAddNew = 'A01'
+  // actionSubmit = 'A03'
+  // actionUpdateCanceled = 'AU0'
+  // actionUpdateInProgress = 'AU3'
+  // actionUpdateRejected = 'AU4'
+  // actionUpdateApproved = 'AU5'
+  // actionUpdateClosed = 'AU9'
+
+  handleShowHideMF(evt, data, view){  
+    if(view.formModel.entityName == 'HR_EContracts'){
+      //Xu li rieng cho HDLD
+    }
+    if(data.status == '0' || data.status == '2' || data.status == '4' || data.status == '5' || data.status == '9' ){
+      for(let i = 0; i < evt.length; i++){
+        let funcIDStr = evt[i].functionID
+        switch (funcIDStr.substr(funcIDStr.length - 3)){
+          case this.actionSubmit:
+            case this.actionUpdateCanceled:
+              case this.actionUpdateInProgress:
+                case this.actionUpdateRejected:
+                  case this.actionUpdateApproved:
+                    case this.actionUpdateClosed:
+                      evt[i].disabled = true;
+                      break;
+        }
+      }
+    }
+    else if(data.status == '3'){
+      let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+      found.disabled = true;
+
+      let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateInProgress)
+      found2.disabled = true;
+    }
+    else if(data.status == '6'){
+      for(let i = 0; i < evt.length; i++){
+        let funcIDStr = evt[i].functionID
+        switch (funcIDStr.substr(funcIDStr.length - 3)){
+            case this.actionUpdateCanceled:
+              case this.actionUpdateInProgress:
+                case this.actionUpdateRejected:
+                  case this.actionUpdateApproved:
+                    case this.actionUpdateClosed:
+                      evt[i].disabled = true;
+                      break;
+        }
+      }
+    }
+  }
+
+  handleUpdateRecordStatus(functionID, data){
+    let funcIDRecognize = functionID.substr(functionID.length -3 );
+    switch(funcIDRecognize){
+      case this.actionUpdateCanceled:
+        data.status = '0';
+        break;
+        
+      case this.actionUpdateInProgress:
+        data.status = '3';
+        break;
+
+      case this.actionUpdateRejected:
+        data.status = '4';
+        break;
+            
+      case this.actionUpdateApproved:
+        data.status = '5';
+        break;
+              
+      case this.actionUpdateClosed:
+        data.status = '9';
+        break;
+    }
+  }
+
   //#endregion
 
   getFunctionList(funcID: string) {
@@ -2045,4 +2131,5 @@ export class CodxHrService {
 }
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { mergeMap } from 'rxjs';
+import { mergeMap } from 'rxjs';import { disableDebugTools } from '@angular/platform-browser';
+

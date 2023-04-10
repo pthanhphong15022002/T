@@ -180,3 +180,8 @@
         padding-left: 0px !important;
     }
 }
+
+.okr-treeview.mt-4{
+    height: calc(100vh - 212px);
+    overflow: auto;
+}

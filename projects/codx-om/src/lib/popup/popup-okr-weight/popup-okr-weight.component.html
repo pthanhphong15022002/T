@@ -46,27 +46,20 @@
             </td>
               
             <td class="text-center">
-              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
                 [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
                 [value]="child?.weight ">
               </codx-inplace>
             </td>
             <td class="text-center" >
-              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+              <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
               [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
               [value]="child?.progress ">
             </codx-inplace>
-          </td>
-          <td class="text-center" >
-            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
-            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-            [value]="child?.progress "  [disabled]="true">
-          </codx-inplace>
-          </td>
-          
+          </td>         
 
           <td class="text-center " >
-            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
             [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
             [value]="child?.weight* child?.progress"  [disabled]="true">
           </codx-inplace>
