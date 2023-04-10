@@ -196,6 +196,7 @@ var childRoutes: Routes = [
         path: 'settingcalendar/:funcID',
         component: SettingCalendarComponent,
       },
+
     ],
   },
   {

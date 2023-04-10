@@ -26,3 +26,14 @@ codx-view-list-detail .codx-detail-footer {
     }
    
 }
+codx-tmmeetings {
+    codx-card-center{ 
+    .card-body .text-gray-700.line-clamp{
+        height: 36px;
+        line-height: 18px;
+        margin-top: 5px;
+        overflow:hidden;
+        text-overflow: ellipsis;
+    } 
+}
+}

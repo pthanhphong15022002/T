@@ -11,6 +11,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApprovalStationeryViewDetailComponent } from './approval/approval-stationery-view-detail/approval-stationery-view-detail.component';
