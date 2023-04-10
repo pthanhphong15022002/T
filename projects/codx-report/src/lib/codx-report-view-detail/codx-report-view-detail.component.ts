@@ -67,6 +67,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
+    this.viewBase.moreFuncs = this.moreFc;
   }
 
   onActions(e:any){

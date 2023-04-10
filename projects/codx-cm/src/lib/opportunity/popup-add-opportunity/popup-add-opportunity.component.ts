@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
+import { DialogData, DialogRef } from 'codx-core';
+import { CM_Opportunities } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-popup-add-opportunity',
@@ -7,9 +9,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PopupAddOpportunityComponent implements OnInit {
 
-  constructor() { }
+ // setting values in system
+  dialog: DialogRef;
+  //type any
+  formModel:any;
+  // type string
+  titleAction:string = '';
+
+  // Data struct Opportunity
+  opportunity: CM_Opportunities;
+
+  constructor(
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+
+  ) {
+    this.dialog = dialog;
+    this.formModel = dialog.formModel;
+    this.titleAction = dt?.data?.titleAction;
+   }
+
 
   ngOnInit(): void {
   }
 
+
+  valueChange($event){
+
+  }
+  saveOpportunity(){
+
+  }
+  cbxChange($event){
+
+  }
 }

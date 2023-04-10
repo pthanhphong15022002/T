@@ -860,7 +860,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, kr, isSubKR,this.groupModel],
+      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, kr, isSubKR,this.groupModel,this.dataOKRPlans],
       option
     );
     dialogEditKR.closed.subscribe((res) => {
@@ -878,7 +878,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, kr, isSubKR,this.groupModel],
+      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, kr, isSubKR,this.groupModel,this.dataOKRPlans],
       option
     );
     dialogCopyKR.closed.subscribe((res) => {
