@@ -264,6 +264,10 @@
                     </ng-container>
                   </div>
                 </div>
+                <codx-carousel-stage [dataSource]="listSteps" [field]="'stepName'" [maxSize]="maxSize" [status]="instanceStatus"
+                (eventClicked)="clickStage($event)"
+                >
+                </codx-carousel-stage>
                 <ng-container *ngIf="tmpTeps">
                   <codx-stages-detail
                     [dataStep]="tmpTeps"

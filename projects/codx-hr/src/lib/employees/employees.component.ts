@@ -83,6 +83,10 @@ export class EmployeesComponent extends UIComponent {
         }
       }
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> dfc52925a10d3574b0f5bab659d2db647a68d6cc
   }
 
   ngAfterViewInit(): void {
@@ -231,7 +235,12 @@ export class EmployeesComponent extends UIComponent {
   }
   // edit
   edit(event: any, data: any) {
+<<<<<<< HEAD
     if (event && data) {
+=======
+    if (event && data)
+    {
+>>>>>>> dfc52925a10d3574b0f5bab659d2db647a68d6cc
       this.view.dataService.dataSelected = data;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;

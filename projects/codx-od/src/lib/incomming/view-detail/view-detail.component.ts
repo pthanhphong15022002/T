@@ -56,6 +56,7 @@ import { RefuseComponent } from '../refuse/refuse.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
+import { Permission } from '@shared/models/file.model';
 
 @Component({
   selector: 'app-view-detail',
@@ -105,6 +106,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   vllStatusAssign = 'TM007';
   funcList: any;
   dataRq = new DataRequest();
+  listPermission = [];
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -172,7 +174,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
     this.setHeight();
-    this.convertPermiss();
+    this.addPermission();
   }
 
   ngOnInit(): void {
@@ -1726,8 +1728,21 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //datas = this.
   }
 
-  convertPermiss() {
-    debugger;
-    var a = this.dataItem.relations;
+  addPermission() {
+    this.listPermission = [];
+    if (this.dataItem.relations && this.dataItem.relations.length > 0) {
+      this.dataItem.relations.forEach((elm) => {
+        if (elm.userID != this.userID) {
+          var p = new Permission();
+          p.read = true;
+          p.share = true;
+          p.download = true;
+          p.objectID = elm.userID;
+          p.objectType = 'U';
+          p.isActive = true;
+          this.listPermission.push(p);
+        }
+      });
+    }
   }
 }
