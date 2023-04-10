@@ -236,7 +236,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-6" *ngIf=" actionType != 'edit'">
                 <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
                 <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
                     (valueChange)="handleSelectEmp($event)">

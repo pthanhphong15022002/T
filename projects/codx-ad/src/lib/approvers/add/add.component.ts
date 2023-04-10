@@ -44,8 +44,8 @@ export class AddApproversComponent extends UIComponent {
   action: string = 'add';
   isInValid = true;
   isTemp = true;
-  lstChangeFunc: tmpTNMD[] = [];
-  lstRoles: tmpformChooseRole[] = [];
+  // lstChangeFunc: tmpTNMD[] = [];
+  // lstRoles: tmpformChooseRole[] = [];
   //#region Roles
   dialogRoles: DialogRef;
   //#endregion
@@ -169,8 +169,8 @@ export class AddApproversComponent extends UIComponent {
       .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddUpdateAsync', [
         this.members,
         groupType,
-        this.lstRoles,
-        this.lstChangeFunc,
+        [],
+        [],
       ])
       .subscribe((res) => {
         if (res) {
@@ -214,31 +214,6 @@ export class AddApproversComponent extends UIComponent {
     // }
   }
   //#endregion
-
-  popRoles(item: any) {
-    let option = new DialogModel();
-    let obj = {
-      formType: this.action,
-      data: item,
-      userID: this.master.groupID,
-      quantity: this.members.length,
-      isGroupUser: true,
-    };
-    this.dialogRoles = this.callfc.openForm(
-      PopRolesComponent,
-      '',
-      1200,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    this.dialogRoles.closed.subscribe((e) => {
-      this.lstRoles = e?.event[0] ?? [];
-      this.lstChangeFunc = e?.event[1] ?? [];
-    });
-  }
 
   clickAddMemeber() {
     this.showPopup = !this.showPopup;
