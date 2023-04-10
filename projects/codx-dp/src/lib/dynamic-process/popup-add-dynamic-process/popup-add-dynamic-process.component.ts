@@ -603,7 +603,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         } else return;
       });
     }else this.dialog.close();
-    
+
   }
 
   //#region Change Tab
@@ -1801,7 +1801,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
-    var stepIDPrevious = event.previousContainer.id; 
+    var stepIDPrevious = event.previousContainer.id;
     if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
       stepIDContain =stepIDContain.substring(2) ;
     }
@@ -1822,7 +1822,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepEdit.push(stepIDPrevious);
       }
     }
-   
+
     event.item.data.stepID = stepIDContain;
     transferArrayItem(
       event.previousContainer.data,
