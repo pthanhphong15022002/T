@@ -56,37 +56,43 @@
               [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
               [value]="child?.progress ">
             </codx-inplace>
-            </td>
-            
-            <td class="text-center" >
-              <div class="d-flex justify-content-between align-item-center">
-                <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
-                  [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-                  [value]="child?.weight* child?.progress ">
-                </codx-inplace>
-                <div class="min-h-table d-flex align-items-center w-30px">
-                  <span *ngIf="child?.edited==true" class="icon-edit_square text-danger" ngbTooltip="Đã chỉnh sửa"></span>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center">
-              <codx-label default="Tổng cộng" name="lblTotal" class="fs-5 fw-bold"></codx-label>
-            </td>
-            <td class="text-center">
-              <span class="fs-3 fw-bold "  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-            </td>
-            <td class="text-center">
-            </td>
-            <td class="text-center">
-              <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress!=0"
-                [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
-              <span class="fs-4 fw-bold text-primary" *ngIf="totalProgress==0" [innerHTML]="totalProgress"></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </td>
+          <td class="text-center" >
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
+            [value]="child?.progress "  [disabled]="true">
+          </codx-inplace>
+          </td>
+          
+
+          <td class="text-center " >
+            <codx-inplace (valueChange)="valueChange($event)" locale="en" format="0.00" [field]="i"
+            [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
+            [value]="child?.weight* child?.progress"  [disabled]="true">
+          </codx-inplace>
+          </td>         
+
+            <div class="min-h-table d-flex align-items-center w-30px">
+              <span *ngIf="child?.edited==true" class="icon-edit_square text-danger" ngbTooltip="Đã chỉnh sửa"></span>
+            </div>
+  
+        </tr>
+        <tr>
+          <td  class="text-center">
+            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5"></codx-label>
+          </td>
+          <td class="">
+            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+          </td>
+          <td class="text-center">
+          </td>
+          <td class="">
+            <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" *ngIf="totalProgress!=0"
+              [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
 
       <div class="d-flex justify-content-end w-100 my-5">
