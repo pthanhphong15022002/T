@@ -43,10 +43,9 @@ export class AddApproversComponent extends UIComponent {
   title: string = '';
   action: string = 'add';
   isInValid = true;
-  isGroupType3 = false;
   isTemp = true;
-  lstChangeFunc: tmpTNMD[] = [];
-  lstRoles: tmpformChooseRole[] = [];
+  // lstChangeFunc: tmpTNMD[] = [];
+  // lstRoles: tmpformChooseRole[] = [];
   //#region Roles
   dialogRoles: DialogRef;
   //#endregion
@@ -107,16 +106,7 @@ export class AddApproversComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    if (this.form) {
-      if (this.form?.formGroup?.controls['groupType'].value == '3') {
-        this.isGroupType3 = true;
-      }
-      this.form?.formGroup?.controls['groupType'].valueChanges.subscribe(
-        (crrValue) => {
-          this.isGroupType3 = crrValue == '3';
-        }
-      );
-    }
+    console.log('formmodel', this.form);
   }
   //#endregion
 
@@ -125,26 +115,19 @@ export class AddApproversComponent extends UIComponent {
   height = window.innerHeight;
   eventApply(e) {
     this.showPopup = !this.showPopup;
-    if (!e.data || e.data.length == 0) return;
+    if (!e.dataSelected || e.dataSelected.length == 0) return;
     else {
-      e?.data.dataSelected.forEach((modelShare) => {
+      e?.dataSelected.forEach((user) => {
         //chua add
-        if (
-          this.members.findIndex(
-            (x) => x.memberID == modelShare.dataSelected.UserID
-          ) == -1
-        ) {
-          modelShare.dataSelected.isAdded = false;
-          modelShare.dataSelected.isRemoved = false;
-          modelShare.dataSelected.memberID = modelShare.dataSelected.UserID;
-          modelShare.dataSelected.userID = modelShare.dataSelected.UserID;
-          modelShare.dataSelected.memberName = modelShare.dataSelected.UserName;
-          modelShare.dataSelected.positionName =
-            modelShare.dataSelected.PositionName;
-          modelShare.dataSelected.orgUnitName =
-            modelShare.dataSelected.OrgUnitName;
-
-          this.members.push(modelShare.dataSelected);
+        if (this.members.findIndex((x) => x.memberID == user.UserID) == -1) {
+          user.isAdded = false;
+          user.isRemoved = false;
+          user.memberID = user.UserID;
+          user.userID = user.UserID;
+          user.memberName = user.UserName;
+          user.positionName = user.PositionName;
+          user.orgUnitName = user.OrgUnitName;
+          this.members.push(user);
         }
       });
     }
@@ -159,7 +142,7 @@ export class AddApproversComponent extends UIComponent {
     } else {
       this.dialog.dataService
         .save((opt: RequestOption) => this.beforeSave(opt), 0)
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res && !res.error) {
             this.master.groupID = this.dialog.dataService.dataSelected.groupID;
             this.beforeSaveMember();
@@ -186,8 +169,8 @@ export class AddApproversComponent extends UIComponent {
       .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddUpdateAsync', [
         this.members,
         groupType,
-        this.lstRoles,
-        this.lstChangeFunc,
+        [],
+        [],
       ])
       .subscribe((res) => {
         if (res) {
@@ -204,83 +187,17 @@ export class AddApproversComponent extends UIComponent {
                 console.log('res', result);
               }
             });
-          // });
         } else {
           this.dialog.dataService.hasSaved = true;
         }
-
-        // else {
-        //   this.dialog.close();
-        // }
       });
   }
 
   beforeSaveMember() {
     let groupType = this.form?.formGroup?.get('groupType')?.value;
-
-    // if (this.members?.length > 0) {
-    //   let lstMemID = [];
-    //   this.members?.forEach((mem) => {
-    //     mem.groupID = this.master.groupID;
-    //     lstMemID.push(mem.memberID);
-    //   });
-    //   //co phan quyen
-
-    //   if (groupType == '3') {
-    //     if (this.lstChangeFunc.length != 0) {
-    //       this.adService
-    //         .getListValidOrderForModules(this.lstChangeFunc)
-    //         .subscribe((lstTNMDs: tmpTNMD[]) => {
-    //           this.lstChangeFunc = lstTNMDs;
-    //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-    //             let lstErrorName = [];
-    //             lstTNMDs.forEach((md) => {
-    //               if (md.isError) {
-    //                 lstErrorName.push(md.moduleName);
-    //               }
-    //             });
-    //             this.notiService.notifyCode(
-    //               'AD017',
-    //               null,
-    //               lstErrorName.join(';')
-    //             );
-    //             this.dialog.dataService.hasSaved = true;
-    //           } else {
-    //             this.saveMember(groupType);
-    //           }
-    //         });
-    //     } else {
-    //       this.saveMember(groupType);
-    //     }
-    //     // this.adService.checkExistedUserRoles(lstMemID).subscribe((res) => {
-    //     //   if (res != null) {
-    //     //     this.notiService.notifyCode('AD022', null, res);
-    //     //   } else {
-    //     //     if (this.lstChangeFunc.length != 0) {
-    //     //       this.adService
-    //     //         .getListValidOrderForModules(
-    //     //           this.lstChangeFunc,
-    //     //           this.members?.length
-    //     //         )
-    //     //         .subscribe((lstTNMDs: tmpTNMD[]) => {
-    //     //           this.lstChangeFunc = lstTNMDs;
-    //     //           if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
-    //     //             this.notiService.notifyCode('AD017');
-    //     //           } else {
-    //     //             this.saveMember(groupType);
-    //     //           }
-    //     //         });
-    //     //     } else {
-    //     //       this.saveMember(groupType);
-    //     //     }
-    //     //   }
-    //     // });
-    //   } else {
-    //     this.saveMember(groupType);
-    //   }
-    // }
-    //  else {
-    // }
+    this.members?.forEach((mem) => {
+      mem.groupID = this.master.groupID;
+    });
     this.saveMember(groupType);
   }
 
@@ -297,31 +214,6 @@ export class AddApproversComponent extends UIComponent {
     // }
   }
   //#endregion
-
-  popRoles(item: any) {
-    let option = new DialogModel();
-    let obj = {
-      formType: this.action,
-      data: item,
-      userID: this.master.groupID,
-      quantity: this.members.length,
-      isGroupUser: true,
-    };
-    this.dialogRoles = this.callfc.openForm(
-      PopRolesComponent,
-      '',
-      1200,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    this.dialogRoles.closed.subscribe((e) => {
-      this.lstRoles = e?.event[0] ?? [];
-      this.lstChangeFunc = e?.event[1] ?? [];
-    });
-  }
 
   clickAddMemeber() {
     this.showPopup = !this.showPopup;

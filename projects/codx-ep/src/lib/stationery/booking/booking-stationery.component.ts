@@ -18,6 +18,7 @@ import {
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
 import { FuncID } from '../../models/enum/enum';
+import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 @Component({
   selector: 'stationery',
@@ -31,6 +32,7 @@ export class BookingStationeryComponent
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+  @ViewChild('report') report: TemplateRef<any>;
   viewType = ViewType;
   views: Array<ViewModel> = [];
   button: ButtonModel;
@@ -53,7 +55,12 @@ export class BookingStationeryComponent
   popupClosed = true;
   isAdmin: boolean;
   approvalRule: any;
-
+  moreFc: ButtonModel[];
+  param: { [k: string]: any } = {};
+  print: boolean = false;
+  _paramString: string = '';
+  predicate = '';
+  dataValue = '';
   constructor(
     injector: Injector,
     private codxEpService: CodxEpService,
@@ -106,9 +113,15 @@ export class BookingStationeryComponent
         },
       },
       {
-        type: ViewType.report,
+        type: ViewType.content,
+        reportView:true,
         sameData: false,
         active: false,
+        text: 'Báo cáo',
+        icon: 'icon-assignment',
+        model:{
+          panelLeftRef:this.report
+        }
       },
     ];
 
@@ -123,6 +136,9 @@ export class BookingStationeryComponent
         break;
       case 'btnAddNew':
         //this.openRequestList();
+        break;
+      case 'btnReport':
+        this.addReport()
         break;
     }
   }
@@ -150,15 +166,34 @@ export class BookingStationeryComponent
         break;
     }
   }
+  orgMorefc:any = undefined;
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
-    if (this.funcID == FuncID.BookingStationery) {
+    if (this.funcID == FuncID.BookingStationery || "EP8R01") {
       this.button = {
         id: 'btnAdd',
       };
+      if(this.view.viewActiveType == 16){
+        this.moreFc = [{
+          id: 'btnReport',
+          text: 'Thêm/Sửa báo cáo'
+        }];
+        this.view.moreFuncs = this.moreFc;
+      }
+      else{
+        if(this.view.moreFuncs.length >1){
+          this.orgMorefc = [...this.view.moreFuncs]
+
+        }
+        if(this.orgMorefc){
+          this.view.moreFuncs = this.orgMorefc;
+        }
+      }
+
     } else {
       this.button = null;
     }
+
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -635,6 +670,22 @@ export class BookingStationeryComponent
   }
 
   closeAddForm(event) {}
+
+  addReport() {
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.callfc.openForm(
+      PopupAddReportComponent,
+      '',
+      screen.width,
+      screen.height,
+      this.funcID,
+      this.funcID,
+      '',
+      option
+    );
+}
 
   private isEmptyGuid(value: string) {
     return value === '00000000-0000-0000-0000-000000000000';

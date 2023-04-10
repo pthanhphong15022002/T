@@ -200,6 +200,7 @@ export class TreeviewCommentComponent implements OnInit,OnChanges {
   // click show comment
   showComments() {
     this.data.isShowComment = !this.data.isShowComment;
+    this.getCommentsAsync(false);
   }
   //set tree
   setDicData(data) {
@@ -223,7 +224,6 @@ export class TreeviewCommentComponent implements OnInit,OnChanges {
   }
   // add tree
   addNode(dataNode: any, newNode: any, id: string) {
-    debugger
     let idx = -1;
     let node = null;
     if(dataNode)

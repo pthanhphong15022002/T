@@ -1104,12 +1104,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupLink() {
-    let dlLink= this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
-    dlLink.closed.subscribe((res:any)=>{
-      if(res){
-        this.data.onlineUrl=res?.event;
+    let dlLink = this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
+    dlLink.closed.subscribe((res: any) => {
+      if (res) {
+        this.data.onlineUrl = res?.event;
       }
-    })
+    });
   }
   showAllResourceChange(evt: any) {
     if (evt != null) {
@@ -1549,10 +1549,30 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.startDate,
         this.startTime
       )
-      .subscribe((url) => {
+      .then((url) => {
         console.log('url', url);
 
         window.open(url, '_blank');
       });
   }
+  // connectMeetingNow() {
+  //   this.codxEpService
+  //     .connectMeetingNow(
+  //       this.data.title,
+  //       this.data.memmo,
+  //       60,
+  //       null,
+  //       this.user.userName,
+  //       'Dang Test',
+  //       true,
+  //       this.data.onlineUrl,
+  //       this.data.startDate,
+  //       this.startTime
+  //     )
+  //     .subscribe((url) => {
+  //       console.log('url', url);
+
+  //       window.open(url, '_blank');
+  //     });
+  // }
 }
