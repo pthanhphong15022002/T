@@ -966,9 +966,6 @@
         <codx-input
           field="memo"
           type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
           [crrValue]="process?.memo"
           (valueChange)="valueChange($event)"
         >
@@ -1107,7 +1104,9 @@
                 <button
                   type="button"
                   class="btn btn-icon btn-sm btn-light-primary ms-2"
-                  (click)="addCustomField(item.recID, item.processID)"
+                  (click)="
+                    addCustomField(item.recID, item.processID, !haveTitle)
+                  "
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
@@ -1154,7 +1153,9 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary"
-                      (click)="addCustomField(item.recID, item.processID)"
+                      (click)="
+                        addCustomField(item.recID, item.processID, !haveTitle)
+                      "
                     >
                       <i class="icon-add icon-18 text-primary"></i>
                       <codx-label
@@ -1217,7 +1218,7 @@
                       </codx-input-custom-field>
                       <codx-mfunc
                         [formModel]="formModelField"
-                        (clickMF)="clickMFFields($event, item1)"
+                        (clickMF)="clickMFFields($event, item1, !haveTitle)"
                         [dataItem]="action != 'edit' ? moreDefaut : item"
                         [type]="'hover'"
                       >

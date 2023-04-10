@@ -81,17 +81,13 @@
         <div class="w-100 pt-4 pb-3 ob-background d-flex justify-content-between">
           <div class="d-flex align-items-top w-100 okr-treegroup">
             <span class="me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
-            <span class="ob-kr ob-name fs-6 fw-bold me-6" (click)="showKR(item,null)">{{ item?.okrName }}</span>
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-center">
-                <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
-                  [value]="item?.category" class="me-2 badge badge-light badge-md">
-                </codx-vll>
-                <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
-                  [value]="item?.confidence" class="me-2 badge badge-light badge-md">
-                </codx-vll>
-              </div>
-            </div>
+            <span class="ob-kr ob-name fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+            <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'"
+              [value]="item?.category" class="me-2 badge badge-light badge-md fs-7">
+            </codx-vll>
+            <codx-vll *ngIf="item?.confidence" [showText]="true" [showBgColor]="true" [name]="'OM013'"
+              [value]="item?.confidence" class="me-2 badge badge-light badge-md fs-7">
+            </codx-vll>
           </div>
           <div class="d-flex align-items-center justify-content-end ms-6">
 
