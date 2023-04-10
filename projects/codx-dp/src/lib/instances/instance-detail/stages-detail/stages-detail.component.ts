@@ -1247,7 +1247,7 @@ export class StagesDetailComponent implements OnInit {
               res.disabled = true;
             }
             break;
-          case 'SYS02'://sửa
+          case 'SYS03'://sửa
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
               res.disabled = true;
             }
@@ -1283,7 +1283,7 @@ export class StagesDetailComponent implements OnInit {
           case 'DP07':
             res.disabled = true;
             break;
-          case 'SYS02'://sửa
+          case 'SYS03'://sửa
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup)){
               res.disabled = true;
             }
