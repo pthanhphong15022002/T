@@ -259,11 +259,6 @@ export class StagesDetailComponent implements OnInit {
     //Add '${implements OnChanges}' to the class.
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
-        if (changes['dataStep'].currentValue?.actualStart != null) {
-          this.dateActual = new Date(
-            changes['dataStep'].currentValue?.actualStart
-          );
-        }
         if (changes['dataStep'].currentValue?.startDate != null) {
           var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
@@ -1216,44 +1211,52 @@ export class StagesDetailComponent implements OnInit {
     if (this.dataStep?.roles?.length > 0) {
       this.isRoleAll =
         this.dataStep?.roles?.some(
-          (element) => element?.objectID == this.user.userID && element.roleType == 'S'
+          (element) =>
+            element?.objectID == this.user.userID && element.roleType == 'S'
         ) || false;
     }
     this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
-    this.progressTaskGroupControl = this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressTaskGroupControl =
+      this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
     this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
 
-  checRoleTask(data, type){
-    return data.roles?.some(
-      (element) => element?.objectID == this.user.userID && element.roleType == type
-    ) || false;
+  checRoleTask(data, type) {
+    return (
+      data.roles?.some(
+        (element) =>
+          element?.objectID == this.user.userID && element.roleType == type
+      ) || false
+    );
   }
 
   async changeDataMFTask(event, task, groupTask) {
     if (event != null) {
       let isGroup = false;
       let isTask = false;
-      if(!this.isRoleAll){
-        isGroup = this.checRoleTask(groupTask, 'O');    
-        if(!isGroup){
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(groupTask, 'O');
+        if (!isGroup) {
           isTask = this.checRoleTask(task, 'O');
-        }      
+        }
       }
       event.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS02'://xóa
+          case 'SYS02': //xóa
             if (task?.isTaskDefault) {
               res.disabled = true;
             }
             break;
-          case 'SYS03'://sửa
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
+          case 'SYS03': //sửa
+            if (
+              !this.leadtimeControl ||
+              (!this.isRoleAll && !isGroup && !isTask)
+            ) {
               res.disabled = true;
             }
-            break;          
-          case 'DP20':// tiến độ
-            if (!this.isRoleAll && !isGroup && !isTask){
+            break;
+          case 'DP20': // tiến độ
+            if (!this.isRoleAll && !isGroup && !isTask) {
               res.isblur = true;
             }
             break;
@@ -1270,8 +1273,8 @@ export class StagesDetailComponent implements OnInit {
   async changeDataMFGroupTask(event, group) {
     if (event != null) {
       let isGroup = false;
-      if(!this.isRoleAll){
-        isGroup = this.checRoleTask(group, 'O');         
+      if (!this.isRoleAll) {
+        isGroup = this.checRoleTask(group, 'O');
       }
       event.forEach((res) => {
         switch (res.functionID) {
@@ -1283,16 +1286,19 @@ export class StagesDetailComponent implements OnInit {
           case 'DP07':
             res.disabled = true;
             break;
-          case 'SYS03'://sửa
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup)){
+          case 'SYS03': //sửa
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup)) {
               res.disabled = true;
             }
-            if (!this.leadtimeControl && !(this.isRoleAll || isGroup)){
+            if (!this.leadtimeControl && !(this.isRoleAll || isGroup)) {
               res.disabled = true;
             }
-            break;          
-          case 'DP20':// tiến độ
-            if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
+            break;
+          case 'DP20': // tiến độ
+            if (
+              !this.progressTaskGroupControl ||
+              (!this.isRoleAll && !isGroup)
+            ) {
               res.isblur = true;
             }
             break;
