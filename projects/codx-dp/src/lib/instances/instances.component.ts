@@ -304,6 +304,7 @@ export class InstancesComponent
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
+          debugger;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
@@ -493,7 +494,7 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
-    var endDate = new Date();
+    debugger;
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
@@ -560,7 +561,7 @@ export class InstancesComponent
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
               this.codxDpService
-                .GetStepsByInstanceIDAsync([data.recID, data.processID])
+                .GetStepsByInstanceIDAsync([data.recID, data.processID,data.status])
                 .subscribe((res) => {
                   if (res && res?.length > 0) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
@@ -578,7 +579,7 @@ export class InstancesComponent
                     var obj = {
                       action: 'edit',
                       applyFor: applyFor,
-                      listStep: this.listStepInstances,
+                      listSteps: this.listStepInstances,
                       titleAction: titleAction,
                       formMD: formMD,
                       endDate: this.HandleEndDate(

@@ -151,14 +151,19 @@ export class AddGroupChatComponent implements OnInit,AfterViewInit {
             if(res){
               this.signalRSV.sendData("ActiveNewGroup",res);
               this.dialogRef.close(res);
-              this.notifiSV.notify("Tạo nhóm chat thành công");
-
+              this.notifiSV.notify("CHAT001");
             }
-            else{
+            else
+            {
               this.dialogRef.close(null);
               this.notifiSV.notify("Tạo nhóm chat không thành công");
             }
           });
+        }
+        else
+        {
+          this.dialogRef.close(null);
+          this.notifiSV.notify("Tạo nhóm chat không thành công");
         }
       });
     }
