@@ -18,6 +18,7 @@ import {
   RequestOption,
   SidebarModel,
   DataRequest,
+  FormModel,
 } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -43,6 +44,14 @@ export class CashReceiptsComponent extends UIComponent {
   itemSelected: any;
   journalNo: string;
   cashbook: any;
+  page: any = 1;
+  pageSize = 6;
+  cashreceiptslines: Array<any> = [];
+  fmCashReceiptsLines: FormModel = {
+    formName: 'CashReceiptsLines',
+    gridViewName: 'grvCashReceiptsLines',
+    entityName: 'AC_CashReceiptsLines',
+  };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -241,7 +250,6 @@ export class CashReceiptsComponent extends UIComponent {
     return true;
   }
   clickChange(data) {}
-
   changeDataMF(e: any, data: any) {
     this.itemSelected = this.view.dataService.dataSelected;
     this.loadDatadetail(data);

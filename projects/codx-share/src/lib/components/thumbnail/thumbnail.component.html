@@ -15,7 +15,7 @@
               title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}" [descLine]="1">
             </codx-temp-full>
-            <div *ngIf="isReferType && item.data.referType == 'source'" class="div-icon-source"><i class="fas fa-paperclip"></i></div>
+            <div *ngIf="isReferType && item.data.referType == 'source'" class="div-icon-source"><i class="icon-14 icon-i-lock-fill"></i></div>
           </ng-template>
         </div>
 
@@ -98,7 +98,7 @@
               title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
               subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1">
             </codx-temp-full>
-            <div *ngIf="isReferType && item.referType == 'source'" class="div-icon-source"><i class="fas fa-paperclip"></i></div>
+            <div *ngIf="isReferType && item.referType == 'source'" class="div-icon-source"><i class="icon-14 icon-i-lock-fill"></i></div>
           </ng-template>
         </div>
         <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">

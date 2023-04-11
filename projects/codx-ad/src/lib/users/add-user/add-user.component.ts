@@ -104,7 +104,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
-    this.isEmpIDNotNull = this.adUser.employeeID != null ? true : false;
+    if (this.adUser.employeeID) {
+      this.isEmpIDNotNull = true;
+    } else {
+      this.isEmpIDNotNull = false;
+    }
+
     if (this.formType == 'edit') {
       // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;

@@ -18,8 +18,12 @@ export class CarouselStageComponent {
   listTreeView:any []=[];
   listDefaultView:any[] = [];
 
+  // type string
   selectedIndex:string ='0';
   viewSetting: string = '';
+
+  // type number
+  currentStep = 0;
 
   readonly viewCarouselForPage: string = 'viewCarouselForPage';
   readonly viewCarouselDefault: string = 'viewCarouselDefault';
@@ -97,6 +101,7 @@ export class CarouselStageComponent {
     var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
     if (indexResult > -1) {
         this.selectedIndex = index.toString();
+        this.currentStep = indexResult;
     }
   }
   stageEnd(){
@@ -109,6 +114,10 @@ export class CarouselStageComponent {
       index: index,
       id: id
     }
+    if (
+      this.currentStep < index && (this.status === '1' || this.status === '2')
+    )
+      return;
     this.eventClicked.emit(result);
    }
   }
