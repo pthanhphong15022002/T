@@ -125,6 +125,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   saveCheck = false;
   listUserID = [];
   tabInfo = [];
+  listUM = [];
   private approvalRule = '0';
   dueDateControl: any;
   listFilePermission = [];
@@ -181,6 +182,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   getCacheData() {
+    this.codxEpService.getListUM().subscribe((res:any)=>{
+      if(res ){
+        Array.from(res).forEach((um:any)=>{
+          this.listUM.push({umid:um?.umid,umName:um?.umName});
+        });        
+      }
+    });
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
@@ -1194,9 +1202,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         (tmpSta.quantity = this.attendeesNumber),
         (tmpSta.itemName = item.ResourceName),
         (tmpSta.umid = item.UMID),
-        (tmpSta.umName = item.UMID), //Chờ cập nhật thành tên đơn vị tính
+        (tmpSta.umName = item.UMID), 
         (tmpSta.objectType = 'EP_Resources'),
-        (tmpSta.objectID = item.RecID),
+        (tmpSta.objectID = item.RecID);
+        let tmpUM = this.listUM.filter((obj) => {
+          return obj.umid == tmpSta.umid;
+        });
+        if(tmpUM!=null && tmpUM.length>0){
+          tmpSta.umName=tmpUM[0]?.umName;
+        }
         this.lstStationery.push(tmpSta);
     });
     this.lstStationery = [
