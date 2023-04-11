@@ -142,34 +142,34 @@ export class ViewContractDetailComponent implements OnInit {
     }
   }
 
-  setHeight() {
-    let main,
-      header = 0;
-    let ele = document.getElementsByClassName(
-      'codx-detail-main'
-    ) as HTMLCollectionOf<HTMLElement>;
-    if (ele) {
-      main = Array.from(ele)[0]?.offsetHeight;
-    }
+  // setHeight() {
+  //   let main,
+  //     header = 0;
+  //   let ele = document.getElementsByClassName(
+  //     'codx-detail-main'
+  //   ) as HTMLCollectionOf<HTMLElement>;
+  //   if (ele) {
+  //     main = Array.from(ele)[0]?.offsetHeight;
+  //   }
 
-    let eleheader = document.getElementsByClassName(
-      'codx-detail-header'
-    ) as HTMLCollectionOf<HTMLElement>;
-    if (ele) {
-      header = Array.from(eleheader)[0]?.offsetHeight;
-    }
+  //   let eleheader = document.getElementsByClassName(
+  //     'codx-detail-header'
+  //   ) as HTMLCollectionOf<HTMLElement>;
+  //   if (ele) {
+  //     header = Array.from(eleheader)[0]?.offsetHeight;
+  //   }
 
-    let nodes = document.getElementsByClassName(
-      'codx-detail-body'
-    ) as HTMLCollectionOf<HTMLElement>;
-    if (nodes.length > 0) {
-      Array.from(
-        document.getElementsByClassName(
-          'codx-detail-body'
-        ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 100 + 'px';
-    }
-  }
+  //   let nodes = document.getElementsByClassName(
+  //     'codx-detail-body'
+  //   ) as HTMLCollectionOf<HTMLElement>;
+  //   if (nodes.length > 0) {
+  //     Array.from(
+  //       document.getElementsByClassName(
+  //         'codx-detail-body'
+  //       ) as HTMLCollectionOf<HTMLElement>
+  //     )[0].style.height = main - header - 100 + 'px';
+  //   }
+  // }
 
   initForm() {
     this.dataReferences = [];
@@ -282,46 +282,10 @@ export class ViewContractDetailComponent implements OnInit {
 
   //#region MoreFunc viewDetai
   changeDataMF(e: any, data: any) {
-    var bookmarked = false;
-    let lstBookmark = data?.bookmarks;
-    if (lstBookmark) {
-      let isbookmark = lstBookmark.filter(
-        (p) => p.objectID == this.user.userID
-      );
-      if (isbookmark?.length > 0) {
-        bookmarked = true;
-      }
-    }
-    var bm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01103'
-    );
-    var unbm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01104'
-    );
-    var release = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01105'
-    );
-
-    this.mfRelease = release;
-
-    if (bookmarked == true) {
-      if (bm && bm.length) bm[0].disabled = true;
-      if (unbm && unbm.length) unbm[0].disabled = false;
-    } else {
-      if (unbm && unbm.length) unbm[0].disabled = true;
-      if (bm && bm.length) bm[0].disabled = false;
-    }
-
-    if (data.approveStatus != '3') {
-      var cancel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'EST01101'
-      );
-      if (cancel && cancel.length) cancel[0].disabled = true;
-    }
-    if (data.approveStatus != 1 && data.approveStatus != 2) {
-      if (release?.length) release[0].disabled = true;
-    }
-  }
+    // console.log('data changedata MF', e);
+    // console.log('data di voi mf', data);
+    this.hrService.handleShowHideMF(e, data, this.view);
+  } 
 
   openFormFuncID(val: any, datas: any = null) {
     var funcID = val?.functionID;
