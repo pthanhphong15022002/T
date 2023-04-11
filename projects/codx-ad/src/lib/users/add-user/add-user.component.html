@@ -53,17 +53,17 @@
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
-            *ngIf="formType == 'edit'"
           >
+            <!-- *ngIf="formType == 'edit'" -->
           </codx-input>
-          <codx-input
+          <!-- <codx-input
             field="employeeID"
             (valueChange)="valueEmp($event)"
             *ngIf="formType == 'add' || formType == 'copy'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
       </div>
     </div>
@@ -148,8 +148,7 @@
         <codx-label
           fiedName="titleUserRoles"
           [formModel]="form?.formModel"
-          default="Chỉnh sửa
-        quyền"
+          default="Chỉnh sửa quyền"
         >
         </codx-label>
       </button>
@@ -230,8 +229,8 @@
     <button
       type="button"
       class="btn btn-primary"
-      (click)="onSave()"
-      [disabled]="this.saveSuccess"
+      (click)="saveUser(true)"
+      [disabled]="this.isSaving"
     >
       <codx-label
         fiedName="Save"

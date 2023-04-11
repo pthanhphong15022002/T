@@ -72,7 +72,7 @@ export class PopRolesComponent implements OnInit {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
-    this.quantity = dt?.data?.quantity;
+    this.quantity = dt?.data?.quantity ?? 1;
     this.isUserGroup = dt?.data?.isGroupUser;
     if (dt?.data.data?.length > 0) {
       if (dt?.data?.userID)
@@ -263,21 +263,27 @@ export class PopRolesComponent implements OnInit {
       if (this.isUserGroup) {
         this.onSave();
       } else {
-        this.adService
-          .getListValidOrderForModules(this.listChooseRole, this.userID)
-          .subscribe((lstTNMDs: tmpTNMD[]) => {
-            let errorMD = [];
-            lstTNMDs?.filter((tnmd) => {
-              if (tnmd.isError) {
-                errorMD.push(tnmd.moduleName);
+        if (this.quantity > 0) {
+          this.adService
+            .getListValidOrderForModules(this.listChooseRole, this.userID)
+            .subscribe((lstTNMDs: tmpTNMD[]) => {
+              let errorMD = [];
+              lstTNMDs?.filter((tnmd) => {
+                if (tnmd.isError) {
+                  errorMD.push(tnmd.moduleName);
+                }
+              });
+              if (lstTNMDs == null || errorMD.length > 0) {
+                this.notiService.notifyCode(
+                  'AD017',
+                  null,
+                  ...errorMD.join(', ')
+                );
+              } else {
+                this.onSave();
               }
             });
-            if (lstTNMDs == null || errorMD.length > 0) {
-              this.notiService.notifyCode('AD017', null, ...errorMD.join(', '));
-            } else {
-              this.onSave();
-            }
-          });
+        }
       }
     } else {
       this.onSave();
