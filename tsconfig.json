@@ -124,10 +124,6 @@
       "@shared/*": [
         "src/shared/*"
       ],
-      "decentrailizationGroup": [
-        "dist/decentrailization-group",
-        "dist/decentrailization-group"
-      ],
       "test": [
         "dist/test/test",
         "dist/test"
