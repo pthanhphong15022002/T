@@ -64,7 +64,7 @@
                                         <ng-container *ngIf="item.createdBy == user.userID">
                                             <ul ngbDropdownMenu>
                                                 <li ngbDropdownItem *ngIf="item.messageType != '5'">
-                                                    <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
+                                                    <a (click)="deleteMessage(item)"  href="javascript:void(0)">
                                                         <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                         <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                                                     </a>
@@ -256,7 +256,7 @@
                                     <ng-container *ngIf="item.createdBy == user.userID" >
                                         <ul ngbDropdownMenu>
                                             <li ngbDropdownItem *ngIf="item.messageType !='5'">
-                                                <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
+                                                <a (click)="deleteMessage(item)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                                                 </a>
@@ -386,6 +386,8 @@
         [multiple]="true" 
         [width]="width"
         [height]="height" 
+        [value]="crrMembers"
+        [allowRemove]="false"
         (clickSave)="addMemeber($event)">
     </codx-combobox-popup>
 </ng-container>

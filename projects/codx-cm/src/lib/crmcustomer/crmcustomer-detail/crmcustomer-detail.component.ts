@@ -31,6 +31,7 @@ export class CrmcustomerDetailComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName = '';
   moreFuncAdd = '';
+  moreFuncEdit = '';
   @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -54,7 +55,7 @@ export class CrmcustomerDetailComponent implements OnInit {
     private cache: CacheService,
     private cmSv: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {}
 
   async ngOnInit() {
@@ -215,12 +216,11 @@ export class CrmcustomerDetailComponent implements OnInit {
     this.clickMoreFunc.emit({ e: e, data: data });
   }
 
-
   //#region Crud contacts crm
-  clickAddContact(action, data) {
+  clickAddContact(action, data, title) {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    var title = this.moreFuncAdd;
+    var title = title;
     dataModel.formName = 'CMContacts';
     dataModel.gridViewName = 'grvCMContacts';
     dataModel.entityName = 'CM_Contacts';
@@ -269,33 +269,31 @@ export class CrmcustomerDetailComponent implements OnInit {
     });
   }
 
-  delete(data){
+  delete(data) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        var check = this.dataSelected.contacts.some(x => x.recID == data.recID && x.contactType == '1');
-        if(!check){
+        var check = this.dataSelected.contacts.some(
+          (x) => x.recID == data.recID && x.contactType == '1'
+        );
+        if (!check) {
           this.cmSv
-          .updateContactCrm(
-            data,
-            this.funcID,
-            this.dataSelected?.recID,
-            true
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) {
-              this.dataSelected.contacts = res;
-              this.changeDetectorRef.detectChanges();
-            }
-          });
-        }else{
-          this.notiService.notifyCode('Liên hệ này đang là liên hệ chính! Không xóa được');
+            .updateContactCrm(data, this.funcID, this.dataSelected?.recID, true)
+            .subscribe((res) => {
+              if (res && res.length > 0) {
+                this.dataSelected.contacts = res;
+                this.changeDetectorRef.detectChanges();
+              }
+            });
+        } else {
+          this.notiService.notifyCode(
+            'Liên hệ này đang là liên hệ chính! Không xóa được'
+          );
           return;
         }
-
-
-      }})
+      }
+    });
   }
   //#endregion
   getNameCrm(data) {
@@ -311,10 +309,10 @@ export class CrmcustomerDetailComponent implements OnInit {
   }
 
   clickMFContact(e, data) {
-    this.moreFuncAdd = e.text;
+    this.moreFuncEdit = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.clickAddContact('edit', data);
+        this.clickAddContact('edit', data, this.moreFuncEdit);
         break;
       case 'SYS02':
         this.delete(data);
