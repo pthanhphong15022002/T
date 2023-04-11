@@ -8,8 +8,10 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {
+  AuthService,
   ButtonModel,
   DataService,
+  DialogModel,
   FormModel,
   NotificationsService,
   SidebarModel,
@@ -20,6 +22,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -42,12 +45,28 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   eContractHeaderText;
   eBasicSalariesFormModel: FormModel;
   currentEbasicSalaryDta: any;
+
+  // get file sv
+  services: string = 'DM';
+  assemblyName: string = 'ERM.Business.DM';
+  className: string = 'FileBussiness';
+  lstFile: any[] =[];
+  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
+  REFERTYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
+  user: any;
+  //
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    //auth
+    private auth: AuthService
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
@@ -57,6 +76,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
+    this.user = this.auth.userValue;
   }
 
   ngAfterViewInit(): void {
@@ -165,4 +185,45 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     });
   }
 
+  // get file list
+  getDataAsync(recId :string){
+    if(recId){
+      this.api.execSv(this.services, this.assemblyName, this.className,'GetFilesByIbjectIDAsync',recId)
+      .subscribe((res:any) => {
+          if(res.length > 0){
+            let files= res;
+            files.map((e :any) =>{
+              if (e && e.referType == this.REFERTYPE.VIDEO) {
+                e['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+              }
+            });
+            this.lstFile = res;
+            //this.countData = res.length;
+          }
+        });
+        
+    }
+  }
+  openFiles(recID: string) {
+    if (this.tmpListItem) {
+      debugger
+      let option = new DialogModel();
+      //if (this.zIndex > 0) option.zIndex = this.zIndex;
+      let popup = this.callfc.openForm(
+        this.tmpListItem,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res) {
+          this.getDataAsync(recID);
+        }
+      });
+    }
+  }
 }
