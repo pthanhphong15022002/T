@@ -249,7 +249,13 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
-      } else
+      }else if(itemQuestion.answerType == "L")
+      {
+        this.lstQuestion[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      }
+       else
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));

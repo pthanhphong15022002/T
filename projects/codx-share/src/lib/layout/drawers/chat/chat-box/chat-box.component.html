@@ -169,39 +169,39 @@
                                 <!-- text -->
                                 <ng-container *ngIf="item.messageType != '2' ">
                                     <div class="message-reciver-message">
-                                        <!-- message reply -->
-                                        <ng-container *ngIf="item.refID">
-                                            <div class="message-reft">
-                                                <span class="d-block">{{item.refContent.createdName}}</span>
-                                                <ng-container *ngIf="item.refContent.content">
-                                                    <span class="d-block text-gray-500">{{item.refContent.content}}</span>
-                                                </ng-container>
-                                                <ng-container *ngIf="item.refContent.type == '2'">
-                                                    <codx-temp-full 
-                                                        [dataItem]="item"
-                                                        [imageId]="item.refID" 
-                                                        imageObjType="WP_Messages"
-                                                        [imageReferType]="item.fileType"
-                                                        [title]="item.fileName"
-                                                        [desc]="formatBytes(item.fileSize)">
-                                                    </codx-temp-full>
-                                                </ng-container>
-                                            </div>
+                                        <ng-container *ngIf="item.messageType == '5';else tmpReciverContent">
+                                            <span>Tin nhắn đã bị xóa.</span>
                                         </ng-container>
-                                        <ng-container *ngIf="item.message">
-                                            <div class="reciver-message">
-                                                <ng-container *ngIf="item.messageType == '5';else tmpReciverContent">
-                                                    <span>Tin nhắn đã bị xóa.</span>
-                                                </ng-container>
-                                                <ng-template #tmpReciverContent>
+                                        <ng-template #tmpReciverContent>
+                                            <!-- message reply -->
+                                            <ng-container *ngIf="item.refID">
+                                                <div class="message-reft">
+                                                    <span class="d-block">{{item.refContent.createdName}}</span>
+                                                    <ng-container *ngIf="item.refContent.content">
+                                                        <span class="d-block text-gray-500">{{item.refContent.content}}</span>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="item.refContent.type == '2'">
+                                                        <codx-temp-full 
+                                                            [dataItem]="item"
+                                                            [imageId]="item.refID" 
+                                                            imageObjType="WP_Messages"
+                                                            [imageReferType]="item.fileType"
+                                                            [title]="item.fileName"
+                                                            [desc]="formatBytes(item.fileSize)">
+                                                        </codx-temp-full>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="item.message">
+                                                <div class="reciver-message">
                                                     <span>{{item.message}}</span>
-                                                </ng-template>
-                                                <!-- time -->
-                                                <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
-                                                    <span class="d-block text-start">{{item.createdOn | date:'hh:mm'}}</span>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>
+                                                    <!-- time -->
+                                                    <ng-container *ngIf="i == arrMessages.length - 1 || item.createdBy != arrMessages[i+1]?.createdBy">
+                                                        <span class="d-block text-start">{{item.createdOn | date:'hh:mm'}}</span>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-container>      
+                                        </ng-template>
                                     </div>
                                 </ng-container>
                                 <!-- files -->
@@ -252,16 +252,18 @@
                                     <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                 </ng-container>
                                 <span ngbDropdown ngbDropdownToggle 
-                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                    class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                    <ng-container *ngIf="item.createdBy == user.userID" >
                                         <ul ngbDropdownMenu>
-                                            <li ngbDropdownItem *ngIf="item.createdBy == user.userID">
+                                            <li ngbDropdownItem *ngIf="item.messageType !='5'">
                                                 <a (click)="deleteMessage(item,i)"  href="javascript:void(0)">
                                                     <span class="icon-close icon-16 me-2 icon-removePost"></span>
                                                     <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                                                 </a>
                                             </li>
                                         </ul>
-                                    </span>
+                                    </ng-container>
+                                </span>
                             </div>
                         </ng-template>  
                     </div>
