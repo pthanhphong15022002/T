@@ -312,7 +312,6 @@ export class CodxEpService {
       [recID]
     );
   }
-
   getListReason(entity: string) {
     return this.api.execSv(
       'BS',
@@ -320,6 +319,15 @@ export class CodxEpService {
       'ReasonCodesBusiness',
       'GetListReasonByEntityAsync',
       [entity]
+    );
+  }
+  getListUM() {
+    return this.api.execSv(
+      "BS", 
+      "ERM.Business.BS", 
+      "UnitsOfMearsureBusiness", 
+      "GetAsync", 
+      []
     );
   }
 

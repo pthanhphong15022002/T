@@ -73,7 +73,10 @@ export class PopupEBasicSalariesComponent
       if (this.fromListView) return true;
       else return false;
     }
-    if (this.actionType == 'copy') return true;
+    if (this.actionType == 'copy') {
+      if (this.fromListView) return true;
+      else return false;
+    }
     if (this.actionType == 'add') {
       if (this.fromListView) return true; // add new from list view
       else return false;

@@ -46,7 +46,7 @@ export class InputCustomFieldComponent implements OnInit {
   messCodePhoneNum = 'RS030';
   listIdUser: string = '';
   arrIdUser = [];
-  numChange = 0 ;
+  numberChange = 0;
 
   constructor(
     private cache: CacheService,
@@ -74,7 +74,7 @@ export class InputCustomFieldComponent implements OnInit {
         break;
       case 'P':
         this.listIdUser = this.customField?.dataValue ?? '';
-        this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
+        this.arrIdUser = this.listIdUser ? this.listIdUser.split(';') : [];
         break;
       case 'A':
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
@@ -109,7 +109,7 @@ export class InputCustomFieldComponent implements OnInit {
             this.showErrMess = true;
 
             //if (!this.checkValid) return;
-             return;
+            return;
           } else this.showErrMess = false;
         }
         //format so dien thoai
@@ -145,7 +145,7 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
-      this.arrIdUser = this.listIdUser ?this.listIdUser.split(';'):[];
+      this.arrIdUser = this.listIdUser ? this.listIdUser.split(';') : [];
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
@@ -162,7 +162,11 @@ export class InputCustomFieldComponent implements OnInit {
   }
 
   valueChangeTime(e) {
-    if(this.numChange > 0)  this.valueChangeCustom.emit({ e: e, data: this.customField });else this.numChange +=1 ;
+    if (this.customField.dataValue && this.numberChange == 0) {
+      this.numberChange = 1;
+      return;
+    }
+    this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
 
   addFile() {
@@ -190,6 +194,6 @@ export class InputCustomFieldComponent implements OnInit {
     //}//
   }
   controlBlur(e) {
-   // if (e.crrValue) this.valueChange(e.crrValue);
+    // if (e.crrValue) this.valueChange(e.crrValue);
   }
 }

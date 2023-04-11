@@ -94,8 +94,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
   getThumb(file:any){
     if(file.pathDisk)
     {
-      let url = `${this.urlUpload}/${file.pathDisk}`
-      return this.shareService.getThumbByUrl(url,300);
+      return this.shareService.getThumbByUrl(file.pathDisk,300);
     }
     return ""
   }

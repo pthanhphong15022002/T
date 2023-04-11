@@ -68,9 +68,7 @@ export class AddSurveyComponent extends UIComponent {
     })
   }
   onInit(): void {
-    if (!this.funcID) {
-      this.codxService.navigate('SVT01');
-    }
+    if (!this.funcID) this.codxService.navigate('SVT01');
     //this.getSV();
     //this.getSignalAfterSave();
   }
@@ -199,5 +197,19 @@ export class AddSurveyComponent extends UIComponent {
       funcID: this.funcID,
       recID: this.recID,
     });
+  }
+
+  onChangeTitle(e:any)
+  {
+    var obj = 
+    {
+      title : e?.data
+    }
+    this.SvService.updateSV(this.recID,obj).subscribe();
+  }
+
+  updateSV()
+  {
+    this.SvService.getSV(this.recID)
   }
 }

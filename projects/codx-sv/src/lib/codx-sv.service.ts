@@ -43,6 +43,10 @@ export class CodxSvService {
   {
     return this.api.execSv("SV","SV","SurveysBusiness","GetItemByRecIDAsync",recID)
   }
+  updateSV(recID:any,data:any)
+  {
+    return this.api.execSv("SV","SV","SurveysBusiness","UpdateItemByRecIDAsync",[recID,data])
+  }
   convertListToObject(
     list: Array<object>,
     fieldName: string,

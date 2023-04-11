@@ -56,6 +56,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   answers: any = new Array();
   isModeAdd = true;
   functionList: any;
+  emptyText = 'Mẫu không có tiêu đề'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -180,7 +181,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   indexSessionA = 0;
   indexQuestionA = 0;
   idSession = "";
-  @Input() title: any = "Mẫu không có tiêu đề";
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
@@ -230,7 +230,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions = [
       {
         seqNo: 0,
-        question: this.title,
+        question: this.emptyText,
         answers: null,
         other: false,
         mandatory: false,
@@ -1257,7 +1257,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addSession(itemActive, seqNoSession) {
-    debugger
     this.generateGuid();
     var tempQuestion = JSON.parse(JSON.stringify(itemActive));
     tempQuestion.answers = null;
