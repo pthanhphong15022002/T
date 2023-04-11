@@ -29,6 +29,7 @@ export class VoucherComponent implements OnInit {
   cashpayment: any;
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
+  invoiceDueDate: any;
   gridHeight: number = 0;
   formModel: FormModel = {
     gridViewName: 'grvSubLedgerOpen',
@@ -63,6 +64,9 @@ export class VoucherComponent implements OnInit {
 
   //#region Init
   ngOnInit(): void {
+    if (this.cashpayment.voucherDate)
+      this.invoiceDueDate = new Date(this.cashpayment.voucherDate);
+    else this.invoiceDueDate = new Date();
     this.loadData();
   }
 
@@ -154,7 +158,7 @@ export class VoucherComponent implements OnInit {
 
   //#region function
   setDate(day?: any) {
-    let date = new Date(this.cashpayment.voucherDate);
+    let date = new Date(this.form.formGroup.value['invoiceDueDate']);
     let aDate = (date as any).addDays(day || 0);
     this.mapDataValues.set('date', aDate.toISOString());
   }
