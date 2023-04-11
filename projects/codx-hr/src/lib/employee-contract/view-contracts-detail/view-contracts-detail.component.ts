@@ -63,6 +63,7 @@ export class ViewContractDetailComponent implements OnInit {
   @Input() hideFooter = false;
   @Output() clickMFunction = new EventEmitter();
   @ViewChild('attachment') attachment;
+  @Output() uploaded;
 
   dataCategory;
   active = 1;

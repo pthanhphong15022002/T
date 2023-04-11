@@ -42,7 +42,7 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   }
 
   @Input() funcID: any;
-  @Input() eBasicSalaryDetail: any;
+  @Input() itemDetail: any;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
@@ -55,9 +55,9 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   user: any;
   grvSetup: any = {};
 
-  ngOnInit() {
-    throw new Error('Method not implemented.');
-  }
+  ngOnInit() {}
   ngAfterViewInit() {}
-  ngOnChanges(changes : SimpleChanges) { }
+  ngOnChanges(changes: SimpleChanges) {}
+  changeDataMF(e: any, data: any) {}
+  openFormFuncID(event: any){}
 }
