@@ -87,12 +87,12 @@
                 default="Đối tượng"
               >
               </codx-label>
-              <codx-input
+              <!-- <codx-input
                 type="text"
                 field="objectID"
                 [disabled]="true"
                 [crrValue]="cashpayment.payee"
-              ></codx-input>
+              ></codx-input> -->
             </div>
           </div>
           <div class="col-2">
@@ -103,13 +103,13 @@
                 default="Tài khoản công nợ"
               >
               </codx-label>
-              <codx-input
+              <!-- <codx-input
                 [Group]="form.formGroup"
                 field="accountID"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
               >
-              </codx-input>
+              </codx-input> -->
             </div>
           </div>
           <div class="col-2">
@@ -123,6 +123,7 @@
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
+                  [crrValue]="cashpayment?.voucherDate"
                   field="invoiceDueDate"
                   (valueChange)="valueChange($event)"
                   [formModel]="form.formModel"
@@ -139,13 +140,13 @@
                 default="Xét trong khoảng"
               >
               </codx-label>
-              <codx-input
+              <!-- <codx-input
                 type="text"
                 field="date"
                 [formModel]="form.formModel"
                 (valueChange)="valueChange($event)"
               >
-              </codx-input>
+              </codx-input> -->
             </div>
           </div>
           <div class="col-2">
@@ -156,14 +157,14 @@
                 default="Loại hóa đơn"
               >
               </codx-label>
-              <codx-input
+              <!-- <codx-input
                 field="voucherType"
                 type="valuelist"
                 crrValue="1"
                 refValue="AC082"
                 (valueChange)="valueChange($event)"
               >
-              </codx-input>
+              </codx-input> -->
             </div>
           </div>
         </div>
@@ -181,12 +182,12 @@
                     default="Số tiền chi trả"
                   >
                   </codx-label>
-                  <codx-input
+                  <!-- <codx-input
                     type="text"
                     field="payAmt"
                     [formModel]="form.formModel"
                   >
-                  </codx-input>
+                  </codx-input> -->
                 </div>
               </div>
             </div>
@@ -200,18 +201,18 @@
                     default="Tiền tệ"
                   >
                   </codx-label>
-                  <codx-input
+                  <!-- <codx-input
                     type="combobox"
                     refValue="Currencies"
                     field="currencyID2"
+                    [crrValue]="cashpayment.currencyID"
                     (valueChange)="valueChange($event)"
-                  ></codx-input>
+                  ></codx-input> -->
                 </div>
               </div>
             </div>
             <div class="col-3">
               <div class="form-group">
-                <!-- Người nhận tiền -->
                 <div class="form-group">
                   <codx-label
                     fiedName="lblType"
@@ -219,13 +220,13 @@
                     default="Cấn trừ hóa đơn"
                   >
                   </codx-label>
-                  <codx-input
+                  <!-- <codx-input
                     type="valuelist"
                     refValue="AC083"
                     crrValue="1"
                     field="payTypem"
                     (valueChange)="valueChange($event)"
-                  ></codx-input>
+                  ></codx-input> -->
                 </div>
               </div>
             </div>
@@ -242,7 +243,7 @@
                   </codx-label>
                 </div>
                 <div class="d-flex">
-                  <codx-input
+                  <!-- <codx-input
                     #checkbox
                     type="checkbox"
                     [checked]="false"
@@ -250,9 +251,8 @@
                     [disabled]="false"
                     (valueChange)="valueChange($event)"
                   >
-                  </codx-input>
+                  </codx-input> -->
                 </div>
-                <!-- Người nhận tiền -->
               </div>
             </div>
           </div>
