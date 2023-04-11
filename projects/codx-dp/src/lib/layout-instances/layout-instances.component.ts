@@ -62,6 +62,7 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
   }
   viewNameProcess(ps) {
     this.processView = ps;
+    this.stepViews=[] ;
     if (this.processView?.steps?.length > 0)
       this.processView.steps.forEach((x) => {
         if (!x.isFailStep && !x.isSuccessStep) {
