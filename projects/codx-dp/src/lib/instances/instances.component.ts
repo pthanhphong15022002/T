@@ -44,6 +44,7 @@ import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instan
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'codx-instances',
@@ -171,7 +172,8 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance: LayoutInstancesComponent,
+    // private layoutInstance: LayoutInstancesComponent,
+    private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -304,7 +306,6 @@ export class InstancesComponent
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
-          debugger;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
@@ -426,10 +427,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
-    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
-    this.view.dataService
-      .copy(this.view.dataService.dataSelected)
-      .subscribe((res) => {
+    this.view.dataService.copy().subscribe((res) => {
         const funcIDApplyFor =
           this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
         const applyFor = this.process.applyFor;
@@ -449,10 +447,7 @@ export class InstancesComponent
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
-              this.codxDpService
-                .getListStepCopyById(dataGets)
-                .subscribe((res) => {
-                  if (res && res?.length > 0) {
+                  if (res) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
                     var formMD = new FormModel();
                     formMD.funcID = funcIDApplyFor;
@@ -489,17 +484,15 @@ export class InstancesComponent
                         });
                     }
                   }
-                });
             });
         });
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
-    debugger;
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
-      listSteps: 'add' ? this.listSteps : this.listStepInstances,
+      listSteps: JSON.parse(JSON.stringify(this.listSteps)),
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
@@ -1425,7 +1418,7 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas = 
+    let datas =
       [{
         san_pham: 'Sản phẩm quần què test',
         dien_tich: 'Diện tích quần què test',
@@ -1444,7 +1437,6 @@ export class InstancesComponent
       )
       .subscribe((res) => {
         console.log(res);
-        debugger;
       });
   }
   //Xét duyệt
@@ -1512,7 +1504,8 @@ export class InstancesComponent
   loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
-    this.layoutInstance.viewNameProcess(ps);
+    // this.layoutInstance.viewNameProcess(ps);
+    this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
