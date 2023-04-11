@@ -44,6 +44,7 @@ import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instan
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'codx-instances',
@@ -171,7 +172,8 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance: LayoutInstancesComponent,
+    // private layoutInstance: LayoutInstancesComponent,
+    private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -304,7 +306,6 @@ export class InstancesComponent
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
-          debugger;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
@@ -495,7 +496,6 @@ export class InstancesComponent
       });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
-    debugger;
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
@@ -1436,7 +1436,6 @@ export class InstancesComponent
       )
       .subscribe((res) => {
         console.log(res);
-        debugger;
       });
   }
   //Xét duyệt
@@ -1504,7 +1503,8 @@ export class InstancesComponent
   loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
-    this.layoutInstance.viewNameProcess(ps);
+    // this.layoutInstance.viewNameProcess(ps);
+    this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
