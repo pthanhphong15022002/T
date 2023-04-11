@@ -77,6 +77,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() listStep: any;
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
+  @Input() ownerInstance: string;
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
 
@@ -194,6 +195,9 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    console.log('---owner',this.ownerInstance);
+    console.log('---',this.currentStep);
+    
     this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
@@ -833,8 +837,20 @@ export class StagesDetailComponent implements OnInit {
   }
   checkEventProgress(data) {
     if (data?.task) {
+      let isGroup = false;
+      let isTask = false;
+      if(!this.isRoleAll){
+        // isGroup = this.checRoleTask(groupTask, 'O');    
+        if(!isGroup){
+          // isTask = this.checRoleTask(task, 'O');
+        }      
+      }
       return data?.task.length == 0 ? true : false;
     } else {
+      let isGroup = false;
+      if(!this.isRoleAll){
+        isGroup = this.checRoleTask(data, 'O');         
+      }
       return true;
     }
   }
@@ -1213,7 +1229,9 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole() {
-    if (this.dataStep?.roles?.length > 0) {
+    if(this.ownerInstance == this.user.userID){
+      this.isRoleAll = true;
+    }else if (this.dataStep?.roles?.length > 0) {
       this.isRoleAll =
         this.dataStep?.roles?.some(
           (element) => element?.objectID == this.user.userID && element.roleType == 'S'
@@ -1243,15 +1261,26 @@ export class StagesDetailComponent implements OnInit {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02'://xóa
-            if (task?.isTaskDefault) {
+            if (task?.isTaskDefault || (!this.isRoleAll && !isGroup)) {
               res.disabled = true;
             }
             break;
+          case 'DP13'://sửa
           case 'SYS03'://sửa
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
               res.disabled = true;
             }
             break;          
+          case 'SYS04'://copy
+            if (!this.isRoleAll && !isGroup){
+              res.disabled = true;
+            }
+            break;   
+          case 'SYS003'://đính kèm file
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
+              res.isblur = true;
+            }
+            break;         
           case 'DP20':// tiến độ
             if (!this.isRoleAll && !isGroup && !isTask){
               res.isblur = true;
@@ -1275,22 +1304,35 @@ export class StagesDetailComponent implements OnInit {
       }
       event.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS02':
-            if (group?.isTaskDefault) {
-              res.disabled = true;
-            }
-            break;
+          case "DP13":
           case 'DP07':
             res.disabled = true;
             break;
+          case 'SYS02':
+            if (group?.isTaskDefault || (!this.isRoleAll && !isGroup)) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS04'://copy
+            if (!this.isRoleAll){
+              res.disabled = true;
+            }
+            break; 
           case 'SYS03'://sửa
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup)){
+            if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
               res.disabled = true;
             }
-            if (!this.leadtimeControl && !(this.isRoleAll || isGroup)){
-              res.disabled = true;
+            break;  
+          case 'SYS003'://đính kèm file
+            if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
+              res.isblur = true;
             }
-            break;          
+            break;  
+          case 'DP08':// thêm công việc
+            if (!this.isRoleAll && !isGroup){
+              res.isblur = true;
+            }
+            break;        
           case 'DP20':// tiến độ
             if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
               res.isblur = true;

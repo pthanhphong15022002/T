@@ -658,9 +658,17 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance(data);
+        this.handelStartDay(data)
         break;
     }
+  }
+
+  handelStartDay(data){
+    this.notificationsService.alertCode('DP033',null, [data?.title || '']).subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.startInstance(data);
+      }
+    });
   }
 
   startInstance(data) {

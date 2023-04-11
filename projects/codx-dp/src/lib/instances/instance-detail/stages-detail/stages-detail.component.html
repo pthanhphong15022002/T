@@ -20,12 +20,18 @@
       <div>
         <button
           type="button"
-          class="btn btn-primary btn-sm d-flex align-items-center cursor-pointer"
+          class="btn btn-primary btn-sm d-flex align-items-center"
           (click)="openUpdateProgress(dataStep)"
-          [disabled]="dataStep?.startDate && dataStep?.endDate ? false : true"
+          [disabled]="(!isStart || !isRoleAll || !progressStepControl) ? true : false "
         >
           <span class="icon-16 icon-update me-1"></span>
-          <span>Cập nhật tiến độ</span>
+          <codx-label
+            fiedName="lblProgress"
+            formName="DPInstancesSteps"
+            gridViewName="grvDPInstancesSteps"
+            default="Cập nhật tiến độ"
+        >
+        </codx-label>
         </button>
       </div>
     </div>
@@ -445,7 +451,8 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart
+          isStart && 
+          isRoleAll
         "
       >
         <button
