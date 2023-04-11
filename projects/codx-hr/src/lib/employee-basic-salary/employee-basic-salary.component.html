@@ -24,7 +24,7 @@
     <div class="w-25 p-3 fs-5 fw-500">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column me-1">
-          <codx-img [width]="40" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
+          <codx-img [width]="45" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
             [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
           </codx-img>
           <codx-vll class="badge badge-sm" [name]="'HR001'"
@@ -42,7 +42,7 @@
           <div class="text-gray-700 mb-1">
             <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-700 " style="font-size: 14px">
             <span [innerHTML]="data?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
           </div>
         </div>
@@ -54,7 +54,7 @@
       <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
         <div class="d-flex flex-row mb-2">
           <span class="icon-attach_money icon-15 me-1 align-self-center"></span>
-          <span class="align-self-center fw-bold" [ngbTooltip]="'Lương cơ bản'"
+          <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText"
             [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
           </span>
         </div>
@@ -62,7 +62,7 @@
           [class]="data.isCurrent? 'text-highlight' : 'text-gray-700'">
           <div class="d-flex flex-row">
             <span class="icon-monetization_on icon-15 align-self-senter me-1"></span>
-            <span class="align-self-center" [ngbTooltip]="'Lương đóng bảo hiểm'"
+            <span class="align-self-center" [ngbTooltip]="grvSetup?.siSalary?.headerText"
               [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
             </span>
           </div>
@@ -85,7 +85,7 @@
     <!-- DecisionNO -->
     <div class="w-25 p-3 fs-5 fw-500">
       <div class="d-flex flex-column">
-        <div class="text-gray-700 d-flex flex-row mb-3">
+        <div class="text-gray-700 d-flex flex-row mb-2">
           <span class="icon-event_notes icon-15 me-1"></span>
           <div class="align-self-center fw-bold">
             <span [title]="eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''">
@@ -100,7 +100,7 @@
         <div class="d-flex flex-row">
           <div class="d-flex flex-row" *ngIf="data?.attachments > 0" (click)="openFiles(data?.recID)">
             <i class="icon-attach_file icon-20"></i>
-            <div class="align-self-center badge badge-sm badge-circle badge-primary me-15">
+            <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
               {{ data?.attachments }}
             </div>
           </div>
