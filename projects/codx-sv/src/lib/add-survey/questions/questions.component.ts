@@ -185,7 +185,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   @Input() formModel: any;
   @Input() dataService: any;
   @Input() recID = "";
-  @Input() funcID = "";
+  @Input() funcID = "";signal
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;

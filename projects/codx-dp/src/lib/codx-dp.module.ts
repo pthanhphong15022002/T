@@ -60,29 +60,34 @@ const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: '**',
-        redirectTo: 'error/404',
-      },
-    ],
-  },
-  //thao tesst chuyen popup sang page
-  {
-    path: '',
-    //component: LayoutNoAsideComponent,
-    component: LayoutInstancesComponent,
-    children: [
-      {
         path: 'instances/:funcID/:processID',
         component: InstancesComponent,
         data: { noReuse: true },
       },
       {
         path: '**',
-        redirectTo: 'dynamicprocess/DP0101',
-        pathMatch: 'full',
+        redirectTo: 'error/404',
       },
     ],
   },
+  //thao tesst chuyen popup sang page
+  // {
+  //   path: '',
+  //   //component: LayoutNoAsideComponent,
+  //   component: LayoutInstancesComponent,
+  //   children: [
+  //     {
+  //       path: 'instances/:funcID/:processID',
+  //       component: InstancesComponent,
+  //       data: { noReuse: true },
+  //     },
+  //     {
+  //       path: '**',
+  //       redirectTo: 'dynamicprocess/DP0101',
+  //       pathMatch: 'full',
+  //     },
+  //   ],
+  // },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
