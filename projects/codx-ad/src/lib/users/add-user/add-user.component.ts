@@ -87,7 +87,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   date = new Date();
 
   //employeeID first change
-  isEmpIDNotNull = false;
+  isEmpIDNotNull: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -104,7 +104,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
-    this.isEmpIDNotNull = this.adUser.employeeID != null ? true : false;
     if (this.formType == 'edit') {
       // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
@@ -156,7 +155,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.title = dt.data?.headerText;
   }
 
-  onInit(): void {}
+  onInit(): void {
+    if (this.adUser.employeeID) {
+      this.isEmpIDNotNull = true;
+    } else {
+      this.isEmpIDNotNull = false;
+    }
+    this.changeDetector.detectChanges();
+  }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;

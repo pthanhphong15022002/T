@@ -47,7 +47,7 @@ export class CashReceiptsComponent extends UIComponent {
   cashbook: any;
   page: any = 1;
   pageSize = 6;
-  cashreceiptslines: Array<CashReceiptsLines> = [];
+  cashreceiptslines: Array<any> = [];
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
     gridViewName: 'grvCashReceiptsLines',
@@ -250,22 +250,20 @@ export class CashReceiptsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-  clickChange(data){
-
-  }
-  changeDataMF(e:any,data:any){
+  clickChange(data) {}
+  changeDataMF(e: any, data: any) {
     this.itemSelected = this.view.dataService.dataSelected;
     this.loadDatadetail(data);
   }
 
   loadDatadetail(data) {
     this.api
-    .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-    .subscribe((res: any) => {
-      if (res != null) {
-        this.objectname = res[0].objectName;
-      }
-    });
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.objectname = res[0].objectName;
+        }
+      });
   }
 
   export(data) {

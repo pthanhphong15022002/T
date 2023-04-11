@@ -59,23 +59,18 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private shareService: CodxShareService,
     private injector: Injector
   ) {
+    
+    this.user = this.auth.get();
+    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
+  }
+
+  ngOnInit(): void {
     this.cache.functionList('WP').subscribe((res) => {
       if (res) {
         this.functionList.entityName = res.entityName;
         this.functionList.funcID = res.functionID;
       }
     });
-    this.user = this.auth.get();
-    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
-    var dataSv = new CRUDService(injector);
-    dataSv.request.gridViewName = 'grvFileInfo';
-    dataSv.request.entityName = 'DM_FileInfo';
-    dataSv.request.formName = 'FileInfo';
-    this.dtService = dataSv;
-  }
-
-  ngOnInit(): void {
-
   }
 
   ngAfterViewInit() {
@@ -96,11 +91,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getThumb(url:any)
-  {
-    if(url)
+  getThumb(file:any){
+    if(file.pathDisk)
     {
-      return this.shareService.getThumbByUrl(url,300);
+      return this.shareService.getThumbByUrl(file.pathDisk,300);
     }
     return ""
   }
