@@ -24,6 +24,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { environment } from 'src/environments/environment';
+import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -34,6 +35,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
+
+  @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
+  @ViewChild('templateItemDetailRight') templateItemDetailRight?: TemplateRef<any>;
+
+  @ViewChild('viewDetail') viewDetail: ViewBasicSalaryDetailComponent;
+
   //#endregion
 
   views: Array<ViewModel> = [];
@@ -87,31 +94,28 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
+        active: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
         },
       },
-      // {
-      //   type: ViewType.listdetail,
-      //   sameData: true,
-      //   active: true,
-      //   model: {
-      //     // template: this.itemTemplateListDetail,
-      //     // panelRightRef: this.panelRightListDetail,
-      //   },
-      // },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateListDetail,
+          panelRightRef: this.templateItemDetailRight,
+        },
+      },
     ];
   }
-  addBasicSalaries(event){
-    if(event.id == 'btnAdd'){
-      this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'add',null);
-    }
-  }
+  
   changeItemDetail(event) {
   }
+
   clickMF(event, data) {
     switch (event.functionID){
       // case 'SYS01':
@@ -133,7 +137,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         break;
     }
   }
+
   changeDataMF(event, data): void {}
+
   handlerEBasicSalary(headerText ,actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
@@ -178,12 +184,26 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       if (res?.event) this.view.dataService.clear();
     });
   }
+
   copyValue(actionHeaderText, data) {
     this.hrService
     .copy(data, this.view.formModel, 'RecID')
     .subscribe((res) => {
         this.handlerEBasicSalary(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
     });
+  }
+
+  addBasicSalaries(event){
+    if(event.id == 'btnAdd'){
+      this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'add',null);
+    }
+  }
+
+  getIdUser(createdBy: any, owner: any) {
+    var arr = [];
+    if (createdBy) arr.push(createdBy);
+    if (owner && createdBy != owner) arr.push(owner);
+    return arr.join(";"); 
   }
 
   // get file list
@@ -205,6 +225,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         
     }
   }
+  
   openFiles(recID: string) {
     if (this.tmpListItem) {
       debugger
