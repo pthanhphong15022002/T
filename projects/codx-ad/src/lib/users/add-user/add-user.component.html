@@ -10,7 +10,6 @@
   [data]="adUser"
 >
 </codx-layout-add>
-
 <ng-template #tabDescription>
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-3 pb-5">
@@ -53,17 +52,17 @@
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
-            *ngIf="formType == 'edit'"
           >
+            <!-- *ngIf="formType == 'edit'" -->
           </codx-input>
-          <codx-input
+          <!-- <codx-input
             field="employeeID"
             (valueChange)="valueEmp($event)"
             *ngIf="formType == 'add' || formType == 'copy'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
       </div>
     </div>

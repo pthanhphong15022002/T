@@ -1,4 +1,4 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED pt-5 '" 
+<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED me-0 p-5 pe-3 pb-0'" 
 [body]="body" *ngIf="isAfterRender">
 </codx-form>
 
@@ -32,7 +32,7 @@
         </codx-input>
       </div>
     </div> -->
-    <div class="flex-grow-1 overflow-auto">
+    <div class="flex-grow-1 overflow-auto mw-1200px w-1200px mx-auto">
       <ejs-tab id="om-tab" class="h-100">
         <e-tabitems>
           <e-tabitem>
@@ -43,76 +43,84 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex flex-row mt-5">
-                <div class="form-group col-5 text-center">
+              <div class="d-flex flex-row mt-5 mx-12">
+                <div class="form-group col-4 fw-bold">
                   <codx-label name="lbl" class="text-dark" default="Phòng ban"></codx-label>
                 </div>
-                <div class="form-group col-1 text-center">
+                <div class="form-group col-1 fw-bold">
                   <codx-label name="lbl" class="text-dark" default="% phân bổ"></codx-label>
                 </div>
-                <div class="form-group col-1 text-center">
+                <div class="form-group col-1 fw-bold">
                   <codx-label name="lbl" class="text-dark" default="Giá trị"></codx-label>
                 </div>
-                <div class="form-group col-1 text-center">
+                <div class="form-group col-1 fw-bold">
                   <codx-label name="lbl" class="text-dark" default="DVT"></codx-label>
                 </div>
-                <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeKR">
+                <div class="form-group col-5 fw-bold" *ngIf="this.distributeToType==typeKR">
                   <codx-label name="lblKR" class="text-dark" default="Tên kết quả"></codx-label>
                 </div>
-                <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeOB">
+                <div class="form-group col-5 fw-bold" *ngIf="this.distributeToType==typeOB">
                   <codx-label name="lblOB" class="text-dark" default="Tên mục tiêu"></codx-label>
                 </div>
               </div>
               <div class="mt-2 d-flex flex-column">
                 <!--header-->
                 
-                <div class="d-flex flex-row  align-items-center">
-                  <div class="d-flex justify-content-center align-items-center"
-                    style="height:30px;width:30px;background:#3699FF"><span
-                      class="icon-home justify-content-center align-items-center text-light"></span></div>
+                <div class="d-flex flex-row align-items-center">
+                  <div class="d-flex align-items-center justify-content-center w-30px h-30px rounded-1 bg-primary me-4">
+                    <i class="icon-home text-white"></i>
+                  </div>
                   <!-- <codx-label name="lbl" [default]="orgUnitTree?.orgUnitName"
                     class="ps-2 fs-5 fw-bolder"></codx-label> -->
-                    <span class="ms-5 fs-5 fw-bolder">{{orgUnitTree?.orgUnitName}}</span>
+                    <span class="fs-5 fw-bold">{{orgUnitTree?.orgUnitName}}</span>
                 </div>
                 <!--content-->
-                <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
+                <div class="d-flex flex-column mx-12" *ngIf=" listDistribute && listDistribute?.length>0">
                   <ng-container class=" flex-grow-1 overflow-auto d-flex flex-column" *ngFor="let item of listDistribute; let i=index;">
                     <div class="my-2 d-flex flex-row justify-content-center" >
-                      <div class=" col-4 mx-1 d-flex flex-row ">
-                        <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px"><span
+                      <div class=" col-4 d-flex align-items-center">
+                        <div class="d-flex flex-stack w-30px h-30px">
+                          <span
                             class=" justify-content-center align-items-center text-light" [ngClass]="item.isActive ? 'text-primary icon-check_circle ' : 'text-muted icon-panorama_fish_eye '" 
                             (click)="disabledChild($event,i)" ></span>
                         </div>  
-                        
-                        <codx-inplace [type]="'text'" emptyText="" style="width:100%;" [disabled]="true" [ngClass]="item.isActive ? '' : 'disabledCss'" 
-                          cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item?.orgUnitName"></codx-inplace>
+                        <div class="w-100 px-1">
+                          <codx-inplace [type]="'text'" emptyText="" style="width:100%;" [disabled]="true" [ngClass]="item.isActive ? '' : 'disabledCss'" 
+                            cssClass="w-100 border-bottom fw-bold rounded-0"
+                            [value]="item?.orgUnitName"></codx-inplace>
+                        </div>
                       </div>
-                      <div class=" col-1  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="percentChange($event)" [field]="i"
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.distributePct">
-                        </codx-inplace>
+                      <div class="col-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
+                        <div class="w-100 px-1">
+                          <codx-inplace [type]="'number'" emptyText="" (valueChange)="percentChange($event)" [field]="i"
+                            cssClass="w-100 border-bottom rounded-0" [value]="item.distributePct">
+                          </codx-inplace>
+                        </div>
                       </div>
-                      <div class="col-1 mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="valueChange($event)" [field]="i"
-                          cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item.distributeValue"> </codx-inplace>
+                      <div class="col-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
+                        <div class="w-100 px-1">
+                          <codx-inplace [type]="'number'" emptyText="" (valueChange)="valueChange($event)" [field]="i"
+                            cssClass="w-100 border-bottom rounded-0"
+                            [value]="item.distributeValue"> </codx-inplace>
+                        </div>
                       </div>
-                      <div class="col-1  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i"
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.umid">
-                        </codx-inplace>
+                      <div class="col-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
+                        <div class="w-100 px-1">
+                          <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i"
+                            cssClass="w-100 border-bottom rounded-0" [value]="item.umid">
+                          </codx-inplace>
+                        </div>
                       </div>
-                      <div class=" col-3  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="nameChange($event)" [field]="i"
-                          cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item.okrName"> </codx-inplace>
+                      <div class="col-5" [ngClass]="item.isActive ? '' : 'disabledCss'" >
+                        <div class="w-100 px-1">
+                          <codx-inplace [type]="'text'" emptyText="" (valueChange)="nameChange($event)" [field]="i"
+                            cssClass="w-100 border-bottom rounded-0"
+                            [value]="item.okrName"> </codx-inplace>
+                        </div>
                       </div>
                     </div>
                   </ng-container>
                 </div>
-                
-
 
               </div>
             </ng-template>
