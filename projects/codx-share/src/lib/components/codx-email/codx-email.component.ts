@@ -421,11 +421,11 @@ export class CodxEmailComponent implements OnInit {
       ...this.lstCc,
       ...this.lstBcc,
     ];
-    this.codxService.sendEmail(this.data, lstSento).subscribe(res =>{
-      if(res){
+    this.codxService.sendEmail(this.data, lstSento).subscribe((res) => {
+      if (res) {
         this.dialog && this.dialog.close();
       }
-    })
+    });
   }
 
   onSaveForm(dialog1: DialogRef) {
@@ -504,7 +504,7 @@ export class CodxEmailComponent implements OnInit {
       if (this.data && this.data.recID) {
         delete this.data.recID;
       }
-      
+
       if (lstSento && lstSento?.length > 0) {
         lstSento.forEach((element) => {
           delete element.recID;
@@ -850,27 +850,27 @@ export class CodxEmailComponent implements OnInit {
       this.saveSelection.restore();
       console.log(this.saveSelection);
       let html =
-        '<span data="' +
+        '<span codx-data="[' +
         data?.fieldName +
-        '">[' +
+        ']">[' +
         data?.headerText +
         ']</span>';
       if (data.data.referedType == '2') {
         html =
-          '<span data="' +
+          '<span codx-data="[' +
           data?.fieldName +
           '|vll:' +
           data?.data?.referedValue +
-          '">[' +
+          ']">[' +
           data?.headerText +
           ']</span>';
       } else if (data.data.referedType == '3') {
         html =
-          '<span data="' +
+          '<span codx-data="[' +
           data?.fieldName +
           '|cbx:' +
           data?.data?.referedValue +
-          '">[' +
+          ']">[' +
           data?.headerText +
           ']</span>';
       }

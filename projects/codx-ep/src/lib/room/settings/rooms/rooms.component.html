@@ -96,7 +96,7 @@
 
 <ng-template #preparatorCol let-data>
   <div class="d-flex align-items-center justify-content-start">
-    <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
+    <codx-img [width]="25" [objectId]="data?.preparator" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <span class="fw-bold"  [innerHTML]="data?.preparator | formatvalue : formModel : 'Preparator' | async"></span>
     </div>

@@ -1821,8 +1821,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
     var stepIDPrevious = event.previousContainer.id;
-    if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
-      stepIDContain = stepIDContain.substring(2);
+    if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
+      stepIDContain =stepIDContain.substring(2) ;
     }
 
     if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
@@ -1843,7 +1843,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
 
     event.item.data.stepID = stepIDContain;
-  
+
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,

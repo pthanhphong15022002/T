@@ -224,7 +224,7 @@ export class CashPaymentsComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .copy(this.view.dataService.dataSelected)
+      .copy((o) => this.setDefault(o))
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',
@@ -305,14 +305,17 @@ export class CashPaymentsComponent extends UIComponent {
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || x.functionID == 'ACT041002' || x.functionID == 'ACT041004');
+        x.functionID == 'ACT041003' ||
+        x.functionID == 'ACT041002' ||
+        x.functionID == 'ACT041004'
+    );
     // duyệt trước khi ghi sổ
-    if (data.status == '1' && data.approveStatus == '1') {
+    if (data?.status == '1' && data?.approveStatus == '1') {
       bm[1].disabled = true;
       bm[2].disabled = true;
     }
     //ko duyệt trước khi ghi sổ
-    if (data.status == '1' && data.approveStatus == '0') {
+    if (data?.status == '1' && data?.approveStatus == '0') {
       bm[0].disabled = true;
       bm[2].disabled = true;
     }
@@ -323,10 +326,9 @@ export class CashPaymentsComponent extends UIComponent {
     }
     //hủy duyệt
     if (data?.approveStatus == '4') {
-      for(var i = 0 ; i< bm.length ; i++)
-        {
-          bm[i].disabled = true;
-        }
+      for (var i = 0; i < bm.length; i++) {
+        bm[i].disabled = true;
+      }
     }
     this.loadDatadetail(this.itemSelected);
   }
@@ -338,21 +340,9 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res[0].objectName;
-        }
-      });
-    this.api
       .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
       .subscribe((res: any) => {
         this.cashpaymentline = res;
-      });
-    this.api
-      .exec('AC', 'TransactionTextsBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.transactionText = res;
       });
   }
   //#endregion

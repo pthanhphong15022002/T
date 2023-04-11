@@ -4,16 +4,16 @@
 </codx-views>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-25 text-highlight p-3 fs-5 fw-500">
     <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblEBasicSalaries" [default]="'Lương cơ bản - Đóng BHXH | Hiệu lực'"></codx-label>
+  <div class="w-25 text-highlight p-3 fs-5 fw-500">
+    <codx-label name="lblEBasicSalaries" [default]="'Mức lương | Hiệu lực'"></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-25 text-highlight p-3 fs-5 fw-500">
     <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-25 text-highlight p-3 fs-5 fw-500">
     <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
   </div>
 </ng-template>
@@ -51,20 +51,20 @@
     <!-- end employee info -->
     <!-- Salary -->
     <div class="w-25 p-3 fs-5 fw-500">
-      <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'">
+      <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
         <div class="d-flex flex-row">
-          <div class="align-self-center fw-bold">
-            <span class="icon-attach_money icon-15 me-1 align-self-center"></span>
-            <span class="align-self-center fw-bold"
-              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-            </span>
-            <span> - </span>
+          <span class="icon-attach_money icon-15 me-1 align-self-center"></span>
+          <span class="align-self-center fw-bold"
+            [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+          </span>
+        </div>
+        <div *ngIf="data?.siSalary!= null && data?.siSalary > 0" class="d-flex flex-column" [class]="data.isCurrent? 'text-highlight' : 'text-gray-700'">
+          <div class="d-flex flex-row">
             <span class="icon-monetization_on icon-15 align-self-senter me-1"></span>
-            <span class="align-self-center fw-bold"
+            <span class="align-self-center"
               [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
             </span>
           </div>
-
         </div>
         <!-- EffectedDate -->
         <div class="d-flex flex-column">
@@ -73,10 +73,6 @@
             <div class="align-self-center fw-bold">
               <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
                 {{ data?.effectedDate | fmDT }}
-              </span>
-              <span> - </span>
-              <span [title]="eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''">
-                {{ data?.expiredDate | fmDT }}
               </span>
             </div>
           </div>
@@ -101,7 +97,7 @@
         </div>
         <div class="d-flex flex-row">
           <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
-            <i class="icon-attach_file text-primary icon-15"></i>
+            <i class="icon-attach_file text-highlight icon-15"></i>
             <div class="align-self-center notification-count me-4 bg-primary">
               {{ data?.attachments }}
             </div>

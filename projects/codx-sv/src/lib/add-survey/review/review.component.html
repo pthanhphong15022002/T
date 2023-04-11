@@ -266,7 +266,7 @@
                 class="btn btn-submit-white text-purple"
                 (click)="continue(itemSession.seqNo + 1)"
               >
-                <codx-label fiedName="Continue" default="Tiếp" class="text-bolder"></codx-label>
+                <codx-label fiedName="lblContinue" default="Tiếp" class="text-bolder" formName="fmReview"></codx-label>
               </button>
               <button
                 *ngIf="itemSession.seqNo == questions.length - 1"
@@ -393,6 +393,7 @@
       [value]="itemAnswer.answer"
       (change)="valueChange(input, itemSession, itemQuestion, itemAnswer, 'T')"
     /> -->
+    {{getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)}}
     <codx-input
       type="text"
       class="border-0"
@@ -673,9 +674,10 @@
   </div>
   <ng-template #tmpL>
     <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
-      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange($event, itemSession, itemQuestion, $event.value)">
+      <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
+      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" > 
         <option selected >Chọn</option>
-        <option *ngFor="let item of itemQuestion.answers" value="">{{item.answer}}</option>
+        <option *ngFor="let item of itemQuestion.answers" [value]="item">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>

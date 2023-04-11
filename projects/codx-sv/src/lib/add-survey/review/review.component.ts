@@ -210,6 +210,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       block: 'start',
       inline: 'nearest',
     });
+    debugger
     this.itemSession = this.questions[pageNum];
     this.lstQuestion = JSON.parse(JSON.stringify(this.lstQuestionTemp));
     this.change.detectChanges();
@@ -236,7 +237,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           other: 0,
           columnNo: 0,
         };
-        this.lstQuestionTemp[itemSession.seqNo].children[
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = results;
       } else if (e.field == 'C') {
@@ -245,11 +246,17 @@ export class ReviewComponent extends UIComponent implements OnInit {
           this.lstAnswer = this.lstAnswer.filter((x) => {
             x.seqNo == itemAnswer.seqNo;
           });
-        this.lstQuestionTemp[itemSession.seqNo].children[
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
-      } else
-        this.lstQuestionTemp[itemSession.seqNo].children[
+      }else if(itemQuestion.answerType == "L")
+      {
+        this.lstQuestion[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      }
+       else
+        this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
     }
@@ -298,7 +305,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
-    if (this.lstQuestion) {
+    if (this.lstQuestion && this.lstQuestion[seqNoSession].children[seqNoQuestion].answers != null) {
       return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
         seqNoAnswer
       ].answer;

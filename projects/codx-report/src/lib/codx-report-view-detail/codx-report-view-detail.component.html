@@ -1,0 +1,20 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  (viewChanged)="viewChanged($event)"
+  [toolbarDisplay]="true"
+  [views]="views"
+  (onActions)="onActions($event)"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFc"
+  (filterReportChange)="filterReportChange($event)"
+  >
+</codx-views>
+<ng-template #report>
+  <!-- <report-viewer [reportUUID]="reportUUID"[parameters]="param" [print]="print"></report-viewer> -->
+  <!-- <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
+
+  </iframe> -->
+  <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
+  <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString"></codx-report-iframe>
+  </ng-template>

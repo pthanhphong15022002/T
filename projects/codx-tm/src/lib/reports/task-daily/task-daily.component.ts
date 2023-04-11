@@ -3,7 +3,6 @@ import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ViewModel, ViewType, ApiHttpService, DialogModel, ViewsComponent, CallFuncService, ButtonModel } from 'codx-core';
-import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 // import { CodxReportComponent } from 'projects/codx-share/src/lib/components/codx-report/codx-report.component';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,7 +23,6 @@ export class TaskDailyComponent implements OnInit {
   itemCompletedOn: TemplateRef<any>;
   @ViewChild('itemActive', { static: true }) itemActive: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
-  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('pined') pined?: TemplateRef<any>;
   @ViewChild('dashboard') dashboard?: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;

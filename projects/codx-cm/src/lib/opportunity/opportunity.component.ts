@@ -1,7 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ButtonModel, CacheService, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CacheService, FormModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CrmcustomerDetailComponent } from '../crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
+import { CodxCmService } from '../codx-cm.service';
+import { PopupAddOpportunityComponent } from './popup-add-opportunity/popup-add-opportunity.component';
 
 @Component({
   selector: 'lib-opportunity',
@@ -19,6 +21,7 @@ implements OnInit, AfterViewInit {
   // type any for view detail
   funcID: any;
   dataObj?: any;
+  kanban: any;
 
   // config api get data
   service = 'DP';
@@ -70,6 +73,7 @@ implements OnInit, AfterViewInit {
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
+    private codxCmService: CodxCmService
   ) {
     super(inject);
     if (!this.funcID)
@@ -304,21 +308,69 @@ implements OnInit, AfterViewInit {
 
   //#region CRUD
   add() {
-  //   switch(this.funcID) {
-  //     case 'CM0101': {
-  //        //statements;
-  //        break;
-  //     }
-  //    case 'CM0104': {
-  //     //statements;
-  //     break;
-  //  }
-  //   default: {
-  //        //statements;
-  //        break;
-  //     }
-  //  }
+    switch(this.funcID) {
+      case 'CM0201': {
+         //statements;
+         this.addOpportunity();
+         break;
+      }
+    default: {
+         //statements;
+         break;
+      }
+   }
+  }
 
+  addOpportunity(){
+    this.view.dataService.addNew().subscribe((res) => {
+      // const funcIDApplyFor = this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      // const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+
+      var formMD = new FormModel();
+      // formMD.funcID = funcIDApplyFor;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      option.Width =  '800px';
+      option.zIndex = 1001;
+      this.openFormOpportunity( formMD, option, 'add');
+
+    });
+  }
+
+  openFormOpportunity(formMD, option, action) {
+
+    var obj = {
+      action: action === 'add' ? 'add' : 'copy',
+      formMD:formMD,
+      titleAction:  action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội'
+    };
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddOpportunityComponent,
+      obj,
+      option
+    );
+    dialogCustomField.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var data = e.event;
+        if (this.kanban) {
+          this.kanban.updateCard(data);
+          if (this.kanban?.dataSource?.length == 1) {
+            this.kanban.refresh();
+          }
+        }
+        // this.dataSelected = data;
+        // if (this.detailViewInstance) {
+        //   this.detailViewInstance.dataSelect = this.dataSelected;
+        //   this.detailViewInstance.listSteps = this.listStepInstances;
+        // }
+
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   changeDataMF($event, data){

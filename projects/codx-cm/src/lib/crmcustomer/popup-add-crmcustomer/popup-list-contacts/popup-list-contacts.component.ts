@@ -113,6 +113,7 @@ export class PopupListContactsComponent implements OnInit {
       if (res && res.length > 0) {
         search = res;
         this.lstSearch = search;
+        this.changeContacts(0, this.lstSearch[0]);
       } else {
         this.lstSearch = [];
         this.contact = null;

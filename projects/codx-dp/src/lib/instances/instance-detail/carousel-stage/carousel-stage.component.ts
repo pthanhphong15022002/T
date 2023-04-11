@@ -8,7 +8,7 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CarouselStageComponent {
   @Input() dataSource: any;
-  @Input() field: any;
+  @Input() fieldName: any;
   @Input() maxSize: any;
   @Input() status:any;
 
@@ -16,7 +16,17 @@ export class CarouselStageComponent {
   @Output() eventClicked = new EventEmitter<any>();
 
   listTreeView:any []=[];
+  listDefaultView:any[] = [];
+
+  // type string
   selectedIndex:string ='0';
+  viewSetting: string = '';
+
+  // type number
+  currentStep = 0;
+
+  readonly viewCarouselForPage: string = 'viewCarouselForPage';
+  readonly viewCarouselDefault: string = 'viewCarouselDefault';
   constructor(
     private config: NgbCarouselConfig,
     private ChangeDetectorRef: ChangeDetectorRef,
@@ -39,6 +49,7 @@ export class CarouselStageComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSource']) {
       this.listTreeView = [];
+      this.viewSetting = '';
       this.selectedIndex ='0';
       this.handleDateMaxSize(changes['dataSource'].currentValue,this.maxSize);
       this.ChangeDetectorRef.detectChanges();
@@ -47,14 +58,24 @@ export class CarouselStageComponent {
 
   handleDateMaxSize(list,maxSize)
   {
-    var index = 0;
-    for (let i = 0; i < list.length; i += maxSize) {
-      const combinedItem = {items: list.slice(i, i + maxSize) };
-      (this.selectedIndex == '0' && (this.status == '1' || this.status == '2')) && this.findStatusInDoing(combinedItem,index);
-      this.listTreeView.push(combinedItem);
-      index++;
+    debugger;
+    if(list && list.length > maxSize) {
+      var index = 0;
+      for (let i = 0; i < list.length; i += maxSize) {
+        const combinedItem = {items: list.slice(i, i + maxSize) };
+        (this.selectedIndex == '0' && (this.status == '1' || this.status == '2')) && this.findStatusInDoing(combinedItem,index);
+        this.listTreeView.push(combinedItem);
+        index++;
+      }
+      (this.status != '1' && this.status != '2') && this.stageEnd();
+      this.viewSetting = this.viewCarouselForPage;
     }
-    (this.status != '1' && this.status != '2') && this.stageEnd();
+    else if(list && (list.length <= maxSize && list.length > 0  ) )
+    {
+      this.listDefaultView = list;
+      this.viewSetting = this.viewCarouselDefault;
+    }
+
   }
 
   getColorStepName(status: string) {
@@ -80,6 +101,7 @@ export class CarouselStageComponent {
     var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
     if (indexResult > -1) {
         this.selectedIndex = index.toString();
+        this.currentStep = indexResult;
     }
   }
   stageEnd(){
@@ -92,6 +114,10 @@ export class CarouselStageComponent {
       index: index,
       id: id
     }
+    if (
+      this.currentStep < index && (this.status === '1' || this.status === '2')
+    )
+      return;
     this.eventClicked.emit(result);
    }
   }
