@@ -426,6 +426,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
+    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
     this.view.dataService
       .copy(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -449,7 +450,7 @@ export class InstancesComponent
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
               this.codxDpService
-                .GetStepsByInstanceIDAsync([data.recID, data.processID])
+                .getListStepCopyById(dataGets)
                 .subscribe((res) => {
                   if (res && res?.length > 0) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
