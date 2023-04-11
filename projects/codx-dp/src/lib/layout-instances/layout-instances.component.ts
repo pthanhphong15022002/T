@@ -84,7 +84,7 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
       this.popupGuide,
       '',
       600,
-      450,
+      470,
       '',
       null,
       '',
