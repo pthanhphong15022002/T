@@ -17,15 +17,21 @@
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
-      <div>
+      <div *ngIf="isUpdate">
         <button
           type="button"
-          class="btn btn-primary btn-sm d-flex align-items-center cursor-pointer"
+          class="btn btn-primary btn-sm d-flex align-items-center"
           (click)="openUpdateProgress(dataStep)"
-          [disabled]="dataStep?.startDate && dataStep?.endDate ? false : true"
+          [disabled]="(!isStart || !isRoleAll || !progressStepControl) ? true : false "
         >
           <span class="icon-16 icon-update me-1"></span>
-          <span>Cập nhật tiến độ</span>
+          <codx-label
+            fiedName="lblProgress"
+            formName="DPInstancesSteps"
+            gridViewName="grvDPInstancesSteps"
+            default="Cập nhật tiến độ"
+        >
+        </codx-label>
         </button>
       </div>
     </div>
@@ -99,7 +105,7 @@
           >
           </codx-label>
         </div>
-        <div class="d-flex align-items-center">
+        <!-- <div class="d-flex align-items-center" *ngIf="dataStep?.actualStar">
           <i class="icon-work_outline icon-16 me-2"></i>
           <codx-label
             name="lblDateActual"
@@ -107,8 +113,8 @@
             gridViewName="grvDPInstancesSteps"
             default="Đã sử dụng:"
           ></codx-label>
-          <span class="ms-1">{{ dateActual | timefrom }} </span>
-        </div>
+          <span class="ms-1">{{ dataStep?.actualStart | timefrom }} </span>
+        </div> -->
       </div>
     </div>
     <div class="d-flex align-items-center justify-content-between">
@@ -208,7 +214,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="instance.status == '1' || instance.status == '2'"
+          *ngIf="isUpdate"
           (click)="openPopupTaskGroup()"
         >
           <i
@@ -218,8 +224,8 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
-          *ngIf="instance.status == '1' || instance.status == '2'"
           (click)="openTypeTask()"
+          *ngIf="isUpdate"
         >
           <i
             [ngClass]="
@@ -445,7 +451,8 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart
+          isStart && 
+          isRoleAll
         "
       >
         <button
@@ -489,9 +496,7 @@
       class="disabled-inline"
       *ngIf="data?.startDate && data?.endDate"
       (click)="
-        checkEventProgress(data) &&
-        (instance.status == 1 || instance.status == 2) &&
-        !isClosed
+        checkEventProgress(data) && !isClosed && isUpdate
           ? openUpdateProgress(data)
           : ''
       "

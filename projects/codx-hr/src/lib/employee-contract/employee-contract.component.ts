@@ -42,7 +42,8 @@ export class EmployeeContractComponent extends UIComponent {
   dialogEditStatus: any;
   
   //#region eContractFuncID
-  
+  actionAddNew = 'HRTPro01A01'
+  actionSubmit = 'HRTPro01A03'
   actionUpdateCanceled = 'HRTPro01AU0'
   actionUpdateInProgress = 'HRTPro01AU3'
   actionUpdateRejected = 'HRTPro01AU4'
@@ -216,11 +217,9 @@ export class EmployeeContractComponent extends UIComponent {
     this.clickMF(event?.event, event?.data);
   }
 
-
-
   clickMF(event, data){
     switch (event.functionID) {
-      case 'HRT1001A3':
+      case this.actionSubmit:
         this.beforeRelease();
         break;
         case this.actionUpdateCanceled:
@@ -229,10 +228,9 @@ export class EmployeeContractComponent extends UIComponent {
               case this.actionUpdateApproved:
                 case this.actionUpdateClosed:
       let oUpdate = JSON.parse(JSON.stringify(data));
-      debugger
       this.popupUpdateEContractStatus(event.functionID , oUpdate)
       break;
-      case 'HRT1001A1': // de xuat hop dong tiep theo
+      case this.actionAddNew: // de xuat hop dong tiep theo
       this.HandleEContractInfo(event.text, 'add', data);
       break;
 
@@ -291,6 +289,7 @@ export class EmployeeContractComponent extends UIComponent {
           actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
+        openFrom: "empContractProcess",
       },
       option
     );

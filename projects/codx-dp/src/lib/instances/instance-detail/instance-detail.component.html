@@ -237,33 +237,6 @@
               >
               </ng-container>
               <ng-container *ngIf="viewModelDetail == 'S'">
-                <div
-                  class="group-steps"
-                  *ngIf="listSteps != null && listSteps.length > 0"
-                >
-                  <div class="d-flex arrow-steps flex-container">
-                    <ng-container *ngFor="let item of listSteps; index as i">
-                      <div
-                        id="step-click"
-                        style="flex-grow: 1; cursor: pointer"
-                        [ngClass]="getColorStepName(item?.stepStatus)"
-                        (click)="click(i, item.stepID)"
-                        [style]="getbackgroundColor(item)"
-                      >
-                        <div class="d-flex align-items-top ps-6">
-                          <span
-                            [ngClass]="item?.icon"
-                            [ngStyle]="{ color: item?.iconColor }"
-                            class="fs-6 me-2"
-                          ></span>
-                          <span class="line-clamp line-clamp-2 step-name">
-                            {{ item.stepName }}</span
-                          >
-                        </div>
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
                 <codx-carousel-stage [dataSource]="listSteps" [fieldName]="'stepName'" [maxSize]="maxSize" [status]="instanceStatus"
                 (eventClicked)="clickStage($event)"
                 >
@@ -281,7 +254,7 @@
                       dataSelect.write &&
                       !dataSelect.closed &&
                       (dataSelect.status == '1' || dataSelect.status == '2') &&
-                      tmpTeps.stepStatus < '2'
+                      tmpTeps.stepStatus < '2' && isOnlyView
                     "
                     [isCreate]="dataSelect.create"
                     [isClosed]="dataSelect.closed"
@@ -289,6 +262,7 @@
                     [listStep]="listSteps"
                     [instance]="dataSelect"
                     [lstIDInvo]="lstInv"
+                    [ownerInstance]="dataSelect?.owner"
                     [listStepReason]="getReasonByStepId(dataSelect.status)"
                     [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
                     [proccesNameMove]="proccesNameMove"
