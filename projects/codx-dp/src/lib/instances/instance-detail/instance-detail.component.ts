@@ -340,11 +340,6 @@ export class InstanceDetailComponent implements OnInit {
     if($event) {
       var indexNo = $event?.indexNo
       var stepId = $event?.id;
-      if (
-        this.currentStep < indexNo &&
-        (this.instanceStatus === '1' || this.instanceStatus === '2')
-      )
-        return;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];

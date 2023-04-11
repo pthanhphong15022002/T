@@ -677,6 +677,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.equipments = [];
       this.data.equipments = tmpEquip;
       this.data.stopOn = this.data.endDate;
+      if(this.data.online!=true){
+        this.data.onlineUrl=null;
+      }
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
       }
@@ -1106,7 +1109,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     let dlLink = this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
     dlLink.closed.subscribe((res: any) => {
-      if (res) {
+      if (res?.event && typeof(res?.event)=== 'string') {
         this.data.onlineUrl = res?.event;
       }
     });
