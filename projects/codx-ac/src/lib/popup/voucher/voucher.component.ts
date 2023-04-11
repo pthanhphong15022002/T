@@ -64,9 +64,6 @@ export class VoucherComponent implements OnInit {
 
   //#region Init
   ngOnInit(): void {
-    if (this.cashpayment.voucherDate)
-      this.invoiceDueDate = new Date(this.cashpayment.voucherDate);
-    else this.invoiceDueDate = new Date();
     this.loadData();
   }
 
