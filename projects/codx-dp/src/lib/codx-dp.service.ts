@@ -545,8 +545,4 @@ export class CodxDpService {
     );
   }
 
-  getListStepCopyById(data){
-    return this.api.exec<any>(
-      'DP', 'InstancesBusiness', 'GetListStepsForCopyAsync',data );
-  }
 }

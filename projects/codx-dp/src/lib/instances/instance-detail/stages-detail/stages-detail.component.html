@@ -17,7 +17,7 @@
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
-      <div>
+      <div *ngIf="isUpdate">
         <button
           type="button"
           class="btn btn-primary btn-sm d-flex align-items-center cursor-pointer"
@@ -208,7 +208,7 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="instance.status == '1' || instance.status == '2'"
+          *ngIf="isUpdate"
           (click)="openPopupTaskGroup()"
         >
           <i
@@ -218,8 +218,8 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
-          *ngIf="instance.status == '1' || instance.status == '2'"
           (click)="openTypeTask()"
+          *ngIf="isUpdate"
         >
           <i
             [ngClass]="
@@ -445,7 +445,7 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart
+          isStart && isUpdate
         "
       >
         <button
@@ -489,9 +489,7 @@
       class="disabled-inline"
       *ngIf="data?.startDate && data?.endDate"
       (click)="
-        checkEventProgress(data) &&
-        (instance.status == 1 || instance.status == 2) &&
-        !isClosed
+        checkEventProgress(data) && !isClosed && isUpdate
           ? openUpdateProgress(data)
           : ''
       "

@@ -1235,10 +1235,10 @@ export class StagesDetailComponent implements OnInit {
       let isGroup = false;
       let isTask = false;
       if(!this.isRoleAll){
-        isGroup = this.checRoleTask(groupTask, 'O');    
+        isGroup = this.checRoleTask(groupTask, 'O');
         if(!isGroup){
           isTask = this.checRoleTask(task, 'O');
-        }      
+        }
       }
       event.forEach((res) => {
         switch (res.functionID) {
@@ -1251,7 +1251,7 @@ export class StagesDetailComponent implements OnInit {
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
               res.disabled = true;
             }
-            break;          
+            break;
           case 'DP20':// tiến độ
             if (!this.isRoleAll && !isGroup && !isTask){
               res.isblur = true;
@@ -1271,7 +1271,7 @@ export class StagesDetailComponent implements OnInit {
     if (event != null) {
       let isGroup = false;
       if(!this.isRoleAll){
-        isGroup = this.checRoleTask(group, 'O');         
+        isGroup = this.checRoleTask(group, 'O');
       }
       event.forEach((res) => {
         switch (res.functionID) {
@@ -1290,7 +1290,7 @@ export class StagesDetailComponent implements OnInit {
             if (!this.leadtimeControl && !(this.isRoleAll || isGroup)){
               res.disabled = true;
             }
-            break;          
+            break;
           case 'DP20':// tiến độ
             if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
               res.isblur = true;
