@@ -212,7 +212,6 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e;
           break;
       }
-
       var index = this.listStep.findIndex((x) => x.recID == field.stepID);
 
       if (index != -1) {
@@ -222,6 +221,7 @@ export class PopupAddInstanceComponent implements OnInit {
           );
           if (idxField != -1) {
             this.listStep[index].fields[idxField].dataValue = result;
+        
             let idxEdit = this.listCustomFile.findIndex(
               (x) => x.recID == this.listStep[index].fields[idxField].recID
             );
