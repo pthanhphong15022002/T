@@ -64,8 +64,8 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
+    this.cashTransfer.acountID = '123';
     this.hiddenFields = this.cashTransfer?.unbounds?.lockFields ?? [];
-
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
     );

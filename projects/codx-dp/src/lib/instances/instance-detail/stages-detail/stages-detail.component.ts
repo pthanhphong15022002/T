@@ -135,8 +135,50 @@ export class StagesDetailComponent implements OnInit {
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
   stepNameSuccess: string = '';
-  stepNameFail : string = '';
-  stepNameReason : string = '';
+  stepNameFail: string = '';
+  stepNameReason: string = '';
+
+  isRoleAll = false;
+
+  roleStep = {
+    addTask: true,
+    addGroup: true,
+    editTaskInstance: true,
+    editGroupTaskInstance: true,
+    edittask: true,
+    editGroupTask: true,
+    deleteTask: false,
+    deleteTaskGroup: false,
+    deleteTaskInstance: true,
+    deleteGroupTaskInstance: true,
+  };
+  roleGroupTask = {
+    addTask: true,
+    addGroup: false,
+    editTaskInstance: true,
+    editGroupTaskInstance: true,
+    edittask: true,
+    editGroupTask: true,
+    deleteTask: false,
+    deleteTaskGroup: false,
+    deleteTaskInstance: true,
+    deleteGroupTaskInstance: true,
+  };
+  roleTask = {
+    addTask: false,
+    addGroup: false,
+    editTaskInstance: false,
+    editGroupTaskInstance: false,
+    edittask: false,
+    editGroupTask: false,
+    deleteTask: false,
+    deleteTaskGroup: false,
+    deleteTaskInstance: false,
+    deleteGroupTaskInstance: false,
+  };
+  leadtimeControl = false; //sửa thời hạn công việc mặc định
+  progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+  progressStepControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
 
   constructor(
     private callfc: CallFuncService,
@@ -152,6 +194,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -180,6 +223,12 @@ export class StagesDetailComponent implements OnInit {
       entityName: 'DP_Instances_Steps_TaskGroups',
       formName: 'DPInstancesStepsTaskGroups',
       gridViewName: 'grvDPInstancesStepsTaskGroups',
+    };
+    this.frmModelInstancesTask = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      funcID: 'DPT040102',
+      gridViewName: 'grvDPInstancesStepsTasks',
     };
     this.getgridViewSetup(this.frmModelInstancesGroup);
     this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
@@ -239,9 +288,13 @@ export class StagesDetailComponent implements OnInit {
         this.dataStep = null;
       }
       this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ?  this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameSuccess))
+        ? this.LowercaseFirstPipe(
+            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+          )
         : changes['dataStep'].currentValue?.isFailStep
-        ? this.LowercaseFirstPipe(this.joinTwoString(this.stepNameReason, this.stepNameFail))
+        ? this.LowercaseFirstPipe(
+            this.joinTwoString(this.stepNameReason, this.stepNameFail)
+          )
         : '';
     }
   }
@@ -1157,6 +1210,95 @@ export class StagesDetailComponent implements OnInit {
       data['actualEnd'] = null;
     }
     this.disabledProgressInput = event?.data;
+  }
+
+  checkRole() {
+    if (this.dataStep?.roles?.length > 0) {
+      this.isRoleAll =
+        this.dataStep?.roles?.some(
+          (element) => element?.objectID == this.user.userID && element.roleType == 'S'
+        ) || false;
+    }
+    this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
+    this.progressTaskGroupControl = this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
+  }
+
+  checRoleTask(data, type){
+    return data.roles?.some(
+      (element) => element?.objectID == this.user.userID && element.roleType == type
+    ) || false;
+  }
+
+  async changeDataMFTask(event, task, groupTask) {
+    if (event != null) {
+      let isGroup = false;
+      let isTask = false;
+      if(!this.isRoleAll){
+        isGroup = this.checRoleTask(groupTask, 'O');    
+        if(!isGroup){
+          isTask = this.checRoleTask(task, 'O');
+        }      
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02'://xóa
+            if (task?.isTaskDefault) {
+              res.disabled = true;
+            }
+            break;
+          case 'SYS03'://sửa
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
+              res.disabled = true;
+            }
+            break;          
+          case 'DP20':// tiến độ
+            if (!this.isRoleAll && !isGroup && !isTask){
+              res.isblur = true;
+            }
+            break;
+          case 'DP12':
+            res.disabled = true;
+            break;
+          case 'DP08':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  async changeDataMFGroupTask(event, group) {
+    if (event != null) {
+      let isGroup = false;
+      if(!this.isRoleAll){
+        isGroup = this.checRoleTask(group, 'O');         
+      }
+      event.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS02':
+            if (group?.isTaskDefault) {
+              res.disabled = true;
+            }
+            break;
+          case 'DP07':
+            res.disabled = true;
+            break;
+          case 'SYS03'://sửa
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup)){
+              res.disabled = true;
+            }
+            if (!this.leadtimeControl && !(this.isRoleAll || isGroup)){
+              res.disabled = true;
+            }
+            break;          
+          case 'DP20':// tiến độ
+            if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
+              res.isblur = true;
+            }
+            break;
+        }
+      });
+    }
   }
 
   async changeDataMF(e, type, data = null) {

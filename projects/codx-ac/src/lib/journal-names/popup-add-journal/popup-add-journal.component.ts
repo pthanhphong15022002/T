@@ -88,6 +88,7 @@ export class PopupAddJournalComponent
 
   vllDateFormat: any;
   vllStringFormat: any;
+  vllAcctControl: any;
 
   constructor(
     private injector: Injector,
@@ -112,12 +113,24 @@ export class PopupAddJournalComponent
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
 
-      this.tempIDIMControls = this.journal.idimControl ? JSON.parse(this.journal.idimControl) : "";
-      this.journal.creater = this.journal.creater ? JSON.parse(this.journal.creater) : "";
-      this.journal.approver = this.journal.approver ? JSON.parse(this.journal.approver) : "";
-      this.journal.poster = this.journal.poster ? JSON.parse(this.journal.poster) : "";
-      this.journal.unposter = this.journal.unposter ? JSON.parse(this.journal.unposter) : "";
-      this.journal.sharer = this.journal.sharer ? JSON.parse(this.journal.sharer) : "";
+      this.tempIDIMControls = this.journal.idimControl
+        ? JSON.parse(this.journal.idimControl)
+        : '';
+      this.journal.creater = this.journal.creater
+        ? JSON.parse(this.journal.creater)
+        : '';
+      this.journal.approver = this.journal.approver
+        ? JSON.parse(this.journal.approver)
+        : '';
+      this.journal.poster = this.journal.poster
+        ? JSON.parse(this.journal.poster)
+        : '';
+      this.journal.unposter = this.journal.unposter
+        ? JSON.parse(this.journal.unposter)
+        : '';
+      this.journal.sharer = this.journal.sharer
+        ? JSON.parse(this.journal.sharer)
+        : '';
     }
   }
   //#endregion
@@ -201,6 +214,14 @@ export class PopupAddJournalComponent
             });
         }
       });
+
+    this.cache
+      .valueList('AC067')
+      .pipe(
+        tap((t) => console.log(t)),
+        map((d) => d.datas)
+      )
+      .subscribe((res) => (this.vllAcctControl = res));
   }
 
   ngAfterViewInit(): void {
@@ -242,6 +263,26 @@ export class PopupAddJournalComponent
         'DIM2Control',
         'DIM3Control',
       ])
+    ) {
+      return;
+    }
+
+    if (
+      !this.validateAcctControl(
+        this.journal.drAcctControl,
+        'drAcctID',
+        'DRAcctControl'
+      )
+    ) {
+      return;
+    }
+
+    if (
+      !this.validateAcctControl(
+        this.journal.crAcctControl,
+        'crAcctID',
+        'CRAcctControl'
+      )
     ) {
       return;
     }
@@ -574,6 +615,25 @@ export class PopupAddJournalComponent
     return Object.keys(oldJournal).filter(
       (k) => oldJournal[k] !== newJournal[k]
     );
+  }
+
+  validateAcctControl(
+    acctControl: string,
+    propName: string,
+    gvsPropName
+  ): boolean {
+    if (acctControl !== '9' && !this.journal[propName]) {
+      this.notiService.notifyCode(
+        'AC0009',
+        null,
+        `"${this.vllAcctControl?.find((v) => v.value === acctControl)?.text}"`,
+        `"${this.gvs?.[gvsPropName]?.headerText}"`
+      );
+
+      return false;
+    }
+
+    return true;
   }
   //#endregion
 }
