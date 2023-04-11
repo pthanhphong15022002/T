@@ -339,7 +339,7 @@ export class PopupAddKRComponent extends UIComponent {
         this.detectorRef.detectChanges();
       }
     }
-  }
+  }  
 
   closeEditTargets(dialog: any) {
     // this.kr.targets = [];
@@ -356,6 +356,7 @@ export class PopupAddKRComponent extends UIComponent {
     else{      
       this.kr = { ...this.groupModel?.krModel };
     }
+    this.kr.transID= this.okrPlan?.recID;
   }
   fullTargets(planVLL:any, targets:any, plan:string){
     if(planVLL!=null && targets!=null){
@@ -509,10 +510,10 @@ export class PopupAddKRComponent extends UIComponent {
     }
   }
   refreshPlanTargets() {
-    if (this.kr.target && this.kr.targets && this.kr.targets.length > 0) {
-      let avgTarget = this.kr.target / this.kr.targets.length;
-      for (let i = 0; i < this.kr.targets.length; i++) {
-        this.kr.targets[i].target = avgTarget;
+    if (this.kr.target && this.editTargets && this.editTargets.length > 0) {
+      let avgTarget = this.kr.target / this.editTargets.length;
+      for (let i = 0; i < this.editTargets.length; i++) {
+        this.editTargets[i].target = avgTarget;
       }
       this.detectorRef.detectChanges();
     }

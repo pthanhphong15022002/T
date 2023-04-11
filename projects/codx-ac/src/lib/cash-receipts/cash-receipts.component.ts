@@ -17,11 +17,9 @@ import {
   DialogModel,
   RequestOption,
   SidebarModel,
-  DataRequest,
 } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-cash-receipts',
@@ -43,6 +41,14 @@ export class CashReceiptsComponent extends UIComponent {
   itemSelected: any;
   journalNo: string;
   cashbook: any;
+  page: any = 1;
+  pageSize = 6;
+  cashreceiptslines: Array<CashReceiptsLines> = [];
+  fmCashReceiptsLines: FormModel = {
+    formName: 'CashReceiptsLines',
+    gridViewName: 'grvCashReceiptsLines',
+    entityName: 'AC_CashReceiptsLines',
+  };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -240,21 +246,22 @@ export class CashReceiptsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-  clickChange(data) {}
+  clickChange(data){
 
-  changeDataMF(e: any, data: any) {
+  }
+  changeDataMF(e:any,data:any){
     this.itemSelected = this.view.dataService.dataSelected;
     this.loadDatadetail(data);
   }
 
   loadDatadetail(data) {
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res[0].objectName;
-        }
-      });
+    .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+    .subscribe((res: any) => {
+      if (res != null) {
+        this.objectname = res[0].objectName;
+      }
+    });
   }
 
   export(data) {
