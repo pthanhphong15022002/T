@@ -16,6 +16,7 @@ import {
   NotificationsService,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -45,7 +46,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   eContractHeaderText;
   eBasicSalariesFormModel: FormModel;
   currentEbasicSalaryDta: any;
-
+  grvSetup :any;
   // get file sv
   services: string = 'DM';
   assemblyName: string = 'ERM.Business.DM';
@@ -76,6 +77,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
+    this.cache.gridViewSetup('EbasicSalaries','grvEbasicSalaries').subscribe(res=>{
+      if(res) this.grvSetup = Util.camelizekeyObj(res);
+    });
     this.user = this.auth.userValue;
   }
 
@@ -107,7 +111,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     }
   }
   changeItemDetail(event) {
-    console.log(event);
   }
   clickMF(event, data) {
     switch (event.functionID){
@@ -176,11 +179,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     });
   }
   copyValue(actionHeaderText, data) {
-    console.log('copy data',data)
     this.hrService
     .copy(data, this.view.formModel, 'RecID')
     .subscribe((res) => {
-      console.log('result',res);
         this.handlerEBasicSalary(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
     });
   }

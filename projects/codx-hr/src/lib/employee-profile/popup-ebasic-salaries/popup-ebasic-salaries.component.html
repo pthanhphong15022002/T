@@ -214,8 +214,8 @@
     <ng-template #body>
         <div *ngIf="allowToViewEmp()" class="form-group row d-flex flex-row">
             <div class="col-6 d-flex align-items-start">
-                <div class="d-flex flex-column me-1">
-                    <codx-img [width]="35" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
+                <div class="d-flex flex-column">
+                    <codx-img [width]="35" class="me-3" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
                         [objectName]="employeeObj?.employeeName" [objectType]="'HR_Employees'">
                     </codx-img>
                     <codx-vll *ngIf="employeeObj?.gender!= null" class="badge badge-sm" [name]="'HR001'"
