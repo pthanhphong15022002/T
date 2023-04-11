@@ -830,23 +830,23 @@ export class StagesDetailComponent implements OnInit {
       450
     );
   }
-  checkEventProgress(data) {
-    if (data?.task) {
+  checkEventProgress(data, group) {
+    if (group) {
       let isGroup = false;
       let isTask = false;
       if(!this.isRoleAll){
-        // isGroup = this.checRoleTask(groupTask, 'O');    
+        isGroup = this.checRoleTask(group, 'O');    
         if(!isGroup){
-          // isTask = this.checRoleTask(task, 'O');
+          isTask = this.checRoleTask(data, 'O');
         }      
       }
-      return data?.task.length == 0 ? true : false;
+      return  this.isRoleAll || isGroup || isTask ? true : false;
     } else {
       let isGroup = false;
       if(!this.isRoleAll){
         isGroup = this.checRoleTask(data, 'O');         
       }
-      return true;
+      return this.progressTaskGroupControl && (this.isRoleAll || isGroup) ? true : false;
     }
   }
 
