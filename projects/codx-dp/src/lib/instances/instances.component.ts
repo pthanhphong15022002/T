@@ -426,10 +426,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
-    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
-    this.view.dataService
-      .copy(this.view.dataService.dataSelected)
-      .subscribe((res) => {
+    this.view.dataService.copy().subscribe((res) => {
         const funcIDApplyFor =
           this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
         const applyFor = this.process.applyFor;
@@ -449,10 +446,7 @@ export class InstancesComponent
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
-              this.codxDpService
-                .getListStepCopyById(dataGets)
-                .subscribe((res) => {
-                  if (res && res?.length > 0) {
+                  if (res) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
                     var formMD = new FormModel();
                     formMD.funcID = funcIDApplyFor;
@@ -489,7 +483,6 @@ export class InstancesComponent
                         });
                     }
                   }
-                });
             });
         });
       });
@@ -499,7 +492,7 @@ export class InstancesComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
-      listSteps: 'add' ? this.listSteps : this.listStepInstances,
+      listSteps: JSON.parse(JSON.stringify(this.listSteps)),
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
@@ -1417,7 +1410,7 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas = 
+    let datas =
       [{
         san_pham: 'Sản phẩm quần què test',
         dien_tich: 'Diện tích quần què test',
