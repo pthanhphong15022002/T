@@ -16,8 +16,9 @@ import moment from 'moment';
 })
 
 export class CodxChatBoxComponent implements OnInit, AfterViewInit{
-  @HostListener('click')
-  onClick() {
+  @HostListener('click', ['$event'])
+  onClick(event:any) {
+    this.isChatBox(event.target);
     this.checkActive(this.groupID);
   }
   @Input() groupID:any;
@@ -137,7 +138,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
             this.dt.detectChanges();
           }
         }
-        else{
+        else
+        {
           this.group.lastMssgID = data.recID;
           this.group.messageType = data.messageType;
           if(res.messageType !== "3"){
@@ -172,7 +174,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
 
   // CRUD vote
   updateVote(mssg:any,vote:any,type:string){
-    debugger
     //add
     if(type == "add"){
       if(!mssg.lstVote){
@@ -253,9 +254,11 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   getGroupInfo(){
     this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByIDAsync",[this.groupID])
     .subscribe((res:any) => {
-      if(res?.groupID){
+      if(res){
+
         this.group = res;
         this.data.groupID = res.groupID;
+        this.crrMembers = Array.from<any>(res.members).map(x => x.userID).join(";");
       }
     })
   }
@@ -347,6 +350,17 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         }
       }
     }
+  }
+  // check tag name 
+  isChatBox(element:HTMLElement){
+  if(element.tagName == "CODX-CHAT-BOX")
+  {
+    if(!element.classList.contains("active"))
+      element.classList.add("active");
+    return;
+  }
+  else
+    this.isChatBox(element.parentElement);
   }
   // collapse box chat
   collapsed(){
@@ -527,16 +541,18 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   showCBB:boolean = false;
   width:number = 720;
   height:number = window.innerHeight;
-  memeber:string = "PMNHI;ADMIN";
+  crrMembers:string = "";
   addMemeber(event:any){
-    if(event.id && event.text){
-      let userIDs = event.id.split(";");
-      let userNames = event.text.split(";");
-      if(Array.isArray(userIDs) && Array.isArray(userNames)){
-        let length = userIDs.length;
+    debugger
+    if(event && event.id && event.text){
+      let arrUserID = event.id.split(";");
+      let arUserName = event.text.split(";");
+      if(Array.isArray(arrUserID) && Array.isArray(arUserName)){
+        let length = arrUserID.length;
         let members = [];
+        this.crrMembers = event.id;
         for (let i = 0; i < length; i++) {
-          members[i] = {userID:userIDs[i], userName:userNames[i] };
+          members[i] = {userID:arrUserID[i], userName:arUserName[i] };
         }
         this.signalR.sendData("AddMemberToGroup",this.groupID,JSON.stringify(members));
       }
@@ -545,15 +561,16 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   }
   //click add member
   clickAddMemeber(){
-    this.showCBB = !this.showCBB;
+    this.showCBB = true;
   }
   //xóa tin nhắn
-  deleteMessage(mssg:any,index:number){
+  deleteMessage(mssg:any){
     this.signalR.sendData("DeletedMessage",this.groupID,mssg.recID);
   }
   // show vote
   lstVoted:any[] = [];
   clickShowVote(mssg:any) {
+    debugger
     if(this.popupVoted){
       this.api.execSv("WP","ERM.Business.WP","ChatBusiness","GetVoteAsync",[mssg.recID])
       .subscribe((res:any[]) => {

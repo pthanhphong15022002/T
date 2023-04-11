@@ -1,9 +1,9 @@
-<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bg-gray-100 h-100 me-0 p-5 pe-3 pb-0'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
-  <div class="w-100 h-100 bg-white d-flex flex-column">
-    <div class="d-flex align-items-center justify-content-end pt-5 me-5">
+  <div class="w-100 h-100 bg-white d-flex flex-column rounded-2 p-6">
+    <div class="d-flex align-items-center justify-content-end">
       <div class="d-flex align-items-center">
         <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
           <span class="symbol-label bg-om-gray">
@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
-    <div class="pb-2 text-center">      
-      <span class="fw-bold fs-2" [innerHTML]="dataOKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
+    <div class="pb-3 text-center">      
+      <span class="fw-bold fs-3" [innerHTML]="dataOKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
     </div>
     <div class="flex-grow-1 overflow-auto">
       <ejs-tab id="om-tab" class="h-100">
@@ -54,28 +54,28 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex flex-column container justify-content-center">
-                <ng-container class="container">
-                  <div class="d-flex flex-row justify-content-start my-3">
+              <div class="d-flex flex-column container justify-content-center mt-5">
+                <ng-container class="container-ob">
+                  <div class="d-flex flex-row justify-content-start mb-4">
                     <div class="d-flex flex-row align-items-center">
                       <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
-                        style="height: 30px; width: 30px">
+                        style="height: 25px; width: 25px">
                         <i class="icon-history justify-content-center align-items-center text-light"></i>
                       </div>
-                      <codx-label name="lbl" default="Hiện trạng" class="ps-2 fs-5 fw-bolder"></codx-label>
+                      <codx-label name="lbl" default="Hiện trạng" class="ps-4 fs-5 fw-bold"></codx-label>
                     </div>
 
                   </div>
                   <div class="d-flex flex-column align-items-center" *ngIf="!isHiddenChart">
                     <!-- Content Dasboard -->
-                    <div class="d-flex justify-content-center align-items-center flex-column w-75">
+                    <div class="d-flex justify-content-center align-items-center flex-column w-100 aqua">
                       <div class="d-flex align-items-center kr-process w-250px min-w-250px ms-3">
-                        <div class="h-15px w-100 bg-gray-200 rounded-4">
+                        <div class="h-15px w-100 bg-gray-100 rounded-4">
                           <div class="bg-color rounded-4 h-15px" role="progressbar"
                             [style.width]="dataOKR?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                             aria-valuemax="100"></div>
                         </div>
-                        <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
+                        <div class="h-15px process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
                           {{ dataOKR?.progress }}%
                         </div>
                       </div>
@@ -92,53 +92,53 @@
                     </div>
                   </div>
 
-                  <div class="d-flex flex-row justify-content-start my-3">
+                  <div class="d-flex flex-row justify-content-start mb-4">
                     <div class="d-flex flex-row align-items-center">
                       <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
-                        style="height: 30px; width: 30px">
+                        style="height: 25px; width: 25px">
                         <i class="icon-history justify-content-center align-items-center text-light"></i>
                       </div>
-                      <codx-label name="lbl" default="Kết quả chính" class="ps-2 fs-5 fw-bolder"></codx-label>
+                      <codx-label name="lbl" default="Kết quả chính" class="ps-4 fs-5 fw-bold"></codx-label>
                     </div>
                   </div>
                   <div class="d-flex  align-items-center flex-column">
-                    <div class="pb-2 cursor-pointer has-action-menu w-75" *ngFor="let item of okrChild">
-                      <div class="mt-2 d-flex align-items-center align-items-center">
-                        <div class="d-flex align-items-start align-items-center col-10">
-                          <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                          <div class="ms-15">
+                    <div class="pb-2 cursor-pointer has-action-menu col-10" *ngFor="let item of okrChild">
+                      <div class="d-flex align-items-center justify-content-between my-2">
+                        <div class="d-flex align-items-center w-100">
+                          <span class="me-4">
+                            <codx-img [width]="35" [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
+                          </span>
+                          <div class="fs-6 fw-bold">
                             {{ item?.okrName }}
                           </div>
                         </div>
-
-                        <i class="ps-5 icon-link me-3"></i>
+                        <button type="button" class="btn btn-icon btn-light">
+                          <i class="icon-link icon-20"></i>
+                        </button>
                       </div>
-                      <div class="d-flex align-items-center kr-process w-100 ms-3 my-1 col-8">
-                        <div class="ms-10 h-15px w-100 bg-gray-200 rounded-4">
-                          <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
-                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="ms-10 text-light process-per position-absolute top-0 fs-8 om-pt-1" [style.left]="
-                          (item?.progress / 2 > 0 ? item?.progress / 2 : 1) + '%'
-                        ">
-                          
-                         <span [innerHTML]="(item?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
-                        </div>
-
-                        <div class="col-4 d-flex align-items-center">
-                          <div class="col-6 d-flex align-items-center" style="
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
+                      <div class="d-flex align-items-center kr-process w-100">
+                        <div class="col-9 d-flex align-item-center">
+                          <div class="ms-15 h-15px w-100 bg-gray-200 rounded-4">
+                            <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
+                              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <div class="text-light process-per position-absolute top-0 fs-8 om-pt-1" [style.left]="
+                            (item?.progress / 2 > 0 ? item?.progress / 2 : 1) + '%'
                           ">
+                            
+                          <span [innerHTML]="(item?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
+                          </div>
+                          <div class="d-flex align-items-center">
                             <span class="ms-5">{{ item?.target }}</span>
                             <span class="ms-1" [innerHTML]="item?.umid | formatvalue : formModel : 'umid' | async "></span>
                           </div>
-                          <div class="col-6 d-flex align-items-center">
+                        </div>
+                        <div class="col-3 pe-0 d-flex align-items-center justify-content-end">
+                          <div class="d-flex align-items-center">
                             <i class="icon-attach_file text-primary me-1"></i>
-                            <span class="me-3">{{ item?.attachments }}</span>
+                            <span class="me-5">{{ item?.attachments }}</span>
                             <i class="icon-chat_bubble_outline text-primary me-1"></i>
-                            <span class="me-3">{{ item?.comments }}</span>
+                            <span >{{ item?.comments }}</span>
                           </div>
                         </div>
                       </div>
@@ -159,7 +159,7 @@
             </ng-template>
             <ng-template #content>
               <div class="d-flex justify-content-center">
-                <div class="w-75">
+                <div class="col-10">
                   <!--Filter-->
                   <div class="d-flex align-items-center justify-content-end" #titleOKR>
                     <div class="d-flex align-items-center">
@@ -181,19 +181,20 @@
                   </div>
 
                   <!--Content-->
-                  <div class="ms-5 ps-5">
-                    <span class="icon-i-signpost-2 text-primary"></span>
-                    <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
+                  <div class="d-flex align-item-center mb-4">
+                    <span class="icon-groupby text-primary"></span>
+                    <codx-label default="Liên kết" class="ps-4 fs-5 fw-bold" name="lblLink"></codx-label>
                   </div>
-                  <div *ngIf="listAlign && listAlign.length>0" class="px-5">
+                  <div *ngIf="listAlign && listAlign.length>0" class="pb-5">
                     <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->
-                  <div class="ms-5 ps-5 pt-5">
-                    <span class="icon-i-signpost-2 text-primary"></span>
-                    <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink" ></codx-label>
+                  
+                  <div class="d-flex align-item-center mb-4">
+                    <span class="icon-account_tree text-primary"></span>
+                    <codx-label default="Phụ thuộc" class="ps-4 fs-5 fw-bold" name="lblLink" ></codx-label>
                   </div>
-                  <div *ngIf="listAssign && listAssign.length>0" class="px-5">
+                  <div *ngIf="listAssign && listAssign.length>0" class="pb-5">
                     <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM"  [okrVll]="okrVll"></view-okr>
                   </div>
                     
@@ -250,7 +251,7 @@
             </ng-template>
             <ng-template #content>
               <div class="d-flex justify-content-center">
-                <div class="w-75 mt-5">
+                <div class="col-10 mt-5">
                   <codx-tree-comment [objectID]="dataOKR.recID" [objectType]="formModel?.entityName" [actionType]="'C'"
                     [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="formModel?.funcID">
                   </codx-tree-comment>

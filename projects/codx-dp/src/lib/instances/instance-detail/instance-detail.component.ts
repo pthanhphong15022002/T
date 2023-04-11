@@ -97,6 +97,7 @@ export class InstanceDetailComponent implements OnInit {
   moreFuncCrr: any;
   listReasonSuccess: DP_Instances_Steps_Reasons[] = [];
   listReasonFail: DP_Instances_Steps_Reasons[] = [];
+  isOnlyView: boolean = true;
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -148,8 +149,7 @@ export class InstanceDetailComponent implements OnInit {
         formModel.funcID = "DPT040102";
         this.frmModelInstancesTask = formModel;
         console.log(this.frmModelInstancesTask);
-        
-      }            
+      }
     });
   }
 
@@ -178,6 +178,7 @@ export class InstanceDetailComponent implements OnInit {
         );
         this.listReasonBySteps(this.reasonStepsObject);
         this.maxSize = 4;
+        this.isOnlyView = true;
       }
     } else if (changes['reloadData'] && this.reloadData) {
       this.instanceStatus = this.dataSelect.status;
@@ -323,28 +324,11 @@ export class InstanceDetailComponent implements OnInit {
     //   });
     // }
   }
-
-  click(indexNo, data) {
-    if (
-      this.currentStep < indexNo &&
-      (this.instanceStatus === '1' || this.instanceStatus === '2')
-    )
-      return;
-    this.currentNameStep = indexNo;
-    var indx = this.listSteps.findIndex((x) => x.stepID == data);
-    this.tmpTeps = this.listSteps[indx];
-    this.lstInv = this.getInvolved(this.tmpTeps.roles);
-    this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
-  }
   clickStage($event) {
     if($event) {
       var indexNo = $event?.indexNo
       var stepId = $event?.id;
-      if (
-        this.currentStep < indexNo &&
-        (this.instanceStatus === '1' || this.instanceStatus === '2')
-      )
-        return;
+      this.isOnlyView = $event?.isOnlyView;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];
@@ -476,6 +460,7 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     this.maxSize = 6;
+    this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
     if (this.viewType == 'd') {

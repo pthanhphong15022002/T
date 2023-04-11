@@ -27,6 +27,7 @@ import { CashPayment } from '../../models/CashPayment.model';
   styleUrls: ['./pop-add-linecash.component.css'],
 })
 export class PopAddLinecashComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText: string;
@@ -63,17 +64,26 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         }
       });
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
+    this.dt.detectChanges();
   }
-  close() {
-    this.dialog.close();
-  }
+  //#endregion
+
+  //#region Event
   valueChange(e: any) {
     this.cashpaymentline[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region Function
+  close() {
+    this.dialog.close();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -114,15 +124,32 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       }
     });
   }
+  //#endregion
+
+  //#region Method
   onSaveAdd(){
-    this.objectcashpaymentline.push({...this.cashpaymentline});
-    this.clearCashpayment();
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.objectcashpaymentline.push({...this.cashpaymentline});
+      this.clearCashpayment();
+    }
   }
   onSave() {
-    window.localStorage.setItem(
-      'dataline',
-      JSON.stringify(this.cashpaymentline)
-    );
-    this.dialog.close();
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      window.localStorage.setItem(
+        'dataline',
+        JSON.stringify(this.cashpaymentline)
+      );
+      this.dialog.close();
+    }
+    
   }
+  //#endregion
 }

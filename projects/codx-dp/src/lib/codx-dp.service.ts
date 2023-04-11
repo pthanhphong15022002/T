@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class CodxDpService {
   dataProcess = new BehaviorSubject<any>(null);
-  
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -544,4 +544,5 @@ export class CodxDpService {
       [userID, 'DP']
     );
   }
+
 }
