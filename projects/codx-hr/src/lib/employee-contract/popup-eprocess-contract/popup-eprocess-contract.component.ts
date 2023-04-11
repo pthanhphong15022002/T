@@ -47,6 +47,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   isAfterRender = false;
   lstSubContract: any;
   headerText: string;
+  openFrom: string;
   employeeObj: any;
 
     //#region EBenefitInfo Declaration
@@ -109,6 +110,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
+    this.openFrom = data?.data?.openFrom;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data truyen vao ben trong ', this.data);
