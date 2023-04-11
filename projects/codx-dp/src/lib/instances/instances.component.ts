@@ -426,6 +426,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
+    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
     this.view.dataService
       .copy(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -449,7 +450,7 @@ export class InstancesComponent
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
               this.codxDpService
-                .GetStepsByInstanceIDAsync([data.recID, data.processID])
+                .getListStepCopyById(dataGets)
                 .subscribe((res) => {
                   if (res && res?.length > 0) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
@@ -459,7 +460,7 @@ export class InstancesComponent
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
                     option.Width =
-                    this.addFieldsControl == '1'  ? '800px' : '550px';
+                      this.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
                     if (!this.process.instanceNoSetting) {
                       this.codxDpService
@@ -561,7 +562,11 @@ export class InstancesComponent
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
               this.codxDpService
-                .GetStepsByInstanceIDAsync([data.recID, data.processID,data.status])
+                .GetStepsByInstanceIDAsync([
+                  data.recID,
+                  data.processID,
+                  data.status,
+                ])
                 .subscribe((res) => {
                   if (res && res?.length > 0) {
                     this.listStepInstances = JSON.parse(JSON.stringify(res));
@@ -1412,12 +1417,14 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas = [
-      { san_pham: 'Sản phẩm quần què test' },
-      { dien_tich: 'Diện tích quần què test' },
-      { so_luong: 'Số lượng quần què test' },
-      { don_gia: 'Đơn giá quần què test' },
-    ];
+    let datas = 
+      [{
+        san_pham: 'Sản phẩm quần què test',
+        dien_tich: 'Diện tích quần què test',
+        so_luong: 'Số lượng quần què test',
+        don_gia: 'Đơn giá quần què test'
+      }]
+    ;
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
       .execSv<any>(
