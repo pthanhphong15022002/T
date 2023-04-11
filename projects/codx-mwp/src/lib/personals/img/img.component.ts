@@ -100,6 +100,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
   {
     if(url)
     {
+      url = url.replace(environment.urlUpload + "/","");
       return this.shareService.getThumbByUrl(url,300);
     }
     return ""
