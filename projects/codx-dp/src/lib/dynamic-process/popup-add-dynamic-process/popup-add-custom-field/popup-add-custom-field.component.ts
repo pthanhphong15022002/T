@@ -97,7 +97,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   valueChange(e) {
     if (e && e.data && e.field) this.field[e.field] = e.data;
-    if (e.field == 'title') this.removeAccents(e.data);
+    if (e.field == 'title' || e.field=='fieldName') this.removeAccents(e.data);
     this.changdef.detectChanges();
   }
 
