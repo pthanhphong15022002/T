@@ -1394,7 +1394,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type],
+                  ['1', data.recID, view, type ,null, $event?.data?.customName],
                   ''
                 )
                 .closed.subscribe();
@@ -1417,7 +1417,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type],
+                  ['1', data.recID, view, type,null,$event?.data?.customName],
                   ''
                 )
                 .closed.subscribe((item) => {
