@@ -17,9 +17,13 @@ import {
   DialogModel,
   RequestOption,
   SidebarModel,
+  DataRequest,
+  FormModel,
 } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashReceiptsLines } from '../models/CashReceiptsLines.model';
 
 @Component({
   selector: 'lib-cash-receipts',
