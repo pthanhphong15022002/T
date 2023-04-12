@@ -446,6 +446,7 @@ export class CodxDMService {
         return 'zip.svg';
       case '.jpg':
       case '.jpeg':
+      case '.jfif':
         return 'jpg.svg';
       case '.mp4':
         return 'mp4.svg';
@@ -1366,7 +1367,7 @@ export class CodxDMService {
             800,
             800,
             '',
-            ['', file , isCopyRight],
+            ['', file , isCopyRight,$event?.data?.customName],
             '',
             option
           );

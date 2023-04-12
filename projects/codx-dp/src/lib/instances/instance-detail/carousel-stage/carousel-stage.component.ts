@@ -112,11 +112,11 @@ export class CarouselStageComponent {
   eventClick(id){
    var index = this.dataSource.findIndex(x=>x.stepID == id);
    if(index != -1) {
-    var isView =  this.currentStep < index && (this.status == '1' || this.status == '2') ? false:true;
+    var isView =  this.currentStep < index && (this.status == '1' || this.status == '2');
     var result = {
       index: index,
       id: id,
-      isOnlyView: isView
+      isOnlyView: !isView
     }
     this.eventClicked.emit(result);
    }
