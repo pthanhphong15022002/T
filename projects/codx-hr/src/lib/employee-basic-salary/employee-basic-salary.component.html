@@ -1,7 +1,5 @@
-<codx-views #view [funcID]="funcID" service="HR" 
-assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
-  className="EBasicSalariesBusiness" [method]="method"
-   [views]="views" [autoLoad]="true" idField="recID"
+<codx-views #view [funcID]="funcID" service="HR" assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
+  className="EBasicSalariesBusiness" [method]="method" [views]="views" [autoLoad]="true" idField="recID"
   [button]="buttonAdd" (buttonClick)="addBasicSalaries($event)" (selectedChange)="changeItemDetail($event)">
 </codx-views>
 
@@ -204,7 +202,7 @@ assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
 
 <ng-template #templateItemDetailRight let-data>
   <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
-  [view]="view" (clickMFunction)="clickEvent($event, data)"></lib-view-basic-salary-detail>
+    [view]="view" (clickMFunction)="clickEvent($event, data)"></lib-view-basic-salary-detail>
 </ng-template>
 <!-- end list & detail view -->
 
@@ -215,3 +213,48 @@ assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
     <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="view?.formModel"></codx-thumbnail>
   </ng-template>
 </ng-template>
+
+<!-- change status -->
+<ng-template #changeStatus let-dialog>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblStatus" default="Cập nhật trạng thái"
+              [formModel]="view.formModel"></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="closeUpdateStatusDialog(dialog)">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+            <codx-label fieldName="status" [formModel]="view.formModel"></codx-label>
+          </label>
+          <codx-input disabled="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label [default]="'Bình luận'" [name]="'lblComment'"></codx-label>
+          <codx-input type="text" [formModel]="view.formModel" (valueChange)="commentValueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="saveUpdateStatusDialog()">
+          <i class="icon-save"></i>
+          <codx-label default="Lưu" name="lblSave" [formModel]="view.formModel"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- end change status -->

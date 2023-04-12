@@ -311,7 +311,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((item: any) => {
           //Reset data View
           
-            this.isCollapsed = false;
+            //this.isCollapsed = false;
             if (item) {            
             this.dataOKRPlans = null;
             this.dataOKRPlans = item;
