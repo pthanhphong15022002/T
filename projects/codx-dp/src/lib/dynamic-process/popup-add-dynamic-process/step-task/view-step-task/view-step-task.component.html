@@ -102,12 +102,12 @@
 </ng-template>
 
 <ng-template #view>
-  <div class="d-flex align-items-center" *ngIf="type == 'M'">
+  <div class="d-flex align-items-center">
     <codx-label
       class="h4 font-weight-400"
       fiedName="roles"
       [formModel]="frmModel"
-      default="Người chủ trì"
+      [default]="type == 'M' ? 'Người chủ trì' : 'Người phụ trách' "
       style="min-width: 120px;"
     >
     </codx-label>
