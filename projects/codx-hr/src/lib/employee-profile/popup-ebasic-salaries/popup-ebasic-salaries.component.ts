@@ -61,7 +61,6 @@ export class PopupEBasicSalariesComponent
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
-    console.log(this.EBasicSalaryObj);
     this.formModel = dialog?.formModel;
     this.employeeObj = data?.data?.employeeObj;
     this.fromListView = data?.data?.fromListView;

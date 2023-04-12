@@ -14,10 +14,10 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { map, Observable, tap } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
-import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { JournalService } from '../../journal-names/journal-names.service';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
