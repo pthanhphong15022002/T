@@ -113,6 +113,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   periodName: any;
   orgUnitTree: any[];
   refIDMeeting:any;
+  isCollapsed: boolean;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -310,7 +311,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         .subscribe((item: any) => {
           //Reset data View
           
-          if (item) {            
+            this.isCollapsed = false;
+            if (item) {            
             this.dataOKRPlans = null;
             this.dataOKRPlans = item;
             this.planNull = false;

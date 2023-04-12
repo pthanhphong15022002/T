@@ -53,24 +53,18 @@ export class OkrTargetsComponent implements OnInit {
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
-  @Input() gridView: any;
-  @Input() formModelOB: any;
-  @Input() formModelKR: any;
-  @Input() formModelSKR: any;
-  @Input() skrFuncID: any;
-  @Input() krFuncID: any;
-  @Input() obFuncID: any;
-  @Input() funcID: any;
   @Input() groupModel: any;
+  @Input() funcID: any;
   @Input() isHiddenChart: boolean;
   @Input() okrFM:any;
   @Input() okrVll:any;  
   @Input() okrGrv:any;  
-  @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner 
+  @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
+  @Input() isCollapsed = false;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
     new EventEmitter();
-  isCollapsed = false;
   dtStatus = [];
+  
   openAccordion = [];
   openAccordionKR = [];
   krTitle = '';
@@ -170,6 +164,9 @@ export class OkrTargetsComponent implements OnInit {
   button: ButtonModel;
   isAfterRender: boolean;
   skrTitle: any;
+  skrFuncID: any;
+  krFuncID: any;
+  obFuncID: any;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -177,14 +174,16 @@ export class OkrTargetsComponent implements OnInit {
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private detec: ChangeDetectorRef
-  ) {}
+  ) {
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
 
   ngOnInit(): void {
-
-    this.isCollapsed = false;
+    this.krFuncID=this.okrFM?.krFM?.funID;
+    this.skrFuncID=this.okrFM?.skrFM?.funID;
+    this.obFuncID=this.okrFM?.obFM?.funID;
     this.createBase();
     this.getCacheData();
     this.getData();
@@ -644,6 +643,7 @@ export class OkrTargetsComponent implements OnInit {
         task.refID = kr?.recID;
         task.sessionID=kr?.transID;
         task.refType = 'OM_OKRs';
+        task.taskName = kr.okrName;
 
         let option = new SidebarModel();
         let assignModel: AssignTaskModel = {
@@ -655,7 +655,7 @@ export class OkrTargetsComponent implements OnInit {
           referedFunction: mfunc,
         };
         //option.DataService = this.view.dataService;
-        option.FormModel = this.formModelKR;
+        option.FormModel = this.okrFM?.krFM;
         option.Width = '550px';
         let dialog = this.callfunc.openSide(
           AssignInfoComponent,
@@ -778,7 +778,7 @@ export class OkrTargetsComponent implements OnInit {
   //OBject
   addOB(popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelOB;    
+    option.FormModel = this.okrFM?.obFM;    
     let baseModel= {...this.groupModel};
     baseModel.obModel.owner=this.defaultOwner;
     let dialogOB = this.callfunc.openSide(
@@ -792,7 +792,7 @@ export class OkrTargetsComponent implements OnInit {
   }
   editOB(ob: any, popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
+    option.FormModel = this.okrFM?.obFM;
 
     let dialogEditOB = this.callfunc.openSide(
       PopupAddOBComponent,
@@ -806,7 +806,7 @@ export class OkrTargetsComponent implements OnInit {
 
   copyOB(ob: any, popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelOB;
+    option.FormModel = this.okrFM?.obFM;
 
     let dialogCopyOB = this.callfunc.openSide(
       PopupAddOBComponent,
@@ -836,7 +836,7 @@ export class OkrTargetsComponent implements OnInit {
   addKR(popupTitle: any, isSubKR = false) {
     let listParent = this.filterOKR(this.obType, this.dataOKR);
     let option = new SidebarModel();
-    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;    
+    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;    
     let baseModel= {...this.groupModel};
     baseModel.krModel.owner=this.defaultOwner;
     baseModel.skrModel.owner=this.defaultOwner;
@@ -856,7 +856,7 @@ export class OkrTargetsComponent implements OnInit {
 
   editKR(kr: any, popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-    option.FormModel = isSubKR ? this.formModelSKR : this.formModelKR;
+    option.FormModel = isSubKR ?this.okrFM?.skrFM : this.okrFM?.krFM;    
 
     let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
@@ -874,7 +874,7 @@ export class OkrTargetsComponent implements OnInit {
 
   copyKR(kr: any, popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-    option.FormModel = this.formModelKR;
+    option.FormModel = isSubKR ?this.okrFM?.skrFM : this.okrFM?.krFM;  
 
     let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
@@ -911,7 +911,7 @@ export class OkrTargetsComponent implements OnInit {
   showOB(obj: any, popupTitle: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
-    dModel.FormModel = this.formModelOB;
+    dModel.FormModel = this.okrFM?.obFM;
     let dialogShowOB = this.callfunc.openForm(
       PopupShowOBComponent,
       '',
@@ -928,7 +928,7 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();
     popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
-    dModel.FormModel = this.formModelKR;
+    dModel.FormModel = this.okrFM?.krFM;
     let dialogShowKR = this.callfunc.openForm(
       PopupShowKRComponent,
       '',
