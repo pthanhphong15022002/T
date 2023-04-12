@@ -8,14 +8,13 @@ import {
 } from '@angular/core';
 import {
   ButtonModel,
-  DataRequest,
   RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
