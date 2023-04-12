@@ -101,14 +101,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
-    if (
-      this.instance.permissions != null &&
-      this.instance.permissions.length > 0
-    ) {
-      this.lstParticipants = this.instance.permissions.filter(
-        (x) => x.roleType === 'P'
-      );
-    }
+
+    this.lstParticipants = dt?.data.lstParticipants;
+
     this.stepIdOld = this.instance.stepID;
 
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
@@ -135,7 +130,9 @@ export class PopupMoveStageComponent implements OnInit {
 
   ngOnInit(): void {
     this.removeReasonInSteps(this.listStepsCbx, this.isUseReason);
-    !this.stepIdClick && this.stepIdClick != this.stepIdOld && this.autoClickedSteps(this.listStepsCbx, this.stepName);
+    !this.stepIdClick &&
+      this.stepIdClick != this.stepIdOld &&
+      this.autoClickedSteps(this.listStepsCbx, this.stepName);
   }
 
   getNameAndPosition(id) {
@@ -162,7 +159,29 @@ export class PopupMoveStageComponent implements OnInit {
         switch (this.assignControl) {
           //Phụ trách giai đoạn hiện tại
           case '0':
-            this.owner = '';
+            if (
+              this.stepCurrent.roles != null &&
+              this.stepCurrent.roles.length > 0
+            ) {
+              var role = this.stepCurrent.roles.filter(
+                (x) =>
+                  x.objectID == this.stepCurrent?.owner && x.roleType == 'S'
+              );
+              if (role != null && role.length > 0) {
+                if (role[0].objectType != 'U' && role[0].objectType != '1') {
+                  this.getOwnerByListRoles(
+                    role.map((x) => x.objectID),
+                    role[0].objectType
+                  );
+                } else {
+                  this.owner = this.stepCurrent?.owner;
+                }
+              } else {
+                this.owner = this.stepCurrent?.owner;
+              }
+            } else {
+              this.owner = '';
+            }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Phụ trách giai đoạn chuyển tiếp
@@ -171,7 +190,34 @@ export class PopupMoveStageComponent implements OnInit {
             index = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepIdClick
             );
-            this.owner = this.listStepsCbx[index]?.owner; // Thêm ? vô dùng cái
+
+            if (
+              this.listStepsCbx[index].roles != null &&
+              this.listStepsCbx[index].roles.length > 0
+            ) {
+              var roleClick = this.listStepsCbx[index].roles.filter(
+                (x) =>
+                  x.objectID == this.listStepsCbx[index].owner &&
+                  x.roleType == 'S'
+              );
+              if (roleClick != null && roleClick.length > 0) {
+                if (
+                  roleClick[0].objectType != 'U' &&
+                  roleClick[0].objectType != '1'
+                ) {
+                  this.getOwnerByListRoles(
+                    roleClick.map((x) => x.objectID),
+                    roleClick[0].objectType
+                  );
+                } else {
+                  this.owner = this.listStepsCbx[index]?.owner;
+                }
+              } else {
+                this.owner = this.listStepsCbx[index]?.owner;
+              }
+            } else {
+              this.owner = '';
+            }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
 
             break;
@@ -180,8 +226,33 @@ export class PopupMoveStageComponent implements OnInit {
             i = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepCurrent.stepID
             );
-            this.stepOld = this.listStepsCbx[i - 1]?.owner;
-            this.owner = this.stepOld;
+            if (
+              this.listStepsCbx[i - 1].roles != null &&
+              this.listStepsCbx[i - 1].roles.length > 0
+            ) {
+              var roleOld = this.listStepsCbx[i - 1].roles.filter(
+                (x) =>
+                  x.objectID == this.listStepsCbx[i - 1].owner &&
+                  x.roleType == 'S'
+              );
+              if (roleOld != null && roleOld.length > 0) {
+                if (
+                  roleOld[0].objectType != 'U' &&
+                  roleOld[0].objectType != '1'
+                ) {
+                  this.getOwnerByListRoles(
+                    roleOld.map((x) => x.objectID),
+                    roleOld[0].objectType
+                  );
+                } else {
+                  this.owner = this.listStepsCbx[i - 1]?.owner;
+                }
+              } else {
+                this.owner = this.listStepsCbx[i - 1]?.owner;
+              }
+            } else {
+              this.owner = '';
+            }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Người nhận nhiệm vụ đầu tiên
@@ -220,7 +291,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   onSave() {
     this.instancesStepOld.owner = this.owner;
-    var isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld)
+    var isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
     if (isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -255,7 +326,7 @@ export class PopupMoveStageComponent implements OnInit {
           ischeck = false;
           break;
         }
-        if(item) {
+        if (item) {
           messageCheckFormat = this.checkFormat(item);
           if (messageCheckFormat) {
             ischeckFormat = false;
@@ -294,8 +365,14 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone && this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-    this.listTaskGroupDone && this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup,'taskGroup');
+    this.listTaskDone &&
+      this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
+    this.listTaskGroupDone &&
+      this.updateProgressIsDone(
+        this.listTaskGroupDone,
+        this.listTaskGroup,
+        'taskGroup'
+      );
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -424,8 +501,8 @@ export class PopupMoveStageComponent implements OnInit {
     if ($event && view == 'custom') {
       if ($event.target.checked) {
         this.isCheckAll = $event.target.checked;
-        this.listTaskGroupDone = this.listTaskGroup;
-        this.listTaskDone = this.listTask;
+        this.listTaskGroupDone = JSON.parse(JSON.stringify(this.listTaskGroup));
+        this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
         this.totalRequireCompletedChecked = this.totalRequireCompleted;
         this.actionCheck = 'custom';
       } else {
@@ -471,7 +548,7 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  upadteProgessIsDone(listDone, listNow, view) {
+  updateProgressIsDone(listDone, listNow, view) {
     const map = new Map();
     listDone.forEach((item) => {
       map.set(item.recID, item.progress);
@@ -568,9 +645,7 @@ export class PopupMoveStageComponent implements OnInit {
       let index = this.instancesStepOld.fields.findIndex(
         (x) => x.recID == field.recID
       );
-      let indexView = this.fieldsNull.findIndex(
-        (x) => x.recID == field.recID
-      );
+      let indexView = this.fieldsNull.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.instancesStepOld.fields[index].dataValue = result;
         if (indexView != -1) {
@@ -598,12 +673,57 @@ export class PopupMoveStageComponent implements OnInit {
     return '';
   }
 
-  updateProgressInstance(){
-    if(this.listTaskDone?.length > 0 && this.listTask?.length > 0 && this.listTaskGroup?.length > 0 && this.listTaskGroupDone?.length > 0 ) {
-      if( this.listTaskDone.length == this.listTask.length && this.listTaskGroupDone.length == this.listTaskGroup.length ) {
+  updateProgressInstance() {
+    if (
+      this.listTaskDone?.length > 0 &&
+      this.listTask?.length > 0 &&
+      this.listTaskGroup?.length > 0 &&
+      this.listTaskGroupDone?.length > 0
+    ) {
+      if (
+        this.listTaskDone.length == this.listTask.length &&
+        this.listTaskGroupDone.length == this.listTaskGroup.length
+      ) {
         this.instancesStepOld.progress = 100;
       }
     }
+  }
 
+  getOwnerByListRoles(lstRoles, objectType) {
+    var lstOrg = [];
+    if (lstRoles != null && lstRoles.length > 0) {
+      switch (objectType) {
+        case 'O':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'O')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'D':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'D')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'P':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+      }
+    }
   }
 }
