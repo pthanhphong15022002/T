@@ -244,8 +244,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     let obj = {
       formType: this.formType,
       data: item,
-      userID: this.adUser.userID,
-      quantity: 1,
+      groupID: '',
+      lstMemIDs: [this.adUser.userID],
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
@@ -448,6 +448,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.isSaving = true;
     opt.methodName = 'AddUpdateUserAsync';
     opt.data = [this.adUser, !this.isSaved];
+    return true;
   }
 
   saveUser(closeAddPopup: boolean) {
@@ -463,7 +464,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
         .subscribe((res) => {
-          if (res?.save) {
+          if (!res?.error) {
             this.isSaved = true;
             this.adUser.userID = res.save.userID;
             this.getHTMLFirstPost(this.adUser);
@@ -476,15 +477,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 }
               });
             this.dataAfterSave = res.save;
-            this.isSaving = false;
 
             if (closeAddPopup) {
-              this.dialog.close();
+              this.dialog.close(res.save);
             }
+            this.detectorRef.detectChanges();
           }
+
+          this.isSaving = false;
         });
     } else {
-      this.isSaved = false;
       this.isSaving = false;
       this.adService.notifyInvalid(this.form.formGroup, this.formModel);
     }

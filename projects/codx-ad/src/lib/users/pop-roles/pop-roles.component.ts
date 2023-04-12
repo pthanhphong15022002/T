@@ -53,8 +53,12 @@ export class PopRolesComponent implements OnInit {
   checkRoleIDNull = false;
   userID: any;
   // lstChangeFunc: tmpTNMD[] = [];
-  quantity = 1;
-  isUserGroup = false;
+
+  quantity = 0;
+  // isUserGroup = false;
+  groupID = '';
+  lstMemIDs = [];
+
   user: UserModel;
   ermSysTenant = ['', 'default'];
   @ViewChild('form') form: CodxFormComponent;
@@ -73,11 +77,12 @@ export class PopRolesComponent implements OnInit {
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
     this.quantity = dt?.data?.quantity ?? 1;
-    this.isUserGroup = dt?.data?.isGroupUser;
-    if (dt?.data.data?.length > 0) {
-      if (dt?.data?.userID)
-        this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
-    }
+    this.lstMemIDs = dt?.data?.lstMemIDs;
+
+    // if (dt?.data.data?.length > 0) {
+    //   if (dt?.data?.userID)
+    //     this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
+    // }
     this.user = authStore.get();
   }
   ngOnInit(): void {
@@ -224,6 +229,7 @@ export class PopRolesComponent implements OnInit {
     }
     this.changeDec.detectChanges();
   }
+
   onCbx(event, item?: any) {
     if (event.data) {
       let dataTemp = JSON.parse(JSON.stringify(item));
@@ -247,6 +253,7 @@ export class PopRolesComponent implements OnInit {
       this.listChooseRole = lstTemp;
     }
   }
+
   checkClickValueOfUserRoles(value?: any) {
     if (value == null) {
       return true;
@@ -260,7 +267,7 @@ export class PopRolesComponent implements OnInit {
       environment.saas == 1 &&
       !this.ermSysTenant.includes(this.user.tenant)
     ) {
-      if (this.isUserGroup) {
+      if (this.groupID != '') {
         this.onSave();
       } else {
         if (this.quantity > 0) {
