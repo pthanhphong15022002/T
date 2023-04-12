@@ -1,6 +1,8 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogRef,
@@ -25,6 +27,9 @@ import { JournalService } from '../../journal-names/journal-names.service';
 export class PopupAddCashTransferComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
+  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
+
   cashTransfer: ICashTransfer = {} as ICashTransfer;
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
@@ -64,7 +69,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
-    this.cashTransfer.acountID = '123';
     this.hiddenFields = this.cashTransfer?.unbounds?.lockFields ?? [];
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
@@ -104,6 +108,12 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
+
+      this.journalService.setAccountCbxDataSourceByJournal(
+        this.journal,
+        this.cbxCashAcctID,
+        this.cbxOffsetAcctID
+      );
 
       if (this.isEdit) {
         this.hiddenFields = this.journalService.getHiddenFields(this.journal);
