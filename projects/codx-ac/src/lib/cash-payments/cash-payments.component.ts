@@ -94,20 +94,6 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
-    this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.oData = res;
-        }
-      });
-    this.api
-      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.cashbook = res;
-        }
-      });
   }
 
   ngAfterViewInit() {

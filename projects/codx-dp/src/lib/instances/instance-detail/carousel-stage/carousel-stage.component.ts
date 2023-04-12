@@ -100,11 +100,15 @@ export class CarouselStageComponent {
   }
 
   findStatusInDoing(listStep,index){
-    var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
-    if (indexResult > -1) {
-        this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
+    if(index){
+      var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
+      if (indexResult > -1) {
+
         this.currentStep = this.listStep.findIndex(item => item.stepStatus == '1');
     }
+    }
+    this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
+
   }
   stageEnd(){
     this.selectedIndex = (this.listTreeView.length -1).toString();
@@ -112,11 +116,11 @@ export class CarouselStageComponent {
   eventClick(id){
    var index = this.dataSource.findIndex(x=>x.stepID == id);
    if(index != -1) {
-    var isView =  this.currentStep < index && (this.status == '1' || this.status == '2') ? false:true;
+    var isView =  this.currentStep < index && (this.status == '1' || this.status == '2');
     var result = {
       index: index,
       id: id,
-      isOnlyView: isView
+      isOnlyView: !isView
     }
     this.eventClicked.emit(result);
    }

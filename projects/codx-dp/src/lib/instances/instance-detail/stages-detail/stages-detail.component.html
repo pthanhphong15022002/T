@@ -214,7 +214,12 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="isUpdate"
+          *ngIf="
+          !isClosed &&
+          isUpdate &&
+          isStart && 
+          isRoleAll
+        "
           (click)="openPopupTaskGroup()"
         >
           <i
@@ -225,7 +230,12 @@
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
           (click)="openTypeTask()"
-          *ngIf="isUpdate"
+          *ngIf="
+            !isClosed &&
+            isUpdate &&
+            isStart && 
+            isRoleAll
+          "
         >
           <i
             [ngClass]="
@@ -451,7 +461,7 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart && 
+          isStart &&
           isRoleAll
         "
       >
@@ -488,7 +498,7 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date" *ngIf="data?.startDate && data?.endDate">
+    <span class="date" *ngIf="data?.value?.startDate && data?.value?.endDate">
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
@@ -508,9 +518,9 @@
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="data?.value?.roles[0]?.objectID"
+        [objectId]="getObjectIdRole(data?.value, data?.group)"
         objectType="AD_Users"
-        [objectName]="data?.value?.roles[0]?.objectName"
+        [objectName]="getObjectNameRole(data?.value, data?.group)"
       ></codx-img>
     </span>
     <div class="notify">
