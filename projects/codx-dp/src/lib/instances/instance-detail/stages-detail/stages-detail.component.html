@@ -488,7 +488,7 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date" *ngIf="data?.startDate && data?.endDate">
+    <span class="date" *ngIf="data?.value?.startDate && data?.value?.endDate">
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >

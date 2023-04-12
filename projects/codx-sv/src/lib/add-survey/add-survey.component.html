@@ -1,3 +1,4 @@
+<div #screen>
 <codx-views
   #view
   [funcID]="funcID"
@@ -6,6 +7,7 @@
   [viewActiveType]="viewType.content"
   (onLoading)="onLoading($event)"
 ></codx-views>
+</div>
 <ng-template #itemTemplate>
   <div
     class="bg-white p-2 subheader d-flex align-items-center justify-content-between"
