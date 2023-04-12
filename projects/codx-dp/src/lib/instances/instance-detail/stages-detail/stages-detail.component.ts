@@ -77,7 +77,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() listStep: any;
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
-  @Input() ownerInstance: string;
+  @Input() listUserIdRole: string[] = [];
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
 
@@ -194,10 +194,7 @@ export class StagesDetailComponent implements OnInit {
     this.viewCrr = this.viewsCurrent;
   }
 
-  async ngOnInit(): Promise<void> {
-    console.log('---owner',this.ownerInstance);
-    console.log('---',this.currentStep);
-    
+  async ngOnInit(): Promise<void> {   
     this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
@@ -642,7 +639,7 @@ export class StagesDetailComponent implements OnInit {
           taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
           [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.taskGroupList.push(taskGroup);
+        this.taskGroupList.push(taskGroup);        
       }
       this.taskList = step['tasks'];
     }
@@ -1224,7 +1221,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole() {
-    if(this.ownerInstance == this.user.userID){
+    if(this.user?.systemAdmin || this.listUserIdRole?.some(id => id == this.user.userID )){
       this.isRoleAll = true;
     }else if (this.dataStep?.roles?.length > 0) {
       this.isRoleAll =
@@ -1477,7 +1474,14 @@ export class StagesDetailComponent implements OnInit {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
+            if(this.isClosed) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS102':
+            if(this.isClosed) {
+              res.disabled = true;
+            }
             // this.deleteReason();
             break;
           default:

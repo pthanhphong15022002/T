@@ -28,7 +28,7 @@ import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { QuestionsComponent } from './add-survey/questions/questions.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ReviewComponent } from './add-survey/review/review.component';
-
+import { NgxCaptureModule } from 'ngx-capture';
 export const routes: Routes = [
   {
     path: '',
@@ -84,6 +84,7 @@ const Component: Type<any>[] = [
     DragDropModule,
     FormsModule,
     ChartAllModule,
+    NgxCaptureModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

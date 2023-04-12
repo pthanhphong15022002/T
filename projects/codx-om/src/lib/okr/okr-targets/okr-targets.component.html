@@ -73,12 +73,12 @@
     <ng-template #templateTreeView let-item>
       <!--OB node-->
       <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
-        <div class="w-100 pt-4 pb-3 ob-background d-flex justify-content-between">
+        <div class="w-100 pt-3 pb-3 ob-background d-flex justify-content-between">
           <div class="row d-flex justify-content-center">
             <div class="">
             </div>
           </div>
-          <div class="d-flex align-items-top w-100 okr-treegroup">
+          <div class="d-flex align-items-center w-100 okr-treegroup">
             <span class="ms-5 me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
             <span class="ob-kr ob-name fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <div class="d-flex flex-column">
@@ -136,22 +136,24 @@
           <span class="icon-brightness_1" [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
             <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
-            <div class="d-flex flex-row">
-              <span class="">
+            <div class="d-flex flex-wrap">
+              <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
-                <span [innerHTML]="item?.target | formatvalue : okrFM?.krFM : 'target' | async"></span>
+                <span class="me-1" [innerHTML]="item?.target | formatvalue : okrFM?.krFM : 'target' | async"></span>
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
-              </span>
-              <span class="ms-3">
+              </div>
+              <span class="mx-2 text-gray-400">|</span>
+              <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>
-                <span [innerHTML]="item?.current | formatvalue : okrFM?.krFM : 'current' | async"></span>
+                <span class="me-1" [innerHTML]="item?.current | formatvalue : okrFM?.krFM : 'current' | async"></span>
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
-              </span>
-              <span class="ms-3">
+              </div>
+              <span class="mx-2 text-gray-400">|</span>
+              <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.actual?.headerText+':'}}</span>
-                <span [innerHTML]="item?.actual | formatvalue : okrFM?.krFM : 'actual' | async"></span>
+                <span class="me-1" [innerHTML]="item?.actual | formatvalue : okrFM?.krFM : 'actual' | async"></span>
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
-              </span>
+              </div>
             </div>
 
           </span>
@@ -181,6 +183,7 @@
                 [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? 'bg-danger': ''">{{
                 item?.okrTasks ? item?.okrTasks?.length : '' }}</span>
             </button>
+            
             <button class="btn btn-icon btn-sm position-relative ms-2" ngbTooltip="Bình luận">
               <span class="icon-chat_bubble_outline icon-18 text-gray-600 text-hover-primary"></span>
               <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs"

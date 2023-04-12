@@ -2,7 +2,6 @@
   #form
   [formModel]="formModel"
   [dialog]="dialog"
-  [data]="vouchers"
   [openMore]="false"
   [headerText]="title"
   [body]="body"
@@ -74,7 +73,7 @@
 <!-- End: Footer -->
 
 <!-- Start: Tab basic -->
-<ng-template #tabBasic>
+<ng-template #tabBasic2>
   <ng-container *ngIf="form?.formGroup">
     <div class="row mt-6">
       <div class="col-12">
@@ -272,6 +271,16 @@
       </div>
     </div>
   </ng-container>
+</ng-template>
+
+<ng-template #tabBasic>
+  <codx-input
+    field="invoiceDueDate"
+    [crrValue]="date"
+    [format]="'d'"
+    [formModel]="form.formModel"
+  >
+  </codx-input>
 </ng-template>
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->

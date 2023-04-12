@@ -59,7 +59,7 @@
 
       </div>
 
-      <div class="row">
+      <div class="row form-group mb-0">
         <div class="col-6">
           <codx-label fiedName="Frequence" [formModel]="form.formModel">
           </codx-label>
@@ -79,30 +79,31 @@
 
 
       </div>
-      <div class="row mb-6 mt-4">
-        <div class="d-flex flex-row justify-content-start align-items-center comment-text text-primary"
-            (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='M'">
-            <span class="comment-text me-1">Ngày {{kr?.checkIn?.day}} trong tháng vào lúc {{kr?.checkIn?.time}} giờ</span>
-
-            <span class="icon-edit icon-16 ms-2"> </span>
+      <div class="row mb-6 mt-2">
+        <div class="d-flex align-items-center text-italic"
+             *ngIf="kr.frequence=='M'">
+            <span class="text-gray-600 me-1">Ngày <span class="text-primary fw-bold">{{kr?.checkIn?.day}}</span> trong tháng vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
+            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <i class="icon-edit icon-16"></i></button>
           </div>
 
-          <div class="d-flex flex-row justify-content-start align-items-center comment-text text-primary"
-            (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='W'">
+          <div class="d-flex align-items-center text-italic"
+             *ngIf="kr.frequence=='W'">
             <span class="me-1">Ngày</span>
             <span class="me-1 fw-bold">
-              <codx-vll [showText]="true" [name]="'L0012'" [value]="kr?.checkIn?.day"></codx-vll>
+              <codx-vll class="text-primary" [showText]="true" [name]="'L0012'" [value]="kr?.checkIn?.day"></codx-vll>
             </span>
-            <span class="me-1">trong tuần vào lúc {{kr?.checkIn?.time}} giờ</span>
-
-            <span class="icon-edit icon-16 ms-2"> </span>
+            <span class="text-gray-600 me-1">trong tuần vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
+            <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <i class="icon-edit icon-16"></i></button>
           </div>
 
-          <div class="d-flex flex-row justify-content-start align-items-center comment-text text-primary"
-            (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='D'">
-            <span class="me-1">Trong ngày vào lúc {{kr?.checkIn?.time}} giờ</span>
-
-            <span class="icon-edit icon-16 ms-2"> </span>
+          <div class="d-flex align-items-center text-italic"
+            *ngIf="kr.frequence=='D'">
+            <span class="text-gray-600 me-1">Trong ngày vào lúc <span class="text-primary fw-bold">{{kr?.checkIn?.time}}</span> giờ</span>
+              <button type="button" class="btn btn-icon btn-sm btn-light ms-3" (click)="openPopupFrequence(popupFrequence)">
+            <i class="icon-edit icon-16"></i>
+          </button>
           </div>
       </div>
       <!-- <div class="row">
