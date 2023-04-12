@@ -39,7 +39,6 @@ export class PopupAddStaskComponent implements OnInit {
   taskName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Instances_Steps_Tasks_Roles[] = [];
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
@@ -69,6 +68,16 @@ export class PopupAddStaskComponent implements OnInit {
   isTaskDefault = false;
   startDateParent: Date;
   endDateParent: Date;
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
+  participant: DP_Instances_Steps_Tasks_Roles[] = [];
+  owner: DP_Instances_Steps_Tasks_Roles[] = [];
+  roles: DP_Instances_Steps_Tasks_Roles[] = [];
   
   constructor(
     private cache: CacheService,
@@ -105,7 +114,7 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listOwner = this.stepsTasks['roles'];
+    this.roles = this.stepsTasks['roles'] || [];
     this.startDateParent = new Date(this.step['startDate']);
     this.endDateParent = new Date(this.step['endDate']);
     console.log(this.startDateParent.getTime());
@@ -148,6 +157,8 @@ export class PopupAddStaskComponent implements OnInit {
         .map((y) => y.value)
         .join('; ');
     }
+    this.owner = this.roles?.filter((role) => role.roleType === 'O');
+    this.participant = this.roles?.filter((role) => role.roleType === 'P');
   }
 
   getFormModel() {
@@ -248,6 +259,23 @@ export class PopupAddStaskComponent implements OnInit {
     }
     this.isLoadDate = !this.isLoadDate;
   }
+
+  changeRoler(e, datas, type) {    
+    if (!e || e?.length == 0) return;
+    let listUser = e || [];
+    let listRole = [];
+    listUser.forEach((element) => {
+        listRole.push({
+          objectID: element.objectID,
+          objectName: element.objectName,
+          objectType: element.objectType,
+          roleType: type,
+          taskID: this.stepsTasks['recID'],
+        });
+    });
+    this.participant = listRole;
+  }
+
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -269,7 +297,7 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['roles'] = [...this.participant,...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
 
     let message = [];

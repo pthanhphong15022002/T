@@ -1229,6 +1229,15 @@ export class CodxHrService {
       data
     );
   }
+  addBGTrackLogEBasicSalaries(objectID, comment, objectType, actionType, createdBy){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'ReceiveToAddBGTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
   //#endregion
 
   //#region HR_EHealths

@@ -1,4 +1,4 @@
-import { BehaviorSubject, finalize, map, Observable, of, share } from 'rxjs';
+import { async, BehaviorSubject, finalize, map, Observable, of, share } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
@@ -22,6 +22,9 @@ import {
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 import { environment } from 'src/environments/environment';
 import { AssignTaskModel } from './models/assign-task.model';
+import { lvFileClientAPI } from '@shared/services/lv.component';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { FileService } from '@shared/services/file.service';
 
 
 
@@ -43,7 +46,9 @@ export class CodxShareService {
     private api: ApiHttpService,
     private auth: AuthStore,
     private cache: CacheService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dmSV: CodxDMService,
+    private fileService : FileService
   ) {
   }
   loadFuncID(functionID: any): Observable<any> {
@@ -657,9 +662,67 @@ export class CodxShareService {
     }
     return '';
   }
+
+  async registerFile(appName: any, uploadFile: any , ChunkSizeInKB: any)
+  {
+    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
+    return await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
+      Data: {
+        FileName: uploadFile?.name,
+        ChunkSizeInKB: ChunkSizeInKB,
+        FileSize: uploadFile?.size,
+        thumbSize: {
+          width: 200, //Kích thước của file ảnh Thum bề ngang
+          height: 200, //Kích thước của file ảnh Thum bề dọc
+        },
+        IsPublic: true,
+        ThumbConstraints: '60,200,450,900',
+      },
+    })
+  }
+
+  async uploadFileAsync(uploadFile: any,appName: any, chunkSizeInKB: any) {
+    lvFileClientAPI.setUrl(environment.urlUpload);
+    var retUpload = await this.registerFile(appName,uploadFile,chunkSizeInKB);
+    if(retUpload == "401") {
+      await this.dmSV.getToken();
+      retUpload = await this.registerFile(appName,uploadFile,chunkSizeInKB);
+    }
+    var chunSizeInfBytes = chunkSizeInKB * 1024;
+    var sizeInBytes = uploadFile?.size;
+          var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
+          if (uploadFile?.size % chunSizeInfBytes > 0) {
+            numOfChunks++;
+          }
+    for (var i = 0; i < numOfChunks; i++) {
+      var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+      var end = start + chunSizeInfBytes; //Vị trí cuối
+      if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+      var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+      var fileChunk = new File([blogPart], uploadFile.name, {
+        type: uploadFile.type,
+      }); //Gói lại thành 1 file chunk để upload
+      try {
+        var uploadChunk = await lvFileClientAPI.formPostWithToken(
+          `api/${appName}/files/upload`,
+          {
+            FilePart: fileChunk,
+            UploadId: retUpload.Data?.UploadId,
+            Index: i,
+          }
+        );
+        console.log(uploadChunk);
+      } catch (ex) {}
+    }
+    return retUpload;
+  }
+  addFile(fileItem: any , actionType: any , entityName:any) {
+    this.fileService.addFile(fileItem , actionType , entityName, false , null).toPromise();
+  }
 }
 
 //#region Model
+
 export class Approvers {
   recID: string;
   roleType: string;
