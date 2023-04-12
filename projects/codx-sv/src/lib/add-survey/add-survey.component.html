@@ -50,20 +50,25 @@
           ></path>
         </g>
       </svg>
-      <span class="title ps-3"><codx-input></codx-input>{{ title }}</span>
-      <span class="icon-bookmarks icon-20 ps-6"></span>
-      <codx-label
-        *ngIf="signal == 'done'"
-        fiedName="Saving"
-        [default]="'Đã lưu tất cả trong thay đổi'"
-        class="pt-16px ps-6"
-      ></codx-label>
-      <codx-label
-        *ngIf="signal == 'saving'"
-        fiedName="Saving"
-        [default]="'Đang lưu...'"
-        class="pt-16px ps-6"
-      ></codx-label>
+      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" (valueChange)="onChangeTitle($event)" [ngbTooltip]="title"></codx-input>
+      <span class="icon-bookmarks icon-20"></span>
+      <ng-container  *ngIf="signal == 'saving' , else saving">
+        <codx-label
+          fiedName="Saving"
+          [default]="'Đang lưu...'"
+          class=" ps-6"
+        ></codx-label>
+      </ng-container>
+      <ng-template #saving >
+        <ng-container *ngIf="signal == 'done'">
+            <codx-label
+            fiedName="Done"
+            [default]="'Đã lưu tất cả thay đổi'"
+            class="ps-6"
+          ></codx-label>
+        </ng-container>
+      </ng-template>
+     
     </div>
     <div class="justify-content-end d-flex align-items-center">
       <span
@@ -73,7 +78,7 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-color_lens icon-22"></i>
+        <i class="icon icon-color_lens icon-20"></i>
       </span>
       <ng-template #customUI>
         <codx-label
@@ -102,7 +107,7 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-undo icon-22"></i>
+        <i class="icon icon-i-arrow-90deg-left icon-22"></i>
       </span>
       <ng-template #undo>
         <codx-label fiedName="Undo" default="Hủy"></codx-label>
@@ -114,7 +119,7 @@
         placement="bottom"
         [autoClose]="'outside'"
       >
-        <i class="icon icon-redo icon-22"></i>
+        <i class="icon icon-i-arrow-90deg-right icon-22"></i>
       </span>
       <ng-template #redo>
         <codx-label fiedName="Redo" default="Làm lại"></codx-label>
@@ -154,7 +159,6 @@
               #app_question
               [formModel]="view.formModel"
               [dataService]="view.dataService"
-              [title]="title"
               [recID]="recID"
               [funcID]="funcID"
             ></app-questions>

@@ -25,6 +25,8 @@ export class ViewJobComponent implements OnInit {
   listDataInput = [];
   listTypeTask = [];
   listDataLink = [];
+  tabInstances = [{type: 'view',title: 'Chi tiết công việc'},{type:'history', title: 'Lịch sử'}];
+  viewModelDetail = 'view'
 
   frmModel: FormModel = {};
   constructor(
@@ -95,5 +97,9 @@ export class ViewJobComponent implements OnInit {
   getColorTile(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
     return { 'border-left': '3px solid' + color?.color };
+  }
+
+  clickMenu(e) {
+    this.viewModelDetail = e;
   }
 }

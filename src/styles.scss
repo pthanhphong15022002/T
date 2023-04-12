@@ -2280,6 +2280,30 @@ codx-card-center{
   }  
 }
 
+.w-1100px {
+  width: 1100px !important;
+}
+.mw-1100px {
+  max-width: 1100px !important;
+}
+.w-1200px {
+  width: 1200px !important;
+}
+.mw-1200px {
+  max-width: 1200px !important;
+}
+
+ejs-richtexteditor{
+.form-control.codx-textarea{
+padding: 0;
+}
+}
+.btn-light-primary i[class*="icon-"]{
+  color: var(--primary);
+}
+.btn-light-primary:hover i[class*="icon-"]{
+  color: var(--primary-inverse);
+}
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

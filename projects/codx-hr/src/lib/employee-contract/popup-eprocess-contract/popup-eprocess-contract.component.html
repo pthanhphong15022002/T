@@ -4,19 +4,31 @@
 </codx-layout-add>
 
 <ng-template #contractInfo>
-  <div *ngIf="(actionType == 'add' && employeeObj == null) || (actionType == 'copy' && employeeObj == null)"
+  <div *ngIf="((actionType == 'add' || actionType == 'copy') && openFrom == 'empContractProcess')"
     class="form-group row">
     <codx-img [width]="35" class="me-3 col-3" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
       [objectName]="employeeObj?.employeeName" [objectType]="'HR_Employees'">
     </codx-img>
     <div class="col-8">
       <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+      <!-- <span *ngIf="actionType == 'add'">
+        <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
+          (valueChange)="handleSelectEmp($event)">
+        </codx-input>
+      </span>
+
+      <span *ngIf="actionType == 'copy'">
+        <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
+          (valueChange)="handleSelectEmp($event)">
+        </codx-input>
+      </span> -->
+
       <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
-        (valueChange)="handleSelectEmp($event)">
-      </codx-input>
+      (valueChange)="handleSelectEmp($event)">
+    </codx-input>
     </div>
   </div>
-  <div *ngIf="actionType == 'edit' || actionType == 'copy' || (actionType == 'add' && employeeObj != null)">
+  <div *ngIf="actionType == 'edit' && openFrom == 'empContractProcess'">
     <div class="d-flex">
       <div class="d-flex flex-column">
         <codx-img [width]="35" class="me-3" [objectId]="employeeObj.employeeID" [referType]="'avt'"

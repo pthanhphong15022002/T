@@ -44,6 +44,7 @@ import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instan
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'codx-instances',
@@ -171,7 +172,8 @@ export class InstancesComponent
     private authStore: AuthStore,
     private pageTitle: PageTitleService,
     private layout: LayoutService,
-    private layoutInstance: LayoutInstancesComponent,
+    // private layoutInstance: LayoutInstancesComponent,
+    private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -304,7 +306,6 @@ export class InstancesComponent
       .subscribe((dt) => {
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
-          debugger;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           // this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
@@ -426,80 +427,66 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
-    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
-    this.view.dataService
-      .copy(this.view.dataService.dataSelected)
-      .subscribe((res) => {
-        const funcIDApplyFor =
-          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-        const applyFor = this.process.applyFor;
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          if (this.addFieldsControl == '2') {
-            let customName = fun.customName || fun.description;
-            if (this.autoName) customName = this.autoName;
-            this.titleAction =
-              this.titleAction +
-              ' ' +
-              customName.charAt(0).toLocaleLowerCase() +
-              customName.slice(1);
-          }
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-              this.codxDpService
-                .getListStepCopyById(dataGets)
-                .subscribe((res) => {
-                  if (res && res?.length > 0) {
-                    this.listStepInstances = JSON.parse(JSON.stringify(res));
-                    var formMD = new FormModel();
-                    formMD.funcID = funcIDApplyFor;
-                    formMD.entityName = fun.entityName;
-                    formMD.formName = fun.formName;
-                    formMD.gridViewName = fun.gridViewName;
-                    option.Width =
-                      this.addFieldsControl == '1' ? '800px' : '550px';
-                    option.zIndex = 1001;
-                    if (!this.process.instanceNoSetting) {
-                      this.codxDpService
-                        .genAutoNumber(
-                          this.funcID,
-                          'DP_Instances',
-                          'InstanceNo'
-                        )
-                        .subscribe((res) => {
-                          if (res) {
-                            this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
-                    } else {
-                      this.codxDpService
-                        .getAutoNumberByInstanceNoSetting(
-                          this.process.instanceNoSetting
-                        )
-                        .subscribe((isNo) => {
-                          if (isNo) {
-                            this.view.dataService.dataSelected.instanceNo =
-                              isNo;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
+    this.view.dataService.copy().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          this.titleAction =
+            this.titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            if (res) {
+              this.listStepInstances = JSON.parse(JSON.stringify(res));
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.dataSelected.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
                     }
-                  }
-                });
-            });
-        });
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    if (isNo) {
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
+                    }
+                  });
+              }
+            }
+          });
       });
+    });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
-    debugger;
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
-      listSteps: 'add' ? this.listSteps : this.listStepInstances,
+      listSteps: JSON.parse(JSON.stringify(this.listSteps)),
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
@@ -658,9 +645,19 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.startInstance(data);
+        this.handelStartDay(data);
         break;
     }
+  }
+
+  handelStartDay(data) {
+    this.notificationsService
+      .alertCode('DP033', null, [data?.title || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startInstance(data);
+        }
+      });
   }
 
   startInstance(data) {
@@ -1417,14 +1414,14 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas = 
-      [{
+    let datas = [
+      {
         san_pham: 'Sản phẩm quần què test',
         dien_tich: 'Diện tích quần què test',
         so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test'
-      }]
-    ;
+        don_gia: 'Đơn giá quần què test',
+      },
+    ];
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
       .execSv<any>(
@@ -1436,7 +1433,6 @@ export class InstancesComponent
       )
       .subscribe((res) => {
         console.log(res);
-        debugger;
       });
   }
   //Xét duyệt
@@ -1504,7 +1500,8 @@ export class InstancesComponent
   loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
-    this.layoutInstance.viewNameProcess(ps);
+    // this.layoutInstance.viewNameProcess(ps);
+    this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,

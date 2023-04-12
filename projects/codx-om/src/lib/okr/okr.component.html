@@ -50,7 +50,7 @@
     </div>
 
 
-    <div class="p-om-okr flex-grow-1 bg-body">
+    <div class=" mt-2">
       <ejs-tab id="om-tab">
         <e-tabitems>
           <e-tabitem>
@@ -103,8 +103,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="px-25">
-
+              <div class="w-100 tab-okr-trees">
                 <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [dataOKRPlans]="dataOKRPlans" [orgUnitTree]="orgUnitTree"></lib-okr-trees>
               </div>
             </ng-template>
@@ -117,7 +116,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID" [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
+              <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID" [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
             </ng-template>
           </e-tabitem>
           <e-tabitem>

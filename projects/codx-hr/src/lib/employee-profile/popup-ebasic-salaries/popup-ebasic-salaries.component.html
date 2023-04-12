@@ -213,7 +213,7 @@
     [data]="EBasicSalaryObj" *ngIf="isAfterRender">
     <ng-template #body>
         <div *ngIf="allowToViewEmp()" class="form-group row d-flex flex-row">
-            <!-- <div class="col-6 d-flex align-items-start">
+            <div class="col-6 d-flex align-items-start">
                 <div class="d-flex flex-column">
                     <codx-img [width]="35" class="me-3" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
                         [objectName]="employeeObj?.employeeName" [objectType]="'HR_Employees'">
@@ -235,8 +235,8 @@
                         <span [innerHTML]="employeeObj?.orgUnitID"></span>
                     </div>
                 </div>
-            </div> -->
-            <div class="col" *ngIf=" actionType != 'edit'">
+            </div>
+            <div class="col-6" *ngIf=" actionType != 'edit'">
                 <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
                 <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
                     (valueChange)="handleSelectEmp($event)">

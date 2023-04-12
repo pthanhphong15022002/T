@@ -1948,6 +1948,35 @@ export class CodxHrService {
   // actionUpdateClosed = 'AU9'
 
   handleShowHideMF(evt, data, view){  
+    // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
+    let category = '4';
+    let formName = 'HRParameters';
+    this.getSettingValue(formName, category).subscribe((res) => {
+      if(res){
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == view.formModel.entityName
+        );
+        if(index > -1){
+          let typeDocObj = parsedJSON[index];
+          if(typeDocObj['ApprovalRule'] != '1'){
+            let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+            found.disabled = true;
+      
+            let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateRejected)
+            found2.disabled = true;
+          }
+        }
+        else{
+          let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+          found.disabled = true;
+    
+          let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateRejected)
+          found2.disabled = true;
+        }
+      }
+    })
+
     if(view.formModel.entityName == 'HR_EContracts'){
       //Xu li rieng cho HDLD
     }

@@ -122,8 +122,8 @@
                 >
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
                   field="invoiceDueDate"
+                  [crrValue]="date"
                   (valueChange)="valueChange($event)"
                   [formModel]="form.formModel"
                 >
@@ -204,6 +204,7 @@
                     type="combobox"
                     refValue="Currencies"
                     field="currencyID2"
+                    [crrValue]="cashpayment.currencyID"
                     (valueChange)="valueChange($event)"
                   ></codx-input>
                 </div>
@@ -211,7 +212,6 @@
             </div>
             <div class="col-3">
               <div class="form-group">
-                <!-- Người nhận tiền -->
                 <div class="form-group">
                   <codx-label
                     fiedName="lblType"
@@ -252,7 +252,6 @@
                   >
                   </codx-input>
                 </div>
-                <!-- Người nhận tiền -->
               </div>
             </div>
           </div>
