@@ -434,7 +434,7 @@ export class StagesDetailComponent implements OnInit {
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
-          taskData['roles'] = [role];
+          taskData['roles'] = [role,...taskData['roles']];
           taskData['createdOn'] = new Date();
           taskData['modifiedOn'] = null;
           taskData['modifiedBy'] = null;
@@ -1072,7 +1072,35 @@ export class StagesDetailComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
     return role;
+  }
+
+  getObjectIdRole(task, group) {
+    if (task?.taskType != 'M' && group) {
+      let objectId =
+        task?.roles.find((role) => role?.roleType == 'P')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    } else {
+      let objectId =
+        task?.roles.find((role) => role?.roleType == 'O')['objectID'] ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    }
+  }
+  getObjectNameRole(task, group) {
+    if (task?.taskType != 'M' && group) {
+      let objectName =
+        task?.roles.find((role) => role?.roleType == 'P')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    } else {
+      let objectName =
+        task?.roles.find((role) => role?.roleType == 'O')['objectName'] ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    }
   }
 
   copyValue(dataCopy, data) {

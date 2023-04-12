@@ -1,7 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxAcService } from '../codx-ac.service';
 import { IAsset } from './interfaces/IAsset.interface';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-fixed-assets',

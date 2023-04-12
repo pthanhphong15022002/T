@@ -104,33 +104,30 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
 
     this.api
-    .execSv<any>(
-      'SYS',
-      'AD',
-      'AutoNumberDefaultsBusiness',
-      'GetFieldAutoNoAsync',
-      [this.functionID, this.dialog.formModel.entityName]
-    )
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.disabledShowInput = true;
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes)
-            this.planceHolderAutoNumber = mes?.customName || mes?.description;
-        });
-      } else {
-        this.disabledShowInput = false;
-      }
-    });
-
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.functionID, this.dialog.formModel.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = false;
+        }
+      });
   }
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     //   this.initForm();
-    if(this.action === 'copy'){
+    if (this.action === 'copy') {
       this.taskGroups.taskGroupID = null;
     }
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe((res) => {
@@ -214,17 +211,17 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups[data.field] = '1';
     } else {
       this.taskGroups[data.field] = '0';
-      if(data.field == 'verifyControl'){
+      if (data.field == 'verifyControl') {
         this.verifyName = '';
         this.taskGroups.verifyByType = '';
         this.taskGroups.verifyBy = '';
       }
-      if(data.field == 'approveControl'){
+      if (data.field == 'approveControl') {
         this.approveName = '';
         this.taskGroups.approveBy = '';
         this.taskGroups.approvers = '';
       }
-      if(data.field == 'maxHoursControl'){
+      if (data.field == 'maxHoursControl') {
         this.taskGroups.maxHours = 0;
       }
     }
@@ -236,7 +233,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     var numberValue = Number(e.data);
     if (numberValue > 0 && numberValue <= 8) {
       this.taskGroups.maxHours = numberValue;
-    }else{
+    } else {
       this.taskGroups.maxHours = 0;
     }
   }
@@ -307,7 +304,11 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           break;
       }
       if (verifyByType) this.taskGroups.verifyByType = verifyByType;
-      if (verifyBy) this.taskGroups.verifyBy = verifyBy;
+      if (verifyBy) {
+        this.taskGroups.verifyBy = verifyBy
+      }else{
+        this.taskGroups.verifyBy = '';
+      } ;
     } else {
       switch (e[0].objectType) {
         case 'S':
@@ -364,7 +365,11 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       if (approveBy) {
         this.taskGroups.approveBy = approveBy;
       }
-      if (approves) this.taskGroups.approvers = approves;
+      if (approves) {
+        this.taskGroups.approvers = approves;
+      } else {
+        this.taskGroups.approvers = '';
+      }
     }
   }
 
@@ -566,6 +571,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   beforeSave(op: any) {
     var data = [];
+    op.className = 'TaskGroupBusiness';
     if (this.action === 'add' || this.action === 'copy') {
       op.method = 'AddTaskGroupsAsync';
       data = [this.taskGroups, this.functionID];
@@ -617,30 +623,41 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if(this.taskGroups.approveControl == '1'){
-      if(this.taskGroups.approvers == null || this.taskGroups.approvers.trim() == ''){
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewSetup['Approvers']?.headerText + '"'
-        );
-        return;
+    if (this.taskGroups.approveControl == '1') {
+      if (this.taskGroups.approveBy != 'TL' && this.taskGroups.approveBy != 'S') {
+        if (
+          this.taskGroups.approvers == null ||
+          this.taskGroups.approvers.trim() == ''
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['Approvers']?.headerText + '"'
+          );
+          return;
+        }
+      }
+
+    }
+
+    if (this.taskGroups.verifyControl == '1') {
+      if (this.taskGroups.verifyByType != 'TL') {
+        if (
+          this.taskGroups.verifyBy == null ||
+          this.taskGroups.verifyBy.trim() == ''
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['VerifyBy']?.headerText + '"'
+          );
+          return;
+        }
       }
     }
 
-    if(this.taskGroups.verifyControl == '1'){
-      if(this.taskGroups.verifyBy == null || this.taskGroups.verifyBy.trim() == ''){
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewSetup['VerifyBy']?.headerText + '"'
-        );
-        return;
-      }
-    }
-
-    if(this.taskGroups.maxHoursControl == '1'){
-      if(this.taskGroups.maxHours <= 0 || this.taskGroups.maxHours > 8){
+    if (this.taskGroups.maxHoursControl == '1') {
+      if (this.taskGroups.maxHours <= 0 || this.taskGroups.maxHours > 8) {
         this.notiService.notifyCode(
           'SYS009',
           0,

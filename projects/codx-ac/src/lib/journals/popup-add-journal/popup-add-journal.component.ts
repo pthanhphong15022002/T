@@ -22,7 +22,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { CodxAcService } from '../../codx-ac.service';
 import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
-import { JournalService } from '../journal-names.service';
+import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
 import { map, tap } from 'rxjs/operators';

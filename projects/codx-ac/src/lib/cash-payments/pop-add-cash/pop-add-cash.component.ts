@@ -32,8 +32,8 @@ import { CodxAcService } from '../../codx-ac.service';
 import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
-import { JournalService } from '../../journal-names/journal-names.service';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../journals/journals.service';
 import { Reason } from '../../models/Reason.model';
 @Component({
   selector: 'lib-pop-add-cash',
@@ -94,17 +94,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   page: any = 1;
-  pageSize :any = 5;
+  pageSize: any = 5;
   key: any;
   columnChange: string;
   vllCashbook: any;
+  vettledInvoicesDelete: any[];
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private callfunc: CallFuncService,
     private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -615,7 +615,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 '',
                 opt
               );
-              dialogs.closed.subscribe((x) => {
+              dialogs.closed.subscribe(() => {
                 var dataline = JSON.parse(localStorage.getItem('dataline'));
                 if (dataline != null) {
                   this.cashpaymentline[index] = dataline;
@@ -680,7 +680,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             '',
             opt
           );
-          dialogs.closed.subscribe((x) => {
+          dialogs.closed.subscribe(() => {
             var dataline = JSON.parse(localStorage.getItem('dataline'));
             if (dataline != null) {
               this.cashpaymentline.push(dataline);

@@ -1,4 +1,3 @@
-import { JournalNamesComponent } from './journal-names/journal-names.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
@@ -20,15 +19,16 @@ import { CashReceiptsComponent } from './cash-receipts/cash-receipts.component';
 import { PopAddReceiptsComponent } from './cash-receipts/pop-add-receipts/pop-add-receipts.component';
 import { PurchaseinvoicesComponent } from './purchaseinvoices/purchaseinvoices.component';
 import { PopAddPurchaseComponent } from './purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
-import { PopupAddJournalComponent } from './journal-names/popup-add-journal/popup-add-journal.component';
-import { DropdownDetailComponent } from './journal-names/dropdown-detail/dropdown-detail.component';
-import { PopupSetupInvoiceComponent } from './journal-names/popup-setup-invoice/popup-setup-invoice.component';
 import { PopAddLineComponent } from './purchaseinvoices/pop-add-line/pop-add-line.component';
-import { SingleSelectPopupComponent } from './journal-names/single-select-popup/single-select-popup.component';
-import { CustomizedMultiSelectPopupComponent } from './journal-names/customized-multi-select-popup/customized-multi-select-popup.component';
 import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
+import { JournalsComponent } from './journals/journals.component';
+import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
+import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-detail.component';
+import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
+import { SingleSelectPopupComponent } from './journals/single-select-popup/single-select-popup.component';
+import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
 
 export const routes: Routes = [
   {
@@ -52,7 +52,7 @@ export const routes: Routes = [
       },
       {
         path: 'journalnames/:funcID',
-        component: JournalNamesComponent,
+        component: JournalsComponent,
         data: { noReuse: true },
       },
       {
@@ -76,7 +76,7 @@ export const routes: Routes = [
     LayoutComponent,
     CashPaymentsComponent,
     PopAddCashComponent,
-    JournalNamesComponent,
+    JournalsComponent,
     CashTransfersComponent,
     PopupAddCashTransferComponent,
     CashReceiptsComponent,
