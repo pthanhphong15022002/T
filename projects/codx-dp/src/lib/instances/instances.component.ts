@@ -1426,10 +1426,10 @@ export class InstancesComponent
         dai_dien: 'người đại diện',
         datas: [
           {
-            san_pham: 'Sản phẩm quần què test',
-            dien_tich: 'Diện tích quần què test',
-            so_luong: 'Số lượng quần què test',
-            don_gia: 'Đơn giá quần què test',
+            san_pham: 'Sản phẩm quần què',
+            dien_tich: '0',
+            so_luong: 1,
+            don_gia: 100000,
           },
           {
             san_pham: 'Sản phẩm 1',
