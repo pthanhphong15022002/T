@@ -655,14 +655,12 @@ export class InstancesComponent
     }
   }
 
-  handelStartDay(data) {
-    this.notificationsService
-      .alertCode('DP033', null, [data?.title || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startInstance(data);
-        }
-      });
+  handelStartDay(data){
+    this.notificationsService.alertCode('DP033',null, [('"' + data?.title + '"') || '']).subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.startInstance(data);
+      }
+    });
   }
 
   startInstance(data) {

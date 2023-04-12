@@ -237,6 +237,7 @@ export class PopupAddKRComponent extends UIComponent {
 
     this.kr.buid = this.kr.buid ?? this.curUser?.buid;
     this.kr.divisionID = this.kr.divisionID ?? this.curUser?.divisionID;
+    
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget(this.kr?.plan);
       this.onSaveTarget();
@@ -317,7 +318,7 @@ export class PopupAddKRComponent extends UIComponent {
 
   calculatorTarget(planType: any) {
     if (this.kr?.target && this.kr?.plan) {
-      this.kr.targets = [];
+      this.editTargets = [];
       this.planVLL = [];
       if (planType == OMCONST.VLL.Plan.Month) {
         this.planVLL = this.monthVLL?.datas;
@@ -334,7 +335,7 @@ export class PopupAddKRComponent extends UIComponent {
           tmpTarget.okrid = this.kr?.recID;
           tmpTarget.target = this.kr.target / this.planVLL.length;
           tmpTarget.edited = false;
-          this.kr.targets.push(tmpTarget);
+          this.editTargets.push(tmpTarget);
         }
         this.detectorRef.detectChanges();
       }
@@ -450,8 +451,8 @@ export class PopupAddKRComponent extends UIComponent {
   }
   onSaveTarget() {
     let sumTargets = 0;
-    for (let i = 0; i < this.kr.targets.length; i++) {
-      sumTargets += this.kr.targets[i].target;
+    for (let i = 0; i < this.editTargets.length; i++) {
+      sumTargets += this.editTargets[i].target;
     }
     if (Math.round(sumTargets) !=this.kr.target) {
       this.notificationsService.notify(

@@ -4,7 +4,7 @@
 
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
-        <div class="d-flex align-items-center kr-process w-100px min-w-100px ms-6">
+        <div class="d-flex align-items-center kr-process w-100px min-w-100px ps-5">
           <div class="h-15px w-100 bg-gray-200 rounded-4">
             <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="dataOKRPlans?.progress + '%'"
               aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
@@ -34,10 +34,7 @@
           <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
             [dataSource]="Krs">
           </codx-chart>
-
         </div>
-
-
       </div>
     </div>
     <!-- Title OKR -->
@@ -63,7 +60,6 @@
           <codx-toolbar-button [button]="button" (buttonClick)="click($event)">
           </codx-toolbar-button>
         </span>
-
       </div>
     </div>
 
@@ -76,25 +72,11 @@
 
     <ng-template #templateTreeView let-item>
       <!--OB node-->
-      <hr class="w-100 my-0" />
       <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
         <div class="w-100 pt-3 pb-3 ob-background d-flex justify-content-between">
           <div class="row d-flex justify-content-center">
-            <!-- <div class="">
-              <div class="progress blue">
-                <span class="progress-left">
-                  <span class="progress-bar"></span>
-                </span>
-                <span class="progress-right">
-                  <span class="progress-bar"></span>
-                </span>
-                <div class="progress-value">
-                  <span class="fw-bold">{{item?.progress}}</span>
-                  <span class="fs-8">%</span>
-                </div>
-              </div>              
-            </div> -->
-
+            <div class="">
+            </div>
           </div>
           <div class="d-flex align-items-center w-100 okr-treegroup">
             <span class="ms-5 me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
@@ -109,12 +91,10 @@
                 </codx-vll>
               </div>
             </div>
-
           </div>
-          <div class="d-flex align-items-center justify-content-end ms-6">
-
+          <div class="d-flex align-items-center justify-content-end ps-5">
             <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-            <div class="d-flex flex-column align-items-center kr-process w-100px min-w-100px ms-6">
+            <div class="d-flex flex-column align-items-center kr-process w-100px min-w-100px ps-5">
               <span *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
               <span *ngIf="item?.progress!=0"
                 [innerHTML]="(item?.progress | formatvalue : okrFM?.obFM : 'progress' | async )+'%'"></span>
@@ -124,20 +104,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex ms-6 align-items-end">
-              <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="clickTreeNode($event)"
-                ngbTooltip="Kết quả">
-                <span class="icon-vpn_key icon-18 text-gray-600 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs "
-                  [ngClass]="item?.items && item?.items.length >0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.items? item?.items.length :0 }}</span>
-              </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4" ngbTooltip="Phân công/Phân bổ">
-                <span class="icon-link icon-18 text-gray-600 text-hover-primary"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs  "
-                  [ngClass]="item?.totalLinkOKR>0 ? 'bg-color': 'bg-gray-300'">{{
-                  item?.totalLinkOKR ? item?.totalLinkOKR : 0 }}</span>
-              </button> -->
+            <div class="d-flex ps-5 align-items-end">
               <button class="btn btn-icon btn-sm position-relative ms-2" ngbTooltip="Công việc">
                 <span class="icon-content_paste icon-18 text-gray-600 text-hover-primary"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs"
@@ -160,11 +127,14 @@
       </div>
 
       <!--KR node-->
-      <div class="d-flex align-items-center py-3 kr-background justify-content-between okr-treenode"
-        *ngIf="item?.okrType==krType">
-        <div class="d-flex align-items-center w-100">
-          <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span>
-          <span class="d-flex flex-column">
+      <div class="d-flex align-items-center py-3 kr-background justify-content-between okr-treenode w-100"
+        *ngIf="item?.okrType==krType || item?.okrType==skrType">
+        <div class="d-flex align-items-center col-6">
+          <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
+          <!-- <span class="okr-node border-3px rounded-circle border pe-1 "
+            [ngClass]="item?.okrType==krType?'border-warning':'border-primary'"></span> -->            
+          <span class="icon-brightness_1" [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
+          <span class="ps-5 d-flex flex-column">
             <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <div class="d-flex flex-wrap">
               <div class="d-flex align-items-center">
@@ -173,8 +143,8 @@
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
-              <div class="d-flex align-items-center">
-                <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>                
+              <div class="d-flex align-items-center"> 
+                <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.current | formatvalue : okrFM?.krFM : 'current' | async"></span>
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
               </div>
@@ -185,29 +155,28 @@
                 <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span>
               </div>
             </div>
-            
+
           </span>
 
         </div>
-        <div class="d-flex align-items-center justify-content-end ms-6">
-          <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-          <div class="d-flex flex-column align-items-center kr-process w-100px min-w-100px ms-6">
 
-            <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
-            <span class="mb-1" *ngIf="item?.progress!=0"
-              [innerHTML]="(item?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
+        <div class="d-flex align-items-center justify-content-end col-6 ps-6">
+          <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'" class="ps-5"></codx-img>
+          <div class="d-flex ps-5 align-items-end">
+            <div class="d-flex flex-column align-items-center kr-process w-100px min-w-100px pe-2 ps-5 pb-2">
+              <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
+              <span class="mb-1" *ngIf="item?.progress!=0"
+                [innerHTML]="(item?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
               <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
                 <div class="rounded-4 h-5px " [ngClass]="item?.actual>=item?.current? 'bg-success' :'bg-danger'"
                   role="progressbar" [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                  aria-valuemax="100">                
+                  aria-valuemax="100">
                 </div>
-                <span class="progress-node position-absolute rounded-circle border-5 border me-1" 
-                [ngClass]="[item?.actual>=item?.current ?'border-success' :'border-danger']"
-                [style.left]="(item?.progress-2) + '%'"></span>
+                <span class="progress-node border-2px position-absolute rounded-circle border me-1"
+                  [ngClass]="[item?.actual>=item?.current ?'border-success' :'border-danger']"
+                  [style.left]="(item?.progress-2) + '%'"></span>
               </div>
-
-          </div>
-          <div class="d-flex ms-6 align-items-end">
+            </div>
             <button class="btn btn-icon btn-sm position-relative ms-2" ngbTooltip="Công việc">
               <span class="icon-content_paste icon-18 text-gray-600 text-hover-primary"></span>
               <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs"
@@ -221,85 +190,19 @@
                 [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-danger': ''">{{
                 item?.notes ? item?.notes?.length : '' }}</span>
             </button>
-            <span class="ms-2 me-2">
+            <span class="ms-2 me-2" *ngIf="item?.okrType==krType ">
               <codx-mfunc [formModel]="okrFM?.krFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,false)"
                 (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>
-          </div>
-        </div>
-      </div>
-
-      <!--SKR node-->
-      <div class="d-flex align-items-center py-3 skr-background justify-content-between"
-        *ngIf="item?.okrType==skrType">
-        <div class="d-flex align-items-center cursor-pointer w-100">
-          <span class="me-3" [inlineSVG]="okrVll?.skr?.icon"></span>
-          <span class="d-flex flex-column">
-            <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
-            <div class="d-flex flex-row">
-              <div class="d-flex flex-wrap">
-                <span class="text-gray-500 me-1">{{okrGrv?.skrGrv?.target?.headerText+':'}}</span>
-                <span class="me-1" [innerHTML]="item?.target | formatvalue : okrFM?.skrFM : 'target' | async"></span>
-                <span [innerHTML]="item?.umid | formatvalue : okrFM?.skrFM : 'UMID' | async"></span>
-              </div>
-              <span class="mx-2 text-gray-400">|</span>
-              <div class="d-flex flex-wrap">
-                <span class="text-gray-500 me-1">{{okrGrv?.skrGrv?.current?.headerText+':'}}</span>                
-                <span class="me-1" [innerHTML]="item?.current | formatvalue : okrFM?.skrFM : 'current' | async"></span>
-                <span [innerHTML]="item?.umid | formatvalue : okrFM?.skrFM : 'UMID' | async"></span>
-              </div>
-              <span class="mx-2 text-gray-400">|</span>
-              <div class="d-flex flex-wrap">
-                <span class="text-gray-500 me-1">{{okrGrv?.skrGrv?.actual?.headerText+':'}}</span>
-                <span class="me-1" [innerHTML]="item?.actual | formatvalue : okrFM?.skrFM : 'actual' | async"></span>
-                <span [innerHTML]="item?.umid | formatvalue : okrFM?.skrFM : 'UMID' | async"></span>
-              </div>
-            </div>
-          </span>
-        </div>
-        <div class="d-flex align-items-center justify-content-end ms-6">
-          <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-          <div class="d-flex flex-column align-items-center kr-process w-100px min-w-100px ms-6">
-
-            <span class="mb-1" *ngIf="item?.progress!=0"
-              [innerHTML]="(item?.progress | formatvalue : okrFM?.skrFM : 'progress' | async )+'%'"></span>
-
-            <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
-            <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
-              <div class="rounded-4 h-5px " [ngClass]="item?.actual>=item?.current? 'bg-success' :'bg-danger'"
-                role="progressbar" [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                aria-valuemax="100">
-              </div>
-              <span class="progress-node position-absolute rounded-circle border-5 border me-1" 
-                [ngClass]="[item?.actual>=item?.current ?'border-success' :'border-danger']"
-                [style.left]="(item?.progress-2) + '%'"></span>
-            </div>
-          </div>
-          <div class="d-flex ms-6 align-items-end">
-            <button class="btn btn-icon btn-sm position-relative ms-2" ngbTooltip="Công việc">
-              <span class="icon-content_paste icon-18 text-gray-600 text-hover-primary"></span>
-              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs"
-                [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? 'bg-danger': ''">{{
-                item?.okrTasks ? item?.okrTasks?.length : '' }}</span>
-            </button>
-            <button class="btn btn-icon btn-sm position-relative ms-2" ngbTooltip="Bình luận">
-              <span class="icon-chat_bubble_outline icon-18 text-gray-600 text-hover-primary"></span>
-              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs"
-                [ngClass]="item?.notes  && item?.notes.length>0 ? 'bg-danger': ''">{{
-                item?.notes ? item?.notes?.length : '' }}</span>
-            </button>
-            <span class="ms-2 me-2">
+            <span class="ms-2 me-2" *ngIf=" item?.okrType==skrType">
               <codx-mfunc [formModel]="okrFM?.skrFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,true)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>
           </div>
         </div>
       </div>
-
-
     </ng-template>
-
   </div>
 </div>
 
