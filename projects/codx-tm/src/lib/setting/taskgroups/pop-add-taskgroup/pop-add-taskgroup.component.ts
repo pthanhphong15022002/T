@@ -571,6 +571,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   beforeSave(op: any) {
     var data = [];
+    op.className = 'TaskGroupBusiness';
     if (this.action === 'add' || this.action === 'copy') {
       op.method = 'AddTaskGroupsAsync';
       data = [this.taskGroups, this.functionID];
@@ -623,17 +624,20 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
 
     if (this.taskGroups.approveControl == '1') {
-      if (
-        this.taskGroups.approvers == null ||
-        this.taskGroups.approvers.trim() == ''
-      ) {
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewSetup['Approvers']?.headerText + '"'
-        );
-        return;
+      if (this.taskGroups.approveBy != 'TL' && this.taskGroups.approveBy != 'S') {
+        if (
+          this.taskGroups.approvers == null ||
+          this.taskGroups.approvers.trim() == ''
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['Approvers']?.headerText + '"'
+          );
+          return;
+        }
       }
+
     }
 
     if (this.taskGroups.verifyControl == '1') {
