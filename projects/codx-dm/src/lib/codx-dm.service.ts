@@ -1366,7 +1366,7 @@ export class CodxDMService {
             800,
             800,
             '',
-            ['', file , isCopyRight],
+            ['', file , isCopyRight,$event?.data?.customName],
             '',
             option
           );
