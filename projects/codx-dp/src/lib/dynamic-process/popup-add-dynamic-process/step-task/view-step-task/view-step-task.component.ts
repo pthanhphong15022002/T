@@ -25,8 +25,11 @@ export class ViewJobComponent implements OnInit {
   listDataInput = [];
   listTypeTask = [];
   listDataLink = [];
-  tabInstances = [{type: 'view',title: 'Chi tiết công việc'},{type:'history', title: 'Lịch sử'}];
-  viewModelDetail = 'view'
+  tabInstances = [
+    { type: 'view', title: 'Chi tiết công việc', icon: 'icon-history',},
+    { type: 'history', title: 'Lịch sử', icon: 'icon-info' },
+  ];
+  viewModelDetail = 'view';
 
   frmModel: FormModel = {};
   constructor(
@@ -65,12 +68,13 @@ export class ViewJobComponent implements OnInit {
       }
     });
 
-    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
-    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
-    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
+    this.owner =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
+    this.participant =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    this.person =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
     console.log(this.owner);
-    
-
   }
 
   getModeFunction() {
