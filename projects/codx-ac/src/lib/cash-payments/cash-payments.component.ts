@@ -295,15 +295,18 @@ export class CashPaymentsComponent extends UIComponent {
         x.functionID == 'ACT041002' ||
         x.functionID == 'ACT041004'
     );
-    // duyệt trước khi ghi sổ
-    if (data?.status == '1' && data?.approveStatus == '1') {
-      bm[1].disabled = true;
-      bm[2].disabled = true;
-    }
-    //ko duyệt trước khi ghi sổ
-    if (data?.status == '1' && data?.approveStatus == '0') {
-      bm[0].disabled = true;
-      bm[2].disabled = true;
+    // check có hay ko duyệt trước khi ghi sổ
+    if (data?.status == '1') {
+      switch (data?.approveStatus) {
+        case '0':
+          bm[0].disabled = true;
+          bm[2].disabled = true;
+          break;
+        case '1':
+          bm[1].disabled = true;
+          bm[2].disabled = true;
+          break;
+      }
     }
     //Chờ duyệt
     if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
