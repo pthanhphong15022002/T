@@ -1416,10 +1416,21 @@ export class InstancesComponent
     //data test
     let datas = [
       {
-        san_pham: 'Sản phẩm quần què test',
-        dien_tich: 'Diện tích quần què test',
-        so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test',
+        dai_dien: 'người đại diện',
+        datas: [
+          {
+            san_pham: 'Sản phẩm quần què test',
+            dien_tich: 'Diện tích quần què test',
+            so_luong: 'Số lượng quần què test',
+            don_gia: 'Đơn giá quần què test',
+          },
+          {
+            san_pham: 'Sản phẩm 1',
+            dien_tich: '0',
+            so_luong: 10,
+            don_gia: 5000,
+          },
+        ],
       },
     ];
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
@@ -1440,7 +1451,7 @@ export class InstancesComponent
 
   downloadFile(data: any) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
-    this.saveByteArray("DP_Instances" || 'excel', sampleArr);
+    this.saveByteArray('DP_Instances' || 'excel', sampleArr);
   }
 
   base64ToArrayBuffer(base64) {
@@ -1464,8 +1475,7 @@ export class InstancesComponent
     link.download = fileName;
     link.click();
   }
- //end export
-
+  //end export
 
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
