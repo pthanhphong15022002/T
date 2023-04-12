@@ -1434,9 +1434,41 @@ export class InstancesComponent
         [JSON.stringify(datas), id]
       )
       .subscribe((res) => {
-        console.log(res);
+        if (res) {
+          this.downloadFile(res);
+        }
       });
   }
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray("DP_Instances" || 'excel', sampleArr);
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var blob = new Blob([byte], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
+  }
+ //end export
+
+
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
     // this.api

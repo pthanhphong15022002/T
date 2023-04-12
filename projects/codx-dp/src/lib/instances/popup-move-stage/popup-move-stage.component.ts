@@ -159,19 +159,27 @@ export class PopupMoveStageComponent implements OnInit {
         switch (this.assignControl) {
           //Phụ trách giai đoạn hiện tại
           case '0':
-
-            if(this.stepCurrent.roles != null && this.stepCurrent.roles.length > 0){
-              var role = this.stepCurrent.roles.filter(x=> x.objectID == this.stepCurrent?.owner && x.roleType == 'S')
-              if(role != null && role.length > 0){
-                if(role[0].objectType != 'U' && role[0].objectType != '1'){
-                  this.getOwnerByListRoles(role.map((x) => x.objectID), role[0].objectType);
-                }else{
+            if (
+              this.stepCurrent.roles != null &&
+              this.stepCurrent.roles.length > 0
+            ) {
+              var role = this.stepCurrent.roles.filter(
+                (x) =>
+                  x.objectID == this.stepCurrent?.owner && x.roleType == 'S'
+              );
+              if (role != null && role.length > 0) {
+                if (role[0].objectType != 'U' && role[0].objectType != '1') {
+                  this.getOwnerByListRoles(
+                    role.map((x) => x.objectID),
+                    role[0].objectType
+                  );
+                } else {
                   this.owner = this.stepCurrent?.owner;
                 }
-              }else{
+              } else {
                 this.owner = this.stepCurrent?.owner;
               }
-            }else{
+            } else {
               this.owner = '';
             }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
@@ -183,18 +191,31 @@ export class PopupMoveStageComponent implements OnInit {
               (x) => x.stepID == this.stepIdClick
             );
 
-            if(this.listStepsCbx[index].roles != null && this.listStepsCbx[index].roles.length > 0){
-              var roleClick = this.listStepsCbx[index].roles.filter(x=> x.objectID == this.listStepsCbx[index].owner && x.roleType == 'S')
-              if(roleClick != null && roleClick.length > 0){
-                if(roleClick[0].objectType != 'U' && roleClick[0].objectType != '1'){
-                  this.getOwnerByListRoles(roleClick.map((x) => x.objectID), roleClick[0].objectType);
-                }else{
+            if (
+              this.listStepsCbx[index].roles != null &&
+              this.listStepsCbx[index].roles.length > 0
+            ) {
+              var roleClick = this.listStepsCbx[index].roles.filter(
+                (x) =>
+                  x.objectID == this.listStepsCbx[index].owner &&
+                  x.roleType == 'S'
+              );
+              if (roleClick != null && roleClick.length > 0) {
+                if (
+                  roleClick[0].objectType != 'U' &&
+                  roleClick[0].objectType != '1'
+                ) {
+                  this.getOwnerByListRoles(
+                    roleClick.map((x) => x.objectID),
+                    roleClick[0].objectType
+                  );
+                } else {
                   this.owner = this.listStepsCbx[index]?.owner;
                 }
-              }else{
+              } else {
                 this.owner = this.listStepsCbx[index]?.owner;
               }
-            }else{
+            } else {
               this.owner = '';
             }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
@@ -205,18 +226,31 @@ export class PopupMoveStageComponent implements OnInit {
             i = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepCurrent.stepID
             );
-            if(this.listStepsCbx[i - 1].roles != null && this.listStepsCbx[i - 1].roles.length > 0){
-              var roleOld = this.listStepsCbx[i - 1].roles.filter(x=> x.objectID == this.listStepsCbx[i - 1].owner && x.roleType == 'S')
-              if(roleOld != null && roleOld.length > 0){
-                if(roleOld[0].objectType != 'U' && roleOld[0].objectType != '1'){
-                  this.getOwnerByListRoles(roleOld.map((x) => x.objectID), roleOld[0].objectType);
-                }else{
+            if (
+              this.listStepsCbx[i - 1].roles != null &&
+              this.listStepsCbx[i - 1].roles.length > 0
+            ) {
+              var roleOld = this.listStepsCbx[i - 1].roles.filter(
+                (x) =>
+                  x.objectID == this.listStepsCbx[i - 1].owner &&
+                  x.roleType == 'S'
+              );
+              if (roleOld != null && roleOld.length > 0) {
+                if (
+                  roleOld[0].objectType != 'U' &&
+                  roleOld[0].objectType != '1'
+                ) {
+                  this.getOwnerByListRoles(
+                    roleOld.map((x) => x.objectID),
+                    roleOld[0].objectType
+                  );
+                } else {
                   this.owner = this.listStepsCbx[i - 1]?.owner;
                 }
-              }else{
+              } else {
                 this.owner = this.listStepsCbx[i - 1]?.owner;
               }
-            }else{
+            } else {
               this.owner = '';
             }
             // if (this.owner != null) this.getNameAndPosition(this.owner);
@@ -332,9 +366,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepIdOld = '';
     }
     this.listTaskDone &&
-      this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+      this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
     this.listTaskGroupDone &&
-      this.upadteProgessIsDone(
+      this.updateProgressIsDone(
         this.listTaskGroupDone,
         this.listTaskGroup,
         'taskGroup'
@@ -467,8 +501,8 @@ export class PopupMoveStageComponent implements OnInit {
     if ($event && view == 'custom') {
       if ($event.target.checked) {
         this.isCheckAll = $event.target.checked;
-        this.listTaskGroupDone = this.listTaskGroup;
-        this.listTaskDone = this.listTask;
+        this.listTaskGroupDone = JSON.parse(JSON.stringify(this.listTaskGroup));
+        this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
         this.totalRequireCompletedChecked = this.totalRequireCompleted;
         this.actionCheck = 'custom';
       } else {
@@ -514,7 +548,7 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  upadteProgessIsDone(listDone, listNow, view) {
+  updateProgressIsDone(listDone, listNow, view) {
     const map = new Map();
     listDone.forEach((item) => {
       map.set(item.recID, item.progress);
