@@ -1097,6 +1097,26 @@ export class CodxHrService {
       data
     );
   }
+
+  EditEmployeeJobSalariesMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EJobSalariesBusiness',
+      'EditEJobSalaryMoreFuncAsync',
+      data
+    );
+  }
+
+  AddEJSlariesTrackLog(objectID, comment, objectType, actionType, createdBy){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'ReceiveToAddEJSalariesTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
   //#endregion
 
   //#region EExperience

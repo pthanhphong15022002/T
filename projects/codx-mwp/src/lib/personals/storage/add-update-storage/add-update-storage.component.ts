@@ -11,6 +11,7 @@ import {
   CRUDService,
   CacheService,
   RequestOption,
+  FormModel,
 } from 'codx-core';
 import {
   Component,
@@ -22,7 +23,6 @@ import {
   ChangeDetectorRef,
   Optional,
 } from '@angular/core';
-import { StorageServices } from '../../../services/storage.services';
 
 @Component({
   selector: 'app-add-update-storage',
@@ -30,21 +30,23 @@ import { StorageServices } from '../../../services/storage.services';
   styleUrls: ['./add-update-storage.component.scss'],
 })
 export class AddUpdateStorageComponent implements OnInit {
-  dialog: DialogRef;
   readOnly = false;
   formType = '';
-  data: any = [];
-  funcID = '';
-  header = 'Thêm mới kho lưu trữ';
+  funcID = 'MWP0095';
+
   empty = '';
   gridViewSetup = {
     title: '',
     memo: '',
   };
-  formModel: any;
-
+  formModel: FormModel = null;
+  dialogData: any;
+  dialogRef:DialogRef;
+  function:any = null;
   storage: Storages = new Storages();
-
+  data:any = null;
+  action: "add" | "edit" = "add";
+  headerText:string = "";
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -52,75 +54,83 @@ export class AddUpdateStorageComponent implements OnInit {
     private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private api: ApiHttpService,
-    private storageService: StorageServices,
     private cache: CacheService,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
-  ) {
-    this.funcID = dialog?.formModel?.funcID;
-    this.formModel = dialog?.formModel;
-    this.dialog = dialog;
-    this.formType = dt?.data[1];
-    if (this.formType == 'edit') {
-      this.header = 'Cập nhật kho lưu trữ';
-      this.storage = JSON.parse(
-        JSON.stringify(dialog.dataService.dataSelected)
-      );
-      this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    }
-    this.cache.gridViewSetup('Storages', 'grvStorages').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup.title = res?.Title?.headerText;
-        this.gridViewSetup.memo = res?.Memo?.headerText;
-      }
-    });
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
+  ) 
+  {
+    this.dialogRef = dialogRef;
+    this.dialogData = dialogData.data;
+    this.formModel = new FormModel();
+    
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.functionList(this.funcID)
+      .subscribe((func:any) => {
+        if(func){
+          this.function = func;
+          this.headerText = `${this.dialogData.text} ${func.defaultName}`;
+          this.cache.gridViewSetup(func.formName, func.gridViewName)
+          .subscribe((grv) => {
+            if(grv){
+              this.formModel.funcID = func.functionID;
+              this.formModel.formName = func.formName;
+              this.formModel.gridViewName = func.gridViewName;
+              this.gridViewSetup = grv;
+            }
+          });
+        }
+      }); 
+    if(this.dialogData){
+      this.action = this.dialogData.action;
+      this.storage = JSON.parse(JSON.stringify(this.dialogData.data));
+      this.data = JSON.parse(JSON.stringify(this.dialogData.data));
+    }
+  }
 
   valueChange(e) {
-    if (e) {
-      var dt = e.data;
-      var field = e.field;
-      this.storage[field] = dt?.value ? dt?.value : dt;
-    }
+    let value = e.data;
+    let field = e.field;
+    this.data[field] = value;
   }
 
-  saveStorage() {
-    if (this.formType == 'add') {
-      this.addStorage();
-    } else this.editStorage();
+  //btn save click
+  submit() {
+    this.action == 'add' ? this.addStorage() : this.editStorage(); 
   }
 
+  //insert storage
   addStorage() {
-    this.storage.storageType = 'WP_Comments';
-    this.dialog.dataService
+    this.data.storageType = 'WP_Comments';
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(res.save.recID)
+              .updateFileDirectReload(this.data.recID)
               .subscribe((result) => {
                 this.loadData.emit();
-                this.dialog.close(res.save);
+                this.dialogRef.close(this.data);
               });
           }
         }
       });
   }
-
+  //edit storage
   editStorage() {
-    this.dialog.dataService
+    debugger
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(res.update.recID)
+              .updateFileDirectReload(this.data.recID)
               .subscribe((result) => {
                 this.loadData.emit();
-                this.dialog.close(res.update);
+                this.dialogRef.close(res.update);
               });
           }
         }
@@ -128,19 +138,11 @@ export class AddUpdateStorageComponent implements OnInit {
   }
 
   beforeSave(op: RequestOption) {
-    var data = [];
     op.service = 'WP';
     op.assemblyName = 'ERM.Business.WP';
     op.className = 'StoragesBusiness';
-    if (this.formType == 'add') {
-      op.methodName = 'CreateStorageAsync';
-      data = [this.storage];
-    }
-    if (this.formType == 'edit') {
-      op.methodName = 'UpdateStorageAsync';
-      data = [this.storage?.recID, this.storage];
-    }
-    op.data = data;
+    op.methodName = this.action == 'add' ? 'CreateStorageAsync' : 'UpdateStorageAsync';
+    op.data = this.data
     return true;
   }
 }

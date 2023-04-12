@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -78,14 +79,17 @@ export class PopupAddStaskComponent implements OnInit {
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
+  user;
   
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.status = dt?.data?.status;
     this.title = dt?.data['taskType']['text'];
     this.stepType = dt?.data['taskType']['value'];
@@ -158,7 +162,23 @@ export class PopupAddStaskComponent implements OnInit {
         .join('; ');
     }
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    if(this.stepType == "M"){
+      this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    }else{
+      let role = new DP_Instances_Steps_Tasks_Roles();
+      this.setRole(role);
+      this.participant = [role]
+    }
+  }
+
+  setRole<T>(role: T) {
+    role['recID'] = Util.uid();
+    role['objectName'] = this.user['userName'];
+    role['objectID'] = this.user['userID'];
+    role['createdOn'] = new Date();
+    role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'P';
+    return role;
   }
 
   getFormModel() {
