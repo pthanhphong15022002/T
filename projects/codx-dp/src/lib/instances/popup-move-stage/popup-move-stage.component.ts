@@ -294,8 +294,8 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone && this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-    this.listTaskGroupDone && this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup,'taskGroup');
+    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
+    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,'taskGroup');
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -424,8 +424,8 @@ export class PopupMoveStageComponent implements OnInit {
     if ($event && view == 'custom') {
       if ($event.target.checked) {
         this.isCheckAll = $event.target.checked;
-        this.listTaskGroupDone = this.listTaskGroup;
-        this.listTaskDone = this.listTask;
+        this.listTaskGroupDone =JSON.parse(JSON.stringify(this.listTaskGroup));
+        this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
         this.totalRequireCompletedChecked = this.totalRequireCompleted;
         this.actionCheck = 'custom';
       } else {
@@ -436,10 +436,8 @@ export class PopupMoveStageComponent implements OnInit {
         this.actionCheck = '';
       }
     } else if ($event && view == 'taskGroup') {
-      $event.target.checked &&
-        this.addItem(this.listTaskGroupDone, data, 'taskGroup');
-      !$event.target.checked &&
-        this.removeItem(this.listTaskGroupDone, data.recID);
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data, 'taskGroup');
+      !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
     } else if ($event && view == 'task') {
       $event.target.checked && this.addItem(this.listTaskDone, data, 'task');
       !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
@@ -471,7 +469,7 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  upadteProgessIsDone(listDone, listNow, view) {
+  updateProgressIsDone(listDone, listNow, view) {
     const map = new Map();
     listDone.forEach((item) => {
       map.set(item.recID, item.progress);
