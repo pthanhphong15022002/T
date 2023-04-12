@@ -122,6 +122,7 @@ export class InstancesComponent
   sumDaySteps: number;
   sumHourSteps: number;
   lstParticipants = [];
+  lstOrg = [];
   listParticipantReason = []; // for moveReason
   oldIdInstance: any;
   viewMode: any;
@@ -490,7 +491,7 @@ export class InstancesComponent
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
-      lstParticipants: this.lstParticipants,
+      lstParticipants: this.lstOrg,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
@@ -580,7 +581,7 @@ export class InstancesComponent
                         this.view.dataService?.dataSelected?.createdOn
                       ),
                       autoName: this.autoName,
-                      lstParticipants: this.lstParticipants,
+                      lstParticipants: this.lstOrg,
                       addFieldsControl: this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
@@ -996,6 +997,7 @@ export class InstancesComponent
             stepReason: stepReason,
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
+            lstParticipants: this.lstOrg,
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1212,7 +1214,7 @@ export class InstancesComponent
       instance: data,
       objReason: reason,
       listProccessCbx: this.listProccessCbx,
-      listParticipantReason: listParticipantReason,
+      listParticipantReason: this.lstOrg,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1432,9 +1434,41 @@ export class InstancesComponent
         [JSON.stringify(datas), id]
       )
       .subscribe((res) => {
-        console.log(res);
+        if (res) {
+          this.downloadFile(res);
+        }
       });
   }
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray("DP_Instances" || 'excel', sampleArr);
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var blob = new Blob([byte], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
+  }
+ //end export
+
+
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
     // this.api
@@ -1533,6 +1567,9 @@ export class InstancesComponent
       this.lstParticipants = this.process?.permissions.filter(
         (x) => x.roleType === 'P'
       );
+      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
+        this.getListUserByOrg(this.lstParticipants);
+      }
     }
   }
   //filter- tam
@@ -1628,5 +1665,107 @@ export class InstancesComponent
   clickStartInstances(e) {
     //goij ham start ma dang sai
     if (e) this.startInstance(this.dataSelected);
+  }
+
+  async getListUserByOrg(list = []) {
+    this.lstOrg = [];
+    if (list != null && list.length > 0) {
+      var userOrgID = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+      if (userOrgID != null && userOrgID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userOrgID, 'O')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userDepartmentID = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (userDepartmentID != null && userDepartmentID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userPositionID = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      if (userPositionID != null && userPositionID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userPositionID, 'P')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+
+      var userRoleID = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+      if (userRoleID != null && userRoleID.length > 0) {
+        this.codxDpService.getListUserByRoleID(userRoleID).subscribe((res) => {
+          if (res != null && res.length > 0) {
+            if (this.lstOrg != null && this.lstOrg.length > 0) {
+              this.lstOrg = this.getUserArray(this.lstOrg, res);
+            } else {
+              this.lstOrg = res;
+            }
+          }
+        });
+      }
+      var lstUser = list.filter(
+        (x) => x.objectType == 'U' || x.objectType == '1'
+      );
+      if (lstUser != null && lstUser.length > 0) {
+        var tmpList = [];
+        lstUser.forEach((element) => {
+          var tmp = {};
+          if (element != null) {
+            tmp['userID'] = element.objectID;
+            tmp['userName'] = element.objectName;
+            tmpList.push(tmp);
+          }
+        });
+        if (tmpList != null && tmpList.length > 0) {
+          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
+        }
+      }
+    }
+  }
+
+  getUserArray(arr1, arr2) {
+    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
+      const duplicateIndex = acc.findIndex(
+        (el) => el.userID === current.userID
+      );
+      if (duplicateIndex === -1) {
+        acc.push(current);
+      } else {
+        acc[duplicateIndex] = current;
+      }
+      return acc;
+    }, []);
+    return arr3;
   }
 }
