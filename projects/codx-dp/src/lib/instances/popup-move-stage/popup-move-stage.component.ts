@@ -82,6 +82,8 @@ export class PopupMoveStageComponent implements OnInit {
   listStepProccess: any;
 
   readonly oneHundredNumber: number = 100;
+  readonly viewTask: string = 'Task';
+  readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
   constructor(
     private codxDpService: CodxDpService,
@@ -294,8 +296,8 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
-    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,'taskGroup');
+    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
+    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -435,11 +437,11 @@ export class PopupMoveStageComponent implements OnInit {
         this.totalRequireCompletedChecked = 0;
         this.actionCheck = '';
       }
-    } else if ($event && view == 'taskGroup') {
-      $event.target.checked && this.addItem(this.listTaskGroupDone, data, 'taskGroup');
+    } else if ($event && view == this.viewTaskGroup) {
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
       !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
-    } else if ($event && view == 'task') {
-      $event.target.checked && this.addItem(this.listTaskDone, data, 'task');
+    } else if ($event && view == this.viewTask) {
+      $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
       !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
     }
   }
@@ -447,7 +449,7 @@ export class PopupMoveStageComponent implements OnInit {
   addItem(list: any, data, view) {
     list.push(data);
     this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
-    if (view == 'taskGroup') {
+    if (view == this.viewTaskGroup) {
       let children = document.getElementById(`${data.recID}`);
     }
   }
@@ -602,6 +604,24 @@ export class PopupMoveStageComponent implements OnInit {
         this.instancesStepOld.progress = 100;
       }
     }
+  }
 
+  checkExitsParentID(item,view): string {
+    var check = 'd-none';
+    if (item?.requireCompleted) {
+      check ='text-danger';
+    }
+    else if(view == this.viewTask)
+    {
+
+      for(let item of this.listTask ) {
+        if(item.parentID?.includes(item.recID)) {
+          check = 'text-orange'
+          break;
+        }
+
+      }
+    }
+    return check;
   }
 }

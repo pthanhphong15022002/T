@@ -100,11 +100,15 @@ export class CarouselStageComponent {
   }
 
   findStatusInDoing(listStep,index){
-    var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
-    if (indexResult > -1) {
-        this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
+    if(index){
+      var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
+      if (indexResult > -1) {
+
         this.currentStep = this.listStep.findIndex(item => item.stepStatus == '1');
     }
+    }
+    this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
+
   }
   stageEnd(){
     this.selectedIndex = (this.listTreeView.length -1).toString();
