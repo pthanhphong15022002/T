@@ -255,17 +255,9 @@ export class EditFileComponent implements OnInit {
       this.dialog = dialog;     
       this.id = this.fileEditing.recID;
       if(this.data[2]) this.isCopyRight = this.data[2];    
-      
+      if(this.data[3]) this.titleDialog = this.data[3];    
       if(dialog.formModel) this.formModel = dialog.formModel;
-      // this.dmSV.isFileEditing.subscribe(item => {
-      //   if (item != undefined && this.fileEditing.recID == item.recID) {
-      //     this.fileEditing.permissions = item.permissions;
-      //     this.changeDetectorRef.detectChanges();
-      //   }                  
-      // });
-    //  this.changeDetectorRef.detectChanges();
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
-    //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
+     
   }
 
   ngOnInit(): void {   
