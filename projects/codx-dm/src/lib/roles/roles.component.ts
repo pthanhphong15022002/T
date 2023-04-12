@@ -246,6 +246,7 @@ export class RolesComponent implements OnInit {
     else this.modePermission = false;
     if(this.data[2]) this.codxView = this.data[2];
     if(this.data[4]) this.propertiesFolder = true;
+    if(this.data[5]) this.titleDialog = this.data[5];
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName

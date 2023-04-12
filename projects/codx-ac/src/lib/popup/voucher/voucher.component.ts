@@ -41,7 +41,7 @@ export class VoucherComponent implements OnInit {
   sublegendOpen: Array<any> = [];
   predicates: string;
   dataValues: string;
-
+  date = new Date().toLocaleDateString();
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -64,9 +64,6 @@ export class VoucherComponent implements OnInit {
 
   //#region Init
   ngOnInit(): void {
-    if (this.cashpayment.voucherDate)
-      this.invoiceDueDate = new Date(this.cashpayment.voucherDate);
-    else this.invoiceDueDate = new Date();
     this.loadData();
   }
 

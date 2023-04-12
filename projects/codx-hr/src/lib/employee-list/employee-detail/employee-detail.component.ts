@@ -4074,6 +4074,7 @@ export class EmployeeDetailComponent extends UIComponent {
           actionHeaderText + ' ' + this.getFormHeader(this.eContractFuncID),
         employeeId: this.employeeID,
         funcID: this.eContractFuncID,
+        openFrom: "empDetail",
       },
       option
     );
