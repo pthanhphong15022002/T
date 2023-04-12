@@ -10,14 +10,14 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { JournalService } from './journal-names.service';
+import { JournalService } from './journals.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
 
 @Component({
-  selector: 'lib-journal-names',
-  templateUrl: './journal-names.component.html',
+  selector: 'lib-journal',
+  templateUrl: './journals.component.html',
 })
-export class JournalNamesComponent extends UIComponent {
+export class JournalsComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   views: Array<ViewModel> = [];
