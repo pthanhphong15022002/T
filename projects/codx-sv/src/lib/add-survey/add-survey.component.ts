@@ -70,7 +70,7 @@ export class AddSurveyComponent extends UIComponent {
   onInit(): void {
     if (!this.funcID) this.codxService.navigate('SVT01');
     //this.getSV();
-    //this.getSignalAfterSave();
+    this.getSignalAfterSave();
   }
 
   generateGUID() {
