@@ -171,10 +171,10 @@ export class PopupMoveStageComponent implements OnInit {
               );
               if (role != null && role.length > 0) {
                 if (role[0].objectType != 'U' && role[0].objectType != '1') {
-                  // this.getOwnerByListRoles(
-                  //   role.map((x) => x.objectID),
-                  //   role[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    role.map((x) => x.objectID),
+                    role[0].objectType
+                  );
                 } else {
                   this.owner = this.stepCurrent?.owner;
                 }
@@ -207,10 +207,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleClick[0].objectType != 'U' &&
                   roleClick[0].objectType != '1'
                 ) {
-                  // this.getOwnerByListRoles(
-                  //   roleClick.map((x) => x.objectID),
-                  //   roleClick[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    roleClick.map((x) => x.objectID),
+                    roleClick[0].objectType
+                  );
                 } else {
                   this.owner = this.listStepsCbx[index]?.owner;
                 }
@@ -242,10 +242,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleOld[0].objectType != 'U' &&
                   roleOld[0].objectType != '1'
                 ) {
-                  // this.getOwnerByListRoles(
-                  //   roleOld.map((x) => x.objectID),
-                  //   roleOld[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    roleOld.map((x) => x.objectID),
+                    roleOld[0].objectType
+                  );
                 } else {
                   this.owner = this.listStepsCbx[i - 1]?.owner;
                 }
@@ -700,5 +700,42 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
     return check;
+  }
+  getOwnerByListRoles(lstRoles, objectType) {
+    var lstOrg = [];
+    if (lstRoles != null && lstRoles.length > 0) {
+      switch (objectType) {
+        case 'O':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'O')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'D':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'D')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'P':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+      }
+    }
   }
 }
