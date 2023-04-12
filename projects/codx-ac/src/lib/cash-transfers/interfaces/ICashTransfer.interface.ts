@@ -68,5 +68,4 @@ export interface ICashTransfer {
   totalAmount: number;
   totalAmount2: number;
   unbounds: any;
-  acountID: string;
 }

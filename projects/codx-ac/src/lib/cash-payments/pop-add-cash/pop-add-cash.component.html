@@ -19,7 +19,7 @@
         <codx-input
           [disabled]="formType === 'edit'"
           [Group]="form.formGroup"
-          field="voucherType"
+          field="subType"
           [formModel]="form.formModel"
           (valueChange)="changeType($event)"
         >
@@ -96,7 +96,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabVoucherLineRefs"></ng-container>
+            <ng-container *ngTemplateOutlet="tabsettledInvoices"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -118,9 +118,11 @@
             <div class="form-group">
               <!-- Sổ quỹ tiền mặt -->
               <div class="form-group">
-                <codx-label fiedName="CashBookID" [formModel]="form.formModel">
-                </codx-label>
+                <span *ngIf="vllCashbook" class="fw-bold fs-6">{{
+                  vllCashbook.text
+                }}</span>
                 <codx-input
+                  #cashBook
                   [Group]="form.formGroup"
                   field="cashBookID"
                   [formModel]="form.formModel"
@@ -134,12 +136,12 @@
             <div class="form-group">
               <!-- Địa chỉ -->
               <div class="form-group">
-                <codx-label fiedName="PaymentAmt" [formModel]="form.formModel">
+                <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
-                  field="paymentAmt"
+                  field="totalAmt"
                   (valueChange)="valueChange($event)"
                   [min]="0"
                 ></codx-input>
@@ -173,8 +175,6 @@
                 <codx-input
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
-                  type="combobox"
-                  refValue="EmployeesAC"
                   field="payee"
                   (valueChange)="valueChange($event)"
                 ></codx-input>
@@ -187,14 +187,11 @@
             <div class="form-group">
               <!-- Lý do chi -->
               <div class="form-group">
-                <codx-label
-                  fiedName="TransactionText"
-                  [formModel]="form.formModel"
-                >
+                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
-                  field="transactionText"
+                  field="reasonID"
                   [formModel]="form.formModel"
                   (valueChange)="valueChange($event)"
                 >
@@ -305,7 +302,13 @@
 
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
-  <div class="h-100" *ngIf="cashpayment.voucherType === '1' && modegrid == 1">
+  <div
+    class="h-100"
+    *ngIf="
+      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
+      modegrid == 1
+    "
+  >
     <codx-gridview-v2
       #gridCashPaymentLine
       [formName]="fmCashPaymentsLines.formName"
@@ -327,7 +330,11 @@
     ></codx-gridview-v2>
   </div>
   <ng-container
-    *ngIf="form?.formGroup && cashpayment.voucherType === '1' && modegrid == 2"
+    *ngIf="
+      form?.formGroup &&
+      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
+      modegrid == 2
+    "
   >
     <div class="d-flex align-items-center justify-content-end pt-2">
       <div class="d-flex align-items-center justify-content-start mt-2 me-5">
@@ -667,7 +674,12 @@
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="cashpayment.voucherType === '1' && modegrid == 2">
+  <ng-container
+    *ngIf="
+      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
+      modegrid == 2
+    "
+  >
     <ng-container *ngIf="cashpaymentline | search : searchText as result">
       <div *ngIf="result.length > 0" class="container w-90 h-90 mt-1">
         <div class="list-empty card card-flush h-100">
@@ -683,7 +695,10 @@
     </ng-container>
   </ng-container>
   <div
-    *ngIf="cashpayment.voucherType === '1' && modegrid == 2"
+    *ngIf="
+      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
+      modegrid == 2
+    "
     class="d-flex align-items-center justify-content-start me-10 mt-3"
   >
     <span class="fs-6 fw-bold">Tổng tiền: {{ total }}</span>
@@ -692,10 +707,10 @@
 <!-- End: CashPaymentLine -->
 
 <!-- Start: VoucherLineRefs -->
-<ng-template #tabVoucherLineRefs>
-  <div class="h-100" *ngIf="cashpayment.voucherType === '2'">
+<ng-template #tabsettledInvoices>
+  <div class="h-100" *ngIf="cashpayment.subType === '2'">
     <codx-gridview-v2
-      #gridVoucherLineRefs
+      #gridSettledInvoices
       formName="VoucherLineRefs"
       gridViewName="grvVoucherLineRefs"
       entityName="AC_VoucherLineRefs"
@@ -704,13 +719,13 @@
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataValues]="form.data.recID"
-      [dataSource]="vettledInvoices"
+      [dataSource]="settledInvoices"
       service="AC"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
       (cellChanged)="voucherLineRefsChanged($event)"
-      (created)="gridCreated($event, gridVoucherLineRefs)"
+      (created)="gridCreated($event, gridSettledInvoices)"
     ></codx-gridview-v2>
   </div>
   <div class="form-group mt-6 mb-0 row">
@@ -845,10 +860,7 @@
 
 <!-- Start: addline -->
 <ng-template #addLine let-data>
-  <div
-    *ngIf="cashpayment.voucherType === '1' && modegrid == 1"
-    class="mt-5 mb-2"
-  >
+  <div *ngIf="cashpayment.subType === '1' && modegrid == 1" class="mt-5 mb-2">
     <button
       id="btn-add"
       type="button"

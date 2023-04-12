@@ -1,5 +1,7 @@
-<codx-views #view [funcID]="funcID" service="HR" assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
-  className="EBasicSalariesBusiness" [method]="method" [views]="views" [autoLoad]="true" idField="recID"
+<codx-views #view [funcID]="funcID" service="HR" 
+assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
+  className="EBasicSalariesBusiness" [method]="method"
+   [views]="views" [autoLoad]="true" idField="recID"
   [button]="buttonAdd" (buttonClick)="addBasicSalaries($event)" (selectedChange)="changeItemDetail($event)">
 </codx-views>
 
@@ -74,7 +76,7 @@
           <div class="d-flex flex-row">
             <span class="icon-calendar_today icon-15 me-1"></span>
             <div class="align-self-center fw-bold">
-              <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
+              <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''">
                 {{ data?.effectedDate | fmDT }}
               </span>
             </div>
@@ -90,11 +92,11 @@
         <div class="text-gray-700 d-flex flex-row mb-2">
           <span class="icon-event_notes icon-15 me-1"></span>
           <div class="align-self-center fw-bold">
-            <span [title]="eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''">
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''">
               {{ data?.decisionNo }}
             </span>
             <span> - </span>
-            <span [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : ''">
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''">
               {{ data?.signedDate | fmDT }}</span>
           </div>
         </div>
@@ -201,7 +203,8 @@
 </ng-template>
 
 <ng-template #templateItemDetailRight let-data>
-  <lib-view-basic-salary-detail #viewDetail></lib-view-basic-salary-detail>
+  <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
+  [view]="view" (clickMFunction)="clickEvent($event, data)"></lib-view-basic-salary-detail>
 </ng-template>
 <!-- end list & detail view -->
 

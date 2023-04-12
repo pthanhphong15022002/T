@@ -154,6 +154,8 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    console.log("thuan---", this.dataSelect);
+    
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;

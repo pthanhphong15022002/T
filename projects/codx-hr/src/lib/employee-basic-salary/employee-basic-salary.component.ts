@@ -45,18 +45,19 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   funcID: string;
-  method = 'GetListEBasicSalariesAsync';
+  method: string  = 'GetListEBasicSalariesAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eContractHeaderText;
+  eBasicSalariesHeaderText;
   eBasicSalariesFormModel: FormModel;
   currentEbasicSalaryDta: any;
   grvSetup :any;
+
   // get file sv
   services: string = 'DM';
-  assemblyName: string = 'ERM.Business.DM';
+  assemblyName: string = 'ERM.Business.HM';
   className: string = 'FileBussiness';
   lstFile: any[] =[];
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
@@ -66,6 +67,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     APPLICATION: 'application',
   };
   user: any;
+  itemDetail: any;
+
+  itemSelected: any;
   //
   constructor(
     inject: Injector,
@@ -114,6 +118,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   
   changeItemDetail(event) {
+    this.itemSelected = event?.data;
   }
 
   clickMF(event, data) {
@@ -138,7 +143,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     }
   }
 
-  changeDataMF(event, data): void {}
+  changeDataMF(event, data): void {
+    this.hrService.handleShowHideMF(event, data, this.view);
+  }
 
   handlerEBasicSalary(headerText ,actionType: string, data: any) {
     let option = new SidebarModel();
@@ -204,6 +211,25 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     if (createdBy) arr.push(createdBy);
     if (owner && createdBy != owner) arr.push(owner);
     return arr.join(";"); 
+  }
+
+  getDetailContract(event, data){
+    if(data){
+      this.itemDetail = data;      
+      this.df.detectChanges();
+    }
+  }
+
+  clickEvent(event, data){
+    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
+    this.clickMF(event?.event, event?.data);
+  }
+
+  handlerAction(event:any){
+
+  }
+  onMoreMulti(event: any){
+
   }
 
   // get file list
