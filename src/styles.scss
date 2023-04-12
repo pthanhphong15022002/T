@@ -2316,6 +2316,12 @@ codx-view-list-detail .codx-detail-main .task-name + .text-gray-700{
   }
 }
 
+.errorMessage.text-danger.ms-3{
+  margin-left: 0!important;
+  margin-top: 3px;
+  font-size: 12px!important;
+  font-style: italic;
+}
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

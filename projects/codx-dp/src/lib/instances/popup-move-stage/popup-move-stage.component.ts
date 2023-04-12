@@ -82,6 +82,8 @@ export class PopupMoveStageComponent implements OnInit {
   listStepProccess: any;
 
   readonly oneHundredNumber: number = 100;
+  readonly viewTask: string = 'Task';
+  readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
   constructor(
     private codxDpService: CodxDpService,
@@ -169,10 +171,10 @@ export class PopupMoveStageComponent implements OnInit {
               );
               if (role != null && role.length > 0) {
                 if (role[0].objectType != 'U' && role[0].objectType != '1') {
-                  this.getOwnerByListRoles(
-                    role.map((x) => x.objectID),
-                    role[0].objectType
-                  );
+                  // this.getOwnerByListRoles(
+                  //   role.map((x) => x.objectID),
+                  //   role[0].objectType
+                  // );
                 } else {
                   this.owner = this.stepCurrent?.owner;
                 }
@@ -205,10 +207,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleClick[0].objectType != 'U' &&
                   roleClick[0].objectType != '1'
                 ) {
-                  this.getOwnerByListRoles(
-                    roleClick.map((x) => x.objectID),
-                    roleClick[0].objectType
-                  );
+                  // this.getOwnerByListRoles(
+                  //   roleClick.map((x) => x.objectID),
+                  //   roleClick[0].objectType
+                  // );
                 } else {
                   this.owner = this.listStepsCbx[index]?.owner;
                 }
@@ -240,10 +242,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleOld[0].objectType != 'U' &&
                   roleOld[0].objectType != '1'
                 ) {
-                  this.getOwnerByListRoles(
-                    roleOld.map((x) => x.objectID),
-                    roleOld[0].objectType
-                  );
+                  // this.getOwnerByListRoles(
+                  //   roleOld.map((x) => x.objectID),
+                  //   roleOld[0].objectType
+                  // );
                 } else {
                   this.owner = this.listStepsCbx[i - 1]?.owner;
                 }
@@ -365,14 +367,8 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone &&
-      this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
-    this.listTaskGroupDone &&
-      this.updateProgressIsDone(
-        this.listTaskGroupDone,
-        this.listTaskGroup,
-        'taskGroup'
-      );
+    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
+    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -512,13 +508,11 @@ export class PopupMoveStageComponent implements OnInit {
         this.totalRequireCompletedChecked = 0;
         this.actionCheck = '';
       }
-    } else if ($event && view == 'taskGroup') {
-      $event.target.checked &&
-        this.addItem(this.listTaskGroupDone, data, 'taskGroup');
-      !$event.target.checked &&
-        this.removeItem(this.listTaskGroupDone, data.recID);
-    } else if ($event && view == 'task') {
-      $event.target.checked && this.addItem(this.listTaskDone, data, 'task');
+    } else if ($event && view == this.viewTaskGroup) {
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
+      !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
+    } else if ($event && view == this.viewTask) {
+      $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
       !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
     }
   }
@@ -526,7 +520,7 @@ export class PopupMoveStageComponent implements OnInit {
   addItem(list: any, data, view) {
     list.push(data);
     this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
-    if (view == 'taskGroup') {
+    if (view == this.viewTaskGroup) {
       let children = document.getElementById(`${data.recID}`);
     }
   }
@@ -689,41 +683,22 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  getOwnerByListRoles(lstRoles, objectType) {
-    var lstOrg = [];
-    if (lstRoles != null && lstRoles.length > 0) {
-      switch (objectType) {
-        case 'O':
-          this.codxDpService
-            .getListUserByListOrgUnitIDAsync(lstRoles, 'O')
-            .subscribe((res) => {
-              if (res != null && res.length > 0) {
-                lstOrg = res;
-                this.owner = lstOrg[0]?.userID;
-              }
-            });
+  checkExitsParentID(item,view): string {
+    var check = 'd-none';
+    if (item?.requireCompleted) {
+      check ='text-danger';
+    }
+    else if(view == this.viewTask)
+    {
+
+      for(let item of this.listTask ) {
+        if(item.parentID?.includes(item.recID)) {
+          check = 'text-orange'
           break;
-        case 'D':
-          this.codxDpService
-            .getListUserByListOrgUnitIDAsync(lstRoles, 'D')
-            .subscribe((res) => {
-              if (res != null && res.length > 0) {
-                lstOrg = res;
-                this.owner = lstOrg[0]?.userID;
-              }
-            });
-          break;
-        case 'P':
-          this.codxDpService
-            .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
-            .subscribe((res) => {
-              if (res != null && res.length > 0) {
-                lstOrg = res;
-                this.owner = lstOrg[0]?.userID;
-              }
-            });
-          break;
+        }
+
       }
     }
+    return check;
   }
 }
