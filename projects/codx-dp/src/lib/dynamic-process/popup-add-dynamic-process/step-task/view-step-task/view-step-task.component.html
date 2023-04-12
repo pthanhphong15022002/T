@@ -102,12 +102,12 @@
 </ng-template>
 
 <ng-template #view>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center" *ngIf="type == 'M'">
     <codx-label
       class="h4 font-weight-400"
       fiedName="roles"
       [formModel]="frmModel"
-      [default]="type == 'M' ? 'Người chủ trì' : 'Người phụ trách' "
+      [default]="'Người chủ trì'  "
       style="min-width: 120px;"
     >
     </codx-label>
@@ -119,37 +119,10 @@
       ></ng-container>
     </div>
   </div>
-  <div class="d-flex align-items-center" *ngIf="type !== 'P'">
-    <codx-label
-      *ngIf="type == 'M'"
-      class="h4 font-weight-400"
-      fiedName="roles"
-      [formModel]="frmModel"
-      default="Người tham gia"
-      style="min-width: 120px;"
-    >
-    </codx-label>
-    <codx-label
-      *ngIf="type != 'M'"
-      class="h4 font-weight-400 me-2"
-      fiedName="roles"
-      [formModel]="frmModel"
-      default="Vai trò/bộ phận thực hiện"
-    >
-    </codx-label>
 
-    <div>
-      <ng-container
-        *ngIf="participant.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: participant }"
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="d-flex align-items-center" *ngIf="type == 'P'">
+  <div class="d-flex align-items-center" *ngIf="type != 'M'">
     <codx-label
-      class="h4 font-weight-400"
+      class="h4 font-weight-400 me-4"
       fiedName="roles"
       [formModel]="frmModel"
       default="Người phụ trách"
@@ -161,6 +134,34 @@
         *ngIf="person.length > 0"
         [ngTemplateOutlet]="showUser"
         [ngTemplateOutletContext]="{ users: person }"
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center" *ngIf="type !== 'P' && type !== 'G'">
+    <codx-label
+      *ngIf="type == 'M'"
+      class="h4 font-weight-400 me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      default="Người tham gia"
+      style="min-width: 120px;"
+    >
+    </codx-label>
+    <codx-label
+      *ngIf="type != 'M'"
+      class="h4 font-weight-400 me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      default="Vai trò/bộ phận thực hiện"
+    >
+    </codx-label>
+
+    <div>
+      <ng-container
+        *ngIf="participant.length > 0"
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: participant }"
       ></ng-container>
     </div>
   </div>
@@ -273,7 +274,7 @@
       <div class="user-mini-nav">
         <span>
           <codx-img
-            [width]="45"
+            [width]="35"
             class="me-2"
             [objectId]="item?.objectID"
             objectType="item?.objectType"
@@ -347,7 +348,7 @@
 
     <div class="d-flex align-items-center" *ngIf="type == 'M'">
       <codx-label
-        class="h4 font-weight-400"
+        class="h4 font-weight-400 me-4"
         fiedName="roles"
         [formModel]="frmModel"
         default="Người chủ trì"
@@ -365,7 +366,7 @@
     <div class="d-flex align-items-center" *ngIf="type !== 'P'">
       <codx-label
         *ngIf="type == 'M'"
-        class="h4 font-weight-400"
+        class="h4 font-weight-400 me-4"
         fiedName="roles"
         [formModel]="frmModel"
         default="Người tham gia"
@@ -374,10 +375,10 @@
       </codx-label>
       <codx-label
         *ngIf="type != 'M'"
-        class="h4 font-weight-400 me-2"
+        class="h4 font-weight-400 me-4"
         fiedName="roles"
         [formModel]="frmModel"
-        default="Vai trò/bộ phận thực hiện"
+        default="Vai trò/bộ phận thực hiện:"
       >
       </codx-label>
 
@@ -392,10 +393,10 @@
 
     <div class="d-flex align-items-center" *ngIf="type == 'P'">
       <codx-label
-        class="h4 font-weight-400"
+        class="h4 font-weight-400 me-4"
         fiedName="roles"
         [formModel]="frmModel"
-        default="Người phụ trách"
+        default="Người phụ trách:"
         style="min-width: 120px;"
       >
       </codx-label>    
