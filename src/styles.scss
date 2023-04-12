@@ -2304,6 +2304,18 @@ padding: 0;
 .btn-light-primary:hover i[class*="icon-"]{
   color: var(--primary-inverse);
 }
+
+
+/*** fix bug TEMP ***/
+
+codx-view-list-detail .codx-detail-main .task-name + .text-gray-700{
+  .codx-detail-main{
+    position: relative!important;
+    bottom: 0!important;
+    padding: 0!important;
+  }
+}
+
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

@@ -214,7 +214,21 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups[data.field] = '1';
     } else {
       this.taskGroups[data.field] = '0';
+      if(data.field == 'verifyControl'){
+        this.verifyName = '';
+        this.taskGroups.verifyByType = '';
+        this.taskGroups.verifyBy = '';
+      }
+      if(data.field == 'approveControl'){
+        this.approveName = '';
+        this.taskGroups.approveBy = '';
+        this.taskGroups.approvers = '';
+      }
+      if(data.field == 'maxHoursControl'){
+        this.taskGroups.maxHours = 0;
+      }
     }
+    this.changDetec.detectChanges();
   }
 
   changeHours(e) {
@@ -222,11 +236,8 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     var numberValue = Number(e.data);
     if (numberValue > 0 && numberValue <= 8) {
       this.taskGroups.maxHours = numberValue;
-    } else {
-      this.notiService.notifyCode(
-        'Vui lòng nhập giá trị lớn hơn 0 hoặc nhỏ hơn 9'
-      );
-      this.taskGroups.maxHours = 1;
+    }else{
+      this.taskGroups.maxHours = 0;
     }
   }
   // valuePro(data) {
@@ -264,7 +275,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           verifyByType += e[0].objectType;
           verifyBy += e[0].id;
           this.api
-            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', verifyBy)
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetAsync', verifyBy)
             .subscribe((res) => {
               if (res) {
                 console.log(res);
@@ -307,7 +318,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
           approveBy += e[0].objectType;
           approves += e[0].id;
           this.api
-            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', approves)
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetAsync', approves)
             .subscribe((res) => {
               if (res) {
                 console.log(res);
@@ -402,7 +413,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
             'SYS',
             'AD',
             'RolesBusiness',
-            'GetOneAsync',
+            'GetAsync',
             this.taskGroups.verifyBy
           )
           .subscribe((res) => {
@@ -458,7 +469,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
             'SYS',
             'AD',
             'RolesBusiness',
-            'GetOneAsync',
+            'GetAsync',
             this.taskGroups.approvers
           )
           .subscribe((res) => {
@@ -605,6 +616,40 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       );
       return;
     }
+
+    if(this.taskGroups.approveControl == '1'){
+      if(this.taskGroups.approvers == null || this.taskGroups.approvers.trim() == ''){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['Approvers']?.headerText + '"'
+        );
+        return;
+      }
+    }
+
+    if(this.taskGroups.verifyControl == '1'){
+      if(this.taskGroups.verifyBy == null || this.taskGroups.verifyBy.trim() == ''){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['VerifyBy']?.headerText + '"'
+        );
+        return;
+      }
+    }
+
+    if(this.taskGroups.maxHoursControl == '1'){
+      if(this.taskGroups.maxHours <= 0 || this.taskGroups.maxHours > 8){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['MaxHours']?.headerText + '"'
+        );
+        return; //Lớn hơn 0 và nhỏ hơn 9 chưa có mssg
+      }
+    }
+
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
         this.lstSavecheckList.push(item.text);

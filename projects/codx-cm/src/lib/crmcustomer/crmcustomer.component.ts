@@ -409,6 +409,10 @@ export class CrmCustomerComponent
     this.clickMF(e.e, e.data);
   }
 
+  changeDataMF(e){
+    console.log(e);
+  }
+
   //#region Search
   searchChanged(e) {}
   //#endregion
