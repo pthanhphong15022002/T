@@ -2298,6 +2298,12 @@ ejs-richtexteditor{
 padding: 0;
 }
 }
+.btn-light-primary i[class*="icon-"]{
+  color: var(--primary);
+}
+.btn-light-primary:hover i[class*="icon-"]{
+  color: var(--primary-inverse);
+}
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

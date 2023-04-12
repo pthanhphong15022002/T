@@ -62,7 +62,6 @@ export class FieldDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-  
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -177,7 +176,7 @@ export class FieldDetailComponent implements OnInit {
 
   clickInput(eleID, dataStep = null, isClick = false) {
     if (this.isSaving) return;
-    if (isClick && eleID!=this.elmIDCrr) {
+    if (isClick && eleID != this.elmIDCrr) {
       if (this.currentElmID && this.currentElmID != this.elmIDCrr)
         this.clickInput(this.currentElmID);
       if (this.elmIDCrr) {
@@ -214,7 +213,6 @@ export class FieldDetailComponent implements OnInit {
       this.elmIDCrr = eleID;
       this.inputElmIDCF.emit(this.elmIDCrr);
     } else this.elmIDCrr = null;
-    
   }
 
   valueChangeCustom(event) {
@@ -246,11 +244,6 @@ export class FieldDetailComponent implements OnInit {
             if (res) {
               var errorMessage = res.customName || res.defaultName;
               this.notiService.notify(errorMessage, '2');
-              // this.notiService.notifyCode(
-              //   'SYS009',
-              //   0,
-              //   '"' + errorMessage + '"'
-              // );
             }
           });
           return false;
@@ -263,11 +256,6 @@ export class FieldDetailComponent implements OnInit {
             if (res) {
               var errorMessage = res.customName || res.defaultName;
               this.notiService.notify(errorMessage, '2');
-              // this.notiService.notifyCode(
-              //   'SYS009',
-              //   0,
-              //   '"' + errorMessage + '"'
-              // );
             }
           });
           return false;
@@ -280,14 +268,12 @@ export class FieldDetailComponent implements OnInit {
     let check = true;
     let checkFormat = true;
 
-    if (
-      field.isRequired &&
-      (!field.dataValue || field.dataValue?.toString().trim() == '')
-    ) {
-      this.notiService.notifyCode('SYS009', 0, '"' + field.title + '"');
-      check = false;
-    }
-    checkFormat = this.checkFormat(field);
+    if (!field.dataValue || field.dataValue?.toString().trim() == '') {
+      if (field.isRequired) {
+        this.notiService.notifyCode('SYS009', 0, '"' + field.title + '"');
+        check = false;
+      }
+    } else checkFormat = this.checkFormat(field);
 
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
