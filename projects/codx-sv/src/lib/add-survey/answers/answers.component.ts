@@ -329,6 +329,8 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           }
           break;
         }
+        
+      case "L":
       case "O":
       {
         switch(properties)

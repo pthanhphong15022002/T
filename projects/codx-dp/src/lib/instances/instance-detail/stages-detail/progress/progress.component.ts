@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ProgressComponent implements OnInit{
   @Input() progress: any;
   id = ''
-
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
   ngOnInit(){
     this.id = "progress" + (Math.random()*100000000).toString();
   }

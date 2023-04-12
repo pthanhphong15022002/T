@@ -21,6 +21,7 @@ import {
 })
 
 export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnInit{
+  console = console;
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
@@ -33,6 +34,9 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
+
+  //Render Signer Position follow Singer ID
+  data: any;
 
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
@@ -50,6 +54,7 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.funcID = data?.data?.funcID;
+     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
@@ -135,6 +140,63 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
           this.df.detectChanges();
         }
       });
+    }
+  }
+
+  //Render Signer Position follow Signer ID
+  
+  // setExpiredDate(month) {
+  //   if (this.data.effectedDate) {
+  //     let date = new Date(this.data.effectedDate);
+  //     this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
+  //     this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
+  //     this.cr.detectChanges();
+  //   }
+  // }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        // case 'contractTypeID': {
+        //   this.data.limitMonths =
+        //     event?.component?.itemsSelected[0]?.LimitMonths;
+        //   this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+        //   this.setExpiredDate(this.data.limitMonths);
+        //   break;
+        // }
+        // case 'effectedDate': {
+        //   this.data.effectedDate = event.data;
+        //   this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
+        //   this.setExpiredDate(this.data.limitMonths);
+        //   break;
+        // }
+        case 'signerID': {
+          let employee = event?.component?.itemsSelected[0];
+          if (employee) {
+            if (employee.PositionID) {
+              this.hrSevice
+                .getPositionByID(employee.PositionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.currentEJobSalaries.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.currentEJobSalaries.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.currentEJobSalaries.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.currentEJobSalaries.signerPosition,
+              });
+            }
+          }
+          break;
+        }
+      }
+
+      this.cr.detectChanges();
     }
   }
 

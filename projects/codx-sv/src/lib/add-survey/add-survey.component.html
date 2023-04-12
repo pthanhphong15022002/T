@@ -1,3 +1,4 @@
+<div #screen>
 <codx-views
   #view
   [funcID]="funcID"
@@ -6,6 +7,7 @@
   [viewActiveType]="viewType.content"
   (onLoading)="onLoading($event)"
 ></codx-views>
+</div>
 <ng-template #itemTemplate>
   <div
     class="bg-white p-2 subheader d-flex align-items-center justify-content-between"
@@ -50,20 +52,25 @@
           ></path>
         </g>
       </svg>
-      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" (valueChange)="onChangeTitle($event)"></codx-input>
+      <codx-input type="text" [crrValue]="title" ngClass="add-sv-title" (valueChange)="onChangeTitle($event)" [ngbTooltip]="title"></codx-input>
       <span class="icon-bookmarks icon-20"></span>
-      <codx-label
-        *ngIf="signal == 'done'"
-        fiedName="Saving"
-        [default]="'Đã lưu tất cả trong thay đổi'"
-        class="pt-16px ps-6"
-      ></codx-label>
-      <codx-label
-        *ngIf="signal == 'saving'"
-        fiedName="Saving"
-        [default]="'Đang lưu...'"
-        class="pt-16px ps-6"
-      ></codx-label>
+      <ng-container  *ngIf="signal == 'saving' , else saving">
+        <codx-label
+          fiedName="Saving"
+          [default]="'Đang lưu...'"
+          class=" ps-6"
+        ></codx-label>
+      </ng-container>
+      <ng-template #saving >
+        <ng-container *ngIf="signal == 'done'">
+            <codx-label
+            fiedName="Done"
+            [default]="'Đã lưu tất cả thay đổi'"
+            class="ps-6"
+          ></codx-label>
+        </ng-container>
+      </ng-template>
+     
     </div>
     <div class="justify-content-end d-flex align-items-center">
       <span

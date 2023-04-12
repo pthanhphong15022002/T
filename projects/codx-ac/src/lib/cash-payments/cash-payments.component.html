@@ -1,57 +1,24 @@
-<codx-views
-  #view
-  idField="recID"
-  [views]="views"
-  [button]="button"
-  entityName="AC_CashPayments"
-  (buttonClick)="toolBarClick($event)"
-  predicates="JournalNo=@0"
-  [dataValues]="journalNo"
->
+<codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
 </codx-views>
 <ng-template #templateMore let-data>
   <div class="has-action-menu" style="height: 30px">
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      [isBookMark]="true"
-      type="hover"
-    ></codx-mfunc>
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+      type="hover"></codx-mfunc>
   </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    [descTmp]="descTmp"
-    [desc2Tmp]="desc2Tmp"
-    [titleTmp]="titleTmp"
-    cardCss="card-template border-bottom p-3 list-task"
-    [formModel]="view.formModel"
-    [modeImgs]="true"
-    [titleLine]="2"
-    [dataItem]="data"
-    [footer]="footerList"
-    [hideMF]="false"
-    [typeMF]="'hover'"
-    [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeDataMF($event, data)"
-    (click)="clickChange(data)"
-    (clickMF)="clickMF($event, data)"
-  >
+  <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
+    cardCss="card-template border-bottom p-3 list-task" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
+    [dataItem]="data" [footer]="footerList" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeDataMF($event, data)" (click)="clickChange(data)" (clickMF)="clickMF($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetail>
   <ng-container *ngIf="itemSelected">
-    <codx-detail-tmp
-      [header]="header"
-      [body]="body"
-      [hideMF]="false"
-      [formModel]="view.formModel"
-      [dataItem]="itemSelected"
-      [footer]="footer"
-      (clickMF)="clickMF($event, itemSelected)"
-      (changeDataMF)="changeDataMF($event, itemSelected)"
-    >
+    <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
+      [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)"
+      (changeDataMF)="changeDataMF($event, itemSelected)">
     </codx-detail-tmp>
   </ng-container>
 </ng-template>
@@ -59,27 +26,17 @@
   <div class="d-flex align-items-center">
     <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
       data?.voucherNo
-    }}</span>
+      }}</span>
   </div>
   <div>
-    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
-      data?.paymentAmt?.toLocaleString("it-IT", {
-        style: "currency",
-        currency: "VND"
-      })
-    }}</span>
+    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{data?.totalAmt.toLocaleString('it-IT',{style:
+      'currency',currency:
+      'VND'})}}</span>
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span
-    class="text-gray-700 line-clamp line-clamp-1"
-    #objectID
-    [innerHTML]="
-      data?.objectID
-        | formatvalue : view.formModel : 'objectID' : objectID
-        | async
-    "
-  ></span>
+  <span *ngIf="data?.objectID" class="text-gray-700 line-clamp line-clamp-1" #objectID
+    [innerHTML]="data?.objectID | formatvalue : view.formModel : 'objectID' : objectID | async"></span>
 </ng-template>
 <ng-template #desc2Tmp let-data>
   <span class="text-gray-700 line-clamp line-clamp-1">{{ data?.memo }}</span>
@@ -92,7 +49,7 @@
           <i class="icon-i-file-earmark-text icon-14"></i>
         </div>
         <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
-          {{ itemSelected.voucherNo }}
+          {{ itemSelected?.voucherNo }}
         </span>
       </div>
     </div>
@@ -101,27 +58,16 @@
         <span>
           <i class="me-2 icon-apartment icon-16 text-gray-700"></i>
         </span>
-        <span
-          class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase"
-          #objectID
-          [innerHTML]="
-            itemSelected.objectID
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectID [innerHTML]="
+            itemSelected?.objectID
               | formatvalue : view.formModel : 'objectID' : objectID
               | async
-          "
-        ></span>
+          "></span>
       </div>
       <div class="d-flex align-self-center">
         <span>
-          <codx-vll
-            [name]="'AC040'"
-            [formModel]="view.formModel"
-            [field]="'Status'"
-            [value]="itemSelected.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-md fs-4 me-3"
-          >
+          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-3">
           </codx-vll>
         </span>
       </div>
@@ -134,118 +80,64 @@
       <div class="d-flex flex-wrap">
         <div class="d-flex align-items-center me-5 mb-1">
           <span class="icon-i-calendar2-event-fill icon-16 me-2"></span>
-          <codx-label
-            class="fw-bold label-colon"
-            fiedName="CreatedOn"
-            [formModel]="view.formModel"
-          >
+          <codx-label class="fw-bold label-colon" fiedName="CreatedOn" [formModel]="view.formModel">
           </codx-label>
-          <span
-            #createdOn
-            class="text-gray-700 mt-1"
-            [innerHTML]="
-              itemSelected.createdOn
-                | formatvalue : view.formModel : 'createdOn' : createdOn
-                | async
-            "
-          ></span>
+          <span #createdOn class="text-gray-700 mt-1" [innerHTML]="itemSelected?.createdOn
+              | formatvalue : view.formModel : 'createdOn' : createdOn
+              | async"></span>
         </div>
       </div>
       <div class="d-flex align-self-center">
-        <span
-          class="badge badge-pill badge-primary badge-md fs-4 me-3 border-0"
-        >
-          <span class="fw-bold line-clamp line-clamp-1 fs-6">{{
-            itemSelected.paymentAmt.toLocaleString("it-IT", {
-              style: "currency",
-              currency: "VND"
-            })
-          }}</span>
+        <span class="badge badge-pill badge-primary badge-md fs-4 me-3 border-0">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6">{{itemSelected?.totalAmt?.toLocaleString('it-IT',{style:
+            'currency',currency:
+            'VND'})}}</span>
         </span>
       </div>
     </div>
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-wallet2 icon-16 me-2"></span>
-        <codx-label
-          class="fw-bold label-colon"
-          fiedName="TransactionText"
-          [formModel]="view.formModel"
-        >
+        <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
         </codx-label>
-        <span
-          #transactionText
-          class="text-gray-700"
-          [innerHTML]="
-            itemSelected.transactionText
+        <span #reasonID class="text-gray-700" [innerHTML]="
+            itemSelected?.reasonID
               | formatvalue
                 : view.formModel
-                : 'transactionText'
-                : transactionText
+                : 'reasonID'
+                : reasonID
               | async
-          "
-        ></span>
+          "></span>
       </div>
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-person-circle icon-16 me-2"></span>
-        <codx-label
-          class="fw-bold label-colon"
-          fiedName="Payee"
-          [formModel]="view.formModel"
-        >
+        <codx-label class="fw-bold label-colon" fiedName="Payee" [formModel]="view.formModel">
         </codx-label>
-        <span
-          #payee
-          [innerHTML]="
-            itemSelected.payee
+        <span #payee [innerHTML]="
+            itemSelected?.payee
               | formatvalue : view.formModel : 'payee' : payee
               | async
-          "
-          class="text-gray-700"
-        ></span>
+          " class="text-gray-700"></span>
       </div>
     </div>
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-journal-album icon-16 me-2"></span>
-        <codx-label
-          class="fw-bold label-colon"
-          fiedName="CashBookID"
-          [formModel]="view.formModel"
-        >
+        <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
         </codx-label>
-        <ng-container *ngFor="let item of cashbook">
-          <span
-            *ngIf="item.cashBookID == itemSelected.cashBookID"
-            #cashBookID
-            class="text-gray-700"
-            [innerHTML]="
-              item.cashBookName
-                | formatvalue : view.formModel : 'cashBookID' : cashBookID
-                | async
-            "
-          ></span>
-        </ng-container>
+        <span #cashBookID class="text-gray-700" [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       </div>
     </div>
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-brush icon-16 me-2"></span>
-        <codx-label
-          class="fw-bold label-colon"
-          fiedName="Memo"
-          [formModel]="view.formModel"
-        >
+        <codx-label class="fw-bold label-colon" fiedName="Memo" [formModel]="view.formModel">
         </codx-label>
-        <span
-          #memo
-          class="text-gray-700"
-          [innerHTML]="
-            itemSelected.memo
+        <span #memo class="text-gray-700" [innerHTML]="
+            itemSelected?.memo
               | formatvalue : view.formModel : 'memo' : memo
               | async
-          "
-        ></span>
+          "></span>
       </div>
     </div>
     <div class="card-add mt-5" #cardbodyRef>
@@ -256,10 +148,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <div
-                  class="fw-bold fs-6"
-                  [innerHTML]="'1' | vll : 'AC070' : 'text' | async"
-                ></div>
+                <div class="fw-bold fs-6" [innerHTML]="'1' | vll : 'AC070' : 'text' | async"></div>
               </div>
             </ng-template>
             <ng-template #content>
@@ -274,13 +163,8 @@
 </ng-template>
 <ng-template #footer>
   <ng-container *ngIf="itemSelected">
-    <codx-tabs
-      [entityName]="view.formModel.entityName"
-      [formModel]="view.formModel"
-      [objectID]="itemSelected.recID"
-      [funcID]="view.formModel.funcID"
-      [TabControl]="tabInfo"
-    ></codx-tabs>
+    <codx-tabs [entityName]="view.formModel.entityName" [formModel]="view.formModel" [objectID]="itemSelected.recID"
+      [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </ng-container>
 </ng-template>
 <ng-template #footerList let-data>
@@ -288,37 +172,22 @@
     <div class="d-flex align-items-center justify-content-between pt-2">
       <div class="d-flex justify-content-start align-items-end me-2">
         <span>
-          <codx-vll
-            [name]="'AC040'"
-            [formModel]="view.formModel"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-md fs-4 me-4"
-          >
+          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-4 me-4">
           </codx-vll>
         </span>
         <span class="d-flex align-items-center">
           <span class="bi bi-calendar2-event icon-16 me-2 text-dark-50"></span>
-          <span
-            class="text-dark-50 mt-1"
-            #createdOn
-            [innerHTML]="
+          <span class="text-dark-50 mt-1" #createdOn [innerHTML]="
               data?.createdOn
                 | formatvalue : view.formModel : 'createdOn' : createdOn
                 | async
-            "
-          ></span>
+            "></span>
         </span>
       </div>
       <div class="d-flex justify-content-start align-items-end me-2">
-        <codx-img
-          [objectId]="data?.voucherNo"
-          [objectName]="data?.voucherNo"
-          [objectType]="view?.entityName"
-          [width]="30"
-        >
+        <codx-img [objectId]="data?.voucherNo" [objectName]="data?.voucherNo" [objectType]="view?.entityName"
+          [width]="30">
         </codx-img>
       </div>
     </div>
@@ -326,234 +195,140 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="cashpaymentline">
-    <div
-      class="table-responsive mt-2"
-      style="height: 450px; border-radius: 5px"
-    >
+    <div class="table-responsive mt-2" style="height: 450px; border-radius: 5px">
       <table id="myTable" class="table table-hover">
         <thead style="position: sticky; top: 0">
           <tr>
-            <th
-              style="
+            <th style="
                 width: 200px;
                 white-space: nowrap;
                 position: sticky;
                 top: 0;
                 padding: 10px 10px;
-              "
-            >
+              ">
               <div class="d-flex">
-                <i
-                  style="color: var(--primary-active)"
-                  class="bi bi-brush icon-16 me-2"
-                ></i>
-                <codx-label
-                  class="fw-bold line-clamp line-clamp-1 fs-6"
-                  fiedName="Note"
-                  [formModel]="fmCashPaymentsLines"
-                >
+                <i style="color: var(--primary-active)" class="bi bi-brush icon-16 me-2"></i>
+                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Note"
+                  [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th
-              style="
+            <th style="
                 width: 200px;
                 white-space: nowrap;
                 position: sticky;
                 top: 0;
                 padding: 10px 10px;
-              "
-            >
+              ">
               <div class="d-flex">
-                <i
-                  style="color: var(--primary-active)"
-                  class="bi bi-cash-coin icon-16 me-2"
-                ></i>
-                <codx-label
-                  class="fw-bold line-clamp line-clamp-1 fs-6"
-                  fiedName="Dr"
-                  [formModel]="fmCashPaymentsLines"
-                >
+                <i style="color: var(--primary-active)" class="bi bi-cash-coin icon-16 me-2"></i>
+                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Dr"
+                  [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th
-              style="
+            <th style="
                 width: 200px;
                 white-space: nowrap;
                 position: sticky;
                 top: 0;
                 padding: 10px 10px;
-              "
-            >
+              ">
               <div class="d-flex">
-                <i
-                  style="color: var(--primary-active)"
-                  class="bi bi-graph-up icon-16 me-2"
-                ></i>
-                <span class="fw-bold line-clamp line-clamp-1 fs-6"
-                  >Thông tin phân tích</span
-                >
+                <i style="color: var(--primary-active)" class="bi bi-graph-up icon-16 me-2"></i>
+                <span class="fw-bold line-clamp line-clamp-1 fs-6">Thông tin phân tích</span>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody
-          style="border-bottom: 1px solid #dee2e6"
-          *ngFor="
+        <tbody style="border-bottom: 1px solid #dee2e6" *ngFor="
             let item of cashpaymentline
               | slice : (page - 1) * pageSize : page * pageSize
-          "
-        >
+          ">
           <tr>
             <td style="padding: 10px 10px">
-              <div
-                *ngIf="item.note != null && item.note != ''"
-                class="d-flex flex-wrap"
-              >
+              <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <span
-                    [ngbTooltip]="item.note"
-                    class="fw-bold line-clamp line-clamp-1 fs-5"
-                    >{{ item.note }}</span
-                  >
+                  <span [ngbTooltip]="item.note" class="fw-bold line-clamp line-clamp-1 fs-5">{{ item.note }}</span>
                 </div>
               </div>
-              <div
-                *ngIf="
+              <div *ngIf="
                   item.transactionText != null && item.transactionText != ''
-                "
-                class="d-flex flex-wrap"
-              >
+                " class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label
-                    class="fw-bold label-colon"
-                    fiedName="TransactionText"
-                    [formModel]="fmCashPaymentsLines"
-                  >
+                  <codx-label class="fw-bold label-colon" fiedName="TransactionText" [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span
-                    #transactionText
-                    class="text-gray-700"
-                    [innerHTML]="
+                  <span #transactionText class="text-gray-700" [innerHTML]="
                       item.transactionText
                         | formatvalue
                           : fmCashPaymentsLines
                           : 'transactionText'
                           : transactionText
                         | async
-                    "
-                  ></span>
+                    "></span>
                 </div>
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <span
-                *ngIf="item.dr != null && item.dr != ''"
-                class="fw-bold line-clamp line-clamp-1 fs-5"
-                >{{ item.dr.toLocaleString("it-IT") }}</span
-              >
+              <span *ngIf="item.dr != null && item.dr != ''" class="fw-bold line-clamp line-clamp-1 fs-5">{{
+                item.dr.toLocaleString("it-IT") }}</span>
             </td>
             <td style="padding: 10px 10px">
               <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label
-                    *ngIf="item.diM2 != null && item.diM2 != ''"
-                    class="fw-bold label-colon"
-                    fiedName="DIM2"
-                    [formModel]="fmCashPaymentsLines"
-                  >
+                  <codx-label *ngIf="item.diM2 != null && item.diM2 != ''" class="fw-bold label-colon" fiedName="DIM2"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span
-                    *ngIf="item.diM2 != null && item.diM2 != ''"
-                    class="text-gray-700"
-                  >
+                  <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-700">
                     &nbsp;
-                    <span
-                      #diM2
-                      class="text-gray-700"
-                      [innerHTML]="
+                    <span #diM2 class="text-gray-700" [innerHTML]="
                         item.diM2
                           | formatvalue : fmCashPaymentsLines : 'diM2' : diM2
                           | async
-                      "
-                    ></span>
+                      "></span>
                     &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                   </span>
-                  <codx-label
-                    *ngIf="item.diM3 != null && item.diM3 != ''"
-                    class="fw-bold label-colon"
-                    fiedName="DIM3"
-                    [formModel]="fmCashPaymentsLines"
-                  >
+                  <codx-label *ngIf="item.diM3 != null && item.diM3 != ''" class="fw-bold label-colon" fiedName="DIM3"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span
-                    *ngIf="item.diM3 != null && item.diM3 != ''"
-                    class="text-gray-700"
-                  >
+                  <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-700">
                     &nbsp;
-                    <span
-                      #diM3
-                      class="text-gray-700"
-                      [innerHTML]="
+                    <span #diM3 class="text-gray-700" [innerHTML]="
                         item.diM3
                           | formatvalue : fmCashPaymentsLines : 'diM3' : diM3
                           | async
-                      "
-                    ></span>
+                      "></span>
                     &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                   </span>
                 </div>
               </div>
               <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label
-                    *ngIf="item.diM1 != null && item.diM1 != ''"
-                    class="fw-bold label-colon"
-                    fiedName="DIM1"
-                    [formModel]="fmCashPaymentsLines"
-                  >
+                  <codx-label *ngIf="item.diM1 != null && item.diM1 != ''" class="fw-bold label-colon" fiedName="DIM1"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span
-                    *ngIf="item.diM1 != null && item.diM1 != ''"
-                    class="text-gray-700"
-                  >
+                  <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-700">
                     &nbsp;
-                    <span
-                      #diM1
-                      class="text-gray-700"
-                      [innerHTML]="
+                    <span #diM1 class="text-gray-700" [innerHTML]="
                         item.diM1
                           | formatvalue : fmCashPaymentsLines : 'diM1' : diM1
                           | async
-                      "
-                    ></span>
+                      "></span>
                     &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                   </span>
-                  <codx-label
-                    *ngIf="item.projectID != null && item.projectID != ''"
-                    class="fw-bold label-colon"
-                    fiedName="ProjectID"
-                    [formModel]="fmCashPaymentsLines"
-                  >
+                  <codx-label *ngIf="item.projectID != null && item.projectID != ''" class="fw-bold label-colon"
+                    fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
-                  <span
-                    *ngIf="item.projectID != null && item.projectID != ''"
-                    class="text-gray-700"
-                  >
+                  <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-700">
                     &nbsp;
-                    <span
-                      #projectID
-                      class="text-gray-700"
-                      [innerHTML]="
+                    <span #projectID class="text-gray-700" [innerHTML]="
                         item.projectID
                           | formatvalue
                             : fmCashPaymentsLines
                             : 'projectID'
                             : projectID
                           | async
-                      "
-                    ></span>
+                      "></span>
                     &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                   </span>
                 </div>
@@ -565,10 +340,7 @@
       <div *ngIf="cashpaymentline.length == 0" class="container w-90 h-90">
         <div class="list-empty card card-flush h-100 mt-20">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img
-              src="../assets/themes/sys/default/img/DataEmpty.svg"
-              class="w-200px"
-            />
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
@@ -578,16 +350,10 @@
     </div>
   </ng-container>
   <div *ngIf="cashpaymentline.length > 0" class="container w-90 h-90">
-    <div
-      style="background: transparent"
-      class="list-empty card card-flush h-100 mt-3"
-    >
+    <div style="background: transparent" class="list-empty card card-flush h-100 mt-3">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination
-          [(page)]="page"
-          [pageSize]="pageSize"
-          [collectionSize]="cashpaymentline.length"
-        ></ngb-pagination>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
+          [collectionSize]="cashpaymentline.length"></ngb-pagination>
       </div>
     </div>
   </div>

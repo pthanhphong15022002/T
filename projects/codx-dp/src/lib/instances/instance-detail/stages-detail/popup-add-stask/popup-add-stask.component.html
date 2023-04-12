@@ -283,35 +283,20 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <div
-        class="d-flex justify-content-between align-item-center"
-        *ngIf="stepType === 'M'"
-      >
-        <div>
-          <codx-label
-            fiedName="roles"
-            [formModel]="dialog?.formModel"
-            default="Người tham gia"
-          ></codx-label>
-        </div>
-        <codx-input
-          type="Share"
-          [refValue]="vllShare"
-          field=""
-          [dataShared]="[]"
-          [multiple]="true"
-          [showInput]="false"
-          (valueChange)="applyOwner($event, listChair)"
-           [disabled]="isTaskDefault"
-        >
-        </codx-input>
-      </div>
-      <ng-container
-        *ngIf="listChair.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: listChair }"
-      ></ng-container>
+    <div class="form-group" *ngIf="stepType === 'M'">
+      <codx-user
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]=" 'Người tham gia'"
+        [dataSource]="participant"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event, participant, 'P')"
+        [vllShare]="'DP0331'"
+        [multiple]="true"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-user>
     </div>
 
     <div class="form-group">

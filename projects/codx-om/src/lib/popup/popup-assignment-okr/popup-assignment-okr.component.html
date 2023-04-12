@@ -41,17 +41,21 @@
                       (valueChange)="cbxOrgChange($event)"
                     ></codx-input>
                   </div>
-                  <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
-                    <div class="d-flex col-8 flex-row">
-                      <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
-                      <div class="d-flex flex-column" >
-                        <span class="ms-4 fw-bold">{{assignmentOKR?.orgUnitName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.positionName}}</span>
+                  <div class="d-flex justify-content-between align-items-top mt-5" *ngIf="assignmentOKR?.objectID!=null">
+                    <div class="d-flex flex-row w-100">
+                      <span class="d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-40px h-40px me-4"> 
+                        <span class="icon-i-building text-primary"></span>
+                      </span>
+                      <div class="d-flex flex-column">
+                        <span class="fs-6 fw-bold text-dark">{{assignmentOKR?.orgUnitName}}</span>
+                        <span class="text-gray-700">{{assignmentOKR?.employeeName}}</span>
+                        <span class="text-gray-500 fs-7">{{assignmentOKR?.positionName}}</span>
                       </div>                     
                     </div>  
+                    <button type="button" class="btn btn-sm btn-icon btn-light-danger" role="button" (click)="deleteOrg()">
+                      <i class="icon-close"></i>
+                    </button>
                     
-                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -72,16 +76,20 @@
                     ></codx-input>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
-                    <div class="d-flex col-8 flex-row ">
-                      <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-person-plus-fill text-primary"></span></span>
+                    <div class="d-flex flex-row w-100">
+                      <span class="d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-40px h-40px me-4"> 
+                        <span class="icon-i-person-plus-fill text-primary"></span>
+                      </span>
                       <div class="d-flex flex-column" >
-                        <span class="ms-4 fw-bold">{{assignmentOKR?.positionName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
+                        <span class="fs-6 text-dark fw-bold">{{assignmentOKR?.positionName}}</span>
+                        <span class="text-gray-700">{{assignmentOKR?.employeeName}}</span>
+                        <span class="fs-7 text-gray-500">{{assignmentOKR?.orgUnitName}}</span>
                       </div>                     
                     </div>  
+                    <button type="button" class="btn btn-sm btn-icon btn-light-danger" role="button" (click)="deleteOrg()">
+                      <i class="icon-close"></i>
+                    </button>
                     
-                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -102,16 +110,19 @@
                     ></codx-input>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.objectID!=null">
-                    <div class="d-flex col-8 flex-row " >
-                      <codx-img [objectId]="assignmentOKR?.userID" [objectType]="'AD_Users'"></codx-img>
+                    <div class="d-flex flex-row w-100">
+                      <span class="me-4">
+                        <codx-img [objectId]="assignmentOKR?.userID" [objectType]="'AD_Users'"></codx-img>
+                      </span>
                       <div class="d-flex flex-column" >
-                        <span class="ms-4 fw-bold">{{assignmentOKR?.employeeName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.positionName}}</span>
-                        <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
+                        <span class="fs-6 text-dark fw-bold">{{assignmentOKR?.employeeName}}</span>
+                        <span class="text-gray-700">{{assignmentOKR?.positionName}}</span>
+                        <span class="fs-7 text-gray-500">{{assignmentOKR?.orgUnitName}}</span>
                       </div>                     
                     </div>  
-                    
-                    <span class="icon-close" role="button" (click)="deleteOrg()"></span>
+                    <button type="button" class="btn btn-sm btn-icon btn-light-danger" role="button" (click)="deleteOrg()">
+                      <i class="icon-close"></i>
+                    </button>
                   </div>
                 </ng-template>
               </e-tabitem>

@@ -17,6 +17,7 @@ export class CarouselStageComponent {
 
   listTreeView:any []=[];
   listDefaultView:any[] = [];
+  listStep:any[] = [];
 
   // type string
   selectedIndex:string ='0';
@@ -51,14 +52,14 @@ export class CarouselStageComponent {
       this.listTreeView = [];
       this.viewSetting = '';
       this.selectedIndex ='0';
-      this.handleDateMaxSize(changes['dataSource'].currentValue,this.maxSize);
+      this.listStep = changes['dataSource'].currentValue;
+      this.handleDateMaxSize(this.listStep,this.maxSize);
       this.ChangeDetectorRef.detectChanges();
     }
   }
 
   handleDateMaxSize(list,maxSize)
   {
-    debugger;
     if(list && list.length > maxSize) {
       var index = 0;
       for (let i = 0; i < list.length; i += maxSize) {
@@ -73,6 +74,7 @@ export class CarouselStageComponent {
     else if(list && (list.length <= maxSize && list.length > 0  ) )
     {
       this.listDefaultView = list;
+      (this.status == '1' || this.status == '2') && this.findStatusInDoing(this.listDefaultView,null);
       this.viewSetting = this.viewCarouselDefault;
     }
 
@@ -98,11 +100,15 @@ export class CarouselStageComponent {
   }
 
   findStatusInDoing(listStep,index){
-    var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
-    if (indexResult > -1) {
-        this.selectedIndex = index.toString();
-        this.currentStep = indexResult;
+    if(index){
+      var indexResult = listStep.items.findIndex(item => item.stepStatus == '1');
+      if (indexResult > -1) {
+
+        this.currentStep = this.listStep.findIndex(item => item.stepStatus == '1');
     }
+    }
+    this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
+
   }
   stageEnd(){
     this.selectedIndex = (this.listTreeView.length -1).toString();
@@ -110,14 +116,12 @@ export class CarouselStageComponent {
   eventClick(id){
    var index = this.dataSource.findIndex(x=>x.stepID == id);
    if(index != -1) {
+    var isView =  this.currentStep < index && (this.status == '1' || this.status == '2');
     var result = {
       index: index,
-      id: id
+      id: id,
+      isOnlyView: !isView
     }
-    if (
-      this.currentStep < index && (this.status === '1' || this.status === '2')
-    )
-      return;
     this.eventClicked.emit(result);
    }
   }

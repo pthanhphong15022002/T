@@ -43,6 +43,7 @@ import {
 import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 import { closest } from '@syncfusion/ej2-base';
 import { firstValueFrom } from 'rxjs';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -136,7 +137,7 @@ export class DynamicProcessComponent
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService,
+    private layoutDP: LayoutComponent,
     private dpService: CodxDpService
   ) {
     super(inject);
@@ -175,6 +176,7 @@ export class DynamicProcessComponent
 
   //chang data
   viewChanged(e) {
+    this.layoutDP.hidenNameProcess() ;
     var funcIDClick = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFunID != funcIDClick) {
       this.funcID = funcIDClick;
