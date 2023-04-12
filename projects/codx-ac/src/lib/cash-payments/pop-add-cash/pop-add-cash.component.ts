@@ -98,6 +98,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   key: any;
   columnChange: string;
   vllCashbook: any;
+  vettledInvoicesDelete: any[];
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
