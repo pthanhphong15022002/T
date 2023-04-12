@@ -77,7 +77,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() listStep: any;
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
-  @Input() ownerInstance: string;
+  @Input() listUserIdRole: string[] = [];
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
 
@@ -194,10 +194,7 @@ export class StagesDetailComponent implements OnInit {
     this.viewCrr = this.viewsCurrent;
   }
 
-  async ngOnInit(): Promise<void> {
-    console.log('---owner',this.ownerInstance);
-    console.log('---',this.currentStep);
-    
+  async ngOnInit(): Promise<void> {   
     this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
@@ -437,7 +434,7 @@ export class StagesDetailComponent implements OnInit {
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
-          taskData['roles'] = [role];
+          taskData['roles'] = [role,...taskData['roles']];
           taskData['createdOn'] = new Date();
           taskData['modifiedOn'] = null;
           taskData['modifiedBy'] = null;
@@ -642,7 +639,7 @@ export class StagesDetailComponent implements OnInit {
           taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
           [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.taskGroupList.push(taskGroup);
+        this.taskGroupList.push(taskGroup);        
       }
       this.taskList = step['tasks'];
     }
@@ -1075,6 +1072,7 @@ export class StagesDetailComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
     return role;
   }
 
@@ -1224,7 +1222,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole() {
-    if(this.ownerInstance == this.user.userID){
+    if(this.user?.systemAdmin || this.listUserIdRole?.some(id => id == this.user.userID )){
       this.isRoleAll = true;
     }else if (this.dataStep?.roles?.length > 0) {
       this.isRoleAll =

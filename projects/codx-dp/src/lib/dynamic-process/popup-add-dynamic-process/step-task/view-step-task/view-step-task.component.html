@@ -65,7 +65,7 @@
     <div class="d-flex align-items-center">
       <span class="icon-more_vert icon-16"></span>
     </div>
-    <codx-progress [progress]="90"></codx-progress>
+    <codx-progress [progress]="50"> </codx-progress>
   </div>
 </div>
 </ng-template>
@@ -102,12 +102,12 @@
 </ng-template>
 
 <ng-template #view>
-  <div class="d-flex align-items-center" *ngIf="type == 'M'">
+  <div class="d-flex align-items-center">
     <codx-label
       class="h4 font-weight-400"
       fiedName="roles"
       [formModel]="frmModel"
-      default="Người chủ trì"
+      [default]="type == 'M' ? 'Người chủ trì' : 'Người phụ trách' "
       style="min-width: 120px;"
     >
     </codx-label>
@@ -257,7 +257,13 @@
   </div>
 </ng-template>
 <ng-template #history>
-  <div>Đang làm nè!</div>
+  <div>
+    <codx-history
+    #history
+    [objectID]="dataInput['recID']"
+    [formModel]="form.formModel"
+  ></codx-history>
+  </div>
 </ng-template>
 
 <!-- End Form Group -->

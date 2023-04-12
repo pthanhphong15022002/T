@@ -648,21 +648,19 @@ export class InstancesComponent
       case 'DP21':
         this.handelStartDay(data);
         break;
-        //xuat khau du lieu
+      //xuat khau du lieu
       case 'SYS002':
         this.exportFile();
         break;
     }
   }
 
-  handelStartDay(data) {
-    this.notificationsService
-      .alertCode('DP033', null, [data?.title || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startInstance(data);
-        }
-      });
+  handelStartDay(data){
+    this.notificationsService.alertCode('DP033',null, [('"' + data?.title + '"') || '']).subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.startInstance(data);
+      }
+    });
   }
 
   startInstance(data) {
@@ -1423,10 +1421,21 @@ export class InstancesComponent
     //data test
     let datas = [
       {
-        san_pham: 'Sản phẩm quần què test',
-        dien_tich: 'Diện tích quần què test',
-        so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test',
+        dai_dien: 'người đại diện',
+        datas: [
+          {
+            san_pham: 'Sản phẩm quần què',
+            dien_tich: '0',
+            so_luong: 1,
+            don_gia: 100000,
+          },
+          {
+            san_pham: 'Sản phẩm 1',
+            dien_tich: '0',
+            so_luong: 10,
+            don_gia: 5000,
+          },
+        ],
       },
     ];
     this.dataSelected.datas = JSON.stringify(datas);
