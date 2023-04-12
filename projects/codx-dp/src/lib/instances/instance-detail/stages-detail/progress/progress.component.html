@@ -1,5 +1,6 @@
 <div class="disabled-inline progressbar" >
    <ejs-progressbar
+    *ngIf="type == 1"
      [id]="id"
      type="Circular"
      height="55"
@@ -21,6 +22,24 @@
        </e-progressbar-annotation>
      </e-progressbar-annotations>
    </ejs-progressbar>
+
+   <ejs-progressbar
+   *ngIf="type == 2"
+   [id]="id"
+   type="Circular"
+   height="55"
+   width="55"
+   trackThickness="4"
+   progressThickness="4"
+   [value]="progress"
+   [progressColor]="'#005DC7'"
+   trackColor="#d8d8d8"
+   progressValueColor="red"
+   [labelStyle]="{ color: '#005DC7' }"
+   [showProgressValue]="true"
+   [animation]="{ enable: true, duration: 1000, delay: 0 }"
+ >
+ </ejs-progressbar>
  </div>
 
 <!-- <ejs-progressbar
