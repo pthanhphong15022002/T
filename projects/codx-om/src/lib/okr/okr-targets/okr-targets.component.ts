@@ -60,13 +60,9 @@ export class OkrTargetsComponent implements OnInit {
   @Input() okrVll:any;  
   @Input() okrGrv:any;  
   @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
-  @Input() isCollapsed = false;
-  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
-    new EventEmitter();
+  @Input() isCollapsed = true;
+  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =new EventEmitter();
   dtStatus = [];
-  
-  openAccordion = [];
-  openAccordionKR = [];
   krTitle = '';
   obTitle = '';
   chartSettings: ChartSettings = {
@@ -308,7 +304,7 @@ export class OkrTargetsComponent implements OnInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd': {
-        this.addOB(evt.text);
+        this.addOB(evt.text+ ' mục tiêu');
         break;
       }
       case 'btnAddO':
@@ -421,6 +417,17 @@ export class OkrTargetsComponent implements OnInit {
       } else {
 
       }
+      //Ẩn phân bổ MF
+      evt.forEach((func) => {
+        if (
+          (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
+            func.functionID == OMCONST.MFUNCID.SKRDistribute) 
+        ) {
+          func.disabled = true;
+        }
+      });
+
+
       evt.forEach((func) => {
         if (
           (func.functionID == OMCONST.MFUNCID.KRCheckIn  ||
@@ -442,13 +449,25 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   changeDataOBMF(evt: any, ob: any){
-    if(ob.items.length<1 || ob.items==null){
+    if(evt!=null && ob!=null){
+      if(ob.items.length<1 || ob.items==null){
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight ) {
+            func.disabled = true;
+          }
+        });
+  
+      }
+      //Ẩn phân bổ MF
       evt.forEach((func) => {
-        if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight ) {
+        if (
+          func.functionID == OMCONST.MFUNCID.OBDistribute 
+        ) {
           func.disabled = true;
         }
       });
     }
+    
   }
   selectionChange(parent) {
     if (parent.isItem) {

@@ -113,7 +113,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   periodName: any;
   orgUnitTree: any[];
   refIDMeeting:any;
-  isCollapsed: boolean;
+  isCollapsed=false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -697,7 +697,11 @@ getOrgTreeOKR() {
     });
   }
   editPlanWeight(popupTitle: any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
+    //Ko có okr nên thông báo ko thể phân bổ trọng số
+    if(this.dataOKR!=null && this.dataOKR.length>0){
+      this.notificationsService.notify("Bộ mục tiêu chưa có mục tiêu để phân bổ trọng số",'3');
+      return;
+    }
     let subTitle = this.curOrgName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
