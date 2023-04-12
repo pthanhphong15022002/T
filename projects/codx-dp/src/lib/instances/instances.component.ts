@@ -426,7 +426,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
     }
-    var dataGets = [this.oldIdInstance,this.view.dataService.dataSelected];
+    var dataGets = [this.oldIdInstance, this.view.dataService.dataSelected];
     this.view.dataService
       .copy(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -1417,14 +1417,14 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas = 
-      [{
+    let datas = [
+      {
         san_pham: 'Sản phẩm quần què test',
         dien_tich: 'Diện tích quần què test',
         so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test'
-      }]
-    ;
+        don_gia: 'Đơn giá quần què test',
+      },
+    ];
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
       .execSv<any>(
