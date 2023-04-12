@@ -18,8 +18,6 @@ import {
   ViewChild,
   Injector,
 } from '@angular/core';
-import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { FileService } from '@shared/services/file.service';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
@@ -96,6 +94,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
     {
       return this.shareService.getThumbByUrl(file.pathDisk,300);
     }
-    return ""
+    return "/assets/themes/wp/default/img/Image_NoData.svg";
   }
 }

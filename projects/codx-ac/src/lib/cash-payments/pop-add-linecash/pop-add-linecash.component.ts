@@ -37,6 +37,10 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   type: any;
   cashpaymentline: CashPaymentLine;
   cashpayment:CashPayment;
+  lockFields:any;
+  dim1:any = true;
+  dim2:any = true;
+  dim3:any = true;
   objectcashpaymentline :Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -56,6 +60,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.objectcashpaymentline = dialogData.data?.dataline;
     this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
+    this.lockFields = dialogData.data?.lockFields;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -71,6 +76,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
+    this.loadlockfields();
     this.dt.detectChanges();
   }
   //#endregion
@@ -123,6 +129,23 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         this.form.formGroup.patchValue(res);
       }
     });
+  }
+  loadlockfields(){
+    if (this.lockFields != null) {
+      this.lockFields.forEach(element => {
+        switch(element){
+          case 'DIM1':
+            this.dim1 = false;
+            break;
+          case 'DIM2':
+            this.dim2 = false;
+            break;
+          case 'DIM3':
+            this.dim3 = false;
+            break;
+        }
+      });
+    }
   }
   //#endregion
 
