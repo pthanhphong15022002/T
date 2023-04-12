@@ -434,7 +434,7 @@ export class StagesDetailComponent implements OnInit {
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
-          taskData['roles'] = [role];
+          taskData['roles'] = [role,...taskData['roles']];
           taskData['createdOn'] = new Date();
           taskData['modifiedOn'] = null;
           taskData['modifiedBy'] = null;
@@ -1072,6 +1072,7 @@ export class StagesDetailComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
+    role['roleType'] = 'O';
     return role;
   }
 
