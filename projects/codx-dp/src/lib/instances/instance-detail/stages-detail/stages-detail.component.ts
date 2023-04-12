@@ -194,8 +194,7 @@ export class StagesDetailComponent implements OnInit {
     this.viewCrr = this.viewsCurrent;
   }
 
-  async ngOnInit(): Promise<void> {
-    console.log('---owner',this.listUserIdRole);    
+  async ngOnInit(): Promise<void> {   
     this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
@@ -1222,7 +1221,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   checkRole() {
-    if(this.listUserIdRole?.some(id => id == this.user.userID )){
+    if(this.user?.systemAdmin || this.listUserIdRole?.some(id => id == this.user.userID )){
       this.isRoleAll = true;
     }else if (this.dataStep?.roles?.length > 0) {
       this.isRoleAll =
