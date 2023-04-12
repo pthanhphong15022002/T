@@ -592,7 +592,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
-          lockFields :this.lockFields
+          lockFields :this.lockFields,
+          journal: this.journal,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -658,7 +659,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       dataline: this.cashpaymentline,
       datacash: this.cashpayment,
       type: 'add',
-      lockFields :this.lockFields
+      lockFields :this.lockFields,
+      journal: this.journal,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
