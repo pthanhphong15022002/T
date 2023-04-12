@@ -52,7 +52,7 @@
         <div class="form-group">
           <codx-label fiedName="OffsetAcctID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input [Group]="form.formGroup" field="offsetAcctID" [formModel]="form.formModel"
+          <codx-input #cbxOffsetAcctID [Group]="form.formGroup" field="offsetAcctID" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -61,7 +61,7 @@
         <div class="form-group">
           <codx-label fiedName="AccountID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input [Group]="form.formGroup" field="accountID" [formModel]="form.formModel"
+          <codx-input #cbxAccountID [Group]="form.formGroup" field="accountID" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>

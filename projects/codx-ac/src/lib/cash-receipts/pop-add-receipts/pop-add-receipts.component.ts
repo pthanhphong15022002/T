@@ -444,6 +444,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
+          journal: this.journal,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -504,6 +505,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       headerText: this.headerText,
       data: data,
       type: 'add',
+      journal: this.journal,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();

@@ -71,6 +71,7 @@ export class InstancesComponent
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('exportTemplate') exportTemplate!: TemplateRef<any>;
   views: Array<ViewModel> = [];
 
   showButtonAdd = true;
@@ -1421,7 +1422,12 @@ export class InstancesComponent
     //data test
     let datas = [
       {
-        dai_dien: 'người đại diện',
+        dai_dien: 'Trần Đoàn Tuyết Khanh',
+        ten_cong_ty : 'Tập đoàn may mặc Khanh Pig',
+        dia_chi : '06 Lê Lợi, Huế',
+        ma_so_thue: '1111111111111',
+        hinh_thuc_thanh_toan: 'Chuyển khoản',
+        tai_khoan: 'VCB-012024554565',
         datas: [
           {
             san_pham: 'Sản phẩm quần què',

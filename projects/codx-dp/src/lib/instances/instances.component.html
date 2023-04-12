@@ -396,20 +396,6 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <!--<span class="mx-1">
-    <codx-dropdown-select
-      *ngIf="process"
-      [cssClass]="'rounded-pill border-1'"
-      cssPopup="h-350px w-300px"
-      [isMulti]="false"
-      type="valuelist"
-      [emptyText]="grvSetup.Permissions.headerText"
-      field="Permissions"
-      [dataSource]="stepsResource"
-      (valueChange)="valueChangeFilter($event)"
-    ></codx-dropdown-select>
-  </span> -->
-
   <!-- <codx-dropdown-select
     (valueChange)="valueToolbarChange($event, item.fieldName)"
     [field]="item.fieldName"
@@ -424,4 +410,16 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
+</ng-template>
+
+<ng-template #exportTemplate>
+  <codx-form
+    [headerText]="titleAction"
+    [body]="bodyExport"
+    [footer]="footerExport"
+    [dialog]="dialog"
+  ></codx-form>
+
+  <ng-template #bodyExport> </ng-template>
+  <ng-template #footerExport> </ng-template>
 </ng-template>
