@@ -122,6 +122,7 @@ export class InstancesComponent
   sumDaySteps: number;
   sumHourSteps: number;
   lstParticipants = [];
+  lstOrg = [];
   listParticipantReason = []; // for moveReason
   oldIdInstance: any;
   viewMode: any;
@@ -428,65 +429,59 @@ export class InstancesComponent
       this.oldIdInstance = data.recID;
     }
     this.view.dataService.copy().subscribe((res) => {
-        const funcIDApplyFor =
-          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-        const applyFor = this.process.applyFor;
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          if (this.addFieldsControl == '2') {
-            let customName = fun.customName || fun.description;
-            if (this.autoName) customName = this.autoName;
-            this.titleAction =
-              this.titleAction +
-              ' ' +
-              customName.charAt(0).toLocaleLowerCase() +
-              customName.slice(1);
-          }
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-                  if (res) {
-                    this.listStepInstances = JSON.parse(JSON.stringify(res));
-                    var formMD = new FormModel();
-                    formMD.funcID = funcIDApplyFor;
-                    formMD.entityName = fun.entityName;
-                    formMD.formName = fun.formName;
-                    formMD.gridViewName = fun.gridViewName;
-                    option.Width =
-                      this.addFieldsControl == '1' ? '800px' : '550px';
-                    option.zIndex = 1001;
-                    if (!this.process.instanceNoSetting) {
-                      this.codxDpService
-                        .genAutoNumber(
-                          this.funcID,
-                          'DP_Instances',
-                          'InstanceNo'
-                        )
-                        .subscribe((res) => {
-                          if (res) {
-                            this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
-                    } else {
-                      this.codxDpService
-                        .getAutoNumberByInstanceNoSetting(
-                          this.process.instanceNoSetting
-                        )
-                        .subscribe((isNo) => {
-                          if (isNo) {
-                            this.view.dataService.dataSelected.instanceNo =
-                              isNo;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          this.titleAction =
+            this.titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            if (res) {
+              this.listStepInstances = JSON.parse(JSON.stringify(res));
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.dataSelected.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
                     }
-                  }
-            });
-        });
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    if (isNo) {
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
+                    }
+                  });
+              }
+            }
+          });
       });
+    });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
     var obj = {
@@ -496,7 +491,7 @@ export class InstancesComponent
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
-      lstParticipants: this.lstParticipants,
+      lstParticipants: this.lstOrg,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
@@ -586,7 +581,7 @@ export class InstancesComponent
                         this.view.dataService?.dataSelected?.createdOn
                       ),
                       autoName: this.autoName,
-                      lstParticipants: this.lstParticipants,
+                      lstParticipants: this.lstOrg,
                       addFieldsControl: this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
@@ -651,17 +646,19 @@ export class InstancesComponent
         this.approvalTrans('tes1', 'test2');
         break;
       case 'DP21':
-        this.handelStartDay(data)
+        this.handelStartDay(data);
         break;
     }
   }
 
-  handelStartDay(data){
-    this.notificationsService.alertCode('DP033',null, [data?.title || '']).subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startInstance(data);
-      }
-    });
+  handelStartDay(data) {
+    this.notificationsService
+      .alertCode('DP033', null, [data?.title || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startInstance(data);
+        }
+      });
   }
 
   startInstance(data) {
@@ -1000,6 +997,7 @@ export class InstancesComponent
             stepReason: stepReason,
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
+            lstParticipants: this.lstOrg,
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1216,7 +1214,7 @@ export class InstancesComponent
       instance: data,
       objReason: reason,
       listProccessCbx: this.listProccessCbx,
-      listParticipantReason: listParticipantReason,
+      listParticipantReason: this.lstOrg,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1418,14 +1416,14 @@ export class InstancesComponent
     // );
 
     //data test
-    let datas =
-      [{
+    let datas = [
+      {
         san_pham: 'Sản phẩm quần què test',
         dien_tich: 'Diện tích quần què test',
         so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test'
-      }]
-    ;
+        don_gia: 'Đơn giá quần què test',
+      },
+    ];
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
       .execSv<any>(
@@ -1537,6 +1535,9 @@ export class InstancesComponent
       this.lstParticipants = this.process?.permissions.filter(
         (x) => x.roleType === 'P'
       );
+      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
+        this.getListUserByOrg(this.lstParticipants);
+      }
     }
   }
   //filter- tam
@@ -1632,5 +1633,107 @@ export class InstancesComponent
   clickStartInstances(e) {
     //goij ham start ma dang sai
     if (e) this.startInstance(this.dataSelected);
+  }
+
+  async getListUserByOrg(list = []) {
+    this.lstOrg = [];
+    if (list != null && list.length > 0) {
+      var userOrgID = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+      if (userOrgID != null && userOrgID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userOrgID, 'O')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userDepartmentID = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (userDepartmentID != null && userDepartmentID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userPositionID = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      if (userPositionID != null && userPositionID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userPositionID, 'P')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+
+      var userRoleID = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+      if (userRoleID != null && userRoleID.length > 0) {
+        this.codxDpService.getListUserByRoleID(userRoleID).subscribe((res) => {
+          if (res != null && res.length > 0) {
+            if (this.lstOrg != null && this.lstOrg.length > 0) {
+              this.lstOrg = this.getUserArray(this.lstOrg, res);
+            } else {
+              this.lstOrg = res;
+            }
+          }
+        });
+      }
+      var lstUser = list.filter(
+        (x) => x.objectType == 'U' || x.objectType == '1'
+      );
+      if (lstUser != null && lstUser.length > 0) {
+        var tmpList = [];
+        lstUser.forEach((element) => {
+          var tmp = {};
+          if (element != null) {
+            tmp['userID'] = element.objectID;
+            tmp['userName'] = element.objectName;
+            tmpList.push(tmp);
+          }
+        });
+        if (tmpList != null && tmpList.length > 0) {
+          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
+        }
+      }
+    }
+  }
+
+  getUserArray(arr1, arr2) {
+    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
+      const duplicateIndex = acc.findIndex(
+        (el) => el.userID === current.userID
+      );
+      if (duplicateIndex === -1) {
+        acc.push(current);
+      } else {
+        acc[duplicateIndex] = current;
+      }
+      return acc;
+    }, []);
+    return arr3;
   }
 }

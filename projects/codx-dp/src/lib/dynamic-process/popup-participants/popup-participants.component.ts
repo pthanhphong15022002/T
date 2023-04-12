@@ -37,7 +37,6 @@ export class PopupParticipantsComponent implements OnInit {
   constructor(private dpSv: CodxDpService) {}
 
   ngOnInit(): void {
-    this.getListUserByOrg(this.lstParticipants);
     // if (this.lstParticipants != null && this.lstParticipants.length > 0)
     //   this.valueChangeLeft(0, this.lstParticipants[this.currentLeft]);
   }
@@ -167,90 +166,7 @@ export class PopupParticipantsComponent implements OnInit {
   //   this.currentRight = 0;
   // }
 
-  async getListUserByOrg(list = []) {
-    this.lstOrg = [];
-    if (list != null && list.length > 0) {
-      var userOrgID = list
-        .filter((x) => x.objectType == 'O')
-        .map((x) => x.objectID);
-      if (userOrgID != null && userOrgID.length > 0) {
-        this.dpSv
-          .getListUserByListOrgUnitIDAsync(userOrgID, 'O')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-      var userDepartmentID = list
-        .filter((x) => x.objectType == 'D')
-        .map((x) => x.objectID);
 
-      if (userDepartmentID != null && userDepartmentID.length > 0) {
-        this.dpSv
-          .getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-      var userPositionID = list
-        .filter((x) => x.objectType == 'P')
-        .map((x) => x.objectID);
-      if (userPositionID != null && userPositionID.length > 0) {
-        this.dpSv
-          .getListUserByListOrgUnitIDAsync(userPositionID, 'P')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-
-      var userRoleID = list
-        .filter((x) => x.objectType == 'R')
-        .map((x) => x.objectID);
-      if (userRoleID != null && userRoleID.length > 0) {
-        this.dpSv.getListUserByRoleID(userRoleID).subscribe((res) => {
-          if (res != null && res.length > 0) {
-            if (this.lstOrg != null && this.lstOrg.length > 0) {
-              this.lstOrg = this.getUserArray(this.lstOrg, res);
-            } else {
-              this.lstOrg = res;
-            }
-          }
-        });
-      }
-      var lstUser = list.filter((x) => x.objectType == 'U' || x.objectType == '1');
-      if (lstUser != null && lstUser.length > 0) {
-        var tmpList = [];
-        lstUser.forEach((element) => {
-          var tmp = {};
-          if (element != null) {
-            tmp['userID'] = element.objectID;
-            tmp['userName'] = element.objectName;
-            tmpList.push(tmp);
-          }
-        });
-        if (tmpList != null && tmpList.length > 0) {
-          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
-        }
-      }
-    }
-  }
 
   onFiltering: EmitType<any> = (e: FilteringEventArgs) => {
     // load overall data when search key empty.
@@ -272,16 +188,5 @@ export class PopupParticipantsComponent implements OnInit {
     this.eventUser.emit({ id: e });
   }
 
-  getUserArray(arr1, arr2) {
-    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
-      const duplicateIndex = acc.findIndex((el) => el.userID === current.userID);
-      if (duplicateIndex === -1) {
-        acc.push(current);
-      } else {
-        acc[duplicateIndex] = current;
-      }
-      return acc;
-    }, []);
-    return arr3;
-  }
+
 }
