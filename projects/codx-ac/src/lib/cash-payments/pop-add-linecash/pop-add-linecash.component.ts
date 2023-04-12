@@ -16,10 +16,12 @@ import {
   CallFuncService,
   NotificationsService,
   DialogData,
+  CodxInputComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CashPayment } from '../../models/CashPayment.model';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-pop-add-linecash',
@@ -29,6 +31,8 @@ import { CashPayment } from '../../models/CashPayment.model';
 export class PopAddLinecashComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
+  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
@@ -50,8 +54,9 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notification: NotificationsService,
+    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData
+    @Optional() private dialogData?: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
@@ -78,6 +83,17 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.form.formGroup.patchValue(this.cashpaymentline);
     this.loadlockfields();
     this.dt.detectChanges();
+
+    this.journalService.setAccountCbxDataSourceByJournal(
+      this.dialogData.data.journal,
+      this.cbxAccountID,
+      this.cbxOffsetAcctID
+    );
+
+    this.form.formGroup.patchValue({
+      accountID: this.cbxAccountID.crrValue,
+      offsetAcctID: this.cbxOffsetAcctID.crrValue,
+    });
   }
   //#endregion
 
