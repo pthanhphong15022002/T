@@ -15,6 +15,7 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -49,6 +50,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cashRef') cashRef: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
+  @ViewChild('cashBook') cashBook: CodxInputComponent;
   headerText: string;
   formModel: FormModel;
   dialog!: DialogRef;
@@ -96,6 +98,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   key: any;
   reverse: boolean = false;
   columnChange: string;
+  vllCashbook: any;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -158,7 +161,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
 
     if (this.formType == 'edit') {
-      if (this.cashpayment?.voucherType == '1') {
+      if (this.cashpayment?.subType == '1') {
         //#region  load cashpaymentline
         this.acService
           .loadData(
@@ -177,7 +180,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
       }
 
-      if (this.cashpayment?.voucherType == '2') {
+      if (this.cashpayment?.subType == '2') {
         this.acService
           .loadData(
             'ERM.Business.AC',
@@ -193,14 +196,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
 
-    if (
-      this.cashpayment &&
-      this.cashpayment.unbounds &&
-      this.cashpayment.unbounds.lockFields &&
-      this.cashpayment.unbounds.lockFields.length
-    ) {
-      this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
-    }
+    // if (
+    //   this.cashpayment &&
+    //   this.cashpayment.unbounds &&
+    //   this.cashpayment.unbounds.lockFields &&
+    //   this.cashpayment.unbounds.lockFields.length
+    // ) {
+    //   this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
+    // }
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
@@ -220,6 +223,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.form.formGroup.patchValue(this.cashpayment);
     this.pageCount = '(' + this.cashpaymentline.length + ')';
     this.loadTotal();
+    this.loadFuncid();
   }
   //#endregion
 
@@ -265,10 +269,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   changeType(e?: any, ele?: TabComponent) {
     let i;
     if (e) i = e.data;
-    if (!e && this.cashpayment.voucherType) i = this.cashpayment.voucherType;
+    if (!e && this.cashpayment.subType) i = this.cashpayment.subType;
     if (!ele) ele = this.tabObj;
     switch (i) {
       case '1':
+        this.loadvll('AC091');
+        ele.hideTab(0, false);
+        ele.hideTab(1, true);
+        this.cashpaymentline = [];
+        break;
+      case '3':
+        this.loadvll('AC093');
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
@@ -334,21 +345,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
 
-      if (field === 'bankaccount')
-        this.api
-          .exec<any>(
-            'BS',
-            'BankAccountsBusiness',
-            'GetAsync',
-            this.cashpayment.bankAccount
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.cashpayment.bankAcctNo = res.bankAcctNo;
-              this.cashpayment.bankID = res.bankID;
-              this.form.formGroup.patchValue(this.cashpayment);
-            }
-          });
+      // if (field === 'bankaccount')
+      //   this.api
+      //     .exec<any>(
+      //       'BS',
+      //       'BankAccountsBusiness',
+      //       'GetAsync',
+      //       this.cashpayment.bankAccount
+      //     )
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         this.cashpayment.bankAcctNo = res.bankAcctNo;
+      //         this.cashpayment.bankID = res.bankID;
+      //         this.form.formGroup.patchValue(this.cashpayment);
+      //       }
+      //     });
 
       if (field === 'transactiontext' || field === 'payee') {
         let idx = 0;
@@ -476,7 +487,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   addRow() {
     switch (this.modegrid) {
       case '1':
-        if (this.cashpayment.voucherType == '1') {
+        if (this.cashpayment.subType == '1') {
           let idx = this.gridCashPaymentLine.dataSource.length;
           let data = this.gridCashPaymentLine.formGroup.value;
           data.recID = Util.uid();
@@ -528,7 +539,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   deleteRow(data) {
     switch (this.modegrid) {
       case '1':
-        if (this.cashpayment.voucherType == '1') {
+        if (this.cashpayment.subType == '1') {
           this.gridCashPaymentLine.deleteRow(data);
           if (this.gridCashPaymentLine.dataSource.length > 0) {
             for (
@@ -541,7 +552,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           this.cashpaymentlineDelete.push(data);
         }
-        if (this.cashpayment.voucherType == '2') {
+        if (this.cashpayment.subType == '2') {
           this.gridSettledInvoices.deleteRow(data);
           this.settledInvoicesDelete.push(data);
         }
@@ -566,9 +577,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   editRow(data) {
     switch (this.modegrid) {
       case '1':
-        if (this.cashpayment.voucherType == '1')
+        if (this.cashpayment.subType == '1')
           this.gridCashPaymentLine.updateRow(data.rowNo, data);
-        if (this.cashpayment.voucherType == '2')
+        if (this.cashpayment.subType == '2')
           this.gridSettledInvoices.updateRow(data.rowNo, data);
         break;
       case '2':
@@ -745,7 +756,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       this.cashpaymentlineDelete,
                     ])
                     .subscribe();
-                  if (this.cashpayment.voucherType === '2') {
+                  if (this.cashpayment.subType === '2') {
                     this.acService
                       .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
                         this.cashpaymentline,
@@ -880,7 +891,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       });
 
       data.transID = t.cashpayment.recID;
-      data.lineType = t.cashpayment.voucherType;
+      data.lineType = t.cashpayment.subType;
       data.settledID = Util.uid();
       data.lineID = e.recID;
       data.recID = Util.uid();
@@ -947,6 +958,28 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     for (var i = 0; i < bm.length; i++) {
       bm[i].disabled = true;
     }
+  }
+
+  loadFuncid() {
+    switch (this.formModel.funcID) {
+      case 'ACT0410':
+        this.loadvll('AC091');
+        break;
+      case 'ACT0429':
+        this.loadvll('AC092');
+        break;
+    }
+  }
+  loadvll(vll) {
+    this.cache.valueList(vll).subscribe((res) => {
+      if (res.datas) {
+        this.vllCashbook = res.datas[0];
+        this.cashBook.ComponentCurrent.dataService.predicates = 'Category=@0';
+        this.cashBook.ComponentCurrent.dataService.dataValues =
+          this.vllCashbook.value;
+        this.dt.detectChanges();
+      }
+    });
   }
   //#endregion
 }

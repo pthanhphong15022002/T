@@ -66,6 +66,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     APPLICATION: 'application',
   };
   user: any;
+  itemDetail: any;
   //
   constructor(
     inject: Injector,
@@ -92,15 +93,15 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
-      {
-        type: ViewType.list,
-        sameData: true,
-        active: true,
-        model: {
-          template: this.templateList,
-          headerTemplate: this.headerTemplate,
-        },
-      },
+      // {
+      //   type: ViewType.list,
+      //   sameData: true,
+      //   active: true,
+      //   model: {
+      //     template: this.templateList,
+      //     headerTemplate: this.headerTemplate,
+      //   },
+      // },
       {
         type: ViewType.listdetail,
         sameData: true,
@@ -204,6 +205,18 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     if (createdBy) arr.push(createdBy);
     if (owner && createdBy != owner) arr.push(owner);
     return arr.join(";"); 
+  }
+
+  getDetailContract(event, data){
+    if(data){
+      this.itemDetail = data;      
+      this.df.detectChanges();
+    }
+  }
+
+  clickEvent(event, data){
+    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
+    this.clickMF(event?.event, event?.data);
   }
 
   // get file list

@@ -79,7 +79,7 @@
       <hr class="w-100 my-0" />
       <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
         <div class="w-100 pt-4 pb-3 ob-background d-flex justify-content-between">
-          <div class="d-flex align-items-top w-100 okr-treegroup">
+          <div class="d-flex align-items-center w-100 okr-treegroup">
             <span class="me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
             <span class="ob-kr ob-name fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <div class="d-flex flex-column">
@@ -143,7 +143,7 @@
       </div>
 
       <!--KR node-->
-      <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode"
+      <div class="d-flex align-items-center py-3 kr-background justify-content-between okr-treenode"
         *ngIf="item?.okrType==krType">
         <div class="d-flex align-items-center w-100">
           <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span>
@@ -206,10 +206,10 @@
       </div>
 
       <!--SKR node-->
-      <div class="d-flex align-items-center  py-2 skr-background justify-content-between  ms-3"
+      <div class="d-flex align-items-center py-3 skr-background justify-content-between"
         *ngIf="item?.okrType==skrType">
         <div class="d-flex align-items-center cursor-pointer w-100">
-          <span class="me-2" [inlineSVG]="okrVll?.skr?.icon"></span>
+          <span class="me-3" [inlineSVG]="okrVll?.skr?.icon"></span>
           <span class="d-flex flex-column">
             <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <span class="text-gray-500">

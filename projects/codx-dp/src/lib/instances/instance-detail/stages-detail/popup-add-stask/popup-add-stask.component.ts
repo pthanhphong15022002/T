@@ -313,6 +313,8 @@ export class PopupAddStaskComponent implements OnInit {
     } else {
       if (this.status === 'copy') {
         this.stepsTasks['recID'] = Util.uid();
+        this.stepsTasks['refID'] = Util.uid();
+        this.stepsTasks['isTaskDefault'] = false;
       }
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     }
