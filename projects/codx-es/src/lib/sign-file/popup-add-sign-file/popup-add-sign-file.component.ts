@@ -858,7 +858,7 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.notify.alertCode('DP007');
+            this.notify.alertCode('SYS007');
             dialogTemplateName && dialogTemplateName.close();
           }
         });

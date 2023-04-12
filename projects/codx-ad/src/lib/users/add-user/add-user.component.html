@@ -35,6 +35,7 @@
           </codx-label>
           <codx-input
             field="UserID"
+            [disabled]="(dialog?.dataService)!.keyField === 'UserID'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
             [disabled]="formType == 'edit'"
