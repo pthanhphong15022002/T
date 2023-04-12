@@ -35,7 +35,7 @@ export class BookingStationeryComponent
   @ViewChild('report') report: TemplateRef<any>;
   viewType = ViewType;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  button: any;
   dataSelected: any;
   columnsGrid: any;
   dialog!: DialogRef;
@@ -191,7 +191,7 @@ export class BookingStationeryComponent
       }
 
     } else {
-      this.button = null;
+      this.button = '';
     }
 
     this.codxEpService.getFormModel(this.funcID).then((res) => {
