@@ -650,7 +650,7 @@
   <div class="h-100" *ngIf="cashpayment.subType === '2'">
     <codx-gridview-v2 #gridVoucherLineRefs formName="VoucherLineRefs" gridViewName="grvVoucherLineRefs"
       entityName="AC_VoucherLineRefs" [templateMore]="morefunction" [editSettings]="editSettings"
-      [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" [dataSource]="voucherLineRefs"
+      [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" 
       service="AC" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
       (cellChanged)="voucherLineRefsChanged($event)"
       (created)="gridCreated($event, gridVoucherLineRefs)"
