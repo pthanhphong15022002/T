@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DataRequest,
   NotificationsService,
 } from 'codx-core';
@@ -124,5 +126,39 @@ export class JournalService {
     }
 
     return hiddenFields;
+  }
+
+  setAccountCbxDataSourceByJournal(
+    journal: IJournal,
+    drAccountCbx: CodxInputComponent,
+    crAccountCbx: CodxInputComponent
+  ): void {
+    // gia tri co dinh, danh sach
+    if (['1', '2'].includes(journal?.drAcctControl)) {
+      (
+        drAccountCbx.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${journal?.drAcctID}]`]
+      );
+    }
+
+    if (['1', '2'].includes(journal?.crAcctControl)) {
+      (
+        crAccountCbx.ComponentCurrent as CodxComboboxComponent
+      ).dataService.setPredicates(
+        ['@0.Contains(AccountID)'],
+        [`[${journal?.crAcctID}]`]
+      );
+    }
+
+    // mac dinh
+    if (journal?.drAcctControl === '0') {
+      drAccountCbx.crrValue = journal?.crAcctID;
+    }
+
+    if (journal?.crAcctControl === '0') {
+      crAccountCbx.crrValue = journal?.crAcctID;
+    }
   }
 }

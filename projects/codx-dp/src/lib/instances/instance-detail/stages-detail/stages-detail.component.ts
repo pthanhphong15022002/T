@@ -1475,7 +1475,14 @@ export class StagesDetailComponent implements OnInit {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
+            if(this.isClosed) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS102':
+            if(this.isClosed) {
+              res.disabled = true;
+            }
             // this.deleteReason();
             break;
           default:

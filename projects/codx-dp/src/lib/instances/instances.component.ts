@@ -122,6 +122,7 @@ export class InstancesComponent
   sumDaySteps: number;
   sumHourSteps: number;
   lstParticipants = [];
+  lstOrg = [];
   listParticipantReason = []; // for moveReason
   oldIdInstance: any;
   viewMode: any;
@@ -428,65 +429,59 @@ export class InstancesComponent
       this.oldIdInstance = data.recID;
     }
     this.view.dataService.copy().subscribe((res) => {
-        const funcIDApplyFor =
-          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-        const applyFor = this.process.applyFor;
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          if (this.addFieldsControl == '2') {
-            let customName = fun.customName || fun.description;
-            if (this.autoName) customName = this.autoName;
-            this.titleAction =
-              this.titleAction +
-              ' ' +
-              customName.charAt(0).toLocaleLowerCase() +
-              customName.slice(1);
-          }
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-                  if (res) {
-                    this.listStepInstances = JSON.parse(JSON.stringify(res));
-                    var formMD = new FormModel();
-                    formMD.funcID = funcIDApplyFor;
-                    formMD.entityName = fun.entityName;
-                    formMD.formName = fun.formName;
-                    formMD.gridViewName = fun.gridViewName;
-                    option.Width =
-                      this.addFieldsControl == '1' ? '800px' : '550px';
-                    option.zIndex = 1001;
-                    if (!this.process.instanceNoSetting) {
-                      this.codxDpService
-                        .genAutoNumber(
-                          this.funcID,
-                          'DP_Instances',
-                          'InstanceNo'
-                        )
-                        .subscribe((res) => {
-                          if (res) {
-                            this.view.dataService.dataSelected.instanceNo = res;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
-                    } else {
-                      this.codxDpService
-                        .getAutoNumberByInstanceNoSetting(
-                          this.process.instanceNoSetting
-                        )
-                        .subscribe((isNo) => {
-                          if (isNo) {
-                            this.view.dataService.dataSelected.instanceNo =
-                              isNo;
-                            this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                          }
-                        });
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          this.titleAction =
+            this.titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            if (res) {
+              this.listStepInstances = JSON.parse(JSON.stringify(res));
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.dataSelected.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
                     }
-                  }
-            });
-        });
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    if (isNo) {
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
+                    }
+                  });
+              }
+            }
+          });
       });
+    });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
     var obj = {
@@ -496,7 +491,7 @@ export class InstancesComponent
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
-      lstParticipants: this.lstParticipants,
+      lstParticipants: this.lstOrg,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
       isAdminRoles: this.isAdminRoles,
@@ -586,7 +581,7 @@ export class InstancesComponent
                         this.view.dataService?.dataSelected?.createdOn
                       ),
                       autoName: this.autoName,
-                      lstParticipants: this.lstParticipants,
+                      lstParticipants: this.lstOrg,
                       addFieldsControl: this.addFieldsControl,
                     };
                     var dialogEditInstance = this.callfc.openSide(
@@ -644,14 +639,18 @@ export class InstancesComponent
         break;
       //export File
       case 'DP16':
-        this.exportFile();
+        this.exportFileDynamic();
         break;
       //trinh kí File
       case 'DP17':
-        this.approvalTrans('tes1', 'test2');
+        this.documentApproval(data);
         break;
       case 'DP21':
-        this.handelStartDay(data)
+        this.handelStartDay(data);
+        break;
+      //xuat khau du lieu
+      case 'SYS002':
+        this.exportFile();
         break;
     }
   }
@@ -1000,6 +999,7 @@ export class InstancesComponent
             stepReason: stepReason,
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
+            lstParticipants: this.lstOrg,
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1216,7 +1216,7 @@ export class InstancesComponent
       instance: data,
       objReason: reason,
       listProccessCbx: this.listProccessCbx,
-      listParticipantReason: listParticipantReason,
+      listParticipantReason: this.lstOrg,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1396,36 +1396,50 @@ export class InstancesComponent
 
   //Export file
   exportFile() {
-    // var gridModel = new DataRequest();
-    // gridModel.formName = this.view.formModel.formName;
-    // gridModel.entityName = this.view.formModel.entityName;
-    // gridModel.funcID = this.view.formModel.funcID;
-    // gridModel.gridViewName = this.view.formModel.gridViewName;
-    // gridModel.page = this.view.dataService.request.page;
-    // gridModel.pageSize = this.view.dataService.request.pageSize;
-    // gridModel.predicate = this.view.dataService.request.predicates;
-    // gridModel.dataValue = this.view.dataService.request.dataValues;
-    // gridModel.entityPermission = this.view.formModel.entityPer;
-    // //
-    // this.callfc.openForm(
-    //   CodxExportComponent,
-    //   null,
-    //   null,
-    //   800,
-    //   '',
-    //   [gridModel, this.dataSelected.recID],
-    //   null
-    // );
-
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+  }
+  exportFileDynamic() {
     //data test
-    let datas =
-      [{
-        san_pham: 'Sản phẩm quần què test',
-        dien_tich: 'Diện tích quần què test',
-        so_luong: 'Số lượng quần què test',
-        don_gia: 'Đơn giá quần què test'
-      }]
-    ;
+    let datas = [
+      {
+        dai_dien: 'người đại diện',
+        datas: [
+          {
+            san_pham: 'Sản phẩm quần què test',
+            dien_tich: 'Diện tích quần què test',
+            so_luong: 'Số lượng quần què test',
+            don_gia: 'Đơn giá quần què test',
+          },
+          {
+            san_pham: 'Sản phẩm 1',
+            dien_tich: '0',
+            so_luong: 10,
+            don_gia: 5000,
+          },
+        ],
+      },
+    ];
+    this.dataSelected.datas = JSON.stringify(datas);
+    if (!this.dataSelected.datas) return;
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
       .execSv<any>(
@@ -1433,73 +1447,46 @@ export class InstancesComponent
         'ERM.Business.Core',
         'CMBusiness',
         'ExportExcelDataAsync',
-        [JSON.stringify(datas), id]
+        [this.dataSelected.datas, id]
       )
       .subscribe((res) => {
-        console.log(res);
+        if (res) {
+          this.downloadFile(res);
+        }
       });
   }
-  //Xét duyệt
-  approvalTrans(processID: any, datas: any) {
-    // this.api
-    //   .execSv(
-    //     'ES',
-    //     'ES',
-    //     'ApprovalTransBusiness',
-    //     'GetCategoryByProcessIDAsync',
-    //     processID
-    //   )
-    //   .subscribe((res2: any) => {
-    // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    // dialogModel.zIndex=1010 ;
-    //trình ký
-    //  if (res2?.eSign == true) {
-    //let signFile = new ES_SignFile();
-    // signFile.recID = datas.recID;
-    //  signFile.title = datas.title;
-    // signFile.categoryID = res2?.categoryID;
-    //signFile.refId = datas.recID;
-    // signFile.refDate = datas.refDate;
-    //signFile.refNo = datas.refNo;
-    //signFile.priority = datas.urgency;
-    // signFile.refType = this.formModel?.entityName;
-    //signFile.files = [];
-    // if (this.data?.files) {
-    //   for (var i = 0; i < this.data?.files.length; i++) {
-    //     var file = new File();
-    //     file.fileID = this.data?.files[i].recID;
-    //     file.fileName = this.data?.files[i].fileName;
-    //     file.eSign = true;
-    //     signFile.files.push(file);
-    //   }
-    // }
-    // let dialogApprove = this.callfc.openForm(
-    //   PopupAddSignFileComponent,
-    //   'Chỉnh sửa',
-    //   700,
-    //   650,
-    //   '',
-    //   {
-    //     oSignFile: signFile,
-    //     // files: this.data?.files,
-    //     //  cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
-    //     disableCateID: true,
-    //     formModel: this.view?.currentView?.formModel,
-    //   },
-    //   '',
-    //   dialogModel
-    // );
-    // dialogApprove.closed.subscribe((res) => {
-    //   if (res.event && res.event?.approved == true) {
-    //   }
-    // });
-    //this.callfunc.openForm();
-    // } else if (res2?.eSign == false) {
-    // }
-    //xét duyệt
-    // });
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray(
+      'DP_Instances_' + this.dataSelected.title || 'excel',
+      sampleArr
+    );
   }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var blob = new Blob([byte], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
+  }
+  //end export
+
   //load điều kiện
   loadData(ps) {
     this.process = ps;
@@ -1537,6 +1524,9 @@ export class InstancesComponent
       this.lstParticipants = this.process?.permissions.filter(
         (x) => x.roleType === 'P'
       );
+      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
+        this.getListUserByOrg(this.lstParticipants);
+      }
     }
   }
   //filter- tam
@@ -1632,5 +1622,237 @@ export class InstancesComponent
   clickStartInstances(e) {
     //goij ham start ma dang sai
     if (e) this.startInstance(this.dataSelected);
+  }
+  //Xét duyệt
+  //Duyệt
+  documentApproval(datas: any) {
+    // if (datas.bsCategory) {
+    //Có thiết lập bước duyệt
+    // if (datas.bsCategory.approval) {
+    this.api
+      .execSv(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        'ODC2303-0002' //thêm để test
+      )
+      .subscribe((item: any) => {
+        if (item) {
+          this.approvalTrans(item?.processID, datas);
+        } else {
+        }
+      });
+    // }
+    //Chưa thiết lập bước duyệt
+    // else {
+    //   var config = new AlertConfirmInputConfig();
+    //   config.type = 'YesNo';
+    //   this.notificationsService.alertCode('OD024', config).subscribe((item) => {
+    //     if (item.event.status == 'Y') {
+    //       //Lấy processID mặc định theo entity
+    //       this.api
+    //         .execSv(
+    //           'ES',
+    //           'ES',
+    //           'CategoriesBusiness',
+    //           'GetDefaulProcessIDAsync',
+    //           this.formModel.entityName
+    //         )
+    //         .subscribe((item: any) => {
+    //           if (item) {
+    //             this.approvalTrans(item?.processID, datas);
+    //           }
+    //         });
+    //     }
+    //   });
+    // }
+    // }
+  }
+  approvalTrans(processID: any, datas: any) {
+    this.api
+      .execSv(
+        'ES',
+        'ES',
+        'ApprovalTransBusiness',
+        'GetCategoryByProcessIDAsync',
+        processID
+      )
+      .subscribe((res2: any) => {
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        //trình ký
+        if (res2?.eSign == true) {
+          let signFile = new ES_SignFile();
+          signFile.recID = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //datas.recID;
+          signFile.title = datas.title;
+          signFile.categoryID = res2?.categoryID;
+          signFile.refId = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //
+          // signFile.refDate = datas.refDate;
+          signFile.refNo = datas.refNo;
+          // signFile.priority = datas.urgency;
+          signFile.refType = this.formModel?.entityName; // OD_Dispatches';
+          signFile.files = [];
+          // if (this.data?.files) {
+          //   for (var i = 0; i < this.data?.files.length; i++) {
+          //     var file = new File();
+          //     file.fileID = this.data?.files[i].recID;
+          //     file.fileName = this.data?.files[i].fileName;
+          //     file.eSign = true;
+          //     signFile.files.push(file);
+          //   }
+          // }
+          let dialogApprove = this.callfc.openForm(
+            PopupAddSignFileComponent,
+            'Chỉnh sửa',
+            700,
+            650,
+            '',
+            {
+              oSignFile: signFile,
+              ///files: this.data?.files,  //file  cân xét duyet
+              cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
+              disableCateID: true,
+              //formModel: this.view?.currentView?.formModel,
+            },
+            '',
+            dialogModel
+          );
+          dialogApprove.closed.subscribe((res) => {
+            if (res.event && res.event?.approved == true) {
+              //update lại data
+            }
+          });
+        } else if (res2?.eSign == false)
+          //xét duyệt
+          this.release(datas, processID);
+      });
+  }
+  //Gửi duyệt
+  release(data: any, processID: any) {
+    this.api
+      .execSv(
+        this.view.service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'ReleaseAsync',
+        [
+          data?.recID,
+          processID,
+          this.view.formModel.entityName,
+          this.formModel.funcID,
+          '<div>' + data?.title + '</div>',
+        ]
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.notificationsService.notifyCode('ES007');
+        }
+      });
+  }
+  //end duyet
+
+  async getListUserByOrg(list = []) {
+    this.lstOrg = [];
+    if (list != null && list.length > 0) {
+      var userOrgID = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+      if (userOrgID != null && userOrgID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userOrgID, 'O')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userDepartmentID = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (userDepartmentID != null && userDepartmentID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+      var userPositionID = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      if (userPositionID != null && userPositionID.length > 0) {
+        this.codxDpService
+          .getListUserByListOrgUnitIDAsync(userPositionID, 'P')
+          .subscribe((res) => {
+            if (res != null && res.length > 0) {
+              if (this.lstOrg != null && this.lstOrg.length > 0) {
+                this.lstOrg = this.getUserArray(this.lstOrg, res);
+              } else {
+                this.lstOrg = res;
+              }
+            }
+          });
+      }
+
+      var userRoleID = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+      if (userRoleID != null && userRoleID.length > 0) {
+        this.codxDpService.getListUserByRoleID(userRoleID).subscribe((res) => {
+          if (res != null && res.length > 0) {
+            if (this.lstOrg != null && this.lstOrg.length > 0) {
+              this.lstOrg = this.getUserArray(this.lstOrg, res);
+            } else {
+              this.lstOrg = res;
+            }
+          }
+        });
+      }
+      var lstUser = list.filter(
+        (x) => x.objectType == 'U' || x.objectType == '1'
+      );
+      if (lstUser != null && lstUser.length > 0) {
+        var tmpList = [];
+        lstUser.forEach((element) => {
+          var tmp = {};
+          if (element != null) {
+            tmp['userID'] = element.objectID;
+            tmp['userName'] = element.objectName;
+            tmpList.push(tmp);
+          }
+        });
+        if (tmpList != null && tmpList.length > 0) {
+          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
+        }
+      }
+    }
+  }
+
+  getUserArray(arr1, arr2) {
+    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
+      const duplicateIndex = acc.findIndex(
+        (el) => el.userID === current.userID
+      );
+      if (duplicateIndex === -1) {
+        acc.push(current);
+      } else {
+        acc[duplicateIndex] = current;
+      }
+      return acc;
+    }, []);
+    return arr3;
   }
 }

@@ -74,6 +74,7 @@ import { VoucherComponent } from './popup/voucher/voucher.component';
 import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { SearchPipe } from './cash-payments/pop-add-cash/search.pipe';
+import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
 
 export const routes: Routes = [
   {
@@ -164,6 +165,10 @@ export const routes: Routes = [
         path: 'fapostingaccounts/:funcID',
         component: FAPostingAccountsComponent,
       },
+      {
+        path: 'fixedassets/:funcID',
+        component: FixedAssetsComponent,
+      },
     ],
   },
 ];
@@ -230,6 +235,7 @@ export const routes: Routes = [
     NameByIdPipe,
     PopAddLinereceiptsComponent,
     SearchPipe,
+    FixedAssetsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
