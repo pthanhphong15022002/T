@@ -41,7 +41,7 @@ export class VoucherComponent implements OnInit {
   sublegendOpen: Array<any> = [];
   predicates: string;
   dataValues: string;
-  date = new Date().toLocaleDateString();
+  date = new Date().toISOString();
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
