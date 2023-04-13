@@ -783,11 +783,13 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances) res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed) res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances){
+                res.disabled = true;
+              }
               break;
             case 'DP02':
               let isUpdateFail = data.write;
