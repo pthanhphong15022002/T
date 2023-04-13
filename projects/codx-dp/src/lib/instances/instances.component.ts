@@ -167,8 +167,22 @@ export class InstancesComponent
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
-  isLockExport = false;
-  dataTemplet = [];
+  isLockButton = false;
+  //test temp
+  dataTemplet = [
+    {
+      templateName: 'File excel của Khanh- Team bá cháy',
+      recID: '1',
+    },
+    {
+      templateName: 'Khanh múa rất đẹp,sập sân khấu',
+      recID: '2',
+    },
+    {
+      templateName: 'Khanh pig bá đạo',
+      recID: '3',
+    },
+  ];
   dialogTemplate: DialogRef;
   isFormExport = true;
 
@@ -1431,7 +1445,7 @@ export class InstancesComponent
   }
 
   showFormExport() {
-    // this.isLockExport = true ;
+    this.isLockButton = true ;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
@@ -1657,9 +1671,11 @@ export class InstancesComponent
     if (e) this.startInstance(this.dataSelected);
   }
   //Xét duyệt
-
+  selectTemp(recID) {
+    if (recID) this.isLockButton = false;else this.isLockButton = true ;
+  }
   showFormSubmit() {
-    // this.isLockExport = true ;
+    this.isLockButton = true ;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
