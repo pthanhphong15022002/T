@@ -28,17 +28,18 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   @Input() okrFM:any;
   @Input() okrVll:any;
   @Input() orgUnitTree:any;
+  @Input() okrGrv:any;
   dataTree: any;
   listDistribute: any;
   isAfterRender: boolean;
   curUser: any;
   openAccordionAlign=[];
   constructor(
-    private callfunc: CallFuncService,
-    private cache: CacheService,
+    //private callfunc: CallFuncService,
+    //private cache: CacheService,
     private codxOmService: CodxOmService,
-    private api: ApiHttpService,
-    private notificationsService: NotificationsService,
+    //private api: ApiHttpService,
+    //private notificationsService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
   ) {    
@@ -60,7 +61,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   clickMF(e: any, data: any) {}
   selectionChange(parent) {
     if (!parent.isItem) {
-      parent.data.items= parent.data.listChildrens;
+      parent.data.items= parent.data.items;
     }
   }
   //-----------------------End-------------------------------//

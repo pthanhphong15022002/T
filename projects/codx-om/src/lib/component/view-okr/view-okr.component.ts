@@ -12,6 +12,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { OMCONST } from '../../codx-om.constant';
+import { CodxOmService } from '../../codx-om.service';
 
 @Component({
   selector: 'view-okr',
@@ -25,15 +26,18 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   @Input() isShowBreakLine=false;
   @Input() okrFM:any;
   @Input() okrVll:any;
+  @Input() okrGrv:any;
 
   dialogRef: DialogRef;
   formModel: FormModel;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
+  listUM=[];
 
   constructor(
     private injector: Injector,
+    private codxOmService: CodxOmService,
   ) {
     super(injector);
   
@@ -44,7 +48,13 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     //this.getCacheData();
-    
+    this.codxOmService.getListUM().subscribe((res:any)=>{
+      if(res ){
+        Array.from(res).forEach((um:any)=>{
+          this.listUM.push({umid:um?.umid,umName:um?.umName});
+        });        
+      }
+    });
   }
 
   //-----------------------End-------------------------------//
@@ -79,6 +89,18 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   selectionChange(parent) {
     if (parent.isItem) {
       parent.data.items= parent?.data?.items;
+    }
+  }
+  //Lấy UMName
+  getUMName(umid:string){
+    let tmpUM = this.listUM.filter((obj) => {
+      return obj.umid == umid;
+    });
+    if(tmpUM!=null && tmpUM.length>0){
+      return tmpUM[0]?.umName;
+    }
+    else{
+      return umid;
     }
   }
 }

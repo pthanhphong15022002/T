@@ -7,7 +7,7 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="w-100 d-flex justify-content-between">
       <div class="mt-2 col-2 ms-3 input-circle input-lg">
-        <codx-input [disabled]="formType === 'edit'" [Group]="form.formGroup" field="subType"
+        <codx-input [disabled]="formType == 'edit' ? true : false" [disabled]="formType === 'edit'" [Group]="form.formGroup" field="subType"
           [formModel]="form.formModel" (valueChange)="changeType($event)">
         </codx-input>
       </div>
@@ -156,18 +156,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div #noteRef class="col-6">
-
-            <div class="form-group">
-              <codx-label fiedName="BankAcctID" [formModel]="form.formModel">
-              </codx-label>
-              <codx-input [Group]="form.formGroup" field="bankacctID" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
-              </codx-input>
-            </div>
-          </div>
-        </div> -->
       </div>
       <div class="col-3">
         <div class="row">
@@ -494,7 +482,7 @@
           {{ headerText }}
         </div>
         <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
-          <codx-input class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
+          <codx-input [disabled]="formType == 'edit' ? true : false"  class="badge badge-danger" [Group]="form.formGroup" field="status" [formModel]="form.formModel">
           </codx-input>
         </div>
       </div>
