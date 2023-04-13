@@ -172,6 +172,8 @@ export class InstancesComponent
   dialogTemplate: DialogRef;
   isFormExport = true;
 
+  listOwnerInMove = [];
+  listStageManagerInMove = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -752,7 +754,7 @@ export class InstancesComponent
             case 'SYS03':
             case 'DP09':
               let isUpdate = data.write;
-              if (!isUpdate || data.status != '2' || data.closed)
+              if (!isUpdate || data.status != '2' || data.closed || !this.checkRoleInMove(data))
                 res.disabled = true;
               break;
             //Copy
@@ -1562,6 +1564,7 @@ export class InstancesComponent
         this.getListUserByOrg(this.lstParticipants);
       }
     }
+    this.getRoleInMove(this.process);
   }
   //filter- tam
   valueChangeFilter(e) {
@@ -1905,5 +1908,37 @@ export class InstancesComponent
       return acc;
     }, []);
     return arr3;
+  }
+
+
+  getRoleInMove(proccess){
+    debugger;
+    var listSteps = proccess.steps
+    for(let item of proccess.permissions) {
+      if(item.roleType === 'O') {
+        this.listOwnerInMove.push(item.objectID);
+      }
+    }
+    debugger;
+     for(let item of listSteps) {
+        var stageManager = item.roles.find(x=> x.roleType === 'S');
+        if(stageManager){
+        var ojb = {
+          stepID: item.recID,
+          objectID: stageManager.objectID
+        }
+          this.listStageManagerInMove.push(ojb);
+        }
+     }
+  }
+  checkRoleInMove(data){
+    if( this.user.userID === data.owner || this.listOwnerInMove.includes(this.user.userID) || this.checkRoleInStage(this.user.userID,data) )
+    {
+      return true;
+    }
+    return false;
+  }
+  checkRoleInStage(userID, data){
+    return this.listStageManagerInMove.some(x=> x.stepID === data.stepID && x.objectID === userID);
   }
 }
