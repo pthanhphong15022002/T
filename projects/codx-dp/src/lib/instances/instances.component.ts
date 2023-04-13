@@ -1702,8 +1702,8 @@ export class InstancesComponent
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        'ODC2303-0002' //thêm để test
-      )
+        'ESC-00000023' //thêm để test ODC2303-0002 đã xóa
+      ) 
       .subscribe((item: any) => {
         if (item) {
           this.approvalTrans(item?.processID, datas);
