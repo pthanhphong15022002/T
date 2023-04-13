@@ -167,8 +167,22 @@ export class InstancesComponent
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
-  isLockExport = false;
-  dataTemplet = [];
+  isLockButton = false;
+  //test temp
+  dataTemplet = [
+    {
+      templateName: 'File excel của Khanh- Team bá cháy',
+      recID: '1',
+    },
+    {
+      templateName: 'Khanh múa rất đẹp,sập sân khấu',
+      recID: '2',
+    },
+    {
+      templateName: 'Khanh pig bá đạo',
+      recID: '3',
+    },
+  ];
   dialogTemplate: DialogRef;
   isFormExport = true;
 
@@ -771,11 +785,13 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances) res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed) res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances){
+                res.disabled = true;
+              }
               break;
             case 'DP02':
               let isUpdateFail = data.write;
@@ -1433,7 +1449,7 @@ export class InstancesComponent
   }
 
   showFormExport() {
-    // this.isLockExport = true ;
+    this.isLockButton = true ;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
@@ -1524,7 +1540,7 @@ export class InstancesComponent
   //end export
 
   //load điều kiện
-  loadData(ps) {
+  async loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
@@ -1561,7 +1577,7 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(this.lstParticipants);
       }
     }
     this.getRoleInMove(this.process);
@@ -1660,9 +1676,11 @@ export class InstancesComponent
     if (e) this.startInstance(this.dataSelected);
   }
   //Xét duyệt
-
+  selectTemp(recID) {
+    if (recID) this.isLockButton = false;else this.isLockButton = true ;
+  }
   showFormSubmit() {
-    // this.isLockExport = true ;
+    this.isLockButton = true ;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(

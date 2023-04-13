@@ -68,7 +68,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
     this.cache
@@ -155,7 +154,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   }
   setDefault(o) {
     return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
   add(e) {

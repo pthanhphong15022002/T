@@ -53,6 +53,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   gvsVATInvoices: any;
   isEdit: boolean = false;
   tabName$: Observable<string>;
+  voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
 
@@ -98,6 +99,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
       map((t) => t.datas?.[0].default),
       tap((t) => console.log(t))
     );
+
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
