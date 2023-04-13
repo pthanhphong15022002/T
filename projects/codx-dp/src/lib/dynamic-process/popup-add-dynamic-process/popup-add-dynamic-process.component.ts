@@ -1303,7 +1303,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles() {
+  clickRoles(roleType) {
     var title = this.gridViewSetup?.Permissions?.headerText;
     let formModel = new FormModel();
     formModel.formName = 'DPProcessesPermissions';
@@ -1312,7 +1312,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -1320,7 +1319,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         950,
         650,
         '',
-        [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
+        [this.process, title, this.action === 'copy' ? 'copy' : 'add', roleType],
         '',
         dialogModel
       )
