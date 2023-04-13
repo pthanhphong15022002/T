@@ -85,14 +85,14 @@ export class InputCustomFieldComponent implements OnInit {
   valueChange(e) {
     let checkNull = !e || !e.data || e.data.toString().trim() == '';
     // if (this.checkValid) {
-      if (this.customField.isRequired && checkNull) {
-        this.cache.message('SYS028').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-          this.showErrMess = true;
-        });
-        if(!this.checkValid) return;
-      } else this.showErrMess = false;
-  // } else this.showErrMess = false;
+    if (this.customField.isRequired && checkNull) {
+      this.cache.message('SYS028').subscribe((res) => {
+        if (res) this.errorMessage = res.customName || res.defaultName;
+        this.showErrMess = true;
+      });
+      if (!this.checkValid) return;
+    } else this.showErrMess = false;
+    // } else this.showErrMess = false;
 
     switch (this.customField.dataType) {
       case 'T':
@@ -104,10 +104,11 @@ export class InputCustomFieldComponent implements OnInit {
               if (res) {
                 this.errorMessage = res.customName || res.defaultName;
               }
+              this.showErrMess = true;
               this.changeDef.detectChanges();
             });
-            this.showErrMess = true;
-            if(!this.checkValid) return;
+
+            if (!this.checkValid) return;
           } else this.showErrMess = false;
         }
         //format so dien thoai
@@ -120,10 +121,11 @@ export class InputCustomFieldComponent implements OnInit {
               if (res) {
                 this.errorMessage = res.customName || res.defaultName;
               }
+              this.showErrMess = true;
               this.changeDef.detectChanges();
             });
-            this.showErrMess = true;
-            if(!this.checkValid) return;
+
+            if (!this.checkValid) return;
           } else this.showErrMess = false;
         }
         break;

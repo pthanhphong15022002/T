@@ -214,7 +214,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modegrid = this.journal.inputMode;
-      this.cashpayment.approveStatus = this.journal.approval;
     });
   }
 
@@ -268,7 +267,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     let i;
-    let vll;
     if (e) i = e.data;
     if (!e && this.cashpayment.subType) i = this.cashpayment.subType;
     if (!ele) ele = this.tabObj;
@@ -277,8 +275,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
-        vll = (this.formModel.funcID == 'ACT0410') ? 'AC091' : 'AC092';
-        this.loadvll(vll);
+        this.loadFuncid();
         break;
       case '3':
         ele.hideTab(0, false);
@@ -931,7 +928,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadFuncid() {
-    switch (this.formModel.funcID) {
+    switch (this.dialog.formModel.funcID) {
       case 'ACT0410':
         this.loadvll('AC091');
         break;
