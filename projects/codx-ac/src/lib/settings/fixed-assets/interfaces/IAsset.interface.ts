@@ -29,7 +29,7 @@ export interface IAsset {
   lastUpdatedOn: string | null;
   acquisitionDate: string | null;
   acquisitionNo: string;
-  uMID: string;
+  umid: string;
   quantity: number;
   multiQuantity: boolean;
   purcAmount: number;
