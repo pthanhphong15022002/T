@@ -416,10 +416,10 @@
     ejs-listview {
       background-color: transparent;
       .e-list-item.e-active {
-        background-color: var(--bg-body);
+        background-color: var(--white);
       }
       .e-list-item:hover {
-        background-color: var(--bg-body);
+        background-color: var(--white);
       }
     }
   }

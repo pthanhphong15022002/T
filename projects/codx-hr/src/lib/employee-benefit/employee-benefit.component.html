@@ -1,0 +1,230 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EBenefits"
+  className="EBenefitsBusiness"
+  [method]="method"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addBenefit($event)"
+>
+</codx-views>
+
+<ng-template #headerTemplate let-data>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblJobSalaries"
+      [default]="'Loại phụ cấp | Số tiền | Hiệu lực'"
+    ></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblApproveStatus"
+      [default]="'Tình trạng duyệt'"
+    ></codx-label>
+  </div>
+</ng-template>
+
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center min-h-100px">
+    <div class="w-25">
+      <div class="d-flex align-items-start">
+        <div class="d-flex flex-column">
+          <codx-img
+            [width]="35"
+            class="me-3"
+            [objectId]="data?.emp?.employeeID"
+            [referType]="'avt'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
+          >
+          </codx-img>
+          <codx-vll
+            class="me-2 badge badge-sm"
+            [name]="'HR001'"
+            [value]="data?.emp?.gender"
+            [showText]="false"
+            [showIcon]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </div>
+        <div class="d-flex flex-column">
+          <div>
+            <div class="fw-bold">
+              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
+              <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+              <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+            </div>
+          </div>
+          <div class="text-gray-700">
+            <span
+              [innerHTML]="
+                data?.emp?.positionID
+                  | formatvalue : view.formModel : 'positionID'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="text-gray-700">
+            <span
+              [innerHTML]="
+                data?.emp?.orgUnitID
+                  | formatvalue : view.formModel : 'orgUnitID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-25">
+      <div
+        class="d-flex flex-column"
+        [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+      >
+        <div
+          class="d-flex align-items-center mt-1"
+          [innerHTML]="
+            data.benefitID | formatvalue : view.formModel : 'benefitID' | async
+          "
+        >
+          <span
+            class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
+          ></span>
+        </div>
+
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
+            <span class="icon-attach_money icon-15 me-1"></span>
+            <div
+              class="align-self-center fw-bold"
+              [ngbTooltip]="grvSetup?.benefitAmt?.headerText"
+            >
+              <span
+                class="align-self-center fw-bold"
+                [innerHTML]="
+                  data?.benefitAmt
+                    | formatvalue : view.formModel : 'benefitAmt'
+                    | async
+                "
+              >
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row">
+            <span class="icon-calendar_today icon-15 me-1"></span>
+            <div class="align-self-center fw-bold">
+              <span
+                [title]="
+                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                "
+                [ngbTooltip]="grvSetup?.effectedDate?.headerText"
+              >
+                {{ data?.effectedDate | fmDT }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-25">
+      <div class="d-flex flex-column">
+        <div class="text-gray-700 d-flex flex-row">
+          <span class="icon-event_notes icon-15 me-1"></span>
+          <div class="align-self-center fw-bold d-flex align-items-center">
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''
+              "
+            >
+              {{ data?.decisionNo }}
+            </span>
+            <span class="p-dot mx-1"> ⚫ </span>
+            <span
+              [title]="
+                eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
+              "
+            >
+              {{ data?.signedDate | fmDT }}</span
+            >
+          </div>
+        </div>
+        <div class="d-flex flex-row">
+          <div>
+            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+              <i class="icon-attach_file text-primary icon-15"></i>
+              <div class="align-self-center notification-count me-4">
+                {{ data?.attachments }}
+              </div>
+            </div>
+          </div>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </div>
+      </div>
+      <codx-attachment
+        #attachment
+        [objectId]="data?.recID"
+        [objectType]="view.formModel.entityName"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="view.formModel"
+        displayThumb="full"
+        showMessage="0"
+      >
+      </codx-attachment>
+    </div>
+    <div class="w-25">
+      <codx-vll
+        [formModel]="view.formModel"
+        [field]="'ApproveStatus'"
+        [value]="data?.approveStatus"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+      >
+      </codx-vll>
+    </div>
+
+    <div class="align-self-center">
+      <div style="height: 35px" class="has-action-menu">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)"
+          [dataItem]="data"
+          type="hover"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+  </div>
+</ng-template>
