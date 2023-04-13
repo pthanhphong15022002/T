@@ -35,8 +35,8 @@ import { PurchaseInvoices } from '../../models/PurchaseInvoices.model';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
 import { VATInvoices } from '../../models/VATInvoices.model';
 import { PopAddLineComponent } from '../pop-add-line/pop-add-line.component';
-import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
-import { JournalService } from '../../journal-names/journal-names.service';
+import { JournalService } from '../../journals/journals.service';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -109,14 +109,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   total: any = 0;
   lockFields: string[];
   constructor(
-    private inject: Injector,
-    cache: CacheService,
+    inject: Injector,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private ngxService: NgxUiLoaderService,
     private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -374,7 +371,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                 this.purchaseinvoices,
                 e.data,
               ])
-              .subscribe((res: any) => {});
+              .subscribe(() => {});
           }
         });
     }
@@ -419,7 +416,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             '',
             opt
           );
-          dialogs.closed.subscribe((x) => {
+          dialogs.closed.subscribe(() => {
             var dataline = JSON.parse(localStorage.getItem('dataline'));
             if (dataline != null) {
               this.purchaseInvoicesLines.push(dataline);
@@ -575,7 +572,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             '',
             opt
           );
-          dialogs.closed.subscribe((x) => {
+          dialogs.closed.subscribe(() => {
             var dataline = JSON.parse(localStorage.getItem('dataline'));
             if (dataline != null) {
               this.purchaseInvoicesLines[index] = dataline;
@@ -741,14 +738,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .exec('AC', 'VATInvoicesBusiness', 'AddVATInvoiceAsync', [
           this.vatinvoices,
         ])
-        .subscribe((res: any) => {});
+        .subscribe(() => {});
     } else {
       this.objectvatinvoices = this.gridInvoices.dataSource;
       this.api
         .exec('AC', 'VATInvoicesBusiness', 'AddLineAsync', [
           this.objectvatinvoices,
         ])
-        .subscribe((res: any) => {});
+        .subscribe(() => {});
     }
   }
   updateVAT() {
@@ -757,7 +754,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .exec('AC', 'VATInvoicesBusiness', 'UpdateVATInvoiceAsync', [
           this.vatinvoices,
         ])
-        .subscribe((res: any) => {});
+        .subscribe(() => {});
     }
   }
   onSave() {
@@ -780,7 +777,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.purchaseinvoices,
-        "PS",
+        'PS',
         'PS_PurchaseInvoices',
         this.form,
         this.formType === 'edit',

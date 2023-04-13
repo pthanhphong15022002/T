@@ -455,6 +455,8 @@ import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/co
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
+import { ViewBasicSalaryDetailComponent } from './employee-basic-salary/view-basic-salary-detail/view-basic-salary-detail.component';
+import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 export const routes: Routes = [
   {
     path: '',
@@ -708,7 +710,9 @@ const T_Component: Type<any>[] = [
   PopupEmployeeJobsalaryComponent,
   ViewContractDetailComponent,
   EmployeeBasicSalaryComponent,
+  ViewBasicSalaryDetailComponent,
   EmployeeJobSalaryComponent,
+  ViewDetailContractsComponent,
 ];
 @NgModule({
   imports: [

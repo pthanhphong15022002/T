@@ -265,15 +265,26 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'hover'"
+    (changeDataMF)="changeDataMf($event, data)"
   >
   </codx-temp-full>
   <ng-template #titleTmp let-data>
     <div class="w-100">
       <div class="justify-content-between text-dark fw-bold">
-        <span>
-          {{ data?.emp?.employeeName }}
-        </span>
-
+        <codx-vll
+        class="badge badge-sm"
+        [name]="'HR001'"
+        [value]="data?.emp?.gender"
+        [showText]="false"
+        [showIcon]="true"
+        [showBgColor]="true"
+      >
+        
+    </codx-vll>
+    <span>
+      {{ data?.emp?.employeeName }}
+    </span>
+        
         <span>
           <i class="icon-qr_code_scanner icon-14 me-1"></i>
           <span class="text-danger">
@@ -282,7 +293,7 @@
         </span>
       </div>
 
-      <div class="justify-content-between text-gray-700">
+      <div class="justify-content-between">
         <span
           [innerHTML]="
             data.emp.positionID
@@ -291,8 +302,10 @@
           "
         ></span>
       </div>
-
-      <div class="justify-content-between text-dark">
+      <div
+      [class]="data?.isCurrent ? 'text-primary' : ''"
+    >
+      <div class="justify-content-between">
         <span
           [innerHTML]="
             data.contractTypeID
@@ -309,19 +322,21 @@
           {{ data.expiredDate | fmDT }}
         </span>
       </div>
+    </div>
+
       <div class="d-flex justify-content-between text-dark">
         <span class="mt-2">
           <codx-vll
             class="badge fw-bold"
             [name]="'HRS102'"
-            [value]="data?.signStatus"
+            [value]="data?.status"
             [showText]="true"
             [showBgColor]="true"
           >
           </codx-vll>
         </span>
 
-        <span class="d-flex flex-row justify-content-end">
+        <!-- <span class="d-flex flex-row justify-content-end">
           <codx-imgs
             [objectId]="getIdUser(data.createdBy, data.owner)"
             [objectType]="'AD_Users'"
@@ -330,23 +345,23 @@
             [mode]="false"
           >
           </codx-imgs>
-        </span>
+        </span> -->
       </div>
     </div>
   </ng-template>
 </ng-template>
 
 <ng-template #panelRightListDetail let-data>
-  <lib-view-contracts-detail
+  <lib-view-detail-contracts
     #viewdetail
     [itemDetail]="itemDetail"
     [funcID]="funcID"
-    [formModel]="view?.formModel"
     [view]="view"
+    [formModel] = "view.formModel"
     (uploaded)="getDetailContract($event, data)"
     (clickMFunction)="clickEvent($event, data)"
   >
-  </lib-view-contracts-detail>
+  </lib-view-detail-contracts>
   <ng-template #itemRightDetail> </ng-template>
 </ng-template>
 
@@ -383,7 +398,7 @@
             </codx-label>
           </label>
           <codx-input
-            disabled="true"
+            [disabled]="'true'"
             field="status"
             [formModel]="view.formModel"
             [Group]="formGroup"

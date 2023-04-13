@@ -29,6 +29,7 @@ export class VoucherComponent implements OnInit {
   cashpayment: any;
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
+  invoiceDueDate: any;
   gridHeight: number = 0;
   formModel: FormModel = {
     gridViewName: 'grvSubLedgerOpen',
@@ -40,7 +41,7 @@ export class VoucherComponent implements OnInit {
   sublegendOpen: Array<any> = [];
   predicates: string;
   dataValues: string;
-
+  date = new Date().toISOString();
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -154,7 +155,7 @@ export class VoucherComponent implements OnInit {
 
   //#region function
   setDate(day?: any) {
-    let date = new Date(this.cashpayment.voucherDate);
+    let date = new Date(this.form.formGroup.value['invoiceDueDate']);
     let aDate = (date as any).addDays(day || 0);
     this.mapDataValues.set('date', aDate.toISOString());
   }

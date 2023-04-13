@@ -1,193 +1,143 @@
-<ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
-        <i class="icon-save"></i>
-        <codx-label
-          default="Lưu"
-          name="lblSave"
-          [formModel]="formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
-
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [formModel]="formModel"
-  [footer]="footer"
-  [dialog]="dialog"
-  [data]="currentEJobSalaries"
-  *ngIf="isAfterRender"
->
-<ng-template #body>
-  <div class="form-group row mt-5">
-    <div *ngIf="(actionType == 'add' && employeeObj == null) || (actionType == 'copy' && employeeObj == null)" class="form-group row">
-        <codx-img
-            [width]="35"
-            class="me-3 col-3"
-            [objectId]="employeeObj?.employeeID"
-            [referType]="'avt'"
-            [objectName]="employeeObj?.employeeName"
-            [objectType]="'HR_Employees'"
-        >
-        </codx-img>
-        <div class="col-8">
-            <codx-label
-                fiedName="EmployeeID" [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="employeeID"
-                [formModel]="formModel" 
-                [Group]="formGroup" 
-                (valueChange)="handleSelectEmp($event)"
-            >
-            </codx-input>
-        </div>
-    </div>
-    <div *ngIf="actionType == 'edit' || actionType == 'copy' || (actionType == 'add' && employeeObj != null)">
-      <div class="d-flex"> 
-        <div class="d-flex flex-column">
-          <codx-img
-            [width]="35"
-            class="me-3"
-            [objectId]="employeeObj.employeeID"
-            [referType]="'avt'"
-            [objectName]="employeeObj.employeeName"
-            [objectType]="'HR_Employees'"
-          >
-          </codx-img>
-          <codx-vll
-          class="badge badge-sm"
-          [name]="'HR001'"
-          [value]="employeeObj?.gender"
-          [showText]="false"
-          [showIcon]="true"
-          [showBgColor]="true"
-        >
-        </codx-vll>
-        </div>
-        <div class="d-flex flex-column">
-          <div>
-            <div class="text-dark fw-bold">
-              <span>
-                {{ employeeObj.employeeName }}
-              </span>
-              <i class="icon-qr_code_scanner icon-14 me-1"></i>
-              <span>
-                {{ employeeObj.employeeID }}
-              </span>
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="formModel" [footer]="footer" [dialog]="dialog"
+  [data]="currentEJobSalaries" *ngIf="isAfterRender">
+  <ng-template #body>
+    <div class="form-group row mt-5">
+      <div
+        class="form-group row">
+        <div class="row">
+          <div class="col-4">
+            <codx-img [width]="35" class="me-3 col-3" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
+              [objectName]="employeeObj?.employeeName ?? employeeObj?.emp.employeeName" [objectType]="'HR_Employees'">
+            </codx-img>
+          </div>
+          <!-- <div class="col-4" *ngIf="(employeeObj != null)">
+            <div class="d-flex">
+              <div class="d-flex flex-column">
+                <codx-img [width]="35" class="me-3" [objectId]="employeeObj.employeeID" [referType]="'avt'"
+                  [objectName]="employeeObj.employeeName" [objectType]="'HR_Employees'">
+                </codx-img>
+                <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="employeeObj?.gender" [showText]="false"
+                  [showIcon]="true" [showBgColor]="true">
+                </codx-vll>
+              </div>
+              <div class="d-flex flex-column">
+                <div>
+                  <div class="text-dark fw-bold">
+                    <span>
+                      {{ employeeObj.employeeName }}
+                    </span>
+                    <i class="icon-qr_code_scanner icon-14 me-1"></i>
+                    <span>
+                      {{ employeeObj.employeeID }}
+                    </span>
+                  </div>
+    
+                </div>
+              </div>
             </div>
-  
+          </div> -->
+          <div class="col-8" *ngIf="actionType != 'edit'">
+            <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+            <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
+              (valueChange)="handleSelectEmp($event)">
+            </codx-input>
           </div>
         </div>
+
+
+      </div>
+      <!-- <div *ngIf="actionType == 'edit' || actionType == 'copy' || (actionType == 'add' && employeeObj != null)">
+        <div class="d-flex">
+          <div class="d-flex flex-column">
+            <codx-img [width]="35" class="me-3" [objectId]="employeeObj.employeeID" [referType]="'avt'"
+              [objectName]="employeeObj.employeeName" [objectType]="'HR_Employees'">
+            </codx-img>
+            <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="employeeObj?.gender" [showText]="false"
+              [showIcon]="true" [showBgColor]="true">
+            </codx-vll>
+          </div>
+          <div class="d-flex flex-column">
+            <div>
+              <div class="text-dark fw-bold">
+                <span>
+                  {{ employeeObj.employeeName }}
+                </span>
+                <i class="icon-qr_code_scanner icon-14 me-1"></i>
+                <span>
+                  {{ employeeObj.employeeID }}
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="col-6">
+        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-input field="decisionNo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      </div>
+      <div class="col-6">
+        <div>
+          <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        </div>
+        <codx-input disabled="true" field="isCurrent" [formModel]="formModel" [Group]="formGroup"></codx-input>
       </div>
     </div>
-    
-    <div class="col-6">
-      <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="decisionNo"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <div>
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
+        <codx-input field="effectedDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
       </div>
-      <codx-input
-        disabled="true"
-        field="isCurrent"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="col-6">
+        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-input field="expiredDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label
-        fiedName="EffectedDate"
-        [formModel]="formModel"
-      ></codx-label>
-      <codx-input
-        field="effectedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+    <div class="form-group row">
+      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
+      <div class="col-6">
+
+        <codx-input field="jSalary" [formModel]="formModel" [Group]="formGroup" [showSpinButton]="false"></codx-input>
+      </div>
     </div>
-    <div class="col-6">
-      <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="expiredDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+
+    <hr>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-input field="signedDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Status" [formModel]="formModel"></codx-label>
+        <codx-input field="status" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
-    <div class="col-6">
 
-    <codx-input
-      field="jSalary"
-      [formModel]="formModel"
-      [Group]="formGroup"
-      [showSpinButton]="false" 
-    ></codx-input>
+    <div class="form-group row">
+      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+      <codx-input field="signerID" [formModel]="formModel" [Group]="formGroup"
+      (valueChange)="valueChange($event)"></codx-input>
     </div>
-  </div>
 
-  <hr>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="signedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+    <div class="form-group row">
+      <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
+      <codx-input field="signerPosition" [formModel]="formModel" [Group]="formGroup"></codx-input>
     </div>
-    <div class="col-6">
-      <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="signStatus"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+
+    <div class="form-group rpw">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input field="note" [formModel]="formModel" [Group]="formGroup"></codx-input>
     </div>
-  </div>
+  </ng-template>
+</codx-form>
 
-  <div class="form-group row">
-    <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
-    <codx-input
-      field="signerID"
-      [formModel]="formModel"
-      [Group]="formGroup"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <codx-label
-      fiedName="SignerPosition"
-      [formModel]="formModel"
-    ></codx-label>
-    <codx-input
-      field="signerPosition"
-      [formModel]="formModel"
-      [Group]="formGroup"
-    ></codx-input>
-  </div>
-
-  <div class="form-group rpw">
-    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-    <codx-input
-      field="note"
-      [formModel]="formModel"
-      [Group]="formGroup"
-    ></codx-input>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+    </button>
   </div>
 </ng-template>
-</codx-form>

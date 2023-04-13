@@ -1,5 +1,5 @@
 #om-tab {
-  height: 100% !important;
+  // height: 100% !important;
   .e-toolbar-item{
     margin-right: 15px;
   }
@@ -10,7 +10,7 @@
 }
 
 #om-tab > .e-content {
-  height: calc(100% - 35px) !important;
+  height: calc(100% - 30px) !important;
   overflow: auto;
 }
 
@@ -233,7 +233,7 @@
           width: 25px;
       }
       .collapse-conent{
-          margin-top: 17px;
+          margin-top: 16px;
           margin-right: 2px;
       }
   }

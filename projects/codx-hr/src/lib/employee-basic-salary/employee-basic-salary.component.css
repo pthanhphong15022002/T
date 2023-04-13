@@ -1,13 +1,22 @@
 .notification-count {
-    /* background: blue;  */
-    height: 20px;
-    top: 1rem;
-    right: 1.5rem;
-    width: 20px;
-    text-align: center;
-    line-height: 20px;
-    border-radius: 50%;
-    color: white;
-    /* border: 1px solid; */
-    font-size: 12px;
+  /* background: blue;  */
+  height: 20px;
+  top: 1rem;
+  right: 1.5rem;
+  width: 20px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  color: white;
+  /* border: 1px solid; */
+  font-size: 12px;
+}
+.text-highlight {
+  color: #3286e6;
+}
+.gender-male {
+  color: blue;
+}
+.gender-female {
+  color: #ff8cf4;
 }

@@ -94,20 +94,6 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.userID = this.authStore.get().userID;
-    this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.oData = res;
-        }
-      });
-    this.api
-      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.cashbook = res;
-        }
-      });
   }
 
   ngAfterViewInit() {
@@ -309,15 +295,18 @@ export class CashPaymentsComponent extends UIComponent {
         x.functionID == 'ACT041002' ||
         x.functionID == 'ACT041004'
     );
-    // duyệt trước khi ghi sổ
-    if (data.status == '1' && data.approveStatus == '1') {
-      bm[1].disabled = true;
-      bm[2].disabled = true;
-    }
-    //ko duyệt trước khi ghi sổ
-    if (data.status == '1' && data.approveStatus == '0') {
-      bm[0].disabled = true;
-      bm[2].disabled = true;
+    // check có hay ko duyệt trước khi ghi sổ
+    if (data?.status == '1') {
+      switch (data?.approveStatus) {
+        case '0':
+          bm[0].disabled = true;
+          bm[2].disabled = true;
+          break;
+        case '1':
+          bm[1].disabled = true;
+          bm[2].disabled = true;
+          break;
+      }
     }
     //Chờ duyệt
     if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
@@ -340,21 +329,9 @@ export class CashPaymentsComponent extends UIComponent {
 
   loadDatadetail(data) {
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res[0].objectName;
-        }
-      });
-    this.api
       .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
       .subscribe((res: any) => {
         this.cashpaymentline = res;
-      });
-    this.api
-      .exec('AC', 'TransactionTextsBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.transactionText = res;
       });
   }
   //#endregion

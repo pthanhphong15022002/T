@@ -61,7 +61,6 @@ export class PopupEBasicSalariesComponent
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
-    console.log(this.EBasicSalaryObj);
     this.formModel = dialog?.formModel;
     this.employeeObj = data?.data?.employeeObj;
     this.fromListView = data?.data?.fromListView;
@@ -73,7 +72,10 @@ export class PopupEBasicSalariesComponent
       if (this.fromListView) return true;
       else return false;
     }
-    if (this.actionType == 'copy') return true;
+    if (this.actionType == 'copy') {
+      if (this.fromListView) return true;
+      else return false;
+    }
     if (this.actionType == 'add') {
       if (this.fromListView) return true; // add new from list view
       else return false;

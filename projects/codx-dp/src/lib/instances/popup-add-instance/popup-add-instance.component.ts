@@ -112,29 +112,24 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data?.formMD;
     this.autoName = dt?.data?.autoName;
     this.endDate = new Date(dt?.data?.endDate);
-    this.addFieldsControl = dt?.data?.addFieldsControl 
+    this.addFieldsControl = dt?.data?.addFieldsControl;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
       this.lstParticipants = dt?.data?.lstParticipants;
       this.owner = this.instance?.owner;
-      if (
-        this.instance.permissions != null &&
-        this.instance.permissions.length > 0
-      ) {
-        this.lstParticipants = this.instance.permissions.filter(
-          (x) => x.roleType === 'P'
-        );
-      }
     } else {
       this.lstParticipants = dt?.data?.lstParticipants;
       this.instance.endDate = this.endDate;
-      var isAdmin = dt?.data.isAdminRoles;
-      if (this.user.administrator || isAdmin) {
-        this.owner = '';
-      } else {
+      var check = false;
+      if (this.lstParticipants != null && this.lstParticipants.length > 0)
+        check = this.lstParticipants.some((x) => x.userID === this.user.userID);
+
+      if (check == true) {
         this.owner = this.user.userID;
+      } else {
+        this.owner = '';
       }
     }
 
@@ -212,7 +207,6 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e;
           break;
       }
-
       var index = this.listStep.findIndex((x) => x.recID == field.stepID);
 
       if (index != -1) {
@@ -222,6 +216,7 @@ export class PopupAddInstanceComponent implements OnInit {
           );
           if (idxField != -1) {
             this.listStep[index].fields[idxField].dataValue = result;
+
             let idxEdit = this.listCustomFile.findIndex(
               (x) => x.recID == this.listStep[index].fields[idxField].recID
             );

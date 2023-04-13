@@ -220,6 +220,15 @@ export class ReviewComponent extends UIComponent implements OnInit {
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
     debugger
     //itemAnswer.choose = true
+    if(itemQuestion.answerType == "L")
+    {
+      this.lstQuestion[itemSession.seqNo].children[
+        itemQuestion.seqNo
+      ].answers[0].answer = itemAnswer;
+
+      return;
+    }
+
     if (!e.data && !e.component) return;
     if (e.component) {
       if (
@@ -249,7 +258,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers = this.lstAnswer;
-      } else
+      }
+       else
         this.lstQuestion[itemSession.seqNo].children[
           itemQuestion.seqNo
         ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));

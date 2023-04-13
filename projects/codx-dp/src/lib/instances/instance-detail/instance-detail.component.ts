@@ -25,13 +25,12 @@ import {
   DialogRef,
   FormModel,
   AuthStore,
-  CodxDetailTmpComponent
+  CodxDetailTmpComponent,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -54,7 +53,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
-  @ViewChild('viewDetail') viewDetail : CodxDetailTmpComponent ;
+  @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
   @Input() viewsCurrent = '';
   @Input() moreFunc: any;
   @Input() reloadData = false;
@@ -97,6 +96,7 @@ export class InstanceDetailComponent implements OnInit {
   moreFuncCrr: any;
   listReasonSuccess: DP_Instances_Steps_Reasons[] = [];
   listReasonFail: DP_Instances_Steps_Reasons[] = [];
+  isOnlyView: boolean = true;
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -120,8 +120,9 @@ export class InstanceDetailComponent implements OnInit {
   isSaving = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   isStart = false;
-  user:any;
-  maxSize:number = 4;
+  user: any;
+  maxSize: number = 4;
+  ownerInstance: string[] = [];
 
   constructor(
     private callfc: CallFuncService,
@@ -132,28 +133,36 @@ export class InstanceDetailComponent implements OnInit {
     private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer,
-    private authStore: AuthStore,
-
+    private authStore: AuthStore
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
-    this.cache.functionList("DPT040102").subscribe((res) => {
-      if(res){
-        let formModel = new FormModel;
+    this.cache.functionList('DPT040102').subscribe((res) => {
+      if (res) {
+        let formModel = new FormModel();
         formModel.formName = res?.formName;
         formModel.gridViewName = res?.gridViewName;
         formModel.entityName = res?.entityName;
-        formModel.funcID = "DPT040102";
+        formModel.funcID = 'DPT040102';
         this.frmModelInstancesTask = formModel;
         console.log(this.frmModelInstancesTask);
-        
-      }            
+      }
     });
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.dataSelect?.permissions?.length > 0) {
+      this.ownerInstance =
+        this.dataSelect?.permissions
+          .filter((role) => role.roleType == 'O')
+          ?.map((item) => {
+            return item.objectID;
+          }) || [];
+    }
+    this.ownerInstance.push(this.dataSelect?.owner);
+
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
@@ -178,13 +187,14 @@ export class InstanceDetailComponent implements OnInit {
         );
         this.listReasonBySteps(this.reasonStepsObject);
         this.maxSize = 4;
+        this.isOnlyView = true;
       }
     } else if (changes['reloadData'] && this.reloadData) {
       this.instanceStatus = this.dataSelect.status;
       //muon change ma ko chang dc
-      if(this.viewDetail && this.moreFuncCrr){
-        this.viewDetail.dataItem = this.dataSelect ;
-        this.viewDetail.changedataMFs(this.moreFuncCrr)
+      if (this.viewDetail && this.moreFuncCrr) {
+        this.viewDetail.dataItem = this.dataSelect;
+        this.viewDetail.changedataMFs(this.moreFuncCrr);
       }
       this.getStageByStep(this.listSteps);
       this.changeDetec.detectChanges();
@@ -323,38 +333,18 @@ export class InstanceDetailComponent implements OnInit {
     //   });
     // }
   }
-
-  click(indexNo, data) {
-    if (
-      this.currentStep < indexNo &&
-      (this.instanceStatus === '1' || this.instanceStatus === '2')
-    )
-      return;
-    this.currentNameStep = indexNo;
-    var indx = this.listSteps.findIndex((x) => x.stepID == data);
-    this.tmpTeps = this.listSteps[indx];
-    this.lstInv = this.getInvolved(this.tmpTeps.roles);
-    this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
-  }
   clickStage($event) {
-    if($event) {
-      var indexNo = $event?.indexNo
+    if ($event) {
+      var indexNo = $event?.indexNo;
       var stepId = $event?.id;
-      if (
-        this.currentStep < indexNo &&
-        (this.instanceStatus === '1' || this.instanceStatus === '2')
-      )
-        return;
+      this.isOnlyView = $event?.isOnlyView;
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];
       this.lstInv = this.getInvolved(this.tmpTeps.roles);
       this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
-
     }
-
   }
-
 
   setHTMLCssStages(oldStage, newStage) {}
 
@@ -421,20 +411,24 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getReasonByStepId(status: string) {
-    if(status == '3' || status == '4') return this.listReasonSuccess;
-    if(status == '5' || status == '6') return this.listReasonFail;
+    if (status == '3' || status == '4') return this.listReasonSuccess;
+    if (status == '5' || status == '6') return this.listReasonFail;
     return null;
   }
-  listReasonBySteps(reasonStepsObject){
-    if(reasonStepsObject) {
-      this.listReasonSuccess = this.convertStepsReason(reasonStepsObject.stepReasonSuccess);
-      this.listReasonFail = this.convertStepsReason( reasonStepsObject.stepReasonFail);
+  listReasonBySteps(reasonStepsObject) {
+    if (reasonStepsObject) {
+      this.listReasonSuccess = this.convertStepsReason(
+        reasonStepsObject.stepReasonSuccess
+      );
+      this.listReasonFail = this.convertStepsReason(
+        reasonStepsObject.stepReasonFail
+      );
     }
   }
-  convertStepsReason(reasons:any){
-    var listReasonInstance =  [];
-    for(let item of reasons ) {
-      var  reasonInstance= new DP_Instances_Steps_Reasons();
+  convertStepsReason(reasons: any) {
+    var listReasonInstance = [];
+    for (let item of reasons) {
+      var reasonInstance = new DP_Instances_Steps_Reasons();
       reasonInstance.processID = this.dataSelect.processID;
       reasonInstance.stepID = item.stepID;
       reasonInstance.reasonName = item.reasonName;
@@ -476,6 +470,7 @@ export class InstanceDetailComponent implements OnInit {
 
   rollHeight() {
     this.maxSize = 6;
+    this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
     if (this.viewType == 'd') {

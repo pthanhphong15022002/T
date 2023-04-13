@@ -674,9 +674,10 @@
   </div>
   <ng-template #tmpL>
     <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
-      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange($event, itemSession, itemQuestion, $event.value)">
+      <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
+      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
         <option selected >Chọn</option>
-        <option *ngFor="let item of itemQuestion.answers" value="">{{item.answer}}</option>
+        <option *ngFor="let item of itemQuestion.answers" [value]="item.answer">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>
