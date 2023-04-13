@@ -338,7 +338,16 @@ export class CodxOmService {
       [recID]
     );
   }
-
+  //Lấy ds UM
+  getListUM() {
+    return this.api.execSv(
+      "BS", 
+      "ERM.Business.BS", 
+      "UnitsOfMearsureBusiness", 
+      "GetAsync", 
+      []
+    );
+  }
   //KTra trc khi thu hồi plan
   beforeUnReleasePlan(recID:string) {
     return this.api.execSv(

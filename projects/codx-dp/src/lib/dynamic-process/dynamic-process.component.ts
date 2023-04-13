@@ -65,7 +65,7 @@ export class DynamicProcessComponent
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
-  
+
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
@@ -151,7 +151,7 @@ export class DynamicProcessComponent
     )
     .subscribe(grv=>{
       this.grvSetup =grv
-    }) 
+    })
 
     this.getListAppyFor();
     this.getValueFormCopy();
@@ -620,7 +620,7 @@ export class DynamicProcessComponent
         950,
         650,
         '',
-        [e, this.titleAction, 'role'],
+        [e, this.titleAction, 'role', 'full'],
         '',
         dialogModel
       )
@@ -868,7 +868,7 @@ export class DynamicProcessComponent
       predicates  = predicate +'0' ;
     }
     if(predicates) predicates = "( " + predicates+ ' )' ;
-      
+
     (this.view.dataService as CRUDService)
       .setPredicates(
         [predicates],
