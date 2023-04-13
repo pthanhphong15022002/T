@@ -1,3 +1,4 @@
+import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
@@ -344,18 +345,14 @@ export class EmployeeContractComponent extends UIComponent {
     if (owner && createdBy != owner) arr.push(owner);
     return arr.join(";"); 
   }
+    
   changeItemDetail(event) {
     this.itemDetail = event?.data;
-    // console.log('eventttttttttttttttttt', event);
-    
-    // console.log('itemdetail', this.itemDetail);
-
-    
   }
+
   getDetailContract(event, data){
     if(data){
       this.itemDetail = data;
-      // console.log('itemdetail', this.itemDetail);
       
       this.df.detectChanges();
     }

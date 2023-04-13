@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ProgressComponent implements OnInit{
   @Input() progress: any;
+  @Input() type = 1;
   id = ''
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
   ngOnInit(){
