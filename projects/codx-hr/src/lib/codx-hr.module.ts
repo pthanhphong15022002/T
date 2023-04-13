@@ -456,6 +456,8 @@ import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-b
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
 import { ViewBasicSalaryDetailComponent } from './employee-basic-salary/view-basic-salary-detail/view-basic-salary-detail.component';
+import { EmployeeBenefitComponent } from './employee-benefit/employee-benefit.component';
+import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee-benefit/popup-employee-benefit.component';
 import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
 export const routes: Routes = [
@@ -561,6 +563,10 @@ export const routes: Routes = [
           {
             path: 'eawards/:funcID',
             component: EmployeeAwardsComponent,
+          },
+          {            
+            path: 'ebenefits/:funcID',
+            component: EmployeeBenefitComponent,
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -717,6 +723,8 @@ const T_Component: Type<any>[] = [
   EmployeeBasicSalaryComponent,
   ViewBasicSalaryDetailComponent,
   EmployeeJobSalaryComponent,
+  EmployeeBenefitComponent,
+  PopupEmployeeBenefitComponent,
   ViewDetailContractsComponent,
   EmployeeAwardsComponent,
 ];
