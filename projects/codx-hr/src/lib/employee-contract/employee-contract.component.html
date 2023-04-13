@@ -265,6 +265,7 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'hover'"
+    (changeDataMF)="changeDataMf($event, data)"
   >
   </codx-temp-full>
   <ng-template #titleTmp let-data>
@@ -335,7 +336,7 @@
           </codx-vll>
         </span>
 
-        <span class="d-flex flex-row justify-content-end">
+        <!-- <span class="d-flex flex-row justify-content-end">
           <codx-imgs
             [objectId]="getIdUser(data.createdBy, data.owner)"
             [objectType]="'AD_Users'"
@@ -344,23 +345,23 @@
             [mode]="false"
           >
           </codx-imgs>
-        </span>
+        </span> -->
       </div>
     </div>
   </ng-template>
 </ng-template>
 
 <ng-template #panelRightListDetail let-data>
-  <lib-view-contracts-detail
+  <lib-view-detail-contracts
     #viewdetail
     [itemDetail]="itemDetail"
     [funcID]="funcID"
-    [formModel]="view?.formModel"
     [view]="view"
+    [formModel] = "view.formModel"
     (uploaded)="getDetailContract($event, data)"
     (clickMFunction)="clickEvent($event, data)"
   >
-  </lib-view-contracts-detail>
+  </lib-view-detail-contracts>
   <ng-template #itemRightDetail> </ng-template>
 </ng-template>
 
@@ -397,7 +398,7 @@
             </codx-label>
           </label>
           <codx-input
-            disabled="true"
+            [disabled]="'true'"
             field="status"
             [formModel]="view.formModel"
             [Group]="formGroup"

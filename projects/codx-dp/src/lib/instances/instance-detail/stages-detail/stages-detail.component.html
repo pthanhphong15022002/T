@@ -518,9 +518,9 @@
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="data?.value?.roles[0]?.objectID"
+        [objectId]="getObjectIdRole(data?.value, data?.group)"
         objectType="AD_Users"
-        [objectName]="data?.value?.roles[0]?.objectName"
+        [objectName]="getObjectNameRole(data?.value, data?.group)"
       ></codx-img>
     </span>
     <div class="notify">

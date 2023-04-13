@@ -44,6 +44,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   @Input() funcID: string = '';
   @Input() objectID: string = '';
+  @Input() method: string = '';
   @Input() predicate: any;
   @Input() dataValue: any;
   @Input() predicates: any;
@@ -93,7 +94,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dataService.dataValues = res.params.dataValue;
       }
     });
-    // set predicate - sort
+    // set dataService
+    this.dataService.service = "WP";
+    this.dataService.assemblyName = "ERM.Business.WP";
+    this.dataService.className = "CommentsBusiness";
+    this.dataService.method = this.method || "GetListPostAsync";
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
@@ -336,4 +341,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     item.isShowShortContent = !item.isShowShortContent; 
   }
   
+
+  // xóa bài viết trên client
+  removePost(data:any){
+    (this.listview.dataService as CRUDService).remove(data).subscribe();
+  }
 }

@@ -64,12 +64,12 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroup: any;
-  listTask: any;
-  listTaskGroupDone: any;
-  listTaskDone: any;
-  listTree: any;
-  listTypeTask: any;
+  listTaskGroup: any = [];
+  listTask: any = [];
+  listTaskGroupDone: any =[];
+  listTaskDone: any = [];
+  listTree: any = [];
+  listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason: any;
@@ -171,10 +171,10 @@ export class PopupMoveStageComponent implements OnInit {
               );
               if (role != null && role.length > 0) {
                 if (role[0].objectType != 'U' && role[0].objectType != '1') {
-                  // this.getOwnerByListRoles(
-                  //   role.map((x) => x.objectID),
-                  //   role[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    role.map((x) => x.objectID),
+                    role[0].objectType
+                  );
                 } else {
                   this.owner = this.stepCurrent?.owner;
                 }
@@ -207,10 +207,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleClick[0].objectType != 'U' &&
                   roleClick[0].objectType != '1'
                 ) {
-                  // this.getOwnerByListRoles(
-                  //   roleClick.map((x) => x.objectID),
-                  //   roleClick[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    roleClick.map((x) => x.objectID),
+                    roleClick[0].objectType
+                  );
                 } else {
                   this.owner = this.listStepsCbx[index]?.owner;
                 }
@@ -242,10 +242,10 @@ export class PopupMoveStageComponent implements OnInit {
                   roleOld[0].objectType != 'U' &&
                   roleOld[0].objectType != '1'
                 ) {
-                  // this.getOwnerByListRoles(
-                  //   roleOld.map((x) => x.objectID),
-                  //   roleOld[0].objectType
-                  // );
+                  this.getOwnerByListRoles(
+                    roleOld.map((x) => x.objectID),
+                    roleOld[0].objectType
+                  );
                 } else {
                   this.owner = this.listStepsCbx[i - 1]?.owner;
                 }
@@ -518,11 +518,21 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   addItem(list: any, data, view) {
-    list.push(data);
-    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+
+
     if (view == this.viewTaskGroup) {
       let children = document.getElementById(`${data.recID}`);
+      list.push(data);
     }
+
+    if(view == this.viewTask) {
+      if(this.ischeckClickedTaskParent(data)) {
+        list.push(data);
+      }
+
+    }
+    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+
   }
 
   removeItem(list, id) {
@@ -683,22 +693,76 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  checkExitsParentID(item,view): string {
+  getColorTask(item,view): string {
     var check = 'd-none';
     if (item?.requireCompleted) {
       check ='text-danger';
     }
     else if(view == this.viewTask)
     {
-
-      for(let item of this.listTask ) {
-        if(item.parentID?.includes(item.recID)) {
+      for(let tasks of this.listTask ) {
+         if(tasks.parentID?.includes(item.refID))
+         {
           check = 'text-orange'
           break;
         }
-
       }
     }
     return check;
+  }
+  ischeckClickedTaskParent(data){
+    if(data.parentID) {
+      var parentIds = data?.parentID.split(';');
+      var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
+      if(filteredList.length != parentIds.length) {
+        var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
+        checkbox.checked = false;
+        var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+        var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+
+        this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+        return false;
+      }
+    }
+    return true;
+
+  }
+
+  getOwnerByListRoles(lstRoles, objectType) {
+    var lstOrg = [];
+    if (lstRoles != null && lstRoles.length > 0) {
+      switch (objectType) {
+        case 'O':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'O')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'D':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'D')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'P':
+          this.codxDpService
+            .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+      }
+    }
   }
 }

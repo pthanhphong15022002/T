@@ -16,9 +16,11 @@ import {
   CallFuncService,
   NotificationsService,
   DialogData,
+  CodxInputComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-pop-add-linereceipts',
@@ -27,6 +29,8 @@ import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
 })
 export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
+  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
@@ -42,8 +46,9 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notification: NotificationsService,
+    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData
+    @Optional() private dialogData?: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
@@ -63,6 +68,17 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashreceiptslines);
+
+    this.journalService.setAccountCbxDataSourceByJournal(
+      this.dialogData.data.journal,
+      this.cbxAccountID,
+      this.cbxOffsetAcctID
+    );
+
+    this.form.formGroup.patchValue({
+      accountID: this.cbxAccountID.crrValue,
+      offsetAcctID: this.cbxOffsetAcctID.crrValue,
+    });
   }
   close() {
     this.dialog.close();
