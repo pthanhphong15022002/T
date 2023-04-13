@@ -113,10 +113,10 @@ export class EmployeeContractComponent extends UIComponent {
     // //   this.view.dataService.methodDelete = 'DeleteEContractAsync';
     // // }
     // console.log('data service data', this.view?.formModel.funcID);
-    // this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
-    //   this.eContractHeaderText = res;
-    //   console.log('hed do` text ne',this.eContractHeaderText);
-    // })
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+      this.eContractHeaderText = res;
+      console.log('hed do` text ne',this.eContractHeaderText);
+    })
   }
 
   ngAfterViewChecked(){
