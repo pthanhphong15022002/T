@@ -6,6 +6,7 @@ import {
   Injector,
   OnDestroy,
   ElementRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -37,12 +38,14 @@ import {
   AnimationSettingsModel,
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
-import { E } from '@angular/cdk/keycodes';
+
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
+
 export class HomeComponent extends UIComponent implements  OnDestroy {
   @ViewChild('divHome') divHome: ElementRef;
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
@@ -158,7 +161,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       ]
     },
   ]
-  //@ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -176,6 +178,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   onInit(): void {
     //View mặc định 
    
+    var elem = document.createElement('div');
+    elem.id = "dm-home-mark-id"
+    elem.className =  "dm-home-mark w-100 h-100";
+    document.body.appendChild(elem);
+
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
@@ -447,162 +454,18 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
       }
     })
-    
+  }
 
-    // this.dmSV.isNodeSelect.subscribe((res) => {
-    //   if (res) {
-    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
-    //     if (tree) {
-    //       if (res.recID) tree.getCurrentNode(res.recID);
-    //       else tree.getCurrentNode(res);
-    //     }
-    //   }
-    // });
+  disableMark()
+  {
+    var elm = document.getElementById("dm-home-mark-id");
+    elm.classList.add("dm-home-mark");
+  }
 
-    // this.dmSV.isNodeDeleted.subscribe((res) => {
-    //   if (res) {
-    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
-    //     if (tree) {
-    //       tree.removeNodeTree(res);
-    //       var breadcumb = [];
-    //       var breadcumbLink = [];
-    //       breadcumb.push(this.dmSV.menuActive.getValue());
-    //       tree.textField = 'folderName';
-    //       var list = tree.arrBreadCumb;
-    //       if (list && list.length > 0) {
-    //         var index = list.findIndex((x) => x.id == res);
-    //         this.codxview.dataService.data =
-    //           this.codxview.dataService.data.filter((x) => x.id != res);
-    //         if (index >= 0) {
-    //           list = list.slice(index + 1);
-    //           if (list.length > 0) {
-    //             this.dmSV.folderId.next(list[0].id);
-    //             this.dmSV.folderID = list[0].id;
-    //             for (var i = list.length - 1; i >= 0; i--) {
-    //               breadcumb.push(list[i].text);
-    //               breadcumbLink.push(list[i].id);
-    //             }
-    //           } else {
-    //             this.dmSV.folderId.next('');
-    //             this.dmSV.folderID = '';
-    //           }
-    //           this.dmSV.breadcumbLink = breadcumbLink;
-    //           this.dmSV.breadcumb.next(breadcumb);
-    //         }
-    //       }
-
-    //       if (breadcumbLink.length <= 1) {
-    //         this.dmSV.page = 1;
-    //         this.getDataFolder(this.dmSV.folderID);
-    //         this.getDataFile(this.dmSV.folderID);
-    //       }
-    //     }
-    //     this.data = this.data.filter((x) => x.recID != res);
-    //     this.view.dataService.data = this.view.dataService.data.filter(
-    //       (x) => x.recID != res
-    //     );
-    //     this.changeDetectorRef.detectChanges();
-    //     this._beginDrapDrop();
-    //   }
-    // });
-
-    // this.dmSV.isNodeChange.subscribe((res) => {
-    //   if (res) {
-    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
-    //     if (tree != null) tree.setNodeTree(res);
-    //     //  that.dmSV.folderId.next(res.recID);
-    //   }
-    // });
-
-    // this.dmSV.isSetThumbnailWait.subscribe((item) => {
-    //   if (item != null) {
-    //     this.displayThumbnail(item.recID, item.thumbnail);
-    //   }
-    // });
-    // this.dmSV.isRefreshTree.subscribe((res) => {
-    //   if (res) {
-    //     var ele = document.getElementsByClassName('collapse');
-    //     for (var i = 0; i < ele.length; i++) {
-    //       // Only if there is only single class
-    //       if (ele[i].className.includes('show')) {
-    //         ele[i].classList.remove('show');
-    //         ele[i].classList.add('hide');
-    //       }
-    //     }
-    //     ele = document.getElementsByClassName('item-selected');
-    //     if (ele.length > 0) ele[0].classList.remove('item-selected');
-    //     ele = document.getElementsByClassName('icon-arrow_drop_down');
-    //     if (ele.length > 0) {
-    //       ele[0].classList.add('icon-arrow_right');
-    //       ele[0].classList.remove('icon-arrow_drop_down');
-    //     }
-    //     this.dmSV.folderId.next('');
-    //     this.dmSV.folderID = '';
-    //     this.dmSV.page = 1;
-    //     this.dmSV.listFolder = this.view.dataService.data;
-    //     this.fileService.options.page = 1;
-    //     this.fileService.options.funcID = this.view.funcID;
-
-    //     this.fileService.GetFiles('').subscribe(async (res) => {
-    //       if (res) {
-    //         this.dmSV.listFiles = res[0];
-    //         this.dmSV.totalPage = parseInt(res[1]);
-    //       } else {
-    //         this.dmSV.listFiles = [];
-    //       }
-
-    //       this.data = [...this.dmSV.listFolder, ...res[0]];
-
-    //       this.changeDetectorRef.detectChanges();
-    //     });
-
-    //     //this.data = this.view.dataService.data
-    //   }
-    // });
-    // this.dmSV.isChangeData.subscribe((item) => {
-    //   if (item) {
-    //     this.dmSV.page = 1;
-    //     this.getDataFolder(this.dmSV.folderID);
-    //     this.getDataFile(this.dmSV.folderID);
-    //   }
-    // });
-    // this.dmSV.isAddFile.subscribe((item) => {
-    //   if (item) {
-    //     this.dmSV.page = 1;
-    //     this.getDataFolder(this.dmSV.folderID);
-    //     var result = this.dmSV.listFolder;
-    //     if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
-    //       result = result.concat(this.dmSV.listFiles);
-    //     this.data = result;
-    //     this.data = [...this.data];
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
-   
-    // this.dmSV.isAddFolder.subscribe((item) => {
-    //   if (item) {
-    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
-    //     if (tree) tree.setNodeTree(item);
-    //     this.changeDetectorRef.detectChanges();
-    //     this.data = [];
-    //     if(this.view.dataService.data.length == 0)
-    //       this.view.dataService.data.push(item);
-    //     var ele = document.getElementsByClassName('item-selected');
-    //     if (ele.length > 0) ele[0].classList.remove('item-selected');
-    //     var ele2 = document.getElementsByClassName(item?.recID);
-    //     if (ele2.length > 0) ele2[0].classList.add('item-selected');
-    //     //this.onSelectionChanged(a);
-    //   }
-    //   this._beginDrapDrop();
-    // });
-    // this.dmSV.isEmptyTrashData.subscribe((item) => {
-    //   if (item) {
-    //     this.data = [];
-    //     this.dmSV.listFiles = [];
-    //     this.dmSV.listFolder = [];
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
+  unableMark()
+  {
+    var elm = document.getElementById("dm-home-mark-id");
+    elm.classList.remove("dm-home-mark");
   }
 
   getParaSetting()
@@ -784,11 +647,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   {
     //GetFolder()
     this.refeshData();
+    this.disableMark();
     this.getDataFolder(this.dmSV.folderID );
   }
   getDataByFuncID00()
   {
     this.refeshData();
+    this.disableMark();
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders("").subscribe((res) => {
       if(res && res[0])
@@ -1552,7 +1417,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.isScrollFolder = false;
           this.getDataFile(id);
         }
-
+        this.unableMark();
         this._beginDrapDrop();
       }
       this.detectorRef.detectChanges();
