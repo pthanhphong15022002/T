@@ -16,10 +16,12 @@ import {
   CallFuncService,
   NotificationsService,
   DialogData,
+  CodxInputComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CashPayment } from '../../models/CashPayment.model';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-pop-add-linecash',
@@ -29,6 +31,8 @@ import { CashPayment } from '../../models/CashPayment.model';
 export class PopAddLinecashComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('cbxAccountID') cbxAccountID: CodxInputComponent;
+  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
@@ -37,6 +41,10 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   type: any;
   cashpaymentline: CashPaymentLine;
   cashpayment:CashPayment;
+  lockFields:any;
+  dim1:any = true;
+  dim2:any = true;
+  dim3:any = true;
   objectcashpaymentline :Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -46,8 +54,9 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notification: NotificationsService,
+    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData
+    @Optional() private dialogData?: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
@@ -56,6 +65,7 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.objectcashpaymentline = dialogData.data?.dataline;
     this.cashpayment = dialogData.data?.datacash;
     this.type = dialogData.data?.type;
+    this.lockFields = dialogData.data?.lockFields;
     this.cache
       .gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines')
       .subscribe((res) => {
@@ -71,7 +81,19 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
+    this.loadlockfields();
     this.dt.detectChanges();
+
+    this.journalService.setAccountCbxDataSourceByJournal(
+      this.dialogData.data.journal,
+      this.cbxAccountID,
+      this.cbxOffsetAcctID
+    );
+
+    this.form.formGroup.patchValue({
+      accountID: this.cbxAccountID.crrValue,
+      offsetAcctID: this.cbxOffsetAcctID.crrValue,
+    });
   }
   //#endregion
 
@@ -123,6 +145,23 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         this.form.formGroup.patchValue(res);
       }
     });
+  }
+  loadlockfields(){
+    if (this.lockFields != null) {
+      this.lockFields.forEach(element => {
+        switch(element){
+          case 'DIM1':
+            this.dim1 = false;
+            break;
+          case 'DIM2':
+            this.dim2 = false;
+            break;
+          case 'DIM3':
+            this.dim3 = false;
+            break;
+        }
+      });
+    }
   }
   //#endregion
 

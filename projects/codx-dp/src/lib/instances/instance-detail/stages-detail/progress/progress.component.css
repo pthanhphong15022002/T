@@ -1,0 +1,12 @@
+/* .host ::ng-deep text {
+	translate-y: 32;
+	font-size: 14px;
+	font-weight: 600;
+} */
+:host ::ng-deep text {
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	transform: translate(27, 32) !important;
+	translate-y: 32 !important;
+  }
+  

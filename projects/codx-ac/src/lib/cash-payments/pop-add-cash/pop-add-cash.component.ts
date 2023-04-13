@@ -51,7 +51,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cashRef') cashRef: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  @ViewChild('cbb') cbb: CodxInputComponent;
+  @ViewChild('cashBook') cashBook: CodxInputComponent;
   headerText: string;
   formModel: FormModel;
   dialog!: DialogRef;
@@ -195,14 +195,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
 
-    // if (
-    //   this.cashpayment &&
-    //   this.cashpayment.unbounds &&
-    //   this.cashpayment.unbounds.lockFields &&
-    //   this.cashpayment.unbounds.lockFields.length
-    // ) {
-    //   this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
-    // }
+    if (
+      this.cashpayment &&
+      this.cashpayment.unbounds &&
+      this.cashpayment.unbounds.lockFields &&
+      this.cashpayment.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
+    }
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
@@ -214,6 +214,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
       this.modegrid = this.journal.inputMode;
+      this.cashpayment.approveStatus = this.journal.approval;
     });
   }
 
@@ -267,21 +268,23 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   changeType(e?: any, ele?: TabComponent) {
     let i;
+    let vll;
     if (e) i = e.data;
     if (!e && this.cashpayment.subType) i = this.cashpayment.subType;
     if (!ele) ele = this.tabObj;
     switch (i) {
       case '1':
-        this.loadvll('AC091');
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
+        vll = (this.formModel.funcID == 'ACT0410') ? 'AC091' : 'AC092';
+        this.loadvll(vll);
         break;
       case '3':
-        this.loadvll('AC093');
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
+        this.loadvll('AC093');
         break;
       default:
         ele.hideTab(0, true);
@@ -589,6 +592,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
+          lockFields :this.lockFields,
+          journal: this.journal,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -654,6 +659,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       dataline: this.cashpaymentline,
       datacash: this.cashpayment,
       type: 'add',
+      lockFields :this.lockFields,
+      journal: this.journal,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -908,7 +915,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   clearCashpayment() {
     this.cashpaymentline = [];
     this.cashpaymentlineDelete = [];
-    this.vettledInvoicesDelete = [];
+    //this.vettledInvoicesDelete = [];
     this.reason = [];
   }
   loadBookmark(e) {
@@ -938,10 +945,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (res.datas) {
         this.vllCashbook = res.datas[0];
         this.cashpayment.category = this.vllCashbook.value;
-        if (this.cbb) {
-          (
-            this.cbb.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
+        if(this.cashBook){
+          (this.cashBook.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.cashBook.crrValue = null;
           this.cashpayment.cashBookID = null;
           this.form.formGroup.patchValue(this.cashpayment);
         }

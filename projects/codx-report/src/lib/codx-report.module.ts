@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { CodxReportViewDetailComponent } from './codx-report-view-detail/codx-report-view-detail.component';
@@ -20,7 +21,7 @@ import { LayoutComponent } from './_layout/layout.component';
 const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
+    component: LayoutNoAsideComponent,
     children: [
       {
         path: 'detail/:funcID',

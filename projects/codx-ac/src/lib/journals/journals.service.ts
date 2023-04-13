@@ -8,8 +8,8 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { IJournal } from './interfaces/IJournal.interface';
 import { CodxAcService } from '../codx-ac.service';
+import { IJournal } from './interfaces/IJournal.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class JournalService {
   constructor(
     private api: ApiHttpService,
     private acService: CodxAcService,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
   ) {}
 
   deleteAutoNumber(autoNoCode: string): Observable<any> {
@@ -131,7 +131,7 @@ export class JournalService {
   setAccountCbxDataSourceByJournal(
     journal: IJournal,
     drAccountCbx: CodxInputComponent,
-    crAccountCbx: CodxInputComponent
+    crAccountCbx: CodxInputComponent,
   ): void {
     // gia tri co dinh, danh sach
     if (['1', '2'].includes(journal?.drAcctControl)) {
@@ -154,7 +154,7 @@ export class JournalService {
 
     // mac dinh
     if (journal?.drAcctControl === '0') {
-      drAccountCbx.crrValue = journal?.crAcctID;
+      drAccountCbx.crrValue = journal?.drAcctID;
     }
 
     if (journal?.crAcctControl === '0') {
