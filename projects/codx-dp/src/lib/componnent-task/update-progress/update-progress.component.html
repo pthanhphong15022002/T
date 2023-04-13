@@ -1,6 +1,6 @@
 <div class="disabled-inline progressbar" (click)="openPopup()">
   <ejs-progressbar
-   *ngIf="type == 1"
+   *ngIf="typeProgress == 1"
     [id]="id"
     type="Circular"
     height="55"
@@ -24,7 +24,7 @@
   </ejs-progressbar>
 
   <ejs-progressbar
-  *ngIf="type == 2"
+  *ngIf="typeProgress == 2"
   [id]="id"
   type="Circular"
   height="55"
@@ -223,8 +223,8 @@
          ></codx-label>
        </span>
      </button>
+     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
      <button type="button" class="btn btn-primary" (click)="handelProgress()">
-       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
      </button>
    </div>
  </ng-template>

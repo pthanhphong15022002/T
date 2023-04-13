@@ -1,7 +1,7 @@
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
-import { AnyARecord } from 'dns';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { firstValueFrom } from 'rxjs';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -15,7 +15,8 @@ export class UpdateProgressComponent implements OnInit {
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
   @Input() formModel: FormModel;
   @Input() dataSource: any;
-  @Input() type = 1;
+  @Input() typeProgress = 1;
+  @Input() type: string;
 
   @Input() dataAll: any; // gantchart
   @Input() step: any; // No gantchart
@@ -38,7 +39,7 @@ export class UpdateProgressComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-    private dpService: CodxDpService,
+    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -78,7 +79,7 @@ export class UpdateProgressComponent implements OnInit {
 
   openPopup() {
     const checkOpen = this.checkConditionOpenPopup();
-    if(!checkOpen){
+    if (!checkOpen) {
       this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
     }
   }
@@ -163,12 +164,57 @@ export class UpdateProgressComponent implements OnInit {
       );
       return;
     }
+
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-
+        if (res) {
+          this.handeleUpdate();
+        }
       });
     } else {
-
+      this.handeleUpdate();
     }
   }
+
+  async handeleUpdate() {
+    if (this.type === 'P') {
+      this.updateProgress();
+    } else if (this.type === 'G') {
+      const check = await this.beforeUpdate('DP031');
+      this.updateProgress(check);
+    } else {
+      const check = await this.beforeUpdate('DP028');
+      this.updateProgress(check);
+    }
+  }
+
+  updateProgress(isUpdate = false) {
+    let dataSave = new Progress();
+    dataSave.stepID = this.step['recID'];
+    dataSave.recID = this.dataSource['recID'];
+    dataSave.progress = Number(this.dataSource['progress']);
+    dataSave.note = this.dataSource['note'];
+    dataSave.actualEnd = this.dataSource['actualEnd'];
+    dataSave.type = this.type;
+    dataSave.isUpdate = isUpdate;
+    
+    this.api.exec<any>('DP','InstanceStepsBusiness','UpdateProgressAsync',dataSave).subscribe(res => {
+
+    });
+  }
+
+  async beforeUpdate(funcID): Promise<boolean> {
+    let check = await firstValueFrom(this.notiService.alertCode(funcID));
+    return check?.event?.status === 'Y' ? true : false;
+  }
+
+}
+export class Progress {
+  stepID: string;
+  recID: string;
+  note: string;
+  progress: number;
+  actualEnd: Date;
+  type: string;
+  isUpdate: boolean;
 }
