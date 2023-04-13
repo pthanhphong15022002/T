@@ -35,6 +35,7 @@ import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.co
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { Reason } from '../../models/Reason.model';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -74,6 +75,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   total: any = 0;
   data: any;
   journal: IJournal;
+  voucherNoPlaceholderText$: Observable<string>;
   reason: Array<Reason> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -203,6 +205,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     ) {
       this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
     }
+
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';

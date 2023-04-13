@@ -273,7 +273,7 @@
                 [disabled]="journal?.voucherNoRule != '0'"
                 [placeholder]="
                   journal?.voucherNoRule == '2'
-                    ? 'Số chứng từ được tạo tự động'
+                    ? (voucherNoPlaceholderText$ | async)
                     : ''
                 "
               >
