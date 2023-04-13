@@ -318,6 +318,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           let data = e.component.itemsSelected[0];
           this.cashpayment.objectType = data['ObjectType'];
           this.cashpayment.payee = data['ObjectName'];
+          this.cashpayment.objectName = data['ObjectName'];
           this.setReason('payee', data['ObjectName'], 1);
         }
 
@@ -947,7 +948,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (res.datas) {
         this.vllCashbook = res.datas[0];
         this.cashpayment.category = this.vllCashbook.value;
-        if(this.cashBook){
+        if (this.formType == 'add') {
           (this.cashBook.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
           this.cashBook.crrValue = null;
           this.cashpayment.cashBookID = null;
