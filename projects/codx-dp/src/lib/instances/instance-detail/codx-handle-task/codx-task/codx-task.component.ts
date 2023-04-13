@@ -1,7 +1,8 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { AuthStore, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-task',
@@ -10,7 +11,9 @@ import { CodxDpService } from 'projects/codx-dp/src/public-api';
 })
 export class CodxTaskComponent implements OnInit{
   @Input() formModel: FormModel;
-  @Input() taskGroupList: any;
+  @Input() stepId: any;
+  @Input() dataSources: any;
+  currentStep: any;
   isUpdate;
   user: any;
   dateFomat = 'dd/MM/yyyy';
@@ -18,6 +21,8 @@ export class CodxTaskComponent implements OnInit{
   isRoleAll = false;
   listTypeTask = [];
   taskList = [];
+  taskGroupList = [];
+  
 
   moreDefaut = {
     share: true,
@@ -34,18 +39,53 @@ export class CodxTaskComponent implements OnInit{
     private authStore: AuthStore,
     private dpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService,
   ) {
     this.user = this.authStore.get();
   }
 
   ngOnInit(): void {
+    this.getStepById(this.stepId);
+
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
+   
   }
 
+  async getStepById(stepId: string){
+    if(this.stepId){
+      this.currentStep = await firstValueFrom(this.api.exec<any>('DP','InstanceStepsBusiness','GetStepByIdAsync',stepId));
+    }else{
+      this.currentStep = JSON.parse(JSON.stringify(this.dataSources));
+    }
+    const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
+      const { taskGroupID } = product;
+      group[taskGroupID] = group[taskGroupID] ?? [];
+      group[taskGroupID].push(product);
+      return group;
+    }, {});
+    const taskGroupConvert = this.currentStep['taskGroups'].map((taskGroup) => {
+      let task = taskGroupList[taskGroup['refID']] ?? [];
+      return {
+        ...taskGroup,
+        task: task.sort((a, b) => a['indexNo'] - b['indexNo']),
+      };
+    });
+    this.currentStep['taskGroups'] = taskGroupConvert;
+    this.taskGroupList = this.currentStep['taskGroups'];
+    if (this.currentStep['taskGroups']?.length > 0 || this.currentStep['tasks']?.length > 0) {
+      let taskGroup = {};
+      taskGroup['task'] =
+        taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
+        [];
+      taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+      this.taskGroupList.push(taskGroup);
+    }
+    this.taskList = this.currentStep['tasks'];
+  }
 
   toggleTask(e, id) {
     let elementGroup = document.getElementById('group' + id.toString());

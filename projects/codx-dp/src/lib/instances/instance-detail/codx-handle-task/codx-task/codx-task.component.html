@@ -76,7 +76,7 @@
                  (cdkDropListDropped)="drop($event, groupTask)"
                  [id]="'group' + groupTask?.recID"
                  class="task"
-                 [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : {}"
+                 [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : {'margin-left': '10px'}"
                >
                  <ng-container *ngFor="let task of groupTask?.task">
                    <div
@@ -171,7 +171,10 @@
      <div
        class="disabled-inline"
      >
-       <codx-progress [progress]="data?.value?.progress"> </codx-progress>
+         <codx-update-progress 
+            [dataSource]="data?.value" 
+            [step]="currentStep"
+         ></codx-update-progress>
      </div>
      <span>
        <codx-img
