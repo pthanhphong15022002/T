@@ -205,7 +205,8 @@
               [formModel]="formModel" 
               [objectType]="'WP_Comments'"
               [medias]="share.medias"
-              [objectID]="share.recID">
+              [objectID]="share.recID"
+              (selectFile)="clickViewDetail($event)">
           </codx-view-files>
       </ng-container>
     </div>

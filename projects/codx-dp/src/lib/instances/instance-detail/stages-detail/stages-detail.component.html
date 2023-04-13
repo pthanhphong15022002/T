@@ -12,7 +12,7 @@
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
-        <i
+        <i *ngIf="dataStep?.memo"
           class="icon-event_notes text-gray-500 icon-20"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
@@ -217,7 +217,7 @@
           *ngIf="
           !isClosed &&
           isUpdate &&
-          isStart && 
+          isStart &&
           isRoleAll
         "
           (click)="openPopupTaskGroup()"
@@ -233,7 +233,7 @@
           *ngIf="
             !isClosed &&
             isUpdate &&
-            isStart && 
+            isStart &&
             isRoleAll
           "
         >
