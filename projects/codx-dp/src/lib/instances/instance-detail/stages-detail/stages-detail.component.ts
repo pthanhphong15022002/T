@@ -194,7 +194,7 @@ export class StagesDetailComponent implements OnInit {
     this.viewCrr = this.viewsCurrent;
   }
 
-  async ngOnInit(): Promise<void> {   
+  async ngOnInit(): Promise<void> {
     this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
@@ -639,7 +639,7 @@ export class StagesDetailComponent implements OnInit {
           taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
           [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.taskGroupList.push(taskGroup);        
+        this.taskGroupList.push(taskGroup);
       }
       this.taskList = step['tasks'];
     }
@@ -832,16 +832,16 @@ export class StagesDetailComponent implements OnInit {
       let isGroup = false;
       let isTask = false;
       if(!this.isRoleAll){
-        isGroup = this.checRoleTask(group, 'O');    
+        isGroup = this.checRoleTask(group, 'O');
         if(!isGroup){
           isTask = this.checRoleTask(data, 'O');
-        }      
+        }
       }
       return  this.isRoleAll || isGroup || isTask ? true : false;
     } else {
       let isGroup = false;
       if(!this.isRoleAll){
-        isGroup = this.checRoleTask(data, 'O');         
+        isGroup = this.checRoleTask(data, 'O');
       }
       return this.progressTaskGroupControl && (this.isRoleAll || isGroup) ? true : false;
     }
@@ -1077,30 +1077,30 @@ export class StagesDetailComponent implements OnInit {
   }
 
   getObjectIdRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'P')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    } else {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'O')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    }
+    // if (task?.taskType != 'M' && group) {
+    //   let objectId =
+    //     task?.roles.find((role) => role?.roleType == 'P')['objectID'] ||
+    //     task?.roles[0]?.objectID;
+    //   return objectId;
+    // } else {
+    //   let objectId =
+    //     task?.roles.find((role) => role?.roleType == 'O')['objectID'] ||
+    //     task?.roles[0]?.objectID;
+    //   return objectId;
+    // }
   }
   getObjectNameRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'P')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    } else {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'O')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    }
+    // if (task?.taskType != 'M' && group) {
+    //   let objectName =
+    //     task?.roles.find((role) => role?.roleType == 'P')['objectName'] ||
+    //     task?.roles[0]?.objectName;
+    //   return objectName;
+    // } else {
+    //   let objectName =
+    //     task?.roles.find((role) => role?.roleType == 'O')['objectName'] ||
+    //     task?.roles[0]?.objectName;
+    //   return objectName;
+    // }
   }
 
   copyValue(dataCopy, data) {
@@ -1295,17 +1295,17 @@ export class StagesDetailComponent implements OnInit {
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
               res.disabled = true;
             }
-            break;          
+            break;
           case 'SYS04'://copy
             if (!this.isRoleAll && !isGroup){
               res.disabled = true;
             }
-            break;   
+            break;
           case 'SYS003'://đính kèm file
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
               res.isblur = true;
             }
-            break;         
+            break;
           case 'DP20':// tiến độ
             if (!this.isRoleAll && !isGroup && !isTask){
               res.isblur = true;
@@ -1342,22 +1342,22 @@ export class StagesDetailComponent implements OnInit {
             if (!this.isRoleAll){
               res.disabled = true;
             }
-            break; 
+            break;
           case 'SYS03'://sửa
             if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
               res.disabled = true;
             }
-            break;  
+            break;
           case 'SYS003'://đính kèm file
             if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
               res.isblur = true;
             }
-            break;  
+            break;
           case 'DP08':// thêm công việc
             if (!this.isRoleAll && !isGroup){
               res.isblur = true;
             }
-            break;        
+            break;
           case 'DP20':// tiến độ
             if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
               res.isblur = true;

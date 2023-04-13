@@ -1,5 +1,5 @@
 .notification-count {
-  /* background: blue;  */
+  background: text-primary; 
   height: 20px;
   top: 1rem;
   right: 1.5rem;
@@ -19,4 +19,13 @@
 }
 .gender-female {
   color: #ff8cf4;
+}
+.p-dot {
+  font-size: 5px;
+  color: rgb(108, 108, 108);
+}
+
+.p-disabled {
+  pointer-events: none;
+  background: gray;
 }

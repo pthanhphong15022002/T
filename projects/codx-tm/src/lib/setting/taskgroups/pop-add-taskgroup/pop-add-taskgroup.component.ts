@@ -305,10 +305,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       }
       if (verifyByType) this.taskGroups.verifyByType = verifyByType;
       if (verifyBy) {
-        this.taskGroups.verifyBy = verifyBy
-      }else{
+        this.taskGroups.verifyBy = verifyBy;
+      } else {
         this.taskGroups.verifyBy = '';
-      } ;
+      }
     } else {
       switch (e[0].objectType) {
         case 'S':
@@ -624,35 +624,31 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
 
     if (this.taskGroups.approveControl == '1') {
-      if (this.taskGroups.approveBy != 'TL' && this.taskGroups.approveBy != 'S') {
-        if (
-          this.taskGroups.approvers == null ||
-          this.taskGroups.approvers.trim() == ''
-        ) {
-          this.notiService.notifyCode(
-            'SYS009',
-            0,
-            '"' + this.gridViewSetup['Approvers']?.headerText + '"'
-          );
-          return;
-        }
+      if (
+        this.taskGroups.approveBy == null ||
+        this.taskGroups.approveBy.trim() == ''
+      ) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['ApproveBy']?.headerText + '"'
+        );
+        return;
       }
-
     }
 
     if (this.taskGroups.verifyControl == '1') {
-      if (this.taskGroups.verifyByType != 'TL') {
         if (
-          this.taskGroups.verifyBy == null ||
-          this.taskGroups.verifyBy.trim() == ''
+          this.taskGroups.verifyByType == null ||
+          this.taskGroups.verifyByType.trim() == ''
         ) {
           this.notiService.notifyCode(
             'SYS009',
             0,
-            '"' + this.gridViewSetup['VerifyBy']?.headerText + '"'
+            '"' + this.gridViewSetup['VerifyByType']?.headerText + '"'
           );
           return;
-        }
+
       }
     }
 
