@@ -1515,7 +1515,17 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         if (approvel[0]) approvel[0].disabled = false;
       }
     }
+    //data?.isblur = true
+    // var returns = e.filter(
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ODT113' || x.functionID == 'ODT5213'
+    // );
 
+    // returns[0].disabled = true
+    // if(this.formModel.funcID == 'ODT41' || (this.formModel.funcID == 'ODT51' && data?.dispatchType == '3'))
+    // {
+    //   returns[0].disabled = false;
+    // }
     if (data?.status == '7') {
       var completed = e.filter(
         (x: { functionID: string }) =>
@@ -1563,7 +1573,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     );
     if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
-    if (data?.status == '4') {
+    if (data?.status == '4' ) {
       var approvel = e.filter(
         (x: { functionID: string }) =>
           x.functionID == 'ODT113' || x.functionID == 'ODT5213'
@@ -1571,7 +1581,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       if (approvel[0]) approvel[0].disabled = true;
       if (approvelCL[0]) approvelCL[0].disabled = false;
     }
-    //data?.isblur = true
+   
   }
   //Gửi duyệt
   release(data: any, processID: any) {
