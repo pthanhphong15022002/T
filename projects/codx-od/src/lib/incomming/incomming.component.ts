@@ -288,7 +288,7 @@ export class IncommingComponent
       if(data?.approveStatus == '3' && data?.createdBy == this.userID)
       {
         var approvel = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
+          (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
         );
         for(var i = 0 ; i< approvel.length ; i++)
         {
