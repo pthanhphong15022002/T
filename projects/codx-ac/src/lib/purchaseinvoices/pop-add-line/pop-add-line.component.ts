@@ -32,6 +32,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   lsVatCode: any;
   journals: any;
   objectIdim: any;
+  lockFields:any;
   purchaseInvoicesLines: PurchaseInvoicesLines;
   constructor(
     inject: Injector,
@@ -42,12 +43,12 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.purchaseInvoicesLines = dialogData.data?.data;
-    this.journals = dialogData.data?.journals;
+    this.lockFields = dialogData.data?.lockFields;
+    if (this.lockFields == null) {
+      this.lockFields = [];
+    }
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
-    // if (this.journals.idimControl != null) {
-    //   this.objectIdim = JSON.parse(this.journals.idimControl);
-    // }
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
@@ -153,6 +154,16 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
         JSON.stringify(this.purchaseInvoicesLines)
       );
       this.dialog.close();
+    }
+  }
+  loadControl(value){
+    let index = this.lockFields.findIndex(
+      (x) => x  == value
+    );
+    if (index == -1) {
+      return true;
+    }else{
+      return false;
     }
   }
 }
