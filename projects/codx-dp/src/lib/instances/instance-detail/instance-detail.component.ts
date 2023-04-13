@@ -440,7 +440,7 @@ export class InstanceDetailComponent implements OnInit {
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
-      (x) => x.stepStatus === '4' || x.stepStatus === '5'
+      (x) => x.stepStatus == '4' || x.stepStatus == '5'
     );
     if (idx > -1) {
       var reasonStep = this.listSteps[idx];
