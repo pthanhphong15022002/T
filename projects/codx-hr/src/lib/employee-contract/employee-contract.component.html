@@ -270,7 +270,7 @@
   </codx-temp-full>
   <ng-template #titleTmp let-data>
     <div class="w-100">
-      <div class="justify-content-between text-dark fw-bold">
+      <div class="justify-content-between">
         <codx-vll
         class="badge badge-sm"
         [name]="'HR001'"
@@ -307,6 +307,7 @@
     >
       <div class="justify-content-between">
         <span
+          [title]="eContractHeaderText.ContractTypeID"
           [innerHTML]="
             data.contractTypeID
               | formatvalue : view.formModel : 'contractTypeID'
@@ -314,11 +315,17 @@
           "
         ></span>
       </div>
-      <div class="justify-content-between text-dark">
-        <span>
-          <i class="icon-calendar_today text-primary fw-bold"></i>
+      <div class="justify-content-between">
+        <span
+        [title]="eContractHeaderText.EffectedDate"
+        >
+          <i class="icon-calendar_today fw-bold"></i>
           {{ data.effectedDate | fmDT }}
           -
+        </span>
+        <span
+        [title]="eContractHeaderText.ExpiredDate"
+        >
           {{ data.expiredDate | fmDT }}
         </span>
       </div>
