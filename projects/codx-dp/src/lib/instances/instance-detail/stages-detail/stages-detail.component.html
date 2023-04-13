@@ -310,7 +310,7 @@
                         </div>
                       </div>
                       <codx-mfunc
-                        *ngIf="groupTask?.startDate && groupTask?.endDate && isUpdate"
+                        *ngIf="groupTask?.startDate && groupTask?.endDate && checkEventProgress(groupTask, null)"
                         [formModel]="frmModelInstancesTask"
                         (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
                         (clickMF)="clickMFTaskGroup($event, groupTask)"
@@ -340,7 +340,7 @@
                     (cdkDropListDropped)="drop($event, groupTask)"
                     [id]="'group' + groupTask?.recID"
                     class="task"
-                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : {}"
+                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : { 'margin-left': '10px' }"
                   >
                     <ng-container *ngFor="let task of groupTask?.task">
                       <div
@@ -404,7 +404,7 @@
                               </codx-attachment>
                             </div>
                             <codx-mfunc
-                              *ngIf="task?.startDate && task?.endDate && isUpdate"
+                              *ngIf="task?.startDate && task?.endDate && checkEventProgress(task,groupTask)"
                               [type]="'hover'"
                               [dataItem]="moreDefaut"
                               [formModel]="frmModelInstancesTask"
@@ -494,6 +494,7 @@
       </div>
     </div>
   </div>
+  <codx-task [taskGroupList]="taskGroupList"></codx-task>
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
