@@ -30,7 +30,7 @@ export class ViewJobComponent implements OnInit {
     { type: 'history', title: 'Lịch sử', icon: 'icon-info' },
   ];
   viewModelDetail = 'view';
-
+  dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
   constructor(
     private cache: CacheService,

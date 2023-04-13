@@ -219,7 +219,7 @@
 </ng-template>
 
 <ng-template #itemVerifyControl let-data>
-  <div class="padding" *ngIf="data.verifyControl == '1'">
+  <div class="padding" *ngIf="data.verifyControl == '1' && data.verifyByType != null && data?.verifyByType.trim() != ''">
     <div
       class="badge badge-light badge-md fs-7"
       *ngIf="
@@ -270,7 +270,7 @@
 </ng-template>
 
 <ng-template #itemApproveControl let-data>
-  <div class="padding" *ngIf="data.approveControl == '1'">
+  <div class="padding" *ngIf="data.approveControl == '1' && data.approveBy != null && data?.approveBy.trim() != ''">
     <div
       class="badge badge-light badge-md fs-7"
       *ngIf="
