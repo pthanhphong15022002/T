@@ -1,0 +1,250 @@
+<codx-detail-tmp
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [footer]="!hideFooter ? footer : null"
+  [body]="body"
+  [formModel]="view.formModel"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100 dt-es-view"
+>
+<ng-template #titleTmp>
+    <div class="d-flex flex-column">
+      <div class="justify-content-between text-dark fw-bold mb-3">
+        <span>
+          {{ itemDetail?.emp?.employeeName }}
+        </span>
+      </div>
+      <!-- 1 -->
+      <div class="justify-content-between text-gray-700 mb-3">
+        <span
+          [innerHTML]="
+            itemDetail?.emp?.positionID
+              | formatvalue : view.formModel : 'positionID'
+              | async
+          "
+        ></span>
+        <span
+          [innerHTML]="
+            itemDetail?.emp?.email
+              | formatvalue : view.formModel : 'email'
+              | async
+          "
+        >
+          <i class="icon-email"></i>
+        </span>
+        <span
+          [innerHTML]="
+            itemDetail?.emp?.mobile
+              | formatvalue : view.formModel : 'mobile'
+              | async
+          "
+        >
+          <i class="icon-phone_android"></i>
+        </span>
+      </div>
+      <!-- 2 -->
+      <div class="justify-content-between text-dark">
+        <span
+          [innerHTML]="
+            itemDetail.orgUnitID
+              | formatvalue : view.formModel : 'orgUnitID'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+  </ng-template>
+  
+<ng-template #header>
+    <div class="d-flex mb-2">
+      <codx-temp-full
+        class="user-center"
+        [title]="itemDetail?.ownerName"
+        [subTitle]="itemDetail?.ownerPosition ?? ''"
+        [imageId]="itemDetail?.owner"
+        imageObjType="AD_Users"
+        [imageWidth]="80"
+        [titleTmp]="titleTmp"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="contractNo"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.contractNo }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="signedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.signedDate | fmDT }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="contractTypeID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.contractTypeID
+              | formatvalue : formModel : 'contractTypeID'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="limitMonths"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.limitMonths
+              | formatvalue : formModel : 'limitMonths'
+              | async
+          "
+        ></span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.EffectedDate
+              | formatvalue : formModel : 'EffectedDate'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-5">
+        <codx-label
+          fiedName="expiredDate"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span class="fw-bold">
+          {{ itemDetail?.expiredDate | fmDT }}
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="OrgUnitID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.OrgUnitID
+              | formatvalue : formModel : 'OrgUnitID'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="PositionID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.PositionID
+              | formatvalue : formModel : 'PositionID'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="LocationID"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.LocationID
+              | formatvalue : formModel : 'LocationID'
+              | async
+          "
+        >
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center me-5 mb-5 col-12">
+        <codx-label
+          fiedName="transportType"
+          [formModel]="formModel"
+          class="text-gray-700 label-colon"
+        >
+        </codx-label>
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.transportType
+              | formatvalue : formModel : 'transportType'
+              | async
+          "
+        >
+        </span>
+      </div>
+    </div>
+    <!-- <div class="mt-2">
+      <ng-container *ngIf="files.length > 0">
+        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
+        </codx-thumbnail>
+      </ng-container>
+    </div> -->
+  </ng-template>
+
+    <ng-template #body>
+
+  </ng-template>
+
+  <ng-template #footer>
+
+  </ng-template>
+</codx-detail-tmp>  

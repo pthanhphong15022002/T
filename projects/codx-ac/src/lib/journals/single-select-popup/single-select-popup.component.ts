@@ -39,7 +39,7 @@ export class SingleSelectPopupComponent extends UIComponent {
       .pipe(map((data) => data.find((m) => m.functionID === 'ACT01')))
       .subscribe((res) => (this.formTitle = res.defaultName));
 
-    this.loadComboboxData('ParentAccounts').subscribe((res) => {
+    this.loadComboboxData('AccountsAC').subscribe((res) => {
       console.log(res);
       this.parentAccounts = res;
     });

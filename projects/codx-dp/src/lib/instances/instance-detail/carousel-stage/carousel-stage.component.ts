@@ -105,9 +105,9 @@ export class CarouselStageComponent {
       if (indexResult > -1) {
 
         this.currentStep = this.listStep.findIndex(item => item.stepStatus == '1');
+        this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
     }
     }
-    this.selectedIndex = ( index == 0 || index  ) ? index.toString():  this.selectedIndex ;
 
   }
   stageEnd(){

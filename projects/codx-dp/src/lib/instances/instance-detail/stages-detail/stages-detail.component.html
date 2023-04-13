@@ -12,7 +12,7 @@
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
-        <i
+        <i *ngIf="dataStep?.memo"
           class="icon-event_notes text-gray-500 icon-20"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
@@ -217,7 +217,7 @@
           *ngIf="
           !isClosed &&
           isUpdate &&
-          isStart && 
+          isStart &&
           isRoleAll
         "
           (click)="openPopupTaskGroup()"
@@ -233,7 +233,7 @@
           *ngIf="
             !isClosed &&
             isUpdate &&
-            isStart && 
+            isStart &&
             isRoleAll
           "
         >
@@ -310,7 +310,7 @@
                         </div>
                       </div>
                       <codx-mfunc
-                        *ngIf="groupTask?.startDate && groupTask?.endDate && isUpdate"
+                        *ngIf="groupTask?.startDate && groupTask?.endDate && checkEventProgress(groupTask, null)"
                         [formModel]="frmModelInstancesTask"
                         (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
                         (clickMF)="clickMFTaskGroup($event, groupTask)"
@@ -340,7 +340,7 @@
                     (cdkDropListDropped)="drop($event, groupTask)"
                     [id]="'group' + groupTask?.recID"
                     class="task"
-                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : {}"
+                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : { 'margin-left': '10px' }"
                   >
                     <ng-container *ngFor="let task of groupTask?.task">
                       <div
@@ -404,7 +404,7 @@
                               </codx-attachment>
                             </div>
                             <codx-mfunc
-                              *ngIf="task?.startDate && task?.endDate && isUpdate"
+                              *ngIf="task?.startDate && task?.endDate && checkEventProgress(task,groupTask)"
                               [type]="'hover'"
                               [dataItem]="moreDefaut"
                               [formModel]="frmModelInstancesTask"
@@ -494,6 +494,7 @@
       </div>
     </div>
   </div>
+  <codx-task [taskGroupList]="taskGroupList"></codx-task>
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
@@ -518,9 +519,9 @@
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="data?.value?.roles[0]?.objectID"
+        [objectId]="getObjectIdRole(data?.value, data?.group)"
         objectType="AD_Users"
-        [objectName]="data?.value?.roles[0]?.objectName"
+        [objectName]="getObjectNameRole(data?.value, data?.group)"
       ></codx-img>
     </span>
     <div class="notify">

@@ -16,6 +16,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   Util,
@@ -46,73 +47,66 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   @ViewChild('viewDetail') viewDetail: ViewBasicSalaryDetailComponent;
 
-  @ViewChild('changeStatus', { static: true }) changeStatus: TemplateRef<any>;
+  @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
   //#endregion
-
-  views: Array<ViewModel> = [];
+  
+  constructor(
+    injector: Injector,
+    private hrService: CodxHrService,
+    private activatedRoute: ActivatedRoute,
+    private df: ChangeDetectorRef,
+    private notify: NotificationsService
+    ) {
+      super(injector);
+      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    }
+    
+    service = 'HR';
+  assemblyName = 'ERM.Business.HR';
+  entityName = 'HR_EBasicSalaries';
+  className = 'EBasicSalariesBusiness';
+  method = 'GetListEBasicSalariesAsync';
+  
+  actionAddNew = 'HRTPro03A01';
+  actionSubmit = 'HRTPro03A03';
+  actionUpdateCanceled = 'HRTPro03AU0';
+  actionUpdateInProgress = 'HRTPro03AU3';
+  actionUpdateRejected = 'HRTPro03AU4';
+  actionUpdateApproved = 'HRTPro03AU5';
+  actionUpdateClosed = 'HRTPro03AU9';
+  
   funcID: string;
-  method: string = 'GetListEBasicSalariesAsync';
+  grvSetup: any;
+  views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
     text: 'Thêm',
   };
   eBasicSalariesHeaderText;
-  eBasicSalariesFormModel: FormModel;
-  currentEbasicSalaryDta: any;
-  grvSetup: any;
-
-  // get file sv
-  services: string = 'DM';
-  assemblyName: string = 'ERM.Business.HM';
-  className: string = 'FileBussiness';
-  lstFile: any[] = [];
-  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
-  REFERTYPE = {
-    IMAGE: 'image',
-    VIDEO: 'video',
-    APPLICATION: 'application',
-  };
-  user: any;
-  itemDetail: any;
-
-  itemSelected: any;
   formGroup: FormGroup;
   currentEmpObj: any;
   editStatusObj: any;
   dialogEditStatus: DialogRef;
-  cmtStatus: any;
-  //
-  constructor(
-    inject: Injector,
-    private hrService: CodxHrService,
-    private activatedRoute: ActivatedRoute,
-    private df: ChangeDetectorRef,
-    private notify : NotificationsService,
-    //auth
-    private auth: AuthService
-  ) {
-    super(inject);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
-  }
+  cmtStatus: string = '';
 
   onInit(): void {
+    this.cache
+      .gridViewSetup('EBasicSalaries', 'grvEBasicSalaries')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = Util.camelize(res);
+        }
+      });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
-    this.cache
-      .gridViewSetup('EbasicSalaries', 'grvEbasicSalaries')
-      .subscribe((res) => {
-        if (res) this.grvSetup = Util.camelizekeyObj(res);
-      });
-    this.user = this.auth.userValue;
   }
-
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.views = [
       {
         type: ViewType.list,
-        sameData: true,
         active: true,
+        sameData: true,
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplate,
@@ -129,129 +123,97 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       },
     ];
   }
-
-  changeItemDetail(event) {
-    this.itemSelected = event?.data;
-  }
-
-  clickMF(event, data) {
-    console.log(event.functionID);
-
-    switch (event.functionID) {
-      // case 'SYS01':
-      // break;
-      case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe((res) => {});
-        this.df.detectChanges();
-        break;
-      case 'SYS03': //edit
-        this.handlerEBasicSalary(
-          event.text + ' ' + this.view.function.description,
-          'edit',
-          data
-        );
-        this.df.detectChanges();
-        break;
-      case 'SYS04': //copy
-        this.copyValue(event.text, data);
-        this.df.detectChanges();
-        break;
-
-      case 'HRTPro03A03': //submit
-        this.openUpdateStatus(data, event.functionID);
-        this.df.detectChanges();
-        break;
-      case 'HRTPro03AU5': //approve
-        this.openUpdateStatus(data, event.functionID);
-        this.df.detectChanges();
-        break;
-      case 'HRTPro03AU3': //in-progress
-        this.openUpdateStatus(data, event.functionID);
-        this.df.detectChanges();
-        break;
-      case 'HRTPro03AU4': //reject
-        this.openUpdateStatus(data, event.functionID);
-        this.df.detectChanges();
-        break;
-      case 'HRTPro03AU0': //cancel
-        this.openUpdateStatus(data, event.functionID);
-        this.df.detectChanges();
-        break;
-
-      case 'SYS003':
-        break;
-      case 'SYS004':
-        break;
-      case 'SYS002':
-        break;
-    }
-  }
-  changeDataMF(event, data): void {
-    this.hrService.handleShowHideMF(event, data, this.view);
-  }
-  
-
-  //#region status update
-  openUpdateStatus(data: any, funcID:  any) {
-    this.hrService.handleUpdateRecordStatus(funcID, data);
-    this.editStatusObj = data;
-    this.currentEmpObj = data.emp;
-    this.formGroup.patchValue(this.editStatusObj);
-    this.dialogEditStatus = this.callfc.openForm(
-      this.changeStatus,
-      null,
-      600,
-      400,
-      null,
-      null
-    );
-    this.dialogEditStatus.closed.subscribe((res) => {
-      // console.log('res sau khi update status', res);
-      // if(res?.event){
-      //   this.view.dataService.update(res.event[0]).subscribe((res) => {
-      //   })
-      // }
-      this.df.detectChanges();
-    });
-  }
-
-  closeUpdateStatusDialog(dialog: DialogRef) {
-    dialog.close();
-  }
-
-  saveUpdateStatusDialog(){
-    this.hrService.UpdateEmployeeBasicSalariesInfo(this.editStatusObj).subscribe(res =>{
-      if(res){
-        this.notify.notifyCode('SYS007');
-        res[0].emp = this.currentEmpObj;
-        //this.view.formModel.entityName
-        this.hrService.addBGTrackLogEBasicSalaries(
-          res[0].recID,
-          this.cmtStatus,
-          this.view.formModel.entityName,
-          'C1',
-          null
-        ).subscribe((res) => {
-          console.log('kq luu track log', res);
-          
-        });
-        this.dialogEditStatus && this.dialogEditStatus.close(res)
-      }
-    })
-  }
-
-  ngAfterViewChecked(){
+  ngAfterViewChecked(){ 
     if(!this.formGroup?.value){
       this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
         this.formGroup = res;
       });
     }
   }
-  //#endregion
-  
 
-  //#region mf event handlers
-  handlerEBasicSalary(headerText, actionType: string, data: any) {
+  addBasicSalary(event) {
+    if (event.id == 'btnAdd') {
+      this.handlerEBasicSalaries(
+        event.text + ' ' + this.view.function.description,
+        'add',
+        null
+      );
+    }
+  }
+  handleAction(event) {}
+  onMoreMulti(event) {}
+  changeItemDetail(event) {}
+
+  clickMF(event, data) {
+    switch (event.functionID) {
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateRejected:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.popupUpdateEBasicSalaryStatus(event.functionID, oUpdate);
+        break;
+      //Delete
+      case 'SYS02':
+        if (data) {
+          this.view.dataService.dataSelected = data;
+        }
+        this.view.dataService
+          .delete([data], true, (option: RequestOption) =>
+            this.beforeDelete(option, data.recID)
+          )
+          .subscribe(() => {});
+        break;
+      //Edit
+      case 'SYS03':
+        this.currentEmpObj = data;
+        this.handlerEBasicSalaries(
+          event.text + ' ' + this.view.function.description,
+          'edit',
+          this.currentEmpObj
+        );
+        this.df.detectChanges();
+        break;
+      //Copy
+      case 'SYS04':
+        this.currentEmpObj = data;
+        this.copyValue(event.text, this.currentEmpObj);
+        this.df.detectChanges();
+        break;
+    }
+  }
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view);
+  }
+  popupUpdateEBasicSalaryStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    
+    this.editStatusObj = data;
+    this.currentEmpObj = data.emp;
+    this.formGroup.patchValue(this.editStatusObj);
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if(res?.event){
+        this.view.dataService.update(res.event[0]).subscribe((res) => {
+        })
+      }
+      this.df.detectChanges();
+    });
+  }
+  handlerEBasicSalaries(
+    actionHeaderText: string,
+    actionType: string,
+    data: any
+  ) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
@@ -263,7 +225,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         //pass data
         actionType: actionType,
         dataObj: data,
-        headerText: headerText,
+        headerText: actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
@@ -271,8 +233,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       },
       option
     );
-
-    //close form
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
@@ -284,34 +244,28 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
           this.df.detectChanges();
-        } else if (actionType == 'delete') {
-          this.df.detectChanges();
-        }
+        } 
       }
       if (res?.event) this.view.dataService.clear();
     });
   }
-
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEmployeeBasicSalariesInfoAsync';
+    opt.className = 'EBasicSalariesBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
+  }
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      this.handlerEBasicSalary(
+      console.log('result', res);
+      this.handlerEBasicSalaries(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
         res
       );
     });
-  }
-
-  addBasicSalaries(event) {
-    if (event.id == 'btnAdd') {
-      this.view.dataService.addNew().subscribe((res) => {
-        this.handlerEBasicSalary(
-          event.text + ' ' + this.view.function.description,
-          'add',
-          null
-        );
-      });
-    }
   }
 
   getIdUser(createdBy: any, owner: any) {
@@ -321,71 +275,29 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     return arr.join(';');
   }
 
-  getDetailContract(event, data) {
-    if (data) {
-      this.itemDetail = data;
-      this.df.detectChanges();
-    }
-  }
-
-  clickEvent(event, data) {
-    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
-    this.clickMF(event?.event, event?.data);
-  }
-
-  // get file list
-  getDataAsync(recId: string) {
-    if (recId) {
-      this.api
-        .execSv(
-          this.services,
-          this.assemblyName,
-          this.className,
-          'GetFilesByIbjectIDAsync',
-          recId
-        )
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            let files = res;
-            files.map((e: any) => {
-              if (e && e.referType == this.REFERTYPE.VIDEO) {
-                e[
-                  'srcVideo'
-                ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-              }
-            });
-            this.lstFile = res;
-            //this.countData = res.length;
-          }
-        });
-    }
-  }
-
-  openFiles(recID: string) {
-    if (this.tmpListItem) {
-      debugger;
-      let option = new DialogModel();
-      //if (this.zIndex > 0) option.zIndex = this.zIndex;
-      let popup = this.callfc.openForm(
-        this.tmpListItem,
-        '',
-        400,
-        500,
-        '',
-        null,
-        '',
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        if (res) {
-          this.getDataAsync(recID);
-        }
-      });
-    }
-  }
-
-
-  commentValueChange(event: any){
+  valueChangeComment(event){
     this.cmtStatus = event.data;
+  }
+  onSaveUpdateForm(){
+    this.hrService.UpdateEmployeeBasicSalariesInfo(this.editStatusObj).subscribe(res =>{
+      if(res){
+        this.notify.notifyCode('SYS007');
+        res[0].emp = this.currentEmpObj;
+        this.hrService.addBGTrackLogEBasicSalaries(
+          res[0].recID,
+          this.cmtStatus,
+          this.view.formModel.entityName,
+          'C1',
+          null
+        ).subscribe((res) => {
+          
+        });
+        this.dialogEditStatus && this.dialogEditStatus.close(res)
+      }
+    })
+  }
+  
+  closeUpdateStatusForm(dialog: DialogRef){
+    dialog.close();
   }
 }

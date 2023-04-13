@@ -71,6 +71,10 @@ export class InstancesComponent
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+
+  @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
+  @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
 
   showButtonAdd = true;
@@ -163,6 +167,24 @@ export class InstancesComponent
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
+  isLockButton = false;
+  //test temp
+  dataTemplet = [
+    {
+      templateName: 'File excel của Khanh- Team bá cháy',
+      recID: '1',
+    },
+    {
+      templateName: 'Khanh múa rất đẹp,sập sân khấu',
+      recID: '2',
+    },
+    {
+      templateName: 'Khanh pig bá đạo',
+      recID: '3',
+    },
+  ];
+  dialogTemplate: DialogRef;
+  isFormExport = true;
 
   constructor(
     private inject: Injector,
@@ -639,11 +661,13 @@ export class InstancesComponent
         break;
       //export File
       case 'DP16':
-        this.exportFileDynamic();
+        this.isFormExport = true;
+        this.showFormExport();
         break;
       //trinh kí File
       case 'DP17':
-        this.documentApproval(data);
+        this.isFormExport = false;
+        this.showFormSubmit();
         break;
       case 'DP21':
         this.handelStartDay(data);
@@ -655,12 +679,14 @@ export class InstancesComponent
     }
   }
 
-  handelStartDay(data){
-    this.notificationsService.alertCode('DP033',null, [('"' + data?.title + '"') || '']).subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.startInstance(data);
-      }
-    });
+  handelStartDay(data) {
+    this.notificationsService
+      .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startInstance(data);
+        }
+      });
   }
 
   startInstance(data) {
@@ -757,11 +783,13 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances) res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed) res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances){
+                res.disabled = true;
+              }
               break;
             case 'DP02':
               let isUpdateFail = data.write;
@@ -1417,11 +1445,33 @@ export class InstancesComponent
       null
     );
   }
+
+  showFormExport() {
+    this.isLockButton = true ;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.dialogTemplate = this.callfc.openForm(
+      this.popupTemplate,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
   exportFileDynamic() {
     //data test
     let datas = [
       {
-        dai_dien: 'người đại diện',
+        dai_dien: 'Trần Đoàn Tuyết Khanh',
+        ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+        dia_chi: '06 Lê Lợi, Huế',
+        ma_so_thue: '1111111111111',
+        hinh_thuc_thanh_toan: 'Chuyển khoản',
+        tai_khoan: 'VCB-012024554565',
         datas: [
           {
             san_pham: 'Sản phẩm quần què',
@@ -1488,7 +1538,7 @@ export class InstancesComponent
   //end export
 
   //load điều kiện
-  loadData(ps) {
+  async loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
@@ -1525,7 +1575,7 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(this.lstParticipants);
       }
     }
   }
@@ -1550,7 +1600,7 @@ export class InstancesComponent
       if (idxField != -1) this.arrFieldFilter.splice(idxField, 1);
     }
 
-    this.loadDataFiler();
+    this.loadDataFilter();
   }
 
   updatePredicate(field, dataValueFiler) {
@@ -1581,7 +1631,7 @@ export class InstancesComponent
   }
 
   //loading Data filter
-  loadDataFiler() {
+  loadDataFilter() {
     this.filterInstancePredicates = '';
     this.dataValueFilterArr = [];
     if (this.arrFieldFilter.length > 0) {
@@ -1620,12 +1670,31 @@ export class InstancesComponent
     // }
   }
   clickStartInstances(e) {
-    //goij ham start ma dang sai
     if (e) this.startInstance(this.dataSelected);
   }
   //Xét duyệt
+  selectTemp(recID) {
+    if (recID) this.isLockButton = false;else this.isLockButton = true ;
+  }
+  showFormSubmit() {
+    this.isLockButton = true ;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.dialogTemplate = this.callfc.openForm(
+      this.popupTemplate,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
   //Duyệt
   documentApproval(datas: any) {
+    this.dialogTemplate.close();
     // if (datas.bsCategory) {
     //Có thiết lập bước duyệt
     // if (datas.bsCategory.approval) {

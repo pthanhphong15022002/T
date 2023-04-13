@@ -35,6 +35,7 @@ import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.co
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { Reason } from '../../models/Reason.model';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -51,7 +52,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cashRef') cashRef: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
-  @ViewChild('cbb') cbb: CodxInputComponent;
+  @ViewChild('cashBook') cashBook: CodxInputComponent;
   headerText: string;
   formModel: FormModel;
   dialog!: DialogRef;
@@ -74,6 +75,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   total: any = 0;
   data: any;
   journal: IJournal;
+  voucherNoPlaceholderText$: Observable<string>;
   reason: Array<Reason> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -195,14 +197,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
 
-    // if (
-    //   this.cashpayment &&
-    //   this.cashpayment.unbounds &&
-    //   this.cashpayment.unbounds.lockFields &&
-    //   this.cashpayment.unbounds.lockFields.length
-    // ) {
-    //   this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
-    // }
+    if (
+      this.cashpayment &&
+      this.cashpayment.unbounds &&
+      this.cashpayment.unbounds.lockFields &&
+      this.cashpayment.unbounds.lockFields.length
+    ) {
+      this.lockFields = this.cashpayment.unbounds.lockFields as Array<string>;
+    }
+
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
@@ -272,16 +277,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (!ele) ele = this.tabObj;
     switch (i) {
       case '1':
-        this.loadvll('AC091');
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
+        this.loadFuncid();
         break;
       case '3':
-        this.loadvll('AC093');
         ele.hideTab(0, false);
         ele.hideTab(1, true);
         this.cashpaymentline = [];
+        this.loadvll('AC093');
         break;
       default:
         ele.hideTab(0, true);
@@ -589,6 +594,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
+          lockFields :this.lockFields,
+          journal: this.journal,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -654,6 +661,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       dataline: this.cashpaymentline,
       datacash: this.cashpayment,
       type: 'add',
+      lockFields :this.lockFields,
+      journal: this.journal,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -908,7 +917,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   clearCashpayment() {
     this.cashpaymentline = [];
     this.cashpaymentlineDelete = [];
-    this.vettledInvoicesDelete = [];
+    //this.vettledInvoicesDelete = [];
     this.reason = [];
   }
   loadBookmark(e) {
@@ -924,7 +933,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadFuncid() {
-    switch (this.formModel.funcID) {
+    switch (this.dialog.formModel.funcID) {
       case 'ACT0410':
         this.loadvll('AC091');
         break;
@@ -938,10 +947,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (res.datas) {
         this.vllCashbook = res.datas[0];
         this.cashpayment.category = this.vllCashbook.value;
-        if (this.cbb) {
-          (
-            this.cbb.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
+        if(this.cashBook){
+          (this.cashBook.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          this.cashBook.crrValue = null;
           this.cashpayment.cashBookID = null;
           this.form.formGroup.patchValue(this.cashpayment);
         }
