@@ -1538,7 +1538,7 @@ export class InstancesComponent
   //end export
 
   //load điều kiện
-  loadData(ps) {
+  async loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
@@ -1575,7 +1575,7 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(this.lstParticipants);
       }
     }
   }
