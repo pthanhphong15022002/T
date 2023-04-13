@@ -47,8 +47,8 @@ import { PopupParticipantsComponent } from './dynamic-process/popup-participants
 import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
 import { ProgressComponent } from './instances/instance-detail/stages-detail/progress-layout/progress.component';
 import { CarouselStageComponent } from './instances/instance-detail/carousel-stage/carousel-stage.component';
-import { UpdateProgressComponent } from './instances/instance-detail/stages-detail/update-progress/update-progress.component';
-import { CodxTaskComponent } from './instances/instance-detail/codx-handle-task/codx-task/codx-task.component';
+import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
+import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.component';
 
 
 const routes: Routes = [
@@ -125,7 +125,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupParticipantsComponent,
     ProgressComponent,
     CarouselStageComponent,  
-    UpdateProgressComponent, CodxTaskComponent
+    UpdateProgressComponent,
+    CodxTaskComponent
   ],
   imports: [
     RouterModule.forChild(routes),

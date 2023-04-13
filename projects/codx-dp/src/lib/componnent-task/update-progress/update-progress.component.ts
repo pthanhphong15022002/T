@@ -2,7 +2,6 @@ import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { AnyARecord } from 'dns';
-import { InstancesComponent } from '../../../instances.component';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
