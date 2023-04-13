@@ -12,7 +12,7 @@
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
-        <i
+        <i *ngIf="dataStep?.memo"
           class="icon-event_notes text-gray-500 icon-20"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
@@ -214,7 +214,12 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="isUpdate"
+          *ngIf="
+          !isClosed &&
+          isUpdate &&
+          isStart &&
+          isRoleAll
+        "
           (click)="openPopupTaskGroup()"
         >
           <i
@@ -225,7 +230,12 @@
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
           (click)="openTypeTask()"
-          *ngIf="isUpdate"
+          *ngIf="
+            !isClosed &&
+            isUpdate &&
+            isStart &&
+            isRoleAll
+          "
         >
           <i
             [ngClass]="
@@ -451,7 +461,7 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart && 
+          isStart &&
           isRoleAll
         "
       >
@@ -508,9 +518,9 @@
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="data?.value?.roles[0]?.objectID"
+        [objectId]="getObjectIdRole(data?.value, data?.group)"
         objectType="AD_Users"
-        [objectName]="data?.value?.roles[0]?.objectName"
+        [objectName]="getObjectNameRole(data?.value, data?.group)"
       ></codx-img>
     </span>
     <div class="notify">

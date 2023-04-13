@@ -64,12 +64,12 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroup: any;
-  listTask: any;
-  listTaskGroupDone: any;
-  listTaskDone: any;
-  listTree: any;
-  listTypeTask: any;
+  listTaskGroup: any = [];
+  listTask: any = [];
+  listTaskGroupDone: any =[];
+  listTaskDone: any = [];
+  listTree: any = [];
+  listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason: any;
@@ -82,6 +82,8 @@ export class PopupMoveStageComponent implements OnInit {
   listStepProccess: any;
 
   readonly oneHundredNumber: number = 100;
+  readonly viewTask: string = 'Task';
+  readonly viewTaskGroup: string = 'TaskGroup';
   fieldsNull = [];
   constructor(
     private codxDpService: CodxDpService,
@@ -365,14 +367,8 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone &&
-      this.updateProgressIsDone(this.listTaskDone, this.listTask, 'task');
-    this.listTaskGroupDone &&
-      this.updateProgressIsDone(
-        this.listTaskGroupDone,
-        this.listTaskGroup,
-        'taskGroup'
-      );
+    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
+    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -512,23 +508,31 @@ export class PopupMoveStageComponent implements OnInit {
         this.totalRequireCompletedChecked = 0;
         this.actionCheck = '';
       }
-    } else if ($event && view == 'taskGroup') {
-      $event.target.checked &&
-        this.addItem(this.listTaskGroupDone, data, 'taskGroup');
-      !$event.target.checked &&
-        this.removeItem(this.listTaskGroupDone, data.recID);
-    } else if ($event && view == 'task') {
-      $event.target.checked && this.addItem(this.listTaskDone, data, 'task');
+    } else if ($event && view == this.viewTaskGroup) {
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
+      !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
+    } else if ($event && view == this.viewTask) {
+      $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
       !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
     }
   }
 
   addItem(list: any, data, view) {
-    list.push(data);
-    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
-    if (view == 'taskGroup') {
+
+
+    if (view == this.viewTaskGroup) {
       let children = document.getElementById(`${data.recID}`);
+      list.push(data);
     }
+
+    if(view == this.viewTask) {
+      if(this.ischeckClickedTaskParent(data)) {
+        list.push(data);
+      }
+
+    }
+    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+
   }
 
   removeItem(list, id) {
@@ -687,6 +691,41 @@ export class PopupMoveStageComponent implements OnInit {
         this.instancesStepOld.progress = 100;
       }
     }
+  }
+
+  getColorTask(item,view): string {
+    var check = 'd-none';
+    if (item?.requireCompleted) {
+      check ='text-danger';
+    }
+    else if(view == this.viewTask)
+    {
+      for(let tasks of this.listTask ) {
+         if(tasks.parentID?.includes(item.refID))
+         {
+          check = 'text-orange'
+          break;
+        }
+      }
+    }
+    return check;
+  }
+  ischeckClickedTaskParent(data){
+    if(data.parentID) {
+      var parentIds = data?.parentID.split(';');
+      var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
+      if(filteredList.length != parentIds.length) {
+        var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
+        checkbox.checked = false;
+        var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+        var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+
+        this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+        return false;
+      }
+    }
+    return true;
+
   }
 
   getOwnerByListRoles(lstRoles, objectType) {

@@ -45,8 +45,8 @@ export class PersonalsComponent extends UIComponent {
     STORAGE: false,
     INFORMATION: false,
   };
-  predicatePortal = '(Category = @0 || Category = @1 || Category = @2) && (ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5)) && Stop = false && @CreatedBy = @6';
-  dataValuePortal = '1;3;4;0;1;5;';
+  predicatePortal = '@CreatedBy=@0 && (Category="1" || Category="3" || Category="4") && Stop=false';
+  dataValuePortal = "";
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
@@ -65,9 +65,7 @@ export class PersonalsComponent extends UIComponent {
     this.employeeInfo = data.source._value;
     this.active = true;
     this.user = this.authStore.get();
-    if(this.user){
-      this.dataValuePortal += this.user.userID;
-    }
+    
   }
 
 
@@ -76,6 +74,10 @@ export class PersonalsComponent extends UIComponent {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
     });
+    if(this.user)
+    {
+      this.dataValuePortal = this.user.userID;
+    }
     this.refreshAvatar();
   }
 
