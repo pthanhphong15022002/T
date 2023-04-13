@@ -34,6 +34,7 @@ import { PopAddLinereceiptsComponent } from '../pop-add-linereceipts/pop-add-lin
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { Reason } from '../../models/Reason.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-receipts',
@@ -73,6 +74,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   columnGrids = [];
   keymodel: any;
   journal: IJournal;
+  voucherNoPlaceholderText$: Observable<string>;
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
     gridViewName: 'grvCashReceiptsLines',
@@ -173,6 +175,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           );
         }
       });
+
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
 
     const options = new DataRequest();
     options.entityName = 'AC_Journals';

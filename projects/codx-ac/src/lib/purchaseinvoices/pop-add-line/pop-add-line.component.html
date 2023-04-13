@@ -46,7 +46,7 @@
     </div>
     <ng-container>
       <div class="row">
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM0')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM0"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -54,7 +54,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM1')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM1"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM2')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM2"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -72,7 +72,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM3')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM3"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM4')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM4"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -90,7 +90,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM9')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM9"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM5')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM5"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -108,7 +108,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM6')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM6"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -118,7 +118,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM7')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM7"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -126,7 +126,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-6">
+        <div *ngIf="loadControl('IDIM8')" class="col-6">
           <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="IDIM8"></codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -215,7 +215,7 @@
       </div>
     </div>
     <div class="row">
-      <div *ngIf="journals.diM1Control == '1'" class="col-4">
+      <div *ngIf="loadControl('DIM1')" class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -223,7 +223,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="journals.diM2Control == '1'" class="col-4">
+      <div *ngIf="loadControl('DIM2')" class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -231,7 +231,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="journals.diM3Control == '1'" class="col-4">
+      <div *ngIf="loadControl('DIM3')" class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -241,7 +241,7 @@
       </div>
     </div>
     <div class="row">
-      <div *ngIf="journals.projectControl" class="col-6">
+      <div *ngIf="loadControl('ProjectID')" class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="ProjectID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
@@ -249,7 +249,7 @@
           </codx-input>
         </div>
       </div>
-      <div *ngIf="journals.assetControl" class="col-6">
+      <div *ngIf="loadControl('AssetID')" class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="AssetID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"

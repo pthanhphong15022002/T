@@ -6,7 +6,7 @@
 }
 
 .header-fixed.toolbar-fixed .wrapper {
-  padding-top: 65px;
+  //padding-top: 65px;
 }
 
 
@@ -132,4 +132,9 @@ codx-treeview .no-permission {
   {
     color: white
   }
+}
+.dm-home-mark
+{
+  position: absolute;
+  z-index: 1000 ;
 }

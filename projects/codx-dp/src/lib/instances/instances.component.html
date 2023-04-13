@@ -414,21 +414,46 @@
 
 <ng-template #popupTemplate>
   <codx-form
+    #form
     [headerText]="titleAction"
+    [formModel]="view.formModel"
     [body]="bodyTemplate"
     [footer]="footerTemplate"
     [dialog]="dialogTemplate"
   ></codx-form>
 
   <ng-template #bodyTemplate>
-    <div style="width: 100%">
-      xuất danh sách temp để chọn - Chua làm
+    <div style="height: 350px">
       <ng-container
         *ngIf="!(dataTemplet?.length > 0)"
         [ngTemplateOutlet]="emptyTemplate"
       >
       </ng-container>
-      <ng-container *ngIf="dataTemplet?.length > 0"> </ng-container>
+      <ng-container *ngIf="dataTemplet?.length > 0">
+        <div *ngFor="let item of dataTemplet">
+          <div class="d-flex w-100">
+            <div class="w-20px h-20px me-2">
+              <codx-input
+                type="radio"
+                name="format"
+                [formModel]="form.formModel"
+                ControlName="format"
+                [crrValue]="item.recID"
+                (valueChange)="selectTemp(item.recID)"
+              ></codx-input>
+            </div>
+            <div class="d-flex align-items-center py-2">
+              <span>
+                <i
+                  class="fa-solid fa-file-excel fs-2 me-3"
+                  style="color: #347442"
+                ></i>
+              </span>
+              <span class="fw-bold text-dark">{{ item.templateName }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-template>
   <ng-template #footerTemplate>
@@ -437,13 +462,15 @@
         <button
           type="button"
           class="btn btn-primary ms-1"
-          [disabled]="isLockExport"
-          (click)="isFormExport?exportFileDynamic():documentApproval(dataSelected)"
+          [disabled]="isLockButton"
+          (click)="
+            isFormExport ? exportFileDynamic() : documentApproval(dataSelected)
+          "
         >
           <codx-label
-            [name]="isFormExport? 'ExportTemplate': 'SubmitTemplate'"
+            [name]="isFormExport ? 'ExportTemplate' : 'SubmitTemplate'"
             [formModel]="view.formModel"
-            [default]="isFormExport? 'Xuất File': 'Ký số'"
+            [default]="isFormExport ? 'Xuất File' : 'Ký số'"
           >
           </codx-label>
         </button>

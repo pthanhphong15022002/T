@@ -1,4 +1,4 @@
-<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="isAfterRender" >
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false">
 </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-4 px-6 d-flex flex-column">
@@ -28,12 +28,14 @@
       </div>
 
       <div class="d-flex align-items-center justify-content-end col-3">
-        <div *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-2" (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu" >
+        <div *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-2"
+          (click)="addEditOKRPlans(false)" ngbTooltip="Chỉnh sửa bộ mục tiêu">
           <span class="symbol-label bg-om-gray">
             <i class="icon-create text-dark"></i>
           </span>
         </div>
-        <div  *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-2" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
+        <div *ngIf="!planNull" class="symbol symbol-30px symbol-circle cursor-pointer me-2"
+          (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
           <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
             <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
           </span>
@@ -42,7 +44,8 @@
           cssClass="w-100 om-calendar" class="me-2" (change)="changeCalendar($event)"></codx-dropdown-calendar>
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
           <span class="symbol-label bg-om-gray">
-            <codx-mfunc [formModel]="formModelPlan"  (changeDataMF)="changeDataMF($event)" (clickMF)="clickMF($event)"></codx-mfunc>
+            <codx-mfunc [formModel]="formModelPlan" (changeDataMF)="changeDataMF($event)"
+              (clickMF)="clickMF($event)"></codx-mfunc>
           </span>
         </div>
       </div>
@@ -50,7 +53,7 @@
     </div>
 
 
-    <div class=" mt-2">
+    <div class=" mt-2" *ngIf="isAfterRender">
       <ejs-tab id="om-tab">
         <e-tabitems>
           <e-tabitem>
@@ -63,10 +66,11 @@
             <ng-template #content>
               <div class="h-100" *ngIf="!planNull ; else elseOKR">
                 <div class="h-100" *ngIf="dataOKR != null">
-                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [okrFM]="okrFM" [okrVll]="okrVll"  [okrGrv]="okrGrv"
-                    [isCollapsed]="isCollapsed"
-                    [groupModel]="groupModel" [curOrgUnitID]="curOrgID"
-                    [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
+                  <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
+                    [okrFM]="okrFM" [okrVll]="okrVll" [okrGrv]="okrGrv" [isCollapsed]="isCollapsed"
+                    [groupModel]="groupModel" [curOrgUnitID]="curOrgID" [funcID]="funcID"
+                    [isHiddenChart]="isHiddenChart" [listUM] = "listUM"
+                    (getOKRPlanForComponent)="getOKRPlanForComponent($event)"></lib-okr-targets>
 
 
                 </div>
@@ -74,20 +78,21 @@
               <ng-template #elseOKR>
                 <div class="w-100 py-10  text-center d-flex flex-row justify-content-center align-item-center">
                   <div class="col-2"></div>
-                  <div class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
+                  <div
+                    class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
 
-                      <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
-                      <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
-                      <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>
-                      <span *ngIf="funcID==orgFuncID" [innerHTML]="orgPlanNull"></span>
-                      <span *ngIf="funcID==persFuncID" [innerHTML]="persPlanNull"></span>
-                      <div class="d-flex justify-content-center">
-                        <span type="button" (click)="click({ id: 'btnAddPlan' })"
-                          class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
-                          <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
-                          <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
-                        </span>
-                      </div>
+                    <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
+                    <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
+                    <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>
+                    <span *ngIf="funcID==orgFuncID" [innerHTML]="orgPlanNull"></span>
+                    <span *ngIf="funcID==persFuncID" [innerHTML]="persPlanNull"></span>
+                    <div class="d-flex justify-content-center">
+                      <span type="button" (click)="click({ id: 'btnAddPlan' })"
+                        class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
+                        <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
+                        <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
+                      </span>
+                    </div>
 
                   </div>
                   <div class="col-2"></div>
@@ -104,7 +109,8 @@
             </ng-template>
             <ng-template #content>
               <div class="w-100 tab-okr-trees">
-                <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [dataOKRPlans]="dataOKRPlans" [orgUnitTree]="orgUnitTree"></lib-okr-trees>
+                <lib-okr-trees [okrVll]="okrVll" [okrFM]="okrFM" [funcID]="funcID" [dataOKRPlans]="dataOKRPlans"
+                  [orgUnitTree]="orgUnitTree"  [okrGrv]="okrGrv"></lib-okr-trees>
               </div>
             </ng-template>
           </e-tabitem>
@@ -116,7 +122,8 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID" [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
+              <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="dataOKRPlans.recID"
+                [predicate]="'SessionID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -129,7 +136,8 @@
             <ng-template #content>
               <div>
 
-                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting" [projectID]="dataOKRPlans?.recID"></codx-tmmeetings>
+                <codx-tmmeetings funcID="OMT017" [dataObj]="refIDMeeting"
+                  [projectID]="dataOKRPlans?.recID"></codx-tmmeetings>
               </div>
             </ng-template>
           </e-tabitem>
@@ -149,7 +157,15 @@
                 <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Cập nhật </ng-template>
+            <ng-template #content>
+              <div class="h-100">
+                <div class="mw-1000px mx-auto">
+                  <codx-history [objectID]="dataOKRPlans?.recID" [formModel]="formModelPlan"
+                    [funcID]="funcID"></codx-history>
+                </div>
+              </div>
+
+            </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>

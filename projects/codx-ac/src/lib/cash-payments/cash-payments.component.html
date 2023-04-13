@@ -36,11 +36,10 @@
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div *ngIf="data?.objectID" class="text-gray-800 line-clamp line-clamp-2 mt-1" #objectID
-    [innerHTML]="data?.objectID | formatvalue : view.formModel : 'objectID' : objectID | async"></div>
+  <span *ngIf="data?.objectName" class="text-gray-700 line-clamp line-clamp-1">{{data?.objectName}}</span>
 </ng-template>
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-500 line-clamp line-clamp-2 fs-7">{{ data?.memo }}</span>
+  <span [ngbTooltip]="data?.memo" class="text-gray-700 line-clamp line-clamp-1">{{ data?.memo }}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
@@ -57,9 +56,9 @@
         <span>
           <i class="me-2 icon-apartment icon-16 text-gray-700"></i>
         </span>
-        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectID [innerHTML]="
-            itemSelected?.objectID
-              | formatvalue : view.formModel : 'objectID' : objectID
+        <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectName [innerHTML]="
+            itemSelected?.objectName
+              | formatvalue : view.formModel : 'objectName' : objectName
               | async
           "></span>
       </div>

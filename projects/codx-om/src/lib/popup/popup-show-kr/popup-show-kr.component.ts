@@ -123,6 +123,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   popupTitle: any;
   okrVll: any;
   isHiddenChart=false;
+  okrGrv: any;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -151,6 +152,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.popupTitle = dialogData?.data[1];
     this.okrFM = dialogData?.data[2];
     this.okrVll = dialogData?.data[3];
+    this.okrGrv = dialogData?.data[4];
     this.formModel=dialogRef.formModel;
 
     
