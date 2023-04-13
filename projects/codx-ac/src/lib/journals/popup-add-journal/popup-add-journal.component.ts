@@ -622,7 +622,7 @@ export class PopupAddJournalComponent
     propName: string,
     gvsPropName
   ): boolean {
-    if (acctControl !== '9' && !this.journal[propName]) {
+    if (acctControl && acctControl !== '9' && !this.journal[propName]) {
       this.notiService.notifyCode(
         'AC0009',
         null,
