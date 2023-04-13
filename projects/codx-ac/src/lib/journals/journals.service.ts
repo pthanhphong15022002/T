@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
+  CacheService,
   CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   DataRequest,
   NotificationsService,
 } from 'codx-core';
-import { Observable } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournal } from './interfaces/IJournal.interface';
 
@@ -19,6 +20,7 @@ export class JournalService {
     private api: ApiHttpService,
     private acService: CodxAcService,
     private notiService: NotificationsService,
+    private cacheService: CacheService
   ) {}
 
   deleteAutoNumber(autoNoCode: string): Observable<any> {
@@ -131,7 +133,7 @@ export class JournalService {
   setAccountCbxDataSourceByJournal(
     journal: IJournal,
     drAccountCbx: CodxInputComponent,
-    crAccountCbx: CodxInputComponent,
+    crAccountCbx: CodxInputComponent
   ): void {
     // gia tri co dinh, danh sach
     if (['1', '2'].includes(journal?.drAcctControl)) {
@@ -160,5 +162,14 @@ export class JournalService {
     if (journal?.crAcctControl === '0') {
       crAccountCbx.crrValue = journal?.crAcctID;
     }
+  }
+
+  getVoucherNoPlaceholderText(): Observable<string> {
+    return this.cacheService
+      .moreFunction('AutoVoucherNumber', 'grvAutoVoucherNumber')
+      .pipe(
+        tap((t) => console.log(t)),
+        map((data) => data.find((m) => m.functionID === 'ACT04')?.defaultName)
+      );
   }
 }

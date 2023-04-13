@@ -12,9 +12,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { map, Observable, tap } from 'rxjs';
-import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
 
 @Component({
   selector: 'lib-cash-transfers',
