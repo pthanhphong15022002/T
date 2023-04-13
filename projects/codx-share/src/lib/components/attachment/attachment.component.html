@@ -107,7 +107,7 @@
         </ng-template>
         <ng-template #footer>
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
+                <button [disabled]="closeBtnUp" type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
                     {{titleUpload}}
                 </button>
             </div>
