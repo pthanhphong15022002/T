@@ -78,7 +78,6 @@ export class PopupAddKRComponent extends UIComponent {
   okrPlan: any;
   constructor(
     private injector: Injector,
-    private authService: AuthService,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,

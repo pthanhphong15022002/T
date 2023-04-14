@@ -29,6 +29,7 @@ import {
   CodxCardImgComponent,
   FormModel,
   CRUDService,
+  DataService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -44,6 +45,7 @@ import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 import { closest } from '@syncfusion/ej2-base';
 import { firstValueFrom } from 'rxjs';
 import { LayoutComponent } from '../_layout/layout.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -125,7 +127,7 @@ export class DynamicProcessComponent
 
   // Get idField
   readonly idField = 'recID';
-  grvSetup :any
+  grvSetup: any;
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any = [];
@@ -145,13 +147,10 @@ export class DynamicProcessComponent
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache
-    .gridViewSetup(
-      'DPProcesses',
-      'grvDPProcesses'
-    )
-    .subscribe(grv=>{
-      this.grvSetup =grv
-    })
+      .gridViewSetup('DPProcesses', 'grvDPProcesses')
+      .subscribe((grv) => {
+        this.grvSetup = grv;
+      });
 
     this.getListAppyFor();
     this.getValueFormCopy();
@@ -176,7 +175,7 @@ export class DynamicProcessComponent
 
   //chang data
   viewChanged(e) {
-    this.layoutDP.hidenNameProcess() ;
+    this.layoutDP.hidenNameProcess();
     var funcIDClick = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFunID != funcIDClick) {
       this.funcID = funcIDClick;
@@ -365,9 +364,7 @@ export class DynamicProcessComponent
             dialog.closed.subscribe((e) => {
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
-                debugger;
                 e.event.totalInstance = this.totalInstance;
-                this.view.dataService.add(e.event).subscribe();
                 this.changeDetectorRef.detectChanges();
               }
             });
@@ -490,7 +487,6 @@ export class DynamicProcessComponent
         break;
       case 'SYS04':
         this.OpenFormCopy(data);
-        //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -521,6 +517,9 @@ export class DynamicProcessComponent
         break;
       case 'DP042': // edit name
         this.restoreProcess(data);
+        break;
+      case 'DP01015': // thiết lập quy trình duyệt
+        this.settingSubmit(data.processNo);
         break;
     }
   }
@@ -788,7 +787,11 @@ export class DynamicProcessComponent
 
   async editName() {
     if (!this.processName?.trim()) {
-      this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['ProcessName']?.headerText + '"'
+      );
       return;
     }
     if (this.processName.trim() === this.processNameBefore.trim()) {
@@ -855,25 +858,75 @@ export class DynamicProcessComponent
     });
   }
 
-  valueChangeFilter(e){
+  valueChangeFilter(e) {
     let predicates = '';
     let predicate = e.field + '=@';
-    let dataValueFilter = e.data
-    if(dataValueFilter?.length >1){
+    let dataValueFilter = e.data;
+    if (dataValueFilter?.length > 1) {
       for (var i = 0; i < dataValueFilter.length - 1; i++) {
-        predicates += predicate + i  + 'or ';
+        predicates += predicate + i + 'or ';
       }
-      predicates += predicate + (dataValueFilter.length);
-    }else if(dataValueFilter?.length ==1){
-      predicates  = predicate +'0' ;
+      predicates += predicate + dataValueFilter.length;
+    } else if (dataValueFilter?.length == 1) {
+      predicates = predicate + '0';
     }
-    if(predicates) predicates = "( " + predicates+ ' )' ;
+    if (predicates) predicates = '( ' + predicates + ' )';
 
     (this.view.dataService as CRUDService)
-      .setPredicates(
-        [predicates],
-        [dataValueFilter.join(';')]
-      )
+      .setPredicates([predicates], [dataValueFilter.join(';')])
       .subscribe();
+  }
+  //setting trình kí
+  settingSubmit(categoryID) {
+    this.api
+      .execSv(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        categoryID
+      )
+      .subscribe((item: any) => {
+        if (item) {
+          this.cache.functionList('ESS22').subscribe((f) => {
+            if (f) {
+              if (!f || !f.gridViewName || !f.formName) return;
+               this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+                this.cache
+                  .gridViewSetup(f.formName, f.gridViewName)
+                  .subscribe((grvSetup) => {
+                    let formES = new FormModel();
+                    formES.funcID = f?.functionID;
+                    formES.entityName = f?.entityName;
+                    formES.formName = f?.formName;
+                    formES.gridViewName = f?.gridViewName;
+                    formES.currentData = item;
+                    let option = new SidebarModel();
+                    option.Width = '550px';
+                    option.FormModel = formES;
+                    var dataService = new DataService(this.inject);
+                    dataService.dataSelected = item;
+                    let popupEditES = this.callfc.openSide(
+                      PopupAddCategoryComponent,
+                      {
+                        disableCategoryID: '1',
+                        data: item,
+                        isAdd: false,
+                        headerText: this.titleAction,
+                        dataType : 'auto'
+                      },
+                      option
+                    );
+
+                    popupEditES.closed.subscribe((res) => {
+                      if (!res?.event) {
+                      }
+                    });
+                  });
+              });
+            }
+          });
+        }
+      });
   }
 }

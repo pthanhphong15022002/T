@@ -175,6 +175,8 @@
         [viewsCurrent]="'k-'"
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
+        (outStepInstance)="outStepInstance($event)"
+
       >
       </codx-instance-detail>
     </ng-template>
@@ -334,6 +336,7 @@
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
+    (outStepInstance)="outStepInstance($event)"
   >
   </codx-instance-detail>
 </ng-template>
@@ -371,9 +374,8 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <span class="mx-1">
+  <span class="mx-1" *ngIf="process && viewsCurrent != 'k-'">
     <codx-dropdown-select
-      *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [isMulti]="false"

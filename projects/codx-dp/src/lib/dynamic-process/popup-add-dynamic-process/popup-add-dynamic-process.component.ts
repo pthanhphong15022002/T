@@ -1319,7 +1319,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         950,
         650,
         '',
-        [this.process, title, this.action === 'copy' ? 'copy' : 'add', roleType],
+        [
+          this.process,
+          title,
+          this.action === 'copy' ? 'copy' : 'add',
+          roleType,
+        ],
         '',
         dialogModel
       )
@@ -1331,6 +1336,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
   }
+
+  valueRadioInfo($event, view){
+    if (view === 'AllowCopyView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowCopy = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowCopy = false;
+      }
+    } else if (view === 'ApproveRuleView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.approveRule = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.approveRule = false;
+      }
+    }
+  }
+
   //end
 
   //Popup setiing autoNumber - Thao lam dung sua Please
@@ -1823,8 +1845,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
     var stepIDPrevious = event.previousContainer.id;
-    if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
-      stepIDContain =stepIDContain.substring(2) ;
+    if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
+      stepIDContain = stepIDContain.substring(2);
     }
 
     if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
@@ -2967,12 +2989,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.step.reasonControl = false;
-      }
-    } else if (view === 'AllowCopyView') {
-      if ($event.field === 'yes' && $event.component.checked === true) {
-        this.process.allowCopy = true;
-      } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.process.allowCopy = false;
       }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {

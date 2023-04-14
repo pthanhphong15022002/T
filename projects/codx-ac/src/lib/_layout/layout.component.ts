@@ -1,5 +1,5 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { CodxService } from 'codx-core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AsideComponent, CodxService } from 'codx-core';
 import {
   CallFuncService,
   DialogRef,
@@ -18,7 +18,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   override aside = true;
   override asideFixed = true;
   dialog!: DialogRef;
-
+  @ViewChild('aside') asideRef: AsideComponent;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,

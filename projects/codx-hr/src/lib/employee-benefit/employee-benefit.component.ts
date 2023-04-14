@@ -16,6 +16,7 @@ import {
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
+import { FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class EmployeeBenefitComponent extends UIComponent{
     id: 'btnAdd',
     text: 'Thêm',
   };
+  formGroup: FormGroup;
 
   //Object data 
   currentEmpObj: any = null;
@@ -100,15 +102,15 @@ export class EmployeeBenefitComponent extends UIComponent{
         // this.df.detectChanges();
         break;
       //Edit
-      // case 'SYS03':
-      //   this.currentEmpObj = data;
-      //   this.HandleEJobSalary(
-      //     event.text + ' ' + this.view.function.description,
-      //     'edit',
-      //     this.currentEmpObj
-      //   );
-      //   this.df.detectChanges();
-      //   break;
+      case 'SYS03':
+        this.currentEmpObj = data;
+        this.HandleEBenefit(
+          event.text + ' ' + this.view.function.description,
+          'edit',
+          this.currentEmpObj
+        );
+        this.df.detectChanges();
+        break;
       //Copy
       // case 'SYS04':
       //   this.currentEmpObj = data;
@@ -121,6 +123,20 @@ export class EmployeeBenefitComponent extends UIComponent{
   changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
    }
+
+  //Set form group data when open Modal dialog
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .then((res) => {
+          this.formGroup = res;
+        });
+    }
+  }
 
 
   //Open, push data to modal
