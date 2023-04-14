@@ -26,7 +26,10 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import {
+  ProgressAnnotationService,
+  ProgressBarModule,
+} from '@syncfusion/ej2-angular-progressbar';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -45,7 +48,10 @@ import { ProjectChartComponent } from './reports/task-by-projects/project-chart/
 import { CalendarComponent } from './setting/calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
-import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import {
+  AnnotationsService,
+  CircularGaugeModule,
+} from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
@@ -217,12 +223,10 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   TMDashboardComponent,
   TMMeetingsComponent,
-
   TaskExtendsComponent,
   SprintDetailsComponent,
   DashboardComponent,
   PopupTabsViewsDetailsComponent,
-
   LayoutNoToolbarComponent,
   DashboardContentComponent,
 ];
@@ -250,7 +254,11 @@ const T_Component: Type<any>[] = [
   ],
   exports: [RouterModule],
   declarations: T_Component,
-  providers: [AccumulationTooltipService],
+  providers: [
+    AccumulationTooltipService,
+    ProgressAnnotationService,
+    AnnotationsService,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TMModule {

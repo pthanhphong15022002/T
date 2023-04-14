@@ -11,27 +11,27 @@
 <ng-template #template>
   <div class="w-100 h-100">
     <div [ngSwitch]="reportID">
-      <div *ngSwitchCase="'TMD001'">
+      <ng-container *ngSwitchCase="'TMD001'">
         <codx-dashboard
           [templates]="templates1"
           [panels]="panels1"
           [datas]="datas1"
         ></codx-dashboard>
-      </div>
-      <div *ngSwitchCase="'TMD002'">
+      </ng-container>
+      <ng-container *ngSwitchCase="'TMD002'">
         <codx-dashboard
           [templates]="templates2"
           [panels]="panels2"
           [datas]="datas2"
         ></codx-dashboard>
-      </div>
-      <div *ngSwitchCase="'TMD003'">
+      </ng-container>
+      <ng-container *ngSwitchCase="'TMD003'">
         <codx-dashboard
           [templates]="templates3"
           [panels]="panels3"
           [datas]="datas3"
         ></codx-dashboard>
-      </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
@@ -43,7 +43,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
       [title]="'Chưa thực hiện'"
-      [value]="+dashboardData?.status?.newTasks"
+      [value]="+myDBData?.status?.newTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -54,7 +54,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="'Đang thực hiện'"
-      [value]="+dashboardData?.status?.processingTasks"
+      [value]="+myDBData?.status?.processingTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -65,7 +65,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="'Quá hạn'"
-      [value]="+dashboardData?.status?.overdueTasks"
+      [value]="+myDBData?.status?.overdueTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -76,7 +76,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="'Công việc hoàn tất'"
-      [value]="+dashboardData?.status?.doneTasks"
+      [value]="+myDBData?.status?.doneTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -90,7 +90,7 @@
           [chartArea]="chartArea"
           [width]="'100%'"
           align="center"
-          id="chartcontainer"
+          [id]="newGuid()"
           [primaryXAxis]="{
             majorGridLines: { width: 0 },
             minorGridLines: { width: 0 },
@@ -112,11 +112,6 @@
           [title]="'Tỷ lệ công việc được giao'"
           [tooltip]="{
             enable: true
-          }"
-          (axisLabelRender)="OnChartAxisLabeRender($event)"
-          [legendSettings]="{
-            visible: true,
-            enableHighlight: true
           }"
         >
           <e-series-collection>
@@ -142,28 +137,6 @@
               [border]="{ color: '#ffffff', width: 1 }"
             >
             </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="Suzuki"
-              name="Suzuki"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="BMW"
-              name="BMW"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
           </e-series-collection>
         </ejs-chart>
       </div>
@@ -173,32 +146,162 @@
 
 <ng-template #my_dashboard>
   <div id="6" title="Theo nguồn công việc">
-    <ejs-treemap
-      id="treemap123"
-      style="display: block"
-      [dataSource]="dashboardData?.tasksByGroup"
-      weightValuePath="qty"
-      [leafItemSettings]="leafItemSettings"
-    >
-    </ejs-treemap>
+    <div class="w-100 h-100">
+      <div
+        class="text-center"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
+        Theo nguồn công việc
+      </div>
+      <div class="control-section">
+        <div align="center">
+          <ejs-treemap
+            [id]="newGuid()"
+            style="display: block"
+            [dataSource]="myDBData?.tasksByRef.tasksRef"
+            weightValuePath="quantity"
+            [leafItemSettings]=" {
+            labelPath: 'refName',
+          }
+          "
+          >
+          </ejs-treemap>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div id="7" title="Count chart - Hoàn tất">
-    <h1>7</h1>
+  <div id="7" title="Tỷ lệ hoàn thành công việc">
+    <div class="control-section">
+      <div align="center">
+        <ejs-circulargauge
+          background="transparent"
+          style="display: block"
+          [id]="newGuid()"
+          #circulargauge=""
+          [title]="'Tỷ lệ hoàn thành công việc'"
+        >
+          <e-axes>
+            <e-axis
+              minimum="1"
+              radius="80%"
+              maximum="100"
+              startAngle="0"
+              endAngle="360"
+              [majorTicks]="{
+                height: 0,
+            }"
+              [labelStyle]="{
+                position: 'Inside',
+                useRangeColor: true,
+                font: { size: '0px', fontFamily: 'inherit' }
+              }"
+              [lineStyle]="{
+                width: 0
+              }"
+              [minorTicks]="{
+                height: 0
+              }"
+              [ranges]="[
+                {
+                  start: 0,
+                  end: 100,
+                  radius: '90%',
+                  startWidth: 30,
+                  endWidth: 30,
+                  color: '#E0E0E0',
+                }
+              ]"
+              [pointers]="[
+                {
+                  roundedCornerRadius: 20,
+                  value: myDBData?.rateDoneTask,
+                  type: 'RangeBar',
+                  radius: '90%',
+                  color: '#e5ce20',
+                  border: {
+                    width: 0
+                  },
+                  animation: {
+                    enable: false
+                  },
+                  pointerWidth: 30
+                }
+              ]"
+            >
+            </e-axis>
+            <e-axis
+              minimum="1"
+              radius="50%"
+              maximum="100"
+              startAngle="0"
+              endAngle="360"
+              [majorTicks]="{
+                height: 0,
+            }"
+              [labelStyle]="{
+                position: 'Inside',
+                useRangeColor: true,
+                font: { size: '0px', fontFamily: 'inherit' }
+              }"
+              [lineStyle]="{
+                width: 0
+              }"
+              [minorTicks]="{
+                height: 0
+              }"
+              [ranges]="[
+                {
+                  start: 0,
+                  end: 100,
+                  radius: '90%',
+                  startWidth: 30,
+                  endWidth: 30,
+                  color: '#E0E0E0',
+                }
+              ]"
+              [pointers]="[
+                {
+                  roundedCornerRadius: 20,
+                  value: myDBData?.rateDoneTaskOnTime,
+                  type: 'RangeBar',
+                  radius: '90%',
+                  color: 'red',
+                  border: {
+                    width: 0
+                  },
+                  animation: {
+                    enable: false
+                  },
+                  pointerWidth: 30
+                }
+              ]"
+            >
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
   <div id="8" title="Hiệu suất làm việc">
-    <div class="rounded-2 bg-body mb-3">
-      <div class="d-flex justify-content-center">
-        <ejs-circulargauge id="range-container-4">
+    <div class="control-section">
+      <div align="center">
+        <ejs-circulargauge [id]="newGuid()">
           <e-axes>
             <e-axis
               minimum="0"
-              radius="100%"
+              radius="70%"
               maximum="100"
               startAngle="270"
               endAngle="90"
@@ -220,6 +323,7 @@
               [minorTicks]="{
                 width: 0
               }"
+              [annotations]="annotaions"
             >
               <e-ranges>
                 <e-range
@@ -251,27 +355,43 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div id="9" title="Count chart - Hoàn tất">
-    <count-chart
-      [hasIcon]="true"
-      [title]="'Tổng thời gian hoàn thành thực tế'"
-      [value]="116"
-    ></count-chart>
+  <div id="9" title="Tổng thời gian hoàn thành thực tế">
+    <div class="card m-2">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="ms-2">
+            <div class="text-center">Tổng thời gian hoàn thành thực tế</div>
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold fs-1">116</div>
+              <div class="ms-2">giờ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div id="10" title="Count chart - Hoàn tất">
-    <count-chart
-      [hasIcon]="true"
-      [title]="'Tổng thời gian làm việc'"
-      [value]="176"
-    ></count-chart>
+  <div id="10" title="Tổng thời gian làm việc">
+    <div class="card m-2">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="ms-2">
+            <div class="text-center">Tổng thời gian làm việc</div>
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold fs-1">176</div>
+              <div class="ms-2">giờ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div id="11" title="Count chart - Hoàn tất">
+  <div id="11" title="Tỷ lệ công việc theo nhóm">
     <div class="w-100 h-100">
       <div
         class="text-center"
@@ -285,122 +405,80 @@
       >
         Tỷ lệ công việc theo nhóm
       </div>
-      <div class="my-5">
-        <div
-          class="d-flex justify-content-center align-items-center text-white switch-room cursor-pointer"
-        >
+      <div class="mt-5">
+        <div class="d-flex justify-content-center align-items-center">
           <div
-            class="w-100px text-center active py-2 rounded-pill-left"
-            style="background-color: '#C5C7D0'"
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
           >
-            Số lượng
-          </div>
-          <div
-            class="w-100px text-center text-dark py-2 rounded-pill-right"
-            style="background-color: '#f0f2f5'"
-          >
-            Thời gian
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnradiobtnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Số lượng"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Thời gian"
+            ></codx-label>
           </div>
         </div>
       </div>
       <div class="my-4">
-        <codx-chart
-          height="180"
-          [seriesSetting]="chartSettings2?.seriesSetting"
-          [service]="chartSettings2?.service"
-          [assemblyName]="chartSettings2?.assembly"
-          [className]="chartSettings2?.className"
-          [method]="chartSettings2?.method"
-        >
-        </codx-chart>
+        <div class="control-section">
+          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="TasksByGroup1"
+                [dataSource]="myDBData?.tasksByGroup"
+                xName="taskGroupName"
+                yName="qty"
+                startAngle="0"
+                innerRadius="80%"
+                radius="70%"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+        </div>
       </div>
-      <div class="mt-4">
+      <div *ngFor="let data of myDBData?.tasksByGroup" class="mt-4">
         <div class="mx-2 my-5">
           <div class="d-flex justify-content-between">
-            <div>Quản lý công việc (500)</div>
-            <div>52%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'52%'"
-                aria-valuenow="52"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
+            <div>
+              <span>{{ data.taskGroupName }}</span>
+              <span>&nbsp;(</span>
+              <span>{{ data.qty }}</span>
+              <span>)</span>
+            </div>
+            <div>
+              <span>{{ data.percentage.toFixed(1) }}</span
+              ><span>% </span>
             </div>
           </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Công văn (200)</div>
-            <div>20%</div>
-          </div>
           <div class="d-flex align-items-center min-w-200px">
             <div class="h-5px w-100 bg-gray-200 rounded-4">
               <div
                 class="bg-primary rounded-4 h-5px"
                 role="progressbar"
-                [style.width]="'20%'"
-                aria-valuenow="20"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Trình ký số (180)</div>
-            <div>18%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'18%'"
-                aria-valuenow="18"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Đặt phòng (50)</div>
-            <div>5%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'5%'"
-                aria-valuenow="5"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Khác (10)</div>
-            <div>1%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'1%'"
-                aria-valuenow="1"
-                aria-valuemin="0"
-                aria-valuemax="100"
+                [style.width]="data.percentage + '%'"
               ></div>
             </div>
           </div>
@@ -412,12 +490,35 @@
 
 <ng-template #my_dashboard>
   <div id="12" title="Thống kê công việc hoàn thành và số giờ thực hiện">
-    <codx-chart
-      [title]="chartSettings7?.title"
-      [seriesSetting]="chartSettings7?.seriesSetting"
-      [dataSource]="dashboardData?.dataBarChart?.barChart"
-    >
-    </codx-chart>
+    <div class="control-section">
+      <div align="center">
+        <ejs-chart
+          style="display: block"
+          align="center"
+          [id]="newGuid()"
+          [title]="'Thống kê công việc hoàn thành và số giờ thực hiện'"
+        >
+          <e-series-collection>
+            <e-series
+              [dataSource]="myDBData?.dataBarChart?.lineChart"
+              type="Line"
+              xName="label"
+              yName="value"
+              name="WorkHours"
+            >
+            </e-series>
+            <e-series
+              [dataSource]="myDBData?.dataBarChart?.barChart"
+              type="Column"
+              xName="label"
+              yName="value"
+              name="Tasks"
+            >
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -425,28 +526,171 @@
 
 <!--#region team_dashboard  -->
 <ng-template #team_dashboard>
-  <div id="1" title="Thống kê"></div>
+  <div id="1" title="Chưa thực hiện">
+    <count-chart
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+      [title]="'Chưa thực hiện'"
+      [value]="+myDBData?.status?.newTasks"
+    ></count-chart>
+  </div>
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="2" title="Tỷ lệ công việc được giao">
-    <div class="w-100 p-2">
-      <codx-chart
-        height="180"
-        [title]="chartSettings2?.title"
-        [seriesSetting]="chartSettings2?.seriesSetting"
-        [service]="chartSettings2?.service"
-        [assemblyName]="chartSettings2?.assembly"
-        [className]="chartSettings2?.className"
-        [method]="chartSettings2?.method"
-      >
-      </codx-chart>
+  <div id="2" title="Đang thực hiện">
+    <count-chart
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
+      [title]="'Đang thực hiện'"
+      [value]="+myDBData?.status?.processingTasks"
+    ></count-chart>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="3" title="Quá hạn">
+    <count-chart
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
+      [title]="'Quá hạn'"
+      [value]="+myDBData?.status?.overdueTasks"
+    ></count-chart>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="4" title="Hoàn tất">
+    <count-chart
+      [hasIcon]="true"
+      [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
+      [title]="'Công việc hoàn tất'"
+      [value]="+myDBData?.status?.doneTasks"
+    ></count-chart>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="5" title="Đúng hạn">
+    <div class="d-flex">
+      <div class="card m-2">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="progress-container">
+              <div class="progress-container-align position-relative">
+                <div
+                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <span class="fs-6 fw-bold">80%</span>
+                </div>
+                <ejs-progressbar
+                  #annotation1
+                  [id]="newGuid()"
+                  [type]="'Circular'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'70'"
+                  [height]="'70'"
+                  [trackThickness]="10"
+                  [progressThickness]="10"
+                  [animation]="animation"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+            <div class="ms-2">
+              <div>
+                Đúng hạn
+                <div class="fw-bold fs-3">1551</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="3" title="Tỷ lệ hoàn thành đúng hạn của nhân viên">
+  <div id="6" title="Quá hạn">
+    <div class="d-flex">
+      <div class="card m-2">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="progress-container">
+              <div class="progress-container-align position-relative">
+                <div
+                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <span class="fs-6 fw-bold">80%</span>
+                </div>
+                <ejs-progressbar
+                  #annotation1
+                  [id]="newGuid()"
+                  [type]="'Circular'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'70'"
+                  [height]="'70'"
+                  [trackThickness]="10"
+                  [progressThickness]="10"
+                  [progressColor]="'#FF4500'"
+                  [animation]="animation"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+            <div class="ms-2">
+              <div>
+                Quá hạn
+                <div class="fw-bold fs-3">1551</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="7" title="Tỷ lệ công việc theo nhóm">
+    <div class="w-100 h-100">
+      <div
+        class="text-center"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
+        Tỷ lệ công việc theo nhóm
+      </div>
+      <div class="control-section">
+        <!-- <ejs-accumulationchart [id]="newGuid()" #pie2 style="display: block">
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              name="TasksByGroup2"
+              [dataSource]="myDBData?.tasksByGroup"
+              xName="taskGroupName"
+              yName="qty"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="8" title="Tỷ lệ hoàn thành đúng hạn của nhân viên">
     <div class="w-100 h-100">
       <div
         class="text-center"
@@ -462,20 +706,38 @@
       </div>
       <div>
         <div class="my-5">
-          <div
-            class="d-flex justify-content-center align-items-center text-white switch-room cursor-pointer"
-          >
+          <div class="d-flex justify-content-center align-items-center">
             <div
-              class="w-100px text-center active py-2 rounded-pill-left"
-              style="background-color: '#C5C7D0'"
+              class="btn-group"
+              role="group"
+              aria-label="Basic radio toggle button group"
             >
-              Số lượng
-            </div>
-            <div
-              class="w-100px text-center text-dark py-2 rounded-pill-right"
-              style="background-color: '#f0f2f5'"
-            >
-              Thời gian
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnLowestRadio"
+                autocomplete="off"
+                checked
+              />
+              <codx-label
+                class="btn btn-outline-primary"
+                for="btnLowestRadio"
+                default="Thấp nhất"
+              ></codx-label>
+
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnHighestRadio"
+                autocomplete="off"
+              />
+              <codx-label
+                class="btn btn-outline-primary"
+                for="btnHighestRadio"
+                default="Cao nhất"
+              ></codx-label>
             </div>
           </div>
         </div>
@@ -483,202 +745,115 @@
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  [objectType]="'AD_Users'"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-1"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+                    <span class="fs-6 fw-bold">80%</span>
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="80"
+                    [width]="'70'"
+                    [height]="'70'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
             </div>
           </div>
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  [objectType]="'AD_Users'"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-2"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+                    <span class="fs-6 fw-bold">80%</span>
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="80"
+                    [width]="'70'"
+                    [height]="'70'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
             </div>
           </div>
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  [objectType]="'AD_Users'"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-3"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+                    <span class="fs-6 fw-bold">80%</span>
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="80"
+                    [width]="'70'"
+                    [height]="'70'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -688,7 +863,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="4" title="Top nhân viên hoàn thành nhiều công việc nhất">
+  <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
     <div class="w-100 p-2">
       <div class="fw-bold text-center">
         Top nhân viên hoàn thành nhiều công việc nhất
@@ -717,7 +892,41 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="5" title="Tỷ lệ hoàn thành đúng hạn giao việc">
+  <div id="10" title="Tỷ lệ công việc được giao">
+    <div class="control-section">
+      <div align="center">
+        <ejs-chart
+          style="display: block"
+          align="center"
+          [id]="newGuid()"
+          [title]="'Thống kê công việc hoàn thành và số giờ thực hiện'"
+        >
+          <e-series-collection>
+            <e-series
+              [dataSource]="myDBData?.dataBarChart?.lineChart"
+              type="Line"
+              xName="label"
+              yName="value"
+              name="WorkHours"
+            >
+            </e-series>
+            <e-series
+              [dataSource]="myDBData?.dataBarChart?.barChart"
+              type="Column"
+              xName="label"
+              yName="value"
+              name="Tasks"
+            >
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #team_dashboard>
+  <div id="11" title="Tỷ lệ hoàn thành đúng hạn giao việc">
     <div class="w-100 h-100">
       <codx-chart
         height="180"
@@ -730,183 +939,6 @@
   </div>
 </ng-template>
 
-<ng-template #team_dashboard>
-  <div id="6" title="Count chart - Chưa thực hiện">
-    <count-chart
-      [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
-      [title]="'Chưa thực hiện'"
-      [value]="+dashboardData?.status?.newTasks"
-    ></count-chart>
-  </div>
-</ng-template>
-
-<ng-template #team_dashboard>
-  <div id="7" title="Count chart - Đang thực hiện">
-    <count-chart
-      [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
-      [title]="'Đang thực hiện'"
-      [value]="+dashboardData?.status?.processingTasks"
-    ></count-chart>
-  </div>
-</ng-template>
-
-<ng-template #team_dashboard>
-  <div id="8" title="Count chart - Quá hạn">
-    <count-chart
-      [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
-      [title]="'Quá hạn'"
-      [value]="+dashboardData?.status?.overdueTasks"
-    ></count-chart>
-  </div>
-</ng-template>
-
-<ng-template #team_dashboard>
-  <div id="9" title="Count chart - Hoàn tất">
-    <count-chart
-      [hasIcon]="true"
-      [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
-      [title]="'Công việc hoàn tất'"
-      [value]="+dashboardData?.status?.doneTasks"
-    ></count-chart>
-  </div>
-</ng-template>
-
-<ng-template #team_dashboard>
-  <div id="10" title="Count chart - Hoàn tất">
-    <div class="d-flex align-items-center">
-      <ejs-circulargauge
-        class="w-70px h-70px"
-        style="display: block"
-        id="ontime"
-        width="100%"
-      >
-        <e-axes>
-          <e-axis
-            minimum="0"
-            radius="100%"
-            maximum="100"
-            startAngle="0"
-            endAngle="360"
-            [majorTicks]="{
-              height: 0
-            }"
-            [labelStyle]="{
-              position: 'Inside',
-              useRangeColor: true,
-              font: {
-                size: '0px',
-                color: 'white',
-                fontFamily: 'Roboto',
-                fontStyle: 'Regular'
-              }
-            }"
-            [lineStyle]="{
-              width: 0
-            }"
-            [minorTicks]="{
-              width: 0
-            }"
-          >
-            <e-ranges>
-              <e-range
-                start="0"
-                end="100"
-                radius="100%"
-                color="#F0F0F0"
-                startWidth="10"
-                endWidth="10"
-              >
-              </e-range>
-            </e-ranges>
-            <e-pointers>
-              <e-pointer
-                [value]="70"
-                pointerWidth="10"
-                type="RangeBar"
-                radius="100%"
-                color="#357cd2"
-              ></e-pointer>
-            </e-pointers>
-          </e-axis>
-        </e-axes>
-      </ejs-circulargauge>
-      <div class="ms-2">
-        <div>Đúng hạn</div>
-        <div class="fw-bold fs-3">1551</div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #team_dashboard>
-  <div id="11" title="Count chart - Hoàn tất">
-    <div class="d-flex align-items-center">
-      <ejs-circulargauge
-        class="w-70px h-70px"
-        style="display: block"
-        id="duedate"
-        width="100%"
-      >
-        <e-axes>
-          <e-axis
-            minimum="0"
-            radius="100%"
-            maximum="100"
-            startAngle="0"
-            endAngle="360"
-            [majorTicks]="{
-              height: 0
-            }"
-            [labelStyle]="{
-              position: 'Inside',
-              useRangeColor: true,
-              font: {
-                size: '0px',
-                color: 'white',
-                fontFamily: 'Roboto',
-                fontStyle: 'Regular'
-              }
-            }"
-            [lineStyle]="{
-              width: 0
-            }"
-            [minorTicks]="{
-              width: 0
-            }"
-          >
-            <e-ranges>
-              <e-range
-                start="0"
-                end="100"
-                radius="100%"
-                color="#F0F0F0"
-                startWidth="10"
-                endWidth="10"
-              >
-              </e-range>
-            </e-ranges>
-            <e-pointers>
-              <e-pointer
-                [value]="70"
-                pointerWidth="10"
-                type="RangeBar"
-                radius="100%"
-                color="#357cd2"
-              ></e-pointer>
-            </e-pointers>
-          </e-axis>
-        </e-axes>
-      </ejs-circulargauge>
-      <div class="ms-2">
-        <div>Quá hạn</div>
-        <div class="fw-bold fs-3">338</div>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <!--#endregion -->
 
 <!--#region assign_dashboard  -->
@@ -916,7 +948,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
       [title]="'Chưa thực hiện'"
-      [value]="+dashboardData?.status?.newTasks"
+      [value]="+myDBData?.status?.newTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -927,7 +959,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="'Đang thực hiện'"
-      [value]="+dashboardData?.status?.processingTasks"
+      [value]="+myDBData?.status?.processingTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -938,7 +970,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="'Quá hạn'"
-      [value]="+dashboardData?.status?.overdueTasks"
+      [value]="+myDBData?.status?.overdueTasks"
     ></count-chart>
   </div>
 </ng-template>
@@ -949,140 +981,91 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="'Công việc hoàn tất'"
-      [value]="+dashboardData?.status?.doneTasks"
+      [value]="+myDBData?.status?.doneTasks"
     ></count-chart>
   </div>
 </ng-template>
 
 <ng-template #assign_dashboard>
   <div id="5" title="Đúng hạn">
-    <div class="d-flex justify-content-between align-items-center">
-      <ejs-circulargauge
-        class="w-70px h-70px"
-        style="display: inline-block"
-        id="ontime"
-        width="70"
-      >
-        <e-axes>
-          <e-axis
-            minimum="0"
-            radius="100%"
-            maximum="100"
-            startAngle="0"
-            endAngle="360"
-            [majorTicks]="{
-              height: 0
-            }"
-            [labelStyle]="{
-              position: 'Inside',
-              useRangeColor: true,
-              font: {
-                size: '0px',
-                color: 'white',
-                fontFamily: 'Roboto',
-                fontStyle: 'Regular'
-              }
-            }"
-            [lineStyle]="{
-              width: 0
-            }"
-            [minorTicks]="{
-              width: 0
-            }"
-          >
-            <e-ranges>
-              <e-range
-                start="0"
-                end="100"
-                radius="100%"
-                color="#F0F0F0"
-                startWidth="10"
-                endWidth="10"
-              >
-              </e-range>
-            </e-ranges>
-            <e-pointers>
-              <e-pointer
-                [value]="70"
-                pointerWidth="10"
-                type="RangeBar"
-                radius="100%"
-                color="#357cd2"
-              ></e-pointer>
-            </e-pointers>
-          </e-axis>
-        </e-axes>
-      </ejs-circulargauge>
-      <div class="ms-2">
-        <div>Đúng hạn</div>
-        <div class="fw-bold fs-3">1551</div>
+    <div class="d-flex">
+      <div class="card m-2">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="progress-container">
+              <div class="progress-container-align position-relative">
+                <div
+                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <span class="fs-6 fw-bold">80%</span>
+                </div>
+                <ejs-progressbar
+                  #annotation1
+                  [id]="newGuid()"
+                  [type]="'Circular'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'70'"
+                  [height]="'70'"
+                  [trackThickness]="10"
+                  [progressThickness]="10"
+                  [animation]="animation"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+            <div class="ms-2">
+              <div>
+                Đúng hạn
+                <div class="fw-bold fs-3">1551</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #assign_dashboard
-  ><div id="6" title="Quá hạn">
-    <div class="d-flex align-items-center">
-      <ejs-circulargauge
-        class="w-70px h-70px"
-        style="display: block"
-        id="duedate"
-        width="100%"
-      >
-        <e-axes>
-          <e-axis
-            minimum="0"
-            radius="100%"
-            maximum="100"
-            startAngle="0"
-            endAngle="360"
-            [majorTicks]="{
-              height: 0
-            }"
-            [labelStyle]="{
-              position: 'Inside',
-              useRangeColor: true,
-              font: {
-                size: '0px',
-                color: 'white',
-                fontFamily: 'Roboto',
-                fontStyle: 'Regular'
-              }
-            }"
-            [lineStyle]="{
-              width: 0
-            }"
-            [minorTicks]="{
-              width: 0
-            }"
-          >
-            <e-ranges>
-              <e-range
-                start="0"
-                end="100"
-                radius="100%"
-                color="#F0F0F0"
-                startWidth="10"
-                endWidth="10"
-              >
-              </e-range>
-            </e-ranges>
-            <e-pointers>
-              <e-pointer
-                [value]="70"
-                pointerWidth="10"
-                type="RangeBar"
-                radius="100%"
-                color="#357cd2"
-              ></e-pointer>
-            </e-pointers>
-          </e-axis>
-        </e-axes>
-      </ejs-circulargauge>
-      <div class="ms-2">
-        <div>Quá hạn</div>
-        <div class="fw-bold fs-3">338</div>
+  ><div id="6" title="Đúng hạn">
+    <div class="d-flex">
+      <div class="card m-2">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="progress-container">
+              <div class="progress-container-align position-relative">
+                <div
+                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <span class="fs-6 fw-bold">80%</span>
+                </div>
+                <ejs-progressbar
+                  #annotation1
+                  [id]="newGuid()"
+                  [type]="'Circular'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="80"
+                  [width]="'70'"
+                  [height]="'70'"
+                  [trackThickness]="10"
+                  [progressThickness]="10"
+                  [progressColor]="'#FF4500'"
+                  [animation]="animation"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+            <div class="ms-2">
+              <div>
+                Đúng hạn
+                <div class="fw-bold fs-3">1551</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div></ng-template
@@ -1104,20 +1087,38 @@
         Tỷ lệ công việc theo nguồn
       </div>
       <div class="my-5">
-        <div
-          class="d-flex justify-content-center align-items-center text-white switch-room cursor-pointer"
-        >
+        <div class="d-flex justify-content-center align-items-center">
           <div
-            class="w-100px text-center active py-2 rounded-pill-left"
-            style="background-color: '#C5C7D0'"
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
           >
-            Số lượng
-          </div>
-          <div
-            class="w-100px text-center text-dark py-2 rounded-pill-right"
-            style="background-color: '#f0f2f5'"
-          >
-            Thời gian
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Số lượng"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Thời gian"
+            ></codx-label>
           </div>
         </div>
       </div>
@@ -1230,115 +1231,86 @@
 
 <ng-template #assign_dashboard>
   <div id="8" title="Thống kê công việc theo dự án">
-    <div class="control-section">
-      <div align="center">
-        <ejs-chart
-          style="display: block"
-          [chartArea]="chartArea"
-          [width]="'100%'"
-          align="center"
-          id="chartcontainer"
-          [primaryXAxis]="{
-            majorGridLines: { width: 0 },
-            minorGridLines: { width: 0 },
-            majorTickLines: { width: 0 },
-            minorTickLines: { width: 0 },
-            interval: 1,
-            lineStyle: { width: 0 },
-            labelIntersectAction: 'Rotate45',
-            valueType: 'Category'
-          }"
-          [primaryYAxis]="{
-            title: 'Vehicles Production (In Millions)',
-            lineStyle: { width: 0 },
-            majorTickLines: { width: 0 },
-            majorGridLines: { width: 1 },
-            minorGridLines: { width: 1 },
-            minorTickLines: { width: 0 },
-        }"
-          [title]="'Thống kê công việc theo dự án'"
-          [tooltip]="{
-            enable: true
-          }"
-          (axisLabelRender)="OnChartAxisLabeRender($event)"
-          [legendSettings]="{
-            visible: true,
-            enableHighlight: true
-          }"
-        >
-          <e-series-collection>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="General"
-              name="General Motors"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="Honda"
-              name="Honda"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="Suzuki"
-              name="Suzuki"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="BMW"
-              name="BMW"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-          </e-series-collection>
-        </ejs-chart>
+    <h1>8</h1>
+    <div class="w-100 h-100">
+      <div
+        class="text-center"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
+        Tỷ lệ công việc theo nguồn
       </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #assign_dashboard>
-  <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
-    <div class="w-100 p-2">
-      <div class="fw-bold text-center">
-        Top nhân viên hoàn thành nhiều công việc nhất
-      </div>
-      <div class="container">
-        <div class="bar-graph bar-graph-horizontal bar-graph-one">
-          <div class="bar-template" *ngFor="let emp of topEmp">
-            <div
-              class="bar"
-              [ngStyle]="{
-                width: (emp.tasks / 123) * 100 + '%',
-                'background-color': '#64b2d1'
-              }"
-              [title]="emp.name"
-            >
-              <div class="bar-task-quantity">{{ emp.tasks }}</div>
-              <div class="bar-username">
-                {{ (emp.tasks / 123) * 100 >= 50 ? emp.name : "" }}
+      <div>
+        <div class="my-2">
+          <div>Triển khai nội bộ</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block w-100">
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 40%"></div>
+                <div class="progress-bar bg-warning" style="width: 10%"></div>
+                <div class="progress-bar bg-danger" style="width: 20%"></div>
               </div>
+            </div>
+            <div class="ms-2">
+              <span>346</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div>Phát triển sản phẩm CoDX</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block w-100">
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 40%"></div>
+                <div class="progress-bar bg-warning" style="width: 10%"></div>
+                <div class="progress-bar bg-danger" style="width: 20%"></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span>266</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div>Nhà sách Long An</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block w-100">
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 40%"></div>
+                <div class="progress-bar bg-warning" style="width: 10%"></div>
+                <div class="progress-bar bg-danger" style="width: 20%"></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span>111</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div>Nhà máy sản xuất Đô Thành</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block w-100">
+              <div class="progress">
+                <div class="progress-bar bg-success" style="width: 40%"></div>
+                <div class="progress-bar bg-warning" style="width: 10%"></div>
+                <div class="progress-bar bg-danger" style="width: 20%"></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span>78</span>
             </div>
           </div>
         </div>
@@ -1348,13 +1320,40 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div id="10" title="Thống kê công việc hoàn thành và số giờ thực hiện">
+  <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
+    <h1>9</h1>
+    <div class="w-100 h-100">
+      <section class="bar-graph bar-graph-horizontal bar-graph-one">
+        <div class="bar-one">
+          <span class="year">2019</span>
+          <div class="bar" data-percentage="69.6%"></div>
+        </div>
+        <div class="bar-two">
+          <span class="year">2018</span>
+          <div class="bar" data-percentage="71%"></div>
+        </div>
+        <div class="bar-three">
+          <span class="year">2017</span>
+          <div class="bar" data-percentage="74.7%"></div>
+        </div>
+        <div class="bar-four">
+          <span class="year">2019</span>
+          <div class="bar" data-percentage="76.8%"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #assign_dashboard>
+  <div id="10" title="Thống kê công việc theo dự án">
     <h1>10</h1>
   </div>
 </ng-template>
 
 <ng-template #assign_dashboard>
   <div id="11" title=" Tỷ lệ hoàn thành đúng hạn giao việc">
+    <h1>11</h1>
     <div class="w-100 h-100">
       <div
         class="text-center"
@@ -1370,20 +1369,38 @@
       </div>
       <div>
         <div class="my-5">
-          <div
-            class="d-flex justify-content-center align-items-center text-white switch-room cursor-pointer"
-          >
+          <div class="d-flex justify-content-center align-items-center">
             <div
-              class="w-100px text-center active py-2 rounded-pill-left"
-              style="background-color: '#C5C7D0'"
+              class="btn-group"
+              role="group"
+              aria-label="Basic radio toggle button group"
             >
-              Số lượng
-            </div>
-            <div
-              class="w-100px text-center text-dark py-2 rounded-pill-right"
-              style="background-color: '#f0f2f5'"
-            >
-              Thời gian
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnLowestRadio"
+                autocomplete="off"
+                checked
+              />
+              <codx-label
+                class="btn btn-outline-primary"
+                for="btnLowestRadio"
+                default="Thấp nhất"
+              ></codx-label>
+
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnHighestRadio"
+                autocomplete="off"
+              />
+              <codx-label
+                class="btn btn-outline-primary"
+                for="btnHighestRadio"
+                default="Cao nhất"
+              ></codx-label>
             </div>
           </div>
         </div>
@@ -1391,202 +1408,117 @@
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  objectType="AD_Users"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-1"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
-                  >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+              <div class="d-flex align-items-center">
+                <div class="progress-container">
+                  <div class="progress-container-align position-relative">
+                    <div
+                      class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                    >
+                      <span class="fs-6 fw-bold">80%</span>
+                    </div>
+                    <ejs-progressbar
+                      #annotation1
+                      [id]="newGuid()"
+                      [type]="'Circular'"
+                      [maximum]="100"
+                      [minimum]="0"
+                      [value]="80"
+                      [width]="'70'"
+                      [height]="'70'"
+                      [trackThickness]="10"
+                      [progressThickness]="10"
+                      [progressColor]="'#FF4500'"
+                      [animation]="animation"
+                    >
+                    </ejs-progressbar>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  objectType="AD_Users"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-2"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+                    <span class="fs-6 fw-bold">80%</span>
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="80"
+                    [width]="'70'"
+                    [height]="'70'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
             </div>
           </div>
           <div class="mx-2 my-5">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
-                <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+                <codx-img
+                  [objectType]="'AD_Users'"
+                  [objectId]="'2303080005'"
+                ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">Lê Phạm Hoài Thương</div>
+                  <div class="text-dark">Phan Mẫn Nhi</div>
                   <div>Phát triển sản phẩm</div>
                 </div>
               </div>
-              <ejs-circulargauge
-                class="w-70px h-70px"
-                style="display: block"
-                id="range-container-3"
-                width="100%"
-              >
-                <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="{
-                      height: 0
-                    }"
-                    [labelStyle]="{
-                      position: 'Inside',
-                      useRangeColor: true,
-                      font: {
-                        size: '0px',
-                        color: 'white',
-                        fontFamily: 'Roboto',
-                        fontStyle: 'Regular'
-                      }
-                    }"
-                    [lineStyle]="{
-                      width: 0
-                    }"
-                    [minorTicks]="{
-                      width: 0
-                    }"
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      >
-                      </e-range>
-                    </e-ranges>
-                    <e-pointers>
-                      <e-pointer
-                        [value]="70"
-                        pointerWidth="10"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                      ></e-pointer>
-                    </e-pointers>
-                  </e-axis>
-                </e-axes>
-              </ejs-circulargauge>
+                    <span class="fs-6 fw-bold">80%</span>
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="80"
+                    [width]="'70'"
+                    [height]="'70'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
             </div>
           </div>
         </div>
