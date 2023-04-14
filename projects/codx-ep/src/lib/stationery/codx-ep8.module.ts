@@ -24,6 +24,7 @@ import { PopupAddQuotaComponent } from './category/popup-add-quota/popup-add-quo
 import { PopupAddStationeryComponent } from './category/popup-add-stationery/popup-add-stationery.component';
 import { PopupUpdateQuantityComponent } from './category/popup-update-quantity/popup-update-quantity.component';
 import { Layout8Component } from './_layout8/layout8.component';
+import { ReportComponent } from './report/report.component';
 
 const routes: Route[] = [
   {
@@ -46,6 +47,10 @@ const routes: Route[] = [
       {
         path: 'approvestationery/:funcID',
         component: ApprovalStationeryComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: ReportComponent,
       },
     ],
   },
@@ -72,6 +77,7 @@ const Components: Type<any>[] = [
   PopupRequestStationeryComponent,
   BookingStationeryViewDetailComponent,
   ApprovalStationeryViewDetailComponent,
+  ReportComponent,
 ];
 
 @NgModule({
