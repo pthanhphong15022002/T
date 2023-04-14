@@ -7,11 +7,15 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Questions } from '../models/SV_Questions';
 import { SV_Surveys } from '../models/SV_Surveys';
-
+import { NgxCaptureService } from 'ngx-capture';
+import { tap } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { FileUpload } from '@shared/models/file.model';
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -33,16 +37,21 @@ export class AddSurveyComponent extends UIComponent {
   title: any ;
   signal: any = null;
   url: any;
+  user: any;
   titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
 
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
-
+  @ViewChild('screen', { static: true }) screen: any;
   constructor(
     private injector: Injector, 
     private SvService: CodxSvService,
+    private captureService: NgxCaptureService,
+    private ShareService: CodxShareService,
+    private auth : AuthStore,
+    private dmSV: CodxDMService,
     private change: ChangeDetectorRef
   ) {
     super(injector);
@@ -68,6 +77,9 @@ export class AddSurveyComponent extends UIComponent {
     })
   }
   onInit(): void {
+
+    this.user = this.auth.get();
+
     if (!this.funcID) this.codxService.navigate('SVT01');
     //this.getSV();
     this.getSignalAfterSave();
@@ -189,6 +201,29 @@ export class AddSurveyComponent extends UIComponent {
   onSubmit() {}
 
   back() {
+    // this.captureService.getImage(this.screen.nativeElement, true)
+    // .pipe(
+    //   tap(img => {
+    //     var name = 'Capture_' + this.makeid(10) + '.jpg';
+    //     var file = this.dataURLtoFile(img,name);
+    //     this.ShareService.uploadFileAsync(file,this.user.tenant,this.dmSV.ChunkSizeInKB).then(result=>{
+    //       var fileItem = new FileUpload();
+    //       fileItem.objectID = this.recID;
+    //       fileItem.objectType = this.functionList.entityName;
+    //       fileItem.thumbnail = result.Data?.RelUrlThumb;
+    //       fileItem.uploadId = result.Data?.UploadId; 
+    //       fileItem.urlPath = result.Data?.RelUrlOfServerPath; 
+    //       fileItem.fileSize = file.size;
+    //       fileItem.folderID = "";
+    //       fileItem.fileName = file.name;
+    //       fileItem.extension = "jpg";
+    //       fileItem.permissions = [];
+    //       fileItem.referType = 'avt'
+    //       this.ShareService.addFile(fileItem,"",this.functionList.entityName);
+          
+    //     })
+    //   })
+    // ).subscribe();
     this.codxService.navigate('SVT01');
   }
 
@@ -212,4 +247,32 @@ export class AddSurveyComponent extends UIComponent {
   {
     this.SvService.getSV(this.recID)
   }
+
+  dataURLtoFile(dataurl : any, filename : any) {
+ 
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], filename, {type:mime});
+  }
+
+  makeid(length:any) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
 }

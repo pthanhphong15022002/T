@@ -29,11 +29,12 @@ import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashReceipts } from '../../models/CashReceipts.model';
 import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
-import { Transactiontext } from '../../models/transactiontext.model';
 import { VoucherComponent } from '../../popup/voucher/voucher.component';
 import { PopAddLinereceiptsComponent } from '../pop-add-linereceipts/pop-add-linereceipts.component';
-import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
-import { JournalService } from '../../journal-names/journal-names.service';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../journals/journals.service';
+import { Reason } from '../../models/Reason.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-receipts',
@@ -59,7 +60,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   cashreceiptslinesDelete: Array<CashReceiptsLines> = [];
   voucherLineRefs: Array<any> = [];
   voucherLineRefsDelete: Array<any> = [];
-  transactiontext: Array<Transactiontext> = [];
+  transactiontext: Array<Reason> = [];
   moreFunction: any;
   dialog!: DialogRef;
   formType: any;
@@ -73,6 +74,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   columnGrids = [];
   keymodel: any;
   journal: IJournal;
+  voucherNoPlaceholderText$: Observable<string>;
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
     gridViewName: 'grvCashReceiptsLines',
@@ -174,18 +176,19 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         }
       });
 
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
+
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.cashreceipts.journalNo;
     options.pageLoading = false;
-    this.acService
-      .loadDataAsync('AC', options)
-      .subscribe((res) => {
-        this.journal = res[0]?.dataValue
+    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+      this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-      });
+    });
   }
 
   ngAfterViewInit() {
@@ -446,6 +449,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
+          journal: this.journal,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -506,6 +510,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       headerText: this.headerText,
       data: data,
       type: 'add',
+      journal: this.journal,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -708,7 +713,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       this.journalService.handleVoucherNoAndSave(
         this.journal,
         this.cashreceipts,
-        "AC",
+        'AC',
         'AC_CashReceipts',
         this.form,
         this.formType === 'edit',
@@ -800,7 +805,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
 
   setTransaction(field, text, idx) {
     if (!this.transactiontext.some((x) => x.field == field)) {
-      let transText = new Transactiontext();
+      let transText = new Reason();
       transText.field = field;
       transText.value = text;
       transText.index = idx;

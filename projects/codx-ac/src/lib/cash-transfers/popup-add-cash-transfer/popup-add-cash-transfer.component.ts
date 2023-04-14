@@ -1,6 +1,8 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
+  CodxComboboxComponent,
   CodxFormComponent,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogRef,
@@ -12,10 +14,10 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { map, Observable, tap } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
-import { IJournal } from '../../journal-names/interfaces/IJournal.interface';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { JournalService } from '../../journal-names/journal-names.service';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -25,6 +27,9 @@ import { JournalService } from '../../journal-names/journal-names.service';
 export class PopupAddCashTransferComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
+  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
+
   cashTransfer: ICashTransfer = {} as ICashTransfer;
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
@@ -48,6 +53,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   gvsVATInvoices: any;
   isEdit: boolean = false;
   tabName$: Observable<string>;
+  voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
 
@@ -64,7 +70,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.cashTransfer = this.dialogRef.dataService?.dataSelected;
-    this.cashTransfer.acountID = '123';
     this.hiddenFields = this.cashTransfer?.unbounds?.lockFields ?? [];
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
@@ -95,6 +100,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
       tap((t) => console.log(t))
     );
 
+    this.voucherNoPlaceholderText$ =
+      this.journalService.getVoucherNoPlaceholderText();
+
     const options = new DataRequest();
     options.entityName = 'AC_Journals';
     options.predicates = 'JournalNo=@0';
@@ -104,6 +112,12 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
+
+      this.journalService.setAccountCbxDataSourceByJournal(
+        this.journal,
+        this.cbxCashAcctID,
+        this.cbxOffsetAcctID
+      );
 
       if (this.isEdit) {
         this.hiddenFields = this.journalService.getHiddenFields(this.journal);

@@ -1,4 +1,6 @@
-<codx-views [views]="views" 
+<codx-views 
+  #view
+  [views]="views" 
   [autoLoad]="false" 
   [idField]="'recID'">
 </codx-views>
@@ -7,21 +9,27 @@
     <div class="pw-profile" style="
         background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
-      <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID" [funcId]="'ADS05'"
-          [objectName]="employeeInfo.userName" [width]="60" [imgOn]="employeeInfo?.modifiedOn">
-        </codx-img>
-        <div class="d-flex flex-column">
-          <div class="fs-6 fw-bold text-dark">{{ employeeInfo?.userName }}</div>
-          <div class="text-gray-700">{{ employeeInfo?.email }}</div>
-          <div class="text-gray-500">{{ employeeInfo?.mobile }}</div>
+      <ng-container *ngIf="user">
+        <div class="d-flex align-items-center avatar">
+          <codx-img class="me-4" 
+            [objectType]="'AD_Users'" 
+            [objectId]="user.userID" 
+            [objectName]="user.userName"
+            [width]="60">
+          </codx-img>
+          <div class="d-flex flex-column">
+            <div class="fs-6 fw-bold text-dark"><span>{{user.userName}}</span></div>
+            <div class="text-gray-700"><span>{{user.email}}</span></div>
+            <div class="text-gray-500"><span>{{user.mobile}}</span></div>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </div>
     <div class="personal-container">
       <div class="personal-menu w-100">
         <ejs-tab id="tab_default" heightAdjustMode="Auto">
           <e-tabitems>
+            <!-- Bài viết -->
             <e-tabitem>
               <div class="pw-md">
                 <ng-template #headerText>
@@ -30,7 +38,7 @@
                         !headerMF.POST ? 'mwp_post' : 'mwp_post_active'
                       }}.svg" alt="" />
                     <span class="fw-bold ms-2">
-                      <codx-label fiedName="Comment" formName="Comments" default="Bài viết">
+                      <codx-label [formModel]="view.formModel" name="lblPosts" default="Bài viết">
                       </codx-label>
                     </span>
                   </div>
@@ -41,12 +49,12 @@
                   <app-list-post #listPost
                     [predicate]="predicatePortal" 
                     [dataValue]="dataValuePortal" 
-                    [isShowCreate]="false"
-                    [moreFuncTmp]="">
+                    [isShowCreate]="false">
                   </app-list-post>
                 </div>
               </ng-template>
             </e-tabitem>
+            <!-- Hình ảnh -->
             <e-tabitem>
               <ng-template #headerText>
                 <div class="d-flex align-items-center me-3" (click)="activeMF('IMAGE')">
@@ -54,7 +62,7 @@
                       !headerMF.IMAGE ? 'mwp_image' : 'mwp_image_active'
                     }}.svg" alt="" />
                   <span class="fw-bold ms-2">
-                    <codx-label fiedName="Image" formName="Comments" default="Hình ảnh">
+                    <codx-label [formModel]="view.formModel" name="lblImages" default="Hình ảnh">
                     </codx-label>
                   </span>
                 </div>
@@ -65,6 +73,7 @@
                 </div>
               </ng-template>
             </e-tabitem>
+            <!-- Video -->
             <e-tabitem>
               <ng-template #headerText>
                 <div class="d-flex align-items-center me-3" (click)="activeMF('VIDEO')">
@@ -72,7 +81,7 @@
                       !headerMF.VIDEO ? 'mwp_video' : 'mwp_video_active'
                     }}.svg" alt="" />
                   <span class="fw-bold ms-2">
-                    <codx-label fiedName="Video" formName="Comments" default="Video">
+                    <codx-label [formModel]="view.formModel" name="lblVideos" default="Video">
                     </codx-label>
                   </span>
                 </div>
@@ -85,6 +94,7 @@
                 </div>
               </ng-template>
             </e-tabitem>
+            <!-- Sổ tay -->
             <e-tabitem>
               <ng-template #headerText>
                 <div class="d-flex align-items-center me-3" (click)="activeMF('NOTEBOOK')">
@@ -94,7 +104,7 @@
                         : 'mwp_notebooks_active'
                     }}.svg" alt="" />
                   <span class="fw-bold ms-2">
-                    <codx-label fiedName="NoteBook" formName="Comments" default="Sổ tay">
+                    <codx-label [formModel]="view.formModel" name="lblNoteBooks" default="Sổ tay">
                     </codx-label>
                   </span>
                 </div>
@@ -105,6 +115,7 @@
                 </div>
               </ng-template>
             </e-tabitem>
+            <!-- Kho lưu trữ -->
             <e-tabitem>
               <ng-template #headerText>
                 <div class="d-flex align-items-center me-3" (click)="activeMF('STORAGE')">
@@ -112,17 +123,18 @@
                       !headerMF.STORAGE ? 'mwp_storage' : 'mwp_storage_active'
                     }}.svg" alt="" />
                   <span class="fw-bold ms-2">
-                    <codx-label fiedName="Storage" formName="Comments" default="Kho lưu trữ">
+                    <codx-label [formModel]="view.formModel" name="lblStorages" default="Kho lưu trữ">
                     </codx-label>
                   </span>
                 </div>
               </ng-template>
               <ng-template #content>
                 <div class="pw-content p-5 h-100 w-100 pw-lg rounded-2 bg-body scroll-y">
-                  <app-storage></app-storage>
+                  <app-storage [formModel]="view.formModel"></app-storage>
                 </div>
               </ng-template>
             </e-tabitem>
+            <!-- Thông tin cá nhân -->
             <e-tabitem>
               <ng-template #headerText>
                 <div class="d-flex align-items-center" (click)="activeMF('INFORMATION')">
@@ -130,7 +142,7 @@
                       !headerMF.INFORMATION ? 'mwp_info' : 'mwp_info_active'
                     }}.svg" alt="" />
                   <span class="fw-bold ms-2">
-                    <codx-label fiedName="Information" formName="Comments" default="Thông tin cá nhân">
+                    <codx-label [formModel]="view.formModel" name="lblInformation" default="Thông tin cá nhân">
                     </codx-label>
                   </span>
                 </div>

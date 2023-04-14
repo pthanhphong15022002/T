@@ -3,11 +3,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/componnent-task/update-progress/update-progress.component';
 
 @Component({
   selector: 'lib-view-job',
@@ -25,12 +26,18 @@ export class ViewJobComponent implements OnInit {
   listDataInput = [];
   listTypeTask = [];
   listDataLink = [];
-
+  tabInstances = [
+    { type: 'view', title: 'Chi tiết công việc', icon: 'icon-history',},
+    { type: 'history', title: 'Lịch sử', icon: 'icon-info' },
+  ];
+  viewModelDetail = 'view';
+  dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     public sanitizer: DomSanitizer,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -63,12 +70,13 @@ export class ViewJobComponent implements OnInit {
       }
     });
 
-    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
-    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
-    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
+    this.owner =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
+    this.participant =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    this.person =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
     console.log(this.owner);
-    
-
   }
 
   getModeFunction() {
@@ -95,5 +103,47 @@ export class ViewJobComponent implements OnInit {
   getColorTile(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
     return { 'border-left': '3px solid' + color?.color };
+  }
+
+  clickMenu(e) {
+    this.viewModelDetail = e;
+  }
+
+  openUpdateProgress(data?: any) {
+    console.log('======');
+    
+    this.callfc.openForm(UpdateProgressComponent, '', 550, 400);
+    if (data?.parentID) {
+      //check công việc liên kết hoàn thành trước
+    //   let check = false;
+    //   let taskName = '';
+    //   let listID = data?.parentID.split(';');
+    //   listID?.forEach((item) => {
+    //     let taskFind = this.taskList?.find((task) => task.refID == item);
+    //     if (taskFind?.progress != 100) {
+    //       check = true;
+    //       taskName = taskFind?.taskName;
+    //     } else {
+    //       this.actualEndMax =
+    //         !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
+    //           ? taskFind?.actualEnd
+    //           : this.actualEndMax;
+    //     }
+    //   });
+    //   if (check) {
+    //     this.notiService.notifyCode('DP023', 0, taskName);
+    //     return;
+    //   }
+    // } else {
+    //   this.actualEndMax = this.step?.actualStart;
+    // }
+    // if (data) {
+    //   this.dataProgress = JSON.parse(JSON.stringify(data));
+    //   this.dataProgressClone = data;
+    //   this.progressOld = data['progress'] == 100 ? 0 : data['progress'];
+    //   this.disabledProgressInput = data['progress'] == 100 ? true : false;
+    // }
+   
+    }
   }
 }

@@ -61,11 +61,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   gridView: any;
 
   //Kỳ
-  periodID = new Date().getFullYear().toString();
+  periodID: string;
   //Loại
-  interval = 'Y';
+  interval :string;
   //Năm
-  year = new Date().getFullYear();
+  year :number;
   fromDate: any;
   toDate: any;
   dataDate = null;
@@ -113,6 +113,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   periodName: any;
   orgUnitTree: any[];
   refIDMeeting:any;
+  isCollapsed=false;
+  listUM=[];
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -153,16 +155,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.formModelChanged();
     this.createCOObject();
     this.setTitle();
-    if (
-      this.periodID != null &&
-      this.interval != null &&
-      this.year != null &&
-      this.periodID != '' &&
-      this.interval != '' &&
-      this.year != 0
-    ) {
-      this.getOKRPlans(this.periodID, this.interval, this.year);
-    }
+    this.getOKRPlans(this.periodID, this.interval, this.year);
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -264,7 +258,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.okrVll.skr.icon=OMCONST.ASSET_URL+this.okrVll.skr.icon;
       }
     });
-    
+    this.codxOmService.getListUM().subscribe((res:any)=>{
+      if(res ){
+        Array.from(res).forEach((um:any)=>{
+          this.listUM.push({umid:um?.umid,umName:um?.umName});
+        });        
+      }
+    });
     
   }
   //---------------------------------------------------------------------------------//
@@ -290,29 +290,21 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Lấy OKR Plan
   getOKRPlanForComponent(event: any) {
     if (event) {
-      if (
-        event?.periodID != null &&
-        event?.interval != null &&
-        event?.year != null &&
-        event?.periodID != '' &&
-        event?.interval != '' &&
-        event?.year != 0
-      ) {
-        this.getOKRPlans(event?.periodID, event?.interval, event?.year);
-      }
+      this.getOKRPlans(event?.periodID, event?.interval, event?.year);      
     }
   }
 
   getOKRPlans(periodID: any, interval: any, year: any) {
-    if (true) {
+    if (this.periodID != null && this.interval != null && this.year != null && this.periodID != '' && this.interval != '' && this.year != 0) {
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
-          //Reset data View
-          
-          if (item) {            
+          //Reset data View          
+            //this.isCollapsed = false;
+            if (item) {            
             this.dataOKRPlans = null;
             this.dataOKRPlans = item;
+            this.dataOKRPlans.periodName=this.periodName;
             this.planNull = false;
             this.isAfterRender = true;
             this.createCOObject();
@@ -453,27 +445,27 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      // if(this.dataOKR!=null && this.dataOKR.length>0){
-      //   evt.forEach((func) => {
-      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-      //       func.disabled = false;
-      //     }
-      //   });
-      // }
-      // else{
-      //   //nếu ko có OKR thì ẩn MF phân bổ trọng số
-      //   evt.forEach((func) => {
-      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-      //       func.disabled = true;
-      //     }
-      //   });
-      // }
+      if(this.dataOKR!=null && this.dataOKR.length>0){
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+            func.disabled = false;
+          }
+        });
+      }
+      else{
+        //nếu ko có OKR thì ẩn MF phân bổ trọng số
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
   //Hàm click
@@ -513,16 +505,13 @@ getOrgTreeOKR() {
       this.interval = 'M';
     }
     this.setTitle();
-    if (
-      this.periodID != null &&
-      this.interval != null &&
-      this.year != null &&
-      this.periodID != '' &&
-      this.interval != '' &&
-      this.year != 0
-    ) {
-      this.getOKRPlans(this.periodID, this.interval, this.year);
+    if(this.dataOKRPlans!=null && this.dataOKRPlans.year== this.year && this.dataOKRPlans.interval== this.interval && this.dataOKRPlans.periodID== this.periodID ){
+      this.isAfterRender=true;
+      return
     }
+    
+      this.getOKRPlans(this.periodID, this.interval, this.year);
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
@@ -681,21 +670,18 @@ getOrgTreeOKR() {
     );
     dialogAddPlan.closed.subscribe((item) => {
       if (item.event) {
-        if (
-          this.periodID != null &&
-          this.interval != null &&
-          this.year != null &&
-          this.periodID != '' &&
-          this.interval != '' &&
-          this.year != 0
-        ) {
+        
           this.getOKRPlans(this.periodID, this.interval, this.year);
-        }
+        
       }
     });
   }
   editPlanWeight(popupTitle: any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
+    //Ko có okr nên thông báo ko thể phân bổ trọng số
+    if(this.dataOKR!=null && this.dataOKR.length>0){
+      this.notificationsService.notify("Bộ mục tiêu chưa có mục tiêu để phân bổ trọng số",'3');
+      return;
+    }
     let subTitle = this.curOrgName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
@@ -711,16 +697,9 @@ getOrgTreeOKR() {
     );
     dialogEditWeight.closed.subscribe((item) => {
       if (item.event) {
-        if (
-          this.periodID != null &&
-          this.interval != null &&
-          this.year != null &&
-          this.periodID != '' &&
-          this.interval != '' &&
-          this.year != 0
-        ) {
+        
           this.getOKRPlans(this.periodID, this.interval, this.year);
-        }
+        
       }
     });
   }

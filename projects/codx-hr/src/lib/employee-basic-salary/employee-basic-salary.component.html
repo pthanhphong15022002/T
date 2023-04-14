@@ -1,9 +1,8 @@
-<codx-views #view [funcID]="funcID" service="HR" assemblyName="ERM.Business.HR" entityName="HR_EBasicSalaries"
-  className="EBasicSalariesBusiness" [method]="method" [views]="views" [autoLoad]="true" idField="recID"
-  [button]="buttonAdd" (buttonClick)="addBasicSalaries($event)" (selectedChange)="changeItemDetail($event)">
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [className]="className" [method]="method" [views]="views" [autoLoad]="true" idField="recID" [button]="buttonAdd"
+  (buttonClick)="addBasicSalary($event)" (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)"
+  (selectedChange)="changeItemDetail($event)">
 </codx-views>
-
-
 <ng-template #headerTemplate let-data>
   <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
@@ -22,11 +21,11 @@
 <!-- list view -->
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center min-h-100px">
-    <!-- employee info -->
-    <div class="w-25 p-3 fs-5 fw-500">
+    <!-- emp info -->
+    <div class="w-25 p-3">
       <div class="d-flex align-items-start">
-        <div class="d-flex flex-column me-1">
-          <codx-img [width]="45" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
+        <div class="d-flex flex-column me-2">
+          <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
             [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
           </codx-img>
           <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="data?.emp?.gender" [showText]="false"
@@ -35,95 +34,107 @@
         </div>
         <div class="d-flex flex-column">
           <div>
-            <div class="fw-bold mb-1">
+            <div class="fw-bold">
               <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data?.emp?.employeeID }}</span>
             </div>
           </div>
-          <div class="text-gray-700 mb-1">
+          <div class="text-gray-700">
             <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
           </div>
-          <div class="text-gray-700 " style="font-size: 14px">
+          <div class="text-gray-700">
             <span [innerHTML]="data?.emp?.orgUnitID  | formatvalue : view.formModel : 'orgUnitID'| async"></span>
           </div>
         </div>
       </div>
     </div>
-    <!-- end employee info -->
-    <!-- Salary -->
-    <div class="w-25 p-3 fs-5 fw-500">
+    <!-- end emp info -->
+
+    <!-- salary -->
+    <div class="w-25 p-3">
       <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
-        <div class="d-flex flex-row mb-2">
-          <span class="icon-attach_money icon-15 me-1 align-self-center"></span>
-          <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText"
-            [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-          </span>
+        <div class="d-flex flex-row">
+          <span class="icon-attach_money icon-15 me-1"></span>
+          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText">
+            <span class="align-self-center fw-bold"
+              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+            </span>
+          </div>
         </div>
-        <div class="d-flex flex-column mb-2" *ngIf="data?.siSalary!= null && data?.siSalary > 0"
-          [class]="data.isCurrent? 'text-highlight' : 'text-gray-700'">
-          <div class="d-flex flex-row">
-            <span class="icon-monetization_on icon-15 align-self-senter me-1"></span>
-            <span class="align-self-center" [ngbTooltip]="grvSetup?.siSalary?.headerText"
+        <div class="d-flex flex-row">
+          <span class="icon-monetization_on icon-15 me-1"></span>
+          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.siSalary?.headerText">
+            <span class="align-self-center fw-bold"
               [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
             </span>
           </div>
         </div>
-        <!-- EffectedDate -->
         <div class="d-flex flex-column">
           <div class="d-flex flex-row">
             <span class="icon-calendar_today icon-15 me-1"></span>
             <div class="align-self-center fw-bold">
-              <span [title]="eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''">
+              <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''"
+                [ngbTooltip]="grvSetup?.effectedDate?.headerText">
                 {{ data?.effectedDate | fmDT }}
+              </span>
+              <span> - </span>
+              <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['ExpiredDate'] : ''"
+                [ngbTooltip]="grvSetup?.expiredDate?.headerText">
+                {{ data?.expiredDate | fmDT }}
               </span>
             </div>
           </div>
         </div>
-        <!-- end EffectedDate -->
       </div>
     </div>
-    <!-- end salaty -->
-    <!-- DecisionNO -->
+    <!-- end salary -->
+
+    <!-- Decision -->
     <div class="w-25 p-3">
       <div class="d-flex flex-column">
-        <div class="text-gray-700 d-flex flex-row mb-2">
+        <div class="text-gray-700 d-flex flex-row">
           <span class="icon-event_notes icon-15 me-1"></span>
-          <div class="align-self-center fw-bold">
-            <span [title]="eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''">
+          <div class="align-self-center fw-bold align-items-center">
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['DecisionNo'] : ''">
               {{ data?.decisionNo }}
             </span>
             <span> - </span>
-            <span [title]="eContractHeaderText ? eContractHeaderText['SignedDate'] : ''">
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''">
               {{ data?.signedDate | fmDT }}</span>
           </div>
         </div>
-        <!-- Attachments -->
         <div class="d-flex flex-row">
-          <div class="d-flex flex-row" *ngIf="data?.attachments > 0" (click)="openFiles(data?.recID)">
-            <i class="icon-attach_file icon-20"></i>
-            <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
-              {{ data?.attachments }}
+          <div>
+            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+              <i class="icon-attach_file text-primary icon-15"></i>
+              <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
+                {{ data?.attachments }}
+              </div>
             </div>
           </div>
-          <!-- <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [viewType]="3"
-            [openViewPopup]="false">
-          </codx-attachment-temp> -->
           <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
             [showIcon]="false" [showBgColor]="true">
           </codx-vll>
         </div>
       </div>
+
+      <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName" hideFolder="1"
+        hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+        [formModel]="view.formModel" displayThumb="full" showMessage="0">
+      </codx-attachment>
     </div>
     <!-- end decision -->
-    <!-- status -->
+
+    <!-- approve status -->
     <div class="w-25 p-3">
       <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus" [showText]="true"
         [showIcon]="false" [showBgColor]="true">
       </codx-vll>
     </div>
-    <!-- end status -->
-    <!-- more function -->
+    <!-- end approve status -->
+
+    <!-- moreMF -->
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">
         <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
@@ -131,7 +142,7 @@
         </codx-mfunc>
       </div>
     </div>
-    <!-- end more function -->
+    <!-- end moreMF -->
   </div>
 </ng-template>
 <!-- end list view -->
@@ -201,14 +212,58 @@
 </ng-template>
 
 <ng-template #templateItemDetailRight let-data>
-  <lib-view-basic-salary-detail #viewDetail></lib-view-basic-salary-detail>
+  <!-- <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
+    [view]="view" (clickMFunction)="clickEvent($event, data)"></lib-view-basic-salary-detail> -->
 </ng-template>
 <!-- end list & detail view -->
 
-<ng-template #tmpListItem let-dialog>
-  <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách file đính kèm">
-  </codx-form>
-  <ng-template #body>
-    <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="view?.formModel"></codx-thumbnail>
-  </ng-template>
+<!-- update status -->
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEquipment" default="Cập nhật trạng thái"
+              [formModel]="view.formModel"></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="closeUpdateStatusForm(dialog1)">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+            <codx-label fiedName="status" [formModel]="view.formModel">
+            </codx-label>
+          </label>
+          <div class="p-disabled">
+            <codx-input field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+          </div>
+          <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
+        </div>
+        <div class="form-group">
+          <label>
+            <codx-label [default]="'Bình luận'" [name]="'lblComment'" ></codx-label>
+          </label>
+          <codx-input type="text" [formModel]="view.formModel"  (valueChange)="valueChangeComment($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+          <i class="icon-save"></i>
+          <codx-label default="Lưu" name="lblSave" [formModel]="view.formModel"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
 </ng-template>
+<!-- end update status -->

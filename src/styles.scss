@@ -1893,14 +1893,33 @@ codx-header #chat-box {
 .e-dlg-target .e-tab .e-content.e-lib {
   padding-left: 0;
 }
-.input-circle.input-sm .e-input-group.e-ddl {
+.input-sm .e-input-group.e-ddl {
   border-radius: 26px !important;
   padding-left: 5px !important;
-  height: 30px !important;
+  height: 28px !important;
   font-size: 12px !important;
   width: 120px !important;
   line-height: 28px !important;
-  padding-right: 5px !important;
+  padding-right: 0px !important;
+
+  .e-input{
+    height: 26px !important;
+  }
+  .e-input-group-icon{
+    height: 26px!important;
+    min-height: 26px !important;
+    border-radius: 50%!important;
+  }
+}
+.input-border-0 .e-input-group{
+  border: 0!important;
+  background-color: transparent;
+  .e-input-group-icon{
+    background-color: transparent!important;
+  }
+  .e-input-group-icon:hover{
+    color: var(--primary)!important;
+  }
 }
 .input-circle .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
 .input-circle .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
@@ -2298,6 +2317,47 @@ ejs-richtexteditor{
 padding: 0;
 }
 }
+.btn-light-primary i[class*="icon-"]{
+  color: var(--primary);
+}
+.btn-light-primary:hover i[class*="icon-"]{
+  color: var(--primary-inverse);
+}
+
+//Đừng xóa của Chung tội Chung 
+.dm-home-mark
+{
+  position: absolute;
+  z-index: 1000 ;
+  width: 100%;
+  height: 100%;
+}
+/*** fix bug TEMP ***/
+
+codx-view-list-detail .codx-detail-main .task-name + .text-gray-700{
+  .codx-detail-main{
+    position: relative!important;
+    bottom: 0!important;
+    padding: 0!important;
+  }
+}
+
+.errorMessage.text-danger.ms-3{
+  margin-left: 0!important;
+  margin-top: 3px;
+  font-size: 12px!important;
+  font-style: italic;
+}
+
+.input-sm codx-input{
+  height: 26px!important;
+}
+codx-toolbar{
+  .btn.btn-outline-default {
+    border-color:var(--gray-150);
+  }
+}
+
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
 // }

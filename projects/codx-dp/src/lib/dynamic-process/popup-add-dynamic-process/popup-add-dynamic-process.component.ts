@@ -822,7 +822,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
       this.linkAvatar = e?.data[countListFile - 1].avatar;
-
+      if (!this.isChange) this.isChange = true;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -897,6 +897,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   applyShare(e, type) {
     if (e.length > 0) {
+      if (!this.isChange) this.isChange = true;
       console.log(e);
       switch (type) {
         //Người giám sát
@@ -1063,6 +1064,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     roles.objectType = event.type;
     roles.roleType = 'S';
     tmpRole = this.checkRolesStep(this.step.roles, roles);
+    if (!this.isChange) this.isChange = true;
     this.step.roles = tmpRole;
   }
 
@@ -1239,7 +1241,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.lstParticipants.splice(i, 1);
           }
         }
-
+        if (!this.isChange) this.isChange = true;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1301,7 +1303,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles() {
+  clickRoles(roleType) {
     var title = this.gridViewSetup?.Permissions?.headerText;
     let formModel = new FormModel();
     formModel.formName = 'DPProcessesPermissions';
@@ -1310,7 +1312,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -1318,12 +1319,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         950,
         650,
         '',
-        [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
+        [this.process, title, this.action === 'copy' ? 'copy' : 'add', roleType],
         '',
         dialogModel
       )
       .closed.subscribe((e) => {
         if (e && e.event != null) {
+          if (!this.isChange) this.isChange = true;
           this.process.permissions = e.event;
           this.changeDetectorRef.detectChanges();
         }

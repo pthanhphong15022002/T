@@ -238,14 +238,12 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input
-                [Group]="form.formGroup"
-                field="voucherNo"
-                [formModel]="form.formModel"
-                [disabled]="journal?.voucherNoRule != '0'"
-                [placeholder]="journal?.voucherNoRule == '2' ? 'Số chứng từ được tạo tự động' : ''"
-                (valueChange)="valueChange($event)"
-              >
+              <codx-input [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
+                [disabled]="journal?.voucherNoRule != '0'" [placeholder]="
+                  journal?.voucherNoRule == '2'
+                    ? 'Số chứng từ được tạo tự động'
+                    : ''
+                " (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
@@ -422,184 +420,17 @@
   </ng-container>
 </ng-template>
 <ng-template #tabLine>
-  <div *ngIf="modegrid == 0" class="h-100 w-100 border">
+  <div *ngIf="modegrid == 1" class="h-100 w-100 border">
     <codx-gridview-v2 #grid class="tabLine" #gridPurchase autoLoad="true" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [entityName]="fmPurchaseInvoicesLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" [allowFiltering]="true" [allowSorting]="true"
       [dataSource]="purchaseInvoicesLines" service="PS" [height]="gridHeight" [autoLoad]="false" rowHeight="40"
-      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, grid)"
+      (cellChanged)="cellChangedPurchase($event)" (created)="gridCreated($event, gridPurchase)"
       [allowTextWrap]="false"></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && modegrid == 1">
-    <div class="d-flex align-items-center justify-content-end pt-2">
-      <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{ pageCount }}
-      </div>
-      <div class="mt-2">
-        <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
-      </div>
-    </div>
-    <div class="table-responsive mt-3" style="height: 400px; border-radius: 5px">
-      <table id="myTable" class="table table-hover">
-        <thead style="
-            position: sticky;
-            top: 0;
-            background-color: var(--primary-active);
-            color: white;
-          ">
-          <tr>
-            <th></th>
-            <th style="
-                width: 200px;
-                white-space: nowrap;
-                position: sticky;
-                top: 0;
-                padding: 10px 10px;
-              " *ngFor="let item of columnGrids">
-              <div class="d-flex">
-                <span class="fs-5 fw-bold">{{ item.headerText }}</span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6" *ngFor="
-            let item of purchaseInvoicesLines
-              | slice : (page - 1) * pageSize : page * pageSize
-          ">
-          <tr>
-            <td>
-              <div class="d-flex align-items-center justify-content-end">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-                  (click)="editPopupLine(item)">
-                  <i class="icon-edit_square icon-16"></i>
-                </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-                  (click)="deleteRow(item)">
-                  <i class="icon-delete icon-16"></i>
-                </span>
-              </div>
-            </td>
-            <td class="fs-5" style="padding: 10px 10px" *ngFor="let items of columnGrids">
-              <div *ngFor="let keymodel of keymodel" style="
-                  width: 100px;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                ">
-                <!-- rowno line -->
-                <span *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field == 'rowno'
-                  ">
-                  <div style="
-                      background: var(--primary-active);
-                      width: 31px;
-                      height: 30px;
-                      align-items: center;
-                      border-radius: 50px;
-                    " class="d-flex justify-content-start">
-                    <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">{{ item[keymodel]
-                      }}</span>
-                  </div>
-                </span>
-                <!-- items line -->
-                <span *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field == 'itemid'
-                  ">
-                  <div class="d-flex justify-content-start">
-                    <i class="bi bi-boxes icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{ item[keymodel] }}</span>
-                  </div>
-                </span>
-                <!-- unitprice line -->
-                <span *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field == 'unitprice'
-                  ">
-                  <div class="d-flex justify-content-start">
-                    <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{ item[keymodel] }}</span>
-                  </div>
-                </span>
-                <!-- netAmt line -->
-                <span *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field == 'netamt'
-                  ">
-                  <div class="d-flex justify-content-start">
-                    <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{ item[keymodel] }}</span>
-                  </div>
-                </span>
-                <!-- vatAmt line -->
-                <span *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field == 'vatamt'
-                  ">
-                  <div class="d-flex justify-content-start">
-                    <i class="bi bi-coin icon-18 me-2"></i>
-                    <span [ngbTooltip]="item[keymodel].toString()" class="fs-5 fw-bold">{{ item[keymodel] }}</span>
-                  </div>
-                </span>
-                <!-- other line -->
-                <span [ngbTooltip]="item[keymodel]" *ngIf="
-                    items.field == keymodel.toLowerCase() &&
-                    items.field != 'unitprice' &&
-                    items.field != 'netamt' &&
-                    items.field != 'vatamt' &&
-                    items.field != 'itemid' &&
-                    items.field != 'rowno'
-                  ">{{ item[keymodel] }}</span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
-              {{ "SYS011" | mssg | async }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="mySearch" style="display: none" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
-              {{ "SYS010" | mssg | async }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="myBtn" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
-              <div class="d-flex align-items-center">
-                <i class="icon-add_box icon-18"></i>
-                <span class="fs-5">Thêm dòng</span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-container>
   <ng-container *ngIf="form?.formGroup && modegrid == 2 && gridViewLines">
-    <div class="d-flex align-items-center justify-content-end pt-2">
-      <div class="d-flex align-items-center justify-content-start mt-2 me-10">
-        Tất cả {{ pageCount }}
-      </div>
-      <div class="mt-2">
-        <codx-searchbar (searchEvent)="searchName($event)" type="slide" class="me-1"></codx-searchbar>
-      </div>
-    </div>
-    <div class="table-responsive mt-3" style="height: 400px; border-radius: 5px">
+    <div class="table-responsive mt-2"
+      style="height: 400px; border-radius: 5px;background-color: rgba(229, 229, 229, 0.67)">
       <table id="myTable" class="table table-hover">
         <thead style="
             position: sticky;
@@ -608,22 +439,23 @@
             color: white;
           ">
           <tr>
-            <th *ngIf="purchaseInvoicesLines.length > 0"></th>
-            <th style="width: 50px; position: sticky; top: 0; padding: 10px 10px">
-              <div class="d-flex">
-                <span class="fs-5 fw-bold">STT</span>
-              </div>
+            <th style="
+                width: 50px;
+                white-space: nowrap;
+                padding: 10px 10px;
+              ">
+              <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmPurchaseInvoicesLines">
+              </codx-label>
             </th>
             <th style="
                 width: 200px;
                 white-space: nowrap;
-                position: sticky;
-                top: 0;
                 padding: 10px 10px;
               ">
               <div class="d-flex">
                 <i style="color: white" class="icon-i-box-seam icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Mặt hàng</span>
+                <codx-label class="fw-bold" fiedName="ItemID" [formModel]="fmPurchaseInvoicesLines">
+                </codx-label>
               </div>
             </th>
             <th style="
@@ -634,8 +466,8 @@
                 padding: 10px 10px;
               ">
               <div class="d-flex">
-                <i style="color: white" class="bi bi-cash-coin icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Thông tin mua hàng</span>
+                <i style="color: white" class="icon-i-cash icon-18 me-2"></i>
+                <span class="fs-6 fw-bold">Thông tin mua hàng</span>
               </div>
             </th>
             <th style="
@@ -646,8 +478,8 @@
                 padding: 10px 10px;
               ">
               <div class="d-flex">
-                <i style="color: white" class="bi bi-journal-text icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Thông tin thuế</span>
+                <i style="color: white" class="icon-i-journal-text icon-18 me-2"></i>
+                <span class="fs-6 fw-bold">Thông tin thuế</span>
               </div>
             </th>
             <th style="
@@ -658,10 +490,11 @@
                 padding: 10px 10px;
               ">
               <div class="d-flex">
-                <i style="color: white" class="icon-analytics icon-18 me-2"></i>
-                <span class="fs-5 fw-bold">Thông tin phân tích</span>
+                <i style="color: white" class="icon-i-graph-up icon-18 me-2"></i>
+                <span class="fs-6 fw-bold">Thông tin phân tích</span>
               </div>
             </th>
+            <th style="width: 50px;" *ngIf="purchaseInvoicesLines.length > 0"></th>
           </tr>
         </thead>
         <tbody style="border-bottom: 1px solid #dee2e6" *ngFor="
@@ -669,109 +502,120 @@
               | slice : (page - 1) * pageSize : page * pageSize
           ">
           <tr>
-            <td style="width: 30px">
-              <div class="d-flex align-items-center justify-content-start">
-                <span ngbTooltip="Chỉnh sửa" type="button" class="btn btn-icon btn-light-primary ms-1"
-                  (click)="editPopupLine(item)">
-                  <i class="icon-edit_square icon-16"></i>
-                </span>
-                <span ngbTooltip="Xóa" type="button" class="btn btn-icon btn-light-danger ms-1"
-                  (click)="deleteRow(item)">
-                  <i class="icon-delete icon-16"></i>
-                </span>
-              </div>
-            </td>
             <td class="fs-5" style="padding: 10px 10px">
               <span>
                 <div style="
-                    background: var(--primary-active);
-                    width: 31px;
-                    height: 30px;
-                    align-items: center;
-                    border-radius: 50px;
-                  " class="d-flex justify-content-start">
-                  <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">{{ item.rowNo }}</span>
-                </div>
+                  background: var(--primary-active);
+                  width: 28px;
+                  height: 28px;
+                  align-items: center;
+                  border-radius: 50px;
+                " class="d-flex justify-content-start">
+                <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">
+                  {{ item.rowNo }}
+                </span>
+              </div>
               </span>
             </td>
             <td style="padding: 10px 10px">
               <ng-container *ngFor="let name of itemName">
-                <span *ngIf="name.itemID == item.itemID" class="fs-4 fw-bold">{{
-                  name.itemName
-                  }}</span>
+                <span *ngIf="name.itemID == item.itemID" class="fw-bold line-clamp line-clamp-1 fs-5">
+                  {{name.itemName}}</span>
               </ng-container>
-              <br />
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
-                <span *ngIf="item.idiM0 != null && item.idiM0 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM0"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.idiM0
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM0 != null && item.idiM0 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM0" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM0}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM1 != null && item.idiM1 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM1"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.idiM1
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM1 != null && item.idiM1 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM1" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM1}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM2 != null && item.idiM2 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM2"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.idiM2
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM2 != null && item.idiM2 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM2" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM2}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM3 != null && item.idiM3 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM3"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.idiM3
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM3 != null && item.idiM3 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM3" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM3}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM4 != null && item.idiM4 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM4"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{ item.idiM4 }}</span>
-                </span>
+                <ng-container *ngIf="item.idiM4 != null && item.idiM4 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM4" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  &nbsp;
+                  <span #idiM4 class="fs-6 fw-bold" [innerHTML]="
+                      item.idiM4
+                        | formatvalue
+                          : fmPurchaseInvoicesLines
+                          : 'idiM4'
+                          : idiM4
+                        | async
+                    "></span>
+                </ng-container>
               </div>
+              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
+                <ng-container *ngIf="item.idiM5 != null && item.idiM5 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM5" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM5}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-              <div style="white-space: nowrap;" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.idiM5 != null && item.idiM5 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM5'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM5}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM6 != null && item.idiM6 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM6" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM6}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM6 != null && item.idiM6 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM6'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM6}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM7 != null && item.idiM7 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM7" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM7}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM7 != null && item.idiM7 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM7'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM7}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
+                <ng-container *ngIf="item.idiM8 != null && item.idiM8 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM8" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM8}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
+                </ng-container>
 
-                <span *ngIf="item.idiM8 != null && item.idiM8 != ''" class="text-gray-600 fs-5">
-                  {{gridViewLines['IDIM8'].headerText}}:<span
-                    class="fs-5 fw-bold">&nbsp;{{item.idiM8}}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
-
-                <span *ngIf="item.idiM9 != null && item.idiM9 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["IDIM9"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{ item.idiM6 }}</span>
-                </span>
+                <ng-container *ngIf="item.idiM9 != null && item.idiM9 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="IDIM9" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  <span class="fs-6 fw-bold">&nbsp;{{item.idiM9}}</span>
+                </ng-container>
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
-                <span class="text-gray-600 fs-5">Tiền hàng:</span>
-                <span class="fs-5 fw-bold">&nbsp;{{ item.quantity }} {{ item.umid }} x
+              <div *ngIf="item.netAmt != null && item.netAmt != ''" style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
+                <span class="text-gray-700 fs-6">Tiền hàng:</span>
+                <span class="fs-6 fw-bold">&nbsp;{{ item.quantity }} {{ item.umid }} x
                   {{ item.unitPrice.toLocaleString("it-IT") }} =
                   {{ item.netAmt.toLocaleString("it-IT") }}</span>
               </div>
             </td>
             <td style="padding: 10px 10px">
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
-                <span class="text-gray-600 fs-5">Thuế nhập khẩu:</span>
-                <!-- <span class="fs-5 fw-bold">&nbsp;10 cái x 230.000.000 = 20555</span> -->
-              </div>
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
-                <span class="text-gray-600 fs-5">VAT:</span>
+              <div *ngIf="item.vatAmt != null && item.vatAmt != ''" style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
+                <codx-label class="text-gray-700 label-colon"
+                    fiedName="VATID" [formModel]="fmPurchaseInvoicesLines">
+                </codx-label>
                 <ng-container *ngFor="let vat of lsVatCode">
                   <span *ngIf="vat.vatid == item.vatid" class="fs-5 fw-bold">
                     &nbsp;{{ vat.taxRate }}% x
@@ -783,76 +627,103 @@
             </td>
             <td style="padding: 10px 10px">
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.diM2 != null && item.diM2 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["DIM2"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.diM2
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
-                <span *ngIf="item.diM3 != null && item.diM3 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["DIM3"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{ item.diM3 }}</span>
-                </span>
+                <ng-container *ngIf="item.diM2 != null && item.diM2 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="DIM2" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  &nbsp;
+                  <span #diM2 class="fs-6 fw-bold" [innerHTML]="
+                      item.diM2
+                        | formatvalue
+                          : fmPurchaseInvoicesLines
+                          : 'diM2'
+                          : diM2
+                        | async
+                    "></span>
+                  &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                </ng-container>
+                <ng-container *ngIf="item.diM3 != null && item.diM3 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="DIM3" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  &nbsp;
+                  <span #diM3 class="fs-6 fw-bold" [innerHTML]="
+                      item.diM3
+                        | formatvalue
+                          : fmPurchaseInvoicesLines
+                          : 'diM3'
+                          : diM3
+                        | async
+                    "></span>
+                </ng-container>
               </div>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
-                <span *ngIf="item.diM1 != null && item.diM1 != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["DIM1"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{
-                    item.diM1
-                    }}&nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;</span>
-                </span>
-                <span *ngIf="item.projectID != null && item.projectID != ''" class="text-gray-600 fs-5">
-                  {{ gridViewLines["ProjectID"].headerText }}:<span class="fs-5 fw-bold">&nbsp;{{ item.projectID
-                    }}</span>
-                </span>
+                <ng-container *ngIf="item.diM1 != null && item.diM1 != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="DIM1" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  &nbsp;
+                  <span #diM1 class="fs-6 fw-bold" [innerHTML]="
+                      item.diM1
+                        | formatvalue
+                          : fmPurchaseInvoicesLines
+                          : 'diM1'
+                          : diM1
+                        | async
+                    "></span>
+                  &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
+                </ng-container>
+                <ng-container *ngIf="item.projectID != null && item.projectID != ''">
+                  <codx-label class="text-gray-700 label-colon"
+                    fiedName="ProjectID" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                  &nbsp;
+                  <span #projectID class="fs-6 fw-bold" [innerHTML]="
+                      item.projectID
+                        | formatvalue
+                          : fmPurchaseInvoicesLines
+                          : 'projectID'
+                          : projectID
+                        | async
+                    "></span>
+                </ng-container>
+              </div>
+            </td>
+            <td>
+              <div class="has-action-menu">
+                <codx-mfunc [dataItem]="item" [formModel]="form.formModel"
+                  (clickMF)="clickMF($event, item)" isBookMark="false" type="hover"></codx-mfunc>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-      <div *ngIf="purchaseInvoicesLines.length == 0" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
-              {{ "SYS011" | mssg | async }}
+      <ng-container *ngIf="modegrid == 2">
+        <div class="container w-90 h-90">
+          <div style="background: none;" class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center">
+              <button style="border-radius: 49px" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+                <div class="d-flex align-items-center">
+                  <i class="icon-add_box icon-18"></i>
+                  <span class="fs-6 fw-bold">Thêm dòng</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      <div id="mySearch" style="display: none" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-            <div class="fs-5 text-dark fw-bold mt-2 text-center">
-              {{ "SYS010" | mssg | async }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="myBtn" class="container w-90 h-90">
-        <div class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <button style="border-radius: 49px" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
-              <div class="d-flex align-items-center">
-                <i class="icon-add_box icon-18"></i>
-                <span class="fs-5">Thêm dòng</span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
+      </ng-container>
     </div>
   </ng-container>
-  <div *ngIf="purchaseInvoicesLines.length > 0" class="container w-90 h-90">
-    <div class="list-empty card card-flush h-100 mt-2">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-          [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
-      </div>
+  <div class="row mt-2">
+    <div *ngIf="purchaseInvoicesLines.length > 0" class="d-flex justify-content-end">
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize"
+        [collectionSize]="purchaseInvoicesLines.length"></ngb-pagination>
     </div>
   </div>
   <div class="d-flex align-items-center justify-content-start me-10 mt-3">
-    <span class="fs-5 fw-bold me-10">Tổng tiền: {{ totalnet }}</span>
-    <span class="fs-5 fw-bold me-10">Tổng thuế: {{ totalvat }}</span>
-    <span class="fs-5 fw-bold me-10">Tổng cộng: {{ total }}</span>
+    <span class="fs-6 fw-bold me-10">Tổng tiền: {{ totalnet }}</span>
+    <span class="fs-6 fw-bold me-10">Tổng thuế: {{ totalvat }}</span>
+    <span class="fs-6 fw-bold me-10">Tổng cộng: {{ total }}</span>
   </div>
 </ng-template>
 <ng-template #tabLineBill>

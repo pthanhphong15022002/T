@@ -12,7 +12,7 @@
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
-        <i
+        <i *ngIf="dataStep?.memo"
           class="icon-event_notes text-gray-500 icon-20"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
@@ -20,12 +20,18 @@
       <div *ngIf="isUpdate">
         <button
           type="button"
-          class="btn btn-primary btn-sm d-flex align-items-center cursor-pointer"
+          class="btn btn-primary btn-sm d-flex align-items-center"
           (click)="openUpdateProgress(dataStep)"
-          [disabled]="dataStep?.startDate && dataStep?.endDate ? false : true"
+          [disabled]="(!isStart || !isRoleAll || !progressStepControl) ? true : false "
         >
           <span class="icon-16 icon-update me-1"></span>
-          <span>Cập nhật tiến độ</span>
+          <codx-label
+            fiedName="lblProgress"
+            formName="DPInstancesSteps"
+            gridViewName="grvDPInstancesSteps"
+            default="Cập nhật tiến độ"
+        >
+        </codx-label>
         </button>
       </div>
     </div>
@@ -208,7 +214,12 @@
         <button
           type="button"
           class="btn btn-icon btn-outline-primary"
-          *ngIf="isUpdate"
+          *ngIf="
+          !isClosed &&
+          isUpdate &&
+          isStart &&
+          isRoleAll
+        "
           (click)="openPopupTaskGroup()"
         >
           <i
@@ -219,7 +230,12 @@
           type="button"
           class="btn btn-icon btn-outline-primary ms-1"
           (click)="openTypeTask()"
-          *ngIf="isUpdate"
+          *ngIf="
+            !isClosed &&
+            isUpdate &&
+            isStart &&
+            isRoleAll
+          "
         >
           <i
             [ngClass]="
@@ -294,7 +310,7 @@
                         </div>
                       </div>
                       <codx-mfunc
-                        *ngIf="groupTask?.startDate && groupTask?.endDate"
+                        *ngIf="groupTask?.startDate && groupTask?.endDate && checkEventProgress(groupTask, null)"
                         [formModel]="frmModelInstancesTask"
                         (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
                         (clickMF)="clickMFTaskGroup($event, groupTask)"
@@ -306,7 +322,7 @@
                     </div>
                     <ng-container
                       [ngTemplateOutlet]="timeAndProgress"
-                      [ngTemplateOutletContext]="{ value: groupTask }"
+                      [ngTemplateOutletContext]="{ value: {value: groupTask, group: null} }"
                     >
                     </ng-container>
                   </div>
@@ -324,7 +340,7 @@
                     (cdkDropListDropped)="drop($event, groupTask)"
                     [id]="'group' + groupTask?.recID"
                     class="task"
-                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : {}"
+                    [ngStyle]="groupTask?.recID ? { 'margin-left': '50px' } : { 'margin-left': '10px' }"
                   >
                     <ng-container *ngFor="let task of groupTask?.task">
                       <div
@@ -388,7 +404,7 @@
                               </codx-attachment>
                             </div>
                             <codx-mfunc
-                              *ngIf="task?.startDate && task?.endDate"
+                              *ngIf="task?.startDate && task?.endDate && checkEventProgress(task,groupTask)"
                               [type]="'hover'"
                               [dataItem]="moreDefaut"
                               [formModel]="frmModelInstancesTask"
@@ -400,7 +416,7 @@
                           <div>
                             <ng-container
                               [ngTemplateOutlet]="timeAndProgress"
-                              [ngTemplateOutletContext]="{ value: task }"
+                              [ngTemplateOutletContext]="{ value: {value: task, group: groupTask} }"
                             ></ng-container>
                           </div>
                         </div>
@@ -445,7 +461,8 @@
         *ngIf="
           !isClosed &&
           (instance.status == '1' || instance.status == '2') &&
-          isStart && isUpdate
+          isStart &&
+          isRoleAll
         "
       >
         <button
@@ -477,43 +494,44 @@
       </div>
     </div>
   </div>
+  <codx-task [stepId]="dataStep?.recID"></codx-task>
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span class="date" *ngIf="data?.startDate && data?.endDate">
-      {{ data?.startDate | date : dateFomat }} -
-      {{ data?.endDate | date : dateFomat }}</span
+    <span class="date" *ngIf="data?.value?.startDate && data?.value?.endDate">
+      {{ data?.value?.startDate | date : dateFomat }} -
+      {{ data?.value?.endDate | date : dateFomat }}</span
     >
     <div
       class="disabled-inline"
-      *ngIf="data?.startDate && data?.endDate"
+      *ngIf="data?.value?.startDate && data?.value?.endDate"
       (click)="
-        checkEventProgress(data) && !isClosed && isUpdate
-          ? openUpdateProgress(data)
+        checkEventProgress(data?.value, data?.group) && !isClosed && isUpdate
+          ? openUpdateProgress(data?.value)
           : ''
       "
-      [ngClass]="checkEventProgress(data) && !isClosed ? 'cursor-pointer' : ''"
+      [ngClass]="checkEventProgress(data?.value, data?.group) && !isClosed ? 'cursor-pointer' : ''"
     >
-      <codx-progress [progress]="data?.progress"> </codx-progress>
+      <codx-progress [progress]="data?.value?.progress"> </codx-progress>
     </div>
     <span>
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="data?.roles[0]?.objectID"
+        [objectId]="getObjectIdRole(data?.value, data?.group)"
         objectType="AD_Users"
-        [objectName]="data?.roles[0]?.objectName"
+        [objectName]="getObjectNameRole(data?.value, data?.group)"
       ></codx-img>
     </span>
     <div class="notify">
       <span class="me-3">
-        <codx-attachment-temp [objectID]="data.refID"></codx-attachment-temp>
+        <codx-attachment-temp [objectID]="data?.value.refID"></codx-attachment-temp>
       </span>
     </div>
     <div class="notify">
       <span class="me-3">
-        <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+        <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
       </span>
     </div>
   </div>

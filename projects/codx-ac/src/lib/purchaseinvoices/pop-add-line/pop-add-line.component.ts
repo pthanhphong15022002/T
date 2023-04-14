@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
@@ -11,13 +10,9 @@ import {
   CodxFormComponent,
   DialogRef,
   FormModel,
-  CacheService,
-  ApiHttpService,
-  CallFuncService,
   NotificationsService,
   DialogData,
 } from 'codx-core';
-import { CodxAcService } from '../../codx-ac.service';
 import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
 
 @Component({
@@ -35,16 +30,12 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   type: any;
   itemName: any;
   lsVatCode: any;
-  journals:any;
-  objectIdim:any;
+  journals: any;
+  objectIdim: any;
+  lockFields:any;
   purchaseInvoicesLines: PurchaseInvoicesLines;
   constructor(
-    private inject: Injector,
-    cache: CacheService,
-    private acService: CodxAcService,
-    api: ApiHttpService,
-    private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
+    inject: Injector,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -52,12 +43,12 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.purchaseInvoicesLines = dialogData.data?.data;
-    this.journals = dialogData.data?.journals;
+    this.lockFields = dialogData.data?.lockFields;
+    if (this.lockFields == null) {
+      this.lockFields = [];
+    }
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
-    // if (this.journals.idimControl != null) {
-    //   this.objectIdim = JSON.parse(this.journals.idimControl);
-    // }
     this.cache
       .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
       .subscribe((res) => {
@@ -104,7 +95,9 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
           break;
         case 'unitPrice':
         case 'quantity':
-          this.purchaseInvoicesLines.netAmt = this.purchaseInvoicesLines.quantity * this.purchaseInvoicesLines.unitPrice;
+          this.purchaseInvoicesLines.netAmt =
+            this.purchaseInvoicesLines.quantity *
+            this.purchaseInvoicesLines.unitPrice;
           this.lsVatCode.forEach((element) => {
             if (element.vatid == this.purchaseInvoicesLines.vatid) {
               this.purchaseInvoicesLines.vatAmt =
@@ -119,7 +112,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
             vat.TaxRate * this.purchaseInvoicesLines.netAmt;
           this.form.formGroup.patchValue(this.purchaseInvoicesLines);
           break;
-      } 
+      }
     }
   }
   checkValidate() {
@@ -161,6 +154,16 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
         JSON.stringify(this.purchaseInvoicesLines)
       );
       this.dialog.close();
+    }
+  }
+  loadControl(value){
+    let index = this.lockFields.findIndex(
+      (x) => x  == value
+    );
+    if (index == -1) {
+      return true;
+    }else{
+      return false;
     }
   }
 }

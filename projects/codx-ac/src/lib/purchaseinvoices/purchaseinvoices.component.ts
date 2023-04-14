@@ -1,9 +1,7 @@
 import {
   Component,
   Injector,
-  OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -15,8 +13,6 @@ import {
   ButtonModel,
   CallFuncService,
   ViewType,
-  FormModel,
-  DialogModel,
   RequestOption,
   SidebarModel,
 } from 'codx-core';
@@ -50,7 +46,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   page: any = 1;
   pageSize = 5;
   itemName: any;
-  lsVatCode:any;
+  lsVatCode: any;
   gridViewLines: any;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   tabItem: any = [
@@ -72,7 +68,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((params) => {
-      this.parentID = params?.recID;
       this.journalNo = params?.journalNo;
     });
     this.cache
@@ -159,7 +154,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   }
   setDefault(o) {
     return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-      this.parentID,
+      this.journalNo,
     ]);
   }
   add(e) {

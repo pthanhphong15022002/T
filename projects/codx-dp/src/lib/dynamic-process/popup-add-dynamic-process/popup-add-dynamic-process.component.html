@@ -498,7 +498,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('O')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -560,7 +560,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('P')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -623,7 +623,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles()"
+            (click)="clickRoles('F')"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -2981,7 +2981,7 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="true"
+                  [checked]="step?.leadtimeControl"
                   [crrValue]="step?.leadtimeControl"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
                 >
