@@ -175,6 +175,8 @@
         [viewsCurrent]="'k-'"
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
+        (outStepInstance)="outStepInstance($event)"
+
       >
       </codx-instance-detail>
     </ng-template>
@@ -334,6 +336,7 @@
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
+    (outStepInstance)="outStepInstance($event)"
   >
   </codx-instance-detail>
 </ng-template>
