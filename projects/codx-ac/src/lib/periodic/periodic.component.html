@@ -4,6 +4,8 @@
   [views]="views"
   [button]="button"
   entityName="SYS_FunctionList"
+  predicates="Language =@0"
+  [dataValues]="user?.language | uppercase"
 >
 </codx-views>
 
@@ -11,7 +13,7 @@
   <codx-card-img
     cardCss="dp-card-process border border-dark rounded-2 h-100
     w-225px card-no-body"
-    [imageSrc]="'assets/themes/ad/default/img/' + data.smallIcon"
+    [imageSrc]="data.smallIcon"
     resourceObjType="SYS_FunctionList"
     [bookmark]="'true'"
     imgCss="w-100 h-150px"
