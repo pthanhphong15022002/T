@@ -1,5 +1,5 @@
 <codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" (selectedChange)="changeItemDetail($event)">
 </codx-views>
 <ng-template #templateMore let-data>
   <div class="has-action-menu" style="height: 30px">
@@ -11,7 +11,7 @@
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
     cardCss="card-template border-bottom py-3 px-4 list-task" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
     [dataItem]="data" [footer]="footerList" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeDataMF($event, data)" (click)="clickChange(data)" (clickMF)="clickMF($event, data)">
+    (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetail>
