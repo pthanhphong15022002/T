@@ -25,6 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
+import { PopupAddRoleComponent } from '../popup/popup-add-role/popup-add-role.component';
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -133,6 +134,17 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
+  
+  onInit(): void {    
+    this.getCacheData();
+    this.getOKRModel();
+    this.funcIDChanged();
+    this.formModelChanged();
+    this.createCOObject();
+    this.setTitle();
+    this.getOKRPlans(this.periodID, this.interval, this.year);
+    
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -147,17 +159,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     ];
   }
 
-  onInit(): void {
-    
-    this.getCacheData();
-    this.getOKRModel();
-    this.funcIDChanged();
-    this.formModelChanged();
-    this.createCOObject();
-    this.setTitle();
-    this.getOKRPlans(this.periodID, this.interval, this.year);
-    
-  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
@@ -440,6 +441,12 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.SharesPlanORG:
       case OMCONST.MFUNCID.SharesPlanPER:
         this.sharePlan(evt?.text);
+        break;        
+      case OMCONST.MFUNCID.PermissionCOMP:
+      case OMCONST.MFUNCID.PermissionDEPT:
+      case OMCONST.MFUNCID.PermissionORG:
+      case OMCONST.MFUNCID.PermissionPER:
+        this.showPermission(evt?.text);
         break;
     }
   }
@@ -696,14 +703,23 @@ getOrgTreeOKR() {
       dModel
     );
     dialogEditWeight.closed.subscribe((item) => {
-      if (item.event) {
-        
+      if (item.event) {        
           this.getOKRPlans(this.periodID, this.interval, this.year);
         
       }
     });
   }
-  
+  //Xem quyền
+  showPermission(popupTitle: any) {
+    let dialogPermission = this.callfc.openForm(
+      PopupAddRoleComponent, 
+      popupTitle,
+      950,
+      650,
+      null,
+      [ this.dataOKRPlans,popupTitle, ]
+    );
+  }
   //Chia sẻ bộ mục tiêu
   sharePlan(popupTitle: any) {
     let shareFM = new FormModel();

@@ -441,15 +441,7 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-  getCheckInModel() {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'GetCheckInModelAsync',
-      []
-    );
-  }
+  
   calculatorProgressOfPlan(listRecID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,

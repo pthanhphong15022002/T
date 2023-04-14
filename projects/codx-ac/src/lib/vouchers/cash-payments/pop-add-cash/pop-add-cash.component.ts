@@ -1,4 +1,3 @@
-import { VoucherComponent } from './../../popup/voucher/voucher.component';
 import {
   ChangeDetectorRef,
   Component,
@@ -28,14 +27,15 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../../codx-ac.service';
-import { CashPayment } from '../../models/CashPayment.model';
-import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../journals/journals.service';
-import { Reason } from '../../models/Reason.model';
 import { Observable } from 'rxjs';
+import { CashPayment } from '../../../models/CashPayment.model';
+import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { Reason } from '../../../models/Reason.model';
+import { CodxAcService } from '../../../codx-ac.service';
+import { JournalService } from '../../../journals/journals.service';
+import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -595,7 +595,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           headerText: this.headerText,
           data: { ...data },
           type: 'edit',
-          lockFields :this.lockFields,
+          lockFields: this.lockFields,
           journal: this.journal,
         };
         let opt = new DialogModel();
@@ -662,7 +662,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       dataline: this.cashpaymentline,
       datacash: this.cashpayment,
       type: 'add',
-      lockFields :this.lockFields,
+      lockFields: this.lockFields,
       journal: this.journal,
     };
     let opt = new DialogModel();
@@ -949,7 +949,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.vllCashbook = res.datas[0];
         this.cashpayment.category = this.vllCashbook.value;
         if (this.formType == 'add') {
-          (this.cashBook.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          (
+            this.cashBook.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
           this.cashBook.crrValue = null;
           this.cashpayment.cashBookID = null;
           this.form.formGroup.patchValue(this.cashpayment);

@@ -13,7 +13,7 @@ import {
   NotificationsService,
   DialogData,
 } from 'codx-core';
-import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
+import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
 
 @Component({
   selector: 'lib-pop-add-line',
@@ -32,7 +32,7 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
   lsVatCode: any;
   journals: any;
   objectIdim: any;
-  lockFields:any;
+  lockFields: any;
   purchaseInvoicesLines: PurchaseInvoicesLines;
   constructor(
     inject: Injector,
@@ -156,13 +156,11 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
       this.dialog.close();
     }
   }
-  loadControl(value){
-    let index = this.lockFields.findIndex(
-      (x) => x  == value
-    );
+  loadControl(value) {
+    let index = this.lockFields.findIndex((x) => x == value);
     if (index == -1) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

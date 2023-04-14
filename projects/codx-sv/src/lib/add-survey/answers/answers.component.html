@@ -116,7 +116,7 @@
                   <div ngbDropdownMenu>
                     <ng-container *ngIf="respondents && respondents.responds.length > 0">
                       <button class="btn-dpd-1" ngbDropdownItem *ngFor="let item of respondents.responds ; let i = index" (click)="selectedDropDown(i,item.question)">
-                        <span>{{extractContent(item.question)}}</span>
+                        <span class="span-overflow">{{extractContent(item.question)}}</span>
                       </button>
                     </ng-container>
                   </div>

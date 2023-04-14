@@ -18,9 +18,8 @@ import {
   DialogData,
   CodxInputComponent,
 } from 'codx-core';
-import { CodxAcService } from '../../codx-ac.service';
-import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
-import { JournalService } from '../../journals/journals.service';
+import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
+import { JournalService } from '../../../journals/journals.service';
 
 @Component({
   selector: 'lib-pop-add-linereceipts',
@@ -39,12 +38,7 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
   type: any;
   cashreceiptslines: CashReceiptsLines;
   constructor(
-    private inject: Injector,
-    cache: CacheService,
-    private acService: CodxAcService,
-    api: ApiHttpService,
-    private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
+    inject: Injector,
     private notification: NotificationsService,
     private journalService: JournalService,
     @Optional() dialog?: DialogRef,
