@@ -1,10 +1,7 @@
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnInit,
   Optional,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -14,7 +11,6 @@ import {
   ButtonModel,
   CallFuncService,
   DataRequest,
-  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -25,12 +21,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { of } from 'rxjs';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
-import { CashPaymentLine } from '../models/CashPaymentLine.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../codx-ac.service';
-import { IJournal } from '../journals/interfaces/IJournal.interface';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { CashPaymentLine } from '../../models/CashPaymentLine.model';
+import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -358,7 +353,7 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
 
-  release(data :any) {
+  release(data: any) {
     this.acService
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {

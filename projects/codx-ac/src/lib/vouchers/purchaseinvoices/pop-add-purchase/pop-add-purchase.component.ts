@@ -12,12 +12,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
-  CacheService,
-  CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
   CodxInplaceComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogModel,
@@ -28,15 +25,14 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../../codx-ac.service';
-import { PurchaseInvoices } from '../../models/PurchaseInvoices.model';
-import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
-import { VATInvoices } from '../../models/VATInvoices.model';
 import { PopAddLineComponent } from '../pop-add-line/pop-add-line.component';
-import { JournalService } from '../../journals/journals.service';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { PurchaseInvoices } from '../../../models/PurchaseInvoices.model';
+import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
+import { VATInvoices } from '../../../models/VATInvoices.model';
+import { CodxAcService } from '../../../codx-ac.service';
+import { JournalService } from '../../../journals/journals.service';
 declare var window: any;
 @Component({
   selector: 'lib-pop-add-purchase',
@@ -228,65 +224,65 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
-        this.modegrid = this.journal.inputMode;
-        this.VATType = this.journal.vatType;
-        if (this.VATType == '1' || this.VATType == '2') {
-          this.cache
-            .gridViewSetup('VATInvoices', 'grvVATInvoices')
-            .subscribe((gv: any) => {
-              if (gv) {
-                var arrgv = Object.values(gv) as any[];
-                const group: any = {};
-                arrgv.forEach((element) => {
-                  var keytmp = Util.camelize(element.fieldName);
-                  var value = null;
-                  var type = element.dataType.toLowerCase();
-                  if (type === 'bool') value = false;
-                  if (type === 'datetime') value = null;
-                  if (type === 'int' || type === 'decimal') value = 0;
-                  group[keytmp] = element.isRequire
-                    ? new FormControl(value, Validators.required)
-                    : new FormControl(value);
-                });
-                group['updateColumn'] = new FormControl('');
-                var formGroup = new FormGroup(group);
-                this.fgVATInvoices = formGroup;
-                this.api
-                  .exec('AC', 'VATInvoicesBusiness', 'SetDefaultAsync', [
-                    this.purchaseinvoices.recID,
-                  ])
-                  .subscribe((res: any) => {
-                    this.vatinvoices = res;
-                    this.fmVATInvoices.currentData = res;
-                    this.fgVATInvoices.patchValue(this.vatinvoices);
-                    if (this.formType == 'edit') {
-                      if (this.VATType == '1') {
-                        this.api
-                          .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
-                            this.purchaseinvoices.recID,
-                          ])
-                          .subscribe((res: any) => {
-                            if (res != null) {
-                              this.vatinvoices = res[0];
-                              this.fgVATInvoices.patchValue(this.vatinvoices);
-                            }
-                          });
-                      } else {
-                        this.api
-                          .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
-                            this.purchaseinvoices.recID,
-                          ])
-                          .subscribe((res: any) => {
-                            if (res != null) {
-                              this.objectvatinvoices = res;
-                            }
-                          });
-                      }
+      this.modegrid = this.journal.inputMode;
+      this.VATType = this.journal.vatType;
+      if (this.VATType == '1' || this.VATType == '2') {
+        this.cache
+          .gridViewSetup('VATInvoices', 'grvVATInvoices')
+          .subscribe((gv: any) => {
+            if (gv) {
+              var arrgv = Object.values(gv) as any[];
+              const group: any = {};
+              arrgv.forEach((element) => {
+                var keytmp = Util.camelize(element.fieldName);
+                var value = null;
+                var type = element.dataType.toLowerCase();
+                if (type === 'bool') value = false;
+                if (type === 'datetime') value = null;
+                if (type === 'int' || type === 'decimal') value = 0;
+                group[keytmp] = element.isRequire
+                  ? new FormControl(value, Validators.required)
+                  : new FormControl(value);
+              });
+              group['updateColumn'] = new FormControl('');
+              var formGroup = new FormGroup(group);
+              this.fgVATInvoices = formGroup;
+              this.api
+                .exec('AC', 'VATInvoicesBusiness', 'SetDefaultAsync', [
+                  this.purchaseinvoices.recID,
+                ])
+                .subscribe((res: any) => {
+                  this.vatinvoices = res;
+                  this.fmVATInvoices.currentData = res;
+                  this.fgVATInvoices.patchValue(this.vatinvoices);
+                  if (this.formType == 'edit') {
+                    if (this.VATType == '1') {
+                      this.api
+                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
+                          this.purchaseinvoices.recID,
+                        ])
+                        .subscribe((res: any) => {
+                          if (res != null) {
+                            this.vatinvoices = res[0];
+                            this.fgVATInvoices.patchValue(this.vatinvoices);
+                          }
+                        });
+                    } else {
+                      this.api
+                        .exec('AC', 'VATInvoicesBusiness', 'GetAsync', [
+                          this.purchaseinvoices.recID,
+                        ])
+                        .subscribe((res: any) => {
+                          if (res != null) {
+                            this.objectvatinvoices = res;
+                          }
+                        });
                     }
-                  });
-              }
-            });
-        }
+                  }
+                });
+            }
+          });
+      }
     });
   }
 

@@ -26,15 +26,15 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
-import { CodxAcService } from '../../codx-ac.service';
-import { CashReceipts } from '../../models/CashReceipts.model';
-import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
-import { VoucherComponent } from '../../popup/voucher/voucher.component';
 import { PopAddLinereceiptsComponent } from '../pop-add-linereceipts/pop-add-linereceipts.component';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../journals/journals.service';
-import { Reason } from '../../models/Reason.model';
 import { Observable } from 'rxjs';
+import { CashReceipts } from '../../../models/CashReceipts.model';
+import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
+import { Reason } from '../../../models/Reason.model';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { CodxAcService } from '../../../codx-ac.service';
+import { JournalService } from '../../../journals/journals.service';
+import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 
 @Component({
   selector: 'lib-pop-add-receipts',
@@ -96,11 +96,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   pageSize = 5;
   columnChange: any;
   constructor(
-    private inject: Injector,
-    cache: CacheService,
+    inject: Injector,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
@@ -471,7 +469,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                 '',
                 opt
               );
-              dialogs.closed.subscribe((x) => {
+              dialogs.closed.subscribe(() => {
                 var dataline = JSON.parse(localStorage.getItem('dataline'));
                 if (dataline != null) {
                   this.cashreceiptslines[index] = dataline;
@@ -532,7 +530,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
             '',
             opt
           );
-          dialogs.closed.subscribe((x) => {
+          dialogs.closed.subscribe(() => {
             var dataline = JSON.parse(localStorage.getItem('dataline'));
             if (dataline != null) {
               this.cashreceiptslines.push(dataline);
@@ -739,7 +737,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                       'AddAsync',
                       [this.cashreceiptslines]
                     )
-                    .subscribe((res) => {});
+                    .subscribe(() => {});
                   this.dialog.close();
                   this.dt.detectChanges();
                 } else {
