@@ -2277,10 +2277,8 @@ codx-calendar {
   color: inherit;
 }
 
-.layout-hr{
-  #gridViewV2.e-grid .e-rowcell {
-    padding: 8px 15px;
-  }
+#gridViewV2.e-grid .e-rowcell {
+  padding: 7px 10px!important;
 }
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{

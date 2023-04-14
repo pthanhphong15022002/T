@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 
 @Component({
@@ -12,10 +12,11 @@ export class DialogthumbComponent implements OnInit , OnChanges{
 
   @ViewChild('Dialog') public Dialog: DialogComponent;
   animationSettings: AnimationSettingsModel = { effect: 'None' };
-  constructor() { }
+  constructor(private changeDetectorRef: ChangeDetectorRef) { }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["dataFile"] && changes["dataFile"].currentValue != changes["dataFile"].previousValue )
       this.dataFile = changes["dataFile"].currentValue 
+      this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {

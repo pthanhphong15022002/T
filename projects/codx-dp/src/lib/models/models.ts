@@ -46,6 +46,7 @@ export class DP_Processes {
   viewModeDetail: string;
   autoName: string;
   steps: DP_Steps[] = [];
+  approveRule :boolean = false ;
 }
 
 export class DP_Processes_Permission {
@@ -293,6 +294,7 @@ export class DP_Instances {
   tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
+  approveStatus :string
 }
 
 export class DP_Instances_Permissions {
@@ -364,6 +366,7 @@ export class DP_Instances_Steps {
   iconColor: String;
   progressTaskGroupControl: boolean = false;
   progressStepControl: boolean = false;
+  note : string; 
 }
 
 export class DP_Instances_Steps_Roles {

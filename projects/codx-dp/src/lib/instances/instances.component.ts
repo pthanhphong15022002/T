@@ -185,7 +185,7 @@ export class InstancesComponent
   ];
   dialogTemplate: DialogRef;
   isFormExport = true;
-
+  stepInstanceDetailStage: any;
   listOwnerInMove = [];
   listStageManagerInMove = [];
   constructor(
@@ -766,10 +766,14 @@ export class InstancesComponent
             //Chỉnh sửa, chuyển tiếp, thất bại, thành công
             case 'SYS103':
             case 'SYS03':
-            case 'DP09':
               let isUpdate = data.write;
-              if (!isUpdate || data.status != '2' || data.closed || !this.checkRoleInMove(data))
+              if (!isUpdate || data.status != '2' || data.closed)
                 res.disabled = true;
+              break;
+            case 'DP09':
+              if (!data.permissionCloseInstances) {
+                if (!data.permissionMoveInstances) res.disabled = true;
+              }
               break;
             //Copy
             case 'SYS104':
@@ -785,36 +789,38 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed || !data.permissionCloseInstances) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances)
+                res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed || !data.permissionCloseInstances){
+              if (!data.closed || !data.permissionCloseInstances) {
                 res.disabled = true;
               }
               break;
             case 'DP02':
-              let isUpdateFail = data.write;
-              if (
-                !isUpdateFail ||
-                data.status != '2' ||
-                data.closed ||
-                !this.isUseFail
-              ) {
-                res.disabled = true;
+              if (!data.permissionCloseInstances) {
+                if (
+                  !data.permissionMoveInstances ||
+                  data.status != '2' ||
+                  data.closed ||
+                  !this.isUseFail
+                )
+                  res.disabled = true;
               }
-
               break;
             case 'DP10':
-              let isUpdateSuccess = data.write;
-              if (
-                !isUpdateSuccess ||
-                data.status != '2' ||
-                data.closed ||
-                !this.isUseSuccess
-              ) {
-                res.disabled = true;
+              if (!data.permissionCloseInstances) {
+                if (
+                  !data.permissionMoveInstances ||
+                  data.status != '2' ||
+                  data.closed ||
+                  !this.isUseSuccess
+                ) {
+                  res.disabled = true;
+                }
               }
+
               break;
             case 'DP21':
               res.disabled = true;
@@ -825,6 +831,9 @@ export class InstancesComponent
         e.forEach((mf) => {
           switch (mf.functionID) {
             case 'DP21':
+              if (!data.permissionCloseInstances) {
+                mf.disabled = true;
+              }
               break;
             case 'DP09':
             case 'DP10':
@@ -1448,7 +1457,7 @@ export class InstancesComponent
   }
 
   showFormExport() {
-    this.isLockButton = true ;
+    this.isLockButton = true;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
@@ -1576,7 +1585,9 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.lstOrg = await this.codxDpService.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(
+          this.lstParticipants
+        );
       }
     }
     this.getRoleInMove(this.process);
@@ -1676,10 +1687,11 @@ export class InstancesComponent
   }
   //Xét duyệt
   selectTemp(recID) {
-    if (recID) this.isLockButton = false;else this.isLockButton = true ;
+    if (recID) this.isLockButton = false;
+    else this.isLockButton = true;
   }
   showFormSubmit() {
-    this.isLockButton = true ;
+    this.isLockButton = true;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
@@ -1707,7 +1719,7 @@ export class InstancesComponent
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
         this.process.processNo //thêm để test ODC2303-0002 đã xóa
-      ) 
+      )
       .subscribe((item: any) => {
         if (item) {
           this.approvalTrans(item?.processID, datas);
@@ -1753,47 +1765,47 @@ export class InstancesComponent
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-         if (res2?.eSign == true) {
-        //   let signFile = new ES_SignFile();
-        //   signFile.recID = datas.recID; 
-        //   signFile.title = datas.title;
-        //   signFile.categoryID = res2?.categoryID;
-        //   signFile.refId = datas.recID; 
-        //   // signFile.refDate = datas.refDate;
-        //   signFile.refNo = datas.refNo;
-        //   signFile.priority = '1';
-        //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
-        //   signFile.files = [];
-        //   // if (this.data?.files) {
-        //   //   for (var i = 0; i < this.data?.files.length; i++) {
-        //   //     var file = new File();
-        //   //     file.fileID = this.data?.files[i].recID;
-        //   //     file.fileName = this.data?.files[i].fileName;
-        //   //     file.eSign = true;
-        //   //     signFile.files.push(file);
-        //   //   }
-        //   // }
-        //   let dialogApprove = this.callfc.openForm(
-        //     PopupAddSignFileComponent,
-        //     'Chỉnh sửa',
-        //     700,
-        //     650,
-        //     '',
-        //     {
-        //       oSignFile: signFile,
-        //       ///files: this.data?.files,  //file  cân xét duyet
-        //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
-        //       disableCateID: true,
-        //       //formModel: this.view?.currentView?.formModel,
-        //     },
-        //     '',
-        //     dialogModel
-        //   );
-        //   dialogApprove.closed.subscribe((res) => {
-        //     if (res.event && res.event?.approved == true) {
-        //       //update lại data
-        //     }
-        //   });
+        if (res2?.eSign == true) {
+          //   let signFile = new ES_SignFile();
+          //   signFile.recID = datas.recID;
+          //   signFile.title = datas.title;
+          //   signFile.categoryID = res2?.categoryID;
+          //   signFile.refId = datas.recID;
+          //   // signFile.refDate = datas.refDate;
+          //   signFile.refNo = datas.refNo;
+          //   signFile.priority = '1';
+          //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
+          //   signFile.files = [];
+          //   // if (this.data?.files) {
+          //   //   for (var i = 0; i < this.data?.files.length; i++) {
+          //   //     var file = new File();
+          //   //     file.fileID = this.data?.files[i].recID;
+          //   //     file.fileName = this.data?.files[i].fileName;
+          //   //     file.eSign = true;
+          //   //     signFile.files.push(file);
+          //   //   }
+          //   // }
+          //   let dialogApprove = this.callfc.openForm(
+          //     PopupAddSignFileComponent,
+          //     'Chỉnh sửa',
+          //     700,
+          //     650,
+          //     '',
+          //     {
+          //       oSignFile: signFile,
+          //       ///files: this.data?.files,  //file  cân xét duyet
+          //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
+          //       disableCateID: true,
+          //       //formModel: this.view?.currentView?.formModel,
+          //     },
+          //     '',
+          //     dialogModel
+          //   );
+          //   dialogApprove.closed.subscribe((res) => {
+          //     if (res.event && res.event?.approved == true) {
+          //       //update lại data
+          //     }
+          //   });
         } else if (res2?.eSign == false)
           //xét duyệt
           this.release(datas, processID);
@@ -1927,35 +1939,26 @@ export class InstancesComponent
     return arr3;
   }
 
-
-  getRoleInMove(proccess){
-    debugger;
-    var listSteps = proccess.steps
-    for(let item of proccess.permissions) {
-      if(item.roleType === 'O') {
-        this.listOwnerInMove.push(item.objectID);
-      }
-    }
-    debugger;
-     for(let item of listSteps) {
-        var stageManager = item.roles.find(x=> x.roleType === 'S');
-        if(stageManager){
-        var ojb = {
-          stepID: item.recID,
-          objectID: stageManager.objectID
-        }
-          this.listStageManagerInMove.push(ojb);
-        }
-     }
-  }
-  checkRoleInMove(data){
-    if( this.user.userID === data.owner || this.listOwnerInMove.includes(this.user.userID) || this.checkRoleInStage(this.user.userID,data) )
-    {
+  getRoleInMove(step) {}
+  checkRoleInMove(data) {
+    if (
+      this.user.userID === data.owner ||
+      this.listOwnerInMove.includes(this.user.userID) ||
+      this.checkRoleInStage(this.user.userID, data)
+    ) {
       return true;
     }
     return false;
   }
-  checkRoleInStage(userID, data){
-    return this.listStageManagerInMove.some(x=> x.stepID === data.stepID && x.objectID === userID);
+  checkRoleInStage(userID, data) {
+    return this.listStageManagerInMove.some(
+      (x) => x.stepID === data.stepID && x.objectID === userID
+    );
+  }
+
+  outStepInstance(e) {
+    if (e) {
+      this.stepInstanceDetailStage = e.e;
+    }
   }
 }
