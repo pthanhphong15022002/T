@@ -359,6 +359,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
       this.instancesStepOld.owner = this.owner;
+      this.setRoles();
       this.instancesStepOld.stepID = this.stepIdClick;
     }
     if (
@@ -389,6 +390,18 @@ export class PopupMoveStageComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+
+  setRoles(){
+    var index = this.instancesStepOld.roles.findIndex(x=> x.roleType == 'S');
+    if(this.instancesStepOld.roles[index].objectID != this.owner){
+      var tmp = this.lstParticipants.find(x=> x.userID == this.owner)
+      this.instancesStepOld.roles[index].objectID = this.owner;
+      this.instancesStepOld.roles[index].objectName = tmp?.userName;
+      this.instancesStepOld.roles[index].objectType = 'U';
+    }
+
+
   }
 
   valueChange($event) {
@@ -426,7 +439,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   eventUser(e) {
-    this.owner = e.id;
+    this.owner = e?.id;
     // if (this.owner != null) this.getNameAndPosition(this.owner);
   }
 
@@ -764,5 +777,10 @@ export class PopupMoveStageComponent implements OnInit {
           break;
       }
     }
+  }
+  
+  changeProgress(event){
+    console.log(event);
+    
   }
 }

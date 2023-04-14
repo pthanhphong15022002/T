@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { firstValueFrom } from 'rxjs';
@@ -9,10 +9,15 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './codx-task.component.html',
   styleUrls: ['./codx-task.component.scss']
 })
-export class CodxTaskComponent implements OnInit{
+export class CodxTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
+  @Input() isLockSuccess = false;
+  @Input() isSaveProgress = true;
+  @Input() typeProgress = 1;
+  @Output() valueChangeProgress = new EventEmitter<any>();
+
   currentStep: any;
   isUpdate;
   user: any;
@@ -22,7 +27,7 @@ export class CodxTaskComponent implements OnInit{
   listTypeTask = [];
   taskList = [];
   taskGroupList = [];
-  
+
 
   moreDefaut = {
     share: true,
@@ -45,20 +50,46 @@ export class CodxTaskComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.getStepById(this.stepId);
-
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
-   
   }
 
-  async getStepById(stepId: string){
-    if(this.stepId){
-      this.currentStep = await firstValueFrom(this.api.exec<any>('DP','InstanceStepsBusiness','GetStepByIdAsync',stepId));
-    }else{
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    await this.getStepById(this.stepId);
+    if(this.isLockSuccess){
+      await this.removeSuccess();
+    }
+  }
+
+  removeSuccess() {
+    if (this.taskGroupList?.length > 0) {
+      for (let i = 0; i < this.taskGroupList.length;) {
+        if (this.taskGroupList[i]?.task?.length > 0) {
+          for (let j = 0; j < this.taskGroupList[i]?.task.length;) {
+            let task = this.taskGroupList[i]?.task[j];
+            if (task?.progress == 100) {
+              this.taskGroupList[i]?.task.splice(j, 1)
+            } else {
+              ++j
+            }
+          }
+        }
+        if (this.taskGroupList[i]?.progress == 100 && this.taskGroupList[i]?.task?.length == 0) {
+          this.taskGroupList?.splice(i, 1);
+        }else {
+          i++
+        }
+      }
+    }
+  }
+
+  async getStepById(stepId: string) {
+    if (this.stepId) {
+      this.currentStep = await firstValueFrom(this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetStepByIdAsync', stepId));
+    } else {
       this.currentStep = JSON.parse(JSON.stringify(this.dataSources));
     }
     const taskGroupList = this.currentStep?.tasks.reduce((group, product) => {
@@ -170,38 +201,39 @@ export class CodxTaskComponent implements OnInit{
     }
   }
 
-  changeProgress(event){
-    console.log(event);
-    return
-    if(event){
-      if(event.type == 'P'){//step
-        this.currentStep['progress'] = event?.progressStep;
-      }else if(event.type == 'G'){ // group
-        this.taskGroupList?.forEach(group => {
-          if(group.recID == event.groupTaskID){
-            group['progress'] = event.progressGroupTask;
-          }
-        });      
-        if(event.isUpdate){
+  changeProgress(event) {
+    if (event) {
+      if(this.isSaveProgress){
+        if (event.type == 'P') {//step
           this.currentStep['progress'] = event?.progressStep;
-        }
-      }else{//task
-        this.taskGroupList?.forEach(group => {
-          if(group.recID == event.groupTaskID){
-            group?.task?.forEach(task => {
-              if(task.recID == event.taskID){
-                task['progress'] = event.progressTask;
-              }
-            });
-            if(event.isUpdate){
+        } else if (event.type == 'G') { // group
+          this.taskGroupList?.forEach(group => {
+            if (group.recID == event.groupTaskID) {
               group['progress'] = event.progressGroupTask;
             }
+          });
+          if (event.isUpdate) {
+            this.currentStep['progress'] = event?.progressStep;
           }
-        });
-        if(event.isUpdate){
-          this.currentStep['progress'] = event?.progressStep;
+        } else {//task
+          this.taskGroupList?.forEach(group => {
+            if (group.recID == event.groupTaskID) {
+              group?.task?.forEach(task => {
+                if (task.recID == event.taskID) {
+                  task['progress'] = event.progressTask;
+                }
+              });
+              if (event.isUpdate) {
+                group['progress'] = event.progressGroupTask;
+              }
+            }
+          });
+          if (event.isUpdate) {
+            this.currentStep['progress'] = event?.progressStep;
+          }
         }
       }
+      this.valueChangeProgress.emit(event);
     }
   }
 
