@@ -37,6 +37,10 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
+
+
+  @ViewChild('reasonAward') reasonAward: TemplateRef<any>;
+
   //#endregion
 
   constructor(
@@ -139,6 +143,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   changeItemDetail(event) {}
 
   clickMF(event, data) {
+
     switch (event.functionID) {
       case 'SYS02': //Delete
         if (data) {
@@ -222,4 +227,11 @@ export class EmployeeAwardsComponent extends UIComponent {
     return true;
   }
   changeDataMF(event, data) {}
+
+  getIdUser(createdBy: any, owner: any) {
+    var arr = [];
+    if (createdBy) arr.push(createdBy);
+    if (owner && createdBy != owner) arr.push(owner);
+    return arr.join(';');
+  }
 }
