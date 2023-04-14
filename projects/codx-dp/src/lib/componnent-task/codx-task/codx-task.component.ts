@@ -172,30 +172,25 @@ export class CodxTaskComponent implements OnInit{
 
   changeProgress(event){
     console.log(event);
-    
+    return
     if(event){
-      if(event.type == 'P'){
+      if(event.type == 'P'){//step
         this.currentStep['progress'] = event?.progressStep;
-      }else if(event.type == 'G'){
+      }else if(event.type == 'G'){ // group
         this.taskGroupList?.forEach(group => {
           if(group.recID == event.groupTaskID){
             group['progress'] = event.progressGroupTask;
           }
-        });
-        let index = this.taskGroupList?.findIndex(group => group.recID == event.groupTaskID);
-        if(index >= 0){
-          let group = JSON.parse(JSON.stringify(this.taskGroupList[index]));
-          this.taskGroupList?.splice(index,1,group);
-        }
+        });      
         if(event.isUpdate){
           this.currentStep['progress'] = event?.progressStep;
         }
-      }else{
+      }else{//task
         this.taskGroupList?.forEach(group => {
           if(group.recID == event.groupTaskID){
             group?.task?.forEach(task => {
               if(task.recID == event.taskID){
-                task['progress'] = event.progressGroupTask;
+                task['progress'] = event.progressTask;
               }
             });
             if(event.isUpdate){
@@ -203,13 +198,6 @@ export class CodxTaskComponent implements OnInit{
             }
           }
         });
-
-        let index = this.taskGroupList?.findIndex(group => group.recID == event.groupTaskID);
-        if(index >= 0){
-          let group = JSON.parse(JSON.stringify(this.taskGroupList[index]));
-          this.taskGroupList?.splice(index,1,group);
-        }
-        
         if(event.isUpdate){
           this.currentStep['progress'] = event?.progressStep;
         }
