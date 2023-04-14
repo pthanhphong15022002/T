@@ -42,8 +42,7 @@ import {
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./home.component.scss']
 })
 
 export class HomeComponent extends UIComponent implements  OnDestroy {
@@ -74,8 +73,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   titleAccessDeniedFile = 'Bạn không có quyền truy cập file này';
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   titleFileName = 'Tên';
-  titleCreatedBy = 'Người tạo';
-  titleCreatedOn = 'Ngày tạo';
+  titleCreatedBy = 'Người tạo thư mục / tệp tin';
+  titleCreatedOn = 'Ngày tạo thư mục / tệp tin';
   titleLength = 'Dung lượng';
   titleDisc = 'Mô tả';
   sortColumn: string;
@@ -177,12 +176,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
   onInit(): void {
     //View mặc định 
+    var check = document.getElementById("dm-home-mark-id");
+    
+    if(!check)
+    {
+      var elem = document.createElement('div');
+      elem.id = "dm-home-mark-id"
+      document.body.appendChild(elem);
+    }
    
-    var elem = document.createElement('div');
-    elem.id = "dm-home-mark-id"
-    elem.className =  "dm-home-mark w-100 h-100";
-    document.body.appendChild(elem);
-
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
@@ -1399,6 +1401,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         }
       }
+      this.unableMark();
       this.detectorRef.detectChanges();
       //ScrollComponent.reinitialization();
     });
@@ -1417,7 +1420,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.isScrollFolder = false;
           this.getDataFile(id);
         }
-        this.unableMark();
+        else this.unableMark();
         this._beginDrapDrop();
       }
       this.detectorRef.detectChanges();
@@ -1434,6 +1437,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   dbView(data: any) {
+    debugger
     if (data.recID && data.fileName != null) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
@@ -1458,7 +1462,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   getDUser(data)
   {
-    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    var item = data.permissions.filter(x=>x.approvalStatus == "3" || x.approvalStatus == "4" || x.approvalStatus == "5")[0];
     if(item) return  item?.createdOn;
     return ""
   }
@@ -1504,4 +1508,24 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     span.innerHTML = s;
     return span.textContent || span.innerText;
   };
+
+
+  convertStatus(status:any,clss = "")
+  {
+    if(clss)
+    {
+      if(status == 3 ) return "badge-light-primary"
+      else if(status == 5 || status == 6) return "badge-light-success"
+      else if(status == 4) return "badge-light-danger";
+      else return ""
+    }
+    else
+    {
+      if(status == 3) return "Chờ xét duyệt";
+      else if(status == 4) return "Đã từ chối";
+      else if(status == 5 || status == 6) return "Đã xét duyệt";
+      return "Không xác định"
+    }
+    return ""
+  }
 }

@@ -30,6 +30,7 @@ import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-o
 import { PopupShareOkrPlanComponent } from './popup/popup-share-okr-plans/popup-share-okr-plans.component';
 import { ViewOKRComponent } from './component/view-okr/view-okr.component';
 import { ProgressAnnotationService, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
 
 const routes: Routes = [
   {
@@ -88,7 +89,8 @@ const routes: Routes = [
     PopupShareOkrPlanComponent,
     OkrTreesComponent,
     PopupAddOKRPlanComponent,
-    ViewOKRComponent   
+    ViewOKRComponent,
+    PopupAddRoleComponent,   
   ],
   imports: [
     RouterModule.forChild(routes),
