@@ -1,0 +1,20 @@
+.setting-menuleft{
+    .menu-item .menu-link.active .menu-sub .menu-title {
+        color: var(--gray-700) !important;
+    }
+    .menu-item .menu-sub .menu-link:hover .menu-title{
+        color: var(--primary) !important;
+    }
+    .menu-item .menu-link.active .menu-title {
+        color: var(--gray-700) !important;
+    }
+    .menu-item .menu-link.active .menu-bullet .bullet {
+        background-color: var(--gray-700) !important;
+    }
+    .menu-item .menu-sub .menu-link:hover .menu-bullet .bullet {
+        background-color: var(--primary) !important;
+    }
+    .menu-item .menu-link {
+        padding: 0.35rem 1rem;
+    }
+}

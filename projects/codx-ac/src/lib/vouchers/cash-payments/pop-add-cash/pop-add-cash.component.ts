@@ -250,6 +250,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.changeType(null, ele);
   }
 
+
   select(e) {
     if (e.isSwiped) {
       e.cancel = true;

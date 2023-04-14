@@ -891,7 +891,7 @@ export class DynamicProcessComponent
           this.cache.functionList('ESS22').subscribe((f) => {
             if (f) {
               if (!f || !f.gridViewName || !f.formName) return;
-              this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+               this.cache.gridView(f.gridViewName).subscribe((gridview) => {
                 this.cache
                   .gridViewSetup(f.formName, f.gridViewName)
                   .subscribe((grvSetup) => {

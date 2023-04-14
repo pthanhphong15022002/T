@@ -15,6 +15,7 @@ export class CodxTaskComponent implements OnInit, OnChanges {
   @Input() dataSources: any;
   @Input() isLockSuccess = false;
   @Input() isSaveProgress = true;
+  @Input() typeProgress = 1;
   @Output() valueChangeProgress = new EventEmitter<any>();
 
   currentStep: any;

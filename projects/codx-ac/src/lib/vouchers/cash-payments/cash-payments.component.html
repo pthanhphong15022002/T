@@ -17,8 +17,7 @@
 <ng-template #templateDetail>
   <ng-container *ngIf="itemSelected">
     <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
-      [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)"
-      (changeDataMF)="changeDataMF($event, itemSelected)">
+      [dataItem]="itemSelected" [footer]="footer" (clickMF)="clickMF($event, itemSelected)">
     </codx-detail-tmp>
   </ng-container>
 </ng-template>

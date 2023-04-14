@@ -1,8 +1,10 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -23,6 +25,7 @@ import {
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
 
 @Component({
   selector: 'lib-cash-receipts',
@@ -46,7 +49,8 @@ export class CashReceiptsComponent extends UIComponent {
   cashbook: any;
   page: any = 1;
   pageSize = 6;
-  cashreceiptslines: Array<any> = [];
+  loadChange:any;
+  cashreceiptslines: Array<CashReceiptsLines> = [];
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
     gridViewName: 'grvCashReceiptsLines',
@@ -66,6 +70,7 @@ export class CashReceiptsComponent extends UIComponent {
     private inject: Injector,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
+    private dt: ChangeDetectorRef,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -249,19 +254,60 @@ export class CashReceiptsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-  clickChange(data) {}
+
+  changeItemDetail(event) {
+    if (event?.data.result) {
+      return;
+    }else{
+      this.itemSelected = event?.data;
+      this.loadDatadetail(this.itemSelected);
+    }
+    this.dt.detectChanges();
+  }
+
   changeDataMF(e: any, data: any) {
-    this.itemSelected = this.view.dataService.dataSelected;
-    this.loadDatadetail(data);
+    //Bookmark
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT041003' ||
+        x.functionID == 'ACT041002' ||
+        x.functionID == 'ACT041004'
+    );
+    //this.loadDatadetail(data);
+    // // check có hay ko duyệt trước khi ghi sổ
+    // if (data?.status == '1') {
+    //   if (
+    //     this.journal?.approval == 0 &&
+    //     this.journal?.postControl == 2 &&
+    //     this.journal.poster == this.userID
+    //   ) {
+    //     bm[0].disabled = true;
+    //     bm[2].disabled = true;
+    //   }
+    //   if (this.journal.approval == 1) {
+    //     bm[1].disabled = true;
+    //     bm[2].disabled = true;
+    //   }
+    // }
+    // //Chờ duyệt
+    // if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+    //   bm[1].disabled = true;
+    //   bm[0].disabled = true;
+    // }
+    // //hủy duyệt
+    // if (data?.approveStatus == '4') {
+    //   for (var i = 0; i < bm.length; i++) {
+    //     bm[i].disabled = true;
+    //   }
+    // }
   }
 
   loadDatadetail(data) {
+    this.cashreceiptslines = []
     this.api
-      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync', [data.objectID])
+      .exec('AC', 'CashReceiptsLinesBusiness', 'LoadDataAsync', [data.recID])
       .subscribe((res: any) => {
-        if (res != null) {
-          this.objectname = res[0].objectName;
-        }
+        this.cashreceiptslines = res;
       });
   }
 

@@ -18,6 +18,7 @@ import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-det
 import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from './journals/single-select-popup/single-select-popup.component';
 import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
 import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
@@ -66,6 +67,11 @@ export const routes: Routes = [
         component: CashTransfersComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'accounting/:funcID',
+        component: DashboardComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -98,6 +104,7 @@ export const routes: Routes = [
     VoucherComponent,
     PopAddLinecashComponent,
     PopAddLinereceiptsComponent,
+    DashboardComponent,
     PeriodicComponent,
   ],
   imports: [

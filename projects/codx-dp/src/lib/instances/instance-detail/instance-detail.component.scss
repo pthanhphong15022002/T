@@ -209,3 +209,13 @@ codx-instances codx-detail-tmp .codx-detail-main{
 	}
 
 }
+
+.line-clamp-card {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* ADDED */
+  max-height: 3em;
+
+}

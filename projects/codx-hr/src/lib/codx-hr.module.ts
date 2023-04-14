@@ -459,6 +459,7 @@ import { ViewBasicSalaryDetailComponent } from './employee-basic-salary/view-bas
 import { EmployeeBenefitComponent } from './employee-benefit/employee-benefit.component';
 import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee-benefit/popup-employee-benefit.component';
 import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
+import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
 export const routes: Routes = [
   {
@@ -726,6 +727,7 @@ const T_Component: Type<any>[] = [
   EmployeeBenefitComponent,
   PopupEmployeeBenefitComponent,
   ViewDetailContractsComponent,
+  ViewDetailEjobsalaryComponent,
   EmployeeAwardsComponent,
 ];
 @NgModule({

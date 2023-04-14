@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
-          <div *ngIf="okrPlan != null && okrPlan?.permission != null">
-            <ng-container *ngFor="let perm of okrPlan?.permission; index as i;">
+          <div *ngIf="okrPlan != null && okrPlan?.permissions != null">
+            <ng-container *ngFor="let perm of okrPlan?.permissions; index as i;">
               <ng-container
                 *ngIf="perm?.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm?.isSharing  || perm?.isSharing == null)) || (modeSharing && perm?.isSharing))">
                 <div (click)="changePermission(i)"

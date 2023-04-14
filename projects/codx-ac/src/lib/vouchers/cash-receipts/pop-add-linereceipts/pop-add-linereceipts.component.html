@@ -30,9 +30,9 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="TransactionText" [formModel]="form.formModel">
+          <codx-label fiedName="ReasonID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input [Group]="form.formGroup" field="transactionText" [formModel]="form.formModel"
+          <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -71,26 +71,6 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="DIM3" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="DIM1" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
           <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
@@ -103,6 +83,26 @@
           <codx-label fiedName="LoanContractID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="loanContractID" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="DIM3" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="diM3" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="DIM1" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="diM1" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
