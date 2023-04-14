@@ -607,9 +607,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-    debugger;
-    let itemData = this.data;
-    
+    let itemData = this.data;    
     option.methodName = 'AddEditItemAsync';
     option.data = [
       itemData,
