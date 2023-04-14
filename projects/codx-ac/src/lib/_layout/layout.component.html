@@ -3,6 +3,8 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
+      <codx-aside #aside *ngIf="asideDisplay" [hasSecond]="false"> </codx-aside>
+
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -92,7 +94,8 @@
         >
           <span
             [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
-            class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"
+            class="svg-icon"
+            [ngClass]="codxService.toolbarButtonIconSizeClass"
           ></span>
         </div>
         <!-- end::Menu wrapper -->
