@@ -1,10 +1,10 @@
-<div class="disabled-inline progressbar" (click)="dataSource ? openPopup() : ''">
+<div class="disabled-inline progressbar" (click)="openPopup()">
   <ejs-progressbar
    *ngIf="typeProgress == 1"
     [id]="id"
     type="Circular"
-    height="55"
-    width="55"
+    [height]="height"
+    [width]="width"
     trackThickness="4"
     progressThickness="4"
     [value]="progress"
@@ -106,20 +106,20 @@
          </div>
          <ejs-numerictextbox
            *ngIf="!disabledProgressInput"
-           [value]="progress"
+           [value]="progressData"
            format="###'%'"
            min="0"
            max="100"
-           (change)="changeProgress($event, progress)"
+           (change)="changeProgress($event, progressData)"
            disabled="false"
          ></ejs-numerictextbox>
          <ejs-numerictextbox
            *ngIf="disabledProgressInput"
-           [value]="progress"
+           [value]="progressData"
            format="###'%'"
            min="0"
            max="100"
-           (change)="changeProgress($event, progress)"
+           (change)="changeProgress($event, progressData)"
            disabled="true"
          ></ejs-numerictextbox>
        </div>
