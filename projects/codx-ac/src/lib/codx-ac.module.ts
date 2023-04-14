@@ -29,6 +29,7 @@ import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-det
 import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from './journals/single-select-popup/single-select-popup.component';
 import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +59,11 @@ export const routes: Routes = [
       {
         path: 'cashtranfers/:funcID',
         component: CashTransfersComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'accounting/:funcID',
+        component: DashboardComponent,
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
@@ -92,6 +98,7 @@ export const routes: Routes = [
     VoucherComponent,
     PopAddLinecashComponent,
     PopAddLinereceiptsComponent,
+    DashboardComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
