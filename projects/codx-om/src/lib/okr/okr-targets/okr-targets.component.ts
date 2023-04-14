@@ -445,33 +445,12 @@ export class OkrTargetsComponent implements OnInit {
         ) {
           func.disabled = false;
         }
-      });
-      if(kr.items!=null && kr.items.length>0 ){
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.KREditSKRWeight ) {
-            func.disabled = false;
-          }
-          else{
-            func.disabled = true;
-          }
-        });
-      }
-      
+      });      
     }
   }
   changeDataOBMF(evt: any, ob: any){
     if(evt!=null && ob!=null){
-      if(ob.items!=null && ob.items.length>0 ){
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight ) {
-            func.disabled = false;
-          }
-          else{
-            func.disabled=true
-          }
-        });
-  
-      }
+      
       //Ẩn phân bổ MF
       evt.forEach((func) => {
         if (
@@ -541,12 +520,11 @@ export class OkrTargetsComponent implements OnInit {
   getRangeDate(rangeDate:string){ 
     if(rangeDate!=null){
       let listRange= rangeDate.split(';');  
-      let range='';    
-
+      let range='';
       Array.from(listRange).forEach(item=>{
         if(item!=null && item!=''){         
           if(item=='Q1-Q4' || item=='1-12'){
-            range+= this.getPeriodName(item);
+            range+= this.getPeriodName(item)+'; ';
           }
           else if(item.includes('-')){
             let tmpRange= item.split('-');
@@ -559,7 +537,7 @@ export class OkrTargetsComponent implements OnInit {
           }
         }        
       });
-      return range;
+      return range.trim().substring(0, range.length-2);
     }
     return rangeDate;
   }
@@ -573,6 +551,7 @@ export class OkrTargetsComponent implements OnInit {
     }
     else return period;
   }
+
   //Lọc OKR
   filterOKR(okrType:string, listOKR:any[])
   {
@@ -759,22 +738,15 @@ export class OkrTargetsComponent implements OnInit {
             else if(kr.okrType==this.skrType){                  
               this.renderSKR(kr,false);
             }
-              
-            // this.codxOmService.getListOKRTasks(kr?.recID).subscribe((res:any)=>{
-            //   if(res){
-            //     if(kr.okrType==this.krType){
-            //       this.renderKR(kr,false);
-            //     }
-            //     else if(kr.okrType==this.skrType){                  
-            //       this.renderSKR(kr,false);
-            //     }
-            //   }
-            // })
           }
         });
     
   }
   editOKRWeight(ob: any, popupTitle: any) {
+    if(ob.items==null || ob.items.length==0 ){
+      this.notificationsService.notify('Mục tiêu chưa có kết quả chính','3');
+      return;
+    }
     let subTitle = ob?.okrName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
@@ -790,6 +762,10 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   editSKRWeight(kr: any, popupTitle: any) {
+    if(kr.items==null || kr.items.length==0 ){
+      this.notificationsService.notify('Kết quả chưa có kết quả phụ','3');
+      return;
+    }
     let subTitle = kr?.okrName;
     let dModel = new DialogModel();
     dModel.IsFull = true;
