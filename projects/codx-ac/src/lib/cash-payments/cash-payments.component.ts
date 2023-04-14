@@ -345,9 +345,9 @@ export class CashPaymentsComponent extends UIComponent {
     this.loadDatadetail(this.itemSelected);
   }
 
-  clickChange(data) {
-    this.itemSelected = data;
-    this.loadDatadetail(data);
+  changeItemDetail(event) {
+    this.itemSelected = event?.data;
+    this.loadDatadetail(event?.data);
   }
 
   loadDatadetail(data) {
