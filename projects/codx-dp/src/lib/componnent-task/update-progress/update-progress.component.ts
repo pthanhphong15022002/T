@@ -13,11 +13,18 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class UpdateProgressComponent implements OnInit,OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
+
+  @Input() height = 55;
+  @Input() width = 55;
   @Input() formModel: FormModel;
-  @Input() dataSource: any;
-  @Input() typeProgress = 1;
-  @Input() progress = 0;
+
+  @Input() typeProgress = 1; // nếu % ko lên dùng type 2
+  @Input() dataSource: any; // data chứa tiến độ
+  @Input() progress = 0; // tiến độ
   @Input() type: string;
+
+  @Input() isSave = true; //true:lưu lên db không
+  @Input() isUpdate = true; // true: hiện form cho update
 
   @Input() dataAll: any; // gantchart
   @Input() step: any; // No gantchart
@@ -56,26 +63,29 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   }
 
   async ngOnInit() {
-    if (this.step) {
+    if (this.isUpdate && this.step) {
       this.actualEndMax = this.step?.actualStart;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.dataSource && changes.dataSource.currentValue) { 
-      this.progressData = Number(this.dataSource['progress'] || 0) ;
-      this.actualEnd = this.dataSource['actualEnd'] || null;
-      this.note == this.dataSource['note'] || '';
-      this.progressOld = this.progressData ;
-      this.progress = this.progressData;
+    if(this.isUpdate){
+      if(changes?.progress && changes?.progress?.previousValue != changes?.progress?.currentValue && this.dataSource){
+        this.progressData = Number(this.dataSource['progress'] || 0) ;
+        this.actualEnd = this.dataSource['actualEnd'] || null;
+        this.note == this.dataSource['note'] || '';
+        this.progressOld = this.progressData ;
+      }
     }
-    // if (changes.dataSource && JSON.stringify(changes.dataSource.currentValue) !== JSON.stringify(this.previousDataSource)) {
-    //   // Xử lý thay đổi của thuộc tính đầu vào
-    //   console.log('Có thay đổi bên trong dataSource:', changes.dataSource.currentValue);
-    //   // Cập nhật giá trị previousDataSource
-    //   this.previousDataSource = changes.dataSource.currentValue;
-    // }
-    
+  }
+
+  openPopup() {
+    if(this.isUpdate){
+      const checkOpen = this.checkConditionOpenPopup();
+    if (!checkOpen) {
+      this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
+    }
+    }  
   }
 
   checkConditionOpenPopup() {
@@ -98,13 +108,6 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
       }
     }
     return check;
-  }
-
-  openPopup() {
-    const checkOpen = this.checkConditionOpenPopup();
-    if (!checkOpen) {
-      this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
-    }
   }
 
   getgridViewSetup(data) {
@@ -220,16 +223,21 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
     dataSave.actualEnd = this.actualEnd;
     dataSave.type = this.type;
     dataSave.isUpdate = isUpdate;
-    
-    this.api.exec<any>('DP','InstanceStepsBusiness','UpdateProgressAsync',dataSave).subscribe(res => {
-      this.valueChange.emit(res)
-      this.dataSource['progress'] = this.progressData ;
-      this.dataSource['note'] = this.note ;
-      this.dataSource['actualEnd'] = this.actualEnd;
+    if(this.isSave){
+      this.api.exec<any>('DP','InstanceStepsBusiness','UpdateProgressAsync',dataSave).subscribe(res => {
+        this.valueChange.emit(res)
+        this.dataSource['progress'] = this.progressData ;
+        this.dataSource['note'] = this.note ;
+        this.dataSource['actualEnd'] = this.actualEnd;
+        this.progress = this.progressData;
+        this.popupUpdateProgress.close();
+        this.notiService.notifyCode('SYS006');
+      });
+    }else{
       this.progress = this.progressData;
+      this.valueChange.emit(dataSave);
       this.popupUpdateProgress.close();
-      this.notiService.notifyCode('SYS006');
-    });
+    }
   }
 
   async beforeUpdate(funcID): Promise<boolean> {
