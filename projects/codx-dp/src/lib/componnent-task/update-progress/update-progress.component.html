@@ -1,4 +1,4 @@
-<div class="disabled-inline progressbar" (click)="openPopup()">
+<div class="disabled-inline progressbar cursor-pointer" (click)="openPopup()">
   <ejs-progressbar
    *ngIf="typeProgress == 1"
     [id]="id"
@@ -96,7 +96,7 @@
            <div class="d-flex align-items-center justify-content-end">
              <codx-input
                type="switch"
-               [checked]="progress == 100 ? true : false"
+               [checked]="progressData == 100 ? true : false"
                field="progress"
                (valueChange)="checkRadioProgress($event, progress)"
              >
@@ -131,7 +131,7 @@
              default="Ngày hoàn thành thực tế"
            >
            </codx-label>
-           <span *ngIf="progress == 100" style="color: red">
+           <span *ngIf="progressData == 100" style="color: red">
              *</span
            >
          </div>
@@ -141,7 +141,7 @@
            [crrValue]="actualEnd"
            format="F"
            type="datetime"
-           [disabled]="progress == 100 ? false : true"
+           [disabled]="progressData == 100 ? false : true"
          >
          </codx-input>
        </div>

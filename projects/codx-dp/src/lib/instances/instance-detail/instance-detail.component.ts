@@ -42,6 +42,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
   @Input() progress = '0';
@@ -232,6 +233,7 @@ export class InstanceDetailComponent implements OnInit {
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
         this.tmpTeps = data;
+        this.outStepInstance.emit({data: this.tmpTeps});
         this.stepValue = {
           textColor: data.textColor,
           backgroundColor: data.backgroundColor,
@@ -341,6 +343,7 @@ export class InstanceDetailComponent implements OnInit {
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];
+      this.outStepInstance.emit({data: this.tmpTeps});
       this.lstInv = this.getInvolved(this.tmpTeps.roles);
       this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
     }

@@ -14,8 +14,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
 
-  @Input() height = 55;
-  @Input() width = 55;
+  @Input() height = '55';
+  @Input() width = '55';
   @Input() formModel: FormModel;
 
   @Input() typeProgress = 1; // nếu % ko lên dùng type 2
@@ -127,7 +127,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
       this.progressData = 100;
       this.actualEnd = new Date();
     } else {
-      this.progressData = this.progressOld;
+      this.progressData = this.progressOld == 100 ? 0 : this.progressOld;
       this.actualEnd = null;
     }
     this.disabledProgressInput = event?.data;
@@ -231,7 +231,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
         this.dataSource['actualEnd'] = this.actualEnd;
         this.progress = this.progressData;
         this.popupUpdateProgress.close();
-        this.notiService.notifyCode('SYS006');
+        this.notiService.notifyCode('SYS007');
       });
     }else{
       this.progress = this.progressData;

@@ -176,7 +176,8 @@
             [dataSource]="data?.value" 
             [step]="currentStep"
             [type]="data?.type"
-            [isSave]="false"
+            [isSave]="isSaveProgress"
+            [typeProgress]="typeProgress"
             (valueChange)="changeProgress($event)"
          ></codx-update-progress>
      </div>

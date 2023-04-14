@@ -319,3 +319,137 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Detail -->
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card codx_cardcenter p-3"
+    [imageId]="data?.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [titleTmp]="titleTmp"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+  <ng-template #titleTmp let-data>
+    <div class="w-100">
+      <div class="justify-content-between">
+        <codx-vll
+          class="badge badge-sm"
+          [name]="'HR001'"
+          [value]="data?.emp?.gender"
+          [showText]="false"
+          [showIcon]="true"
+          [showBgColor]="true"
+        >
+        </codx-vll>
+        <span>
+          {{ data?.emp?.employeeName }}
+        </span>
+
+        <span>
+          <i class="icon-qr_code_scanner icon-14 me-1"></i>
+          <span class="text-danger">
+            {{ data?.emp?.employeeID }}
+          </span>
+        </span>
+      </div>
+
+      <div class="justify-content-between">
+        <span
+          [innerHTML]="
+            data.emp.positionID
+              | formatvalue : view.formModel : 'PositionID'
+              | async
+          "
+        ></span>
+      </div>
+
+      <div
+        class="d-flex flex-column"
+        [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+      >
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
+            <span class="icon-attach_money icon-15 me-1"></span>
+            <div
+              class="align-self-center fw-bold"
+              [ngbTooltip]="grvSetup?.jSalary?.headerText"
+            >
+              <span
+                class="align-self-center fw-bold"
+                [innerHTML]="
+                  data?.jSalary
+                    | formatvalue : view.formModel : 'jSalary'
+                    | async
+                "
+              >
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row">
+            <span class="icon-calendar_today icon-15 me-1"></span>
+            <div class="align-self-center fw-bold">
+              <span
+                [title]="
+                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                "
+                [ngbTooltip]="grvSetup?.effectedDate?.headerText"
+              >
+                {{ data?.effectedDate | fmDT }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between text-dark">
+        <span class="mt-2">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+
+        <!-- <span class="d-flex flex-row justify-content-end">
+          <codx-imgs
+            [objectId]="getIdUser(data.createdBy, data.owner)"
+            [objectType]="'AD_Users'"
+            [width]="30"
+            [numberImages]="3"
+            [mode]="false"
+          >
+          </codx-imgs>
+        </span> -->
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #panelRightListDetail let-data>
+  <lib-view-detail-ejobsalary
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [view]="view"
+    [formModel] = "view.formModel"
+    (uploaded)="getDetailESalary($event, data)"
+    (clickMFunction)="clickEvent($event, data)"
+  >
+  </lib-view-detail-ejobsalary>
+  <ng-template #itemRightDetail> </ng-template>
+</ng-template>
+
+<!--End Detail -->

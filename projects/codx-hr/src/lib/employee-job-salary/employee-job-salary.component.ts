@@ -32,6 +32,11 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
+
+  //Detail
+  @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
+  @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
+  itemDetail;
   //#endregion
 
   views: Array<ViewModel> = [];
@@ -53,7 +58,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   formGroup: FormGroup;
   dialogEditStatus: any;
   dataCategory;
-  itemDetail;
   cmtStatus: string = '';
 
   //#region eJobSalaryFuncID
@@ -102,16 +106,21 @@ export class EmployeeJobSalaryComponent extends UIComponent {
           headerTemplate: this.headerTemplate,
         },
       },
-      // {
-      //   type: ViewType.listdetail,
-      //   sameData: true,
-      //   active: true,
-      //   model: {
-      //     // template: this.itemTemplateListDetail,
-      //     // panelRightRef: this.panelRightListDetail,
-      //   },
-      // },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
     ];
+
+    //Get Header text when view detail
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
+      this.eContractHeaderText = res;
+    });
   }
 
   //Open, push data to modal
@@ -159,10 +168,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
         null
       );
     }
-  }
-
-  changeItemDetail(event) {
-    // console.log(event);
   }
 
   //Call api delete
@@ -365,4 +370,23 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   changeDataMF(event, data): void {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
+
+  //#region  Handle detail data
+  getDetailESalary(event, data) {
+    if (data) {
+      this.itemDetail = data;
+
+      this.df.detectChanges();
+    }
+  }
+
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  clickEvent(event, data) {
+    this.clickMF(event?.event, event?.data);
+  }
+
+  //#endregion
 }
