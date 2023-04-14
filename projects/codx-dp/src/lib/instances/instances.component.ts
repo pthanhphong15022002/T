@@ -1230,7 +1230,6 @@ export class InstancesComponent
   }
 
   openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
-    // this.codxDpService.get
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
@@ -1707,7 +1706,7 @@ export class InstancesComponent
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        'ESC-00000023' //thêm để test ODC2303-0002 đã xóa
+        this.process.processNo //thêm để test ODC2303-0002 đã xóa
       ) 
       .subscribe((item: any) => {
         if (item) {
@@ -1754,47 +1753,47 @@ export class InstancesComponent
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true) {
-          let signFile = new ES_SignFile();
-          signFile.recID = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //datas.recID;
-          signFile.title = datas.title;
-          signFile.categoryID = res2?.categoryID;
-          signFile.refId = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //
-          // signFile.refDate = datas.refDate;
-          signFile.refNo = datas.refNo;
-          // signFile.priority = datas.urgency;
-          signFile.refType = this.formModel?.entityName; // OD_Dispatches';
-          signFile.files = [];
-          // if (this.data?.files) {
-          //   for (var i = 0; i < this.data?.files.length; i++) {
-          //     var file = new File();
-          //     file.fileID = this.data?.files[i].recID;
-          //     file.fileName = this.data?.files[i].fileName;
-          //     file.eSign = true;
-          //     signFile.files.push(file);
-          //   }
-          // }
-          let dialogApprove = this.callfc.openForm(
-            PopupAddSignFileComponent,
-            'Chỉnh sửa',
-            700,
-            650,
-            '',
-            {
-              oSignFile: signFile,
-              ///files: this.data?.files,  //file  cân xét duyet
-              cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
-              disableCateID: true,
-              //formModel: this.view?.currentView?.formModel,
-            },
-            '',
-            dialogModel
-          );
-          dialogApprove.closed.subscribe((res) => {
-            if (res.event && res.event?.approved == true) {
-              //update lại data
-            }
-          });
+         if (res2?.eSign == true) {
+        //   let signFile = new ES_SignFile();
+        //   signFile.recID = datas.recID; 
+        //   signFile.title = datas.title;
+        //   signFile.categoryID = res2?.categoryID;
+        //   signFile.refId = datas.recID; 
+        //   // signFile.refDate = datas.refDate;
+        //   signFile.refNo = datas.refNo;
+        //   signFile.priority = '1';
+        //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
+        //   signFile.files = [];
+        //   // if (this.data?.files) {
+        //   //   for (var i = 0; i < this.data?.files.length; i++) {
+        //   //     var file = new File();
+        //   //     file.fileID = this.data?.files[i].recID;
+        //   //     file.fileName = this.data?.files[i].fileName;
+        //   //     file.eSign = true;
+        //   //     signFile.files.push(file);
+        //   //   }
+        //   // }
+        //   let dialogApprove = this.callfc.openForm(
+        //     PopupAddSignFileComponent,
+        //     'Chỉnh sửa',
+        //     700,
+        //     650,
+        //     '',
+        //     {
+        //       oSignFile: signFile,
+        //       ///files: this.data?.files,  //file  cân xét duyet
+        //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
+        //       disableCateID: true,
+        //       //formModel: this.view?.currentView?.formModel,
+        //     },
+        //     '',
+        //     dialogModel
+        //   );
+        //   dialogApprove.closed.subscribe((res) => {
+        //     if (res.event && res.event?.approved == true) {
+        //       //update lại data
+        //     }
+        //   });
         } else if (res2?.eSign == false)
           //xét duyệt
           this.release(datas, processID);
