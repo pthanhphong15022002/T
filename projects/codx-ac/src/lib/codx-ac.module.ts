@@ -10,25 +10,25 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
-import { CashPaymentsComponent } from './cash-payments/cash-payments.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
-import { PopAddCashComponent } from './cash-payments/pop-add-cash/pop-add-cash.component';
-import { CashTransfersComponent } from './cash-transfers/cash-transfers.component';
-import { PopupAddCashTransferComponent } from './cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
-import { CashReceiptsComponent } from './cash-receipts/cash-receipts.component';
-import { PopAddReceiptsComponent } from './cash-receipts/pop-add-receipts/pop-add-receipts.component';
-import { PurchaseinvoicesComponent } from './purchaseinvoices/purchaseinvoices.component';
-import { PopAddPurchaseComponent } from './purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
-import { PopAddLineComponent } from './purchaseinvoices/pop-add-line/pop-add-line.component';
 import { VoucherComponent } from './popup/voucher/voucher.component';
-import { PopAddLinecashComponent } from './cash-payments/pop-add-linecash/pop-add-linecash.component';
-import { PopAddLinereceiptsComponent } from './cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { JournalsComponent } from './journals/journals.component';
 import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
 import { DropdownDetailComponent } from './journals/dropdown-detail/dropdown-detail.component';
 import { PopupSetupInvoiceComponent } from './journals/popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from './journals/single-select-popup/single-select-popup.component';
 import { CustomizedMultiSelectPopupComponent } from './journals/customized-multi-select-popup/customized-multi-select-popup.component';
+import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
+import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
+import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
+import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
+import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
+import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
+import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
+import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
+import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
+import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 
 export const routes: Routes = [
   {

@@ -17,8 +17,8 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
-import { PurchaseInvoicesLines } from '../models/PurchaseInvoicesLines.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { PurchaseInvoicesLines } from '../../models/PurchaseInvoicesLines.model';
 
 @Component({
   selector: 'lib-purchaseinvoices',
