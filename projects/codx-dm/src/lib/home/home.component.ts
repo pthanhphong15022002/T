@@ -42,8 +42,7 @@ import {
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./home.component.scss']
 })
 
 export class HomeComponent extends UIComponent implements  OnDestroy {
@@ -177,12 +176,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
   onInit(): void {
     //View mặc định 
+    var check = document.getElementById("dm-home-mark-id");
+    
+    if(!check)
+    {
+      var elem = document.createElement('div');
+      elem.id = "dm-home-mark-id"
+      document.body.appendChild(elem);
+    }
    
-    var elem = document.createElement('div');
-    elem.id = "dm-home-mark-id"
-    elem.className =  "dm-home-mark w-100 h-100";
-    document.body.appendChild(elem);
-
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
@@ -1399,6 +1401,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         }
       }
+      this.unableMark();
       this.detectorRef.detectChanges();
       //ScrollComponent.reinitialization();
     });
@@ -1417,7 +1420,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.isScrollFolder = false;
           this.getDataFile(id);
         }
-        this.unableMark();
+        else this.unableMark();
         this._beginDrapDrop();
       }
       this.detectorRef.detectChanges();

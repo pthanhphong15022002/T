@@ -2305,7 +2305,14 @@ padding: 0;
   color: var(--primary-inverse);
 }
 
-
+//Đừng xóa của Chung tội Chung 
+.dm-home-mark
+{
+  position: absolute;
+  z-index: 1000 ;
+  width: 100%;
+  height: 100%;
+}
 /*** fix bug TEMP ***/
 
 codx-view-list-detail .codx-detail-main .task-name + .text-gray-700{
