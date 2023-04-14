@@ -1,5 +1,11 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 
 @Component({
   selector: 'lib-periodic',
@@ -13,9 +19,12 @@ export class PeriodicComponent extends UIComponent {
   button: ButtonModel = {
     id: 'btnAdd',
   };
-  functionName: string;
-  constructor(inject: Injector) {
+
+  user: any;
+
+  constructor(inject: Injector, private authstore: AuthStore) {
     super(inject);
+    this.user = this.authstore.get();
   }
   //#region Constructor
 
