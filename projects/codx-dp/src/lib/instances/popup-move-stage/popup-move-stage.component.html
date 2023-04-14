@@ -72,7 +72,13 @@
         </div>
         <div class="pt-5 ms-6">
           <div class="accordion" id="accordion1">
-            <ng-container *ngFor="let item of listTree; let i = index">
+            <codx-task 
+              [dataSources]="instancesStepOld"
+              [isSaveProgress]="false"
+              [isLockSuccess]="true"
+              (valueChangeProgress)="changeProgress($event)"
+            ></codx-task>
+            <!-- <ng-container *ngFor="let item of listTree; let i = index">
               <div *ngIf="item.taskGroupID === null; else taskGroup">
                 <ol class="list-unstyled" >
                   <li>
@@ -217,7 +223,7 @@
                   </li>
                 </ol>
               </ng-template>
-             </ng-container>
+             </ng-container> -->
           </div>
         </div>
       </div>

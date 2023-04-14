@@ -23,23 +23,35 @@
 >
   <ng-template #body>
     <div class="form-group row mt-5">
-      <div
-        class="form-group row">
+      <div class="form-group row">
         <div class="row">
           <div class="col-4">
-            <codx-img [width]="35" class="me-3 col-3" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
-              [objectName]="employeeObj?.employeeName ?? employeeObj?.emp.employeeName" [objectType]="'HR_Employees'">
+            <codx-img
+              [width]="35"
+              class="me-3 col-3"
+              [objectId]="employeeObj?.employeeID"
+              [referType]="'avt'"
+              [objectName]="
+                employeeObj?.employeeName ?? employeeObj?.emp.employeeName
+              "
+              [objectType]="'HR_Employees'"
+            >
             </codx-img>
           </div>
           <div class="col-8" *ngIf="actionType != 'edit'">
-            <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
-            <codx-input field="employeeID" [formModel]="formModel" [Group]="formGroup"
-              (valueChange)="handleSelectEmp($event)">
+            <codx-label
+              fiedName="EmployeeID"
+              [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+              field="employeeID"
+              [formModel]="formModel"
+              [Group]="formGroup"
+              (valueChange)="handleSelectEmp($event)"
+            >
             </codx-input>
           </div>
         </div>
-
-
       </div>
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
@@ -55,10 +67,11 @@
         </div>
         <div>
           <codx-input
-            field="IsCurrent"
+            disabled="true"
+            field="isCurrent"
             [formModel]="formModel"
             [Group]="formGroup"
-            disabled="true">
+          >
           </codx-input>
         </div>
       </div>
@@ -77,10 +90,7 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label
-          fiedName="ExpiredDate"
-          [formModel]="formModel"
-        ></codx-label>
+        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
         <codx-input
           field="ExpiredDate"
           [formModel]="formModel"
@@ -110,7 +120,7 @@
             field="BenefitAmt"
             [formModel]="formModel"
             [Group]="formGroup"
-            [showSpinButton]="false" 
+            [showSpinButton]="false"
           ></codx-input>
         </div>
       </div>
@@ -133,15 +143,15 @@
       <codx-label fiedName="BenefitPct" [formModel]="formModel"></codx-label>
       <div class="col-6">
         <codx-input
-        field="BenefitPct"
-        [formModel]="formModel"
-        [Group]="formGroup"
-        [showSpinButton]="false" 
-      ></codx-input>
+          field="BenefitPct"
+          [formModel]="formModel"
+          [Group]="formGroup"
+          [showSpinButton]="false"
+        ></codx-input>
       </div>
     </div>
 
-    <hr>
+    <hr />
 
     <div class="form-group row">
       <div class="col-6">

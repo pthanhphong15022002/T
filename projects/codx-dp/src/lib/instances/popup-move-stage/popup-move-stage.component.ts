@@ -778,4 +778,9 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
   }
+  
+  changeProgress(event){
+    console.log(event);
+    
+  }
 }

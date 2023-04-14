@@ -14,11 +14,11 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
 
-  @Input() height = 55;
-  @Input() width = 55;
+  @Input() height = '55';
+  @Input() width = '55';
   @Input() formModel: FormModel;
 
-  @Input() typeProgress = 1; // nếu % ko lên dùng type 2
+  @Input() typeProgress = 2; // nếu % ko lên dùng type 2
   @Input() dataSource: any; // data chứa tiến độ
   @Input() progress = 0; // tiến độ
   @Input() type: string;
