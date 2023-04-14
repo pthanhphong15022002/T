@@ -9,7 +9,7 @@
 
 <ng-template #rowTemplate let-data>
   <tr>
-    <td>
+    <td class="p-3">
       <div class="fw-bold">{{ data?.assetName }}</div>
       <div>
         <codx-label
@@ -42,7 +42,7 @@
       </div>
     </td>
 
-    <td>
+    <td class="p-3">
       <div>
         <codx-label fiedName="costAmt" [formModel]="view.formModel"></codx-label
         >:&nbsp;<span class="text-primary">{{ data?.costAmt }}</span>
@@ -80,7 +80,7 @@
       </div>
     </td>
 
-    <td class="d-flex justify-content-center">
+    <td class="text-center p-3">
       <span class="badge badge-warning">{{ data?.status }}</span>
       <div class="text-secondary">{{ data?.createdOn }}</div>
       <div>{{ data?.createdBy }}</div>

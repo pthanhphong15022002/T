@@ -1977,7 +1977,6 @@ export class CodxHrService {
   // actionUpdateClosed = 'AU9'
 
   handleShowHideMF(evt, data, view){  
-    debugger
     // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
     let category = '4';
     let formName = 'HRParameters';

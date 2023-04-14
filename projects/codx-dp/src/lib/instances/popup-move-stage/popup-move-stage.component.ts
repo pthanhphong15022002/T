@@ -64,12 +64,12 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroup: any;
-  listTask: any;
-  listTaskGroupDone: any;
-  listTaskDone: any;
-  listTree: any;
-  listTypeTask: any;
+  listTaskGroup: any = [];
+  listTask: any = [];
+  listTaskGroupDone: any =[];
+  listTaskDone: any = [];
+  listTree: any = [];
+  listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason: any;
@@ -518,11 +518,21 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   addItem(list: any, data, view) {
-    list.push(data);
-    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+
+
     if (view == this.viewTaskGroup) {
       let children = document.getElementById(`${data.recID}`);
+      list.push(data);
     }
+
+    if(view == this.viewTask) {
+      if(this.ischeckClickedTaskParent(data)) {
+        list.push(data);
+      }
+
+    }
+    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+
   }
 
   removeItem(list, id) {
@@ -653,13 +663,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field.dataValue.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue.toLowerCase().match(validEmail)) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field.dataValue.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue.toLowerCase().match(validPhone)) {
           return 'RS030';
         }
       }
@@ -683,24 +693,41 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  checkExitsParentID(item,view): string {
+  getColorTask(item,view): string {
     var check = 'd-none';
     if (item?.requireCompleted) {
       check ='text-danger';
     }
     else if(view == this.viewTask)
     {
-
-      for(let item of this.listTask ) {
-        if(item.parentID?.includes(item.recID)) {
+      for(let tasks of this.listTask ) {
+         if(tasks.parentID?.includes(item.refID))
+         {
           check = 'text-orange'
           break;
         }
-
       }
     }
     return check;
   }
+  ischeckClickedTaskParent(data){
+    if(data.parentID) {
+      var parentIds = data?.parentID.split(';');
+      var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
+      if(filteredList.length != parentIds.length) {
+        var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
+        checkbox.checked = false;
+        var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+        var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+
+        this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+        return false;
+      }
+    }
+    return true;
+
+  }
+
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
     if (lstRoles != null && lstRoles.length > 0) {
