@@ -231,7 +231,7 @@ var childPublicRoutes: Routes = [
     component: ViewFileDialogComponent,
   },
   {
-    path: 'review',
+    path: 'forms',
     component: ReviewComponent,
   },
   {

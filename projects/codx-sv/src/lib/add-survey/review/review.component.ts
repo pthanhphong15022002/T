@@ -1,5 +1,5 @@
 import { I } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, HostBinding } from '@angular/core';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -20,6 +20,8 @@ import { SV_Respondents } from '../../models/SV_Respondents';
   providers: [RteService, MultiSelectService],
 })
 export class ReviewComponent extends UIComponent implements OnInit {
+
+  @HostBinding('class.h-100') someField: boolean = false;
   respondents: SV_Respondents = new SV_Respondents();
   questions: any = [];
   functionList: any;
@@ -88,6 +90,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.someField = true
     this.SVServices.getFormModel(this.funcID).then((res) => {
       if (res) this.formModel = res;
     });

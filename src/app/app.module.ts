@@ -111,9 +111,9 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
-        authService.getUserByToken().subscribe((v) => {
-          resolve(v);
-        });
+        // authService.getUserByToken().subscribe((v) => {
+           resolve(true);
+        // });
       });
     });
   };
