@@ -1,4 +1,4 @@
-<div class="disabled-inline progressbar" (click)="openPopup()">
+<div class="disabled-inline progressbar" (click)="dataSource ? openPopup() : ''">
   <ejs-progressbar
    *ngIf="typeProgress == 1"
     [id]="id"
@@ -7,7 +7,7 @@
     width="55"
     trackThickness="4"
     progressThickness="4"
-    [value]="dataSource['progress']"
+    [value]="progress"
     [progressColor]="'#005DC7'"
     trackColor="#d8d8d8"
     progressValueColor="red"
@@ -31,7 +31,7 @@
   width="55"
   trackThickness="4"
   progressThickness="4"
-  [value]="dataSource['progress']"
+  [value]="progress"
   [progressColor]="'#005DC7'"
   trackColor="#d8d8d8"
   progressValueColor="red"
@@ -96,9 +96,9 @@
            <div class="d-flex align-items-center justify-content-end">
              <codx-input
                type="switch"
-               [checked]="dataSource?.progress == '100' ? true : false"
+               [checked]="progress == 100 ? true : false"
                field="progress"
-               (valueChange)="checkRadioProgress($event, dataSource)"
+               (valueChange)="checkRadioProgress($event, progress)"
              >
              </codx-input>
              <span class="ms-2">100%</span>
@@ -106,20 +106,20 @@
          </div>
          <ejs-numerictextbox
            *ngIf="!disabledProgressInput"
-           [value]="dataSource?.progress"
+           [value]="progress"
            format="###'%'"
            min="0"
            max="100"
-           (change)="changeProgress($event, dataSource)"
+           (change)="changeProgress($event, progress)"
            disabled="false"
          ></ejs-numerictextbox>
          <ejs-numerictextbox
            *ngIf="disabledProgressInput"
-           [value]="dataSource?.progress"
+           [value]="progress"
            format="###'%'"
            min="0"
            max="100"
-           (change)="changeProgress($event, dataSource)"
+           (change)="changeProgress($event, progress)"
            disabled="true"
          ></ejs-numerictextbox>
        </div>
@@ -131,17 +131,17 @@
              default="Ngày hoàn thành thực tế"
            >
            </codx-label>
-           <span *ngIf="dataSource?.progress == 100" style="color: red">
+           <span *ngIf="progress == 100" style="color: red">
              *</span
            >
          </div>
          <codx-input
            field="actualEnd"
-           (valueChange)="changeValueDate($event, dataSource)"
-           [crrValue]="dataSource?.actualEnd"
+           (valueChange)="changeValueDate($event, actualEnd)"
+           [crrValue]="actualEnd"
            format="F"
            type="datetime"
-           [disabled]="dataSource?.progress == 100 ? false : true"
+           [disabled]="progress == 100 ? false : true"
          >
          </codx-input>
        </div>
@@ -161,8 +161,8 @@
          type="textarea"
          format="ed2"
          height="200"
-         [crrValue]="dataSource?.note"
-         (valueChange)="changeValueInput($event, dataSource)"
+         [crrValue]="note"
+         (valueChange)="changeValueInput($event, note)"
        >
        </codx-input>
      </div>
@@ -223,8 +223,8 @@
          ></codx-label>
        </span>
      </button>
-     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
      <button type="button" class="btn btn-primary" (click)="handelProgress()">
+       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
      </button>
    </div>
  </ng-template>

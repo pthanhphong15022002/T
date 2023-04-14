@@ -175,6 +175,7 @@
             [dataSource]="data?.value" 
             [step]="currentStep"
             [type]="data?.type"
+            (valueChange)="changeProgress($event)"
          ></codx-update-progress>
      </div>
      <span>

@@ -170,6 +170,53 @@ export class CodxTaskComponent implements OnInit{
     }
   }
 
+  changeProgress(event){
+    console.log(event);
+    
+    if(event){
+      if(event.type == 'P'){
+        this.currentStep['progress'] = event?.progressStep;
+      }else if(event.type == 'G'){
+        this.taskGroupList?.forEach(group => {
+          if(group.recID == event.groupTaskID){
+            group['progress'] = event.progressGroupTask;
+          }
+        });
+        let index = this.taskGroupList?.findIndex(group => group.recID == event.groupTaskID);
+        if(index >= 0){
+          let group = JSON.parse(JSON.stringify(this.taskGroupList[index]));
+          this.taskGroupList?.splice(index,1,group);
+        }
+        if(event.isUpdate){
+          this.currentStep['progress'] = event?.progressStep;
+        }
+      }else{
+        this.taskGroupList?.forEach(group => {
+          if(group.recID == event.groupTaskID){
+            group?.task?.forEach(task => {
+              if(task.recID == event.taskID){
+                task['progress'] = event.progressGroupTask;
+              }
+            });
+            if(event.isUpdate){
+              group['progress'] = event.progressGroupTask;
+            }
+          }
+        });
+
+        let index = this.taskGroupList?.findIndex(group => group.recID == event.groupTaskID);
+        if(index >= 0){
+          let group = JSON.parse(JSON.stringify(this.taskGroupList[index]));
+          this.taskGroupList?.splice(index,1,group);
+        }
+        
+        if(event.isUpdate){
+          this.currentStep['progress'] = event?.progressStep;
+        }
+      }
+    }
+  }
+
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
       // case 'SYS02':
