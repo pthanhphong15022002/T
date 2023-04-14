@@ -213,9 +213,11 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
           }
         });
     } else {
+      console.log(this.formModel.currentData)
       this.hrSevice
         .EditEBenefit(this.formModel.currentData)
         .subscribe((p) => {
+          console.log(p)
           if (p != null) {
             this.notify.notifyCode('SYS007'); 
             this.dialog && this.dialog.close(p);
