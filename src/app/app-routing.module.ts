@@ -9,13 +9,9 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
 
-var childRoutes: Routes = [
-  {
-    path: 'auth',
-    loadChildren: () =>
-      import('./modules/auth/auth.module').then((m) => m.AuthModule),
-  },
+var childAuthRoutes: Routes = [
   {
     path: 'cm',
     canActivate: [AuthGuard],
@@ -211,15 +207,6 @@ var childRoutes: Routes = [
     ],
   },
   {
-    path: 'error',
-    loadChildren: () =>
-      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
-  },
-  {
-    path: 'viewfile',
-    component: ViewFileDialogComponent,
-  },
-  {
     path: 'sos',
     component: SosComponent,
   },
@@ -231,12 +218,33 @@ var childRoutes: Routes = [
         (m) => m.CodxTnModule
       ),
   },
+];
+
+var childPublicRoutes: Routes = [
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./modules/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'viewfile',
+    component: ViewFileDialogComponent,
+  },
+  {
+    path: 'review',
+    component: ReviewComponent,
+  },
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
+  },
   {
     path: '',
     redirectTo: 'wp',
     pathMatch: 'full',
   },
-  { path: '**', redirectTo: 'error/404' },
+  { path: '**', redirectTo: 'error/404' }
 ];
 
 export const routes: Routes = [
@@ -252,7 +260,7 @@ export const routes: Routes = [
   },
   {
     path: ':tenant',
-    children: childRoutes,
+    children: [...childAuthRoutes, ...childPublicRoutes],
   },
   {
     path: '',
