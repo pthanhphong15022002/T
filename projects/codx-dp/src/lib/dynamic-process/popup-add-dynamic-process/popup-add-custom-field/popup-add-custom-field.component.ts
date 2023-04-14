@@ -165,9 +165,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
           x.recID != this.field.recID
       );
       if (check) {
-        this.notiService.notify(
-          'Field name không được trùng nhau ! - Thêm messCode Khanh !! ',
-          '2'
+        this.notiService.notifyCode(
+          'DP026',
+          0, '"' + this.grvSetup['FieldName']?.headerText + '"'
         );
         return;
       }

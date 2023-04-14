@@ -831,6 +831,9 @@ export class InstancesComponent
         e.forEach((mf) => {
           switch (mf.functionID) {
             case 'DP21':
+              if (!data.permissionCloseInstances) {
+                mf.disabled = true;
+              }
               break;
             case 'DP09':
             case 'DP10':
@@ -1587,7 +1590,6 @@ export class InstancesComponent
         );
       }
     }
-    this.getRoleInMove(this.process);
   }
   //filter- tam
   valueChangeFilter(e) {
@@ -1934,23 +1936,6 @@ export class InstancesComponent
       return acc;
     }, []);
     return arr3;
-  }
-
-  getRoleInMove(step) {}
-  checkRoleInMove(data) {
-    if (
-      this.user.userID === data.owner ||
-      this.listOwnerInMove.includes(this.user.userID) ||
-      this.checkRoleInStage(this.user.userID, data)
-    ) {
-      return true;
-    }
-    return false;
-  }
-  checkRoleInStage(userID, data) {
-    return this.listStageManagerInMove.some(
-      (x) => x.stepID === data.stepID && x.objectID === userID
-    );
   }
 
   outStepInstance(e) {
