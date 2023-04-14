@@ -29,12 +29,18 @@ import { PopAddPurchaseComponent } from './vouchers/purchaseinvoices/pop-add-pur
 import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/pop-add-line.component';
 import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
+import { PeriodicComponent } from './periodic/periodic.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: NosubAsideComponent,
     children: [
+      {
+        path: 'accounting/:funcID',
+        component: PeriodicComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
@@ -92,6 +98,7 @@ export const routes: Routes = [
     VoucherComponent,
     PopAddLinecashComponent,
     PopAddLinereceiptsComponent,
+    PeriodicComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
