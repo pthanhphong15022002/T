@@ -831,6 +831,9 @@ export class InstancesComponent
         e.forEach((mf) => {
           switch (mf.functionID) {
             case 'DP21':
+              if (!data.permissionCloseInstances) {
+                mf.disabled = true;
+              }
               break;
             case 'DP09':
             case 'DP10':
