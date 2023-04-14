@@ -2277,10 +2277,8 @@ codx-calendar {
   color: inherit;
 }
 
-.layout-hr{
-  #gridViewV2.e-grid .e-rowcell {
-    padding: 8px 15px;
-  }
+#gridViewV2.e-grid .e-rowcell {
+  padding: 7px 10px!important;
 }
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
@@ -2355,6 +2353,12 @@ codx-view-list-detail .codx-detail-main .task-name + .text-gray-700{
 codx-toolbar{
   .btn.btn-outline-default {
     border-color:var(--gray-150);
+  }
+}
+.addpost-scroll{
+  .e-richtexteditor .e-rte-toolbar.e-rte-tb-float,
+  .e-richtexteditor .e-rte-toolbar.e-toolbar.e-extended-toolbar.e-rte-tb-float {
+    width: 646px!important;
   }
 }
 

@@ -1,8 +1,8 @@
+import { ActivatedRoute } from '@angular/router';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
-import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -10,17 +10,26 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   templateUrl: './update-progress.component.html',
   styleUrls: ['./update-progress.component.scss']
 })
-export class UpdateProgressComponent implements OnInit {
+export class UpdateProgressComponent implements OnInit,OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupProgress') popupProgress: AttachmentComponent;
+
+  @Input() height = 55;
+  @Input() width = 55;
   @Input() formModel: FormModel;
-  @Input() dataSource: any;
-  @Input() typeProgress = 1;
+
+  @Input() typeProgress = 1; // nếu % ko lên dùng type 2
+  @Input() dataSource: any; // data chứa tiến độ
+  @Input() progress = 0; // tiến độ
   @Input() type: string;
+
+  @Input() isSave = true; //true:lưu lên db không
+  @Input() isUpdate = true; // true: hiện form cho update
 
   @Input() dataAll: any; // gantchart
   @Input() step: any; // No gantchart
 
+  @Output() valueChange = new EventEmitter<any>();
 
   progressOld = 0;
   disabledProgressInput = false;
@@ -33,6 +42,10 @@ export class UpdateProgressComponent implements OnInit {
   id = ''
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
   popupUpdateProgress: DialogRef;
+
+  progressData = 0;
+  actualEnd: Date;
+  note = '';
 
   constructor(
     private callfc: CallFuncService,
@@ -50,9 +63,29 @@ export class UpdateProgressComponent implements OnInit {
   }
 
   async ngOnInit() {
-    if (this.step) {
+    if (this.isUpdate && this.step) {
       this.actualEndMax = this.step?.actualStart;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.isUpdate){
+      if(changes?.progress && changes?.progress?.previousValue != changes?.progress?.currentValue && this.dataSource){
+        this.progressData = Number(this.dataSource['progress'] || 0) ;
+        this.actualEnd = this.dataSource['actualEnd'] || null;
+        this.note == this.dataSource['note'] || '';
+        this.progressOld = this.progressData ;
+      }
+    }
+  }
+
+  openPopup() {
+    if(this.isUpdate){
+      const checkOpen = this.checkConditionOpenPopup();
+    if (!checkOpen) {
+      this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
+    }
+    }  
   }
 
   checkConditionOpenPopup() {
@@ -77,13 +110,6 @@ export class UpdateProgressComponent implements OnInit {
     return check;
   }
 
-  openPopup() {
-    const checkOpen = this.checkConditionOpenPopup();
-    if (!checkOpen) {
-      this.popupUpdateProgress = this.callfc.openForm(this.popupProgress, '', 550, 400);
-    }
-  }
-
   getgridViewSetup(data) {
     this.cache
       .gridViewSetup(data?.formName, data?.gridViewName)
@@ -98,22 +124,22 @@ export class UpdateProgressComponent implements OnInit {
   // check checkbox 100%
   checkRadioProgress(event, data) {
     if (event?.data) {
-      data[event?.field] = 100;
-      data['actualEnd'] = new Date();
+      this.progressData = 100;
+      this.actualEnd = new Date();
     } else {
-      data[event?.field] = this.progressOld;
-      data['actualEnd'] = null;
+      this.progressData = this.progressOld;
+      this.actualEnd = null;
     }
     this.disabledProgressInput = event?.data;
   }
 
   changeProgress(e, data) {
-    data['progress'] = e?.value ? e?.value : 0;
-    if (data['progress'] < 100) {
-      data['actualEnd'] = null;
+    this.progressData= e?.value ? e?.value : 0;
+    if (this.progressData < 100) {
+      this.actualEnd = null;
     }
-    if (data['progress'] == 100 && !data['actualEnd']) {
-      data['actualEnd'] = new Date();
+    if (this.progressData == 100 && ! this.actualEnd) {
+      this.actualEnd = new Date();
     }
   }
 
@@ -192,15 +218,26 @@ export class UpdateProgressComponent implements OnInit {
     let dataSave = new Progress();
     dataSave.stepID = this.step['recID'];
     dataSave.recID = this.dataSource['recID'];
-    dataSave.progress = Number(this.dataSource['progress']);
-    dataSave.note = this.dataSource['note'];
-    dataSave.actualEnd = this.dataSource['actualEnd'];
+    dataSave.progress = this.progressData 
+    dataSave.note = this.note;
+    dataSave.actualEnd = this.actualEnd;
     dataSave.type = this.type;
     dataSave.isUpdate = isUpdate;
-    
-    this.api.exec<any>('DP','InstanceStepsBusiness','UpdateProgressAsync',dataSave).subscribe(res => {
-
-    });
+    if(this.isSave){
+      this.api.exec<any>('DP','InstanceStepsBusiness','UpdateProgressAsync',dataSave).subscribe(res => {
+        this.valueChange.emit(res)
+        this.dataSource['progress'] = this.progressData ;
+        this.dataSource['note'] = this.note ;
+        this.dataSource['actualEnd'] = this.actualEnd;
+        this.progress = this.progressData;
+        this.popupUpdateProgress.close();
+        this.notiService.notifyCode('SYS006');
+      });
+    }else{
+      this.progress = this.progressData;
+      this.valueChange.emit(dataSave);
+      this.popupUpdateProgress.close();
+    }
   }
 
   async beforeUpdate(funcID): Promise<boolean> {
