@@ -471,7 +471,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
-      this.dialog.dataService.keyField != 'CategoryID' &&
+      this.dataType != 'auto' &&
+      this.dialog.dataService?.keyField != 'CategoryID' &&
       (this.data.categoryID == '' || this.data.categoryID == null)
     ) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
