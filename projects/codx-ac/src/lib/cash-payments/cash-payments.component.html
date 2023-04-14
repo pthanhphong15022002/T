@@ -1,5 +1,5 @@
 <codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo">
+  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" (selectedChange)="changeItemDetail($event)">
 </codx-views>
 <ng-template #templateMore let-data>
   <div class="has-action-menu" style="height: 30px">
@@ -11,7 +11,7 @@
   <codx-temp-full [descTmp]="descTmp" [desc2Tmp]="desc2Tmp" [titleTmp]="titleTmp"
     cardCss="card-template border-bottom py-3 px-4 list-task" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
     [dataItem]="data" [footer]="footerList" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeDataMF($event, data)" (click)="clickChange(data)" (clickMF)="clickMF($event, data)">
+    (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetail>
@@ -36,10 +36,11 @@
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
-  <span *ngIf="data?.objectName" class="text-gray-700 line-clamp line-clamp-1">{{data?.objectName}}</span>
+  <div class="mt-1">
+  <span *ngIf="data?.objectName" class="text-gray-800 line-clamp line-clamp-2">{{data?.objectName}}</span></div>
 </ng-template>
 <ng-template #desc2Tmp let-data>
-  <span [ngbTooltip]="data?.memo" class="text-gray-700 line-clamp line-clamp-1">{{ data?.memo }}</span>
+  <span [ngbTooltip]="data?.memo" class="text-gray-600 line-clamp line-clamp-2 fs-7">{{ data?.memo }}</span>
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
@@ -105,10 +106,11 @@
               | async
           "></span>
       </div>
-      <div class="d-flex align-items-center me-5 mb-1">
+      <div class="d-flex align-items-top me-5 mb-1">
         <span class="icon-i-person-circle icon-14 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="Payee" [formModel]="view.formModel">
-        </codx-label>
+        <div class="d-flex flex-column">
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="Payee" [formModel]="view.formModel">
+        </codx-label></div>
         <!-- <span #payee [innerHTML]="
             itemSelected?.payee
               | formatvalue : view.formModel : 'payee' : payee
@@ -120,16 +122,18 @@
     <div class="d-flex flex-wrap">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-journal-album icon-14 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
+        
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="CashBookID" [formModel]="view.formModel">
         </codx-label>
         <span #cashBookID class="text-gray-700" [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       </div>
     </div>
     <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center me-5 mb-1">
+      <div class="d-flex align-items-top me-5 mb-1">
         <span class="icon-brush icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="Memo" [formModel]="view.formModel">
-        </codx-label>
+        <div class="d-flex flex-column">
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
+        </codx-label></div>
         <span #memo class="text-gray-700" [innerHTML]="
             itemSelected?.memo
               | formatvalue : view.formModel : 'memo' : memo
@@ -193,7 +197,7 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="cashpaymentline">
     <div class="table-responsive mt-2" style="height: 450px; border-radius: 5px">
-      <table id="myTable" class="table table-hover">
+      <table id="myTable" class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
             <th>
@@ -204,7 +208,7 @@
                 </codx-label>
               </div>
             </th>
-            <th class="w-200px">
+            <th class="w-20">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="bi bi-cash-coin icon-16 me-2"></i>
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Dr"
@@ -212,7 +216,7 @@
                 </codx-label>
               </div>
             </th>
-            <th class="w-200px">
+            <th class="w-30">
               <div class="d-flex">
                 <i style="color: var(--primary-active)" class="bi bi-graph-up icon-16 me-2"></i>
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">Thông tin phân tích</span>
