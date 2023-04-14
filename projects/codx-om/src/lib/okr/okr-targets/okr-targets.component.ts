@@ -49,7 +49,8 @@ const _notSubKR = false;
 export class OkrTargetsComponent implements OnInit {
   @ViewChild('omTab') omTab: any;
   @ViewChild('treeView') treeView: any;
-  @ViewChild('popupAddTask') popupAddTask: any;
+  @ViewChild('showTask') showTask: any;
+  @ViewChild('showCommnent') showCommnent: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -60,11 +61,13 @@ export class OkrTargetsComponent implements OnInit {
   @Input() okrVll:any;  
   @Input() okrGrv:any;  
   @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
-  @Input() isCollapsed = true;
+  @Input() isCollapsed = false;
+  @Input() listUM=[] ;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =new EventEmitter();
   dtStatus = [];
   krTitle = '';
   obTitle = '';
+  selectOKR:any;
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -163,6 +166,7 @@ export class OkrTargetsComponent implements OnInit {
   skrFuncID: any;
   krFuncID: any;
   obFuncID: any;
+  vllRangeDate: any;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -224,6 +228,10 @@ export class OkrTargetsComponent implements OnInit {
       });
     }
 
+    this.cache.valueList('OM021').subscribe((item) => {
+      if (item?.datas) this.vllRangeDate = item?.datas;
+      console.log(this.vllRangeDate);
+    });
     
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
@@ -438,9 +446,12 @@ export class OkrTargetsComponent implements OnInit {
           func.disabled = false;
         }
       });
-      if(kr.items.length<1 || kr.items==null){
+      if(kr.items!=null && kr.items.length>0 ){
         evt.forEach((func) => {
           if (func.functionID == OMCONST.MFUNCID.KREditSKRWeight ) {
+            func.disabled = false;
+          }
+          else{
             func.disabled = true;
           }
         });
@@ -450,10 +461,13 @@ export class OkrTargetsComponent implements OnInit {
   }
   changeDataOBMF(evt: any, ob: any){
     if(evt!=null && ob!=null){
-      if(ob.items.length<1 || ob.items==null){
+      if(ob.items!=null && ob.items.length>0 ){
         evt.forEach((func) => {
           if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight ) {
-            func.disabled = true;
+            func.disabled = false;
+          }
+          else{
+            func.disabled=true
           }
         });
   
@@ -512,6 +526,53 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
+  //Lấy UMName
+  getUMName(umid:string){
+    let tmpUM = this.listUM.filter((obj) => {
+      return obj.umid == umid;
+    });
+    if(tmpUM!=null && tmpUM.length>0){
+      return tmpUM[0]?.umName;
+    }
+    else{
+      return umid;
+    }
+  }
+  getRangeDate(rangeDate:string){ 
+    if(rangeDate!=null){
+      let listRange= rangeDate.split(';');  
+      let range='';    
+
+      Array.from(listRange).forEach(item=>{
+        if(item!=null && item!=''){         
+          if(item=='Q1-Q4' || item=='1-12'){
+            range+= this.getPeriodName(item);
+          }
+          else if(item.includes('-')){
+            let tmpRange= item.split('-');
+            if(tmpRange!=null && tmpRange.length==2){
+              range+= this.getPeriodName(tmpRange[0])+' - '+this.getPeriodName(tmpRange[1])+'; ';
+            }
+          }
+          else{
+            range+= this.getPeriodName(item)+'; ';
+          }
+        }        
+      });
+      return range;
+    }
+    return rangeDate;
+  }
+
+  getPeriodName(period:string){
+    let periodName = this.vllRangeDate.filter((obj) => {
+      return obj.value == period;
+    });
+    if(periodName!=null && periodName.length>0){
+      return periodName[0]?.text;
+    }
+    else return period;
+  }
   //Lọc OKR
   filterOKR(okrType:string, listOKR:any[])
   {
@@ -940,7 +1001,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obj, popupTitle, this.okrFM,this.okrVll],
+      [obj, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
       '',
       dModel
     );
@@ -957,7 +1018,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, popupTitle, this.okrFM,this.okrVll],
+      [kr, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
       '',
       dModel
     );
@@ -1001,8 +1062,24 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
-  clickTreeNode(evt:any){
+  clickTreeNode(evt:any, ){
     evt.stopPropagation();
     evt.preventDefault();
+  }
+  showTasks(evt:any,data:any){    
+    evt.stopPropagation();
+    evt.preventDefault();
+    if(evt !=null && data!=null){
+      this.selectOKR=data;
+      let dialogShowTask = this.callfunc.openForm(this.showTask, '', 1280, 720, null);
+    }
+  }
+  showComments(evt:any,data:any){    
+    evt.stopPropagation();
+    evt.preventDefault();
+    if(evt !=null && data!=null){
+      this.selectOKR=data;
+      let dialogShowComment = this.callfunc.openForm(this.showCommnent, '', 500, 720, null);
+    }
   }
 }

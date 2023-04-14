@@ -234,7 +234,7 @@
                     <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAlign && listAlign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM"
+                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM" [okrGrv]="okrGrv"
                       [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->
@@ -243,7 +243,7 @@
                     <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAssign && listAssign.length>0" class="px-5">
-                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"
+                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrGrv]="okrGrv"
                       [okrVll]="okrVll"></view-okr>
                   </div>
                   <!--Content-->

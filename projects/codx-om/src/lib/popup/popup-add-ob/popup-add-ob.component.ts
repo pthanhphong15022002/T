@@ -14,18 +14,15 @@ import {
   AuthService,
   AuthStore,
   CodxFormComponent,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
-  ImageViewerComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
   Util,
 } from 'codx-core';
 import { CodxOmService } from '../../codx-om.service';
-import { Targets } from '../../model/okr.model';
 
 //import { CodxEpService } from '../../../codx-ep.service';
 
@@ -71,33 +68,6 @@ export class PopupAddOBComponent extends UIComponent {
   oldOB:any;
   okrPlan: any;
   listShares=[];
-  //Chờ c thương thiết lập vll
-  //Giả lập vll
-  //OM003
-  // vll={
-  //   datas : [
-  //     {
-  //       value: "9",
-  //       text: "Tất cả",
-  //       icon: "All.svg"
-  //     },
-  //     {
-  //       value: "4;P",
-  //       text: "Phòng & Quản lý của tôi",
-  //       icon: "MyDeptManagement.svg"
-  //     },
-  //     {
-  //       value: "4",
-  //       text: "Phòng của tôi",
-  //       icon: "MyDept.svg"
-  //     },
-  //     {
-  //       value: "P",
-  //       text: "Quản lý của tôi",
-  //       icon: "MyManagement.svg"
-  //     }
-  //   ]
-  // }
   okrRecID: any;
   shareModel: any;
   curUser: any;

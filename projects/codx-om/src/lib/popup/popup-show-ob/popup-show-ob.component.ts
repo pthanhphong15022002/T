@@ -131,6 +131,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   popupTitle='';
   okrVll: any;
   isHiddenChart=true;
+  okrGrv: any;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -159,6 +160,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     this.popupTitle = dialogData?.data[1];
     this.okrFM = dialogData?.data[2];
     this.okrVll = dialogData?.data[3];
+    this.okrGrv = dialogData?.data[4];
     this.formModel=dialogRef.formModel;
   
   }

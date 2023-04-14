@@ -186,6 +186,8 @@ export class InstancesComponent
   dialogTemplate: DialogRef;
   isFormExport = true;
 
+  listOwnerInMove = [];
+  listStageManagerInMove = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -766,7 +768,7 @@ export class InstancesComponent
             case 'SYS03':
             case 'DP09':
               let isUpdate = data.write;
-              if (!isUpdate || data.status != '2' || data.closed)
+              if (!isUpdate || data.status != '2' || data.closed || !this.checkRoleInMove(data))
                 res.disabled = true;
               break;
             //Copy
@@ -783,11 +785,13 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances) res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed) res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances){
+                res.disabled = true;
+              }
               break;
             case 'DP02':
               let isUpdateFail = data.write;
@@ -1536,7 +1540,7 @@ export class InstancesComponent
   //end export
 
   //load điều kiện
-  loadData(ps) {
+  async loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
@@ -1573,9 +1577,10 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(this.lstParticipants);
       }
     }
+    this.getRoleInMove(this.process);
   }
   //filter- tam
   valueChangeFilter(e) {
@@ -1702,8 +1707,8 @@ export class InstancesComponent
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        'ODC2303-0002' //thêm để test
-      )
+        'ESC-00000023' //thêm để test ODC2303-0002 đã xóa
+      ) 
       .subscribe((item: any) => {
         if (item) {
           this.approvalTrans(item?.processID, datas);
@@ -1921,5 +1926,37 @@ export class InstancesComponent
       return acc;
     }, []);
     return arr3;
+  }
+
+
+  getRoleInMove(proccess){
+    debugger;
+    var listSteps = proccess.steps
+    for(let item of proccess.permissions) {
+      if(item.roleType === 'O') {
+        this.listOwnerInMove.push(item.objectID);
+      }
+    }
+    debugger;
+     for(let item of listSteps) {
+        var stageManager = item.roles.find(x=> x.roleType === 'S');
+        if(stageManager){
+        var ojb = {
+          stepID: item.recID,
+          objectID: stageManager.objectID
+        }
+          this.listStageManagerInMove.push(ojb);
+        }
+     }
+  }
+  checkRoleInMove(data){
+    if( this.user.userID === data.owner || this.listOwnerInMove.includes(this.user.userID) || this.checkRoleInStage(this.user.userID,data) )
+    {
+      return true;
+    }
+    return false;
+  }
+  checkRoleInStage(userID, data){
+    return this.listStageManagerInMove.some(x=> x.stepID === data.stepID && x.objectID === userID);
   }
 }
