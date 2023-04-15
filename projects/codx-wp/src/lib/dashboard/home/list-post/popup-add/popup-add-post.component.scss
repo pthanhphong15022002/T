@@ -82,6 +82,11 @@ codx-vll > .symbol.symbol-12px > img {
     bottom: 50px;
     overflow: hidden;
     overflow-y: auto;
+    border: 1px var(--gray-150) solid;
+    .wp-contents {
+        margin:0;
+    }
+
 }
 
 .body.body-addpost .body-function {
@@ -94,3 +99,4 @@ codx-vll > .symbol.symbol-12px > img {
     border: 1px solid #bfb5b5;
     border-radius: 4px;
 }
+

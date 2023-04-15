@@ -37,7 +37,7 @@
         </codx-input>
       </div>
 
-      <div class="form-group col-5"  *ngIf="grView?.validateControl?.allowPopup">
+      <div class="form-group col-8"  *ngIf="grView?.validateControl?.allowPopup">
         <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
         </codx-label>
         <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
@@ -46,13 +46,13 @@
     </div>
 
     <div class="row">
-      <div class="col-7 form-group"  *ngIf="grView?.companyID?.allowPopup">
+      <div class="col-6 form-group"  *ngIf="grView?.companyID?.allowPopup">
         <codx-label fiedName="CompanyID" [formModel]="form.formModel">
         </codx-label>
         <codx-input ControlName="companyID" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
-      <div class="form-group col-5"  *ngIf="grView?.location?.allowPopup">
+      <div class="form-group col-6"  *ngIf="grView?.location?.allowPopup">
         <codx-label fiedName="Location" [formModel]="form.formModel">
         </codx-label>
         <codx-input ControlName="location" [formModel]="form.formModel" [Group]="form.formGroup">
@@ -121,27 +121,27 @@
   </ng-template>
 
   <ng-template #popupDevice let-dialog>
-    <div class="modal-header">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
+    <div class="modal-header py-5 px-6">
+      <div class="d-flex justify-content-between align-items-center flex-grow-1">
+        <div class="d-flex flex-column">
+          <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
             <codx-label name="lblEquipment" default="Thiết bị" [formModel]="form.formModel"></codx-label>
-          </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-            (click)="dialog.close()">
-            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
-          </button>
+          </div>
+          <div class="text-gray-500">
+            <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+              [formModel]="form.formModel"></codx-label>
+          </div>
         </div>
-        <div class="text-dark-50">
-          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
-            [formModel]="form.formModel"></codx-label>
-        </div>
+        <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close"
+          (click)="dialog.close()">
+          <span class="icon-close icon-18"></span>
+        </button>
       </div>
     </div>
-    <div class="modal-body h-100 scroll-y">
-      <div class="mb-1" *ngFor="let item of tmplstDevice">
-        <div class="d-flex flex-stack rounded-2 bg-hover p-2">
-          <div class="d-flex">
+    <div class="modal-body h-100 scroll-y p-5 pt-0">
+      <div class="border-top border-gray-100" *ngFor="let item of tmplstDevice">
+        <div class="d-flex flex-stack rounded-2 bg-hover py-1">
+          <div class="d-flex ms-2">
             <span class="text-dark me-2" [className]="item.icon"
               [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
             </span>
@@ -149,8 +149,8 @@
               <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
             </div>
           </div>
-          <div class="d-flex justify-content-end">
-            <div class="form-check form-check-solid form-switch mt-2 mb-0">
+          <div class="d-flex justify-content-end align-items-center ms-5">
+            <div class="form-check form-check-solid form-switch mt-3 w-35px">
               <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
                 [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
               <label class="form-check-label" for="googleswitch"></label>

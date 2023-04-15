@@ -74,12 +74,22 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column">
-                    <div class="d-flex flex-row ">
+                    <div class="d-flex flex-row" #reasonField>
                         <!-- <span class="align-self-center fw-bold"
                             [innerHTML]=" data?.reason | formatvalue : view.formModel : 'reason' | async">
                         </span> -->
-                        <span class="prevent-overflow-text">{{data?.reason}}</span>
+                        <span [ngbTooltip]="reasonTooltip"
+                            class="prevent-overflow-text"
+                            #titleContent>{{data?.reason}}</span>
                     </div>
+                    <ng-template #reasonTooltip>
+                        <div class="d-flex flex-column">
+                            <span>{{ grvSetup?.Reason?.headerText }}</span>
+                            <span [style.display]=" (titleContent.offsetWidth < reasonField.scrollWidth)? 'none':''">
+                                {{ data?.reason}}
+                            </span>
+                        </div>
+                    </ng-template>
                 </div>
             </div>
         </div>
@@ -146,3 +156,73 @@
     </div>
 </ng-template>
 <!-- end list view -->
+
+<!-- list & detail view -->
+<ng-template #templateListDetail let-data>
+    <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
+        cardCss="card codx_cardcenter p-3" [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'"
+        [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data"
+        [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
+        <!-- info view -->
+        <ng-template #titleTmp let-data>
+            <div class="w-100">
+                <!-- emp info -->
+                <div class="justify-content-between text-dark fw-bold">
+                    <span>{{ data?.emp?.employeeName }}</span>
+                    <span>
+                        <i class="icon-qr_code_scanner icon-14 me-1"></i>
+                        <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+                    </span>
+                </div>
+                <div class="justify-content-between text-gray-700">
+                    <span
+                        [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
+                </div>
+                <!-- end emp info -->
+                <!-- salaries -->
+                <!-- <div class="justify-content-between fs-5 fw-bold">
+          <div class="d-flex flex-row">
+            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" class="align-self-center fw-bold">
+              <span class="icon-attach_money align-self-center icon-15 me-1"></span>
+              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText"
+                [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+              </span>
+              <span> - </span>
+              <span class="icon-monetization_on icon-15 me-1 align-self-center fw-bold"></span>
+              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.siSalary?.headerText"
+                [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
+              </span>
+            </div>
+          </div>
+        </div> -->
+                <!-- end salaries -->
+                <!-- effected day -->
+                <!-- <div class="justify-content-between fs-5 fw-bold" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
+          <span class="icon-calendar_today fw-bold"></span>
+          <span>{{ data.effectedDate | fmDT }}</span>
+        </div> -->
+                <!-- end day -->
+                <!-- status & owner -->
+                <div class="d-flex justify-content-between text-dark">
+                    <span class="mt-2">
+                        <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true"
+                            [showBgColor]="true">
+                        </codx-vll>
+                    </span>
+                    <span class="d-flex flex-row justify-content-end">
+                        <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'"
+                            [width]="30" [numberImages]="3" [mode]="false">
+                        </codx-imgs>
+                    </span>
+                </div>
+                <!-- end status & owner -->
+            </div>
+        </ng-template>
+        <!-- end -->
+    </codx-temp-full>
+</ng-template>
+
+<ng-template #templateItemDetailRight let-data>
+
+</ng-template>
+<!-- end list & detail -->

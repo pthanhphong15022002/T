@@ -665,6 +665,68 @@
           </div>
         </ng-container>
       </div>
+      <hr />
+      <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-5 text-dark me-3"
+            name="lblApprover"
+            [formModel]="dialog.formModel"
+            default="Người xét duyệt"
+          >
+          </codx-label>
+          <!-- <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'followers')"
+          >
+            <i class="icon-person_add_alt_1 icon-16"></i>
+          </button> -->
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="clickRoles('A')"
+          >
+            <i class="icon-settings icon-16"></i>
+          </button>
+        </div>
+        <div>
+          <codx-label
+            class="fw-normal text-gray-400"
+            name="lblApproverControl"
+            [formModel]="dialog.formModel"
+            default="Có quyền xét duyệt các tài liệu của nhiệm vụ trong quy trình"
+          >
+          </codx-label>
+        </div>
+      </div>
+
+      <div
+        class="d-flex flex-wrap"
+        *ngIf="process.permissions != null && process.permissions?.length > 0"
+      >
+        <ng-container *ngFor="let perm of process.permissions; index as i">
+          <div
+            *ngIf="perm.roleType == 'A'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+          >
+            <div class="me-2">
+              <codx-img
+                [width]="20"
+                [objectId]="perm.objectName"
+                objectType="AD_Users"
+              >
+              </codx-img>
+            </div>
+            <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+            <!-- <ng-container *ngIf="checkAssignRemove(i)">
+              <div class="action-menu-od" (click)="removeUser(i)">
+                <i class="icon-close text-danger icon-16"></i>
+              </div>
+            </ng-container> -->
+          </div>
+        </ng-container>
+      </div>
     </div>
   </div>
   <!--Tùy chỉnh quy trình-->
@@ -889,27 +951,79 @@
               <div class="d-flex align-items-center">
                 <div class="me-5">
                   <codx-input
-                    name="success-radio"
+                    name="copy-radio"
                     type="radio"
                     style="width: 100%"
                     field="yes"
                     [label]="titleRadioYes"
                     [checked]="process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
-                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
                   >
                   </codx-input>
                 </div>
                 <div class="me-5">
                   <codx-input
-                    name="success-radio"
+                    name="copy-radio"
                     type="radio"
                     style="width: 100%"
                     field="no"
                     [label]="titleRadioNo"
                     [checked]="!process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
-                    (valueChange)="valueChangeRadio($event, 'AllowCopyView')"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <div>
+              <codx-label fiedName="ApproveRule" [formModel]="dialog.formModel">
+              </codx-label>
+            </div>
+            <div>
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblFollowerControl"
+                [formModel]="dialog.formModel"
+                default="Có quyền xem các nhiệm vụ trong quy trình"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-6 row">
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="approve-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.approveRule ?? false"
+                    [crrValue]="process?.approveRule"
+                    (valueChange)="valueRadioInfo($event, 'ApproveRuleView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="approve-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.approveRule ?? false"
+                    [crrValue]="process?.approveRule"
+                    (valueChange)="valueRadioInfo($event, 'ApproveRuleView')"
                     readonly
                   >
                   </codx-input>

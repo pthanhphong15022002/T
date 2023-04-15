@@ -204,7 +204,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteGiftGroupAsync';
-    op.data = data?.giftID;
+    op.data = data;
     return true;
   }
 

@@ -172,9 +172,13 @@
        class="disabled-inline"
      >
          <codx-update-progress 
+            [progress]="data?.value?.progress"
             [dataSource]="data?.value" 
             [step]="currentStep"
             [type]="data?.type"
+            [isSave]="isSaveProgress"
+            [typeProgress]="typeProgress"
+            (valueChange)="changeProgress($event)"
          ></codx-update-progress>
      </div>
      <span>

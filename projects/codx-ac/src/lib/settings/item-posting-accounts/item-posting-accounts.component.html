@@ -8,13 +8,13 @@
 >
 </codx-views>
 <ng-template #templateLeft>
-  <div class="aside-secondary d-flex flex-row-fluid bg-white">
+  <div class="d-flex flex-row-fluid bg-white rounded-2 w-100 h-100 setting-menuleft">
     <!--begin::Workspace-->
-    <div class="aside-workspace px-4" id="kt_aside_wordspace">
+    <div class="aside-workspace px-4 w-100 h-100" id="kt_aside_wordspace">
       <div class="d-flex h-100 flex-column">
         <!--begin::Wrapper-->
         <div
-          class="flex-column-fluid hover-scroll-y"
+          class="flex-column-fluid scroll-y h-100"
           data-kt-scroll="true"
           data-kt-scroll-activate="true"
           data-kt-scroll-height="auto"
@@ -201,13 +201,13 @@
   </div>
 </ng-template>
 <ng-template #templateRight>
-  <div class="px-4">
+  <div class="px-4 h-100">
     <codx-gridview
       #grid
       funcID="ACS248"
       [dataService]="view.dataService"
       entityName="AC_IVPostingAccounts"
-      height="300px"
+      class="h-100"
       idField="recID"
       [templateMore]="morefunction"
     ></codx-gridview>
