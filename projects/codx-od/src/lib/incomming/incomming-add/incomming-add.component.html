@@ -90,10 +90,10 @@
 
   <div class="row form-group">
     <div class="col-6">
-      <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label> <span *ngIf="!keyField" class="text-danger">*</span>
       <!-- Bùa r nhờ Quang fix sau -->
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="true">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="keyField">
       </codx-input>
     </div>
     <div class="col-6">
@@ -130,13 +130,13 @@
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title" class="h-105px">
     </codx-input>
   </div>
-  <div class="form-group row">
-    <div class="col" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'">
+  <div class="form-group row" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1'">
+    <div class="col" *ngIf="gridViewSetup['Urgency'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
-    <div class="col" *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'">
+    <div class="col" *ngIf="gridViewSetup['Security'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Security" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>

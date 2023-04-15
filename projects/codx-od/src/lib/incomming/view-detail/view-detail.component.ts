@@ -1275,6 +1275,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     else this.notifySvr.notify('Bạn không có quyền thực hiện chức năng này.');
     return false;
   }
+  
   //Thu hồi quyền
   recall(id: any) {
     this.odService.recallRelation(id).subscribe((item) => {
@@ -1433,7 +1434,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.view.dataService.data[index] = data;
   }
   changeDataMF(e: any, data: any) {
-    debugger
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
@@ -1637,7 +1637,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     dataSave.agencyID = dataSave.departmentID;
     dataSave.agencyName = '';
     dataSave.departmentID = departmentID;
-    this.odService.saveDispatch(this.dataRq, dataSave).subscribe();
+    this.odService.saveDispatch(this.dataRq, dataSave,true).subscribe();
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {
