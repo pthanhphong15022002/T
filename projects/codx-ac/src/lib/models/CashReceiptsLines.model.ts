@@ -42,7 +42,7 @@ export class CashReceiptsLines {
   taxAmt: any;
   taxAmt2: any;
   transID: any;
-  transactionText: any;
+  reasonID: any;
   unbounds: any;
   updateColumns: any;
   vatid: any;

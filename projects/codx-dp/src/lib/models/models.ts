@@ -41,7 +41,7 @@ export class DP_Processes {
   modifiedBy: string;
   instanceNoSetting: string;
   addFieldsControl: string;
-  allowCopy: boolean;
+  allowCopy: boolean = true;
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
@@ -366,7 +366,7 @@ export class DP_Instances_Steps {
   iconColor: String;
   progressTaskGroupControl: boolean = false;
   progressStepControl: boolean = false;
-  note : string; 
+  note : string;
 }
 
 export class DP_Instances_Steps_Roles {
