@@ -18,7 +18,7 @@ import { UpdateProgressComponent } from 'projects/codx-dp/src/lib/componnent-tas
 export class ViewJobComponent implements OnInit {
   title = '';
   dialog!: DialogRef;
-  dataInput = {}; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
+  dataInput: any; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
   type = '';
   owner = [];
   person = [];
@@ -33,6 +33,7 @@ export class ViewJobComponent implements OnInit {
   viewModelDetail = 'view';
   dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
+  step: any;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -45,6 +46,7 @@ export class ViewJobComponent implements OnInit {
     this.type = dt?.data?.value?.type;
     this.dataInput = dt?.data?.value;
     this.listDataInput = dt?.data?.listValue;
+    this.step = dt?.data?.step;
     this.getModeFunction();
   }
 

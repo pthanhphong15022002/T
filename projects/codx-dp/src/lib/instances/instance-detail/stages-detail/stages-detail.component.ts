@@ -589,6 +589,7 @@ export class StagesDetailComponent implements OnInit {
       this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
         value: value,
         listValue: listTaskConvert,
+        step: this.dataStep,
       });
     }
   }
