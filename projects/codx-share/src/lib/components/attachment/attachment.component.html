@@ -42,11 +42,13 @@
                                                         class="fw-bold"></codx-label>
                                                 </span>
                                             </div>
+                                            <!-- Select Folder directoryUpload='true' -->
                                             <div class="dropzone-panel mt-6">
                                                 <ejs-uploader #templateupload id='templatefileupload'
                                                     [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                                     [asyncSettings]='path' [dropArea]='dropElement'
-                                                    (selected)='onFileSelect($event)'>
+                                                    (selected)='onFileSelect($event)'
+                                                    >
                                                 </ejs-uploader>
                                             </div>
                                         </div>

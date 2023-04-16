@@ -396,6 +396,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       }
       if(dtS[0].children && dtS[0].children.length>0)
         dtS[0].children[0]['active'] = true;
+      
       return dtS;
     }
   }
