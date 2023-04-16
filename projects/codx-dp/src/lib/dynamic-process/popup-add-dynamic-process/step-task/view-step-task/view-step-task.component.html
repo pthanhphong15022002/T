@@ -74,12 +74,20 @@
         </codx-label>
       </div>
 
-      <codx-update-progress
+      <!-- <codx-update-progress
         [dataSource]="dataInput"
         [type]="2"
         class="cursor-pointer"
       >
-      </codx-update-progress>
+      </codx-update-progress> -->
+      <codx-update-progress 
+        [progress]="dataInput['progress']"
+        [dataSource]="dataInput" 
+        [type]="dataInput?.type"
+        [typeProgress]="2"
+        [step]="step"
+        ></codx-update-progress>
+
       <div class="d-flex align-items-center">
         <span class="icon-more_vert icon-16"></span>
       </div>
