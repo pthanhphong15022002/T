@@ -168,6 +168,7 @@ export class InstancesComponent
   reasonStepsObject: any;
   addFieldsControl = '1';
   isLockButton = false;
+  esCategory: any;
   //test temp
   dataTemplet = [
     {
@@ -1701,49 +1702,69 @@ export class InstancesComponent
     else this.isLockButton = true;
   }
   showFormSubmit() {
-    this.isLockButton = true;
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
-      '',
-      600,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
-  }
-
-  //Duyệt
-  documentApproval(datas: any) {
-    this.dialogTemplate.close();
-    // if (datas.bsCategory) {
-    //Có thiết lập bước duyệt
-    // if (datas.bsCategory.approval) {
     this.api
       .execSv(
         'ES',
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.process.processNo 
+        this.process.processNo
       )
       .subscribe((item: any) => {
         if (item) {
+          this.esCategory = item;
           this.codxDpService
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
-              if (check) this.approvalTrans(item?.processID, datas);
-              else {
-                this.notificationsService.notifyCode('DP036');
-              }
+              if (check) {
+                this.isLockButton = true;
+                let option = new DialogModel();
+                option.zIndex = 1001;
+                this.dialogTemplate = this.callfc.openForm(
+                  this.popupTemplate,
+                  '',
+                  600,
+                  500,
+                  '',
+                  null,
+                  '',
+                  option
+                );
+              } else this.notificationsService.notifyCode('DP036');
             });
-
-        } else {
         }
       });
+  }
+
+  //Duyệt
+  documentApproval(datas: any) {
+    this.approvalTrans(this.esCategory?.processID, datas);
+    // this.dialogTemplate.close();
+    // // if (datas.bsCategory) {
+    // //Có thiết lập bước duyệt
+    // // if (datas.bsCategory.approval) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'CategoriesBusiness',
+    //     'GetByCategoryIDAsync',
+    //     this.process.processNo
+    //   )
+    //   .subscribe((item: any) => {
+    //     if (item) {
+         
+    //       this.codxDpService
+    //         .checkApprovalStep(item.recID)
+    //         .subscribe((check) => {
+    //           if (check) this.approvalTrans(item?.processID, datas);
+    //           else {
+    //             this.notificationsService.notifyCode('DP036');
+    //           }
+    //         });
+    //     } else {
+    //     }
+     // });
     // }
     //Chưa thiết lập bước duyệt
     // else {
