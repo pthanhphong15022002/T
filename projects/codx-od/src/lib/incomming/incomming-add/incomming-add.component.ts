@@ -368,16 +368,16 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.attachment.objectId = this.dispatch.recID;
       this.addRelations();
       this.addPermission();
       this.odService
       .saveDispatch(this.dataRq, this.dispatch , this.keyField)
       .subscribe(async (item) => {
+        
         if (item.status == 0) {
           this.data = item.data;
           this.attachment.dataSelected = item.data;
-       
+          this.attachment.objectId =  item.data.recID;
           (await this.attachment.saveFilesObservable()).subscribe(
             (item2: any) => {
               //Chưa xử lý Upload nhìu file
