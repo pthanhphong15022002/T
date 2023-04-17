@@ -41,7 +41,7 @@
             </ng-container>
           </div>
         </div>
-        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="(!okrPlan?.assign || propertiesFolder)?'dm-div-disable':null">
+        <div class="add-user" [ngClass]="">
           <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
             (valueChange)="onSaveRole($event)">
           </codx-input>

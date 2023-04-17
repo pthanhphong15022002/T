@@ -37,6 +37,8 @@
             <span class="text-gray-500"></span>
           </ng-template>
           <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0" title="Tài liệu bảo mật"></span>
+          <span *ngIf="data?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+          <span *ngIf="data?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
         </div>
       </div>
     </ng-template>
@@ -64,8 +66,9 @@
                 <span class="icon-download icon-16"></span>
               </div>
             </div>
-            <span *ngIf="dmSV.checkView(data.read) == false"
-              class="icon-security text-primary icon-18  position-absolute end-0"></span>
+            <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0"></span>
+            <span *ngIf="data?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="data?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
           </div>
         </div>
       </div>

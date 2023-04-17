@@ -330,12 +330,21 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
 
   //Lấy Emp theo UserID
-  getListEmpByUserID(userID:any) {
+  getUser(userID:any) {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
+  getEmployee(userID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetListEmployeesByUserIDAsync',
+      'GetEmployeeInforAsync',
       [userID]
     );
   }
