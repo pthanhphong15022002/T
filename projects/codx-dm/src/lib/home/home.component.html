@@ -54,6 +54,8 @@
           </codx-temp-full>
           <ng-template #rightSecurity>
             <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+            <span *ngIf="file?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+            <span *ngIf="file?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
           </ng-template>
         </div>
         <div class="d-flex align-items-center text-primary font-size-md mt-1">
@@ -127,6 +129,8 @@
       </codx-temp-full>
       <ng-template #rightSecurity>
         <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+        <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+        <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
       </ng-template>
     </ng-container>
 
@@ -195,14 +199,29 @@
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
             <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">
-              <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
-                (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
-                [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3" [title]="
-                  item.folderName  ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="rightSecurity">
+              <codx-temp-full 
+                appDragDropFileFolder 
+                [dataDrapDrop]="item"
+                cardCss="w-250px" 
+                imgCss="w-20px me-3" 
+                titleCss="dms-title pe-6" 
+                [class]="classFile(item, 'float-start')"
+                [title]="item.folderName  ? item.folderName : item.fileName" 
+                [imageSrc]="dmSV.getImage(item)" 
+                [imageWidth]="20" 
+                [baseHeaderRightTmp]="rightSecurity"
+                [footer]="footerTmp"
+                [dataItem]="item"
+                (fileFolderDropped)="fileFolderDropped($event)" 
+              >
               </codx-temp-full>
+              <ng-template #footerTmp>
+                <div *ngIf="(funcID == 'DMT06' || funcID == 'DMT05' || funcID == 'DMT07') && item?.filePath" [title]="item?.filePath" class="div-dm-overflow"><span>{{item?.filePath}}</span></div>
+              </ng-template>
               <ng-template #rightSecurity>
-                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18" title="Tài liệu bảo mật"></span>
+                <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+                <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
               </ng-template>
             </td>
             <td class="w-100px">

@@ -1,4 +1,4 @@
-import { CodxCmService } from './../../codx-cm.service';
+import { CodxCmService } from '../../codx-cm.service';
 import {
   Component,
   Input,
@@ -17,14 +17,14 @@ import {
   AlertConfirmInputConfig,
   NotificationsService,
 } from 'codx-core';
-import { PopupQuickaddContactComponent } from '../popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
-  selector: 'codx-crmcustomer-detail',
-  templateUrl: './crmcustomer-detail.component.html',
-  styleUrls: ['./crmcustomer-detail.component.css'],
+  selector: 'codx-cmcustomer-detail',
+  templateUrl: './cmcustomer-detail.component.html',
+  styleUrls: ['./cmcustomer-detail.component.css'],
 })
-export class CrmcustomerDetailComponent implements OnInit {
+export class CmcustomerDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;

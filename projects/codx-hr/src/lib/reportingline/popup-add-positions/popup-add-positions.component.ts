@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -13,6 +14,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
+import { CodxHrService } from '../../codx-hr.service';
 
 
 @Component({
@@ -29,7 +31,9 @@ export class PopupAddPositionsComponent implements OnInit {
   data: any = null;
   isCorporation;
   formModel;
+  formGroup;
   blocked:boolean = false;
+  isAfterRender = false;
 
   @Output() Savechange = new EventEmitter();
 
@@ -37,7 +41,9 @@ export class PopupAddPositionsComponent implements OnInit {
     private auth: AuthService,
     private api: ApiHttpService,
     private cacheService: CacheService,
+    private cr: ChangeDetectorRef,
     private notifiSV:NotificationsService,
+    private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -47,11 +53,23 @@ export class PopupAddPositionsComponent implements OnInit {
     this.dialogRef = dialog;
     this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
+    debugger
     // this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.user = this.auth.userValue;
 
   }
   ngOnInit(): void {
+    this.hrService
+    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    .then((fg) => {
+      if(fg){
+        this.formGroup = fg;
+        this.formGroup.patchValue(this.data);
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    })
+    
     this.getFucnName(this.functionID);
     if(this.isAdd)
       this.blocked = this.dialogRef.dataService.keyField ? true : false;
@@ -105,8 +123,15 @@ export class PopupAddPositionsComponent implements OnInit {
       }
     }
   }
+
+  valChange(evt){
+    debugger
+    this.data.orgUnitID = evt.data.value[0]
+  }
+
   // click save
   OnSaveForm() {
+    debugger
     let _method = this.isAdd ? "SaveAsync" : "UpdateAsync";
     this.api.execSv(
       'HR', 
