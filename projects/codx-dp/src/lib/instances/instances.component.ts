@@ -1474,31 +1474,42 @@ export class InstancesComponent
 
   exportFileDynamic() {
     //data test
-    let datas = [
-      {
-        dai_dien: 'Trần Đoàn Tuyết Khanh',
-        ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-        dia_chi: '06 Lê Lợi, Huế',
-        ma_so_thue: '1111111111111',
-        hinh_thuc_thanh_toan: 'Chuyển khoản',
-        tai_khoan: 'VCB-012024554565',
-        datas: [
-          {
-            san_pham: 'Sản phẩm quần què',
-            dien_tich: '0',
-            so_luong: 1,
-            don_gia: 100000,
-          },
-          {
-            san_pham: 'Sản phẩm 1',
-            dien_tich: '0',
-            so_luong: 10,
-            don_gia: 5000,
-          },
-        ],
-      },
-    ];
-    this.dataSelected.datas = JSON.stringify(datas);
+    // let datas = [
+    //   {
+    //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     dia_chi: '06 Lê Lợi, Huế',
+    //     ma_so_thue: '1111111111111',
+    //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     tai_khoan: 'VCB-012024554565',
+    //     san_pham: 'Sản phẩm quần què',
+    //     dien_tich: '0',
+    //     so_luong: 1,
+    //     don_gia: 100000,
+
+    //     // datas: [
+    //     //   {
+    //     //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     //     dia_chi: '06 Lê Lợi, Huế',
+    //     //     ma_so_thue: '1111111111111',
+    //     //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     //     tai_khoan: 'VCB-012024554565',
+    //     //     san_pham: 'Sản phẩm quần què',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 1,
+    //     //     don_gia: 100000,
+    //     //   },
+    //     //   {
+    //     //     san_pham: 'Sản phẩm 1',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 10,
+    //     //     don_gia: 5000,
+    //     //   },
+    //     // ],
+    //   },
+    // ];
+    // this.dataSelected.datas = JSON.stringify(datas);
     if (!this.dataSelected.datas) return;
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
