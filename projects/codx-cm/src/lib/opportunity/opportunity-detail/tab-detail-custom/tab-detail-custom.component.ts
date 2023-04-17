@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Injector, Input, OnInit, inject } from '@angular/core';
 import { FormModel, SidebarModel, UIComponent } from 'codx-core';
-import { PopupAddCrmcustomerComponent } from '../../../crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
+import { PopupAddCmcustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
+
 
 @Component({
   selector: 'codx-tab-detail-custom',
@@ -46,7 +47,7 @@ implements OnInit, AfterViewInit {
       option.DataService = null;
       this.titleAction = ' Bao test'
       var dialog = this.callfc.openSide(
-        PopupAddCrmcustomerComponent,
+        PopupAddCmcustomerComponent,
         ['add', this.titleAction],
         option
       );
