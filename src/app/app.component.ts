@@ -4,10 +4,13 @@ import {
   OnDestroy,
   OnInit,
   HostListener,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
+  AuthService,
+  AuthStore,
   LayoutService,
   NotificationsFCMService,
   NotificationsService,
@@ -16,26 +19,28 @@ import {
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+declare var window: any;
+
 @Component({
   selector: 'body[root]',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private angularFireMessaging: AngularFireMessaging;
 
   constructor(
     private router: Router,
     private tenant: TenantService,
-    // private angularFireMessaging: AngularFireMessaging,
-    private ns: NotificationsFCMService,
-    private notify: NotificationsService,
-    private route: ActivatedRoute,
     private layoutService: LayoutService,
-    private titleService: Title
-  ) {}
+    private titleService: Title,
+    private authSV : AuthService
+  ) 
+  {
+    
+  }
 
   ngOnInit() {
     if (environment.layoutCZ == 'qtsc') {
@@ -50,6 +55,9 @@ export class AppComponent implements OnInit, OnDestroy {
         .setAttribute('href', './assets/logos/favicon.ico');
     }
     this.unsubscribe.push(this.tenant.init(this.router));
+    
+
+    
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
     //     environment.FCMToken = token;
@@ -71,6 +79,9 @@ export class AppComponent implements OnInit, OnDestroy {
     //   });
   }
 
+
+  ngAfterViewInit(){
+  }
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }

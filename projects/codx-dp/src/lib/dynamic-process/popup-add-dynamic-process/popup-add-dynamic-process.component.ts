@@ -1312,7 +1312,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-    this.callfc
+    var dialog = this.callfc
       .openForm(
         PopupRolesDynamicComponent,
         '',
@@ -1327,9 +1327,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ],
         '',
         dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e && e.event != null) {
+      );
+
+      dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event.length > 0) {
           if (!this.isChange) this.isChange = true;
           this.process.permissions = e.event;
           this.changeDetectorRef.detectChanges();
