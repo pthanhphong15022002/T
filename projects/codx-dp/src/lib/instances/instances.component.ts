@@ -774,7 +774,7 @@ export class InstancesComponent
               break;
             case 'DP09':
               if (!data.permissionCloseInstances) {
-                if (!data.permissionMoveInstances) res.disabled = true;
+                if (!data.permissionMoveInstances || data.closed) res.disabled = true;
               }
               break;
             //Copy
@@ -1754,7 +1754,7 @@ export class InstancesComponent
     //   )
     //   .subscribe((item: any) => {
     //     if (item) {
-         
+
     //       this.codxDpService
     //         .checkApprovalStep(item.recID)
     //         .subscribe((check) => {
