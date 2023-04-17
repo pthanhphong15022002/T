@@ -54,25 +54,10 @@
             default="Công việc chưa hoàn tất">
           </codx-label>
           </div>
-          <div class="mx-3 d-flex align-items-center justify-content-end">
-            <div class="text-nowrap me-3">
-              <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-                default="Hoàn thành tất cả">
-              </codx-label>
-            </div>
-            <div class="w-30px d-flex align-items-center">
-              <input
-              class="form-check-input rounded-circle w-20px h-20px"
-              type="checkbox"
-              [checked]="isCheckAll"
-              (change)="checkAllValue($event,'all','custom')"
-              />
-            </div>
-          </div>
         </div>
         <div class="pt-5 ms-6">
           <div class="accordion" id="accordion1">
-            <codx-task 
+            <codx-task
               [dataSources]="instancesStepOld"
               [isSaveProgress]="false"
               [isLockSuccess]="true"

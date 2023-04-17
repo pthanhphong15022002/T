@@ -1514,18 +1514,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   {
     if(clss)
     {
-      if(status == 3 ) return "badge-light-primary"
+      if(status == 3 || status == 1) return "badge-light-primary"
+      else if(status == 4 || status == 7) return "badge-light-danger";
       else if(status == 5 || status == 6) return "badge-light-success"
-      else if(status == 4) return "badge-light-danger";
-      else return ""
+      return ""
     }
     else
     {
-      if(status == 3) return "Chờ xét duyệt";
-      else if(status == 4) return "Đã từ chối";
+      if(status == 3 || status == 1)return "Chờ xét duyệt";
+      else if(status == 4 || status == 7) return "Đã từ chối";
       else if(status == 5 || status == 6) return "Đã xét duyệt";
       return "Không xác định"
     }
-    return ""
   }
 }
