@@ -82,16 +82,16 @@ export class CarouselStageComponent {
 
   getColorStepName(status: string) {
     if (status == '1') {
-      return 'step current';
+      return 'step current custom-horizontal-rule';
     } else if (
       status == '3' ||
       status == '4' ||
       status == '5' ||
       !status
     ) {
-      return 'step old';
+      return 'step old custom-horizontal-rule';
     }
-    return 'step';
+    return 'step custom-horizontal-rule';
   }
   getbackgroundColor(item) {
     return item?.backgroundColor

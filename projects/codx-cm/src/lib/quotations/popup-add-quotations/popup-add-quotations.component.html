@@ -12,7 +12,7 @@
 <!-- Start: Body -->
 <ng-template #body>
   <div class="card-add mt-5" #cardbodyGeneral>
-    <ejs-tab #cashGeneral>
+    <ejs-tab #quotationGeneral>
       <e-tabitems>
         <!-- Tab thông tin chung  -->
         <e-tabitem>
@@ -183,7 +183,7 @@
       [autoLoad]="false"
       rowHeight="40"
       (cellChanged)="productsLineChanged($event)"
-      (created)="gridCreated($event)"
+      (created)="gridCreated($event,gridProductsLine)"
     ></codx-gridview-v2>
   </div>
   <!-- predicates="TransID=@0"  cai nay truyền loc-->

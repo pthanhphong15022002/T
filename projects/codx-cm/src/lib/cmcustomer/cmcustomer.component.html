@@ -76,8 +76,8 @@
 <!--List view-->
 
 <ng-template #itemViewList let-data>
-  <codx-view-list-crm [dataSelected]="data" [formModel]="view.formModel" [entityName]="entityName"
-    [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-crm>
+  <codx-view-list-cm [dataSelected]="data" [formModel]="view.formModel" [entityName]="entityName"
+    [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-cm>
 </ng-template>
 <!--List view-->
 <!--list details tempfull-->
@@ -130,7 +130,7 @@
 <!--list details tempfull-->
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-crmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
+  <codx-cmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
     [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName">
-  </codx-crmcustomer-detail>
+  </codx-cmcustomer-detail>
 </ng-template>

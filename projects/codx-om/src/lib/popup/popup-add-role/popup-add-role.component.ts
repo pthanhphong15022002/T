@@ -235,7 +235,6 @@ export class PopupAddRoleComponent  extends UIComponent  {
   // onInit(): void {
     
   onInit(): void {
-    this.changePermission(0);
     this.getData();
     //this.getRoleShare();
   }
@@ -255,7 +254,8 @@ export class PopupAddRoleComponent  extends UIComponent  {
     this.codxOmService.getOKRPlansByID(this.oldPlan?.recID).subscribe((res:any)=>{
       if(res){
         this.okrPlan=res;
-        this.isAfterRender=true;
+        this.isAfterRender=true;        
+        this.changePermission(0);
       }
     })
   }
@@ -358,7 +358,73 @@ export class PopupAddRoleComponent  extends UIComponent  {
    
   }
 
-  changePermission(index) {    
+  changePermission(index) {
+    if(this.okrPlan.permissions==null){
+      return;
+    }
+    // alert(index);
+    // save old permission
+    // alert(1);
+    // this.currentPemission = index;
+
+    let isSystem = false;
+    let objectType = "";
+    if (this.currentPemission > -1) {
+      let oldIndex = this.currentPemission; //find index in your array
+      if (oldIndex != index && oldIndex > -1 && this.okrPlan.permissions[oldIndex] != null) {
+        this.okrPlan.permissions[oldIndex].full = this.full;
+        this.okrPlan.permissions[oldIndex].create = this.create;
+        this.okrPlan.permissions[oldIndex].read = this.read;
+        this.okrPlan.permissions[oldIndex].update = this.update;
+        this.okrPlan.permissions[oldIndex].delete = this.delete;
+        this.okrPlan.permissions[oldIndex].download = this.download;
+        this.okrPlan.permissions[oldIndex].share = this.share;
+        this.okrPlan.permissions[oldIndex].upload = this.upload;
+        this.okrPlan.permissions[oldIndex].startDate = this.startDate;
+        this.okrPlan.permissions[oldIndex].endDate = this.endDate;
+        //  this.okrPlan.permissions[oldIndex].isSystem = this.isSystem;
+        this.okrPlan.permissions[oldIndex].assign = this.assign;
+      }
+    }
+
+    // load new permission
+    if (this.okrPlan.permissions[index] != null) {
+      this.full = this.okrPlan.permissions[index].create && this.okrPlan.permissions[index].read && this.okrPlan.permissions[index].update && this.okrPlan.permissions[index].delete && this.okrPlan.permissions[index].download && this.okrPlan.permissions[index].share && this.okrPlan.permissions[index].upload && this.okrPlan.permissions[index].assign;
+      //  this.isSetFull = true;
+      this.create = this.okrPlan.permissions[index].create;
+      this.read = this.okrPlan.permissions[index].read;
+      this.update = this.okrPlan.permissions[index].update;
+      this.delete = this.okrPlan.permissions[index].delete;
+      this.download = this.okrPlan.permissions[index].download;
+      this.share = this.okrPlan.permissions[index].share;
+      this.upload = this.okrPlan.permissions[index].upload;
+      this.assign = this.okrPlan.permissions[index].assign;
+      this.startDate = this.okrPlan.permissions[index].startDate;
+      this.endDate = this.okrPlan.permissions[index].endDate;
+      this.currentPemission = index;
+      isSystem = this.okrPlan.permissions[index].isSystem;
+      objectType = this.okrPlan.permissions[index].objectType;
+      this.userID = this.okrPlan.permissions[index].objectID;
+      this.objectType = objectType;
+      this.isSystem = this.okrPlan.permissions[index].isSystem;
+      this.permissonActiveId = index;
+    }
+    else {
+      this.full = false;
+      this.create = false;
+      this.read = false;
+      this.update = false;
+      this.delete = false;
+      this.download = false;
+      this.share = false;
+      this.upload = false;
+      this.assign = false;
+      this.currentPemission = index;
+      isSystem = false;
+      this.isSystem = false;
+      this.permissonActiveId = index;
+    }
+    this.detectorRef.detectChanges();
   }
 
   controlFocus(isFull) {
@@ -381,9 +447,9 @@ export class PopupAddRoleComponent  extends UIComponent  {
   }
 
   allowSetRight() {
-    // this.fileEditing.assign
+    // this.okrPlan.assign
     //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.assignRight;
-    //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.fileEditing.assign;
+    //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.okrPlan.assign;
     
   }
 
