@@ -95,7 +95,7 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex flex-stack w-100 mb-2">
+    <div class="d-flex flex-stack w-100 mb-1">
       <div class="d-flex flex-wrap">
         <div class="d-flex align-items-center me-5 mb-1">
           <span class="icon-customize icon-14 me-2"></span>
@@ -114,7 +114,7 @@
         </span>
       </div>
     </div>
-    <div class="d-flex flex-wrap mb-2">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-journal-album icon-14 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
@@ -123,7 +123,7 @@
           [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       </div>
     </div>
-    <div class="d-flex flex-wrap mb-2">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-i-wallet2 icon-14 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
@@ -137,7 +137,7 @@
               | async
           "></span>
       </div>
-      <div class="d-flex align-items-center me-5 mb-1">
+      <div class="d-flex align-items-center me-5">
         <span class="icon-i-person-circle icon-14 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="Payor" [formModel]="view.formModel">
         </codx-label>
@@ -161,7 +161,7 @@
           "></span>
       </div>
     </div>
-    <div class="card-add mt-5" #cardbodyRef>
+    <div class="card-add mt-3" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
@@ -196,7 +196,7 @@
           <tr class="border-bottom">
             <th>
               <div class="d-flex">
-                <i style="color: var(--primary-active)" class="icon-brush icon-16 me-2"></i>
+                <span class="icon-brush icon-16 me-2"></span>
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Note"
                   [formModel]="fmCashReceiptsLines">
                 </codx-label>
@@ -204,7 +204,7 @@
             </th>
             <th class="w-200px">
               <div class="d-flex">
-                <i style="color: var(--primary-active)" class="icon-i-cash icon-16 me-2"></i>
+                <span class="icon-i-cash icon-16 me-2"></span>
                 <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Dr"
                   [formModel]="fmCashReceiptsLines">
                 </codx-label>
@@ -212,7 +212,7 @@
             </th>
             <th class="w-200px">
               <div class="d-flex">
-                <i style="color: var(--primary-active)" class="icon-i-graph-up icon-16 me-2"></i>
+                <span class="icon-i-graph-up icon-16 me-2"></span>
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">Thông tin phân tích</span>
               </div>
             </th>
@@ -225,14 +225,14 @@
           <tr>
             <td>
               <span [ngbTooltip]="item.note" *ngIf="item.note != null && item.note != ''"
-                class="fw-bold line-clamp line-clamp-2 fs-5">
+                class="fw-bold line-clamp line-clamp-2">
                 {{item.note}}</span>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="item.reasonID != null && item.reasonID != ''">
                   <codx-label class="text-gray-700 label-colon" fiedName="ReasonID" [formModel]="fmCashReceiptsLines">
                   </codx-label>
                   &nbsp;
-                  <span #reasonID class="fs-6 fw-bold" [innerHTML]="
+                  <span #reasonID class="fw-bold" [innerHTML]="
                         item.reasonID
                           | formatvalue
                             : fmCashReceiptsLines
@@ -250,10 +250,9 @@
             <td>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start mt-1">
                 <ng-container *ngIf="item.diM2 != null && item.diM2 != ''">
-                  <codx-label class="text-gray-700 label-colon"
+                  <codx-label class="text-gray-700 label-colon me-1"
                     fiedName="DIM2" [formModel]="fmCashReceiptsLines">
                   </codx-label>
-                  &nbsp;
                   <span #diM2 class="fs-6 fw-bold" [innerHTML]="
                       item.diM2
                         | formatvalue

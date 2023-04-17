@@ -226,8 +226,8 @@
       (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
   </div>
   <ng-container *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
-    <div class="table-responsive mt-3">
-      <table class="table table-hover table-row-bordered">
+    <div class="table-responsive mt-3 h-100">
+      <table class="table table-hover table-row-bordered h-100">
         <thead>
           <tr>
             <th class="w-50px text-center">
@@ -431,7 +431,7 @@
 <!-- Start: Sub toolbar -->
 <ng-template #subToolbar>
   <div class="w-100">
-    <div class="d-flex align-items-center justify-content-between pt-3">
+    <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
       <div class="d-flex align-items-center me-2">
         <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
           <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
