@@ -822,7 +822,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
       this.linkAvatar = e?.data[countListFile - 1].avatar;
-
+      if (!this.isChange) this.isChange = true;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -897,6 +897,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   applyShare(e, type) {
     if (e.length > 0) {
+      if (!this.isChange) this.isChange = true;
       console.log(e);
       switch (type) {
         //Người giám sát
@@ -1063,6 +1064,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     roles.objectType = event.type;
     roles.roleType = 'S';
     tmpRole = this.checkRolesStep(this.step.roles, roles);
+    if (!this.isChange) this.isChange = true;
     this.step.roles = tmpRole;
   }
 
@@ -1239,7 +1241,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.lstParticipants.splice(i, 1);
           }
         }
-
+        if (!this.isChange) this.isChange = true;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1301,7 +1303,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles() {
+  clickRoles(roleType) {
     var title = this.gridViewSetup?.Permissions?.headerText;
     let formModel = new FormModel();
     formModel.formName = 'DPProcessesPermissions';
@@ -1310,25 +1312,48 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-
-    this.callfc
+    var dialog = this.callfc
       .openForm(
         PopupRolesDynamicComponent,
         '',
         950,
         650,
         '',
-        [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
+        [
+          this.process,
+          title,
+          this.action === 'copy' ? 'copy' : 'add',
+          roleType,
+        ],
         '',
         dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e && e.event != null) {
+      );
+
+      dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event.length > 0) {
+          if (!this.isChange) this.isChange = true;
           this.process.permissions = e.event;
           this.changeDetectorRef.detectChanges();
         }
       });
   }
+
+  valueRadioInfo($event, view){
+    if (view === 'AllowCopyView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowCopy = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowCopy = false;
+      }
+    } else if (view === 'ApproveRuleView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.approveRule = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.approveRule = false;
+      }
+    }
+  }
+
   //end
 
   //Popup setiing autoNumber - Thao lam dung sua Please
@@ -1821,8 +1846,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dropFieldsToStep(event, stepID) {
     var stepIDContain = event.container.id;
     var stepIDPrevious = event.previousContainer.id;
-    if(stepIDContain[0]=='v' && stepIDContain[1]=='-'){
-      stepIDContain =stepIDContain.substring(2) ;
+    if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
+      stepIDContain = stepIDContain.substring(2);
     }
 
     if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
@@ -2965,12 +2990,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.step.reasonControl = false;
-      }
-    } else if (view === 'AllowCopyView') {
-      if ($event.field === 'yes' && $event.component.checked === true) {
-        this.process.allowCopy = true;
-      } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.process.allowCopy = false;
       }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {

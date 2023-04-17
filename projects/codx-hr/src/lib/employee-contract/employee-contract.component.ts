@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
-import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef, FormModel } from 'codx-core';
+import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef, FormModel, AuthService } from 'codx-core';
 import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
@@ -72,6 +72,7 @@ export class EmployeeContractComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
+    private auth: AuthService,
     ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -113,10 +114,10 @@ export class EmployeeContractComponent extends UIComponent {
     // //   this.view.dataService.methodDelete = 'DeleteEContractAsync';
     // // }
     // console.log('data service data', this.view?.formModel.funcID);
-    // this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
-    //   this.eContractHeaderText = res;
-    //   console.log('hed do` text ne',this.eContractHeaderText);
-    // })
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
+      this.eContractHeaderText = res;
+      console.log('hed do` text ne',this.eContractHeaderText);
+    })
   }
 
   ngAfterViewChecked(){
@@ -219,6 +220,8 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   clickMF(event, data){
+    this.itemDetail = data;
+    
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -363,7 +366,6 @@ export class EmployeeContractComponent extends UIComponent {
     let formName = 'HRParameters';
     this.hrService.getSettingValue(formName, category).subscribe((res) => {
       if (res) {
-        debugger;
         let parsedJSON = JSON.parse(res?.dataValue);
         let index = parsedJSON.findIndex(
           (p) => p.Category == this.view.formModel.entityName

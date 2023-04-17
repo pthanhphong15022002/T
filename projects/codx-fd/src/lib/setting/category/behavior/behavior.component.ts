@@ -220,7 +220,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteCompetencesAsync';
-    op.data = data?.competenceID;
+    op.data = data;
     return true;
   }
 

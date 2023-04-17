@@ -71,7 +71,7 @@
                           <codx-input
                             type="combobox"
                             field="recID"
-                            [crrValue]="item.recIDofRole"
+                            [crrValue]="item.roleID"
                             refValue="UserRoles"
                             (valueChange)="onCbx($event, item)"
                             [dataSelected]="false"
@@ -85,7 +85,7 @@
                           <codx-input
                             type="combobox"
                             field="recID"
-                            [crrValue]="item.recIDofRole"
+                            [crrValue]="item.roleID"
                             refValue="UserRoles"
                             (valueChange)="onCbx($event, item)"
                             [dataSelected]="false"
@@ -166,7 +166,7 @@
                             <codx-input
                               type="combobox"
                               field="recID"
-                              [crrValue]="item.recIDofRole"
+                              [crrValue]="item.roleID"
                               refValue="UserRoles"
                               (valueChange)="onCbx($event, item)"
                               [dataSelected]="false"
@@ -180,7 +180,7 @@
                             <codx-input
                               type="combobox"
                               field="recID"
-                              [crrValue]="item.recIDofRole"
+                              [crrValue]="item.roleID"
                               refValue="UserRoles"
                               (valueChange)="onCbx($event, item)"
                               [dataSelected]="false"
@@ -204,7 +204,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="beforeSave()">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
         Lưu
       </button>
     </div>

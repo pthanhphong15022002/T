@@ -1,5 +1,5 @@
 
-<div class="okr-treeview w-100 h-100 mw-1000px mx-auto">
+<div class="okr-treeview w-100 h-100 mw-1000px mx-auto" *ngIf="orgUnitTree!=null">
     <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree" [enableCheck]="false"
     idField="orgUnitID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="true"
     (selectionChange)="selectionChange($event)" *ngIf="isAfterRender">
@@ -22,7 +22,7 @@
         <!--Content-->
         <div class="me-2" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
     
-          <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
+          <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
           </view-okr>
         </div>
     </div>    

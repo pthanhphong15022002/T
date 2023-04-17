@@ -305,12 +305,8 @@
     .menu-item .menu-link.active .menu-title,
     .menu-item.here > .menu-link .menu-title {
       color: var(--title-color) !important;
-    }
-
-    .menu-item.here > .menu-link .menu-title {
-      color: var(--title-color) !important;
-    }
-
+     }
+   
     .menu-item:not(.here)
       .menu-link:hover:not(.disabled):not(.active):not(.here)
       .menu-title {
@@ -416,10 +412,10 @@
     ejs-listview {
       background-color: transparent;
       .e-list-item.e-active {
-        background-color: var(--bg-body);
+        background-color: var(--white);
       }
       .e-list-item:hover {
-        background-color: var(--bg-body);
+        background-color: var(--white);
       }
     }
   }
@@ -746,6 +742,10 @@
   codx-layout-add .lay-add-tab-footer {
     border-color: var(--border-light);
   }
+
+  .menu-state-primary .menu-item.here > .menu-link {
+    color: var(--primary-dark);
+}
 }
 
 .e-toolbar-item.e-date-range.e-overflow-show .e-tbar-btn {

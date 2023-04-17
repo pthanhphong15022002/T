@@ -393,7 +393,6 @@
       [value]="itemAnswer.answer"
       (change)="valueChange(input, itemSession, itemQuestion, itemAnswer, 'T')"
     /> -->
-    {{getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)}}
     <codx-input
       type="text"
       class="border-0"
@@ -976,7 +975,7 @@
   </div>
   <div class="d-flex align-items-center mt-3 border-top py-3">
     <span class="ms-6 icon-i-eye-slash icon-24"></span>
-    <span class="ms-3">{{ user.email }}</span>
+    <span class="ms-3">{{ user?.email ? user?.email : "Guest" }}</span>
   </div>
 </ng-template>
 

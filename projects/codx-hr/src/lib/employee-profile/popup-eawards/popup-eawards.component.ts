@@ -7,6 +7,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -32,11 +33,14 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   funcID;
   idField = 'RecID';
   employId;
+  empObj;
   valueYear;
   isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
+
+  fromListView: boolean = false; //check where to open the form
 
   constructor(
     private injector: Injector,
@@ -55,7 +59,47 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
  
     this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
       
+    this.fromListView = data?.data?.fromListView;
+    this.empObj = data?.data?.empObj;
 
+
+  }
+
+  allowToViewEmp(): boolean {
+    //check if show emp info or not
+    if (this.actionType == 'edit') {
+      if (this.fromListView) return true;
+      else return false;
+    }
+    if (this.actionType == 'copy') {
+      if (this.fromListView) return true;
+      else return false;
+    }
+    if (this.actionType == 'add') {
+      if (this.fromListView) return true; // add new from list view
+      else return false;
+    }
+    return true;
+  }
+  handleSelectEmp(evt) {
+    if (evt.data != null) {
+      this.employId = evt.data;
+      this.getEmployeeInfoById(this.employId);
+    }
+  }
+  getEmployeeInfoById(empId: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        this.empObj = emp[0][0];
+        //console.log('employee cua form', this.employeeObj);
+        this.cr.detectChanges();
+      }
+    });
   }
 
   initForm() {
@@ -101,6 +145,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           });
       }
     });
+    if (this.employId != null) this.getEmployeeInfoById(this.employId);
   }
 
   onSaveForm() {

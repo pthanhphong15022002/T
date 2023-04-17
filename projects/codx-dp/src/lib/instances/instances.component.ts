@@ -167,11 +167,28 @@ export class InstancesComponent
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
-  isLockExport = false;
-  dataTemplet = [];
+  isLockButton = false;
+  esCategory: any;
+  //test temp
+  dataTemplet = [
+    {
+      templateName: 'File excel của Khanh- Team bá cháy',
+      recID: '1',
+    },
+    {
+      templateName: 'Khanh múa rất đẹp,sập sân khấu',
+      recID: '2',
+    },
+    {
+      templateName: 'Khanh pig bá đạo',
+      recID: '3',
+    },
+  ];
   dialogTemplate: DialogRef;
   isFormExport = true;
-
+  stepInstanceDetailStage: any;
+  listOwnerInMove = [];
+  listStageManagerInMove = [];
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -683,6 +700,7 @@ export class InstancesComponent
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
         this.reloadData = true;
+        this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
       } else this.reloadData = false;
@@ -750,10 +768,14 @@ export class InstancesComponent
             //Chỉnh sửa, chuyển tiếp, thất bại, thành công
             case 'SYS103':
             case 'SYS03':
-            case 'DP09':
               let isUpdate = data.write;
               if (!isUpdate || data.status != '2' || data.closed)
                 res.disabled = true;
+              break;
+            case 'DP09':
+              if (!data.permissionCloseInstances) {
+                if (!data.permissionMoveInstances) res.disabled = true;
+              }
               break;
             //Copy
             case 'SYS104':
@@ -769,34 +791,38 @@ export class InstancesComponent
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed) res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances)
+                res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed) res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances) {
+                res.disabled = true;
+              }
               break;
             case 'DP02':
-              let isUpdateFail = data.write;
-              if (
-                !isUpdateFail ||
-                data.status != '2' ||
-                data.closed ||
-                !this.isUseFail
-              ) {
-                res.disabled = true;
+              if (!data.permissionCloseInstances) {
+                if (
+                  !data.permissionMoveInstances ||
+                  data.status != '2' ||
+                  data.closed ||
+                  !this.isUseFail
+                )
+                  res.disabled = true;
               }
-
               break;
             case 'DP10':
-              let isUpdateSuccess = data.write;
-              if (
-                !isUpdateSuccess ||
-                data.status != '2' ||
-                data.closed ||
-                !this.isUseSuccess
-              ) {
-                res.disabled = true;
+              if (!data.permissionCloseInstances) {
+                if (
+                  !data.permissionMoveInstances ||
+                  data.status != '2' ||
+                  data.closed ||
+                  !this.isUseSuccess
+                ) {
+                  res.disabled = true;
+                }
               }
+
               break;
             case 'DP21':
               res.disabled = true;
@@ -807,6 +833,9 @@ export class InstancesComponent
         e.forEach((mf) => {
           switch (mf.functionID) {
             case 'DP21':
+              if (!data.permissionCloseInstances) {
+                mf.disabled = true;
+              }
               break;
             case 'DP09':
             case 'DP10':
@@ -1212,7 +1241,6 @@ export class InstancesComponent
   }
 
   openFormReason(data, fun, isMoveSuccess, dataMore, listParticipantReason) {
-    // this.codxDpService.get
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
@@ -1431,7 +1459,7 @@ export class InstancesComponent
   }
 
   showFormExport() {
-    // this.isLockExport = true ;
+    this.isLockButton = true;
     let option = new DialogModel();
     option.zIndex = 1001;
     this.dialogTemplate = this.callfc.openForm(
@@ -1448,31 +1476,42 @@ export class InstancesComponent
 
   exportFileDynamic() {
     //data test
-    let datas = [
-      {
-        dai_dien: 'Trần Đoàn Tuyết Khanh',
-        ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-        dia_chi: '06 Lê Lợi, Huế',
-        ma_so_thue: '1111111111111',
-        hinh_thuc_thanh_toan: 'Chuyển khoản',
-        tai_khoan: 'VCB-012024554565',
-        datas: [
-          {
-            san_pham: 'Sản phẩm quần què',
-            dien_tich: '0',
-            so_luong: 1,
-            don_gia: 100000,
-          },
-          {
-            san_pham: 'Sản phẩm 1',
-            dien_tich: '0',
-            so_luong: 10,
-            don_gia: 5000,
-          },
-        ],
-      },
-    ];
-    this.dataSelected.datas = JSON.stringify(datas);
+    // let datas = [
+    //   {
+    //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     dia_chi: '06 Lê Lợi, Huế',
+    //     ma_so_thue: '1111111111111',
+    //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     tai_khoan: 'VCB-012024554565',
+    //     san_pham: 'Sản phẩm quần què',
+    //     dien_tich: '0',
+    //     so_luong: 1,
+    //     don_gia: 100000,
+
+    //     // datas: [
+    //     //   {
+    //     //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     //     dia_chi: '06 Lê Lợi, Huế',
+    //     //     ma_so_thue: '1111111111111',
+    //     //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     //     tai_khoan: 'VCB-012024554565',
+    //     //     san_pham: 'Sản phẩm quần què',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 1,
+    //     //     don_gia: 100000,
+    //     //   },
+    //     //   {
+    //     //     san_pham: 'Sản phẩm 1',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 10,
+    //     //     don_gia: 5000,
+    //     //   },
+    //     // ],
+    //   },
+    // ];
+    // this.dataSelected.datas = JSON.stringify(datas);
     if (!this.dataSelected.datas) return;
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
@@ -1522,7 +1561,7 @@ export class InstancesComponent
   //end export
 
   //load điều kiện
-  loadData(ps) {
+  async loadData(ps) {
     this.process = ps;
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
@@ -1559,7 +1598,9 @@ export class InstancesComponent
         (x) => x.roleType === 'P'
       );
       if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.getListUserByOrg(this.lstParticipants);
+        this.lstOrg = await this.codxDpService.getListUserByOrg(
+          this.lstParticipants
+        );
       }
     }
   }
@@ -1657,43 +1698,74 @@ export class InstancesComponent
     if (e) this.startInstance(this.dataSelected);
   }
   //Xét duyệt
-
-  showFormSubmit() {
-    // this.isLockExport = true ;
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
-      '',
-      600,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
+  selectTemp(recID) {
+    if (recID) this.isLockButton = false;
+    else this.isLockButton = true;
   }
-
-  //Duyệt
-  documentApproval(datas: any) {
-    this.dialogTemplate.close();
-    // if (datas.bsCategory) {
-    //Có thiết lập bước duyệt
-    // if (datas.bsCategory.approval) {
+  showFormSubmit() {
     this.api
       .execSv(
         'ES',
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        'ODC2303-0002' //thêm để test
+        this.process.processNo
       )
       .subscribe((item: any) => {
         if (item) {
-          this.approvalTrans(item?.processID, datas);
-        } else {
+          this.esCategory = item;
+          this.codxDpService
+            .checkApprovalStep(item.recID)
+            .subscribe((check) => {
+              if (check) {
+                this.isLockButton = true;
+                let option = new DialogModel();
+                option.zIndex = 1001;
+                this.dialogTemplate = this.callfc.openForm(
+                  this.popupTemplate,
+                  '',
+                  600,
+                  500,
+                  '',
+                  null,
+                  '',
+                  option
+                );
+              } else this.notificationsService.notifyCode('DP036');
+            });
         }
       });
+  }
+
+  //Duyệt
+  documentApproval(datas: any) {
+    this.approvalTrans(this.esCategory?.processID, datas);
+    // this.dialogTemplate.close();
+    // // if (datas.bsCategory) {
+    // //Có thiết lập bước duyệt
+    // // if (datas.bsCategory.approval) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'CategoriesBusiness',
+    //     'GetByCategoryIDAsync',
+    //     this.process.processNo
+    //   )
+    //   .subscribe((item: any) => {
+    //     if (item) {
+         
+    //       this.codxDpService
+    //         .checkApprovalStep(item.recID)
+    //         .subscribe((check) => {
+    //           if (check) this.approvalTrans(item?.processID, datas);
+    //           else {
+    //             this.notificationsService.notifyCode('DP036');
+    //           }
+    //         });
+    //     } else {
+    //     }
+     // });
     // }
     //Chưa thiết lập bước duyệt
     // else {
@@ -1734,46 +1806,46 @@ export class InstancesComponent
         dialogModel.IsFull = true;
         //trình ký
         if (res2?.eSign == true) {
-          let signFile = new ES_SignFile();
-          signFile.recID = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //datas.recID;
-          signFile.title = datas.title;
-          signFile.categoryID = res2?.categoryID;
-          signFile.refId = datas.recID; //'54951209-3195-4b58-9c17-31e59f9e15db'; //
-          // signFile.refDate = datas.refDate;
-          signFile.refNo = datas.refNo;
-          // signFile.priority = datas.urgency;
-          signFile.refType = this.formModel?.entityName; // OD_Dispatches';
-          signFile.files = [];
-          // if (this.data?.files) {
-          //   for (var i = 0; i < this.data?.files.length; i++) {
-          //     var file = new File();
-          //     file.fileID = this.data?.files[i].recID;
-          //     file.fileName = this.data?.files[i].fileName;
-          //     file.eSign = true;
-          //     signFile.files.push(file);
-          //   }
-          // }
-          let dialogApprove = this.callfc.openForm(
-            PopupAddSignFileComponent,
-            'Chỉnh sửa',
-            700,
-            650,
-            '',
-            {
-              oSignFile: signFile,
-              ///files: this.data?.files,  //file  cân xét duyet
-              cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
-              disableCateID: true,
-              //formModel: this.view?.currentView?.formModel,
-            },
-            '',
-            dialogModel
-          );
-          dialogApprove.closed.subscribe((res) => {
-            if (res.event && res.event?.approved == true) {
-              //update lại data
-            }
-          });
+          //   let signFile = new ES_SignFile();
+          //   signFile.recID = datas.recID;
+          //   signFile.title = datas.title;
+          //   signFile.categoryID = res2?.categoryID;
+          //   signFile.refId = datas.recID;
+          //   // signFile.refDate = datas.refDate;
+          //   signFile.refNo = datas.refNo;
+          //   signFile.priority = '1';
+          //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
+          //   signFile.files = [];
+          //   // if (this.data?.files) {
+          //   //   for (var i = 0; i < this.data?.files.length; i++) {
+          //   //     var file = new File();
+          //   //     file.fileID = this.data?.files[i].recID;
+          //   //     file.fileName = this.data?.files[i].fileName;
+          //   //     file.eSign = true;
+          //   //     signFile.files.push(file);
+          //   //   }
+          //   // }
+          //   let dialogApprove = this.callfc.openForm(
+          //     PopupAddSignFileComponent,
+          //     'Chỉnh sửa',
+          //     700,
+          //     650,
+          //     '',
+          //     {
+          //       oSignFile: signFile,
+          //       ///files: this.data?.files,  //file  cân xét duyet
+          //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
+          //       disableCateID: true,
+          //       //formModel: this.view?.currentView?.formModel,
+          //     },
+          //     '',
+          //     dialogModel
+          //   );
+          //   dialogApprove.closed.subscribe((res) => {
+          //     if (res.event && res.event?.approved == true) {
+          //       //update lại data
+          //     }
+          //   });
         } else if (res2?.eSign == false)
           //xét duyệt
           this.release(datas, processID);
@@ -1788,10 +1860,10 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.recID,
+          data?.processID,
           processID,
           this.view.formModel.entityName,
-          this.formModel.funcID,
+          this.view.formModel.funcID,
           '<div>' + data?.title + '</div>',
         ]
       )
@@ -1905,5 +1977,11 @@ export class InstancesComponent
       return acc;
     }, []);
     return arr3;
+  }
+
+  outStepInstance(e) {
+    if (e) {
+      this.stepInstanceDetailStage = e.e;
+    }
   }
 }

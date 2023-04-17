@@ -1,6 +1,4 @@
-import { Permission } from '@shared/models/file.model';
 import { DistributeOKR } from '../../model/distributeOKR.model';
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -9,21 +7,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  CircularGaugeComponent,
-  GaugeTheme,
-  IAxisLabelRenderEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge';
 
 import {
   AuthService,
   AuthStore,
   CallFuncService,
   DialogData,
-  DialogModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   UIComponent,
   ViewModel,
@@ -42,9 +32,7 @@ export class PopupAssignmentOKRComponent
 {
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
-
   @ViewChild('assignTab') assignTab: any;
-
   dialogRef: DialogRef;
   title = '';
   okrName = '';
@@ -74,10 +62,8 @@ export class PopupAssignmentOKRComponent
   okrPlanRecID: any;
   constructor(
     private injector: Injector,
-    private authService: AuthService,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
     private authStore: AuthStore,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef

@@ -1,7 +1,15 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { IAsset } from './interfaces/IAsset.interface';
 import { CodxAcService } from '../../codx-ac.service';
+import { PopupAddFixedAssetComponent } from './popup-add-fixed-asset/popup-add-fixed-asset.component';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-fixed-assets',
@@ -15,6 +23,7 @@ export class FixedAssetsComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
+  functionName: string;
 
   constructor(private inject: Injector, private acService: CodxAcService) {
     super(inject);
@@ -22,7 +31,18 @@ export class FixedAssetsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache
+      .functionList('ACT0811')
+      .pipe(
+        tap((t) => console.log(t)),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      )
+      .subscribe((res) => (this.functionName = res));
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -57,7 +77,7 @@ export class FixedAssetsComponent extends UIComponent {
               headerText: 'Tình trạng',
               field: 'header3',
             },
-            { width: '1%', field: 'threeDot', headerText: '' },
+            { width: '2%', field: 'threeDot', headerText: '' },
           ],
           template: this.rowTemplate,
         },
@@ -70,15 +90,24 @@ export class FixedAssetsComponent extends UIComponent {
   handleClickAdd(e) {
     console.log({ e });
 
-    this.api
-      .exec('ERM.Business.AM', 'AssetsBusiness', 'AddAsync', {
-        assetID: '2332',
-        status: '1',
-        postedLayer: '1',
-        owner: 'asdfdas',
-        buid: 'sdaf',
-      } as IAsset)
-      .subscribe((res) => console.log(res));
+    this.view.dataService.addNew().subscribe((newItem) => {
+      // debug
+      console.log({ newItem });
+
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      this.callfc.openSide(
+        PopupAddFixedAssetComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
 
   handleClickMoreFuncs(e, data) {
@@ -101,9 +130,45 @@ export class FixedAssetsComponent extends UIComponent {
       .subscribe((res) => console.log(res));
   }
 
-  edit(e, data): void {}
+  edit(e, data): void {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
 
-  copy(e, data): void {}
+      this.callfc.openSide(
+        PopupAddFixedAssetComponent,
+        {
+          formType: 'edit',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
+
+  copy(e, data): void {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe(() => {
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+
+      this.callfc.openSide(
+        PopupAddFixedAssetComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
   //#endregion
 
   //#region Method

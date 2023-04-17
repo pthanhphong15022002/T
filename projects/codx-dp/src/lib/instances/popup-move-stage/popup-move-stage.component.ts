@@ -66,7 +66,7 @@ export class PopupMoveStageComponent implements OnInit {
   firstInstance: any;
   listTaskGroup: any = [];
   listTask: any = [];
-  listTaskGroupDone: any =[];
+  listTaskGroupDone: any = [];
   listTaskDone: any = [];
   listTree: any = [];
   listTypeTask: any = [];
@@ -280,15 +280,13 @@ export class PopupMoveStageComponent implements OnInit {
     this.listTask = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
-      (x) => x.progress < this.oneHundredNumber
-    );
-    if (
-      (this.listTask.length > 0 && this.listTask) ||
-      (this.listTaskGroup.length > 0 && this.listTaskGroup)
-    ) {
-      this.listTree = this.updateDateForTree(this.listTaskGroup, this.listTask);
-    }
+    this.listTaskGroup = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
+    // if (
+    //   (this.listTask.length > 0 && this.listTask) ||
+    //   (this.listTaskGroup.length > 0 && this.listTaskGroup)
+    // ) {
+    //   //      this.listTree = this.updateDateForTree(this.listTaskGroup, this.listTask);
+    // }
   }
 
   onSave() {
@@ -359,6 +357,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
       this.instancesStepOld.owner = this.owner;
+      this.setRoles();
       this.instancesStepOld.stepID = this.stepIdClick;
     }
     if (
@@ -367,8 +366,8 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
-    this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
+    // this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
+    //  this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
     this.updateProgressInstance();
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
@@ -389,6 +388,18 @@ export class PopupMoveStageComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+
+  setRoles() {
+    var index = this.instancesStepOld.roles.findIndex(x => x.roleType == 'S');
+    if (this.instancesStepOld.roles[index].objectID != this.owner) {
+      var tmp = this.lstParticipants.find(x => x.userID == this.owner)
+      this.instancesStepOld.roles[index].objectID = this.owner;
+      this.instancesStepOld.roles[index].objectName = tmp?.userName;
+      this.instancesStepOld.roles[index].objectType = 'U';
+    }
+
+
   }
 
   valueChange($event) {
@@ -426,124 +437,124 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   eventUser(e) {
-    this.owner = e.id;
+    this.owner = e?.id;
     // if (this.owner != null) this.getNameAndPosition(this.owner);
   }
 
-  buildTree(parents, children) {
-    const tree = [];
+  // buildTree(parents, children) {
+  //   const tree = [];
 
-    const lookup = parents.reduce((acc, parent) => {
-      acc[parent.refID] = parent;
-      parent.children = [];
-      return acc;
-    }, {});
+  //   const lookup = parents.reduce((acc, parent) => {
+  //     acc[parent.refID] = parent;
+  //     parent.children = [];
+  //     return acc;
+  //   }, {});
 
-    children.forEach((child) => {
-      const parentId = child.taskGroupID;
-      if (parentId in lookup) {
-        lookup[parentId].children.push(child);
-        this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
-          child,
-          this.totalRequireCompleted,
-          true
-        );
-      }
-    });
+  //   children.forEach((child) => {
+  //     const parentId = child.taskGroupID;
+  //     if (parentId in lookup) {
+  //       lookup[parentId].children.push(child);
+  //       this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
+  //         child,
+  //         this.totalRequireCompleted,
+  //         true
+  //       );
+  //     }
+  //   });
 
-    Object.keys(lookup).forEach((key) => {
-      const parent = lookup[key];
-      if (!parent.taskGroupID) {
-        tree.push(parent);
-      }
-    });
-    return tree;
-  }
+  //   Object.keys(lookup).forEach((key) => {
+  //     const parent = lookup[key];
+  //     if (!parent.taskGroupID) {
+  //       tree.push(parent);
+  //     }
+  //   });
+  //   return tree;
+  // }
 
-  updateDateForTree(parents, children) {
-    for (let item of children) {
-      if (
-        item?.taskGroupID === null ||
-        item?.taskGroupID === undefined ||
-        item?.taskGroupID === ''
-      ) {
-        parents.push(item);
-        this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
-          item,
-          this.totalRequireCompleted,
-          true
-        );
-      }
-    }
-    return this.buildTree(parents, children);
-  }
-  myFunction($event, index) {
-    let children = document.getElementById('children' + index);
-    let parent = document.getElementById('parent' + index);
-    if (children.classList[2] === 'show') {
-      children.classList.remove('show');
-      children.classList.add('hidden');
+  // updateDateForTree(parents, children) {
+  //   for (let item of children) {
+  //     if (
+  //       item?.taskGroupID === null ||
+  //       item?.taskGroupID === undefined ||
+  //       item?.taskGroupID === ''
+  //     ) {
+  //       parents.push(item);
+  //       this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
+  //         item,
+  //         this.totalRequireCompleted,
+  //         true
+  //       );
+  //     }
+  //   }
+  //   return this.buildTree(parents, children);
+  // }
+  // myFunction($event, index) {
+  //   let children = document.getElementById('children' + index);
+  //   let parent = document.getElementById('parent' + index);
+  //   if (children.classList[2] === 'show') {
+  //     children.classList.remove('show');
+  //     children.classList.add('hidden');
 
-      parent.classList.remove('icon-remove');
-      parent.classList.add('icon-add');
-    } else {
-      children.classList.remove('hidden');
-      children.classList.add('show');
-      parent.classList.remove('icon-add');
-      parent.classList.add('icon-remove');
-    }
-  }
-  checkAllValue($event, data, view) {
-    if ($event && view == 'custom') {
-      if ($event.target.checked) {
-        this.isCheckAll = $event.target.checked;
-        this.listTaskGroupDone = JSON.parse(JSON.stringify(this.listTaskGroup));
-        this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
-        this.totalRequireCompletedChecked = this.totalRequireCompleted;
-        this.actionCheck = 'custom';
-      } else {
-        this.isCheckAll = $event.target.checked;
-        this.listTaskGroupDone = [];
-        this.listTaskDone = [];
-        this.totalRequireCompletedChecked = 0;
-        this.actionCheck = '';
-      }
-    } else if ($event && view == this.viewTaskGroup) {
-      $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
-      !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
-    } else if ($event && view == this.viewTask) {
-      $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
-      !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
-    }
-  }
+  //     parent.classList.remove('icon-remove');
+  //     parent.classList.add('icon-add');
+  //   } else {
+  //     children.classList.remove('hidden');
+  //     children.classList.add('show');
+  //     parent.classList.remove('icon-add');
+  //     parent.classList.add('icon-remove');
+  //   }
+  // }
+  // checkAllValue($event, data, view) {
+  //   if ($event && view == 'custom') {
+  //     if ($event.target.checked) {
+  //       this.isCheckAll = $event.target.checked;
+  //       this.listTaskGroupDone = JSON.parse(JSON.stringify(this.listTaskGroup));
+  //       this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
+  //       this.totalRequireCompletedChecked = this.totalRequireCompleted;
+  //       this.actionCheck = 'custom';
+  //     } else {
+  //       this.isCheckAll = $event.target.checked;
+  //       this.listTaskGroupDone = [];
+  //       this.listTaskDone = [];
+  //       this.totalRequireCompletedChecked = 0;
+  //       this.actionCheck = '';
+  //     }
+  //   } else if ($event && view == this.viewTaskGroup) {
+  //     $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
+  //     !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
+  //   } else if ($event && view == this.viewTask) {
+  //     $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
+  //     !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
+  //   }
+  // }
 
-  addItem(list: any, data, view) {
+  // addItem(list: any, data, view) {
 
 
-    if (view == this.viewTaskGroup) {
-      let children = document.getElementById(`${data.recID}`);
-      list.push(data);
-    }
+  //   if (view == this.viewTaskGroup) {
+  //     let children = document.getElementById(`${data.recID}`);
+  //     list.push(data);
+  //   }
 
-    if(view == this.viewTask) {
-      if(this.ischeckClickedTaskParent(data)) {
-        list.push(data);
-      }
+  //   if(view == this.viewTask) {
+  //     if(this.ischeckClickedTaskParent(data)) {
+  //       list.push(data);
+  //     }
 
-    }
-    this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
+  //   }
+  //   this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
 
-  }
+  // }
 
-  removeItem(list, id) {
-    let idx = list.findIndex((x) => x.recID === id);
-    if (idx >= 0) list.splice(idx, 1);
-    this.UpdateRequireCompletedCheck(
-      list[idx],
-      this.totalRequireCompleted,
-      false
-    );
-  }
+  // removeItem(list, id) {
+  //   let idx = list.findIndex((x) => x.recID === id);
+  //   if (idx >= 0) list.splice(idx, 1);
+  //   this.UpdateRequireCompletedCheck(
+  //     list[idx],
+  //     this.totalRequireCompleted,
+  //     false
+  //   );
+  // }
   removeItemSuccess(list) {
     let idx = list.findIndex((x) => x.isSuccessStep);
     if (idx >= 0) list.splice(idx, 1);
@@ -552,23 +563,23 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  updateProgressIsDone(listDone, listNow, view) {
-    const map = new Map();
-    listDone.forEach((item) => {
-      map.set(item.recID, item.progress);
-    });
-    listNow.forEach((item) => {
-      if (map.has(item.recID)) {
-        item.progress = 100;
-        item.actualEnd = new Date();
-      }
-    });
-    if (view === 'task') {
-      this.instancesStepOld.tasks = listNow;
-    } else {
-      this.instancesStepOld.taskGroups = listNow;
-    }
-  }
+  // updateProgressIsDone(listDone, listNow, view) {
+  //   const map = new Map();
+  //   listDone.forEach((item) => {
+  //     map.set(item.recID, item.progress);
+  //   });
+  //   listNow.forEach((item) => {
+  //     if (map.has(item.recID)) {
+  //       item.progress = 100;
+  //       item.actualEnd = new Date();
+  //     }
+  //   });
+  //   if (view === 'task') {
+  //     this.instancesStepOld.tasks = listNow;
+  //   } else {
+  //     this.instancesStepOld.taskGroups = listNow;
+  //   }
+  // }
   getIconTask(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return color?.icon;
@@ -663,13 +674,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field.dataValue.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue.toLowerCase().match(validEmail)) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field.dataValue.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue.toLowerCase().match(validPhone)) {
           return 'RS030';
         }
       }
@@ -693,16 +704,14 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  getColorTask(item,view): string {
+  getColorTask(item, view): string {
     var check = 'd-none';
     if (item?.requireCompleted) {
-      check ='text-danger';
+      check = 'text-danger';
     }
-    else if(view == this.viewTask)
-    {
-      for(let tasks of this.listTask ) {
-         if(tasks.parentID?.includes(item.refID))
-         {
+    else if (view == this.viewTask) {
+      for (let tasks of this.listTask) {
+        if (tasks.parentID?.includes(item.refID)) {
           check = 'text-orange'
           break;
         }
@@ -710,23 +719,23 @@ export class PopupMoveStageComponent implements OnInit {
     }
     return check;
   }
-  ischeckClickedTaskParent(data){
-    if(data.parentID) {
-      var parentIds = data?.parentID.split(';');
-      var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
-      if(filteredList.length != parentIds.length) {
-        var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
-        checkbox.checked = false;
-        var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-        var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+  // ischeckClickedTaskParent(data){
+  //   if(data.parentID) {
+  //     var parentIds = data?.parentID.split(';');
+  //     var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
+  //     if(filteredList.length != parentIds.length) {
+  //       var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
+  //       checkbox.checked = false;
+  //       var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+  //       var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
 
-        this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-        return false;
-      }
-    }
-    return true;
+  //       this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+  //       return false;
+  //     }
+  //   }
+  //   return true;
 
-  }
+  // }
 
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
@@ -764,5 +773,27 @@ export class PopupMoveStageComponent implements OnInit {
           break;
       }
     }
+  }
+
+  changeProgress(event) {
+    console.log(event);
+    if (event) {
+      if (event.type === 'T') {
+       var obj = this.listTask.find(x=>x.recID === event.recID);
+      }
+      else if(event.type === 'G'){
+        var obj = this.listTaskGroup.find(x=>x.recID === event.recID);
+      }
+      this.updateDataTask(obj,event);
+    }
+
+  }
+  updateDataTask(taskNew:any, taskOld: any) {
+    taskNew.actualEnd = taskOld.actualEnd;
+    taskNew.isUpdate = taskOld.isUpdate;
+    taskNew.note = taskOld.note;
+    taskNew.progress = taskOld.progress;
+
+
   }
 }

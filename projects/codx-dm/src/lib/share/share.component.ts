@@ -284,7 +284,6 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      debugger
       this.fileEditing.toPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
       this.fileEditing.toPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
       if (!this.isShare) {
