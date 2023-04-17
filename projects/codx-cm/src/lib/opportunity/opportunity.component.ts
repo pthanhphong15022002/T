@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModel, CacheService, FormModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CrmcustomerDetailComponent } from '../crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
+import { CmcustomerDetailComponent } from '../crmcustomer/crmcustomer-detail/cmcustomer-detail.component';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddOpportunityComponent } from './popup-add-opportunity/popup-add-opportunity.component';
 

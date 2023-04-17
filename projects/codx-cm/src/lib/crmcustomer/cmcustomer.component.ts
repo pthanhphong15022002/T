@@ -19,15 +19,15 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CrmcustomerDetailComponent } from './crmcustomer-detail/crmcustomer-detail.component';
-import { PopupAddCrmcustomerComponent } from './popup-add-crmcustomer/popup-add-crmcustomer.component';
+import { CmcustomerDetailComponent } from './crmcustomer-detail/cmcustomer-detail.component';
+import { PopupAddCmcustomerComponent } from './popup-add-crmcustomer/popup-add-cmcustomer.component';
 
 @Component({
-  selector: 'codx-crmcustomer',
-  templateUrl: './crmcustomer.component.html',
-  styleUrls: ['./crmcustomer.component.css'],
+  selector: 'codx-cmcustomer',
+  templateUrl: './cmcustomer.component.html',
+  styleUrls: ['./cmcustomer.component.css'],
 })
-export class CrmCustomerComponent
+export class CmCustomerComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -48,7 +48,7 @@ export class CrmCustomerComponent
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
+  @ViewChild('customerDetail') customerDetail: CmcustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
@@ -433,7 +433,7 @@ export class CrmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
-          PopupAddCrmcustomerComponent,
+          PopupAddCmcustomerComponent,
           ['add', this.titleAction],
           option
         );
@@ -467,7 +467,7 @@ export class CrmCustomerComponent
           this.titleAction =
             this.titleAction + ' ' + this.view?.function.customName;
           var dialog = this.callfc.openSide(
-            PopupAddCrmcustomerComponent,
+            PopupAddCmcustomerComponent,
             ['edit', this.titleAction],
             option
           );
@@ -503,7 +503,7 @@ export class CrmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
-          PopupAddCrmcustomerComponent,
+          PopupAddCmcustomerComponent,
           ['copy', this.titleAction],
           option
         );
