@@ -709,7 +709,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 let dialogCopy = this.callFuncService.openSide(
                   PopupAddBookingRoomComponent,
                   [
-                    this.view.dataService.dataSelected,
+                    res,
                     true,
                     this.popupTitle,
                     null,

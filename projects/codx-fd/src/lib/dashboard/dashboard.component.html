@@ -5,8 +5,10 @@
     <div class="fd-pagehome h-100 w-100">
         <div class="d-flex h-100 w-100">
             <div class="w-100 home-left">
-                <app-list-post [module]="'FD'" [dataService]="dataServiceWP" [isShowCreate]="false"
-                    [formModel]="view.formModel">
+                <app-list-post 
+                    [isShowCreate]="false"
+                    [predicate]="predicateWP"
+                    [dataValue]="dataValueWP">
                 </app-list-post>
             </div>
             <div class="w-350px min-w-350px ms-4 home-right bg-body p-5 rounded-3">

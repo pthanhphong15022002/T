@@ -1,3 +1,4 @@
+import { DateTime } from "@syncfusion/ej2-angular-charts";
 import { Util } from "codx-core";
 
 export class WP_Messages{
@@ -19,9 +20,9 @@ export class WP_Messages{
     public createdOn : Date;
     public modifiedOn: Date;
     public modifiedBy: string;
-    constructor(){
-        this.recID = "";
-        this.groupID = "";
+    constructor(groupID:string){
+        this.recID = Util.uid();
+        this.groupID = groupID;
         this.userID = "";
         this.status = null;
         this.userName ="";
@@ -38,5 +39,18 @@ export class WP_Messages{
         this.createdOn = null;
         this.modifiedBy = "";
         this.modifiedOn = null;
+    }
+}
+export class tmpMessage extends WP_Messages{
+    public myVote : any;
+    public lstVote : any[];
+    public isOnline : boolean;
+    public jSMessage : any;
+    constructor(groupID:string){
+        super(groupID);
+        this.myVote = null;
+        this.lstVote = [];
+        this.isOnline = false;
+        this.jSMessage = null;
     }
 }

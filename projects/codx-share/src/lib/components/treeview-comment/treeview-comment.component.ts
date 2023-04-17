@@ -20,7 +20,7 @@ import { ImageGridComponent } from '../image-grid/image-grid.component';
   styleUrls: ['./treeview-comment.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TreeviewCommentComponent implements OnInit,OnChanges {
+export class TreeviewCommentComponent implements OnInit {
   @Input() data:any = null;
   @Input() activeParent:boolean = false;
   @Input() funcID:string = "";
@@ -55,12 +55,8 @@ export class TreeviewCommentComponent implements OnInit,OnChanges {
   {
     this.user = this.auth.userValue;
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    this.getCommentsAsync();
-  }
 
   ngOnInit(): void {
-    this.getCommentsAsync();
     this.getValueIcon();
   }
   

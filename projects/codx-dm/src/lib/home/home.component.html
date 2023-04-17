@@ -191,9 +191,7 @@
           </tr>
         </thead>
         <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
-          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="
-              item.folderName != undefined ? item.folderName : item.fileName
-            ">
+          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
             <td class="w-50px">
               <codx-mfunc  *ngIf="!hideMF" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
@@ -220,8 +218,8 @@
               </ng-template>
               <ng-template #rightSecurity>
                 <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18" title="Tài liệu bảo mật"></span>
-                <span *ngIf="item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
-                <span *ngIf="item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
+                <span *ngIf="funcID == 'DMT00' && item?.approvalStatus == '7'" class="icon-i-shield-lock-fill icon-18 position-absolute end-0" [style.color]="'#F64E60'" title="Từ chối duyệt"></span>
               </ng-template>
             </td>
             <td class="w-100px">
