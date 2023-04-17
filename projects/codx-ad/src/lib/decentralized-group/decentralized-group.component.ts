@@ -77,7 +77,7 @@ export class DecentralizedGroupComponent extends UIComponent {
           {
             title: title,
             formType: 'add',
-            groupID: res.groupID,
+            quantity: this,
           },
           option
         );
@@ -94,12 +94,14 @@ export class DecentralizedGroupComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '550px';
-      let action = 'edit';
+      option.Width = '850px';
       let title = text + ' ' + this.func.description;
       let side = this.callfc.openSide(
-        AddApproversComponent,
-        [title, action],
+        AddDecentralGroupMemComponent,
+        {
+          title: title,
+          formType: 'add',
+        },
         option
       );
       side.closed.subscribe((x) => {

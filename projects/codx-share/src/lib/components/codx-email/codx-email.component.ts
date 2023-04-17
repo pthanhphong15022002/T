@@ -195,7 +195,7 @@ export class CodxEmailComponent implements OnInit {
                           this.dialogETemplate.patchValue(this.data);
                           if (this.data?.cubeID) {
                             //Load field theo cubeID của EmailTemplate
-                            this.loadListFieldByCubeID(this.data.cubeIB);
+                            this.loadListFieldByCubeID(this.data.cubeID);
                           } else {
                             this.loadListFieldByFuntion();
                           }
