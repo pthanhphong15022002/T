@@ -43,10 +43,11 @@ export class CustomizedMultiSelectPopupComponent extends UIComponent {
       );
 
     this.cache
-      .viewSettingValues('AC1')
+      .viewSettingValues('ACParameters')
       .pipe(
         tap((o) => console.log(o)),
-        map((data) => JSON.parse(data.dataValue)?.ACS155?.split(';')),
+        map((arr) => arr.filter((f) => f.category === '1')?.[0]),
+        map((data) => JSON.parse(data.dataValue)?.IDIMControl?.split(';')),
         tap((o) => console.log(o))
       )
       .subscribe((settingValues) => {
