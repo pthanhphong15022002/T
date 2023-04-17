@@ -31,9 +31,9 @@
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <div class="d-flex">
+  <div class="d-flex align-items-center">
     <div
-      class="title"
+      class="title fs-6 fw-bold me-3"
       [innerHTML]="
         data.groupName | formatvalue : view.formModel : 'GroupName' | async
       "
@@ -43,7 +43,7 @@
       [showBgColor]="true"
       name="AD008"
       [value]="data?.groupType"
-      class="badge badge-danger"
+      class="badge badge-sm badge-danger"
     >
     </codx-vll>
   </div>
@@ -63,7 +63,7 @@
     <div class="d-flex flex-row align-items-top p-3 border-bottom">
       <div class="w-100 min-w-200px ps-3">
         <codx-temp-full
-          cardCss="card-template border-bottom px-2 pt-4 pb-2"
+          cardCss="card-template"
           (clickMF)="moreFunction($event, data)"
           [imageId]="data.recID"
           [imageObjType]="view.formModel?.entityName"
