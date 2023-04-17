@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-    [className]="className" [method]="method" [views]="views" [autoLoad]="true" idField="recID" [button]="buttonAdd"
-    (buttonClick)="addAward($event)" (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)"
-    (selectedChange)="changeItemDetail($event)">
+  [className]="className" [method]="method" [views]="views" [autoLoad]="true" idField="recID" [button]="buttonAdd"
+  (buttonClick)="addAward($event)" (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)"
+  (selectedChange)="changeItemDetail($event)">
 </codx-views>
 
 <!-- header -->
@@ -179,29 +179,7 @@
                         [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
                 </div>
                 <!-- end emp info -->
-                <!-- salaries -->
-                <!-- <div class="justify-content-between fs-5 fw-bold">
-          <div class="d-flex flex-row">
-            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" class="align-self-center fw-bold">
-              <span class="icon-attach_money align-self-center icon-15 me-1"></span>
-              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText"
-                [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-              </span>
-              <span> - </span>
-              <span class="icon-monetization_on icon-15 me-1 align-self-center fw-bold"></span>
-              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.siSalary?.headerText"
-                [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
-              </span>
-            </div>
-          </div>
-        </div> -->
-                <!-- end salaries -->
-                <!-- effected day -->
-                <!-- <div class="justify-content-between fs-5 fw-bold" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
-          <span class="icon-calendar_today fw-bold"></span>
-          <span>{{ data.effectedDate | fmDT }}</span>
-        </div> -->
-                <!-- end day -->
+                
                 <!-- status & owner -->
                 <div class="d-flex justify-content-between text-dark">
                     <span class="mt-2">
@@ -226,3 +204,54 @@
 
 </ng-template>
 <!-- end list & detail -->
+
+<!-- update status -->
+<ng-template #templateUpdateStatus let-dialog>
+    <div class="codx-form card w-100 h-100 rounded-0 border-0">
+      <div class="card-header flex-column">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="card-title">
+            <div class="d-flex flex-column">
+              <codx-label class="dialog-title line-clamp line-clamp-1" name="lblEquipment" default="Cập nhật trạng thái"
+                [formModel]="view.formModel"></codx-label>
+            </div>
+          </div>
+          <div class="card-toolbar">
+            <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="closeUpdateStatusForm(dialog)">
+              <span class="icon-close icon-18"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="align-items-center me-3 mt-10">
+          <div class="form-group">
+            <label>
+              <codx-label fiedName="Status" [formModel]="view.formModel">
+              </codx-label>
+            </label>
+            <div class="p-disabled">
+              <codx-input field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input>
+            </div>
+            <!-- <codx-input [disabled]="true" field="status" [formModel]="view.formModel" [Group]="formGroup"></codx-input> -->
+          </div>
+          <div class="form-group">
+            <label>
+              <codx-label [default]="'Bình luận'" [name]="'lblComment'" ></codx-label>
+            </label>
+            <codx-input type="text" [formModel]="view.formModel"  (valueChange)="valueChangeComment($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer border-0">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+            <i class="icon-save"></i>
+            <codx-label default="Lưu" name="lblSave" [formModel]="view.formModel"></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- end update status -->

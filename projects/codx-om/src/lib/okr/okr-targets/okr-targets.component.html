@@ -81,12 +81,12 @@
               <div class="progress-container-align position-relative">
                 <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                   <span>
-                    <span class="fs-6 fw-bold">{{item?.progress}}</span>
-                    <span class="fs-9">%</span>
+                    <span class="fs-8 fw-bold">{{item?.progress}}</span>
+                    <span class="fs-10">%</span>
                   </span>
                 </span>
                 <ejs-progressbar #annotation1 [id]="'label-container'+item?.recID" [type]="'Circular'" [maximum]="100"
-                  [minimum]="0" [value]="item?.progress" [width]="'70'" [height]="'70'" [trackThickness]="5"
+                  [minimum]="0" [value]="item?.progress" [width]="'60'" [height]="'60'" [trackThickness]="5"
                   [progressThickness]="3" [progressColor]="'#FF0000'"
                   >
                   <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
@@ -147,7 +147,7 @@
           <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
           <!-- <span class="okr-node border-3px rounded-circle border pe-1 "
             [ngClass]="item?.okrType==krType?'border-warning':'border-primary'"></span> -->
-          <span class="icon-brightness_1" [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
+          <span class="icon-brightness_1 fs-12px d-flex align-items-center " [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
             <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <div class="d-flex flex-wrap">

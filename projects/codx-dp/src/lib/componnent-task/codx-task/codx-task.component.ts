@@ -202,38 +202,40 @@ export class CodxTaskComponent implements OnInit, OnChanges {
   }
 
   changeProgress(event) {
-    if (event) {
-      if(this.isSaveProgress){
-        if (event.type == 'P') {//step
-          this.currentStep['progress'] = event?.progressStep;
-        } else if (event.type == 'G') { // group
-          this.taskGroupList?.forEach(group => {
-            if (group.recID == event.groupTaskID) {
-              group['progress'] = event.progressGroupTask;
+    if (event) {  
+      this.updateProgress(event)
+      this.valueChangeProgress.emit(event);
+    }
+  }
+
+  updateProgress(event){
+    if (event.type == 'P') {//step
+      this.currentStep['progress'] = event?.progressStep;
+    } else if (event.type == 'G') { // group
+      this.taskGroupList?.forEach(group => {
+        if (group.recID == event.groupTaskID) {
+          group['progress'] = event.progressGroupTask;
+        }
+      });
+      if (event.isUpdate) {
+        this.currentStep['progress'] = event?.progressStep;
+      }
+    } else {//task
+      this.taskGroupList?.forEach(group => {
+        if (group.recID == event.groupTaskID) {
+          group?.task?.forEach(task => {
+            if (task.recID == event.taskID) {
+              task['progress'] = event.progressTask;
             }
           });
           if (event.isUpdate) {
-            this.currentStep['progress'] = event?.progressStep;
-          }
-        } else {//task
-          this.taskGroupList?.forEach(group => {
-            if (group.recID == event.groupTaskID) {
-              group?.task?.forEach(task => {
-                if (task.recID == event.taskID) {
-                  task['progress'] = event.progressTask;
-                }
-              });
-              if (event.isUpdate) {
-                group['progress'] = event.progressGroupTask;
-              }
-            }
-          });
-          if (event.isUpdate) {
-            this.currentStep['progress'] = event?.progressStep;
+            group['progress'] = event.progressGroupTask;
           }
         }
+      });
+      if (event.isUpdate) {
+        this.currentStep['progress'] = event?.progressStep;
       }
-      this.valueChangeProgress.emit(event);
     }
   }
 

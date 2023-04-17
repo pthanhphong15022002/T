@@ -64,10 +64,11 @@
         <div
           class="col-{{
             12 / showColumnControl
-          }} p-3 has-action-menu crr-fiels mb-5"
+          }} has-action-menu crr-fiels mb-5"
         >
+        <!-- p-3 -->
           <ng-container
-            [ngTemplateOutlet]="titleDefault? viewDetailFieldCurrent :viewCustomFields"
+            [ngTemplateOutlet]="viewDetailFieldCurrent"
             [ngTemplateOutletContext]="{ $implicit: field }"
           ></ng-container>
         </div>
