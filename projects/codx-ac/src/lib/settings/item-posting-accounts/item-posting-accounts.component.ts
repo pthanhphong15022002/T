@@ -28,7 +28,7 @@ import { PopAddItemComponent } from './pop-add-item/pop-add-item.component';
 @Component({
   selector: 'postingaccounts',
   templateUrl: './item-posting-accounts.component.html',
-  styleUrls: ['./item-posting-accounts.component.css'],
+  styleUrls: ['./item-posting-accounts.component.scss'],
 })
 export class ItempostingaccountsComponent extends UIComponent {
   //#region Constructor
@@ -118,7 +118,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         active: true,
         model: {
           panelLeftRef: this.templateLeft,
-          widthLeft: '15%',
+          widthLeft: '22%',
           panelRightRef: this.templateRight,
         },
       },

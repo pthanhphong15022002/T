@@ -1584,13 +1584,13 @@ export class CodxHrService {
     );
   }
 
-  loadDataEContract(dataRequest: DataRequest) {
+  loadDataEContract(data) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'LoadDataEContractAsync',
-      dataRequest
+      data
     );
   }
 

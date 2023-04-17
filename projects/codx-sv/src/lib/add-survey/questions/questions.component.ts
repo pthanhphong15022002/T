@@ -57,6 +57,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   isModeAdd = true;
   functionList: any;
   emptyText = 'Mẫu không có tiêu đề'
+  en = environment;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -395,6 +396,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       }
       if(dtS[0].children && dtS[0].children.length>0)
         dtS[0].children[0]['active'] = true;
+      
       return dtS;
     }
   }
@@ -1659,9 +1661,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   getSrcImage(data) {
-    return (data['srcImage'] = `${environment.urlUpload}/${
-      data.urlPath ? data.urlPath : data.pathDisk
-    }`);
+    debugger
+    return environment.urlUpload + "/" +data?.pathDisk;
   }
 
   getSrcVideo(data) {

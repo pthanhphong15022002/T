@@ -151,4 +151,28 @@ export class CodxAcService {
         tap((r) => console.log(r))
       );
   }
+  getCategoryByEntityName(entityName: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [entityName]
+    );
+  }
+  release(
+    recID: string,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    title: string
+  ) {
+    return this.api.execSv<any>(
+      'AC',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [recID, processID, entityName, funcID, title]
+    );
+  }
 }

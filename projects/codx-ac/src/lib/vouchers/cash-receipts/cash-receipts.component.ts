@@ -1,0 +1,338 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  UIComponent,
+  ViewModel,
+  DialogRef,
+  ButtonModel,
+  CallFuncService,
+  ViewType,
+  DialogModel,
+  RequestOption,
+  SidebarModel,
+  DataRequest,
+  FormModel,
+} from 'codx-core';
+import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
+
+@Component({
+  selector: 'lib-cash-receipts',
+  templateUrl: './cash-receipts.component.html',
+  styleUrls: ['./cash-receipts.component.css'],
+})
+export class CashReceiptsComponent extends UIComponent {
+  //#region Contructor
+  views: Array<ViewModel> = [];
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  dialog!: DialogRef;
+  button?: ButtonModel = { id: 'btnAdd' };
+  headerText: any;
+  funcName: any;
+  oData: any;
+  objectname: any;
+  itemSelected: any;
+  journalNo: string;
+  cashbook: any;
+  page: any = 1;
+  pageSize = 6;
+  loadChange:any;
+  cashreceiptslines: Array<CashReceiptsLines> = [];
+  fmCashReceiptsLines: FormModel = {
+    formName: 'CashReceiptsLines',
+    gridViewName: 'grvCashReceiptsLines',
+    entityName: 'AC_CashReceiptsLines',
+  };
+  tabItem: any = [
+    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
+    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  ];
+  constructor(
+    private inject: Injector,
+    private callfunc: CallFuncService,
+    private routerActive: ActivatedRoute,
+    private dt: ChangeDetectorRef,
+    @Optional() dialog?: DialogRef
+  ) {
+    super(inject);
+    this.dialog = dialog;
+    this.routerActive.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
+  }
+  //#endregion
+
+  //#region Init
+  onInit(): void {
+    this.api
+      .exec('AC', 'ObjectsBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.oData = res;
+        }
+      });
+    this.api
+      .exec('AC', 'CashBookBusiness', 'LoadDataAsync')
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.cashbook = res;
+        }
+      });
+  }
+  ngAfterViewInit() {
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
+    this.views = [
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+          frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+    ];
+  }
+  //#endregion
+
+  //#region Event
+  toolBarClick(e) {
+    switch (e.id) {
+      case 'btnAdd':
+        this.add(e);
+        break;
+    }
+  }
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
+        break;
+    }
+  }
+  add(e) {
+    this.headerText = this.funcName;
+    this.view.dataService
+      .addNew((o) => this.setDefault(o))
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'add',
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
+          PopAddReceiptsComponent,
+          obj,
+          option,
+          this.view.funcID
+        );
+      });
+  }
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
+          PopAddReceiptsComponent,
+          obj,
+          option,
+          this.view.funcID
+        );
+      });
+  }
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.isFull = true;
+        this.dialog = this.callfunc.openSide(
+          PopAddReceiptsComponent,
+          obj,
+          option,
+          this.view.funcID
+        );
+      });
+  }
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec(
+              'ERM.Business.AC',
+              'CashReceiptsLinesBusiness',
+              'DeleteAsync',
+              [data.recID]
+            )
+            .subscribe((res: any) => {});
+        }
+      });
+  }
+  //#endregion
+
+  //#region Function
+  setDefault(o) {
+    return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
+      this.journalNo,
+    ]);
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'CashReceiptsBusiness';
+    opt.assemblyName = 'AC';
+    opt.service = 'AC';
+    opt.data = data;
+    return true;
+  }
+
+  changeItemDetail(event) {
+    if (event?.data.result) {
+      return;
+    }else{
+      this.itemSelected = event?.data;
+      this.loadDatadetail(this.itemSelected);
+    }
+    this.dt.detectChanges();
+  }
+
+  changeDataMF(e: any, data: any) {
+    //Bookmark
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT041003' ||
+        x.functionID == 'ACT041002' ||
+        x.functionID == 'ACT041004'
+    );
+    //this.loadDatadetail(data);
+    // // check có hay ko duyệt trước khi ghi sổ
+    // if (data?.status == '1') {
+    //   if (
+    //     this.journal?.approval == 0 &&
+    //     this.journal?.postControl == 2 &&
+    //     this.journal.poster == this.userID
+    //   ) {
+    //     bm[0].disabled = true;
+    //     bm[2].disabled = true;
+    //   }
+    //   if (this.journal.approval == 1) {
+    //     bm[1].disabled = true;
+    //     bm[2].disabled = true;
+    //   }
+    // }
+    // //Chờ duyệt
+    // if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
+    //   bm[1].disabled = true;
+    //   bm[0].disabled = true;
+    // }
+    // //hủy duyệt
+    // if (data?.approveStatus == '4') {
+    //   for (var i = 0; i < bm.length; i++) {
+    //     bm[i].disabled = true;
+    //   }
+    // }
+  }
+
+  loadDatadetail(data) {
+    this.cashreceiptslines = []
+    this.api
+      .exec('AC', 'CashReceiptsLinesBusiness', 'LoadDataAsync', [data.recID])
+      .subscribe((res: any) => {
+        this.cashreceiptslines = res;
+      });
+  }
+
+  export(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
+  //#endregion
+}

@@ -1,3 +1,4 @@
+import { format } from 'path';
 import {
   Component,
   Injector,
@@ -8,11 +9,13 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { UIComponent, ViewModel, ViewType, DataRequest } from 'codx-core';
+import {
+  AnimationModel,
+  ProgressBar,
+  RangeColorModel,
+} from '@syncfusion/ej2-angular-progressbar';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
-import { IAxisLabelRenderEventArgs } from '@syncfusion/ej2-angular-charts';
-
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -35,6 +38,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('team_dashboard') templates2: QueryList<any>;
   @ViewChildren('assign_dashboard') templates3: QueryList<any>;
 
+  @ViewChild('annotation1') annotation: ProgressBar;
+
   @Input() panels1: any;
   @Input() datas1: any;
   @Input() panels2: any;
@@ -46,11 +51,13 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> = [];
   dashboard = [];
   funcID: string = 'TMD';
-  reportID: string = 'TMD002';
+  reportID: string = 'TMD001';
 
   templates: QueryList<any>;
 
-  dashboardData: any;
+  myDBData: any;
+  teamDBData: any;
+  assignDBData: any;
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -251,8 +258,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     seriesSetting: [
       {
         type: 'Pie',
-        xName: 'status',
-        yName: 'value',
+        xName: 'taskGroupName',
+        yName: 'percentage',
         innerRadius: '80%',
         radius: '70%',
         startAngle: 0,
@@ -261,10 +268,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         endAngle: 360,
       },
     ],
-    service: 'OM',
-    assembly: 'ERM.Business.OM',
-    className: 'DashBoardBusiness',
-    method: 'GetChartData1Async',
   };
 
   chartSettings5: ChartSettings = {
@@ -280,50 +283,45 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     ],
   };
 
-  leafItemSettings: any = {
-    labelPath: 'taskGroupName',
-  };
-
   stacked_data: Object[] = [
     {
       Year: '2013',
       General: 9628912,
       Honda: 4298390,
-      Suzuki: 2842133,
-      BMW: 2006366,
     },
     {
       Year: '2014',
       General: 9609326,
       Honda: 4513769,
-      Suzuki: 3016710,
-      BMW: 2165566,
-    },
-    {
-      Year: '2015',
-      General: 7485587,
-      Honda: 4543838,
-      Suzuki: 3034081,
-      BMW: 2279503,
-    },
-    {
-      Year: '2016',
-      General: 7793066,
-      Honda: 4999266,
-      Suzuki: 2945295,
-      BMW: 2359756,
-    },
-    {
-      Year: '2017',
-      General: 6856880,
-      Honda: 5235842,
-      Suzuki: 3302336,
-      BMW: 2505741,
     },
   ];
 
   predicates: any;
   dataValues: any;
+
+  public animation: AnimationModel = {
+    enable: true,
+    duration: 2000,
+    delay: 0,
+  };
+
+  public annotaions: Object = [
+    {
+      content:
+        '<div id="pointervalue" style="font-size:35px;width:120px;text-align:center;">' +
+        '60' +
+        '/100</div>',
+      angle: 0,
+      zIndex: '1',
+      radius: '0%',
+    },
+    {
+      content: '<div id="slider" style="height:70px;width:250px;"></div>',
+      angle: 0,
+      zIndex: '1',
+      radius: '-100%',
+    },
+  ];
 
   constructor(inject: Injector) {
     super(inject);
@@ -338,10 +336,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"2"},{"panelId":"0.6937258303982936_layout","data":"3"},{"panelId":"0.5667390469747078_layout","data":"4"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.21519762020962552_layout","data":"7"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.14683256767762543_layout","data":"9"},{"panelId":"0.36639064171709834_layout","data":"10"},{"panelId":"0.36601875176456145_layout","data":"11"},{"panelId":"0.3516224838830073_layout","data":"12"}]'
     );
     this.panels2 = JSON.parse(
-      '[{"id":"dfeb663a-185a-4fef-85b0-25613979133d","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"30a29412-9253-4033-a5e4-617246359357","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.9435262123249284_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31200119842251084_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5547337482348278_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4533692938771181_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.23559424577365373_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5314304532149856_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.7158772861178662_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6630241925546723_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.2853680268255028_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.007499361474228472_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.023172028709681936_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.31080209919803936_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.8927326695370017_layout","row":4,"col":0,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.8302215091444525_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.7731673204748104_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.9527549374583961_layout","row":20,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"0.7371661853933429_layout","row":20,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas2 = JSON.parse(
-      '[{"panelId":"dfeb663a-185a-4fef-85b0-25613979133d","data":"1"},{"panelId":"30a29412-9253-4033-a5e4-617246359357","data":"2"},{"panelId":"fe57aaa2-4606-49a0-a8da-de9f0b190ef7","data":"3"},{"panelId":"002dce4b-87c8-4c07-8c58-ed65a84e08ae","data":"4"},{"panelId":"5abdc8fe-de06-4c77-81c0-f1d05128ec2f","data":"5"},{"panelId":"0.9435262123249284_layout","data":"6"},{"panelId":"0.31200119842251084_layout","data":"7"},{"panelId":"0.5547337482348278_layout","data":"8"},{"panelId":"0.4533692938771181_layout","data":"9"},{"panelId":"0.23559424577365373_layout","data":"10"},{"panelId":"0.5314304532149856_layout","data":"11"}]'
+      '[{"panelId":"0.7158772861178662_layout","data":"1"},{"panelId":"0.6630241925546723_layout","data":"2"},{"panelId":"0.2853680268255028_layout","data":"3"},{"panelId":"0.007499361474228472_layout","data":"4"},{"panelId":"0.023172028709681936_layout","data":"5"},{"panelId":"0.31080209919803936_layout","data":"6"},{"panelId":"0.8927326695370017_layout","data":"7"},{"panelId":"0.8302215091444525_layout","data":"8"},{"panelId":"0.7731673204748104_layout","data":"9"},{"panelId":"0.9527549374583961_layout","data":"10"},{"panelId":"0.7371661853933429_layout","data":"11"}]'
     );
     this.panels3 = JSON.parse(
       '[{"id":"0.0014514686635016538_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.19694528981098758_layout","row":0,"col":24,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.9240829789281733_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.3905464098807283_layout","row":0,"col":32,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6324365355784578_layout","row":0,"col":40,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.7307926980008612_layout","row":4,"col":0,"sizeX":16,"sizeY":32,"minSizeX":16,"minSizeY":32,"maxSizeX":null,"maxSizeY":null},{"id":"0.7062776900074157_layout","row":0,"col":16,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.09230805583161117_layout","row":4,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.4142359240869473_layout","row":4,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.13567559377635385_layout","row":20,"col":16,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null},{"id":"0.0919781174656844_layout","row":20,"col":32,"sizeX":16,"sizeY":16,"minSizeX":16,"minSizeY":16,"maxSizeX":null,"maxSizeY":null}]'
@@ -349,7 +347,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.datas3 = JSON.parse(
       '[{"panelId":"0.9240829789281733_layout","data":"1"},{"panelId":"0.0014514686635016538_layout","data":"2"},{"panelId":"0.7062776900074157_layout","data":"3"},{"panelId":"0.19694528981098758_layout","data":"4"},{"panelId":"0.3905464098807283_layout","data":"5"},{"panelId":"0.6324365355784578_layout","data":"6"},{"panelId":"0.7307926980008612_layout","data":"7"},{"panelId":"0.09230805583161117_layout","data":"8"},{"panelId":"0.4142359240869473_layout","data":"9"},{"panelId":"0.13567559377635385_layout","data":"10"},{"panelId":"0.0919781174656844_layout","data":"11"}]'
     );
-    this.getTeamDashboardData(this.predicates, this.dataValues);
   }
 
   ngAfterViewInit(): void {
@@ -371,6 +368,22 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  getMyDashboardData(predicates: string, dataValues: string) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'TM_Tasks';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    this.api
+      .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model])
+      .subscribe((res) => {
+        this.myDBData = res;
+        console.log('MyDB', this.myDBData);
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
   getTeamDashboardData(predicates: string, dataValues: string) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -378,42 +391,82 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     model.predicates = predicates;
     model.dataValues = dataValues;
     this.api
-      .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', model)
+      .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
-        this.dashboardData = res;
-        console.log(this.dashboardData);
+        this.myDBData = res;
+        //console.log(this.myDBData);
       });
 
     this.detectorRef.detectChanges();
   }
 
-  valueChange(evt: any) {
-    if (evt?.field) {
-      let field = evt.field;
+  getAssignDashboardData(predicates: string, dataValues: string) {
+    let model = new GridModels();
+    model.funcID = this.funcID;
+    model.entityName = 'TM_Tasks';
+    model.predicates = predicates;
+    model.dataValues = dataValues;
+    this.api
+      .exec('TM', 'TaskBusiness', 'GetDataAssignDashboardAsync', [model])
+      .subscribe((res) => {
+        this.myDBData = res;
+        //console.log(this.myDBData);
+      });
 
-      if (field === 'employee') {
-      }
-
-      if (field === 'organization') {
-      }
-    }
+    this.detectorRef.detectChanges();
   }
+
   filterChange(e: any) {
-    const [predicates, dataValues] = e[0];
+    const { predicates, dataValues } = e[0];
+    const paramValue = e[1];
     this.predicates = predicates;
     this.dataValues = dataValues;
-    this.getTeamDashboardData(predicates, dataValues);
-    this.detectorRef.detectChanges();
-  }
-  onActions(e: any) {
-    this.reportID = e.data;
-    this.getTeamDashboardData(this.predicates, this.dataValues);
+
+    switch (this.reportID) {
+      case 'TMD001':
+        this.getMyDashboardData(this.predicates, this.dataValues);
+        break;
+      case 'TMD002':
+        this.getTeamDashboardData(this.predicates, this.dataValues);
+        break;
+      case 'TMD003':
+        this.getAssignDashboardData(this.predicates, this.dataValues);
+        break;
+      default:
+        break;
+    }
+
     this.detectorRef.detectChanges();
   }
 
-  OnChartAxisLabeRender(args: IAxisLabelRenderEventArgs) {
-    if (args.value > 999999 || args.value < -999999) {
-      args.text = args.text.replace('0000000', '0M').replace('000000', 'M');
+  onActions(e: any) {
+    this.reportID = e.data;
+    this.predicates = null;
+    this.dataValues = null;
+    switch (this.reportID) {
+      case 'TMD001':
+        this.getMyDashboardData(null, null);
+        break;
+      case 'TMD002':
+        this.getTeamDashboardData(null, null);
+        break;
+      case 'TMD003':
+        this.getAssignDashboardData(null, null);
+        break;
+      default:
+        break;
     }
+    this.detectorRef.detectChanges();
+  }
+
+  newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

@@ -1,12 +1,8 @@
 export class CashReceipts {
-  address: any;
   allowEditKey: any;
-  approvalRule: any;
-  approvedBy: any;
-  approvedOn: any;
   assign: any;
-  bankAccount: any;
-  bankAcctNo: any;
+  attachments: any;
+  bankAcctID: any;
   bankID: any;
   buid: any;
   cashBookID: any;
@@ -14,17 +10,16 @@ export class CashReceipts {
   createdOn: any;
   currencyID: any;
   delete: any;
-  exchangeRate: 1;
-  idCardNo: any;
+  dirty: any;
+  exchangeRate: any;
   idField: any;
   illegalExpense: any;
   includeTables: any;
   isSettlement: any;
   isTransfer: any;
-  issuedBy: any;
-  issuedOn: any;
   journalNo: any;
   journalType: any;
+  loanContractID: any;
   memo: any;
   memo2: any;
   mixedPayment: any;
@@ -32,29 +27,30 @@ export class CashReceipts {
   modifiedOn: any;
   multi: any;
   objectID: any;
+  objectName: any;
   objectType: any;
   owner: any;
   payor: any;
+  payorID: any;
   pmtMethodID: any;
-  postedBy: any;
   postedLayer: any;
-  postedOn: any;
+  reasonID: any;
   recID: any;
-  receiptAmt: any;
+  refDocs: any;
   refID: any;
   refNo: any;
+  refType: any;
   share: any;
-  status: any
+  status: any;
+  subType: any;
+  totalAmt: any;
   totalCR: any;
   totalDR: any;
-  transactionText: any;
   unbounds: any;
   updateColumns: any;
   validated: any;
-  vendor: any;
   voucherDate: any;
   voucherNo: any;
-  voucherTime: any;
-  voucherType:any
   write: any;
+  category:any;
 }

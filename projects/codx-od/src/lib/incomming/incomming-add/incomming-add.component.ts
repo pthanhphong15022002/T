@@ -69,7 +69,9 @@ export class IncommingAddComponent implements OnInit {
   lrelations :any;
   user:any;
   agencyName:any;
-  referType = 'source'
+  referType = 'source';
+
+  keyField = false; //Kiểm tra số công văn tự động
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -86,16 +88,19 @@ export class IncommingAddComponent implements OnInit {
   }
   public disEdit: any;
   ngOnInit(): void {
+    this.type = this.data?.type;
+    
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
     this.user = this.auth.get();
     if (this.user?.userID) this.dispatch.createdBy = this.user?.userID;
 
+    if(this.dialog?.dataService?.keyField || this.type == 'edit') this.keyField = true;
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
-    this.type = this.data?.type;
+    
     this.formModel = this.data?.formModel;
     this.service = this.data?.service;
     this.dataRq.entityName = this.formModel?.entityName;
@@ -221,7 +226,6 @@ export class IncommingAddComponent implements OnInit {
   //Người được chia sẻ
   changeDataShare(event: any)
   {
-    debugger
     if(event?.data?.value) this.relations = event?.data?.value
   }
   //Nơi nhận
@@ -231,6 +235,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.departmentID = event?.data;
     if (event?.data) this.getDispathOwner(event.data);
   }
+  
   getDispathOwner(data:any)
   {
     this.api
@@ -258,6 +263,7 @@ export class IncommingAddComponent implements OnInit {
           }
         });
   }
+  
   getInforByUser(id:any) : Observable<any>
   {
     return this.api
@@ -269,9 +275,11 @@ export class IncommingAddComponent implements OnInit {
       id
     );
   }
+  
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
+  
   //Các hàm value change
   changeValueAgency(event: any) {
     //ktra nếu giá trị trả vô = giá trị trả ra return null
@@ -326,6 +334,7 @@ export class IncommingAddComponent implements OnInit {
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
+  
   valueChangeDate(event: any) {
     this.dispatch[event?.field] = event?.data.fromDate;
   }
@@ -359,16 +368,16 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.attachment.objectId = this.dispatch.recID;
       this.addRelations();
       this.addPermission();
       this.odService
-      .saveDispatch(this.dataRq, this.dispatch)
+      .saveDispatch(this.dataRq, this.dispatch , this.keyField)
       .subscribe(async (item) => {
+        
         if (item.status == 0) {
           this.data = item.data;
           this.attachment.dataSelected = item.data;
-       
+          this.attachment.objectId =  item.data.recID;
           (await this.attachment.saveFilesObservable()).subscribe(
             (item2: any) => {
               //Chưa xử lý Upload nhìu file
@@ -502,6 +511,10 @@ export class IncommingAddComponent implements OnInit {
       if(!data)
         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
     }
+
+    //Kiểm tra số tự động
+    if(!this.keyField && !this.dispatch.dispatchNo) arr.push(this.gridViewSetup['DispatchNo'].headerText);
+
     if(arr.length>0)
     {
       var name = arr.join(" , ");

@@ -54,25 +54,17 @@
             default="Công việc chưa hoàn tất">
           </codx-label>
           </div>
-          <div class="mx-3 d-flex align-items-center justify-content-end">
-            <div class="text-nowrap me-3">
-              <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-                default="Hoàn thành tất cả">
-              </codx-label>
-            </div>
-            <div class="w-30px d-flex align-items-center">
-              <input
-              class="form-check-input rounded-circle w-20px h-20px"
-              type="checkbox"
-              [checked]="isCheckAll"
-              (change)="checkAllValue($event,'all','custom')"
-              />
-            </div>
-          </div>
         </div>
         <div class="pt-5 ms-6">
           <div class="accordion" id="accordion1">
-            <ng-container *ngFor="let item of listTree; let i = index">
+            <codx-task
+              [dataSources]="instancesStepOld"
+              [isSaveProgress]="false"
+              [isLockSuccess]="true"
+              [typeProgress]="2"
+              (valueChangeProgress)="changeProgress($event)"
+            ></codx-task>
+            <!-- <ng-container *ngFor="let item of listTree; let i = index">
               <div *ngIf="item.taskGroupID === null; else taskGroup">
                 <ol class="list-unstyled" >
                   <li>
@@ -89,7 +81,7 @@
                         </div>
                         <div class="">
                           {{item.taskName}}
-                          <span [ngClass]="checkExitsParentID(item, viewTask)">*</span>
+                          <span [ngClass]="getColorTask(item, viewTask)">*</span>
                         </div>
                       </div>
                       <div class="mx-3">
@@ -112,6 +104,7 @@
                             <input
                             class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
+                            [id]="item.recID"
                             [checked]="isCheckAll"
                             (change)="checkAllValue($event,item,viewTask)"
                             />
@@ -154,6 +147,7 @@
                           </div>
                           <div class="w-30px d-flex align-items-center">
                             <input
+                            [id]="item.recID"
                             class="form-check-input rounded-circle w-20px h-20px"
                             type="checkbox"
                             [checked]="isCheckAll"
@@ -178,7 +172,7 @@
                                   ></span>
                                 </div>
                                 <div class=""> {{task.taskName}}
-                                  <span [ngClass]="checkExitsParentID(task, viewTask)">*</span>
+                                  <span [ngClass]="getColorTask(task, viewTask)">*</span>
                                 </div>
                               </div>
                               <div class="mx-3">
@@ -199,7 +193,7 @@
                                   </div>
                                   <div class="w-30px d-flex align-items-center">
                                     <input
-                                    [id]="item.recID"
+                                    [id]="task.recID"
                                     class="form-check-input rounded-circle w-20px h-20px"
                                     type="checkbox"
                                     [checked]="isCheckAll"
@@ -215,7 +209,7 @@
                   </li>
                 </ol>
               </ng-template>
-             </ng-container>
+             </ng-container> -->
           </div>
         </div>
       </div>

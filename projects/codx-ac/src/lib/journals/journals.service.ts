@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
+  CacheService,
   CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   DataRequest,
   NotificationsService,
 } from 'codx-core';
-import { Observable } from 'rxjs';
-import { IJournal } from './interfaces/IJournal.interface';
+import { Observable, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
+import { IJournal } from './interfaces/IJournal.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ export class JournalService {
   constructor(
     private api: ApiHttpService,
     private acService: CodxAcService,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private cacheService: CacheService
   ) {}
 
   deleteAutoNumber(autoNoCode: string): Observable<any> {
@@ -154,11 +156,20 @@ export class JournalService {
 
     // mac dinh
     if (journal?.drAcctControl === '0') {
-      drAccountCbx.crrValue = journal?.crAcctID;
+      drAccountCbx.crrValue = journal?.drAcctID;
     }
 
     if (journal?.crAcctControl === '0') {
       crAccountCbx.crrValue = journal?.crAcctID;
     }
+  }
+
+  getVoucherNoPlaceholderText(): Observable<string> {
+    return this.cacheService
+      .moreFunction('AutoVoucherNumber', 'grvAutoVoucherNumber')
+      .pipe(
+        tap((t) => console.log(t)),
+        map((data) => data.find((m) => m.functionID === 'ACT04')?.defaultName)
+      );
   }
 }
