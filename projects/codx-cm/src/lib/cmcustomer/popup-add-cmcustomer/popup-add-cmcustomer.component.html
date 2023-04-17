@@ -108,34 +108,52 @@
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label
-          [formModel]="dialog.formModel"
-          name="lblLastName"
-          default="Họ và đệm"
-        >
+        <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
         </codx-label>
         <codx-input
-          type="text"
-          [crrValue]="lastName"
-          (valueChange)="valueChange($event)"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [field]="'contactType'"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [field]="'salutation'"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="dialog.formModel" fiedName="LastName">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           field="lastName"
         >
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label
-          [formModel]="dialog.formModel"
-          name="lblFirstName"
-          default="Tên"
-        >
+        <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
         </codx-label>
         <codx-input
-          type="text"
-          [crrValue]="firstName"
-          (valueChange)="valueChange($event)"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           field="firstName"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="dialog.formModel" fiedName="Gender">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="gender"
         >
         </codx-input>
       </div>
@@ -179,11 +197,34 @@
         <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102' || funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <codx-label
+              [formModel]="form.formModel"
+              [fiedName]="funcID == 'CM0101' ? 'Phone' : 'Mobile'"
+            >
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="funcID == 'CM0102'">
+            <codx-label
+              class="text-gray-500 me-2"
+              [formModel]="form.formModel"
+              [fiedName]="'AllowCall'"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="allowCall"
+            >
+            </codx-input>
+          </div>
+        </div>
+
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="phone"
+          [field]="funcID == 'CM0101' ? 'phone' : 'mobile'"
         >
         </codx-input>
       </div>
@@ -270,7 +311,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="funcID == 'CM0101'">
         <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
         </codx-label>
         <codx-input
