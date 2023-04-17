@@ -133,3 +133,11 @@ codx-treeview .no-permission {
     color: white
   }
 }
+
+.div-dm-overflow
+{
+  width: 260px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
