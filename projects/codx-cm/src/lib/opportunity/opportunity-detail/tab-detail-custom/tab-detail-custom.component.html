@@ -3,11 +3,17 @@
   <some-element *ngSwitchCase="tabField" [ngTemplateOutlet]="field"></some-element>
   <some-element *ngSwitchCase="tabContact" [ngTemplateOutlet]="contact"></some-element>
   <some-element *ngSwitchCase="tabOpponent" [ngTemplateOutlet]="opponent"></some-element>
-  <some-element *ngSwitchCase="tabTask" [ngTemplateOutlet]=""></some-element>
-  <some-element *ngSwitchCase="tabProduct" [ngTemplateOutlet]=""></some-element>
+  <some-element *ngSwitchCase="tabTask" [ngTemplateOutlet]="task"></some-element>
+  <some-element *ngSwitchCase="tabProduct" [ngTemplateOutlet]="product"></some-element>
   <some-element *ngSwitchDefault></some-element>
 </container-element>
+<ng-template #task>
 
+</ng-template>
+
+<ng-template #product>
+
+</ng-template>
 <ng-template #information>
 
   <div class="d-flex flex-column">
