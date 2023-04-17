@@ -52,7 +52,7 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.funcID = data?.data?.funcID;
-     this.employeeId = data?.data?.employeeId;
+    this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
@@ -204,6 +204,7 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
       this.hrSevice
         .AddEBenefit(this.currentEJobSalaries)
         .subscribe((p) => {
+          console.log(p)
           if (p != null) { 
             this.notify.notifyCode('SYS006'); 
             this.dialog && this.dialog.close(p);
@@ -213,11 +214,9 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
           }
         });
     } else {
-      console.log(this.formModel.currentData)
       this.hrSevice
         .EditEBenefit(this.formModel.currentData)
         .subscribe((p) => {
-          console.log(p)
           if (p != null) {
             this.notify.notifyCode('SYS007'); 
             this.dialog && this.dialog.close(p);
