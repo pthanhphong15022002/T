@@ -1728,7 +1728,7 @@ export class InstancesComponent
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.process.processNo //thêm để test ODC2303-0002 đã xóa
+        this.process.processNo 
       )
       .subscribe((item: any) => {
         if (item) {
@@ -1737,9 +1737,7 @@ export class InstancesComponent
             .subscribe((check) => {
               if (check) this.approvalTrans(item?.processID, datas);
               else {
-                this.notificationsService.notify(
-                  'Hãy thiết lập các bước trình ký để tiến hành bước xét duyệt--Khanh cho anh xin mess code','2'
-                );
+                this.notificationsService.notifyCode('DP036');
               }
             });
 
@@ -1840,10 +1838,10 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.recID,
+          data?.processID,
           processID,
           this.view.formModel.entityName,
-          this.formModel.funcID,
+          this.view.formModel.funcID,
           '<div>' + data?.title + '</div>',
         ]
       )
