@@ -32,14 +32,22 @@
                                             </div>
                                             <div class="dropzone-msg dz-message needsclick">
                                                 <div class="dropzone-msg-title mb-2">
-                                                    <codx-label name="lblupload3" [formModel]="formModel"
+                                                    <codx-label 
                                                         default="Chọn một hay nhiều file từ máy của bạn."
-                                                        class="fw-bold"></codx-label>
+                                                        [fiedName]="'lblAttachmentTitle'"
+                                                        [formName]="'fmAttachment'"
+                                                        class="fw-bold"
+                                                    >
+                                                    </codx-label>
                                                 </div>
                                                 <span class="dropzone-msg-desc">
-                                                    <codx-label name="lblupload4" [formModel]="formModel"
-                                                        default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc"
-                                                        class="fw-bold"></codx-label>
+                                                    <codx-label 
+                                                        default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây"
+                                                        [fiedName]="'lblAttachmentSubTitle'"
+                                                        [formName]="'fmAttachment'"
+                                                        class="fw-bold"
+                                                    >
+                                                    </codx-label>
                                                 </span>
                                             </div>
                                             <!-- Select Folder directoryUpload='true' -->
