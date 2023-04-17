@@ -37,9 +37,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   cashpaymentline: CashPaymentLine;
   cashpayment: CashPayment;
   lockFields: any;
-  dim1: any = true;
-  dim2: any = true;
-  dim3: any = true;
   objectcashpaymentline: Array<CashPaymentLine> = [];
   constructor(
     private inject: Injector,
@@ -72,7 +69,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpaymentline);
-    this.loadlockfields();
     this.dt.detectChanges();
 
     this.journalService.setAccountCbxDataSourceByJournal(
@@ -92,6 +88,53 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   valueChange(e: any) {
     this.cashpaymentline[e.field] = e.data;
   }
+  // valueChange(e: any) {
+  //   const field = [
+  //     'accountid',
+  //     'offsetacctid',
+  //     'objecttype',
+  //     'objectid',
+  //     'dr',
+  //     'cr',
+  //     'dr2',
+  //     'cr2',
+  //     'reasonid',
+  //     'referenceno',
+  //   ];
+  //   if (field.includes(e.field.toLowerCase())) {
+  //     this.api
+  //       .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+  //         this.cashpayment,
+  //         this.cashpaymentline,
+  //         e.field,
+  //         e.data?.isAddNew,
+  //       ])
+  //       .subscribe((res: any) => {
+  //         if (res && res.line){}
+  //           // this.cashpaymentline = res.line;
+  //           // this.form.formGroup.patchValue(this.cashpaymentline);
+  //       });
+  //   }
+
+  //   if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+  //     if (e.value === '3') {
+  //       //Set lock field
+  //     } else {
+  //       this.api
+  //         .exec<any>(
+  //           'AC',
+  //           'AC',
+  //           'CashPaymentsLinesBusiness',
+  //           'SetLockFieldAsync'
+  //         )
+  //         .subscribe((res) => {
+  //           if (res) {
+  //             //Set lock field
+  //           }
+  //         });
+  //     }
+  //   }
+  // }
   //#endregion
 
   //#region Function
@@ -137,21 +180,12 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
         }
       });
   }
-  loadlockfields() {
-    if (this.lockFields != null) {
-      this.lockFields.forEach((element) => {
-        switch (element) {
-          case 'DIM1':
-            this.dim1 = false;
-            break;
-          case 'DIM2':
-            this.dim2 = false;
-            break;
-          case 'DIM3':
-            this.dim3 = false;
-            break;
-        }
-      });
+  loadControl(value) {
+    let index = this.lockFields.findIndex((x) => x == value);
+    if (index == -1) {
+      return true;
+    } else {
+      return false;
     }
   }
   //#endregion
