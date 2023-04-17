@@ -699,6 +699,7 @@ export class InstancesComponent
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
         this.reloadData = true;
+        this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
       } else this.reloadData = false;
