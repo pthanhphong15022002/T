@@ -1732,7 +1732,17 @@ export class InstancesComponent
       )
       .subscribe((item: any) => {
         if (item) {
-          this.approvalTrans(item?.processID, datas);
+          this.codxDpService
+            .checkApprovalStep(item.recID)
+            .subscribe((check) => {
+              if (check) this.approvalTrans(item?.processID, datas);
+              else {
+                this.notificationsService.notify(
+                  'Hãy thiết lập các bước trình ký để tiến hành bước xét duyệt--Khanh cho anh xin mess code','2'
+                );
+              }
+            });
+
         } else {
         }
       });
