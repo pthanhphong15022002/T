@@ -130,7 +130,9 @@ textarea.e-input,
 // }
 input.e-input{
   height: 32px !important;
+  line-height: 32px;
 }
+
 input.e-input::placeholder,
 textarea.e-input::placeholder,
 .e-input-group::placeholder,
@@ -2361,6 +2363,25 @@ codx-toolbar{
     width: 646px!important;
   }
 }
+.linechat-user{
+  border-radius: 4px 0 0 4px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 34px;
+}
+.linechat-user span{
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
