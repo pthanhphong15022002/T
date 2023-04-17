@@ -39,8 +39,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   isHaveFile = false;
   actualEndMax: Date;
   headerTextInsStep = {};
-  id = ''
-  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
+  id = '';
+  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
   popupUpdateProgress: DialogRef;
 
   progressData = 0;
@@ -59,7 +59,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
-    this.id = "progress" + (Math.random() * 100000000).toString();
+    this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
   }
 
   async ngOnInit() {
