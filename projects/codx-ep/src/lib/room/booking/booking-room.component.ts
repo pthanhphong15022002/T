@@ -698,17 +698,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           .getBookingByRecID(evt?.recID)
           .subscribe((booking) => {
             if (booking) {
-              this.view.dataService.copy(booking).subscribe((res) => {
+              this.view.dataService.dataSelected=booking;
+              this.view.dataService.copy().subscribe((res) => {                
+              if(res){
                 this.popupClosed = false;
                 let option = new SidebarModel();
                 option.Width = '800px';
-                this.view.dataService.dataSelected = res;
                 option.DataService = this.view?.dataService;
                 option.FormModel = this.formModel;
                 let dialogCopy = this.callFuncService.openSide(
                   PopupAddBookingRoomComponent,
                   [
-                    this.view.dataService.dataSelected,
+                    res,
                     true,
                     this.popupTitle,
                     null,
@@ -720,6 +721,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                   this.popupClosed = true;
                   if (!returnData.event) this.view.dataService.clear();
                 });
+              }
+                
               });
             }
           });

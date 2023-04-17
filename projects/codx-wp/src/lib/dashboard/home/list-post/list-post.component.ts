@@ -185,7 +185,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   deletePost(data: any) {
     if (data) {
       (this.listview.dataService as CRUDService)
-        .delete([data],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
+        .delete([data.recID],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
         .subscribe();
     }
   }

@@ -1,3 +1,5 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { data } from './../../../../codx-cm/src/lib/task/codx-table/data';
 import {
   ChangeDetectorRef,
   Component,
@@ -38,7 +40,6 @@ export class EmployeeAwardsComponent extends UIComponent {
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
 
-
   @ViewChild('reasonAward') reasonAward: TemplateRef<any>;
 
   //#endregion
@@ -60,13 +61,13 @@ export class EmployeeAwardsComponent extends UIComponent {
   className = 'EAwardsBusiness';
   method = 'GetListAwardByDataRequestAsync';
 
-  actionAddNew = 'HRTPro06A01';
-  actionSubmit = 'HRTPro06A03';
-  actionUpdateCanceled = 'HRTPro06AU0';
-  actionUpdateInProgress = 'HRTPro06AU3';
-  actionUpdateRejected = 'HRTPro06AU4';
+  actionAddNew = 'HRTPro06A01'; // mới tạo
+  actionSubmit = 'HRTPro06A03'; //gửi duyệt
+  actionUpdateCanceled = 'HRTPro06AU0'; //hủy
+  actionUpdateInProgress = 'HRTPro06AU3'; //đang duyệt
+  actionUpdateRejected = 'HRTPro06AU4'; //từ chối
   actionUpdateApproved = 'HRTPro06AU5';
-  actionUpdateClosed = 'HRTPro06AU9';
+  actionUpdateClosed = 'HRTPro06AU9'; // đóng
 
   funcID: string;
   grvSetup: any;
@@ -82,19 +83,22 @@ export class EmployeeAwardsComponent extends UIComponent {
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
   dialogAddEdit: DialogRef;
-  onInit() {
+
+  onInit(): void {
+    this.cache
+      .gridViewSetup('EAwards', 'grvEAwards')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = res;
+        }
+      });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
-      if (res) {
-        //this.grvSetup = Util.camelize(res);
-        this.grvSetup = res;
-        console.log(this.grvSetup);
-      }
-    });
+
   }
-  ngAfterViewInit() {
+
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.list,
@@ -115,19 +119,19 @@ export class EmployeeAwardsComponent extends UIComponent {
         },
       },
     ];
+    this.view.dataService.methodDelete = 'DeleteEmployeeAwardInfoAsync';
+
   }
-  ngAfterViewChecked() {
-    if (!this.formGroup?.value) {
-      this.hrService
-        .getFormGroup(
-          this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
-        )
-        .then((res) => {
+
+  ngAfterViewChecked(){
+    if(!this.formGroup?.value){
+      this.hrService.getFormGroup(this.view?.formModel?.formName,
+        this.view?.formModel?.gridViewName).then(res =>{
           this.formGroup = res;
-        });
+        })
     }
   }
+
   addAward(event) {
     if (event.id == 'btnAdd') {
       this.handlerEAwards(
@@ -143,9 +147,17 @@ export class EmployeeAwardsComponent extends UIComponent {
   changeItemDetail(event) {}
 
   clickMF(event, data) {
-
     switch (event.functionID) {
-      case 'SYS02': //Delete
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateRejected:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.popupUpdateEAwardStatus(event.functionID, oUpdate);
+        break;
+      //Delete
+      case 'SYS02':
         if (data) {
           this.view.dataService.dataSelected = data;
         }
@@ -154,9 +166,9 @@ export class EmployeeAwardsComponent extends UIComponent {
             this.beforeDelete(option, data.recID)
           )
           .subscribe(() => {});
-        this.df.detectChanges();
         break;
-      case 'SYS03': //edit
+      //Edit
+      case 'SYS03':
         this.currentEmpObj = data;
         this.handlerEAwards(
           event.text + ' ' + this.view.function.description,
@@ -165,6 +177,7 @@ export class EmployeeAwardsComponent extends UIComponent {
         );
         this.df.detectChanges();
         break;
+      //Copy
       case 'SYS04':
         this.currentEmpObj = data;
         this.copyValue(event.text, this.currentEmpObj);
@@ -172,13 +185,17 @@ export class EmployeeAwardsComponent extends UIComponent {
         break;
     }
   }
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view);
+  }
 
   handlerEAwards(actionHeaderText: string, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
+
     //open form
-    this.dialogAddEdit = this.callfc.openSide(
+    let dialogAdd = this.callfc.openSide(
       PopupEAwardsComponent,
       {
         //pass data
@@ -191,7 +208,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       },
       option
     );
-    this.dialogAddEdit.closed.subscribe((res) => {
+    dialogAdd.closed.subscribe((res) => {
       console.log(res);
       if (res.event) {
         if (actionType == 'add') {
@@ -203,11 +220,21 @@ export class EmployeeAwardsComponent extends UIComponent {
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
           this.df.detectChanges();
-        } 
+        }
       }
       if (res?.event) this.view.dataService.clear();
     });
   }
+
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEmployeeAwardInfoAsync';
+    opt.className = 'EAwardsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
+  }
+
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
       console.log('result', res);
@@ -218,20 +245,53 @@ export class EmployeeAwardsComponent extends UIComponent {
       );
     });
   }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteEmployeeAwardInfoAsync';
-    opt.className = 'EAwardsBusiness';
-    opt.assemblyName = 'HR';
-    opt.service = 'HR';
-    opt.data = data;
-    return true;
-  }
-  changeDataMF(event, data) {}
 
-  getIdUser(createdBy: any, owner: any) {
-    var arr = [];
-    if (createdBy) arr.push(createdBy);
-    if (owner && createdBy != owner) arr.push(owner);
-    return arr.join(';');
+  popupUpdateEAwardStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+    this.editStatusObj = data;
+    this.currentEmpObj = data.emp;
+    this.formGroup.patchValue(this.editStatusObj);
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if(res?.event){
+        this.view.dataService.update(res.event[0]).subscribe((res) => {
+        })
+      }
+      this.df.detectChanges();
+    });
+  }
+
+  getIdUser(string1, tring2) {}
+
+  valueChangeComment(event){
+    this.cmtStatus = event.data;
+  }
+  onSaveUpdateForm(){
+    this.hrService.UpdateEmployeeAwardInfo(this.editStatusObj).subscribe(res =>{
+      if(res){
+        this.notify.notifyCode('SYS007');
+        res[0].emp = this.currentEmpObj;
+        this.hrService.addBGTrackLogEAwards(
+          res[0].recID,
+          this.cmtStatus,
+          this.view.formModel.entityName,
+          'C1',
+          null
+        ).subscribe((res) => {
+          
+        });
+        this.dialogEditStatus && this.dialogEditStatus.close(res)
+      }
+    })
+  }
+  closeUpdateStatusForm(dialog: DialogRef){
+    dialog.close();
   }
 }

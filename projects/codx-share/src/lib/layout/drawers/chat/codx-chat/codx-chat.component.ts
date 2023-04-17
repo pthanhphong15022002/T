@@ -1,6 +1,6 @@
 import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel} from 'codx-core';
+import { CodxService, CallFuncService, ApiHttpService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, AuthService} from 'codx-core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
@@ -112,6 +112,8 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       viewRef.detectChanges();
       let view = viewRef.rootNodes[0];
       document.querySelector("#codx-container-chat")?.append(view);
+      this.codxChatContainer.elementRef.nativeElement.remove();
+      
     }
   }
   //click  open popup 
