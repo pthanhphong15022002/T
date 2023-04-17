@@ -583,9 +583,19 @@ export class CodxHrService {
       data
     );
   }
+
+  addBGTrackLogEAwards(objectID, comment, objectType, actionType, createdBy){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAwardsBusiness',
+      'ReceiveToAddBGTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
   //#endregion
 
-  //#region EAwardBusiness
+  //#region EDisciplinesBusiness
   getEmployeeDisciplineModel() {
     return this.api.execSv<any>(
       'HR',

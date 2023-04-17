@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { AuthService } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 
 declare var window: any;
@@ -10,7 +11,7 @@ declare var window: any;
   styleUrls: ['./chat-container.component.scss'],
 
 })
-export class CodxChatContainerComponent implements OnInit {
+export class CodxChatContainerComponent implements OnInit,OnDestroy {
   @HostBinding('style') get myStyle(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(`
     width: 100%;
@@ -29,37 +30,45 @@ export class CodxChatContainerComponent implements OnInit {
   (
     private signalRSV:SignalRService,
     private sanitizer: DomSanitizer,
+    private authSV:AuthService,
     private dt:ChangeDetectorRef
   ) 
   {
   }
+  
   @ViewChild("boxChats",{static:true}) boxChats:TemplateRef<any>;
   @ViewChild("boxChatItem",{static:true}) boxChatItem:TemplateRef<any>;
 
   ngOnInit(): void {
   }
-
-
   ngAfterViewInit(){
     // active new group
     this.signalRSV.activeNewGroup.subscribe((res:any) => {
-      if(res){
-        this.handleBoxChat(res);
+      if(res?.group)
+      {
+        this.handleBoxChat(res.group);
       }
     });
     // active group
     this.signalRSV.activeGroup.subscribe((res:any) => {
-      if(res)
+      if(res?.group)
       {
-        this.handleBoxChat(res);
+        this.handleBoxChat(res?.group);
       }
     });
     //receiver message
     this.signalRSV.chat.subscribe((res:any) => {
-      if(res){
-        this.handleBoxChat(res.data);         
+      if(res?.mssg){
+        this.handleBoxChat(res.mssg);         
       }
     });
+
+    this.signalRSV.disConnected.subscribe((res) => {
+      
+    })
+  }
+
+  ngOnDestroy(): void {
   }
   // handle box chat
   handleBoxChat(data:any){

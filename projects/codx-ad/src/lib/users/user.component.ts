@@ -201,8 +201,8 @@ export class UserComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
           e.event.modifiedOn = new Date();
@@ -241,12 +241,14 @@ export class UserComponent extends UIComponent {
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
-        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        this.dialog.closed.subscribe((x) => {
+        let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        dialog.closed.subscribe((x) => {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
-            this.view.dataService.update(x.event).subscribe();
+            this.view.dataService.update(x.event).subscribe((res) => {
+              console.log('edit xong', res);
+            });
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -271,8 +273,8 @@ export class UserComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((x) => {
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((x) => {
         if (x.event) {
           x.event.modifiedOn = new Date();
           this.view.dataService.update(x.event).subscribe();

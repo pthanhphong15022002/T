@@ -180,7 +180,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           this.countListViewChoose();
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
-            dt['roleID'] = dt.recIDofRole;
+            dt['roleID'] = dt.roleID;
             dt.userID = this.adUserGroup.userID;
           });
           this.changeDetector.detectChanges();
@@ -436,7 +436,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           this.viewChooseRole = res.msgBodyData[0];
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
-            dt['roleID'] = dt.recIDofRole;
+            dt['roleID'] = dt.roleID;
             dt.userID = this.adUserGroup.userID;
           });
           this.countListViewChooseRoleApp = this.viewChooseRole.length;

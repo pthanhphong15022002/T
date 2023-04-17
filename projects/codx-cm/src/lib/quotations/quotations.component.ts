@@ -23,6 +23,7 @@ import {
 })
 export class QuotationsComponent extends UIComponent {
   @Input() funcID: string;
+  @Input() customerID: string;
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -52,4 +53,6 @@ export class QuotationsComponent extends UIComponent {
   }
 
   clickMF(e, data) {}
+
+  changeItemDetail(e) {}
 }

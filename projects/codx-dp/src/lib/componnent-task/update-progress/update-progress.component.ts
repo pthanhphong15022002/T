@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom} from 'rxjs';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -39,8 +39,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   isHaveFile = false;
   actualEndMax: Date;
   headerTextInsStep = {};
-  id = ''
-  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
+  id = '';
+  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
   popupUpdateProgress: DialogRef;
 
   progressData = 0;
@@ -59,7 +59,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
-    this.id = "progress" + (Math.random() * 100000000).toString();
+    this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
   }
 
   async ngOnInit() {
@@ -171,6 +171,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   }
 
   async handelProgress() {
+    console.log(this.progress);
+    
     if (this.dataSource?.progress == 100 && !this.dataSource?.actualEnd) {
       this.notiService.notifyCode(
         'SYS009',
@@ -234,10 +236,51 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
         this.notiService.notifyCode('SYS007');
       });
     }else{
-      this.progress = this.progressData;
-      this.valueChange.emit(dataSave);
+      this.handelDataOutput(isUpdate)
       this.popupUpdateProgress.close();
     }
+  }
+
+  handelDataOutput(isUpdate){
+    let dataOutput  = new progressOutput();
+    dataOutput.stepID = this.step['recID'];
+    dataOutput.groupTaskID = this.dataSource['taskGroupID'];
+    dataOutput.taskID = this.dataSource['recID'];
+    dataOutput.isUpdate = isUpdate;
+    dataOutput.actualEnd = this.actualEnd;
+    dataOutput.note = this.note;
+    dataOutput.type = this.type;
+    switch(this.type){
+      case 'P':
+        dataOutput.progressStep = this.progressData;
+        break;
+      case 'G':
+        dataOutput.progressGroupTask = this.progressData;
+        break
+      case 'T':
+        dataOutput.progressTask = this.progressData;
+        if(isUpdate){
+          this.progressGroupTask(dataOutput);
+        }
+        break
+    }
+    this.valueChange.emit(dataOutput);
+  }
+
+  progressGroupTask(dataOutput: progressOutput){
+    if(this.step){
+      let step = JSON.parse(JSON.stringify(this.step));
+      if(dataOutput.groupTaskID){
+        let listTask = step?.tasks?.filter(task =>task.taskGroupID == dataOutput.groupTaskID) || [];
+        let task = listTask?.find(t => t.recID == dataOutput.taskID);
+        task.progress = dataOutput.progressTask;
+        const sum = listTask.reduce((acc, task) => {
+          return acc + task.progress;
+        }, 0);
+        dataOutput.progressGroupTask = Number((sum/listTask.length).toFixed(2));
+      }
+    }
+    
   }
 
   async beforeUpdate(funcID): Promise<boolean> {
@@ -245,6 +288,18 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
     return check?.event?.status === 'Y' ? true : false;
   }
 
+}
+export class progressOutput {
+		stepID: string;
+		groupTaskID: string;                                    
+		taskID: string;
+		type: string;
+		progressStep: number = null;
+		progressGroupTask: number = null;
+		progressTask: number = null;
+		note: string = '';
+		actualEnd: Date = null;
+		isUpdate: boolean = false;
 }
 export class Progress {
   stepID: string;

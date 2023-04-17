@@ -1312,32 +1312,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-    this.callfc
-      .openForm(
-        PopupRolesDynamicComponent,
-        '',
-        950,
-        650,
-        '',
-        [
-          this.process,
-          title,
-          this.action === 'copy' ? 'copy' : 'add',
-          roleType,
-        ],
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e && e.event != null) {
-          if (!this.isChange) this.isChange = true;
-          this.process.permissions = e.event;
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+    var dialog = this.callfc.openForm(
+      PopupRolesDynamicComponent,
+      '',
+      950,
+      650,
+      '',
+      [this.process, title, this.action === 'copy' ? 'copy' : 'add', roleType],
+      '',
+      dialogModel
+    );
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        if (!this.isChange) this.isChange = true;
+        this.process.permissions = e.event;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
-  valueRadioInfo($event, view){
+  valueRadioInfo($event, view) {
     if (view === 'AllowCopyView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowCopy = true;
@@ -1685,17 +1680,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   editCustomField(field, textTitle, enabled) {
+    let oldStepID = field?.stepID;
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1720,14 +1711,37 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
-              this.stepList.forEach((obj) => {
-                if (obj.recID == this.fieldCrr.stepID) {
-                  let index = obj.fields.findIndex(
-                    (x) => x.recID == this.fieldCrr.recID
-                  );
-                  if (index != -1) {
-                    obj.fields[index] = this.fieldCrr;
+              if (oldStepID == this.fieldCrr.stepID) {
+                this.stepList.forEach((obj) => {
+                  if (obj.recID == this.fieldCrr.stepID) {
+                    let index = obj.fields.findIndex(
+                      (x) => x.recID == this.fieldCrr.recID
+                    );
+                    if (index != -1) {
+                      obj.fields[index] = this.fieldCrr;
+                    }
+                    if (this.action == 'edit') {
+                      let check = this.listStepEdit.some(
+                        (id) => id == obj?.recID
+                      );
+                      if (!check) {
+                        this.listStepEdit.push(obj?.recID);
+                      }
+                    }
                   }
+                });
+              } else {
+                this.stepList.forEach((obj) => {
+                  if (obj.recID == oldStepID) {
+                    let index = obj.fields.findIndex(
+                      (x) => x.recID == this.fieldCrr.recID
+                    );
+                    if (index != -1) {
+                      obj.fields.splice(index, 1);
+                    }
+                  }
+                  if (obj.recID == this.fieldCrr.stepID)
+                    obj.fields.push(this.fieldCrr);
                   if (this.action == 'edit') {
                     let check = this.listStepEdit.some(
                       (id) => id == obj?.recID
@@ -1736,8 +1750,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                       this.listStepEdit.push(obj?.recID);
                     }
                   }
-                }
-              });
+                });
+              }
+
               this.changeDetectorRef.detectChanges();
             }
           });
@@ -1833,11 +1848,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
     if (event.previousContainer === event.container) {
-      //   // if (stepID) {
       this.dropFields(event, stepID);
-      //   //   } else {
-      //   //     this.dropSteps(event);
-      //   //   }
     } else {
       this.dropFieldsToStep(event, stepID);
     }
@@ -1961,7 +1972,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (stepCopy['fields']?.length > 0) {
       stepCopy['fields']?.forEach((fields) => {
         fields['recID'] = Util.uid();
-        fields['stepID'] = this.step['recID'];
+        fields['stepID'] = stepCopy['recID'];
         fields['createdOn'] = new Date();
         fields['createdBy'] = this.userId;
         fields['modifiedOn'] = null;
