@@ -1,7 +1,7 @@
 import { Targets } from './../../../../../codx-om/src/lib/model/okr.model';
 import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {data} from './data'
-import { CrmcustomerDetailComponent } from '../../crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
+import { CmcustomerDetailComponent } from '../../cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 @Component({
@@ -44,7 +44,7 @@ implements OnInit, AfterViewInit {
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('customerDetail') customerDetail: CrmcustomerDetailComponent;
+  @ViewChild('customerDetail') customerDetail: CmcustomerDetailComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
