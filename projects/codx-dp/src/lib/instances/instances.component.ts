@@ -774,7 +774,7 @@ export class InstancesComponent
               break;
             case 'DP09':
               if (!data.permissionCloseInstances) {
-                if (!data.permissionMoveInstances || data.closed) res.disabled = true;
+                if (!data.permissionMoveInstances || data.status != '2' || data.closed) res.disabled = true;
               }
               break;
             //Copy
