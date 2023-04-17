@@ -126,7 +126,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
-
+    
     this.curUser = this.auth.get();
     this.createCOObject()
   }
@@ -136,13 +136,32 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   
   onInit(): void {    
-    this.getCacheData();
-    this.getOKRModel();
-    this.funcIDChanged();
-    this.formModelChanged();
-    this.createCOObject();
-    this.setTitle();
-    this.getOKRPlans(this.periodID, this.interval, this.year);
+    
+    if(this.curUser.employee==null){
+      this.codxOmService.getListEmpByUserID([this.curUser?.userID]).subscribe((emp) => {
+        if (emp) {
+          this.curUser.employee=emp[0];          
+          this.getCacheData();
+          this.getOKRModel();
+          this.funcIDChanged();
+          this.formModelChanged();
+          this.createCOObject();
+          this.setTitle();
+          this.getOKRPlans(this.periodID, this.interval, this.year);
+        }
+      });
+    }   
+    else{
+
+      this.getCacheData();
+      this.getOKRModel();
+      this.funcIDChanged();
+      this.formModelChanged();
+      this.createCOObject();
+      this.setTitle();
+      this.getOKRPlans(this.periodID, this.interval, this.year);
+    }
+
     
   }
   ngAfterViewInit(): void {
@@ -271,6 +290,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
+  getCurrentEmp(){
+      this.codxOmService.getListEmpByUserID([this.curUser?.userID]).subscribe((emp) => {
+        if (emp) {
+          this.curUser.employee=emp[0];
+        }
+      });
+    
+  }
   getOKRModel() {
     this.codxOmService.getOKRModel(this.funcID).subscribe((model: any) => {
       if (model) {
