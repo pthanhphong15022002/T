@@ -45,6 +45,7 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
   benefitFormGroup : FormGroup;
   lstBenefit;
   active = 1;
+  console = console;
 
   ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
@@ -67,12 +68,12 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
       changes.itemDetail?.previousValue?.recID !=
         changes.itemDetail?.currentValue?.recID
     ) {
-      this.hrService.loadDataEContract(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.df.detectChanges();
-        }
-      });
+      // this.hrService.loadDataEContract(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
+      //   if (res) {
+      //     this.itemDetail = res;
+      //     this.df.detectChanges();
+      //   }
+      // });
     }
 
     console.log('thong tin hdld', this.itemDetail);

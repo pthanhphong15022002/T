@@ -35,6 +35,7 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   gridViewSetup: any;
   validate: any = 0;
+  lockFields: any;
   type: any;
   cashreceiptslines: CashReceiptsLines;
   constructor(
@@ -49,6 +50,7 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.cashreceiptslines = dialogData.data?.data;
     this.type = dialogData.data?.type;
+    this.lockFields = dialogData.data?.lockFields;
     this.cache
       .gridViewSetup('CashReceiptsLines', 'grvCashReceiptsLines')
       .subscribe((res) => {
@@ -101,6 +103,14 @@ export class PopAddLinereceiptsComponent extends UIComponent implements OnInit {
           }
         }
       }
+    }
+  }
+  loadControl(value) {
+    let index = this.lockFields.findIndex((x) => x == value);
+    if (index == -1) {
+      return true;
+    } else {
+      return false;
     }
   }
   onSave() {
