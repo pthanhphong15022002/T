@@ -26,7 +26,7 @@ export class QuotationsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-
+  customerID: any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -52,4 +52,6 @@ export class QuotationsComponent extends UIComponent {
   }
 
   clickMF(e, data) {}
+  
+  changeItemDetail(e) {}
 }
