@@ -28,7 +28,7 @@ import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-qu
   templateUrl: './popup-add-cmcustomer.component.html',
   styleUrls: ['./popup-add-cmcustomer.component.css'],
 })
-export class PopupAddCmcustomerComponent implements OnInit {
+export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   data = new tmpCrm();
   dialog: any;
@@ -58,9 +58,7 @@ export class PopupAddCmcustomerComponent implements OnInit {
     this.title = dt.data[1];
     if (this.action == 'edit') {
       this.getAvatar(this.data);
-      if (this.funcID == 'CM0102') {
-        this.getLastAndFirstName(this.data?.contactName);
-      }
+
       if (this.data.contacts != null && this.data.contacts.length > 0) {
         this.contacts = this.data.contacts;
         var check = this.contacts.find((x) => x.contactType == '1');

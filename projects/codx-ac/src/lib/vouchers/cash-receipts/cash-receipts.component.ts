@@ -49,7 +49,7 @@ export class CashReceiptsComponent extends UIComponent {
   cashbook: any;
   page: any = 1;
   pageSize = 6;
-  loadChange:any;
+  loadChange: any;
   cashreceiptslines: Array<CashReceiptsLines> = [];
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
@@ -192,6 +192,12 @@ export class CashReceiptsComponent extends UIComponent {
           option,
           this.view.funcID
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event['update']) {
+            this.itemSelected = res.event['data'];
+            this.loadDatadetail(this.itemSelected);
+          }
+        });
       });
   }
   copy(e, data) {
@@ -258,11 +264,14 @@ export class CashReceiptsComponent extends UIComponent {
   changeItemDetail(event) {
     if (event?.data.result) {
       return;
-    }else{
-      this.itemSelected = event?.data;
-      this.loadDatadetail(this.itemSelected);
+    } else {
+      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
+      }
     }
-    this.dt.detectChanges();
   }
 
   changeDataMF(e: any, data: any) {
@@ -303,7 +312,6 @@ export class CashReceiptsComponent extends UIComponent {
   }
 
   loadDatadetail(data) {
-    this.cashreceiptslines = []
     this.api
       .exec('AC', 'CashReceiptsLinesBusiness', 'LoadDataAsync', [data.recID])
       .subscribe((res: any) => {
