@@ -19,8 +19,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CmcustomerDetailComponent } from './crmcustomer-detail/cmcustomer-detail.component';
-import { PopupAddCmcustomerComponent } from './popup-add-crmcustomer/popup-add-cmcustomer.component';
+import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
+import { PopupAddCmcustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 
 @Component({
   selector: 'codx-cmcustomer',

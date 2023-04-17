@@ -17,7 +17,7 @@ import {
   AlertConfirmInputConfig,
   NotificationsService,
 } from 'codx-core';
-import { PopupQuickaddContactComponent } from '../popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
