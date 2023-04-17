@@ -20,7 +20,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('gridProductsLine') gridProductsLine: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
-  @ViewChild('cashGeneral') cashGeneral: ElementRef;
+  @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   quotations: CM_Quotations;
@@ -40,7 +40,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
   productsLine: Array<CM_Products> = []; //mang san pham
-
+  lockFields = [];
   constructor(
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
@@ -58,15 +58,17 @@ export class PopupAddQuotationsComponent implements OnInit {
   select(e) {}
   created(e) {}
 
-  gridCreated(e) {
+  gridCreated(e, grid) {
     let hBody, hTab, hNote;
     if (this.cardbodyGeneral)
       hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
-    if (this.cashGeneral) hTab = (this.cashGeneral as any).element.offsetHeight;
+    if (this.quotationGeneral) hTab = (this.quotationGeneral as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
+    grid.disableField(this.lockFields);
   }
+
   clickMF(e, data) {}
 
   addRow() {

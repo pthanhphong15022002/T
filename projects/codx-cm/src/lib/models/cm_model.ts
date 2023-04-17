@@ -1,11 +1,38 @@
 export class CM_Products {
+recID: string;
+productID: string;
+productName: string;
+productName2: string;
+businessLineID: string;
+parentID: string;
+note: string;
+sorting: number;
+stop: boolean;
+detail: string;
+onHand: number;
+sales: number;
+unit: string;
+unitPrice: number;
+currencyID: string;
+owner: string;
+bUID: string;
+createdOn: Date;
+createdBy: string;
+modifiedOn: Date;
+modifiedBy: string;
+
+}
+export class CM_BusinessLines {
   recID: string;
-  productID: string;
-  productType: string;
-  productName: string;
-  unitPrice: number;
-  specifications: string;
-  isCompanyProduct: boolean = false;
+  businessLineID: string;
+  businessLineName: string;
+  businessLineName2: string;
+  parentID: string;
+  note: string;
+  sorting: number;
+  stop: boolean;
+  owner: string;
+  bUID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -13,18 +40,42 @@ export class CM_Products {
 }
 
 export class CM_Quotations {
-  recID: string;
-  quotationID: string;
-  objectType: string;
-  objectID: string;
-  quotationName: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-  createdOn: Date;
-  createdBy: string;
-  modifiedOn: Date;
-  modifiedBy: string;
+recID: string;
+quotationID: string;
+quotationName: string;
+quotationName2: string;
+category: string;
+orderPoolID: string;
+customerID: string;
+salespersonID: string;
+consultantID: string;
+delTermID: string;
+delModeID: string;
+pmtTermID: string;
+pmtMethodID: string;
+currencyID: string;
+status: string;
+deadline: Date;
+memo: string;
+totalAmt: number;
+discPct: number;
+discAmt: number;
+tags: string;
+refType: string;
+refNo: string;
+refID: string;
+versionNo: string;
+revision: number;
+parentID: string;
+attachments: number;
+comments: number;
+owner: string;
+bUID: string;
+createdOn: Date;
+createdBy: string;
+modifiedOn: Date;
+modifiedBy: string;
+
 }
 
 export class CM_Opportunities {
@@ -35,7 +86,7 @@ export class CM_Opportunities {
   campaignID: string;
   objectType: string;
   objectID: string;
-  contacts: CM_Products[]=[];
+  contacts: CM_Products[] = [];
   // opponents: objects;
   // products: objects;
   title: string;
@@ -53,7 +104,7 @@ export class CM_Opportunities {
   closedOn: Date;
   owner: string;
   bUID: string;
-  permissions: CM_Permissions[]=[];
+  permissions: CM_Permissions[] = [];
   tags: string;
   stepID: string;
   // templates: objects;
@@ -61,41 +112,41 @@ export class CM_Opportunities {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
-  modifiedBy: string;bit
-
+  modifiedBy: string;
+  bit;
 }
 
 export class CM_Permissions {
   recID: string;
-roleType: string;
-objectType: string;
-objectName: string;
-objectID: string;
-create: boolean;
-read: boolean;
-update: boolean;
-assign: boolean;
-delete: boolean;
-share: boolean;
-upload: boolean;
-download: boolean;
-note: string;
-createdOn: Date;
-createdBy: string;
-modifiedOn: Date;
-modifiedBy: string;
-edit: boolean;
-allowPermit: boolean;
-publish: boolean;
-isActive: boolean;
-startDate: Date;
-endDate: Date;
-approvalRule: string;
-approverType: string;
-approvers: string;
-approvedBy: string;
-approveStatus: string;
-approvedOn: Date;
-autoCreate: string;
-allowUpdateStatus: string;
+  roleType: string;
+  objectType: string;
+  objectName: string;
+  objectID: string;
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  assign: boolean;
+  delete: boolean;
+  share: boolean;
+  upload: boolean;
+  download: boolean;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  edit: boolean;
+  allowPermit: boolean;
+  publish: boolean;
+  isActive: boolean;
+  startDate: Date;
+  endDate: Date;
+  approvalRule: string;
+  approverType: string;
+  approvers: string;
+  approvedBy: string;
+  approveStatus: string;
+  approvedOn: Date;
+  autoCreate: string;
+  allowUpdateStatus: string;
 }
