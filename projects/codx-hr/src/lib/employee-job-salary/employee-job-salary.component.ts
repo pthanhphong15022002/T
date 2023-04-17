@@ -239,7 +239,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
-    debugger;
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
