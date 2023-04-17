@@ -328,6 +328,19 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+
+  //Lấy Emp theo UserID
+  getListEmpByUserID(userID:any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListEmployeesByUserIDAsync',
+      [userID]
+    );
+  }
+
+
   //Lấy Task theo OKR recID
   getListOKRTasks(recID:string) {
     return this.api.execSv(

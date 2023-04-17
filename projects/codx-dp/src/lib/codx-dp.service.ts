@@ -637,4 +637,9 @@ export class CodxDpService {
     }, []);
     return arr3;
   }
+  //check trinfh ki
+  checkApprovalStep(recID){
+   return this.api.exec('ES','ApprovalStepsBusiness','CheckApprovalStepByTranIDAsync',recID)
+  }
+  
 }
