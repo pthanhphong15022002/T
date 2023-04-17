@@ -9,6 +9,8 @@ import {
 } from 'codx-core';
 import { lstat } from 'fs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { tmpTNMD } from './models/tmpTenantModules.models';
+import { tmpformChooseRole } from './models/tmpformChooseRole.models';
 
 @Injectable({
   providedIn: 'root',
@@ -344,6 +346,34 @@ export class CodxAdService {
       [userID, tenant, mailType]
     );
   }
+
+  //#region AD_User new process
+  removeAD_UserRoles(
+    lstAD_UserRoles: tmpformChooseRole[],
+    lstUserIDs: string[]
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'RemoveAD_UserRolesAsync',
+      [lstAD_UserRoles, lstUserIDs]
+    );
+  }
+
+  addUpdateAD_UserRoles(
+    lstAD_UserRoles: tmpformChooseRole[],
+    lstUserIDs: string[]
+  ) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'AddUserRolesAsync',
+      [lstAD_UserRoles, lstUserIDs]
+    );
+  }
+  //#endregion
 
   //#region UserGroupBusiness
   addUserGroupAsync(userGroupModel) {

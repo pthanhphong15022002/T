@@ -1,32 +1,19 @@
-import { GroupMembers, UserGroup } from '../../models/UserGroups.model';
 import {
   Component,
-  OnInit,
   Optional,
   ChangeDetectorRef,
   ViewChild,
   Injector,
 } from '@angular/core';
 import {
-  ApiHttpService,
-  CallFuncService,
-  CodxService,
   DialogData,
-  DialogModel,
   DialogRef,
-  FormModel,
   ImageViewerComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { FormGroup } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { PopRolesComponent } from '../../users/pop-roles/pop-roles.component';
-import { tmpTNMD } from '../../models/tmpTenantModules.models';
 import { CodxAdService } from '../../codx-ad.service';
-import { map } from 'rxjs';
-import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
   selector: 'lib-add',

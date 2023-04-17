@@ -168,6 +168,7 @@ export class InstancesComponent
   reasonStepsObject: any;
   addFieldsControl = '1';
   isLockButton = false;
+  esCategory: any;
   //test temp
   dataTemplet = [
     {
@@ -699,6 +700,7 @@ export class InstancesComponent
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
         this.reloadData = true;
+        this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
       } else this.reloadData = false;
@@ -1701,51 +1703,69 @@ export class InstancesComponent
     else this.isLockButton = true;
   }
   showFormSubmit() {
-    this.isLockButton = true;
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
-      '',
-      600,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
-  }
-
-  //Duyệt
-  documentApproval(datas: any) {
-    this.dialogTemplate.close();
-    // if (datas.bsCategory) {
-    //Có thiết lập bước duyệt
-    // if (datas.bsCategory.approval) {
     this.api
       .execSv(
         'ES',
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.process.processNo //thêm để test ODC2303-0002 đã xóa
+        this.process.processNo
       )
       .subscribe((item: any) => {
         if (item) {
+          this.esCategory = item;
           this.codxDpService
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
-              if (check) this.approvalTrans(item?.processID, datas);
-              else {
-                this.notificationsService.notify(
-                  'Hãy thiết lập các bước trình ký để tiến hành bước xét duyệt--Khanh cho anh xin mess code','2'
+              if (check) {
+                this.isLockButton = true;
+                let option = new DialogModel();
+                option.zIndex = 1001;
+                this.dialogTemplate = this.callfc.openForm(
+                  this.popupTemplate,
+                  '',
+                  600,
+                  500,
+                  '',
+                  null,
+                  '',
+                  option
                 );
-              }
+              } else this.notificationsService.notifyCode('DP036');
             });
-
-        } else {
         }
       });
+  }
+
+  //Duyệt
+  documentApproval(datas: any) {
+    this.approvalTrans(this.esCategory?.processID, datas);
+    // this.dialogTemplate.close();
+    // // if (datas.bsCategory) {
+    // //Có thiết lập bước duyệt
+    // // if (datas.bsCategory.approval) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'CategoriesBusiness',
+    //     'GetByCategoryIDAsync',
+    //     this.process.processNo
+    //   )
+    //   .subscribe((item: any) => {
+    //     if (item) {
+         
+    //       this.codxDpService
+    //         .checkApprovalStep(item.recID)
+    //         .subscribe((check) => {
+    //           if (check) this.approvalTrans(item?.processID, datas);
+    //           else {
+    //             this.notificationsService.notifyCode('DP036');
+    //           }
+    //         });
+    //     } else {
+    //     }
+     // });
     // }
     //Chưa thiết lập bước duyệt
     // else {
@@ -1840,10 +1860,10 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.recID,
+          data?.processID,
           processID,
           this.view.formModel.entityName,
-          this.formModel.funcID,
+          this.view.formModel.funcID,
           '<div>' + data?.title + '</div>',
         ]
       )

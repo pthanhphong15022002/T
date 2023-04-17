@@ -126,13 +126,29 @@
       </codx-label>
     </button>
   </div>
+  <div *ngFor="let item of lstCurRoles; let i = index">
+    <div
+      class="d-flex align-items-center justify-content-between mb-4"
+      *ngIf="!item.isPortal"
+    >
+      <div class="d-flex align-items-center">
+        <div class="me-2">
+          <img class="w-30px" src="../../../{{ item.smallIcon }}" alt="" />
+        </div>
+        <div class="fw-bold">{{ item.customName }}</div>
+      </div>
+      <div class="text-end">
+        <div [style.color]="item.color">
+          {{ item.roleName }}
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary">
-      (click)="onSave()"
-      <!-- [disabled]="this.saveSuccess" -->
+    <button type="button" class="btn btn-primary" (click)="onSave()">
       <codx-label
         fiedName="Save"
         [formModel]="formModel"
