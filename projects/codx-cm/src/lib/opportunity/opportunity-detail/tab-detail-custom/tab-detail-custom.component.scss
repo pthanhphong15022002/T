@@ -1,0 +1,15 @@
+.custom-icon-button {
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-icon-button .icons {
+  color: var(--primary);
+  transition: color 0.3s;
+}
+
+.custom-icon-button:hover .icons {
+  color: var(--primary-active);
+}

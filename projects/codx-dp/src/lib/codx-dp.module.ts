@@ -50,6 +50,7 @@ import { CarouselStageComponent } from './instances/instance-detail/carousel-sta
 
 import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.component';
 import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
+import { ProgressbarComponent } from './componnent-task/progressbar/progressbar.component';
 
 
 const routes: Routes = [
@@ -127,7 +128,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ProgressComponent,
     CarouselStageComponent,  
     UpdateProgressComponent,
-    CodxTaskComponent
+    CodxTaskComponent,
+    ProgressbarComponent
   ],
   imports: [
     RouterModule.forChild(routes),
