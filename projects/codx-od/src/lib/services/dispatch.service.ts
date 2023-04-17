@@ -218,9 +218,9 @@ export class DispatchService implements OnDestroy {
     return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateResultAsync', obj);
   }
    //Thêm mới công văn
-   saveDispatch(dataRq : DataRequest ,obj: dispatch)
+   saveDispatch(dataRq : DataRequest ,obj: dispatch , keyField:boolean)
    {
-     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj]);
+     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj , keyField]);
    }
     //cập nhật công văn
     updateDispatch(obj: dispatch , funcID: string = "", isDlFile: boolean , referType: string , entityName: string)

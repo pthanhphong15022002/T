@@ -1,3 +1,4 @@
+import { FuncID } from './../../../../codx-ep/src/lib/models/enum/enum';
 import { change } from '@syncfusion/ej2-grids';
 import {
   Component,
@@ -12,8 +13,10 @@ import {
   ButtonModel,
   DataService,
   DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   Util,
@@ -25,6 +28,8 @@ import { ActivatedRoute } from '@angular/router';
 import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { environment } from 'src/environments/environment';
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
+import { PopupAddNewHRComponent } from '../employee-list/popup-add-new-hr/popup-add-new-hr.component';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -37,71 +42,76 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
   @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
-  @ViewChild('templateItemDetailRight') templateItemDetailRight?: TemplateRef<any>;
+  @ViewChild('templateItemDetailRight')
+  templateItemDetailRight?: TemplateRef<any>;
 
   @ViewChild('viewDetail') viewDetail: ViewBasicSalaryDetailComponent;
 
+  @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
   //#endregion
-
-  views: Array<ViewModel> = [];
-  funcID: string;
+  
+  constructor(
+    injector: Injector,
+    private hrService: CodxHrService,
+    private activatedRoute: ActivatedRoute,
+    private df: ChangeDetectorRef,
+    private notify: NotificationsService
+    ) {
+      super(injector);
+      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    }
+    
+    service = 'HR';
+  assemblyName = 'ERM.Business.HR';
+  entityName = 'HR_EBasicSalaries';
+  className = 'EBasicSalariesBusiness';
   method = 'GetListEBasicSalariesAsync';
+  
+  actionAddNew = 'HRTPro03A01';
+  actionSubmit = 'HRTPro03A03';
+  actionUpdateCanceled = 'HRTPro03AU0';
+  actionUpdateInProgress = 'HRTPro03AU3';
+  actionUpdateRejected = 'HRTPro03AU4';
+  actionUpdateApproved = 'HRTPro03AU5';
+  actionUpdateClosed = 'HRTPro03AU9';
+  
+  funcID: string;
+  grvSetup: any;
+  views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eContractHeaderText;
-  eBasicSalariesFormModel: FormModel;
-  currentEbasicSalaryDta: any;
-  grvSetup :any;
-  // get file sv
-  services: string = 'DM';
-  assemblyName: string = 'ERM.Business.DM';
-  className: string = 'FileBussiness';
-  lstFile: any[] =[];
-  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
-  REFERTYPE = {
-    IMAGE: 'image',
-    VIDEO: 'video',
-    APPLICATION: 'application',
-  };
-  user: any;
-  itemDetail: any;
-  //
-  constructor(
-    inject: Injector,
-    private hrService: CodxHrService,
-    private activatedRoute: ActivatedRoute,
-    private df: ChangeDetectorRef,
-    private notify: NotificationsService,
-    //auth
-    private auth: AuthService
-  ) {
-    super(inject);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
-  }
+  eBasicSalariesHeaderText;
+  formGroup: FormGroup;
+  currentEmpObj: any;
+  editStatusObj: any;
+  dialogEditStatus: DialogRef;
+  cmtStatus: string = '';
 
   onInit(): void {
+    this.cache
+      .gridViewSetup('EBasicSalaries', 'grvEBasicSalaries')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = Util.camelize(res);
+        }
+      });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
-    this.cache.gridViewSetup('EbasicSalaries','grvEbasicSalaries').subscribe(res=>{
-      if(res) this.grvSetup = Util.camelizekeyObj(res);
-    });
-    this.user = this.auth.userValue;
   }
-
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.views = [
-      // {
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   active: true,
-      //   model: {
-      //     template: this.templateList,
-      //     headerTemplate: this.headerTemplate,
-      //   },
-      // },
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
       {
         type: ViewType.listdetail,
         sameData: true,
@@ -113,39 +123,101 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       },
     ];
   }
-  
-  changeItemDetail(event) {
+  ngAfterViewChecked(){ 
+    if(!this.formGroup?.value){
+      this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
+        this.formGroup = res;
+      });
+    }
   }
 
+  addBasicSalary(event) {
+    if (event.id == 'btnAdd') {
+      this.handlerEBasicSalaries(
+        event.text + ' ' + this.view.function.description,
+        'add',
+        null
+      );
+    }
+  }
+  handleAction(event) {}
+  onMoreMulti(event) {}
+  changeItemDetail(event) {}
+
   clickMF(event, data) {
-    switch (event.functionID){
-      // case 'SYS01':
-        // break;
+    switch (event.functionID) {
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateRejected:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.popupUpdateEBasicSalaryStatus(event.functionID, oUpdate);
+        break;
+      //Delete
       case 'SYS02':
-        this.view.dataService.delete([data]).subscribe(res=>{   });
-        this.df.detectChanges();
+        if (data) {
+          this.view.dataService.dataSelected = data;
+        }
+        this.view.dataService
+          .delete([data], true, (option: RequestOption) =>
+            this.beforeDelete(option, data.recID)
+          )
+          .subscribe(() => {});
         break;
+      //Edit
       case 'SYS03':
-        this.currentEbasicSalaryDta = data;
-        this.handlerEBasicSalary(event.text + ' ' + this.view.function.description, 'edit', this.currentEbasicSalaryDta);
+        this.currentEmpObj = data;
+        this.handlerEBasicSalaries(
+          event.text + ' ' + this.view.function.description,
+          'edit',
+          this.currentEmpObj
+        );
         this.df.detectChanges();
         break;
+      //Copy
       case 'SYS04':
-        this.currentEbasicSalaryDta = data;
-        this.copyValue(event.text, this.currentEbasicSalaryDta);
-        //this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'copy',this.currentEbasicSalaryDta);
+        this.currentEmpObj = data;
+        this.copyValue(event.text, this.currentEmpObj);
         this.df.detectChanges();
         break;
     }
   }
+  changeDataMF(event, data) {
+    this.hrService.handleShowHideMF(event, data, this.view);
+  }
+  popupUpdateEBasicSalaryStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
 
-  changeDataMF(event, data): void {}
-
-  handlerEBasicSalary(headerText ,actionType: string, data: any) {
+    
+    this.editStatusObj = data;
+    this.currentEmpObj = data.emp;
+    this.formGroup.patchValue(this.editStatusObj);
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if(res?.event){
+        this.view.dataService.update(res.event[0]).subscribe((res) => {
+        })
+      }
+      this.df.detectChanges();
+    });
+  }
+  handlerEBasicSalaries(
+    actionHeaderText: string,
+    actionType: string,
+    data: any
+  ) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
-    
+
     //open form
     let dialogAdd = this.callfc.openSide(
       PopupEBasicSalariesComponent,
@@ -153,7 +225,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         //pass data
         actionType: actionType,
         dataObj: data,
-        headerText: headerText,
+        headerText: actionHeaderText,
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
@@ -161,104 +233,72 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       },
       option
     );
-
-    //close form
     dialogAdd.closed.subscribe((res) => {
+      console.log(res);
       if (res.event) {
-        if(actionType == 'add'){
-          
-          this.view.dataService.add(res.event[0],0).subscribe(res => {});
+        if (actionType == 'add') {
+          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
-        }
-        else if(actionType == 'copy'){
-          this.view.dataService.add(res.event[0],0).subscribe(res => {});
+        } else if (actionType == 'copy') {
+          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
-        }
-        else if(actionType == 'edit'){
-          this.view.dataService.update(res.event[0]).subscribe(res =>{});
+        } else if (actionType == 'edit') {
+          this.view.dataService.update(res.event[0]).subscribe((res) => {});
           this.df.detectChanges();
-        }
-        else if(actionType == 'delete'){
-          this.df.detectChanges();
-        }
+        } 
       }
       if (res?.event) this.view.dataService.clear();
     });
   }
-
-  copyValue(actionHeaderText, data) {
-    this.hrService
-    .copy(data, this.view.formModel, 'RecID')
-    .subscribe((res) => {
-        this.handlerEBasicSalary(actionHeaderText + ' ' + this.view.function.description, 'copy', res);
-    });
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEmployeeBasicSalariesInfoAsync';
+    opt.className = 'EBasicSalariesBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
   }
-
-  addBasicSalaries(event){
-    if(event.id == 'btnAdd'){
-      this.handlerEBasicSalary(event.text + ' ' + this.view.function.description,'add',null);
-    }
+  copyValue(actionHeaderText, data) {
+    this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
+      console.log('result', res);
+      this.handlerEBasicSalaries(
+        actionHeaderText + ' ' + this.view.function.description,
+        'copy',
+        res
+      );
+    });
   }
 
   getIdUser(createdBy: any, owner: any) {
     var arr = [];
     if (createdBy) arr.push(createdBy);
     if (owner && createdBy != owner) arr.push(owner);
-    return arr.join(";"); 
+    return arr.join(';');
   }
 
-  getDetailContract(event, data){
-    if(data){
-      this.itemDetail = data;      
-      this.df.detectChanges();
-    }
+  valueChangeComment(event){
+    this.cmtStatus = event.data;
   }
-
-  clickEvent(event, data){
-    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
-    this.clickMF(event?.event, event?.data);
-  }
-
-  // get file list
-  getDataAsync(recId :string){
-    if(recId){
-      this.api.execSv(this.services, this.assemblyName, this.className,'GetFilesByIbjectIDAsync',recId)
-      .subscribe((res:any) => {
-          if(res.length > 0){
-            let files= res;
-            files.map((e :any) =>{
-              if (e && e.referType == this.REFERTYPE.VIDEO) {
-                e['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-              }
-            });
-            this.lstFile = res;
-            //this.countData = res.length;
-          }
+  onSaveUpdateForm(){
+    this.hrService.UpdateEmployeeBasicSalariesInfo(this.editStatusObj).subscribe(res =>{
+      if(res){
+        this.notify.notifyCode('SYS007');
+        res[0].emp = this.currentEmpObj;
+        this.hrService.addBGTrackLogEBasicSalaries(
+          res[0].recID,
+          this.cmtStatus,
+          this.view.formModel.entityName,
+          'C1',
+          null
+        ).subscribe((res) => {
+          
         });
-        
-    }
+        this.dialogEditStatus && this.dialogEditStatus.close(res)
+      }
+    })
   }
   
-  openFiles(recID: string) {
-    if (this.tmpListItem) {
-      debugger
-      let option = new DialogModel();
-      //if (this.zIndex > 0) option.zIndex = this.zIndex;
-      let popup = this.callfc.openForm(
-        this.tmpListItem,
-        '',
-        400,
-        500,
-        '',
-        null,
-        '',
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        if (res) {
-          this.getDataAsync(recID);
-        }
-      });
-    }
+  closeUpdateStatusForm(dialog: DialogRef){
+    dialog.close();
   }
 }

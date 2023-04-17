@@ -35,7 +35,7 @@ export class BookingStationeryComponent
   @ViewChild('report') report: TemplateRef<any>;
   viewType = ViewType;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  button: any;
   dataSelected: any;
   columnsGrid: any;
   dialog!: DialogRef;
@@ -114,14 +114,14 @@ export class BookingStationeryComponent
       },
       {
         type: ViewType.content,
-        reportView:true,
+        reportView: true,
         sameData: false,
         active: false,
         text: 'Báo cáo',
         icon: 'icon-assignment',
-        model:{
-          panelLeftRef:this.report
-        }
+        model: {
+          panelLeftRef: this.report,
+        },
       },
     ];
 
@@ -138,7 +138,7 @@ export class BookingStationeryComponent
         //this.openRequestList();
         break;
       case 'btnReport':
-        this.addReport()
+        this.addReport();
         break;
     }
   }
@@ -166,32 +166,31 @@ export class BookingStationeryComponent
         break;
     }
   }
-  orgMorefc:any = undefined;
+  orgMorefc: any = undefined;
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
-    if (this.funcID == FuncID.BookingStationery || "EP8R01") {
+    if (this.funcID == FuncID.BookingStationery || 'EP8R01') {
       this.button = {
         id: 'btnAdd',
       };
-      if(this.view.viewActiveType == 16){
-        this.moreFc = [{
-          id: 'btnReport',
-          text: 'Thêm/Sửa báo cáo'
-        }];
+      if (this.view.viewActiveType == 16) {
+        this.moreFc = [
+          {
+            id: 'btnReport',
+            text: 'Thêm/Sửa báo cáo',
+          },
+        ];
         this.view.moreFuncs = this.moreFc;
-      }
-      else{
-        if(this.view.moreFuncs.length >1){
-          this.orgMorefc = [...this.view.moreFuncs]
-
+      } else {
+        if (this.view.moreFuncs.length > 1) {
+          this.orgMorefc = [...this.view.moreFuncs];
         }
-        if(this.orgMorefc){
+        if (this.orgMorefc) {
           this.view.moreFuncs = this.orgMorefc;
         }
       }
-
     } else {
-      this.button = null;
+      this.button = '';
     }
 
     this.codxEpService.getFormModel(this.funcID).then((res) => {
@@ -227,18 +226,6 @@ export class BookingStationeryComponent
           data.approveStatus = '0';
           this.view.dataService.update(data).subscribe();
         } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
-
-    this.codxEpService
-      .cancel(data?.recID, '', this.formModel.entityName)
-      .subscribe((res: any) => {
-        //kiểm tra code có trả về mã lỗi ko, nếu ko có tức là thành công
-        if (res != null && res?.msgCodeError == null) {
-          //...
-        } else {
-          //thông báo lỗi trả từ BE
           this.notificationsService.notifyCode(res?.msgCodeError);
         }
       });
@@ -535,7 +522,7 @@ export class BookingStationeryComponent
   }
 
   allocate(data: any) {
-    if (this.approvalRule) {
+    if (data.approval == '1') {
       this.api
         .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
         .subscribe((trans: any) => {
@@ -685,7 +672,7 @@ export class BookingStationeryComponent
       '',
       option
     );
-}
+  }
 
   private isEmptyGuid(value: string) {
     return value === '00000000-0000-0000-0000-000000000000';

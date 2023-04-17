@@ -125,7 +125,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     ];
-    if (this.view?.funcID == 'ODT41' || this.xd)
+    if (this.view?.funcID == 'ODT41' || (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') || this.xd)
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',
@@ -970,7 +970,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Hủy xét duyệt
       case 'ODT212':
-      case 'ODT3012': {
+      case 'ODT3012':
+      case 'ODT5112': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         this.notifySvr
@@ -1274,6 +1275,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     else this.notifySvr.notify('Bạn không có quyền thực hiện chức năng này.');
     return false;
   }
+  
   //Thu hồi quyền
   recall(id: any) {
     this.odService.recallRelation(id).subscribe((item) => {
@@ -1496,7 +1498,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
         var approvel = e.filter(
           (x: { functionID: string }) =>
-            x.functionID == 'ODT212' || x.functionID == 'ODT3012'
+            x.functionID == 'ODT212' || x.functionID == 'ODT3012' || x.functionID == 'ODT5112'
         );
         for (var i = 0; i < approvel.length; i++) {
           approvel[i].disabled = false;
@@ -1513,7 +1515,17 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         if (approvel[0]) approvel[0].disabled = false;
       }
     }
+    //data?.isblur = true
+    // var returns = e.filter(
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ODT113' || x.functionID == 'ODT5213'
+    // );
 
+    // returns[0].disabled = true
+    // if(this.formModel.funcID == 'ODT41' || (this.formModel.funcID == 'ODT51' && data?.dispatchType == '3'))
+    // {
+    //   returns[0].disabled = false;
+    // }
     if (data?.status == '7') {
       var completed = e.filter(
         (x: { functionID: string }) =>
@@ -1561,7 +1573,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     );
     if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
-    if (data?.status == '4') {
+    if (data?.status == '4' ) {
       var approvel = e.filter(
         (x: { functionID: string }) =>
           x.functionID == 'ODT113' || x.functionID == 'ODT5213'
@@ -1569,7 +1581,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       if (approvel[0]) approvel[0].disabled = true;
       if (approvelCL[0]) approvelCL[0].disabled = false;
     }
-    //data?.isblur = true
+   
   }
   //Gửi duyệt
   release(data: any, processID: any) {
@@ -1625,7 +1637,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     dataSave.agencyID = dataSave.departmentID;
     dataSave.agencyName = '';
     dataSave.departmentID = departmentID;
-    this.odService.saveDispatch(this.dataRq, dataSave).subscribe();
+    this.odService.saveDispatch(this.dataRq, dataSave,true).subscribe();
   }
   //Xét duyệt
   approvalTrans(processID: any, datas: any) {

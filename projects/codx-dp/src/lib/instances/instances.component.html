@@ -175,6 +175,8 @@
         [viewsCurrent]="'k-'"
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
+        (outStepInstance)="outStepInstance($event)"
+
       >
       </codx-instance-detail>
     </ng-template>
@@ -334,6 +336,7 @@
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
+    (outStepInstance)="outStepInstance($event)"
   >
   </codx-instance-detail>
 </ng-template>
@@ -371,9 +374,8 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <span class="mx-1">
+  <span class="mx-1" *ngIf="process && viewsCurrent != 'k-'">
     <codx-dropdown-select
-      *ngIf="process"
       [cssClass]="'rounded-pill border-1'"
       cssPopup="h-350px w-300px"
       [isMulti]="false"
@@ -396,20 +398,6 @@
       (valueChange)="valueChangeFilter($event)"
     ></codx-dropdown-select>
   </span>
-  <!--<span class="mx-1">
-    <codx-dropdown-select
-      *ngIf="process"
-      [cssClass]="'rounded-pill border-1'"
-      cssPopup="h-350px w-300px"
-      [isMulti]="false"
-      type="valuelist"
-      [emptyText]="grvSetup.Permissions.headerText"
-      field="Permissions"
-      [dataSource]="stepsResource"
-      (valueChange)="valueChangeFilter($event)"
-    ></codx-dropdown-select>
-  </span> -->
-
   <!-- <codx-dropdown-select
     (valueChange)="valueToolbarChange($event, item.fieldName)"
     [field]="item.fieldName"
@@ -424,4 +412,87 @@
     cssPopup="h-450px w-300px"
     [isToolbar]="true"
   ></codx-dropdown-select> -->
+</ng-template>
+
+<ng-template #popupTemplate>
+  <codx-form
+    #form
+    [headerText]="titleAction"
+    [formModel]="view.formModel"
+    [body]="bodyTemplate"
+    [footer]="footerTemplate"
+    [dialog]="dialogTemplate"
+  ></codx-form>
+
+  <ng-template #bodyTemplate>
+    <div style="height: 350px">
+      <ng-container
+        *ngIf="!(dataTemplet?.length > 0)"
+        [ngTemplateOutlet]="emptyTemplate"
+      >
+      </ng-container>
+      <ng-container *ngIf="dataTemplet?.length > 0">
+        <div *ngFor="let item of dataTemplet">
+          <div class="d-flex w-100">
+            <div class="w-20px h-20px me-2">
+              <codx-input
+                type="radio"
+                name="format"
+                [formModel]="form.formModel"
+                ControlName="format"
+                [crrValue]="item.recID"
+                (valueChange)="selectTemp(item.recID)"
+              ></codx-input>
+            </div>
+            <div class="d-flex align-items-center py-2">
+              <span>
+                <i
+                  class="fa-solid fa-file-excel fs-2 me-3"
+                  style="color: #347442"
+                ></i>
+              </span>
+              <span class="fw-bold text-dark">{{ item.templateName }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footerTemplate>
+    <div class="d-flex justify-content-end">
+      <div class="">
+        <button
+          type="button"
+          class="btn btn-primary ms-1"
+          [disabled]="isLockButton"
+          (click)="
+            isFormExport ? exportFileDynamic() : documentApproval(dataSelected)
+          "
+        >
+          <codx-label
+            [name]="isFormExport ? 'ExportTemplate' : 'SubmitTemplate'"
+            [formModel]="view.formModel"
+            [default]="isFormExport ? 'Xuất File' : 'Ký số'"
+          >
+          </codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #emptyTemplate>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-250px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>

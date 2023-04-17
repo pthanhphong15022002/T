@@ -113,8 +113,8 @@
 
     .e-tab.e-fill-mode .e-content {
       padding: 12px 0px;
-      height: calc(100% - 42px) !important;
-      overflow-y: auto;
+      height: calc(100vh - 44px) !important;
+      overflow: auto;
     }
 
     .e-tab .e-tab-header .e-toolbar-items {

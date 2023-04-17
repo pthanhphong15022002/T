@@ -1,0 +1,109 @@
+<codx-views
+  #view
+  [views]="views"
+  entityName="AM_Assets"
+  [button]="btnAdd"
+  (buttonClick)="handleClickAdd($event)"
+>
+</codx-views>
+
+<ng-template #rowTemplate let-data>
+  <tr>
+    <td class="p-3">
+      <div class="fw-bold">{{ data?.assetName }}</div>
+      <div>
+        <codx-label
+          fiedName="assetCardNo"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.assetCardNo }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label
+          fiedName="assetOriginID"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.assetOriginID }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label
+          fiedName="assetGroupID"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.assetGroupID }}</span>
+      </div>
+      <div>
+        <codx-vll
+          [showText]="true"
+          [showBgColor]="true"
+          name="AC080"
+          [value]="data?.assetType"
+          class="badge badge-danger"
+        >
+        </codx-vll>
+      </div>
+    </td>
+
+    <td class="p-3">
+      <div>
+        <codx-label fiedName="costAmt" [formModel]="view.formModel"></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.costAmt }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label
+          fiedName="accumulatedDepr"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.accumulatedDepr }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label fiedName="salvage" [formModel]="view.formModel"></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.salvage }}</span>
+      </div>
+      <div>
+        <codx-label
+          fiedName="deprStartDate"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.deprStartDate }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label
+          fiedName="servicePeriods"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.servicePeriods }}</span>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+        <codx-label
+          fiedName="deprPeriods"
+          [formModel]="view.formModel"
+        ></codx-label
+        >:&nbsp;<span class="text-primary">{{ data?.deprPeriods }}</span>
+      </div>
+      <div>
+        <span class="badge badge-info">{{ data?.deprMethod }}</span>
+      </div>
+    </td>
+
+    <td class="text-center p-3">
+      <span class="badge badge-warning">{{ data?.status }}</span>
+      <div class="text-secondary">{{ data?.createdOn }}</div>
+      <div>{{ data?.createdBy }}</div>
+    </td>
+
+    <td>
+      <codx-mfunc
+        [dataItem]="data"
+        [formModel]="view.formModel"
+        (clickMF)="handleClickMoreFuncs($event, data)"
+        [isBookMark]="true"
+        type="view"
+      ></codx-mfunc>
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #moreTemplate let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="handleClickMoreFuncs($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>

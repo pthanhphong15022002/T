@@ -112,7 +112,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   dataRequest = new DataRequest();
 
   folder : any;
-
+  closeBtnUp = false;
   @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
@@ -473,15 +473,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.dataRequest.pageSize = this.pageSize;
       if(!this.isReferType)
       {
-        this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && (ReferType=@1'
+        this.dataRequest.predicate = 'ObjectID=@0 && ObjectType=@2 && IsDelete = false && (ReferType=@1'
         if(this.referType == "source") this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
         this.dataRequest.predicate += ')'
       }
-      else
-      {
-        this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false'
-      }
-      this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
+      else this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false'
+      this.dataRequest.dataValue = [this.objectId,this.referType,this.objectType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
       this.fileService
@@ -883,6 +880,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSave() {
+    this.closeBtnUp = true;
     var check = await this.CheckTenantFile(this.user.tenant);
     if(typeof check == 'object' && check.AppId) await this.onMultiSaveAfterTenant();
     else
@@ -891,6 +889,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if(typeof regs == 'object' && regs.Data.AppId) await this.onMultiSaveAfterTenant();
       else  {
         this.notificationsService.notify("Đăng ký tenant không thành công");
+        this.closeBtnUp = false
       }
     }
    
@@ -909,6 +908,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.isCopyRight > 0
         ) {
           this.notificationsService.notifyCode('DM067');
+          this.closeBtnUp = false;
           return;
         }
         if (this.data == undefined) this.data = [];
@@ -934,7 +934,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage)
+        {
+          this.closeBtnUp = false;
           return this.notificationsService.notifyCode('DM053');
+
+        }
         this.atSV.fileListAdded = [];
         if (total > 1) {
           var done = this.fileService
@@ -1087,6 +1091,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                                 this.notificationsService.notify(mess);
                                 this.fileUploadList = [];
                                 this.closePopup();
+                                this.closeBtnUp = false;
                               });
                           } else {
                             // save 1
@@ -1117,11 +1122,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
               }
             });
         } else if (total == 1) {
+          
           if(!this.fileUploadList[0]) 
           {
+            this.closeBtnUp = false;
             this.notificationsService.notifyCode("DM006",0,this.fileUploadList[0].fileName)
             return null;
           }
+          
           this.fileUploadList[0].description = this.description[0];
           this.fileUploadList[0].data = '';
           this.addFileLargeLong(this.fileUploadList[0]);
@@ -1133,6 +1141,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           // this.cacheService.message('DM001')
           // this.notificationsService.notifyCode("");
           this.notificationsService.notify(this.title2);
+          this.closeBtnUp = false;
         }
       }
     });
@@ -1421,6 +1430,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // this.notificationsService.notify(ex);
     }
     if(!fileItem.urlPath) return null;
+
+    this.closeBtnUp = false;
     return fileItem;
   }
 

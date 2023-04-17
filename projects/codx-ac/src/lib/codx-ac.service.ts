@@ -8,7 +8,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { map, Observable, tap } from 'rxjs';
-import { Transactiontext } from './models/transactiontext.model';
+import { Reason } from './models/Reason.model';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +68,7 @@ export class CodxAcService {
     return newMemo;
   }
 
-  setMemo(master: any, transactiontext: Array<Transactiontext>) {
+  setMemo(master: any, transactiontext: Array<Reason>) {
     let newMemo = '';
     let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
     for (let i = 0; i < sortTrans.length; i++) {
@@ -150,5 +150,29 @@ export class CodxAcService {
         map((r) => r[0]),
         tap((r) => console.log(r))
       );
+  }
+  getCategoryByEntityName(entityName: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [entityName]
+    );
+  }
+  release(
+    recID: string,
+    processID: string,
+    entityName: string,
+    funcID: string,
+    title: string
+  ) {
+    return this.api.execSv<any>(
+      'AC',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'ReleaseAsync',
+      [recID, processID, entityName, funcID, title]
+    );
   }
 }

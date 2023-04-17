@@ -46,4 +46,7 @@ export class CashPayment {
   totalAmt: any;
   totalCR: any;
   totalDR: any;
+  category:any;
+  approveStatus:any;
+  unbounds:any;
 }

@@ -381,16 +381,11 @@ export class CreateFolderComponent implements OnInit {
           this.icon = res.icon;
           this.listSubFolder = this.fileEditing.subFolder;
           //  this.checkSecurity = this.fileEditing.checkSecurity;
-          if (this.fileEditing.hasSubFolder == true) {
-            this.createSubFolder = true;
-          } else {
-            this.createSubFolder = false;
-          }
+          if (this.fileEditing.hasSubFolder == true) this.createSubFolder = true;
+          else this.createSubFolder = false;
 
-          if (
-            this.fileEditing.location != null &&
-            this.fileEditing.location != ''
-          ) {
+          if (this.fileEditing.location) 
+          {
             let list = this.fileEditing.location.split('|');
             this.floor = list[0];
             this.range = list[1];
@@ -421,6 +416,28 @@ export class CreateFolderComponent implements OnInit {
           this.fileEditing = new FileUpload();
           this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
+
+          var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
+          if(check.length == 0)
+          {
+            var perm = new Permission();
+            perm.objectType = '1';
+            perm.objectID = this.user.userID;
+            perm.objectName = 'Owner (' + this.user.userName + ')';
+            perm.isSystem = true;
+            perm.isActive = true;
+            perm.isSharing = false;
+            perm.read = true;
+            perm.download = true;
+            perm.full = true;
+            perm.share = true;
+            perm.update = true;
+            perm.create = true;
+            perm.delete = true;
+            perm.upload = true;
+            perm.assign = true;
+            this.fileEditing.permissions.push(perm);
+          }
           //alert(1);
           this.startDate = null;
           this.endDate = null;

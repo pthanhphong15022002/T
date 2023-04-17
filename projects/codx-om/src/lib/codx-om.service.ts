@@ -328,6 +328,19 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+
+  //Lấy Emp theo UserID
+  getListEmpByUserID(userID:any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListEmployeesByUserIDAsync',
+      [userID]
+    );
+  }
+
+
   //Lấy Task theo OKR recID
   getListOKRTasks(recID:string) {
     return this.api.execSv(
@@ -338,7 +351,16 @@ export class CodxOmService {
       [recID]
     );
   }
-
+  //Lấy ds UM
+  getListUM() {
+    return this.api.execSv(
+      "BS", 
+      "ERM.Business.BS", 
+      "UnitsOfMearsureBusiness", 
+      "GetAsync", 
+      []
+    );
+  }
   //KTra trc khi thu hồi plan
   beforeUnReleasePlan(recID:string) {
     return this.api.execSv(
@@ -432,15 +454,7 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-  getCheckInModel() {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'GetCheckInModelAsync',
-      []
-    );
-  }
+  
   calculatorProgressOfPlan(listRecID: any) {
     return this.api.execSv(
       OMCONST.SERVICES,

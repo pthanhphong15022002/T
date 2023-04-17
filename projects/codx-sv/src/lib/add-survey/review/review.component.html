@@ -393,7 +393,6 @@
       [value]="itemAnswer.answer"
       (change)="valueChange(input, itemSession, itemQuestion, itemAnswer, 'T')"
     /> -->
-    {{getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)}}
     <codx-input
       type="text"
       class="border-0"
@@ -675,9 +674,9 @@
   <ng-template #tmpL>
     <ng-container *ngIf="itemQuestion.answerType == 'L' ; else tmpO">
       <!-- //(change)="valueChange($event.target.value, itemSession, itemQuestion, item)" -->
-      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" > 
+      <select class="form-select w-200px ms-6 rounded" aria-label="Default select example" (change)="valueChange( $event, itemSession, itemQuestion, $event.target.value)"> 
         <option selected >Chọn</option>
-        <option *ngFor="let item of itemQuestion.answers" [value]="item">{{item.answer}}</option>
+        <option *ngFor="let item of itemQuestion.answers" [value]="item.answer">{{item.answer}}</option>
       </select>
     </ng-container>
   </ng-template>
@@ -976,7 +975,7 @@
   </div>
   <div class="d-flex align-items-center mt-3 border-top py-3">
     <span class="ms-6 icon-i-eye-slash icon-24"></span>
-    <span class="ms-3">{{ user.email }}</span>
+    <span class="ms-3">{{ user?.email ? user?.email : "Guest" }}</span>
   </div>
 </ng-template>
 

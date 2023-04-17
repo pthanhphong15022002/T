@@ -10,6 +10,17 @@
   [data]="adUser"
 >
 </codx-layout-add>
+<!-- <ng-template #tabDescription>
+  <ng-container *ngIf="form?.formGroup">
+    <codx-input
+      field="employeeID"
+      (valueChange)="valueEmp($event)"
+      [Group]="form.formGroup"
+      [formModel]="form.formModel"
+    >
+    </codx-input>
+  </ng-container>
+</ng-template> -->
 <ng-template #tabDescription>
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-3 pb-5">
@@ -36,6 +47,7 @@
           <codx-input
             [disabled]="true"
             field="UserID"
+            [disabled]="(dialog?.dataService)!.keyField === 'UserID'"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
           >

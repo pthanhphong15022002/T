@@ -1,5 +1,5 @@
 
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Route } from '@angular/router';
 import { AuthStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 
@@ -9,6 +9,7 @@ import { AuthStore, UIComponent, ViewModel, ViewType } from 'codx-core';
   styleUrls: ['./codx-report-views.component.scss']
 })
 export class CodxReportViewsComponent   extends UIComponent implements OnInit, AfterViewInit, OnChanges {
+  @ViewChild('templateListCard') templateListCard!:TemplateRef<any>;
   onInit(): void {
   }
 
@@ -35,6 +36,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
         reportView: true,
         reportType:'R',
         model: {
+          template:this.templateListCard
         },
       },
       // {
@@ -56,5 +58,8 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
     if(e.type == 'detail'){
       this.codxService.navigate("","/report/detail/"+e.data.reportID)
     }
+  }
+  cardClick(e:any){
+    this.codxService.navigate("","/report/detail/"+e.reportID)
   }
 }

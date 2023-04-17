@@ -7,7 +7,7 @@
   [entityName]="entity"
   [className]="className"
   [method]="method"
-  [button]="button"
+  [button]="funcID != 'EP8T12' ? button : ''"
   (buttonClick)="click($event)"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
@@ -103,5 +103,11 @@
 
   </iframe> -->
   <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
-  <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString"></codx-report-iframe>
-  </ng-template>
+  <codx-report-iframe
+    [funcID]="funcID"
+    [predicates]="predicate"
+    [dataValues]="dataValue"
+    [print]="print"
+    [param]="_paramString"
+  ></codx-report-iframe>
+</ng-template>

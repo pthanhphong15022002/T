@@ -161,6 +161,7 @@ import { CodxChatBoxComponent } from './layout/drawers/chat/chat-box/chat-box.co
 import { MessageSystemPipe } from './layout/drawers/chat/chat-box/mssgSystem.pipe';
 import { ScrollPipe } from './layout/drawers/chat/chat-box/scrollPipe.pipe';
 import { AddGroupChatComponent } from './layout/drawers/chat/popup/popup-add-group/popup-add-group.component';
+import { SearchPipe } from './pipe/search.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -280,8 +281,6 @@ const T_Component: Type<any>[] = [
   CodxChatListComponent,
   CodxChatBoxComponent,
   AddGroupChatComponent,
-
-
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -292,52 +291,53 @@ const T_Pipe: Type<any>[] = [
   // chatting
   ScrollPipe,
   MessageSystemPipe,
+  SearchPipe,
 ];
 
 @NgModule({
-    declarations: [
-        T_Component,
-        T_Pipe,
-        AttachmentComponent,
-        DialogthumbComponent,
-        CodxEmailComponent,
-        //CodxApproveStepsComponent,
-        AddEditApprovalStepComponent,
-        PopupAddApproverComponent,
-        CodxClearCacheComponent,
-        CalendarCenterComponent,
-    ],
-    exports: [T_Component, T_Pipe],
-    imports: [
-        CommonModule,
-        NgbModule,
-        FormsModule,
-        SharedModule,
-        CodxCoreModule,
-        CalendarModule,
-        CoreModule,
-        DateRangePickerModule,
-        TabModule,
-        UploaderModule,
-        PickerModule,
-        ChartAllModule,
-        CircularGaugeModule,
-        // BoldReportsModule,
-        // BoldReportDesignerModule,
-        // BoldReportViewerModule,
-        ReactiveFormsModule,
-        DocumentEditorAllModule,
-        DocumentEditorContainerAllModule,
-        SpreadsheetAllModule,
-        DialogModule,
-        //pdf
-        ListViewAllModule,
-        NgxExtendedPdfViewerModule,
-        DashboardLayoutAllModule,
-        SliderModule,
-        LazyLoadImageModule,
-        DragDropModule,
-    ]
+  declarations: [
+    T_Component,
+    T_Pipe,
+    AttachmentComponent,
+    DialogthumbComponent,
+    CodxEmailComponent,
+    //CodxApproveStepsComponent,
+    AddEditApprovalStepComponent,
+    PopupAddApproverComponent,
+    CodxClearCacheComponent,
+    CalendarCenterComponent,
+  ],
+  exports: [T_Component, T_Pipe],
+  imports: [
+    CommonModule,
+    NgbModule,
+    FormsModule,
+    SharedModule,
+    CodxCoreModule,
+    CalendarModule,
+    CoreModule,
+    DateRangePickerModule,
+    TabModule,
+    UploaderModule,
+    PickerModule,
+    ChartAllModule,
+    CircularGaugeModule,
+    // BoldReportsModule,
+    // BoldReportDesignerModule,
+    // BoldReportViewerModule,
+    ReactiveFormsModule,
+    DocumentEditorAllModule,
+    DocumentEditorContainerAllModule,
+    SpreadsheetAllModule,
+    DialogModule,
+    //pdf
+    ListViewAllModule,
+    NgxExtendedPdfViewerModule,
+    DashboardLayoutAllModule,
+    SliderModule,
+    LazyLoadImageModule,
+    DragDropModule,
+  ],
 })
 export class CodxShareModule {
   // public static forRoot(

@@ -1,3 +1,4 @@
+<div #screen>
 <codx-views
   #view
   [funcID]="funcID"
@@ -6,6 +7,7 @@
   [viewActiveType]="viewType.content"
   (onLoading)="onLoading($event)"
 ></codx-views>
+</div>
 <ng-template #itemTemplate>
   <div
     class="bg-white p-2 subheader d-flex align-items-center justify-content-between"
@@ -131,9 +133,7 @@
       >
         <codx-label fiedName="Submit" default="Gửi"></codx-label>
       </button>
-      <span class="btn btn-icon btn-white w-36px h-30px ms-2 me-9">
-        <i class="icon icon-more_vert icon-22"></i>
-      </span>
+     <codx-mfunc [formModel]="view?.formModel"></codx-mfunc>
     </div>
   </div>
   <ejs-tab class="ejstab-survey" headerPlacement="Top" (selected)="onSelected($event)">

@@ -1,0 +1,230 @@
+<div class="disabled-inline progressbar cursor-pointer" (click)="openPopup()">
+  <ejs-progressbar
+   *ngIf="typeProgress == 1"
+    [id]="id"
+    type="Circular"
+    [height]="height"
+    [width]="width"
+    trackThickness="4"
+    progressThickness="4"
+    [value]="progress"
+    [progressColor]="'#005DC7'"
+    trackColor="#d8d8d8"
+    progressValueColor="red"
+    [labelStyle]="{ color: '#005DC7' }"
+    [showProgressValue]="false"
+    [animation]="{ enable: true, duration: 1000, delay: 0 }"
+  >
+    <e-progressbar-annotations>
+      <e-progressbar-annotation
+        [content]='HTMLProgress'
+      >
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
+
+  <ejs-progressbar
+  *ngIf="typeProgress == 2"
+  [id]="id"
+  type="Circular"
+  height="55"
+  width="55"
+  trackThickness="4"
+  progressThickness="4"
+  [value]="progress"
+  [progressColor]="'#005DC7'"
+  trackColor="#d8d8d8"
+  progressValueColor="red"
+  [labelStyle]="{ color: '#005DC7' }"
+  [showProgressValue]="true"
+  [animation]="{ enable: true, duration: 1000, delay: 0 }"
+>
+</ejs-progressbar>
+</div>
+<ng-template #popupProgress>
+<div class="d-flex flex-column p-5 h-100">
+   <div>
+      <ng-container [ngTemplateOutlet]="header"></ng-container>
+   </div>
+   <div style="flex-grow: 1">
+      <ng-container [ngTemplateOutlet]="updateProgressBody"></ng-container>
+   </div>
+   <div class="">
+      <ng-container [ngTemplateOutlet]="updateProgressFooter"></ng-container>
+   </div>
+</div>
+</ng-template>
+ <ng-template #header>
+   <div class="d-flex justify-content-between">
+     <div>
+       <div>
+         <codx-label
+           class="h3"
+           fiedName="progressHeader"
+           [formModel]="formModel"
+           [default]="'Cập nhật kết quả thực hiện'"
+         ></codx-label>
+       </div>
+       <div>
+         <codx-label
+           class="text-gray-400"
+           fiedName="progressHeaderMemo"
+           [formModel]="formModel"
+           [default]="'Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành'"
+         ></codx-label>
+       </div>
+     </div>
+     <div>
+       <span
+         class="icon-close icon-18 cursor-pointer"
+         (click)="popupUpdateProgress.close()"
+       ></span>
+     </div>
+   </div>
+ </ng-template>
+
+ <ng-template #updateProgressBody>
+   <div class="mt-5">
+     <div class="form-group d-flex justify-content-between row">
+       <div class="col-6">
+         <div class="d-flex align-items-center justify-content-between">
+           <codx-label
+             fiedName="progress"
+             [formModel]="formModel"
+             default="Tiến độ thực hiện"
+           ></codx-label>
+           <div class="d-flex align-items-center justify-content-end">
+             <codx-input
+               type="switch"
+               [checked]="progressData == 100 ? true : false"
+               field="progress"
+               (valueChange)="checkRadioProgress($event, progress)"
+             >
+             </codx-input>
+             <span class="ms-2">100%</span>
+           </div>
+         </div>
+         <ejs-numerictextbox
+           *ngIf="!disabledProgressInput"
+           [value]="progressData"
+           format="###'%'"
+           min="0"
+           max="100"
+           (change)="changeProgress($event, progressData)"
+           disabled="false"
+         ></ejs-numerictextbox>
+         <ejs-numerictextbox
+           *ngIf="disabledProgressInput"
+           [value]="progressData"
+           format="###'%'"
+           min="0"
+           max="100"
+           (change)="changeProgress($event, progressData)"
+           disabled="true"
+         ></ejs-numerictextbox>
+       </div>
+       <div class="col-6">
+         <div>
+           <codx-label
+             fiedName="actualEnd"
+             [formModel]="formModel"
+             default="Ngày hoàn thành thực tế"
+           >
+           </codx-label>
+           <span *ngIf="progressData == 100" style="color: red">
+             *</span
+           >
+         </div>
+         <codx-input
+           field="actualEnd"
+           (valueChange)="changeValueDate($event, actualEnd)"
+           [crrValue]="actualEnd"
+           format="F"
+           type="datetime"
+           [disabled]="progressData == 100 ? false : true"
+         >
+         </codx-input>
+       </div>
+     </div>
+ 
+     <div class="form-group">
+       <div>
+         <codx-label
+           fiedName="note"
+           [formModel]="formModel"
+           default="Ghi chú"
+         ></codx-label>
+       </div>
+       <codx-input
+         class="w-100"
+         field="note"
+         type="textarea"
+         format="ed2"
+         height="200"
+         [crrValue]="note"
+         (valueChange)="changeValueInput($event, note)"
+       >
+       </codx-input>
+     </div>
+     <ng-container>
+       <div
+         class="d-flex align-items-center justify-content-between mt-4"
+         *ngIf="showLabelAttachment"
+         style="float: left; clear: left"
+       >
+         <div class="d-flex align-items-center mb-2">
+           <div class="fw-bold text-primary">
+             <codx-label
+               fiedName="lblAttachments"
+               [formModel]="formModel"
+               default="Tài liệu"
+             >
+             </codx-label>
+           </div>
+         </div>
+       </div>
+       <div>
+         <codx-attachment
+           #attachment
+           [objectId]="dataSource?.recID"
+           hideFolder="1"
+           hideImageUpload="0"
+           hideImageThumb="0"
+           hideUploadBtn="1"
+           hideDes="1"
+           type="inline"
+           allowMultiFile="1"
+           (fileAdded)="fileAdded($event)"
+           (fileCount)="getfileCount($event)"
+           (viewFile)="getfileDelete($event)"
+           displayThumb="full"
+           showMessage="0"
+         >
+         </codx-attachment>
+       </div>
+     </ng-container>
+   </div>
+ </ng-template>
+
+ <ng-template #updateProgressFooter>
+   <div class="mb-4 d-flex justify-content-between w-100">
+     <button
+       style="float: left"
+       type="button"
+       class="btn btn-light-primary me-3"
+       (click)="addFile($event)"
+     >
+       <i class="icon-cloud_upload fs-5"></i
+       ><span>
+         <codx-label
+           name="UploadFile"
+           formName="Tasks"
+           default="Đính kèm"
+         ></codx-label>
+       </span>
+     </button>
+     <button type="button" class="btn btn-primary" (click)="handelProgress()">
+       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+     </button>
+   </div>
+ </ng-template>
