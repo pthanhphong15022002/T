@@ -27,6 +27,7 @@ import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
 import { T } from '@angular/cdk/keycodes';
+import { SignalRService } from '../../drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'codx-user-inner',
@@ -64,6 +65,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private codxShareSV: CodxShareService,
     private change: ChangeDetectorRef,
     private element: ElementRef,
+    private signalRSV:SignalRService,
     private callSV: CallFuncService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
@@ -114,6 +116,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   logout() {
+    debugger
+    let ele = document.getElementsByTagName("codx-chat-container");
+    ele[0].remove();
     this.auth.logout('');
     // document.location.reload();
   }
