@@ -32,6 +32,9 @@ export class CmcustomerDetailComponent implements OnInit {
   @Input() entityName = '';
   moreFuncAdd = '';
   moreFuncEdit = '';
+  vllContactType = 'CRM025';
+  contactPerson: any;
+  listContacts = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -72,15 +75,25 @@ export class CmcustomerDetailComponent implements OnInit {
     if (this.dataSelected.recID) {
       if (this.dataSelected.recID == this.id) return;
       this.id = this.dataSelected.recID;
+      this.getContactByObjectID(this.id);
+      this.getListContactByObjectID(this.id);
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
   }
 
-  getOneData(recID, funcID) {
-    this.cmSv.getOne(recID, funcID).subscribe((res) => {
+  getContactByObjectID(objectID) {
+    this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
       if (res) {
-        this.dataSelected = res;
+        this.contactPerson = res;
+      }
+    });
+  }
+
+  getListContactByObjectID(objectID) {
+    this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listContacts = res;
       }
     });
   }
@@ -226,44 +239,28 @@ export class CmcustomerDetailComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
+    var obj = {
+      moreFuncName: title,
+      action: action,
+      dataContact: data,
+      type: 'formDetail',
+      recIDCm: this.dataSelected?.recID,
+      objectType: '1'
+    }
     var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
       500,
       '',
-      [title, action, data],
+      obj,
       '',
       opt
     );
     dialog.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var contactsPerson = e.event;
-        if (
-          this.dataSelected.contacts != null &&
-          this.dataSelected.contacts.length > 0
-        ) {
-          var check = this.dataSelected.contacts.filter(
-            (x) => x.recID == contactsPerson.recID
-          );
-          if (check == null) {
-            contactsPerson.contactType = '2';
-          }
-        } else {
-          contactsPerson.contactType = '2';
-        }
-        this.cmSv
-          .updateContactCrm(
-            contactsPerson,
-            this.funcID,
-            this.dataSelected?.recID
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) {
-              this.dataSelected.contacts = res;
-            }
-          });
-
+        this.getListContactByObjectID(this.dataSelected?.recID);
+        this.getContactByObjectID(this.dataSelected?.recID);
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -304,7 +301,7 @@ export class CmcustomerDetailComponent implements OnInit {
     } else if (this.funcID == 'CM0103') {
       return data.partnerName;
     } else {
-      return data.opponentName;
+      return data.competitorName;
     }
   }
 

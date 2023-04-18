@@ -93,14 +93,13 @@
     <codx-card-img 
       [dataItem]="item"
       cardCss="border rounded-3 card-img-mwp img-storage w-225px h-225px" 
-      imgCss="h-150px w-150px mb-2" 
       [title]="item.title" 
       icoTitleCss="icon-archive icon-16" 
       [desc2]="item.memo"
       [imageObjName]="item.title"
       [imageId]="item.recID"
       [imageObjType]="'WP_Storages'" 
-      [imageWidth]="300" 
+      imgCss="h-150px w-150px mb-2" 
       [formModel]="formModel"
       (clickMF)="clickMF($event, item)"  >
     </codx-card-img>

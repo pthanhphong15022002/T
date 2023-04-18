@@ -36,6 +36,7 @@ import { LayoutApprovalComponent } from './layout-approval/layout-approval.compo
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add-post.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
+import { PostShareComponent } from './dashboard/home/list-post/post-share/post-share.component';
 
 export const routes: Routes = [
   {
