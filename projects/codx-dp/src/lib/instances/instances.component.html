@@ -255,7 +255,7 @@
           <div *ngFor="let item of listSteps">
             <div
               *ngIf="item.stepID === data.stepID"
-              [ngStyle]="{ 'background-color': item['backgroundColor'] }"
+              [ngStyle]="{ 'background-color': (data.status == '3' || data.status == '4' ) ? colorReasonSuccess?.color : (data.status == '5' || data.status == '6' ) ? colorReasonFail?.color : item['backgroundColor'] }"
               class="me-2 badge badge-primary"
             >
               <span

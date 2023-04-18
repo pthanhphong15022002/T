@@ -169,6 +169,9 @@ export class InstancesComponent
   addFieldsControl = '1';
   isLockButton = false;
   esCategory: any;
+  colorReasonSuccess:any;
+  colorReasonFail:any;
+
   //test temp
   dataTemplet = [
     {
@@ -221,7 +224,7 @@ export class InstancesComponent
     });
     this.layout.setUrl('dp/dynamicprocess/DP0101');
     this.layout.setLogo(null);
-
+    this.getColorReason();
     this.cache
       .gridViewSetup('DPInstances', 'grvDPInstances')
       .subscribe((grv) => {
@@ -1980,5 +1983,20 @@ export class InstancesComponent
     if (e) {
       this.stepInstanceDetailStage = e.e;
     }
+  }
+
+  getColorReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        debugger;
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
   }
 }
