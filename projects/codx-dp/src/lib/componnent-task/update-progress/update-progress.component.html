@@ -40,6 +40,10 @@
   [animation]="{ enable: true, duration: 1000, delay: 0 }"
 >
 </ejs-progressbar>
+<codx-progressbar
+  *ngIf="typeProgress == 3"
+   [progress]="progress"
+></codx-progressbar>
 </div>
 <ng-template #popupProgress>
 <div class="d-flex flex-column p-5 h-100">
