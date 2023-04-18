@@ -15,7 +15,6 @@ export class ProgressbarComponent implements OnInit,OnChanges {
   sizeCustom = '';
   sizespan = '';
   ngOnInit(): void {
-    this.progress = 0;
     this.fontSizeCustom = (Math.floor(this.size/3)).toString() + 'px';
     this.sizeCustom = this.size.toString() + 'px';
     this.sizespan = (Math.floor(this.size/1.25)).toString() + 'px';
@@ -23,7 +22,7 @@ export class ProgressbarComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges){
     if(changes?.progress){
-      this.load(this.progress);
+      this.load(Math.floor(this.progress));
     }
   }
 
