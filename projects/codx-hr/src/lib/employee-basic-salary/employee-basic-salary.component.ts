@@ -47,26 +47,27 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   @ViewChild('viewDetail') viewDetail: ViewBasicSalaryDetailComponent;
 
-  @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
+  @ViewChild('templateUpdateStatus', { static: true })
+  templateUpdateStatus: TemplateRef<any>;
   //#endregion
-  
+
   constructor(
     injector: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService
-    ) {
-      super(injector);
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
-    
-    service = 'HR';
+  ) {
+    super(injector);
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+  }
+
+  service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_EBasicSalaries';
   className = 'EBasicSalariesBusiness';
   method = 'GetListEBasicSalariesAsync';
-  
+
   actionAddNew = 'HRTPro03A01';
   actionSubmit = 'HRTPro03A03';
   actionUpdateCanceled = 'HRTPro03AU0';
@@ -74,9 +75,10 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   actionUpdateRejected = 'HRTPro03AU4';
   actionUpdateApproved = 'HRTPro03AU5';
   actionUpdateClosed = 'HRTPro03AU9';
-  
+
   funcID: string;
   grvSetup: any;
+  genderGrvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -98,6 +100,11 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         if (res) {
           this.grvSetup = res;
         }
+      });
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
       });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
@@ -125,11 +132,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       },
     ];
   }
-  ngAfterViewChecked(){ 
-    if(!this.formGroup?.value){
-      this.hrService.getFormGroup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).then((res) => {
-        this.formGroup = res;
-      });
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .then((res) => {
+          this.formGroup = res;
+        });
     }
   }
 
@@ -173,18 +185,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         break;
       //Edit
       case 'SYS03':
-        this.currentEmpObj = data;
         this.handlerEBasicSalaries(
           event.text + ' ' + this.view.function.description,
           'edit',
-          this.currentEmpObj
+          data
         );
         this.df.detectChanges();
         break;
       //Copy
       case 'SYS04':
-        this.currentEmpObj = data;
-        this.copyValue(event.text, this.currentEmpObj);
+        this.copyValue(event.text, data);
         this.df.detectChanges();
         break;
     }
@@ -195,7 +205,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   popupUpdateEBasicSalaryStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
-    
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
@@ -208,9 +217,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      if(res?.event){
-        this.view.dataService.update(res.event[0]).subscribe((res) => {
-        })
+      if (res?.event) {
+        this.view.dataService.update(res.event[0]).subscribe((res) => {});
       }
       this.df.detectChanges();
     });
@@ -223,7 +231,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
-
+    this.currentEmpObj = data?.emp;
     //open form
     let dialogAdd = this.callfc.openSide(
       PopupEBasicSalariesComponent,
@@ -235,6 +243,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
+        empObj: actionType == 'add' ? null: this.currentEmpObj,
         fromListView: true,
       },
       option
@@ -251,7 +260,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
           this.df.detectChanges();
-        } 
+        }
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -282,39 +291,41 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     return arr.join(';');
   }
 
-  valueChangeComment(event){
+  valueChangeComment(event) {
     this.cmtStatus = event.data;
   }
-  onSaveUpdateForm(){
-    this.hrService.UpdateEmployeeBasicSalariesInfo(this.editStatusObj).subscribe(res =>{
-      if(res){
-        this.notify.notifyCode('SYS007');
-        res[0].emp = this.currentEmpObj;
-        this.hrService.addBGTrackLogEBasicSalaries(
-          res[0].recID,
-          this.cmtStatus,
-          this.view.formModel.entityName,
-          'C1',
-          null
-        ).subscribe((res) => {
-          
-        });
-        this.dialogEditStatus && this.dialogEditStatus.close(res)
-      }
-    })
+  onSaveUpdateForm() {
+    this.hrService
+      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj)
+      .subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('SYS007');
+          res[0].emp = this.currentEmpObj;
+          this.hrService
+            .addBGTrackLogEBasicSalaries(
+              res[0].recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null
+            )
+            .subscribe((res) => {});
+          this.dialogEditStatus && this.dialogEditStatus.close(res);
+        }
+      });
   }
-  
-  closeUpdateStatusForm(dialog: DialogRef){
+
+  closeUpdateStatusForm(dialog: DialogRef) {
     dialog.close();
   }
 
-  getDetailAward(event, data){
-    if(data){
+  getDetailAward(event, data) {
+    if (data) {
       this.itemDetail = data;
-      this.df.detectChanges()
+      this.df.detectChanges();
     }
   }
-  clickEvent(event, data){
-    this.clickMF(event?.event, event?.data)
+  clickEvent(event, data) {
+    this.clickMF(event?.event, event?.data);
   }
 }
