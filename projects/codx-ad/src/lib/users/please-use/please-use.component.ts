@@ -38,7 +38,7 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
         if (res) {
           if (!res.isExistInTenant) {
             obj = {
-              formType: 'edit',
+              formType: 'invite',
               data: res,
             };
           } else {

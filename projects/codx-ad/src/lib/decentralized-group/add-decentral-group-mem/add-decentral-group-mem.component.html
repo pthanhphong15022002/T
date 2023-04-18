@@ -1,6 +1,5 @@
 <codx-layout-add
   #form
-  [title]="header"
   [tabInfo]="tabInfo"
   [footer]="footer"
   [formModel]="dialog.formModel"
@@ -91,7 +90,7 @@
           </codx-label>
         </div>
       </div>
-      <<ng-container *ngIf="isTwoWays">
+      <ng-container>
         <button
           type="button"
           class="cursor-pointer btn btn-icon btn-sm btn-light"
@@ -101,15 +100,52 @@
         </button>
         <ng-container *ngIf="popAddMemberState">
           <codx-combobox-popup
-            [comboboxName]="'Share_Users'"
+            [comboboxName]="'UserGroupPermissions'"
             [multiple]="true"
             [width]="width"
             [height]="height"
-            [value]="memberIDs"
+            [value]="groupData.memberIDs"
             (clickSave)="changeLstMembers($event)"
           >
           </codx-combobox-popup>
         </ng-container>
+      </ng-container>
+    </div>
+    <div class="form-group">
+      <ng-container *ngFor="let item of groupData.members">
+        <div
+          class="d-flex align-items-top border-bottom py-2 justify-content-between list-title"
+        >
+          <div class="d-flex align-items-top w-100">
+            <codx-img
+              class="me-3"
+              [objectId]="item?.memberID"
+              objectType="AD_Users"
+            >
+            </codx-img>
+            <div class="d-flex flex-column me-6 w-100">
+              <div class="text-dark fw-bold fs-6">
+                {{ item?.memberName }}
+              </div>
+              <div class="text-gray-500">
+                {{
+                  (item?.positionName ? item?.positionName + " | " : "") +
+                    item?.orgUnitName ??
+                    ""
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="ms-5">
+            <a
+              class="btn btn-icon btn-sm btn-light-danger"
+              style="cursor: pointer"
+              (click)="removeMember(item)"
+            >
+              <span class="icon-close icon-16"></span>
+            </a>
+          </div>
+        </div>
       </ng-container>
     </div>
   </ng-container>
@@ -117,7 +153,7 @@
 
 <ng-template #tabRoles>
   <div class="form-group mt-3">
-    <button type="button" class="btn btn-primary" (click)="openPopRoles()">
+    <button type="button" class="btn btn-primary" (click)="onSave(false)">
       <codx-label
         fiedName="titleUserRoles"
         [formModel]="form?.formModel"
@@ -126,7 +162,7 @@
       </codx-label>
     </button>
   </div>
-  <div *ngFor="let item of lstCurRoles; let i = index">
+  <div *ngFor="let item of groupData.groupRoles; let i = index">
     <div
       class="d-flex align-items-center justify-content-between mb-4"
       *ngIf="!item.isPortal"
@@ -148,7 +184,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button type="button" class="btn btn-primary" (click)="onSave(true)">
       <codx-label
         fiedName="Save"
         [formModel]="formModel"

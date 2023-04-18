@@ -363,14 +363,15 @@ export class CodxAdService {
 
   addUpdateAD_UserRoles(
     lstAD_UserRoles: tmpformChooseRole[],
-    lstUserIDs: string[]
+    lstUserIDs: string[],
+    needValidate: boolean
   ) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UsersBusiness',
       'AddUserRolesAsync',
-      [lstAD_UserRoles, lstUserIDs]
+      [lstAD_UserRoles, lstUserIDs, needValidate]
     );
   }
   //#endregion

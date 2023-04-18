@@ -157,8 +157,12 @@
     <ng-template #titleTmp let-data>
       <div class="w-100">
         <!-- emp info -->
+
         <div class="justify-content-between text-dark fw-bold">
-          <span>{{ data?.emp?.employeeName }}</span>
+          <codx-vll class="badge badge-sm me-1" [name]="'HR001'" [value]="data?.emp?.gender" [showText]="false"
+            [showIcon]="true" [showBgColor]="true">
+          </codx-vll>
+          <span class="fs-5 me-1">{{ data?.emp?.employeeName }}</span>
           <span>
             <i class="icon-qr_code_scanner icon-14 me-1"></i>
             <span class="text-danger">{{ data?.emp?.employeeID }}</span>
@@ -170,8 +174,7 @@
         <!-- end emp info -->
         <!-- salaries -->
         <div class="justify-content-between fs-5 fw-bold">
-          <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" 
-            *ngIf="data?.siSalary >0 ;else noSiSalary"
+          <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" *ngIf="data?.siSalary >0 ;else noSiSalary"
             class="d-flex flex-row align-self-center fw-bold gap-1">
             <span class="icon-attach_money align-self-center icon-15"></span>
             <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
@@ -184,18 +187,18 @@
             </span>
           </div>
           <ng-template #noSiSalary>
-            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" 
-            class="d-flex flex-row align-self-center fw-bold gap-1">
-            <span class="icon-attach_money align-self-center icon-15"></span>
-            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
-              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-            </span>
-          </div>
+            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'"
+              class="d-flex flex-row align-self-center fw-bold gap-1">
+              <span class="icon-attach_money align-self-center icon-15"></span>
+              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
+                [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+              </span>
+            </div>
           </ng-template>
         </div>
         <!-- end salaries -->
         <!-- effected day -->
-        <div class="d-flex flex-row align-self-center fs-5 fw-bold"  
+        <div class="d-flex flex-row align-self-center fs-5 fw-bold"
           [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
           <span class="icon-calendar_today fw-bold me-1"></span>
           <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">{{ data.effectedDate | fmDT }}</span>
@@ -222,8 +225,8 @@
 </ng-template>
 
 <ng-template #templateItemDetailRight let-data>
-  <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" 
-    [formModel]="view?.formModel" [view]="view" (clickMFunction)="clickEvent($event, data)">
+  <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
+    [view]="view" (clickMFunction)="clickEvent($event, data)">
   </lib-view-basic-salary-detail>
 </ng-template>
 <!-- end list & detail view -->

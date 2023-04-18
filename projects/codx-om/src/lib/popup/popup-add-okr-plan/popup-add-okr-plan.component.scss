@@ -82,3 +82,10 @@ input {
 .e-input-group.e-control-wrapper,.e-input-group {
     border: 0px !important;
 }
+.om-hover-mf{
+    opacity: 0.1;
+}
+.om-hover-mf
+{&:hover{
+    opacity: 1;
+}}
