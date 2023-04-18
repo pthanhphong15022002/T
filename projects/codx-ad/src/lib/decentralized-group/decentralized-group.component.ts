@@ -77,7 +77,6 @@ export class DecentralizedGroupComponent extends UIComponent {
           {
             title: title,
             formType: 'add',
-            quantity: this,
           },
           option
         );
@@ -100,7 +99,7 @@ export class DecentralizedGroupComponent extends UIComponent {
         AddDecentralGroupMemComponent,
         {
           title: title,
-          formType: 'add',
+          formType: 'edit',
         },
         option
       );

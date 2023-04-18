@@ -95,7 +95,7 @@ export class UserComponent extends UIComponent {
     this.headerText = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit('edit', data);
         break;
       case 'SYS04':
         this.copy(data);
@@ -171,12 +171,17 @@ export class UserComponent extends UIComponent {
         if (x.event) {
           this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
             if (res) {
-              var dataMF: any = [];
-              if (x.event?.formType == 'edit') {
+              let dataMF: any = [];
+              if (x.event?.formType == 'invite') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.formType, x.event?.data);
+              } else if (x.event?.formType == 'edit') {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
                 this.headerText = dataMF[0].customName;
-                this.edit(x.event?.data);
+                this.edit(x.event?.formType, x.event?.data);
               } else {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
@@ -226,7 +231,7 @@ export class UserComponent extends UIComponent {
       });
   }
 
-  edit(data?) {
+  edit(formType: string, data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -234,7 +239,7 @@ export class UserComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
-          formType: 'edit',
+          formType: formType,
           headerText: this.headerText,
         };
         let option = new SidebarModel();

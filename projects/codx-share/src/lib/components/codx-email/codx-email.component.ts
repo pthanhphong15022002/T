@@ -228,22 +228,24 @@ export class CodxEmailComponent implements OnInit {
                 //this.cr.detectChanges();
               });
           } else {
-            this.codxService.getDataDefault().subscribe((res) => {
-              if (res) {
-                //this.setViewBody();
+            this.codxService
+              .getDataDefault(this.functionID)
+              .subscribe((res) => {
+                if (res) {
+                  //this.setViewBody();
 
-                this.data = res;
-                this.dialogETemplate.patchValue(this.data);
-                this.dialogETemplate.addControl(
-                  'recID',
-                  new FormControl(this.data.recID)
-                );
-                this.loadListFieldByFuntion();
-                this.formModel.currentData = this.data;
-                this.isAfterRender = true;
-                //this.cr.detectChanges();
-              }
-            });
+                  this.data = res;
+                  this.dialogETemplate.patchValue(this.data);
+                  this.dialogETemplate.addControl(
+                    'recID',
+                    new FormControl(this.data.recID)
+                  );
+                  this.loadListFieldByFuntion();
+                  this.formModel.currentData = this.data;
+                  this.isAfterRender = true;
+                  //this.cr.detectChanges();
+                }
+              });
             //this.loadListFieldByFuntion();
           }
           // this.codxService
