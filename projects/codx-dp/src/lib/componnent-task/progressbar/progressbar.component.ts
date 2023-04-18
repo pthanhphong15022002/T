@@ -9,26 +9,28 @@ export class ProgressbarComponent implements OnInit,OnChanges {
   @Input() progress = 0;
   @Input() color = '#005DC7';
   @Input() size = 40;
-  @Input() fontSize = 12;
 
-  fontSizeSpan = ''
+
+  fontSizeCustom = '';
+  sizeCustom = '';
+  sizespan = '';
   ngOnInit(): void {
     this.progress = 0;
-    this.fontSizeSpan = this.fontSize.toString() + 'px';
+    this.fontSizeCustom = (Math.floor(this.size/3)).toString() + 'px';
+    this.sizeCustom = this.size.toString() + 'px';
+    this.sizespan = (Math.floor(this.size/1.25)).toString() + 'px';
   }
 
   ngOnChanges(changes: SimpleChanges){
     if(changes?.progress){
-      let progress = 0;
-      for(let i = 0; i <= this.progress; i++) {
-        setTimeout(() => {
-          progress = i;
-          this.load(progress);
-        },1000)
-        
-      }
+      this.load(this.progress);
     }
   }
+
+  getbackgroundColor() {
+    return `--color: ${this.color}; --size: ${this.sizeCustom}; --size-span: ${this.sizespan}`;
+  }
+
   load(percent) {
     const ppc = document.querySelector('.progress-pie-chart') as HTMLElement;
     const deg = (360 * percent) / 100;

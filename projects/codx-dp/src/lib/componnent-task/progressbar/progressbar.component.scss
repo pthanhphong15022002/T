@@ -1,5 +1,9 @@
+:root {
+  --size: 40px;
+  --color: #005DC7;
+  --size-span: 35px
+}
 $size: 40px;
-$color: #005DC7;
 @mixin circle($size) {
    content: "";
    position: absolute;
@@ -9,7 +13,6 @@ $color: #005DC7;
    width: $size;
    height: $size;
  }
-
  .progress-pie-chart {
    width: $size;
    height: $size;
@@ -17,7 +20,7 @@ $color: #005DC7;
    background-color: #E5E5E5;
    position: relative;
    &.gt-50 {
-     background-color: $color;
+     background-color: var(--color);
    }
  }
  .ppc-progress {
@@ -26,7 +29,7 @@ $color: #005DC7;
    .ppc-progress-fill {
      @include circle($size);
      clip: rect(0, #{$size/2}, $size, 0);
-     background: $color;
+     background: var(--color);
      transform: rotate(60deg);
    }
    .gt-50 & {
@@ -46,7 +49,7 @@ $color: #005DC7;
      display: block;
      font-size: 2.6em;
      font-weight: bold;
-     color: $color;
+     color: var(--color);
    }
  }
  .pcc-percents-wrapper {
