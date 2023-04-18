@@ -109,13 +109,14 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     let objParam:any = {};
     if(e[1]){
       for(let key in e[1]){
-        if(key.includes('Date')){
-          objParam['fromDate'] = e[1][key].fromDate;
-          objParam['toDate'] = e[1][key].toDate;
-        }
-        else{
-          objParam[key] = e[1][key]
-        }
+        // if(key.includes('Date')){
+        //   objParam['fromDate'] = e[1][key].fromDate;
+        //   objParam['toDate'] = e[1][key].toDate;
+        // }
+        // else{
+        //   objParam[key] = e[1][key]
+        // }
+        objParam[key] = e[1][key]
       }
       this._paramString = JSON.stringify(objParam);
     }
