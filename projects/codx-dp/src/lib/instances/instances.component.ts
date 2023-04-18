@@ -773,7 +773,7 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (!data.permissionCloseInstances) {
+              if (!data.permissionCloseInstances || data.status != '2') {
                 if (!data.permissionMoveInstances || data.status != '2' || data.closed) res.disabled = true;
               }
               break;
@@ -781,7 +781,7 @@ export class InstancesComponent
             case 'SYS104':
             case 'SYS04':
               let isCopy = this.isCreate ? true : false;
-              if (!isCopy || data.closed) res.disabled = true;
+              if (!isCopy || data.closed || data.status != '2') res.disabled = true;
               break;
             //xóa
             case 'SYS102':
@@ -801,7 +801,7 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (!data.permissionCloseInstances) {
+              if (!data.permissionCloseInstances || data.status != '2') {
                 if (
                   !data.permissionMoveInstances ||
                   data.status != '2' ||
@@ -812,7 +812,7 @@ export class InstancesComponent
               }
               break;
             case 'DP10':
-              if (!data.permissionCloseInstances) {
+              if (!data.permissionCloseInstances || ( data.permissionCloseInstances && data.status != '2')) {
                 if (
                   !data.permissionMoveInstances ||
                   data.status != '2' ||
@@ -824,6 +824,8 @@ export class InstancesComponent
               }
 
               break;
+            case 'SYS004':
+            case 'SYS002':
             case 'DP21':
               res.disabled = true;
               break;
@@ -839,6 +841,8 @@ export class InstancesComponent
               break;
             case 'DP09':
             case 'DP10':
+            case 'SYS004':
+            case 'SYS002':
             case 'DP02':
               mf.disabled = true;
               break;
@@ -934,6 +938,15 @@ export class InstancesComponent
     if (data.status == '1') {
       this.notificationsService.notify(
         'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
+        '2'
+      );
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    debugger;;
+    if (data.status != '1' && data.status != '2' ) {
+      this.notificationsService.notify(
+        'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
         '2'
       );
       this.changeDetectorRef.detectChanges();
@@ -1125,13 +1138,21 @@ export class InstancesComponent
   }
 
   autoMoveStage(dataInstance) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.handleMoveStage(dataInstance);
-      }
-    });
+    debugger;
+
+    var checkTransferControl = this.process.steps.find( x => x.recID === dataInstance.step.stepID).transferControl;
+
+    if(checkTransferControl == '1') {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.handleMoveStage(dataInstance);
+        }
+      });
+    }
+
+
   }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;

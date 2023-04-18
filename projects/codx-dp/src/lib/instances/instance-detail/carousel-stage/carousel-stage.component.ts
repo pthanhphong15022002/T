@@ -34,6 +34,7 @@ export class CarouselStageComponent {
   idElementCrr: any;
   readonly viewCarouselForPage: string = 'viewCarouselForPage';
   readonly viewCarouselDefault: string = 'viewCarouselDefault';
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private config: NgbCarouselConfig,
     private changeDetectorRef: ChangeDetectorRef
@@ -48,17 +49,19 @@ export class CarouselStageComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSource']) {
-      this.listTreeView = [];
-      this.viewSetting = '';
-      this.selectedIndex = '0';
+      this.clearDataBefore();
       this.listStep = changes['dataSource'].currentValue;
-      let stepCrr = this.listStep?.filter(x=>x.stepStatus=='1')[0]
-      if(stepCrr)this.idElementCrr = stepCrr.stepID ;else this.idElementCrr =  this.listStep[0].stepID
       this.handleDateMaxSize(this.listStep, this.maxSize);
+      this.idElementCrr = this.autoClick(this.listStep);
       this.changeDetectorRef.detectChanges();
     }
   }
 
+  clearDataBefore(){
+    this.listTreeView = [];
+    this.viewSetting = '';
+    this.selectedIndex = '0';
+  }
   handleDateMaxSize(list, maxSize) {
     if (list && list.length > maxSize) {
       var index = 0;
@@ -80,7 +83,7 @@ export class CarouselStageComponent {
     }
   }
 
-  getColorStepName(status: string, stepID) {
+  getColorStepName(status: string) {
     if (status == '1') {
       return 'step current ';
     } else if (status == '3' || status == '4' || status == '5' || !status) {
@@ -125,5 +128,12 @@ export class CarouselStageComponent {
       this.eventClicked.emit(result);
     }
     this.changeDetectorRef.detectChanges();
+  }
+  autoClick(listStep){
+    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0]
+    if(stepCrr) {
+        return stepCrr.stepID;
+    }
+    return this.guidEmpty;
   }
 }
