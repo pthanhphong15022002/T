@@ -1604,8 +1604,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         config.type = 'YesNo';
         //SYS003
         this.notiService
-          .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
-          .closed.subscribe((x) => {
+          .alertCode('SYS003').subscribe((x) => {
             if (x.event.status == 'Y') {
               var method =
                 this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
