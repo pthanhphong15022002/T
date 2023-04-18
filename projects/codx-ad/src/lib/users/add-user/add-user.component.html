@@ -120,8 +120,8 @@
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           (valueChange)="valueChangeM($event)"
-          [disabled]="!adUser.email ? false : true"
-          *ngIf="formType == 'edit'"
+          [disabled]="true"
+          *ngIf="formType == 'edit' || formType == 'invite'"
         >
         </codx-input>
         <codx-input
@@ -129,7 +129,7 @@
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           (valueChange)="valueChangeM($event)"
-          [disabled]="false"
+          [disabled]="isSaas"
           *ngIf="formType == 'add' || formType == 'copy'"
         >
         </codx-input>
