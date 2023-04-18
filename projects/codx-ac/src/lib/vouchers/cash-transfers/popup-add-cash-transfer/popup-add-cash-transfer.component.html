@@ -466,9 +466,9 @@
                 default="Tổng cộng:"
                 fiedName="lblTotalAmount"
                 [formModel]="form.formModel"
-                class="fw-bold fs-2 me-2 text-dark"
+                class="fw-bold fs-3 me-2 text-dark"
               ></codx-label>
-              <span class="fw-bold fs-2 text-primary">
+              <span class="fw-bold fs-3 text-primary">
                 {{
                   (cashTransfer?.payAmount || 0) +
                     (cashTransfer?.paymentFees || 0) +
@@ -503,7 +503,7 @@
 </ng-template>
 
 <ng-template #customToolbar>
-  <div class="d-flex justify-content-between pt-2 w-100">
+  <div class="d-flex justify-content-between pt-3 w-100">
     <div class="d-flex align-items-center">
       <div class="btn btn-icon btn-primary btn-circle me-3">
         <i
@@ -556,7 +556,7 @@
       </button>
 
       <div
-        class="ms-2 btn btn-icon btn-sm btn-light-danger btn-circle bg"
+        class="ms-2 btn btn-icon btn-light-danger btn-circle"
         (click)="close()"
       >
         <i class="icon-close icon-18"></i>
