@@ -1153,13 +1153,6 @@
 
 <!-- Quy trình động - All in ------------------------------------------------------------------------------- -->
 <ng-template #dynamicFieldsAllSteps>
-  <!-- <ng-container *ngFor="let st of stepList">
-    <ng-container
-      *ngIf="!st.isFailStep && !st.isSuccessStep"
-      [ngTemplateOutlet]="dynamicFields"
-      [ngTemplateOutletContext]="{ $implicit: st }"
-    ></ng-container>
-  </ng-container> -->
   <ng-container
     *ngIf="stepList?.length > 0"
     [ngTemplateOutlet]="dynamicFields"
@@ -1403,20 +1396,213 @@
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
         <div class="example-list stage-body-left-main">
-          <div
-            *ngFor="let itemTemp of listTemp; let i = index"
-            class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-            [ngClass]="itemTemp?.recID === tempCrr?.recID ? 'click' : ''"
-            (click)="clickViewTemp(itemTemp)"
+          <ul
+            ngbNav
+            #nav="ngbNav"
+            [(activeId)]="active"
+            class="nav-export h-100 p-0 m-0"
+            orientation="vertical"
+            (navChange)="navChanged($event)"
           >
-            <div class="order">{{ i + 1 }}</div>
-            <div class="d-flex flex-column">
-              <div class="fw-bold text-dark">
-                {{ itemTemp?.templateName }}
-              </div>
+            <li class="p-0 m-0" ngbNavItem="1">
+              <a ngbNavLink
+                ><div class="d-flex align-items-center py-2">
+                  <i
+                    class="fa-solid fa-file-excel fs-2 me-3"
+                    style="color: #347442"
+                  ></i
+                  ><codx-label
+                    [default]="'Excel Template'"
+                    [class]="'fw-bold ' + (type == 'excel' ? 'text-primary' : '')"
+                  ></codx-label></div
+              ></a>
+            </li>
+            <li class="p-0 m-0" ngbNavItem="2">
+              <a ngbNavLink
+                ><div class="d-flex align-items-center py-2">
+                  <i
+                    class="fa-solid fa-file-word fs-2 me-3"
+                    style="color: #005dc7"
+                  ></i
+                  ><codx-label
+                    [default]="'Word Template'"
+                    [class]="'fw-bold ' + (type == 'word' ? 'text-primary' : '')"
+                  ></codx-label></div
+              ></a>
+            </li>
+          </ul>
+          <div
+            [ngbNavOutlet]="nav"
+            class="tmp-content ms-4 ps-6 border-start w-100 h-100"
+          ></div>
+        </div>
+      </div>
+      <div class="stage-body-right w-100 ps-6">
+        <ng-container *ngIf="type == 'excel'">
+          <div class="mb-4">
+            <div>
+              <codx-label
+                [default]="'Excel Template'"
+                class="fs-4 fw-bold"
+              ></codx-label>
+            </div>
+            <div class="fs-7 text-gray-500">
+              <codx-label
+                [default]="'Danh sách file excel đã import'"
+              ></codx-label>
             </div>
           </div>
-        </div>
+          <div (scroll)="onScroll($event)" class="export-content mt-3">
+            <ng-container
+              [ngTemplateOutlet]="
+                dataEx?.length > 0 ? tempDataEx : emptyTemplate
+              "
+            >
+            </ng-container>
+            <ng-template #tempDataEx>
+              <div
+                class="d-flex align-items-start justify-content-between py-2 border-bottom"
+                *ngFor="let item of dataEx"
+              >
+                <div class="d-flex align-items-top w-100">
+                  <!-- <div class="w-20px h-20px me-2">
+                  <codx-input type="radio" name="format"  ControlName="format" [crrValue]="'excelTemp_' + item.recID" ></codx-input>
+                </div> -->
+                  <div class="d-flex flex-column w-100">
+                    <div class="fw-bold text-dark">
+                      {{ item.templateName }}
+                    </div>
+                    <div class="fs-7 text-gray-500 text-italic">
+                      {{ item.description }}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start ms-6">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-sm btn-outline-primary"
+                    triggers="click"
+                    [autoClose]="true"
+                    [ngbTooltip]="tool"
+                    ngClass="border-0"
+                  >
+                    <span class="icon-more_vert icon-16"></span>
+                  </button>
+                  <ng-template #tool>
+                    <ng-container *ngFor="let x of moreFunction">
+                      <div
+                        class="d-flex p-2 cursor-pointer"
+                        (click)="openFormTemplet(x?.id, item)"
+                      >
+                        <span
+                          class="icon-16 me-2"
+                          [ngClass]="x?.icon"
+                          [style.color]="x?.textColor"
+                        ></span>
+                        <codx-label
+                          [formModel]="dialog.formModel"
+                          [fiedName]="x?.text"
+                        ></codx-label>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="type == 'word'">
+          <div class="mb-4">
+            <div>
+              <codx-label
+                [default]="'Word Template'"
+                class="fs-4 fw-bold"
+              ></codx-label>
+            </div>
+            <div class="fs-7 text-gray-500">
+              <codx-label
+                [default]="'Danh sách file word đã import'"
+              ></codx-label>
+            </div>
+          </div>
+          <div class="export-content mt-3">
+            <ng-container
+              [ngTemplateOutlet]="
+                dataWord?.length > 0 ? tempDataWord : emptyTemplate
+              "
+            >
+            </ng-container>
+            <ng-template #tempDataWord>
+              <div
+                class="d-flex align-items-start justify-content-between py-2 border-bottom"
+                *ngFor="let item of dataWord"
+              >
+                <div class="d-flex align-items-top w-100">
+                  <!-- <div class="w-20px h-20px me-2">
+                  <codx-input type="radio" name="format" ControlName="format" [crrValue]="item.recID" ></codx-input>
+                </div> -->
+                  <div class="d-flex flex-column w-100">
+                    <div class="fw-bold text-dark">
+                      {{ item.templateName }}
+                    </div>
+                    <div class="fs-7 text-gray-500 text-italic">
+                      {{ item.description }}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start ms-6">
+                  <div ngbDropdown class="dropdown ms-6">
+                    <button
+                      ngbDropdownToggle
+                      class="btn"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="icon-more_vert icon-18"></span>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                      <a ngbDropdownItem class="dropdown-item">
+                        <div
+                          class="d-flex align-items-center cursor-pointer"
+                          (click)="openFormTemplet('edit', item)"
+                        >
+                          <span class="icon-edit text-primary icon-16"></span>
+                          <span class="ms-2">Chỉnh sửa</span>
+                        </div>
+                      </a>
+                      <a ngbDropdownItem class="dropdown-item">
+                        <div
+                          class="d-flex align-items-center cursor-pointer"
+                          (click)="openFormTemplet('delete', item)"
+                        >
+                          <span class="icon-delete text-danger icon-16"></span>
+                          <span class="ms-2">Xóa</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <!-- <ng-template #elseWord>
+              <div class="export-container">
+                <div
+                  class="d-flex flex-column flex-center justify-content-center"
+                >
+                  <img
+                    src="../assets/themes/sys/default/img/DataEmpty.svg"
+                    class="w-200px"
+                  />
+                  <div class="fw-bold mt-1 text-center">
+                    <div class="mt-2 text-center">Chưa có dữ liệu word</div>
+                  </div>
+                </div>
+              </div>
+            </ng-template> -->
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -1434,7 +1620,7 @@
     <button
       type="button"
       class="btn btn-sm btn-outline-primary"
-      (click)="addTemplet()"
+      (click)="openFormTemplet('add', null)"
     >
       <i class="icon-add icon-14 text-primary ms-n1"></i>
       <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
@@ -3338,3 +3524,18 @@
   </div>
 </ng-template>
 <!-- End Thiết lập giai đoạn -->
+<ng-template #emptyTemplate>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-250px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

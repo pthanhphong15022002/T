@@ -1349,30 +1349,6 @@ export class InstancesComponent
     );
   }
 
-  // getSumDurationDayOfSteps(listStepCbx: any) {
-  //   let totalDay = listStepCbx
-  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
-  //     .reduce(
-  //       (sum, f) =>
-  //         sum +
-  //         f?.durationDay +
-  //         f?.durationHour +
-  //         this.setTimeHoliday(f?.excludeDayoff),
-  //       0
-  //     );
-  //   return totalDay;
-  // }
-  // getSumDurationHourOfSteps(listStepCbx: any) {
-  //   let totalHour = listStepCbx
-  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
-  //     .reduce((sum, f) => sum + f?.durationHour, 0);
-  //   return totalHour;
-  // }
-  // setTimeHoliday(dayOffs: string): number {
-  //   let listDays = dayOffs.split(';');
-  //   return listDays.length;
-  // }
-
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {
       return '1;2';
