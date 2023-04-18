@@ -1248,6 +1248,15 @@ export class CodxHrService {
       [objectID, comment, objectType, actionType, createdBy]
     );
   }
+  getOldBasicSalary(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetOldBasicSalaryAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region HR_EHealths
@@ -1699,6 +1708,25 @@ export class CodxHrService {
     );
   }
 
+  EditEmployeeBenefitMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'EditEmployeeBenefitMoreFunc',
+      data
+    );
+  }
+
+  AddEBenefitTrackLog(objectID, comment, objectType, actionType, createdBy){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBenefitsBusiness',
+      'ReceiveToAddEJSalariesTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
   //#endregion
 
   //#region HR_EBusinessTravels

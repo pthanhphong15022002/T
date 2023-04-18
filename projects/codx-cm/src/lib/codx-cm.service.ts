@@ -34,12 +34,30 @@ export class CodxCmService {
     );
   }
 
-  getOne(recID, funcID){
+  getOneCustomer(recID, funcID){
     return this.api.exec<any>(
       'CM',
       'CustomersBusiness',
       'GetOneAsync',
       [recID, funcID]
+    );
+  }
+
+  getContactByObjectID(objectID){
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetOneAsync',
+      [objectID]
+    );
+  }
+
+  getListContactByObjectID(objectID){
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetListContactByObjectIDAsync',
+      [objectID]
     );
   }
 

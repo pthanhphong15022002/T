@@ -42,10 +42,63 @@
   ></codx-tag>
 </ng-template>
 <ng-template #body>
+  <div class="mb-3" *ngIf="funcID == 'CM0102'">
+    <div class="mb-4">
+      <codx-label
+        name="lblLink"
+        class="h4 text-dark fw-bold"
+        [formModel]="dialog.formModel"
+        default="Đối tượng liên kết"
+      >
+      </codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
+          </codx-label>
+          <codx-input
+            [field]="'objectType'"
+            [crrValue]="data.objectType"
+            [type]="'valuelist'"
+            [refValue]="gridViewSetup?.ObjectType?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
+          </codx-label>
+          <codx-input
+            [field]="'contactType'"
+            [crrValue]="data?.contactType"
+            [type]="'valuelist'"
+            [refValue]="gridViewSetup?.ContactType?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label
+        [formModel]="form.formModel"
+        [fiedName]="'ObjectID'"
+      ></codx-label>
+      <codx-input
+        [field]="'objectID'"
+        [crrValue]="data?.objectID"
+        type="combobox"
+        [refValue]="'CM_Customers'"
+        (valueChange)="valueChangeContact($event)"
+      ></codx-input>
+    </div>
+  </div>
+
   <div class="mb-4">
     <codx-label
       name="lblGeneral"
-      class="text-dark fw-bold"
+      class="h4 text-dark fw-bold"
       [formModel]="dialog.formModel"
       default="Thông tin chung"
     >
@@ -107,35 +160,44 @@
         >
         </codx-input>
       </div>
+
       <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label
-          [formModel]="dialog.formModel"
-          name="lblLastName"
-          default="Họ và đệm"
-        >
+        <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
         </codx-label>
         <codx-input
-          type="text"
-          [crrValue]="lastName"
-          (valueChange)="valueChange($event)"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [field]="'salutation'"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="dialog.formModel" fiedName="LastName">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           field="lastName"
         >
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label
-          [formModel]="dialog.formModel"
-          name="lblFirstName"
-          default="Tên"
-        >
+        <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
         </codx-label>
         <codx-input
-          type="text"
-          [crrValue]="firstName"
-          (valueChange)="valueChange($event)"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           field="firstName"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="dialog.formModel" fiedName="Gender">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="gender"
         >
         </codx-input>
       </div>
@@ -152,7 +214,11 @@
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <div class="d-flex justify-content-between">
           <div class="d-flex align-items-center">
-            <codx-label [formModel]="form.formModel" fiedName="Contacts">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblContacts"
+              default="Liên hệ chính"
+            >
             </codx-label>
           </div>
           <div class="d-flex justify-content-end">
@@ -179,11 +245,34 @@
         <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102' || funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <codx-label
+              [formModel]="form.formModel"
+              [fiedName]="funcID == 'CM0101' ? 'Phone' : 'Mobile'"
+            >
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="funcID == 'CM0102'">
+            <codx-label
+              class="text-gray-500 me-2"
+              [formModel]="form.formModel"
+              [fiedName]="'AllowCall'"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="allowCall"
+            >
+            </codx-input>
+          </div>
+        </div>
+
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="phone"
+          [field]="funcID == 'CM0101' ? 'phone' : 'mobile'"
         >
         </codx-input>
       </div>
@@ -197,12 +286,33 @@
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-        <codx-label [formModel]="dialog.formModel" fiedName="Email">
-        </codx-label>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <codx-label
+              [formModel]="form.formModel"
+              [fiedName]="funcID == 'CM0101' ? 'Email' : 'PersonalEmail'"
+            >
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="funcID == 'CM0102'">
+            <codx-label
+              class="text-gray-500 me-2"
+              [formModel]="form.formModel"
+              [fiedName]="'AllowEmail'"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="allowEmail"
+            >
+            </codx-input>
+          </div>
+        </div>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="email"
+          [field]="funcID == 'CM0101' ? 'email' : 'personalEmail'"
         >
         </codx-input>
       </div>
@@ -230,6 +340,56 @@
         >
         </codx-input>
       </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Birthday">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="birthday"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="BirthPlace">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="birthPlace"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="idCardNo"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="issuedOn"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="issuedBy"
+        >
+        </codx-input>
+      </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
         <codx-label [formModel]="form.formModel" fiedName="Source">
         </codx-label>
@@ -241,12 +401,12 @@
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
+        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0102' ? 'Note' : 'Memo'"> </codx-label>
 
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="memo"
+          [field]="funcID == 'CM0102' ? 'note' : 'memo'"
         >
         </codx-input>
       </div>
@@ -270,7 +430,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="funcID == 'CM0101'">
         <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
         </codx-label>
         <codx-input
@@ -281,12 +441,123 @@
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Nationality">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="nationality"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="ethnicGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Religion">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="religion"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Education">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="education"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="MaritalStatus">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="maritalStatus"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Income">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="income"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Occupation">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="occupation"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
         <codx-label [formModel]="form.formModel" fiedName="JobTitle">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="jobTitle"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Department">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="department"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group row" *ngIf="funcID == 'CM0102'">
+        <div class="col-8">
+          <codx-label [formModel]="form.formModel" fiedName="Phone">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="phone"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4">
+          <codx-label [formModel]="form.formModel" fiedName="PhoneExt">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="phoneExt"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="email"
         >
         </codx-input>
       </div>
@@ -346,23 +617,23 @@
           </div>
         </div>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="BankAccount">
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'BankAccount' : 'BankAcctNo'">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="bankAccount"
+          [field]="funcID == 'CM0101' ? 'bankAccount' : 'bankAcctNo'"
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="BankName">
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
+        <codx-label [formModel]="form.formModel" [fiedName]=" funcID == 'CM0101' ? 'BankName' : 'BankID'">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="bankName"
+          [field]="funcID == 'CM0101' ? 'bankName' : 'bankID'"
         >
         </codx-input>
       </div>
@@ -388,42 +659,6 @@
           </div>
           <div class="w-100 ms-1">
             <codx-label [formModel]="form.formModel" fiedName="IsBlackList">
-            </codx-label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <div class="d-flex justify-content-between">
-          <div>
-            <codx-input
-              type="switch"
-              class="me-2"
-              [crrValue]="data?.allowCall"
-              (valueChange)="valueChange($event)"
-              field="allowCall"
-            >
-            </codx-input>
-          </div>
-          <div class="w-100">
-            <codx-label [formModel]="form.formModel" fiedName="AllowCall">
-            </codx-label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <div class="d-flex justify-content-between">
-          <div>
-            <codx-input
-              type="switch"
-              class="me-2"
-              [crrValue]="data?.allowEmail"
-              (valueChange)="valueChange($event)"
-              field="allowEmail"
-            >
-            </codx-input>
-          </div>
-          <div class="w-100">
-            <codx-label [formModel]="form.formModel" fiedName="AllowEmail">
             </codx-label>
           </div>
         </div>
@@ -574,7 +809,7 @@
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
               {{ contactsPerson.contactName }}
             </div>
-            <div class="mb-1" *ngIf="contactsPerson.phoneNumber">
+            <div class="mb-1" *ngIf="contactsPerson?.mobile">
               <span
                 [ngClass]="
                   contactsPerson.allowCall
@@ -586,10 +821,10 @@
               <span
                 [ngClass]="contactsPerson.allowCall ? 'text-primary' : ''"
                 class="text-gray-900"
-                >{{ contactsPerson.phoneNumber }}</span
+                >{{ contactsPerson.mobile }}</span
               >
             </div>
-            <div *ngIf="contactsPerson.email">
+            <div *ngIf="contactsPerson?.personalEmail">
               <span
                 [ngClass]="
                   contactsPerson.allowEmail
@@ -601,7 +836,7 @@
               <span
                 [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''"
                 class="text-gray-900"
-                >{{ contactsPerson.email }}</span
+                >{{ contactsPerson?.personalEmail }}</span
               >
             </div>
           </div>

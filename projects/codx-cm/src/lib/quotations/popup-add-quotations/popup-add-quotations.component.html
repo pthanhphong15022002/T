@@ -81,8 +81,17 @@
           ></codx-input>
         </div>
         <div class="form-group col-2">
-          <codx-label default="Phiên bản"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+          <codx-label
+          fiedName="VersionNo"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="versionNo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+          <!-- <codx-label default="Phiên bản"></codx-label>
+          <codx-input type="text" placeholder="test thôi dung la"></codx-input> -->
         </div>
         <div class="form-group col-3">
           <codx-label default="Ngày hết hạn"></codx-label>

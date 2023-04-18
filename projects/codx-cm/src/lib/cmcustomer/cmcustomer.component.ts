@@ -20,7 +20,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
-import { PopupAddCmcustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -433,7 +433,7 @@ export class CmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
-          PopupAddCmcustomerComponent,
+          PopupAddCmCustomerComponent,
           ['add', this.titleAction],
           option
         );
@@ -467,7 +467,7 @@ export class CmCustomerComponent
           this.titleAction =
             this.titleAction + ' ' + this.view?.function.customName;
           var dialog = this.callfc.openSide(
-            PopupAddCmcustomerComponent,
+            PopupAddCmCustomerComponent,
             ['edit', this.titleAction],
             option
           );
@@ -503,7 +503,7 @@ export class CmCustomerComponent
         this.titleAction =
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
-          PopupAddCmcustomerComponent,
+          PopupAddCmCustomerComponent,
           ['copy', this.titleAction],
           option
         );

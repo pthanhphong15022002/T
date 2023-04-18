@@ -30,6 +30,7 @@ import { FormGroup } from '@angular/forms';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-add-user',
@@ -78,7 +79,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   date = new Date();
   //employeeID first change
   isEmpIDNotNull: boolean = false;
-
+  isSaas = false;
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -90,13 +91,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     super(injector);
+    this.isSaas = environment.saas == 1;
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
-    if (this.formType == 'edit') {
+    if (this.formType == 'invite') {
+      this.isSaved = false;
+      this.viewChooseRole = this.data?.chooseRoles;
+      this.adUser.chooseRoles = this.viewChooseRole;
+      if (this.data?.chooseRoles)
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.data?.chooseRoles)
+        );
+      this.adUser['phone'] = this.adUser.mobile;
+      this.countListViewChoose();
+    } else if (this.formType == 'edit') {
       this.isSaved = true;
-      // this.adUser.userID = this.data._uuid;
+
       this.viewChooseRole = this.data?.chooseRoles;
       this.adUser.chooseRoles = this.viewChooseRole;
       if (this.data?.chooseRoles)
@@ -239,7 +251,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   beforeOpenPopupRoles(item: any) {
     this.countOpenPopRoles++;
 
-    if ((this.formType == 'add' || this.formType == 'copy') && !this.isSaved) {
+    if (!this.isSaved) {
       // if (this.countOpenPopRoles == 1) this.addUserTemp();
       this.saveUser(false, item);
     } else {
@@ -255,6 +267,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       data: item,
       groupID: '',
       lstMemIDs: [this.adUser.userID],
+      needValidate: true,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,

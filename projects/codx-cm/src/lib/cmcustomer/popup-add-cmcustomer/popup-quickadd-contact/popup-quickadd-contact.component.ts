@@ -1,5 +1,4 @@
 import { CodxCmService } from './../../../codx-cm.service';
-import { tmpCrm, CM_Contacts } from './../../../models/tmpCrm.model';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
   DialogData,
@@ -7,6 +6,8 @@ import {
   NotificationsService,
   CacheService,
 } from 'codx-core';
+import { CM_Contacts } from '../../../models/cm_model';
+import { tmpCrm } from '../../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-popup-quickadd-contact',
@@ -16,12 +17,14 @@ import {
 export class PopupQuickaddContactComponent implements OnInit {
   dialog: any;
   data = new CM_Contacts();
-  firstName: any;
-  lastName: any;
   gridViewSetup: any;
   title = '';
   action = '';
-  contact: CM_Contacts;
+  type: any;
+  contactType = '';
+  isCheckContactType = false;
+  recIDCm: any;
+  objectType: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -30,11 +33,18 @@ export class PopupQuickaddContactComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.title = dt?.data[0];
-    this.action = dt?.data[1];
+    this.title = dt?.data?.moreFuncName;
+    this.action = dt?.data?.action;
+    this.type = dt?.data?.type;
+    this.recIDCm = dt?.data?.recIDCm;
+    this.objectType = dt?.data?.objectType
+    if(this.type == 'formAdd'){
+      this.contactType = '1';
+    }
     if (this.action == 'edit') {
-      this.data = JSON.parse(JSON.stringify(dt?.data[2]));
-      this.getLastAndFirstName(this.data.contactName);
+      this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
+      this.contactType = this.data?.contactType;
+      if(this.contactType.split(';').some(x=> x == "1")) this.isCheckContactType = true;
     }
   }
   ngOnInit(): void {
@@ -50,17 +60,17 @@ export class PopupQuickaddContactComponent implements OnInit {
       });
   }
 
-  getLastAndFirstName(contactName) {
-    if (contactName != null) {
-      var nameArr = contactName.split(' ');
-      if (nameArr != null && nameArr.length > 1) {
-        this.lastName = nameArr.slice(0, -1).join(' ');
-        this.firstName = nameArr[nameArr.length - 1];
-      } else {
-        this.firstName = contactName;
-      }
-    }
-  }
+  // getLastAndFirstName(contactName) {
+  //   if (contactName != null) {
+  //     var nameArr = contactName.split(' ');
+  //     if (nameArr != null && nameArr.length > 1) {
+  //       this.lastName = nameArr.slice(0, -1).join(' ');
+  //       this.firstName = nameArr[nameArr.length - 1];
+  //     } else {
+  //       this.firstName = contactName;
+  //     }
+  //   }
+  // }
 
   beforeSave(op) {
     var data = [];
@@ -73,27 +83,36 @@ export class PopupQuickaddContactComponent implements OnInit {
 
   onAdd() {
     var data = [];
-    if (this.firstName != null && this.firstName.trim() != '') {
-      if (this.lastName != null && this.lastName.trim() != '') {
-        this.data.contactName = this.lastName.trim() + ' ' + this.firstName.trim();
+    if (this.data.firstName != null && this.data.firstName.trim() != '') {
+      if (this.data.lastName != null && this.data.lastName.trim() != '') {
+        this.data.contactName =
+          this.data.lastName.trim() + ' ' + this.data.firstName.trim();
       } else {
-        this.data.contactName = this.firstName.trim();
+        this.data.contactName = this.data.firstName.trim();
       }
     } else {
       this.data.contactName = '';
     }
+    if(this.type == 'formDetail'){
+      this.data.contactType = this.contactType;
+    }
     if (this.action == 'add' || this.action == 'copy') {
       data = [
+        null,
         this.data,
-        this.dialog.formModel.formName,
+        null,
+        null,
         this.dialog.formModel.funcID,
         this.dialog.formModel.entityName,
+        this.recIDCm,
+        this.objectType
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
-          this.contact = res;
-          this.dialog.close(this.contact);
+          this.data = res;
+          this.data.contactType = this.contactType;
+          this.dialog.close(this.data);
         } else {
           this.dialog.close();
         }
@@ -104,31 +123,37 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave() {
-    if (this.firstName == null || this.firstName.trim() == '') {
+    if (this.data.firstName == null || this.data.firstName.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
-        '"' + this.gridViewSetup['ContactName'].headerText + '"'
+        '"' + this.gridViewSetup['FirstName'].headerText + '"'
       );
       return;
     }
-    if (this.data.phoneNumber != null && this.data.phoneNumber.trim() != '') {
-      if (!this.checkEmailOrPhone(this.data.phoneNumber, 'P')) return;
+
+    if(this.contactType == null || this.contactType.trim() == ''){
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ContactType'].headerText + '"'
+      );
+      return;
     }
-    if (this.data.email != null && this.data.email.trim() != '') {
-      if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
+
+
+    if (this.data.mobile != null && this.data.mobile.trim() != '') {
+      if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
+    }
+    if (this.data.personalEmail != null && this.data.personalEmail.trim() != '') {
+      if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
     }
 
     this.onAdd();
   }
 
   valueChange(e) {
-    if (e.field == 'firstName' || e.field == 'lastName') {
-      this.firstName = e.field == 'firstName' ? e.data : this.firstName;
-      this.lastName = e.field == 'lastName' ? e.data : this.lastName;
-    } else {
-      this.data[e.field] = e.data;
-    }
+    this.contactType = e.data;
   }
 
   checkEmailOrPhone(field, type) {

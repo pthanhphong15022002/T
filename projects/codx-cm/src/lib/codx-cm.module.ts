@@ -26,7 +26,7 @@ import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.comp
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CodxTaskComponent } from './task/codx-task/codx-task.component';
 import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
-import { PopupAddCmcustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
 import { PopupAddressComponent } from './cmcustomer/popup-address/popup-address.component';
 import { ViewListCmComponent } from './cmcustomer/view-list-cm/view-list-cm.component';
 import { PopupListContactsComponent } from './cmcustomer/popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
@@ -38,6 +38,7 @@ import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-d
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
 import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
+import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 const routes: Routes = [
   {
     path: '',
@@ -77,7 +78,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxShowTaskComponent,
     InformationComponent,
     CodxTaskComponent,
-    PopupAddCmcustomerComponent,
+    PopupAddCmCustomerComponent,
     PopupAddressComponent,
     ViewListCmComponent,
     PopupListContactsComponent,
@@ -104,6 +105,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CodxDpModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
