@@ -75,9 +75,11 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   parentID: string;
   pageCount: any;
   columnGrids = [];
+  lockFields = [];
   keymodel: any;
   journal: IJournal;
   vllCashbook: any;
+  journalNo: string;
   voucherNoPlaceholderText$: Observable<string>;
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
@@ -112,7 +114,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+      if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
@@ -146,7 +148,25 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
               this.loadTotal();
             }
           });
+        this.api
+            .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [
+              this.journalNo
+            ])
+            .subscribe((res) => {
+              this.lockFields = res[1];
+            })
         //#endregion
+      }
+    }
+
+    if (this.formType == 'add') {
+      if (
+        this.cashreceipts &&
+        this.cashreceipts.unbounds &&
+        this.cashreceipts.unbounds.lockFields &&
+        this.cashreceipts.unbounds.lockFields.length
+      ) {
+        this.lockFields = this.cashreceipts.unbounds.lockFields as Array<string>;
       }
     }
 
@@ -454,6 +474,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           data: { ...data },
           type: 'edit',
           journal: this.journal,
+          lockFields: this.lockFields,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -549,6 +570,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       data: data,
       type: 'add',
       journal: this.journal,
+      lockFields: this.lockFields,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -765,7 +787,10 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                       this.cashreceiptslinesDelete,
                     ])
                     .subscribe();
-                  this.dialog.close();
+                  this.dialog.close({
+                    update:true,
+                    data : this.cashreceipts
+                  });
                   this.dt.detectChanges();
                 } else {
                 }

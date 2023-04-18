@@ -1,6 +1,24 @@
-<codx-views #view idField="recID" [funcID]="funcID" [views]="views"  entityName="CM_Quotations">
+<codx-views
+  #view
+  idField="recID"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
+  [views]="views"
+  predicates="CustomerID=@0"
+  [dataValues]="customerID"
+  (selectedChange)="changeItemDetail($event)"
+>
 </codx-views>
 <ng-template #templateMore let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>

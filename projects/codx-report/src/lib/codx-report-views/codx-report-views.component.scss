@@ -1,15 +1,11 @@
-// ::ng-deep{
-
-//   .btn-review {
-//     position: absolute;
-//     top: 3px;
-//     display: block;
-//     z-index: 1;
-//     right: 200px;
-//     background-color: white !important;
-//     border: none !important;
-// }
-
-
-
-// }
+::ng-deep {
+  .card-report {
+    .codx-image {
+      display: unset !important;
+      max-height: 120px !important;
+    }
+    .card-body{
+      min-height: 60px;
+    }
+  }
+}

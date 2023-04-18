@@ -1,4 +1,4 @@
-import { CM_Contacts, tmpCrm } from './../../models/tmpCrm.model';
+import { CM_Contacts, tmpCrm } from '../../models/tmpCrm.model';
 import {
   Component,
   OnInit,
@@ -24,11 +24,11 @@ import { PopupListContactsComponent } from './popup-list-contacts/popup-list-con
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
-  selector: 'lib-popup-add-crmcustomer',
-  templateUrl: './popup-add-crmcustomer.component.html',
-  styleUrls: ['./popup-add-crmcustomer.component.css'],
+  selector: 'lib-popup-add-cmcustomer',
+  templateUrl: './popup-add-cmcustomer.component.html',
+  styleUrls: ['./popup-add-cmcustomer.component.css'],
 })
-export class PopupAddCrmcustomerComponent implements OnInit {
+export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   data = new tmpCrm();
   dialog: any;
@@ -58,9 +58,7 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     this.title = dt.data[1];
     if (this.action == 'edit') {
       this.getAvatar(this.data);
-      if (this.funcID == 'CM0102') {
-        this.getLastAndFirstName(this.data?.contactName);
-      }
+
       if (this.data.contacts != null && this.data.contacts.length > 0) {
         this.contacts = this.data.contacts;
         var check = this.contacts.find((x) => x.contactType == '1');
@@ -323,9 +321,9 @@ export class PopupAddCrmcustomerComponent implements OnInit {
     let opt = new DialogModel();
     let dataModel = new FormModel();
     var title = this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
-    dataModel.formName = 'CMAddresses';
-    dataModel.gridViewName = 'grvCMAddresses';
-    dataModel.entityName = 'CM_Addresses';
+    dataModel.formName = this.dialog.formModel.formName;
+    dataModel.gridViewName = this.dialog.formModel.gridViewName;
+    dataModel.entityName = this.dialog.formModel.entityName;
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
     this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', [title], '', opt);

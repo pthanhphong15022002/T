@@ -23,14 +23,14 @@ export class CodxViewCardComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    this.getFilepattern(this.card.pattern);
+    debugger
+    this.getFilepattern(this.card.patternID);
   }
 
 
   // Get pattern
   getFilepattern(patternID:string){
-    if(patternID)
-    {
+    if(patternID){
       debugger
       this.api
       .execSv(

@@ -8,28 +8,33 @@
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="Country" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="country">
+    <codx-label fiedName="PostalCode" [formModel]="dialog.formModel"></codx-label>
+    <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="postalCode">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="Province" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="province">
+    <codx-label fiedName="CountryID" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="countryID">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="District" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="district">
+    <codx-label fiedName="ProvinceID" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="provinceID">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="Ward" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="ward">
+    <codx-label fiedName="DistrictID" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="districtID">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="Street" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="street">
+    <codx-label fiedName="WardID" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="wardID">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="Address" [formModel]="dialog.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="address">
     </codx-input>
   </div>
 </ng-template>
