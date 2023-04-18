@@ -2,8 +2,12 @@
   #view
   idField="recID"
   [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
   [views]="views"
-  entityName="CM_Quotations"
   predicates="CustomerID=@0"
   [dataValues]="customerID"
   (selectedChange)="changeItemDetail($event)"

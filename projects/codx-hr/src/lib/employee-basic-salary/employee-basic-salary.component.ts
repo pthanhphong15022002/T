@@ -89,12 +89,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
 
+  itemDetail;
+
   onInit(): void {
     this.cache
       .gridViewSetup('EBasicSalaries', 'grvEBasicSalaries')
       .subscribe((res) => {
         if (res) {
-          this.grvSetup = Util.camelize(res);
+          this.grvSetup = res;
         }
       });
     if (!this.funcID) {
@@ -142,9 +144,13 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   handleAction(event) {}
   onMoreMulti(event) {}
-  changeItemDetail(event) {}
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
 
   clickMF(event, data) {
+    this.itemDetail = data;
+
     switch (event.functionID) {
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
@@ -300,5 +306,15 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   
   closeUpdateStatusForm(dialog: DialogRef){
     dialog.close();
+  }
+
+  getDetailAward(event, data){
+    if(data){
+      this.itemDetail = data;
+      this.df.detectChanges()
+    }
+  }
+  clickEvent(event, data){
+    this.clickMF(event?.event, event?.data)
   }
 }

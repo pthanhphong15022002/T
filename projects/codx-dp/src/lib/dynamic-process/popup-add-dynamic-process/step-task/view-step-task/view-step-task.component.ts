@@ -64,6 +64,7 @@ export class ViewJobComponent implements OnInit {
           data['taskGroupID'] && data['taskGroupID'] == this.dataInput['refID']
       );
     }
+
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
@@ -100,7 +101,7 @@ export class ViewJobComponent implements OnInit {
 
   getColor(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
-    return { 'background-color': color?.color };
+    return { 'background-color': color?.color, with: '40px', height: '40px' };
   }
   getColorTile(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
