@@ -3,17 +3,88 @@
   [headerText]="title"
   [dialog]="dialog"
   [formModel]="frmModel"
-  [openMore]="true"
+  [openMore]="false"
   [body]="body"
+  [subHeader]="header"
 ></codx-form>
-
-<!-- Form Group -->
-<ng-template #body>
-  <ng-container [ngTemplateOutlet]="header"></ng-container>
-  <ng-container [ngTemplateOutlet]="main"></ng-container>
+<ng-template #header>
+  <div class="offcanvas-header w-100">
+    <div
+      class="btn-extand d-flex align-items-center"
+      [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
+    >
+      <ng-container *ngIf="!hideExtend">
+        <span [style.marginLeft]="'52%'">
+          <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
+          </codx-label>
+        </span>
+      </ng-container>
+      <a
+        class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
+        (click)="extendShow()"
+      >
+        <span *ngIf="hideExtend" class="text-dark me-2">
+          <codx-label
+            fiedName="Expand"
+            [formModel]="form.formModel"
+            default="Mở rộng"
+          >
+          </codx-label>
+        </span>
+        <span class="icon-login icon-20 ext_button"></span>
+      </a>
+    </div>
+  </div>
 </ng-template>
 
-<ng-template #header>
+<ng-template #body>
+  <div class="offcanvas-content offcanvas-extend fixed-extend">
+    <div class="d-flex">
+      <div class="flex-grow-1 extend-main">
+        <ng-container [ngTemplateOutlet]="nav"></ng-container>
+        <ng-container [ngTemplateOutlet]="main"></ng-container>
+      </div>
+      <div
+        [ngStyle]="{ display: hideExtend ? 'none' : 'block' }"
+        style="height: 91vh; border-left: 1px solid #d1d1d1; width:300px"
+      >
+      <ng-container [ngTemplateOutlet]="right"></ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #right>
+  <div class="d-flex tab-header">
+    <ul class="nav nav-tabs w-100">
+      <ng-container *ngFor="let item of tabInstances; let i = index">
+        <li class="nav-item">
+          <a
+            (click)="clickMenu(item.type)"
+            [class]="'tab-item text-dark fw-bold d-flex align-item-center' +' ' +(item.type == viewModelDetail ? 'tab-active' : '')"
+          >
+              <codx-label
+                [name]="'lbl' + item.type"
+                [formName]="'SYS'"
+                [default]="item.title"
+              >
+              </codx-label>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+  <div class="mt-5">   
+    <ng-container *ngIf="viewModelDetail == 'history'" [ngTemplateOutlet]="history">
+    </ng-container>
+    <ng-container *ngIf="viewModelDetail == 'comment'" [ngTemplateOutlet]="comment">
+    </ng-container>       
+    <ng-container *ngIf="viewModelDetail == 'attachments'" [ngTemplateOutlet]="attachments">
+    </ng-container>       
+  </div>
+</ng-template>
+
+<ng-template #nav>
   <div class="d-flex justify-content-between align-items-center py-1">
     <div class="d-flex align-items-center">
       <div class="icon-container" [ngStyle]="getColor(dataInput)">
@@ -254,12 +325,23 @@
       >
       </codx-label>
     </div>
-    <div class="d-flex align-items-center">
-      <span class="icon-more_vert icon-16"></span>
-    </div>
   </div>
 </ng-template>
 <ng-template #history>
+  <div>
+    <codx-history
+      #history
+      [objectID]="dataInput['recID']"
+      [formModel]="form.formModel"
+    ></codx-history>
+  </div>
+</ng-template>
+<ng-template #comment>
+  <div>
+    <codx-comment-temp [objectID]="dataInput['recID']"></codx-comment-temp>
+  </div>
+</ng-template>
+<ng-template #attachments>
   <div>
     <codx-history
       #history

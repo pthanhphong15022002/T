@@ -27,10 +27,11 @@ export class ViewJobComponent implements OnInit {
   listTypeTask = [];
   listDataLink = [];
   tabInstances = [
-    { type: 'view', title: 'Chi tiết công việc', icon: 'icon-history',},
-    { type: 'history', title: 'Lịch sử', icon: 'icon-info' },
+    { type: 'history', title: 'History'},
+    { type: 'comment', title: 'Comment'},
+    { type: 'attachments', title: 'Attachments'},
   ];
-  viewModelDetail = 'view';
+  viewModelDetail = 'history';
   dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
   step: any;
@@ -38,6 +39,7 @@ export class ViewJobComponent implements OnInit {
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
   ];
+  hideExtend = true;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -152,5 +154,26 @@ export class ViewJobComponent implements OnInit {
     // }
    
     }
+  }
+  extendShow(): void {
+    this.hideExtend = !this.hideExtend;
+    var doc = document.getElementsByClassName('extend-more')[0];
+    var ext = document.getElementsByClassName('ext_button')[0];
+    if (ext != null) {
+      if (this.hideExtend) {
+        document
+          .getElementsByClassName('codx-dialog-container')[0]
+          .setAttribute('style', 'width: 550px; z-index: 1000;');
+        doc.setAttribute('style', 'display: none');
+        ext.classList.remove('rotate-back');
+      } else {
+        document
+          .getElementsByClassName('codx-dialog-container')[0]
+          .setAttribute('style', 'width: 900px; z-index: 1000;');
+        doc.setAttribute('style', 'display: block');
+        ext.classList.add('rotate-back');
+      }
+    }
+
   }
 }
