@@ -56,7 +56,7 @@
       <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
         <div class="d-flex flex-row">
           <span class="icon-attach_money icon-15 me-1"></span>
-          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText">
+          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText">
             <span class="align-self-center fw-bold"
               [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
             </span>
@@ -64,7 +64,7 @@
         </div>
         <div class="d-flex flex-row">
           <span class="icon-monetization_on icon-15 me-1"></span>
-          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.siSalary?.headerText">
+          <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText">
             <span class="align-self-center fw-bold"
               [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
             </span>
@@ -75,14 +75,14 @@
             <span class="icon-calendar_today icon-15 me-1"></span>
             <div class="align-self-center fw-bold">
               <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''"
-                [ngbTooltip]="grvSetup?.effectedDate?.headerText">
-                {{ data?.effectedDate | fmDT }}
+                [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+                [innerHTML]="data?.effectedDate  | formatvalue : view.formModel : 'effectedDate'| async">
               </span>
-              <span> - </span>
+              <!-- <span> - </span>
               <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['ExpiredDate'] : ''"
-                [ngbTooltip]="grvSetup?.expiredDate?.headerText">
+                [ngbTooltip]="grvSetup?.ExpiredDate?.headerText">
                 {{ data?.expiredDate | fmDT }}
-              </span>
+              </span> -->
             </div>
           </div>
         </div>
@@ -170,25 +170,35 @@
         <!-- end emp info -->
         <!-- salaries -->
         <div class="justify-content-between fs-5 fw-bold">
-          <div class="d-flex flex-row">
-            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" class="align-self-center fw-bold">
-              <span class="icon-attach_money align-self-center icon-15 me-1"></span>
-              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.bSalary?.headerText"
-                [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-              </span>
-              <span> - </span>
-              <span class="icon-monetization_on icon-15 me-1 align-self-center fw-bold"></span>
-              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.siSalary?.headerText"
-                [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
-              </span>
-            </div>
+          <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" 
+            *ngIf="data?.siSalary >0 ;else noSiSalary"
+            class="d-flex flex-row align-self-center fw-bold gap-1">
+            <span class="icon-attach_money align-self-center icon-15"></span>
+            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
+              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+            </span>
+            <span> - </span>
+            <span class="icon-monetization_on icon-15 align-self-center fw-bold"></span>
+            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText"
+              [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
+            </span>
           </div>
+          <ng-template #noSiSalary>
+            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" 
+            class="d-flex flex-row align-self-center fw-bold gap-1">
+            <span class="icon-attach_money align-self-center icon-15"></span>
+            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
+              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+            </span>
+          </div>
+          </ng-template>
         </div>
         <!-- end salaries -->
         <!-- effected day -->
-        <div class="justify-content-between fs-5 fw-bold" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
-          <span class="icon-calendar_today fw-bold"></span>
-          <span>{{ data.effectedDate | fmDT }}</span>
+        <div class="d-flex flex-row align-self-center fs-5 fw-bold"  
+          [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
+          <span class="icon-calendar_today fw-bold me-1"></span>
+          <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">{{ data.effectedDate | fmDT }}</span>
         </div>
         <!-- end day -->
         <!-- status & owner -->
@@ -198,11 +208,11 @@
               [showBgColor]="true">
             </codx-vll>
           </span>
-          <span class="d-flex flex-row justify-content-end">
+          <!-- <span class="d-flex flex-row justify-content-end">
             <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
               [numberImages]="3" [mode]="false">
             </codx-imgs>
-          </span>
+          </span> -->
         </div>
         <!-- end status & owner -->
       </div>
@@ -212,8 +222,9 @@
 </ng-template>
 
 <ng-template #templateItemDetailRight let-data>
-  <!-- <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
-    [view]="view" (clickMFunction)="clickEvent($event, data)"></lib-view-basic-salary-detail> -->
+  <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" 
+    [formModel]="view?.formModel" [view]="view" (clickMFunction)="clickEvent($event, data)">
+  </lib-view-basic-salary-detail>
 </ng-template>
 <!-- end list & detail view -->
 
@@ -229,7 +240,8 @@
           </div>
         </div>
         <div class="card-toolbar">
-          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="closeUpdateStatusForm(dialog1)">
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closeUpdateStatusForm(dialog1)">
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -249,9 +261,9 @@
         </div>
         <div class="form-group">
           <label>
-            <codx-label [default]="'Bình luận'" [name]="'lblComment'" ></codx-label>
+            <codx-label [default]="'Bình luận'" [name]="'lblComment'"></codx-label>
           </label>
-          <codx-input type="text" [formModel]="view.formModel"  (valueChange)="valueChangeComment($event)">
+          <codx-input type="text" [formModel]="view.formModel" (valueChange)="valueChangeComment($event)">
           </codx-input>
         </div>
       </div>
