@@ -86,28 +86,28 @@
     [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imgOn]="data?.modifiedOn" (changeDataMF)="changeDataMF($event)"
     [imageReferType]="'avt'" [imageWidth]="35" imgCss="me-3" [imageObjType]="entityName" [title]="getNameCrm(data)"
     [titleCss]="'fs-6'" [descTmp]="descTmp" (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'"
-    [formModel]="view.formModel" [footer]="footer" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
+    [formModel]="view.formModel" [footer]="footer" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column">
-    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.phoneNumber">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.mobile">
       <span [ngClass]="data.allowCall ? 'icon-phone_android text-primary' : 'icon-phonelink_erase'"
         class=" icon-16 me-1"></span>
-      <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.phoneNumber}}</span>
+      <span [ngClass]="data.allowCall ? 'text-primary' : ''" class="text-gray-900">{{data.mobile}}</span>
     </div>
-    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.email">
+    <div class="mt-1" *ngIf="funcID == 'CM0102' && data?.personalEmail">
       <span [ngClass]="data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'"
         class="icon-16 me-1 text-gray-900"></span>
-      <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.email}}</span>
+      <span [ngClass]="data.allowEmail ? 'text-primary' : ''" class="text-gray-900">{{data.personalEmail}}</span>
     </div>
     <div class="mt-1">
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
       <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
     </div>
-    <div class="mt-1" *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.field">
+    <div class="mt-1" *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries">
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
-      <span>{{data.field}}</span>
+      <span>{{data.industries}}</span>
     </div>
   </div>
 </ng-template>
@@ -118,14 +118,7 @@
     </codx-imgs>
   </div>
 </ng-template>
-<ng-template #baseHeaderRightTmp let-data>
-  <div>
-    <span class="icon-14 me-1" [class]="data?.priority | vll : vllPriority : 'icon' | async" [style.color]="
-    '1' | vll : vllPriority : 'textColor' | async
-  ">
-    </span>
-  </div>
-</ng-template>
+
 
 <!--list details tempfull-->
 <!--Detail-->

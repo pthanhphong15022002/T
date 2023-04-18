@@ -1,10 +1,10 @@
 <codx-form
   #form
   [headerText]="title"
-  [body]="body"
   [dialog]="dialog"
   [formModel]="frmModel"
-  [openMore]="false"
+  [openMore]="true"
+  [body]="body"
 ></codx-form>
 
 <!-- Form Group -->
@@ -15,204 +15,36 @@
 
 <ng-template #header>
   <div class="d-flex justify-content-between align-items-center py-1">
-    <div>
+    <div class="d-flex align-items-center">
       <div class="icon-container" [ngStyle]="getColor(dataInput)">
-        <span class="icon-16" [ngClass]="getIconTask(dataInput)"></span>
+        <span class="icon-22 font-weight-bold" [ngClass]="getIconTask(dataInput)"></span>
       </div>
-      <div>
-        <div class="fs-4 fw-bold text-dark" [ngStyle]="getColorTile(dataInput)">
-          <span class="ms-2">{{ dataInput["name"] }}</span>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="d-flex">
-      <div
-        class="d-flex align-items-center me-2"
-        *ngIf="dataInput['reminders']"
-      >
-        <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
-        <span>
-          {{ dataInput["reminders"] }}
-        </span>
-      </div>
-
-      <div class="d-flex align-items-center me-2">
-        <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
-        <span
-          class="date"
-          *ngIf="dataInput['startDate'] && dataInput['endDate']"
-        >
-          {{ dataInput["startDate"] | date : dateFomat }} -
-          {{ dataInput["endDate"] | date : dateFomat }}
-        </span>
-        <span>(</span>
-        <span class="mx-1 text-primary-500">{{
-          dataInput["durationDay"]
-        }}</span>
-        <codx-label name="durationDay" default="ngày"></codx-label>
-        <span class="mx-1 text-primary-500">{{
-          dataInput["durationHour"]
-        }}</span>
-        <codx-label name="durationHour" default="giờ"></codx-label>
-        <span>)</span>
-      </div>
-
-      <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
-        <span class="icon-local_phone icon-18 me-1"></span>
-        <span class="mx-1 text-primary-500">{{ dataInput["callType"] }}</span>
-      </div>
-      <div
-        *ngIf="type === 'M'"
-        class="d-flex justify-content-center align-items-center"
-      >
-        <codx-input
-          type="switch"
-          class="test-check me-2 mt-2"
-          [checked]="dataInput['isOnline']"
-          field="isOnline"
-          [disabled]="true"
-        >
-        </codx-input>
-        <codx-label
-          fiedName="isOnline"
-          [formModel]="frmModel"
-          default="Họp trực tuyến"
-        >
-        </codx-label>
-      </div>
-
-      <codx-update-progress
-        [progress]="dataInput['progress']"
-        [dataSource]="dataInput"
-        [type]="dataInput?.type"
-        [typeProgress]="2"
-        [step]="step"
-      ></codx-update-progress>
-
-      <div class="d-flex align-items-center">
-        <span class="icon-more_vert icon-16"></span>
+      <div class="ms-2">
+        <span class="fs-4 fw-bold text-dark">{{ dataInput["name"] }}</span>
+        <ng-container [ngTemplateOutlet]="describe"></ng-container>
       </div>
     </div>
+    <codx-update-progress
+    [progress]="dataInput['progress']"
+    [dataSource]="dataInput"
+    [type]="dataInput?.type"
+    [typeProgress]="2"
+    [step]="step"
+  ></codx-update-progress>
   </div>
 </ng-template>
 
 <ng-template #main>
-  <div class="d-flex tab-header">
-    <ul class="nav nav-tabs w-100">
-      <ng-container *ngFor="let item of tabInstances; let i = index">
-        <li class="nav-item">
-          <a
-            (click)="clickMenu(item.type)"
-            [class]="
-              'tab-item text-dark fw-bold d-flex align-item-center' +
-              ' ' +
-              (item.type == viewModelDetail ? 'tab-active' : '')
-            "
-          >
-            <i
-              [class]="
-                'me-2 ' +
-                item.icon +
-                ' ' +
-                (item.type == viewModelDetail ? 'text-primary' : '')
-              "
-            ></i
-            ><span>
-              <codx-label
-                [name]="'lbl' + item.type"
-                [formName]="'SYS'"
-                [default]="item.title"
-              >
-              </codx-label>
-            </span>
-          </a>
-        </li>
-      </ng-container>
-    </ul>
-  </div>
-  <div class="mt-5">
-    <ng-container *ngIf="viewModelDetail == 'view'" [ngTemplateOutlet]="view">
-    </ng-container>
-    <ng-container
-      *ngIf="viewModelDetail == 'history'"
-      [ngTemplateOutlet]="history"
-    >
-    </ng-container>
-  </div>
-</ng-template>
-
-<ng-template #view>
-  <div class="d-flex align-items-center" *ngIf="type == 'M'">
-    <codx-label
-      class="h4 font-weight-400 me-4"
-      fiedName="roles"
-      [formModel]="frmModel"
-      [default]="'Người chủ trì'"
-      style="min-width: 130px"
-    >
-    </codx-label>
-    <div>
-      <ng-container
-        *ngIf="owner.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: owner }"
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="d-flex align-items-center" *ngIf="type != 'M'">
-    <codx-label
-      class="h4 font-weight-400 me-4"
-      fiedName="roles"
-      [formModel]="frmModel"
-      default="Người phụ trách"
-      style="min-width: 130px"
-    >
-    </codx-label>
-    <div>
-      <ng-container
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: type == 'P' ? person : owner }"
-      ></ng-container>
-    </div>
-  </div>
-
-  <div class="d-flex align-items-center" *ngIf="type !== 'P' && type !== 'G'">
-    <codx-label
-      *ngIf="type == 'M'"
-      class="h4 font-weight-400 me-4"
-      fiedName="roles"
-      [formModel]="frmModel"
-      default="Người tham gia"
-      style="min-width: 130px"
-    >
-    </codx-label>
-    <codx-label
-      *ngIf="type != 'M'"
-      class="h4 font-weight-400 me-4"
-      fiedName="roles"
-      [formModel]="frmModel"
-      default="Vai trò/bộ phận thực hiện"
-    >
-    </codx-label>
-
-    <div>
-      <ng-container
-        *ngIf="participant.length > 0"
-        [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: participant }"
-      ></ng-container>
-    </div>
-  </div>
+  <hr/>
+  <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
   <div *ngIf="type == 'P'">
     <codx-label
-      class="h4 font-weight-400"
+      class="fs-5"
       fiedName=""
       [formModel]="frmModel"
-      default="Trường nhập liệu"
+      default="Trường nhập liệu:"
+      style="font-weight: 500"
     >
     </codx-label>
     <ul *ngIf="dataInput['fieldName']?.length > 0">
@@ -227,10 +59,11 @@
     *ngIf="type !== 'G' && type !== 'P'"
   >
     <codx-label
-      class="h4 font-weight-400 me-3"
+      class="fs-5 me-3"
       fiedName="memo"
       [formModel]="frmModel"
-      default="Tài liệu"
+      default="Tài liệu:"
+      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -256,10 +89,11 @@
 
   <div *ngIf="type !== 'P'">
     <codx-label
-      class="h4 font-weight-400"
+      class="fs-5"
       fiedName="memo"
       [formModel]="frmModel"
       default="Ghi chú: "
+      style="font-weight: 500;"
     >
     </codx-label>
     <p [innerHTML]="dataInput['memo']"></p>
@@ -269,18 +103,20 @@
   <div *ngIf="type !== 'P'">
     <codx-label
       *ngIf="type !== 'G'"
-      class="h4 font-weight-400"
+      class="fs-5"
       fiedName="parentID"
       [formModel]="frmModel"
-      default="Công việc liên kết"
+      default="Công việc liên kết:"
+      style="font-weight: 500"
     >
     </codx-label>
     <codx-label
       *ngIf="type === 'G'"
-      class="h4 font-weight-400"
+      class="fs-5"
       fiedName=""
       [formModel]="frmModel"
-      default="Công việc"
+      default="Công việc:"
+      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -300,6 +136,126 @@
           }}</span>
         </div>
       </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #showOwner>
+  <!-- Chủ quy trình -->
+  <div class="d-flex align-items-center" *ngIf="type == 'M'">
+    <codx-label
+      class="fs-5 me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      [default]="'Người phụ trách/chủ trì:'"
+      style="font-weight: 500;"
+    >
+    </codx-label>
+    <div>
+      <ng-container
+        *ngIf="owner.length > 0"
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: owner }"
+      ></ng-container>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center" *ngIf="type != 'M'">
+    <codx-label
+      class="fs-5 font-weight-normal me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      default="Người phụ trách:"
+      style="font-weight: 500;"
+    >
+    </codx-label>
+    <div>
+      <ng-container
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: type == 'P' ? person : owner }"
+      ></ng-container>
+    </div>
+  </div>
+   
+  <!-- Người tham gia -->
+  <div class="d-flex mt-4" *ngIf="type == 'M'">
+    <codx-label
+      class="fs-5 font-weight-normal me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      default="Người tham gia:"
+      style="min-width: 160px; font-weight: 500;"
+    >
+    </codx-label>
+    <div>
+      <ng-container
+        *ngIf="participant.length > 0"
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: participant }"
+      ></ng-container>
+    </div>
+  </div>
+
+</ng-template>
+<!-- Phần ngày giờ và thông báo dưới tên -->
+<ng-template #describe>
+  <div class="d-flex">
+    <div
+      class="d-flex align-items-center me-2"
+      *ngIf="dataInput['reminders']"
+    >
+      <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
+      <span>
+        {{ dataInput["reminders"] }}
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center me-2">
+      <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
+      <span
+        class="date"
+        *ngIf="dataInput['startDate'] && dataInput['endDate']"
+      >
+        {{ dataInput["startDate"] | date : dateFomat }} -
+        {{ dataInput["endDate"] | date : dateFomat }}
+      </span>
+      <span>(</span>
+      <span class="mx-1 text-primary-500">{{
+        dataInput["durationDay"]
+      }}</span>
+      <codx-label name="durationDay" default="ngày"></codx-label>
+      <span class="mx-1 text-primary-500">{{
+        dataInput["durationHour"]
+      }}</span>
+      <codx-label name="durationHour" default="giờ"></codx-label>
+      <span>)</span>
+    </div>
+
+    <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
+      <span class="icon-local_phone icon-18 me-1"></span>
+      <span class="mx-1 text-primary-500">{{ dataInput["callType"] }}</span>
+    </div>
+    <div
+      *ngIf="type === 'M'"
+      class="d-flex justify-content-center align-items-center"
+    >
+      <codx-input
+        type="switch"
+        class="test-check me-2 mt-2"
+        [checked]="dataInput['isOnline']"
+        field="isOnline"
+        [disabled]="true"
+      >
+      </codx-input>
+      <codx-label
+        fiedName="isOnline"
+        [formModel]="frmModel"
+        default="Họp trực tuyến"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="icon-more_vert icon-16"></span>
     </div>
   </div>
 </ng-template>

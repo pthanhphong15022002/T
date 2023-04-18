@@ -42,10 +42,63 @@
   ></codx-tag>
 </ng-template>
 <ng-template #body>
+  <div class="mb-3" *ngIf="funcID == 'CM0102'">
+    <div class="mb-4">
+      <codx-label
+        name="lblLink"
+        class="h4 text-dark fw-bold"
+        [formModel]="dialog.formModel"
+        default="Đối tượng liên kết"
+      >
+      </codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
+          </codx-label>
+          <codx-input
+            [field]="'objectType'"
+            [crrValue]="data.objectType"
+            [type]="'valuelist'"
+            [refValue]="gridViewSetup?.ObjectType?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
+          </codx-label>
+          <codx-input
+            [field]="'contactType'"
+            [crrValue]="data?.contactType"
+            [type]="'valuelist'"
+            [refValue]="gridViewSetup?.ContactType?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label
+        [formModel]="form.formModel"
+        [fiedName]="'ObjectID'"
+      ></codx-label>
+      <codx-input
+        [field]="'objectID'"
+        [crrValue]="data?.objectID"
+        type="combobox"
+        [refValue]="'CM_Customers'"
+        (valueChange)="valueChangeContact($event)"
+      ></codx-input>
+    </div>
+  </div>
+
   <div class="mb-4">
     <codx-label
       name="lblGeneral"
-      class="text-dark fw-bold"
+      class="h4 text-dark fw-bold"
       [formModel]="dialog.formModel"
       default="Thông tin chung"
     >
@@ -107,16 +160,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [field]="'contactType'"
-        >
-        </codx-input>
-      </div>
+
       <div class="form-group" *ngIf="funcID == 'CM0102'">
         <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
         </codx-label>
@@ -170,7 +214,11 @@
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
         <div class="d-flex justify-content-between">
           <div class="d-flex align-items-center">
-            <codx-label [formModel]="form.formModel" fiedName="Contacts">
+            <codx-label
+              [formModel]="form.formModel"
+              name="lblContacts"
+              default="Liên hệ chính"
+            >
             </codx-label>
           </div>
           <div class="d-flex justify-content-end">
@@ -353,12 +401,12 @@
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
+        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0102' ? 'Note' : 'Memo'"> </codx-label>
 
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="memo"
+          [field]="funcID == 'CM0102' ? 'note' : 'memo'"
         >
         </codx-input>
       </div>
@@ -505,8 +553,7 @@
         </div>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" fiedName="Email">
-        </codx-label>
+        <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -571,22 +618,22 @@
         </div>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" fiedName="BankAccount">
+        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'BankAccount' : 'BankAcctNo'">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="bankAccount"
+          [field]="funcID == 'CM0101' ? 'bankAccount' : 'bankAcctNo'"
         >
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" fiedName="BankName">
+        <codx-label [formModel]="form.formModel" [fiedName]=" funcID == 'CM0101' ? 'BankName' : 'BankID'">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="bankName"
+          [field]="funcID == 'CM0101' ? 'bankName' : 'bankID'"
         >
         </codx-input>
       </div>
@@ -762,7 +809,7 @@
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
               {{ contactsPerson.contactName }}
             </div>
-            <div class="mb-1" *ngIf="contactsPerson.phoneNumber">
+            <div class="mb-1" *ngIf="contactsPerson?.mobile">
               <span
                 [ngClass]="
                   contactsPerson.allowCall
@@ -774,10 +821,10 @@
               <span
                 [ngClass]="contactsPerson.allowCall ? 'text-primary' : ''"
                 class="text-gray-900"
-                >{{ contactsPerson.phoneNumber }}</span
+                >{{ contactsPerson.mobile }}</span
               >
             </div>
-            <div *ngIf="contactsPerson.email">
+            <div *ngIf="contactsPerson?.personalEmail">
               <span
                 [ngClass]="
                   contactsPerson.allowEmail
@@ -789,7 +836,7 @@
               <span
                 [ngClass]="contactsPerson.allowEmail ? 'text-primary' : ''"
                 class="text-gray-900"
-                >{{ contactsPerson.email }}</span
+                >{{ contactsPerson?.personalEmail }}</span
               >
             </div>
           </div>

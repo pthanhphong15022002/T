@@ -34,6 +34,10 @@ export class ViewJobComponent implements OnInit {
   dateFomat = 'dd/MM/yyyy';
   frmModel: FormModel = {};
   step: any;
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
+  ];
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
