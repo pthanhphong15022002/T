@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'codx-view-list-crm',
-  templateUrl: './view-list-crm.component.html',
-  styleUrls: ['./view-list-crm.component.css']
+  selector: 'codx-view-list-cm',
+  templateUrl: './view-list-cm.component.html',
+  styleUrls: ['./view-list-cm.component.css']
 })
-export class ViewListCrmComponent implements OnInit {
+export class ViewListCmComponent implements OnInit {
   @Input() dataSelected: any
   @Input() formModel: any;
   @Input() vllPriority = '';

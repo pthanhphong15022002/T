@@ -168,6 +168,7 @@ export class InstancesComponent
   reasonStepsObject: any;
   addFieldsControl = '1';
   isLockButton = false;
+  esCategory: any;
   //test temp
   dataTemplet = [
     {
@@ -699,6 +700,7 @@ export class InstancesComponent
         data.startDate = res?.length > 0 ? res[0].startDate : null;
         this.dataSelected = data;
         this.reloadData = true;
+        this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
       } else this.reloadData = false;
@@ -772,7 +774,7 @@ export class InstancesComponent
               break;
             case 'DP09':
               if (!data.permissionCloseInstances) {
-                if (!data.permissionMoveInstances) res.disabled = true;
+                if (!data.permissionMoveInstances || data.status != '2' || data.closed) res.disabled = true;
               }
               break;
             //Copy
@@ -1474,31 +1476,42 @@ export class InstancesComponent
 
   exportFileDynamic() {
     //data test
-    let datas = [
-      {
-        dai_dien: 'Trần Đoàn Tuyết Khanh',
-        ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-        dia_chi: '06 Lê Lợi, Huế',
-        ma_so_thue: '1111111111111',
-        hinh_thuc_thanh_toan: 'Chuyển khoản',
-        tai_khoan: 'VCB-012024554565',
-        datas: [
-          {
-            san_pham: 'Sản phẩm quần què',
-            dien_tich: '0',
-            so_luong: 1,
-            don_gia: 100000,
-          },
-          {
-            san_pham: 'Sản phẩm 1',
-            dien_tich: '0',
-            so_luong: 10,
-            don_gia: 5000,
-          },
-        ],
-      },
-    ];
-    this.dataSelected.datas = JSON.stringify(datas);
+    // let datas = [
+    //   {
+    //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     dia_chi: '06 Lê Lợi, Huế',
+    //     ma_so_thue: '1111111111111',
+    //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     tai_khoan: 'VCB-012024554565',
+    //     san_pham: 'Sản phẩm quần què',
+    //     dien_tich: '0',
+    //     so_luong: 1,
+    //     don_gia: 100000,
+
+    //     // datas: [
+    //     //   {
+    //     //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     //     dia_chi: '06 Lê Lợi, Huế',
+    //     //     ma_so_thue: '1111111111111',
+    //     //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     //     tai_khoan: 'VCB-012024554565',
+    //     //     san_pham: 'Sản phẩm quần què',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 1,
+    //     //     don_gia: 100000,
+    //     //   },
+    //     //   {
+    //     //     san_pham: 'Sản phẩm 1',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 10,
+    //     //     don_gia: 5000,
+    //     //   },
+    //     // ],
+    //   },
+    // ];
+    // this.dataSelected.datas = JSON.stringify(datas);
     if (!this.dataSelected.datas) return;
     let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
     this.api
@@ -1690,41 +1703,69 @@ export class InstancesComponent
     else this.isLockButton = true;
   }
   showFormSubmit() {
-    this.isLockButton = true;
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
-      '',
-      600,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
-  }
-
-  //Duyệt
-  documentApproval(datas: any) {
-    this.dialogTemplate.close();
-    // if (datas.bsCategory) {
-    //Có thiết lập bước duyệt
-    // if (datas.bsCategory.approval) {
     this.api
       .execSv(
         'ES',
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.process.processNo //thêm để test ODC2303-0002 đã xóa
+        this.process.processNo
       )
       .subscribe((item: any) => {
         if (item) {
-          this.approvalTrans(item?.processID, datas);
-        } else {
+          this.esCategory = item;
+          this.codxDpService
+            .checkApprovalStep(item.recID)
+            .subscribe((check) => {
+              if (check) {
+                this.isLockButton = true;
+                let option = new DialogModel();
+                option.zIndex = 1001;
+                this.dialogTemplate = this.callfc.openForm(
+                  this.popupTemplate,
+                  '',
+                  600,
+                  500,
+                  '',
+                  null,
+                  '',
+                  option
+                );
+              } else this.notificationsService.notifyCode('DP036');
+            });
         }
       });
+  }
+
+  //Duyệt
+  documentApproval(datas: any) {
+    this.approvalTrans(this.esCategory?.processID, datas);
+    // this.dialogTemplate.close();
+    // // if (datas.bsCategory) {
+    // //Có thiết lập bước duyệt
+    // // if (datas.bsCategory.approval) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'CategoriesBusiness',
+    //     'GetByCategoryIDAsync',
+    //     this.process.processNo
+    //   )
+    //   .subscribe((item: any) => {
+    //     if (item) {
+
+    //       this.codxDpService
+    //         .checkApprovalStep(item.recID)
+    //         .subscribe((check) => {
+    //           if (check) this.approvalTrans(item?.processID, datas);
+    //           else {
+    //             this.notificationsService.notifyCode('DP036');
+    //           }
+    //         });
+    //     } else {
+    //     }
+     // });
     // }
     //Chưa thiết lập bước duyệt
     // else {
@@ -1819,10 +1860,10 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.recID,
+          data?.processID,
           processID,
           this.view.formModel.entityName,
-          this.formModel.funcID,
+          this.view.formModel.funcID,
           '<div>' + data?.title + '</div>',
         ]
       )

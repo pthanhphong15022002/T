@@ -16,6 +16,7 @@ import {
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { MessageSystemPipe } from '../chat-box/mssgSystem.pipe';
+import { GRID_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
 
 @Component({
   selector: 'codx-chat-list',
@@ -80,17 +81,25 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // add mesage
     this.signalRSV.chat.subscribe((res: any) => {
-      if (res){
-        let mssg = res.data;
+      debugger
+      if (res?.mssg){
+        let mssg = res.mssg;
         let data = this.codxListView.dataService.data;
-        let _index = data.findIndex(e => e['groupID'] === mssg.groupID);
-        if(_index != -1){
-          let group = data[_index]; 
-          if(mssg.messageType && mssg.messageType !== "3"){
-            group.message = res.message;
-            group.modifiedOn = res.modifiedOn;
-            group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
-            (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
+        if(mssg){
+          let index = data.findIndex(e => e['groupID'] === mssg.groupID);
+          if(index != -1){
+            let group = JSON.parse(JSON.stringify(data[index])); 
+            if(mssg.messageType && mssg.messageType !== "3")
+            {
+              group.message = mssg.message;
+            }
+            else
+            {
+              group.message = "";
+            }
+            group.modifiedOn = mssg.modifiedOn;
+            group.isRead = mssg.status.some(x => x["UserID"] === this.user.UserID);
+            this.codxListView.dataService.data.splice(index,1);
             (this.codxListView.dataService as CRUDService).add(group).subscribe();
           }
         }
