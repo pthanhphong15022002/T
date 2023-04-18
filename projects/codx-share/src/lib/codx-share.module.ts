@@ -162,6 +162,7 @@ import { MessageSystemPipe } from './layout/drawers/chat/chat-box/mssgSystem.pip
 import { ScrollPipe } from './layout/drawers/chat/chat-box/scrollPipe.pipe';
 import { AddGroupChatComponent } from './layout/drawers/chat/popup/popup-add-group/popup-add-group.component';
 import { SearchPipe } from './pipe/search.pipe';
+import { PostShareComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/post-share/post-share.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -246,6 +247,8 @@ const T_Component: Type<any>[] = [
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
   ListPostComponent,
+  PostShareComponent,
+
 
   CodxHistoryComponent,
   CodxHistoryItemComponent,
