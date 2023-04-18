@@ -20,9 +20,9 @@
       <div class="d-flex arrow-steps flex-container">
         <ng-container ngbSlide *ngFor="let item of items.items" >
           <div
-            id="step-click"
+            id="{{item.stepID}}"
             style="flex-grow: 1; cursor: pointer"
-            [ngClass]="getColorStepName(item?.stepStatus)"
+            [ngClass]="getColorStepName(item?.stepStatus,item?.stepID) + ' ' +(idElementCrr == item.stepID? 'custom-horizontal-rule':'')"
             (click)="eventClick(item.stepID)"
             [style]="getbackgroundColor(item)"
           >
@@ -39,7 +39,6 @@
           </div>
         </ng-container>
       </div>
-
     </ng-template>
   </ng-container>
 
@@ -58,7 +57,7 @@
       <div
       id="step-click"
       style="flex-grow: 1; cursor: pointer"
-      [ngClass]="getColorStepName(item?.stepStatus)"
+      [ngClass]="getColorStepName(item?.stepStatus,item?.stepID) + ' ' +(idElementCrr == item.stepID? 'custom-horizontal-rule':'')"
       (click)="eventClick(item.stepID)"
       [style]="getbackgroundColor(item)"
     >
