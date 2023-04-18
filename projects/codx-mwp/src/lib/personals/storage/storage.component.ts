@@ -137,18 +137,17 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
         option.DataService = this.listView.dataService as CRUDService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
+        res.storageType = 'WP_Comments';
         var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
           {data:res,action:'add',text:moreFC.defaultName},
           option
         );
         dialog.closed.subscribe((res) => {
-          if (res.event) {
-            res.event['modifiedOn'] = new Date();
+          if (res.event){
             (this.listView.dataService as CRUDService)
-              .update(res.event)
+              .add(res.event)
               .subscribe();
-            this.detectorRef.detectChanges();
           }
         });
       });
@@ -170,7 +169,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       );
       dialog.closed.subscribe((res) => {
         if (res.event) {
-          res.event['modifiedOn'] = new Date();
           (this.listView.dataService as CRUDService)
             .update(res.event)
             .subscribe();
