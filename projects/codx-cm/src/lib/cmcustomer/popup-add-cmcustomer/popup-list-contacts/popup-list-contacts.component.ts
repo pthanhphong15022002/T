@@ -36,7 +36,7 @@ export class PopupListContactsComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.type = dt?.data[0];
-    if(this.type == 'formAdd'){
+    if (this.type == 'formAdd') {
       this.contactType = '1';
     }
   }
@@ -62,7 +62,7 @@ export class PopupListContactsComponent implements OnInit {
     else return;
   }
 
-  valueChange(e){
+  valueChange(e) {
     this.contactType = e.data;
   }
 
@@ -81,39 +81,50 @@ export class PopupListContactsComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    var obj = {
-      moreFuncName: this.moreFuncAdd,
-      action: 'add',
-      dataContact: null,
-      type: this.type
-    }
-    var dialog = this.callFc.openForm(
-      PopupQuickaddContactComponent,
-      '',
-      500,
-      500,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialog.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        //gán tạm thời để xử lí liên hệ chính
-        this.contact = e.event;
-        this.lstContacts.push(this.contact);
-        this.lstSearch = this.lstContacts;
-        var index = this.lstSearch.findIndex(
-          (x) => x.recID == this.contact.recID
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: this.moreFuncAdd,
+          action: 'add',
+          dataContact: null,
+          type: this.type,
+          gridViewSetup: res,
+        };
+        var dialog = this.callFc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          500,
+          '',
+          obj,
+          '',
+          opt
         );
-        if (index > -1) {
-          this.changeContacts(index, this.contact);
-        } else {
-          this.changeContacts(0, this.lstSearch[0]);
-        }
-        this.changeDet.detectChanges()
-      }
-    });
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            //gán tạm thời để xử lí liên hệ chính
+            if (e.event?.recID) {
+              this.contact = e.event;
+              this.lstContacts.push(this.contact);
+              this.lstSearch = this.lstContacts;
+              var index = this.lstSearch.findIndex(
+                (x) => x.recID == this.contact.recID
+              );
+              if (index > -1) {
+                this.changeContacts(index, this.contact);
+              } else {
+                this.changeContacts(0, this.lstSearch[0]);
+              }
+            }else{
+              this.changeContacts(0, this.lstSearch[0]);
+
+            }
+            this.changeDet.detectChanges();
+
+          }
+        });
+      });
   }
 
   searchName(searchTerm) {
@@ -133,8 +144,7 @@ export class PopupListContactsComponent implements OnInit {
         this.lstSearch = [];
         this.contact = null;
       }
-      this.changeDet.detectChanges()
-
+      this.changeDet.detectChanges();
     });
   }
 }

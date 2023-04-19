@@ -78,6 +78,15 @@ export class CodxCmService {
     );
   }
 
+  getListAddress(entityName, recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'LoadDataAsync',
+      [entityName, recID]
+    );
+  }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {}
