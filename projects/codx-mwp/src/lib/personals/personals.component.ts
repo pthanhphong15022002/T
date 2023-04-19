@@ -78,7 +78,7 @@ export class PersonalsComponent extends UIComponent {
     {
       this.dataValuePortal = this.user.userID;
     }
-    this.refreshAvatar();
+
   }
 
   ngAfterViewInit() {
@@ -95,15 +95,6 @@ export class PersonalsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  refreshAvatar() {
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.checkRefreshAvatar = !this.checkRefreshAvatar;
-        this.employeeInfo['modifiedOn'] = res?.modifiedOn;
-        this.changedt.detectChanges();
-      }
-    });
-  }
 
   getFunctionList() {
     // if (this.funcID) {

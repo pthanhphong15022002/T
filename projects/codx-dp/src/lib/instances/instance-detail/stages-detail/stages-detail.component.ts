@@ -597,7 +597,7 @@ export class StagesDetailComponent implements OnInit {
         step: this.dataStep,
       };
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.zIndex = 1011;
       option.FormModel = frmModel;
       let dialog = this.callfc.openSide(ViewJobComponent, listData, option);

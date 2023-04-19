@@ -156,6 +156,8 @@ export class PopRolesComponent extends UIComponent {
       environment.saas == 1 &&
       !this.ermSysTenant.includes(this.user.tenant)
     ) {
+      console.log('lst uid', this.lstUserIDs);
+
       return this.adService
         .addUpdateAD_UserRoles(
           this.lstNeedAddRoles,
@@ -292,18 +294,6 @@ export class PopRolesComponent extends UIComponent {
       item.roleName = curRole?.roleName;
       item.color = curRole?.color;
 
-      // let lstTemp = JSON.parse(JSON.stringify(this.listChooseRole));
-      // lstTemp.forEach((res) => {
-      //   if (res.functionID == dataTemp.functionID) {
-      //     res.roleID = item.roleID;
-      //     res.roleID = item.roleID;
-      //     res.roleName = item.roleName;
-      //     res.color = item.color;
-      //     res.userID = this.userID;
-      //   }
-      // });
-      // this.listChooseRole = lstTemp;
-
       this.lstNeedAddRoles.push(item);
 
       this.addRoles().subscribe((isAddSuccess: boolean) => {
@@ -322,6 +312,13 @@ export class PopRolesComponent extends UIComponent {
 
           this.detectorRef.detectChanges();
         }
+        let curItemIdx = this.listChooseRole.findIndex(
+          (x) => x.module == item.module
+        );
+        if (curItemIdx > -1) {
+          this.listChooseRole[curItemIdx] = item;
+        }
+        // this.listChooseRole = this.listChooseRole.slice();
       });
     }
   }
