@@ -49,7 +49,6 @@
                     type="text"
                     field="customerName"
                     [disabled]="true"
-                    [formModel]="form.formModel"
                     [crrValue]="customerName"
                   ></codx-input>
                 </div>
@@ -342,7 +341,107 @@
             ></codx-label>
           </div>
         </ng-template>
-        <ng-template #content></ng-template>
+        <ng-template #content>
+          <div class="row mt-6">
+            <div class="col-5">
+              <codx-label
+                fiedName="lblCancelInfo"
+                [formModel]="form.formModel"
+                default="Thông tin hủy hóa đơn"
+                class="fw-bold fs-5 text-primary"
+              ></codx-label>
+
+              <div class="row mt-3">
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="cancelReason"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cancelReason"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group"></div>
+                <div class="col-2 form-group"></div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="cancelRefNo"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cancelRefNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="cancelRefDate"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cancelRefDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+
+                <div class="form-group">
+                  <codx-label
+                    fiedName="cancelNote"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cancelNote"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-5">
+              <codx-label
+                fiedName="lblReturnInfo"
+                [formModel]="form.formModel"
+                default="Thông tin trả hàng"
+                class="fw-bold fs-5 text-primary"
+              ></codx-label>
+
+              <div class="row mt-3">
+                <div class="col-2 form-group"></div>
+                <div class="col-2 form-group"></div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="returnReference"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="returnReference"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-3 form-group"></div>
+                <div class="col-3 form-group"></div>
+
+                <div class="form-group">
+                  <codx-label
+                    fiedName="returnNote"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="returnNote"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </e-tabitem>
       <e-tabitem>
         <ng-template #headerText>
@@ -355,7 +454,21 @@
             ></codx-label>
           </div>
         </ng-template>
-        <ng-template #content></ng-template>
+        <ng-template #content>
+          <div class="row mt-6">
+            <div class="col-3 form-group">
+              <codx-label
+                fiedName="autoSettlement"
+                [formModel]="form.formModel"
+              ></codx-label>
+              <codx-input
+                field="autoSettlement"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+              ></codx-input>
+            </div>
+          </div>
+        </ng-template>
       </e-tabitem>
     </e-tabitems>
   </ejs-tab>
@@ -374,16 +487,18 @@
         </ng-template>
         <ng-template #content>
           <codx-gridview-v2
-            formName="SalesInvoicesLines"
-            gridViewName="grvSalesInvoicesLines"
-            entityName="SM_SalesInvoicesLines"
+            #grid
+            [formName]="fmSalesInvoicesLines.formName"
+            [gridViewName]="fmSalesInvoicesLines.gridViewName"
+            [entityName]="fmSalesInvoicesLines.entityName"
+            service="SM"
             [templateMore]="more"
             [editSettings]="editSettings"
             [allowFiltering]="true"
             [allowSorting]="true"
             [autoLoad]="false"
-            [height]="500"
-            [rowHeight]="40"
+            [height]="200"
+            [dataSource]="salesInvoicesLines"
             (cellChanged)="handleCellChange($event)"
             (created)="handleCreate($event)"
           ></codx-gridview-v2>
@@ -391,6 +506,39 @@
       </e-tabitem>
     </e-tabitems>
   </ejs-tab>
+
+  <button
+    class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
+    (click)="addRow()"
+  >
+    <i class="icon-add icon-16 me-1"></i>
+    <codx-label
+      fiedName="lblAddLine"
+      [formModel]="fmSalesInvoicesLines"
+      default="Thêm dòng"
+    ></codx-label>
+  </button>
+
+  <div class="row mt-3">
+    <div class="col-5 form-group">
+      <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="memo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="handleInputChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="col-7">
+      <codx-label
+        fiedName="orderNo"
+        [formModel]="form.formModel"
+        class="fw-bold"
+      ></codx-label
+      >:&nbsp;{{ salesInvoice.orderNo }}
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #footer>

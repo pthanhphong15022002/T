@@ -26,7 +26,7 @@
         <div class="col-6 p-0">
             <div class="btn-like btn-feed delay-500">
                 <div *ngIf="!data.myVoted;else myVoted">
-                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary" (dblclick)="dbLikePost(data)">
                         <span class="fw-bold text-dark">
                             <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                         </span>
@@ -39,7 +39,7 @@
                     </ng-container>
                 </div>
                 <ng-template #myVoted>
-                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <div (dblclick)="votePost(data, data.myVoteType)" class="d-flex align-items-center justify-content-center text-hover-primary">
                         <img *ngIf="dVll[data.myVoteType]?.icon"
                             src="assets/themes/wp/default/img/{{dVll[data.myVoteType]?.icon}}"
                             style="width: 18px; height: 18px">

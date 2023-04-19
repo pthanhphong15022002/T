@@ -67,6 +67,7 @@ export class TreeviewCommentComponent implements OnInit {
     .subscribe((res) => {
       if(Array.isArray(res.datas)) {
         this.vllL1480 = Array.from<any>(res.datas);
+        this.defaulVote = this.vllL1480[0];
         if(this.vllL1480.length > 0){
           this.dVll["0"] = null;
           this.vllL1480.forEach(element => {
@@ -78,7 +79,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // get comment
   getCommentsAsync(data:any){ 
-    debugger
     if(!Array.isArray(data.listComment))
     {
       data.listComment = [];
@@ -138,6 +138,7 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // votes post
   votePost(data: any, voteType = null) {
+    debugger
     if(data && voteType){
       this.api.execSv(
         "WP",
@@ -264,5 +265,14 @@ export class TreeviewCommentComponent implements OnInit {
       this.data.totalComment = res;
       this.dt.detectChanges();
     });
+  }
+
+  // doubleclick votes
+  defaulVote:any = null;
+  dbLikePost(data){
+    debugger
+    if(data && this.defaulVote){
+      this.votePost(data,this.defaulVote.value);
+    }
   }
 }
