@@ -85,6 +85,7 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = {};
 
+  @Input() curSignerType;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
@@ -252,6 +253,8 @@ export class PdfComponent
   oSignfile: any;
   onInit() {
     this.curSelectedHLA = null;
+    // console.log('approver', );
+
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
         this.vllSupplier = res.datas;
@@ -851,7 +854,7 @@ export class PdfComponent
       virtual.id = id;
       virtual.className = 'manualCanvasLayer';
       virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
-      virtual.style.border = '1px solid #eee';
+      virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -904,9 +907,11 @@ export class PdfComponent
               : area.allowEditAreas == false
               ? false
               : !area.isLock;
-          if (isRender) {
+          if (!isRender) {
             let curSignerInfo = this.lstSigners.find(
-              (signer) => signer.authorID == area.signer
+              (signer) =>
+                signer.authorID == area.signer ||
+                this.curSignerType == area.signer
             );
             let url = '';
             let isChangeUrl = false;

@@ -4,7 +4,7 @@
   [dataItem]="itemDetail"
   [footer]="!hideFooter ? footer : null"
   [body]="body"
-  [formModel]="view.formModel"
+  [formModel]="view?.formModel || formModel"
   (clickMF)="clickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
   class="h-100 dt-es-view"

@@ -14,6 +14,7 @@ import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
+import { map } from 'rxjs';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -76,36 +77,26 @@ export class TreeviewCommentComponent implements OnInit {
     });
   }
   // get comment
-  pageIndex:number = 1 ;
-  totalPage:number = 0;
-  pageSize:number = 10;
-  getCommentsAsync(scrolled:boolean = false){ 
-    if(scrolled){
-      this.pageIndex++;
-      if(this.pageIndex > this.totalPage){
-        return
-      }
+  getCommentsAsync(data:any){ 
+    debugger
+    if(!Array.isArray(data.listComment))
+    {
+      data.listComment = [];
     }
     this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      "GetCommentsAsync",
-      [this.data.recID, this.pageIndex,true])
-      .subscribe((res:any[]) => {
-        if(res && res[0].length > 0){
-          if(scrolled)
-          {
-            this.data.listComment = this.data.listComment.concat(res[0]);
-          }
-          else
-          {
-            this.totalPage = Math.ceil(res[1]/this.pageSize);
-            this.data.listComment = res[0];
-          }
-          this.dt.detectChanges();
-        }
-      });
+    "WP",
+    "ERM.Business.WP",
+    "CommentsBusiness",
+    "GetCommentsAsync",
+    [data.recID,data.pageIndex == null ? 0 : data.pageIndex + 1])
+    .subscribe((res:any[]) => {
+      if(Array.isArray(res[0]))
+      {
+        data.listComment = data.listComment.concat(res[0]);
+        data.pageIndex++;
+      }
+      data.full = data.listComment.length == res[1];
+    });
   }
   // click show votes
   showVotes(data: any) {
@@ -176,27 +167,14 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-  // load subcomment
-  loadSubComment(data:any) {
-    data.isShowComment = true;
-    this.api.execSv(
-      'WP',
-      'ERM.Business.WP',
-      'CommentsBusiness',
-      "GetSubCommentAsync",
-      [data.recID])
-      .subscribe((res: any[]) =>{
-        if(res){
-          data.listComment = res;
-          res.map((e:any) => {this.setNodeTree(e)});
-          this.dt.detectChanges();
-        }
-      })
-  }
+  isShowComment : boolean = false;
   // click show comment
   showComments() {
-    this.data.isShowComment = !this.data.isShowComment;
-    this.getCommentsAsync(false);
+    this.isShowComment = !this.isShowComment;
+    if(!this.data.load){
+      this.data.load = true;
+      this.getCommentsAsync(this.data);
+    }
   }
   //set tree
   setDicData(data) {

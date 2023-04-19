@@ -323,10 +323,10 @@ export class CodxEpService {
   }
   getListUM() {
     return this.api.execSv(
-      "BS", 
-      "ERM.Business.BS", 
-      "UnitsOfMearsureBusiness", 
-      "GetAsync", 
+      'BS',
+      'ERM.Business.BS',
+      'UnitsOfMearsureBusiness',
+      'GetAsync',
       []
     );
   }
@@ -739,6 +739,19 @@ export class CodxEpService {
       [recID, driverID]
     );
   }
+  //old
+
+  getListUserIDByListOrgIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetListUserIDByListOrgIDAsync',
+      data
+    );
+  }
+
+  //new
 
   getUserByListDepartmentID(listDepID) {
     return this.api.execSv<any>(
@@ -749,14 +762,22 @@ export class CodxEpService {
       listDepID
     );
   }
-
-  getListUserIDByListOrgIDAsync(data) {
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'OrganizationUnitsBusiness',
-      'GetListUserIDByListOrgIDAsync',
-      data
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+  getListUserIDByListEmployeeID(listEmployeeID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
     );
   }
 
@@ -769,17 +790,6 @@ export class CodxEpService {
       listGroupID
     );
   }
-
-  getListUserIDByListPositionsID(listPositionID) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetListUserIDByListPositionsIDAsync',
-      listPositionID
-    );
-  }
-
   afterApprovedManual(entity: string, recID: string, status: string) {
     return this.api.execSv(
       'EP',
