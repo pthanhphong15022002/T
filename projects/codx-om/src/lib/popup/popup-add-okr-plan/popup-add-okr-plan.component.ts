@@ -254,6 +254,8 @@ export class PopupAddOKRPlanComponent
     if (type) {
       switch (type) {
         case this.obType:
+
+        console.log(this.dataOKR[obIndex]);
           if(this.dataOKR[obIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa mục tiêu tự động tạo');
             return;
@@ -263,34 +265,39 @@ export class PopupAddOKRPlanComponent
           }
           else{
             this.dataOKR[obIndex].isDeleted = true;
-          }
+          }         
           break;
 
         case this.krType:
-
-          if(this.dataOKR[obIndex][krIndex].autoCreated==true){
+          console.log(this.dataOKR[obIndex].items[krIndex]);
+          
+          if(this.dataOKR[obIndex].items[krIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa kết quả chính tự động tạo');
             return;
           }
-          if(this.dataOKR[obIndex][krIndex].isAdd==true){
-            this.dataOKR.splice(obIndex,1);
+          if(this.dataOKR[obIndex].items[krIndex].isAdd==true){
+            this.dataOKR[obIndex].items[krIndex].splice(krIndex,1);
           }
           else{
-            this.dataOKR[obIndex][krIndex].isDeleted = true;
+            this.dataOKR[obIndex].items[krIndex].isDeleted = true;
           }
+          
           break;
 
         case this.skrType:
-          if(this.dataOKR[obIndex][krIndex][skrIndex].autoCreated==true){
+          console.log(this.dataOKR[obIndex].items[krIndex].items[skrIndex]);
+          if(this.dataOKR[obIndex].items[krIndex].items[skrIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa kết quả phụ tự động tạo');
             return;
           }
-          if(this.dataOKR[obIndex][krIndex][skrIndex].isAdd==true){
-            this.dataOKR.splice(obIndex,1);
+          if(this.dataOKR[obIndex].items[krIndex].items[skrIndex].isAdd==true){
+            this.dataOKR[obIndex].items[krIndex].items.splice(skrIndex,1);
           }
           else{
-            this.dataOKR[obIndex][krIndex][skrIndex].isDeleted = true;
+            this.dataOKR[obIndex].items[krIndex].items[skrIndex].isDeleted = true;
           }
+           
+          break;
       }
       this.detectorRef.detectChanges();
     }

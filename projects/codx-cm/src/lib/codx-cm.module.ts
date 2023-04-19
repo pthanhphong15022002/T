@@ -38,6 +38,7 @@ import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-d
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
 import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
+import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
 const routes: Routes = [
   {
     path: '',
@@ -104,6 +105,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CodxDpModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

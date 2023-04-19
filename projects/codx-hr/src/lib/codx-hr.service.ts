@@ -1258,6 +1258,15 @@ export class CodxHrService {
       [objectID, comment, objectType, actionType, createdBy]
     );
   }
+  getOldBasicSalary(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetOldBasicSalaryAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region HR_EHealths

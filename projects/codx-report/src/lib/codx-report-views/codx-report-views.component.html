@@ -8,7 +8,7 @@
   >
 </codx-views>
 <ng-template #templateListCard let-data>
-  <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img>
+  <!-- <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img> -->
   <codx-card-img
     cardCss="border w-250px h-100 card-vpp"
     [imageObjType]="'SYS_ReportList'"
@@ -19,7 +19,7 @@
     [rootData]="data"
     [footer]="cardItemFooter"
     [imgOn]="data.modifiedOn"
-    [imageWidth]="700"
+    [imageWidth]="500"
     [height]="500"
     [contentLine]="data.defaultName"
     [content]="data.customName"
@@ -30,15 +30,16 @@
   </codx-card-img>
 </ng-template>
 <ng-template #cardItemFooter let-data>
-  <div class="e-card-actions w-100">
+  <div class="e-card-actions w-100 d-flex justify-content-center">
     <button
       id="showcarddata"
-      class="ms-4 e-btn e-outline e-primary"
+      class="w-100 text-center e-btn e-outline e-primary"
       (click)="cardClick(data)"
     >
     <codx-label
     name="lblInfomation"
     default="Xem thông tin chi tiết"
+    formName="sys"
   ></codx-label>
     </button>
   </div>

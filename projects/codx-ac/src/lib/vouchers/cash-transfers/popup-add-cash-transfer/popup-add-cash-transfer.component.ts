@@ -143,12 +143,12 @@ export class PopupAddCashTransferComponent extends UIComponent {
       // load vatInvoice
       const options = new DataRequest();
       options.entityName = 'AC_VATInvoices';
-      options.page = 1;
-      this.api
-        .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      options.pageLoading = false;
+      this.acService
+        .loadDataAsync('AC', options)
         .pipe(
           map((invoices) =>
-            invoices[0].find((i) => i.transID === this.cashTransfer.recID)
+            invoices.find((i) => i.transID === this.cashTransfer.recID)
           )
         )
         .subscribe((res) => {
