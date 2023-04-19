@@ -53,10 +53,10 @@ export interface ISalesInvoice {
   paytoThirdParty: boolean;
   thirdPartyID: string;
   thirdParty: string;
-  vATID: string;
-  vATAmt: number;
-  vATAmt2: number;
-  vATAmt3: number;
+  vatid: string;
+  vatAmt: number;
+  vatAmt2: number;
+  vatAmt3: number;
   taxExchRate: number;
   taxMulti: boolean;
   taxNote: string;

@@ -320,16 +320,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
+                <tr *ngFor="let line of salesInvoicesLines">
+                  <th scope="row">{{ line.refLineNo }}</th>
                   <td>
-                    <div class="fw-bold">Item Name</div>
+                    <div class="fw-bold">{{ line.itemName }}</div>
                     <div>
                       <span>Quy cách: test</span>&nbsp;|&nbsp;<span
                         >Quy cách: test</span
                       >
                     </div>
-                    <div>LineType</div>
+                    <codx-vll
+                      [formModel]="fmSalesInvoicesLines"
+                      field="LineType"
+                      [value]="line.lineType"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-md fs-4 me-3"
+                    >
+                    </codx-vll>
                   </td>
                   <td>Otto</td>
                   <td>@mdo</td>
