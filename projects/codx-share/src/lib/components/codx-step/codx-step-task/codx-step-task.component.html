@@ -248,7 +248,7 @@
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
     <div class="disabled-inline">
-      <codx-update-progress
+      <codx-progress
         [progress]="data?.value?.progress"
         [dataSource]="data?.value"
         [step]="currentStep"
@@ -256,7 +256,7 @@
         [isSave]="isSaveProgress"
         [typeProgress]="typeProgress"
         (valueChange)="changeProgress($event)"
-      ></codx-update-progress>
+      ></codx-progress>
     </div>
     <span>
       <codx-img

@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 @Component({
   selector: 'codx-progressbar',
-  templateUrl: './progressbar.component.html',
-  styleUrls: ['./progressbar.component.scss'],
+  templateUrl: './codx-progressbar.component.html',
+  styleUrls: ['./codx-progressbar.component.scss'],
 })
 export class ProgressbarComponent implements OnInit,OnChanges {
   @Input() progress = 0;
