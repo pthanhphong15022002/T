@@ -2,7 +2,7 @@
   #view
   [funcID]="funcID"
   service="HR"
-  assemblyName="HR"
+  assemblyName="ERM.Business.HR"
   entityName="HR_EJobSalaries"
   className="EJobSalariesBusiness"
   [method]="method"
@@ -121,7 +121,7 @@
             <div class="align-self-center fw-bold">
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.effectedDate?.headerText"
               >
@@ -130,7 +130,7 @@
               <span> - </span>
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['ExpiredDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.expiredDate?.headerText"
               >
@@ -149,7 +149,7 @@
           <div class="align-self-center fw-bold d-flex align-items-center">
             <span
               [title]="
-                eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''
+                eJobSalaryHeader ? eJobSalaryHeader['DecisionNo'] : ''
               "
             >
               {{ data?.decisionNo }}
@@ -157,7 +157,7 @@
             <span class="p-dot mx-1"> ⚫ </span>
             <span
               [title]="
-                eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
+                eJobSalaryHeader ? eJobSalaryHeader['SignedDate'] : ''
               "
             >
               {{ data?.signedDate | fmDT }}</span
@@ -221,6 +221,7 @@
       >
       </codx-attachment>
     </div>
+    
     <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
@@ -401,7 +402,7 @@
             <div class="align-self-center fw-bold">
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.effectedDate?.headerText"
               >

@@ -392,7 +392,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     );
     /*Binding dữ liệu vào html*/
     this.tmpPost = {
-      content: HTMLParse,
+      contents: HTMLParse,
       approveControl: '0',
       category: '1',
       shareControl: '9',

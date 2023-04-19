@@ -1,4 +1,3 @@
-import { CM_Contacts, tmpCrm } from '../../models/tmpCrm.model';
 import {
   Component,
   OnInit,
@@ -22,6 +21,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAddressComponent } from '../popup-address/popup-address.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-add-cmcustomer',
@@ -30,24 +30,24 @@ import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-qu
 })
 export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-  data = new tmpCrm();
+  data: any;
   dialog: any;
   title = '';
   action: any;
   linkAvatar = '';
   funcID = '';
   contacts = [];
-  firstName: any;
-  lastName: any;
   gridViewSetup: any;
   moreFuncName: '';
-  contactsPerson: CM_Contacts;
+  contactsPerson: any;
+  refValue = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private callFc: CallFuncService,
     private notiService: NotificationsService,
     private cache: CacheService,
+    private cmSv: CodxCmService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -57,13 +57,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.action = dt.data[0];
     this.title = dt.data[1];
     if (this.action == 'edit') {
+      this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res)=>{
+        if(res){
+          this.contactsPerson = res;
+        }
+      });
       this.getAvatar(this.data);
-
-      if (this.data.contacts != null && this.data.contacts.length > 0) {
-        this.contacts = this.data.contacts;
-        var check = this.contacts.find((x) => x.contactType == '1');
-        if (check != null) this.contactsPerson = check;
-      }
     }
   }
 
@@ -87,79 +86,53 @@ export class PopupAddCmCustomerComponent implements OnInit {
     });
   }
 
-
-
-
-  getLastAndFirstName(contactName) {
-    if (contactName != null) {
-      var nameArr = contactName.split(' ');
-      if (nameArr != null && nameArr.length > 1) {
-        this.lastName = nameArr.slice(0, -1).join(' ');
-        this.firstName = nameArr[nameArr.length - 1];
-      } else {
-        this.firstName = contactName;
-      }
-    }
-  }
+  // getLastAndFirstName(contactName) {
+  //   if (contactName != null) {
+  //     var nameArr = contactName.split(' ');
+  //     if (nameArr != null && nameArr.length > 1) {
+  //       this.lastName = nameArr.slice(0, -1).join(' ');
+  //       this.firstName = nameArr[nameArr.length - 1];
+  //     } else {
+  //       this.firstName = contactName;
+  //     }
+  //   }
+  // }
 
   valueTagChange(e) {
     this.data.field = e.data;
   }
 
-  valueChange(e) {
-    if (e.field == 'firstName' || e.field == 'lastName') {
-      this.firstName = e.field == 'firstName' ? e.data : this.firstName;
-      this.lastName = e.field == 'lastName' ? e.data : this.lastName;
-    } else {
-      this.data[e.field] = e.data;
-      if (this.funcID == 'CM0102') {
-        if (e.field == 'isCustomer') {
-          if (e.data == true) {
-            this.data.customerFrom = new Date();
-          } else {
-            this.data.customerFrom = null;
-          }
-        }
-      }
+  valueChangeContact(e){
+    this.data[e.field] = e?.data;
+    if(this.data.objectType){
+
     }
   }
 
   beforeSave(op) {
     var data = [];
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0103') {
-      if (this.contactsPerson != null) {
-        if (this.contacts != null && this.contacts.length > 0) {
-          var check = this.contacts.find(
-            (x) => x.recID == this.contactsPerson.recID
-          );
-          if (check == null) {
-            this.contacts.forEach((el) => {
-              el.contactType = '2';
-            });
-            this.contacts.push(this.contactsPerson);
-          }
+    if (this.funcID == 'CM0102') {
+      if (this.data.firstName != null && this.data.firstName.trim() != '') {
+        if (this.data.lastName != null && this.data.lastName.trim() != '') {
+          this.data.contactName =
+            this.data.lastName.trim() + ' ' + this.data.firstName.trim();
         } else {
-          this.contacts.push(this.contactsPerson);
+          this.data.contactName = this.data.firstName.trim();
         }
-        this.data.contacts = this.contacts;
-      }
-    }
-    if (this.firstName != null && this.firstName.trim() != '') {
-      if (this.lastName != null && this.lastName.trim() != '') {
-        this.data.contactName = this.lastName.trim() + ' ' + this.firstName.trim();
       } else {
-        this.data.contactName = this.firstName.trim();
+        this.data.contactName = '';
       }
-    } else {
-      this.data.contactName = '';
     }
+
     if (this.action === 'add' || this.action == 'copy') {
       op.method = 'AddCrmAsync';
       op.className = 'CustomersBusiness';
 
       data = [
-        this.data,
-        this.dialog.formModel.formName,
+        this.funcID == 'CM0101' ? this.data : null,
+        this.funcID == 'CM0102' ? this.data : null,
+        this.funcID == 'CM0103' ? this.data : null,
+        this.funcID == 'CM0104' ? this.data : null,
         this.funcID,
         this.dialog.formModel.entityName,
         this.contactsPerson?.recID,
@@ -203,33 +176,40 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   async onSave() {
     if (this.funcID == 'CM0102') {
-      if (this.firstName == null || this.firstName.trim() == '') {
+      if (this.data.firstName == null || this.data.firstName.trim() == '') {
         this.notiService.notifyCode(
           'SYS009',
           0,
-          '"' + this.gridViewSetup['ContactName'].headerText + '"'
+          '"' + this.gridViewSetup['FirstName'].headerText + '"'
         );
         return;
       }
-      if (this.data.phoneNumber != null && this.data.phoneNumber.trim() != '') {
-        if (!this.checkEmailOrPhone(this.data.phoneNumber, 'P')) return;
+      if (this.data.mobile != null && this.data.mobile.trim() != '') {
+        if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
       }
-      if (this.data.email != null && this.data.email.trim() != '') {
-        if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
+      if (
+        this.data.personalEmail != null &&
+        this.data.personalEmail.trim() != ''
+      ) {
+        if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
       }
     }
 
-    if(this.funcID != 'CM0102' && this.funcID != 'CM0104'){
-      if(this.contactsPerson == null){
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewSetup['Contacts'].headerText + '"'
-        );
+    if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
+      if (this.contactsPerson == null) {
+        this.notiService.notifyCode('Liên hệ chính không được trống'); //Chưa có msssg
         return;
       }
     }
-
+    if (this.data.phone != null && this.data.phone.trim() != '') {
+      if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
+    }
+    if (
+      this.data.email != null &&
+      this.data.email.trim() != ''
+    ) {
+      if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
+    }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
@@ -320,13 +300,23 @@ export class PopupAddCmCustomerComponent implements OnInit {
   openPopupAddress() {
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    var title = this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
+    var title =
+      this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
     dataModel.formName = this.dialog.formModel.formName;
     dataModel.gridViewName = this.dialog.formModel.gridViewName;
     dataModel.entityName = this.dialog.formModel.entityName;
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
-    this.callFc.openForm(PopupAddressComponent, '', 500, 550, '', [title], '', opt);
+    this.callFc.openForm(
+      PopupAddressComponent,
+      '',
+      500,
+      550,
+      '',
+      [title],
+      '',
+      opt
+    );
   }
 
   //#region Contact
@@ -345,15 +335,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
       500,
       550,
       '',
-      '',
+      ['formAdd'],
       '',
       opt
     );
     dialog.closed.subscribe((e) => {
       if (e && e.event != null) {
-        //gán tạm thời để xử lí liên hệ chính
-        this.contactsPerson = e.event;
-        this.contactsPerson.contactType = '1';
+        if (e.event?.recID) this.contactsPerson = e.event;
       }
     });
   }
@@ -367,21 +355,25 @@ export class PopupAddCmCustomerComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
+    var obj = {
+      moreFuncName: this.moreFuncName,
+      action: 'add',
+      dataContact: null,
+      type: 'formAdd'
+    }
     var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
       500,
       '',
-      [this.moreFuncName, 'add', null],
+      obj,
       '',
       opt
     );
     dialog.closed.subscribe((e) => {
       if (e && e.event != null) {
-        //gán tạm thời để xử lí liên hệ chính
-        this.contactsPerson = e.event;
-        this.contactsPerson.contactType = '1';
+        if (e.event?.recID) this.contactsPerson = e.event;
       }
     });
   }

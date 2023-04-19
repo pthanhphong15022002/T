@@ -283,12 +283,13 @@ export class CodxShareService {
     );
   }
 
-  getDataDefault() {
+  getDataDefault(functionID: string) {
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetDataDefaultAsync'
+      'GetDataDefaultAsync',
+      [functionID]
     );
   }
 

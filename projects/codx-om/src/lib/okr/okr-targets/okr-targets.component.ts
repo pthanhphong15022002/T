@@ -626,7 +626,7 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.category = newOKR?.category;
     oldOKR.actual = newOKR?.actual;
     oldOKR.current = newOKR?.current;
-    oldOKR.rangeDate = newOKR?.rangeDate;
+    oldOKR.rangeDate = this.getRangeDate(newOKR?.rangeDate);
     if(newOKR?.okrTasks !=null && newOKR?.okrTasks.length>0){
       oldOKR.okrTasks= newOKR?.okrTasks;
     }
