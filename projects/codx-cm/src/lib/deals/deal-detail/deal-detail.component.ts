@@ -3,11 +3,11 @@ import { CRUDService } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 
 @Component({
-  selector: 'codx-opportunity-detail',
-  templateUrl: './opportunity-detail.component.html',
-  styleUrls: ['./opportunity-detail.component.scss']
+  selector: 'codx-deail-detail',
+  templateUrl: './deal-detail.component.html',
+  styleUrls: ['./deal-detail.component.scss']
 })
-export class OpportunityDetailComponent implements OnInit {
+export class DealDetailComponent  implements OnInit {
 
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
@@ -79,3 +79,4 @@ export class OpportunityDetailComponent implements OnInit {
     this.clickMoreFunc.emit({e: e, data: data});
   }
 }
+

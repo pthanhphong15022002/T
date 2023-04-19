@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, inject } from '@angular/core';
-import { FormModel, SidebarModel, UIComponent } from 'codx-core';
+import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
+import { EditSettingsModel } from '@syncfusion/ej2-gantt';
+import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
-import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
-  selector: 'codx-tab-detail-custom',
+  selector: 'codx-tab-deal-detail',
   templateUrl: './tab-detail-custom.component.html',
   styleUrls: ['./tab-detail-custom.component.scss']
 })
@@ -22,17 +22,17 @@ implements OnInit, AfterViewInit {
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
 
-  fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
-  };
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
+  // fmProcductsLines: FormModel = {
+  //   formName: 'CMProducts',
+  //   gridViewName: 'grvCMProducts',
+  //   entityName: 'CM_Products',
+  // };
+  // editSettings: EditSettingsModel = {
+  //   allowEditing: true,
+  //   allowAdding: true,
+  //   allowDeleting: true,
+  //   mode: 'Normal',
+  // };
 
   constructor(
     private inject: Injector,
