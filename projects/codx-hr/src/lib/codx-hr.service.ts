@@ -1127,6 +1127,16 @@ export class CodxHrService {
       [objectID, comment, objectType, actionType, createdBy]
     );
   }
+
+  GetOldSalaries(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetOldSalariesAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EExperience
