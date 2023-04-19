@@ -83,8 +83,7 @@ export class CodxViewApprovalStepComponent
 
             if (gridModels.dataValue != null) {
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                if (res && res?.length >= 0) {
-                  debugger
+                if (res && res?.length >= 0) {                  
                   this.process = res;
                   this.cr.detectChanges();
                 }
@@ -102,7 +101,6 @@ export class CodxViewApprovalStepComponent
           .getApprovalTransByTransID(this.transID)
           .subscribe((res) => {
             if (res) {
-              debugger
               this.process = res;
               this.cr.detectChanges();
             }
