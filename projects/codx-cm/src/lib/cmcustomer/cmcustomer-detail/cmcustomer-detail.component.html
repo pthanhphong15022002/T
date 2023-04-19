@@ -111,7 +111,7 @@
             >
               <codx-label
                 class="text-dark"
-                fiedName="Memo"
+                name="lblContact"
                 [formModel]="formModel"
                 default="Liên hệ: "
               ></codx-label>
@@ -229,6 +229,7 @@
               [funcID]="funcID"
               [dataSelected]="dataSelected"
               [formModel]="formModel"
+              [gridViewSetup]="gridViewSetup"
             >
             </codx-information>
           </ng-container>
@@ -352,8 +353,12 @@
         "
       >
         <ng-container *ngFor="let item of data?.contactType.split(';')">
-          <div class="mb-1">
-            {{ item | vll : vllContactType : "text" | async }}
+          <div class="mb-1" [innerHTML]="
+          item
+            | formatvalue : formModelContact : 'ContactType'
+            | async
+        ">
+            <!-- {{ item | vll : vllContactType : "text" | async }} -->
           </div>
         </ng-container>
       </div>
