@@ -13,6 +13,7 @@ import {
   AuthStore,
   AuthService,
   UserModel,
+  FilesService,
 } from 'codx-core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { UserInnerComponent } from 'projects/codx-share/src/lib/layout/dropdown-inner/user-inner/user-inner.component';
@@ -135,8 +136,8 @@ export class InformationComponent extends UIComponent implements OnInit {
     private auth: AuthService,
     private authstore: AuthStore,
     private mwpService: CodxMwpService,
-    private codxShareSV: CodxShareService,
-    private element: ElementRef
+    private element: ElementRef,
+    private fileSv: FilesService
   ) {
     super(injector);
     let data: any = this.auth.user$;
@@ -306,7 +307,7 @@ export class InformationComponent extends UIComponent implements OnInit {
   changeAvatar(event: any) {
     if (event) {
       this.employeeInfo['modifiedOn'] = new Date();
-      this.codxShareSV.dataRefreshImage.next(this.employeeInfo);
+      this.fileSv.dataRefreshImage.next(this.employeeInfo);
     }
   }
 
