@@ -584,9 +584,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             });
         } else {
           if (this.listStepAproveRemove?.length > 0)
-            this.dpService
-              .removeApprovalStep(this.listStepAproveRemove)
-              .subscribe();
+          this.dpService
+            .removeListApprovalStep(this.listStepAproveRemove)
+            .subscribe();
         }
       });
   }
@@ -669,7 +669,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           } else {
             if (this.listStepAproveRemove?.length > 0)
               this.dpService
-                .removeApprovalStep(this.listStepAproveRemove)
+                .removeListApprovalStep(this.listStepAproveRemove)
                 .subscribe();
           }
           this.dialog.close();
