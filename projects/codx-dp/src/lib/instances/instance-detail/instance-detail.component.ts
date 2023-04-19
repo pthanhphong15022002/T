@@ -51,7 +51,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
-  @Input() viewType = 'd';
+ // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
@@ -476,7 +476,7 @@ export class InstanceDetailComponent implements OnInit {
     this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
-    if (this.viewType == 'd') {
+    if (this.viewsCurrent == 'd-') {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;
