@@ -20,14 +20,6 @@
         data.groupName | formatvalue : view.formModel : 'GroupName' | async
       "
     ></div>
-    <!-- <codx-vll
-      [showText]="true"
-      [showBgColor]="true"
-      name="AD008"
-      [value]="data?.groupType"
-      class="badge badge-danger"
-    >
-    </codx-vll> -->
   </div>
 </ng-template>
 
@@ -52,7 +44,6 @@
           [subTitleTmp]="subTitleTmp"
           [descTmp]="lstGroupMems"
           [resources]="data['users']"
-          resourceObjType="AD_Users"
           [formModel]="view.formModel"
           [typeMF]="'hover'"
           [hideMF]="true"

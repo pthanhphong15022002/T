@@ -23,6 +23,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
+
   quotations: CM_Quotations;
   action = 'add';
   dialog: DialogRef;
@@ -41,14 +42,16 @@ export class PopupAddQuotationsComponent implements OnInit {
   };
   productsLine: Array<CM_Products> = []; //mang san pham
   lockFields = [];
+
   constructor(
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.quotations = new CM_Quotations();
-    this.quotations.recID = Util.uid();
+    // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.action = dt?.data?.action
   }
 
   ngOnInit(): void {}

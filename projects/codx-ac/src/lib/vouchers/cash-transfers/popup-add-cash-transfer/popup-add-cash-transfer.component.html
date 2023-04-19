@@ -6,24 +6,25 @@
   [dialog]="dialogRef"
   [customToolbar]="customToolbar"
   [data]="cashTransfer"
+  ngClass="ac-dialog"
 >
 </codx-form>
 
 <ng-template #body>
-  <ejs-tab #tabGeneralInfo class="popup-cash-transfer pe-3">
+  <ejs-tab #tabGeneralInfo class="popup-cash-transfer">
     <e-tabitems>
       <!-- Tab thông tin chứng từ -->
       <e-tabitem>
         <ng-template #headerText>
           <div class="d-flex align-items-top">
             <i class="icon-info icon-18 me-2"></i>
-            <div class="fw-bold fs-6 text-uppercase">
+            <div class="fw-bold fs-5 text-uppercase">
               {{ tabName$ | async }}
             </div>
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="row mt-6">
+          <div class="row mt-5">
             <div class="col-7 ac-left">
               <div class="mw-750px">
                 <div class="row">
@@ -459,15 +460,15 @@
             </div>
             <!-- #endregion -->
           </div>
-          <div class="d-flex justify-content-end me-12 mt-4">
+          <div class="d-flex justify-content-end me-12 mt-4 mb-5">
             <div class="d-flex align-items-center">
               <codx-label
                 default="Tổng cộng:"
                 fiedName="lblTotalAmount"
                 [formModel]="form.formModel"
-                class="fw-bold fs-2 me-2 text-dark"
+                class="fw-bold fs-3 me-2 text-dark"
               ></codx-label>
-              <span class="fw-bold fs-2 text-primary">
+              <span class="fw-bold fs-3 text-primary">
                 {{
                   (cashTransfer?.payAmount || 0) +
                     (cashTransfer?.paymentFees || 0) +
@@ -483,26 +484,35 @@
 </ng-template>
 
 <ng-template #footer>
-  <codx-tabs
+
+  <div class="ac-dialog-footer">
+    <div class="btn btn-white btn-icon tab-action">
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <codx-tabs
     [entityName]="form.formModel.entityName"
     [formModel]="form.formModel"
     [objectID]="cashTransfer?.recID"
     [funcID]="form.formModel.funcID"
     [TabControl]="tabs"
   ></codx-tabs>
+    
+  </div>
+
+  
 </ng-template>
 
 <ng-template #customToolbar>
-  <div class="d-flex justify-content-between pt-2 w-100">
+  <div class="d-flex justify-content-between pt-3 w-100">
     <div class="d-flex align-items-center">
-      <div class="btn btn-icon btn-lg btn-primary btn-circle me-4 bg">
+      <div class="btn btn-icon btn-primary btn-circle me-3">
         <i
           class="icon-16"
           [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
         ></i>
-      </div>
+      </div> 
       <div
-        class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase"
+        class="dialog-title line-clamp line-clamp-1 me-3 fw-bold"
       >
         {{ formTitle }}
       </div>
@@ -520,7 +530,7 @@
       <ng-container *ngIf="!isEdit">
         <button
           type="button"
-          class="btn btn-light-primary"
+          class="btn btn-sm btn-light-primary"
           (click)="handleClickSave(false)"
         >
           <codx-label
@@ -534,7 +544,7 @@
 
       <button
         type="button"
-        class="btn btn-primary ms-3"
+        class="btn btn-sm btn-primary ms-2 me-2"
         (click)="handleClickSave(true)"
       >
         <codx-label
@@ -546,10 +556,10 @@
       </button>
 
       <div
-        class="ms-4 btn btn-icon btn-sm btn-light-primary btn-circle bg"
+        class="ms-2 btn btn-icon btn-light-danger btn-circle"
         (click)="close()"
       >
-        <i class="icon-close icon-16"></i>
+        <i class="icon-close icon-18"></i>
       </div>
     </div>
   </div>

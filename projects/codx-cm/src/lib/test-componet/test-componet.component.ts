@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { auto } from '@popperjs/core';
 import {
   CacheService,
@@ -11,6 +11,7 @@ import {
 import { PopupTypeTaskComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { PopupAddQuotationsComponent } from '../quotations/popup-add-quotations/popup-add-quotations.component';
 import { PopupTaskComponent } from '../task/popup-task/popup-task.component';
+import { QuotationsComponent } from '../quotations/quotations.component';
 
 @Component({
   selector: 'lib-test-componet',
@@ -858,40 +859,42 @@ export class TestComponetComponent implements OnInit {
     updateColumns: '',
     unbounds: null,
   };
+  @ViewChild ('quotations')quotations : QuotationsComponent
   constructor(private callfc: CallFuncService, private cache: CacheService) {}
 
   ngOnInit(): void {}
 
   openFormAddQuotations() {
+    this.quotations.add()
     //tesst
-    this.cache.functionList('CM0202').subscribe((f) => {
-      this.cache
-        .gridViewSetup(f.formName, f.gridViewName)
-        .subscribe((gr) => {
-          let formModel =  new FormModel() ;
-          formModel.funcID ='CM0202' ;
-          formModel.formName =f.formName;
-          formModel.gridViewName = f.gridViewName ;
+    // this.cache.functionList('CM0202').subscribe((f) => {
+    //   this.cache
+    //     .gridViewSetup(f.formName, f.gridViewName)
+    //     .subscribe((gr) => {
+    //       let formModel =  new FormModel() ;
+    //       formModel.funcID ='CM0202' ;
+    //       formModel.formName =f.formName;
+    //       formModel.gridViewName = f.gridViewName ;
 
-          var obj = {
-            action: 'add',
-            headerText: 'sdasdsadasdasd',
-          };
-          let option = new DialogModel();
-          option.IsFull = true;
-          option.FormModel = formModel ;
-          var dialog = this.callfc.openForm(
-            PopupAddQuotationsComponent,
-            '',
-            null,
-            null,
-            '',
-            obj,
-            '',
-            option
-          );
-        });
-    });
+    //       var obj = {
+    //         action: 'add',
+    //         headerText: 'sdasdsadasdasd',
+    //       };
+    //       let option = new DialogModel();
+    //       option.IsFull = true;
+    //       option.FormModel = formModel ;
+    //       var dialog = this.callfc.openForm(
+    //         PopupAddQuotationsComponent,
+    //         '',
+    //         null,
+    //         null,
+    //         '',
+    //         obj,
+    //         '',
+    //         option
+    //       );
+    //     });
+    // });
 
    
   }

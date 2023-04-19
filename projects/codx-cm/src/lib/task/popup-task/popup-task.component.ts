@@ -230,7 +230,7 @@ export class PopupTaskComponent implements OnInit {
         this.AddTaskAsync('CM_Customers').subscribe((res) => {
           if(res){
             this.dialog.close({ data: res, action: this.action });
-          }          
+          }
         });
       } else {
         this.editTaskAsync('CM_Customers');

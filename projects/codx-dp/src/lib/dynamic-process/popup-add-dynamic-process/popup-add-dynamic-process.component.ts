@@ -49,16 +49,16 @@ import {
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
-import { format } from 'path';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { lastValueFrom, firstValueFrom } from 'rxjs';
+import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -72,6 +72,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('addStagePopup') addStagePopup: TemplateRef<any>;
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
+  @ViewChild('emptyTemplate') emptyTemplate: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
   process = new DP_Processes();
   permissions = [];
@@ -234,6 +235,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   instanceNoEx: string = '';
   listTemp = [];
   tempCrr: any;
+  type = 'excel';
+  request = new DataRequest();
+  optionEx = new DataRequest();
+  optionWord = new DataRequest();
+  services = 'DP';
+  idField = 'RecID';
+  service: string = 'SYS';
+  assemblyName: string = 'AD';
+  className: string = 'ExcelTemplatesBusiness';
+  method: string = 'GetByEntityAsync';
+  submitted = false;
+  moreFunction = [
+    {
+      id: 'edit',
+      icon: 'icon-edit',
+      text: 'Chỉnh sửa',
+      textColor: '#307CD2',
+    },
+    {
+      id: 'delete',
+      icon: 'icon-delete',
+      text: 'Xóa',
+      textColor: '#F54E60',
+    },
+  ];
+  dataEx = [];
+  dataWord = [];
+  active = '1';
+  exportGroup: FormGroup;
   //end data Test
   isShowstage = true;
   titleAdd = '';
@@ -263,6 +293,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private dpService: CodxDpService,
     private CodxDpService: CodxDpService,
     private authStore: AuthStore,
+    private formBuilder: FormBuilder,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -308,6 +339,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
     }
     if (this.action == 'edit') {
+      this.loadEx();
+      this.loadWord();
       // this.showID = true;
       this.checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
@@ -336,7 +369,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefaultCF = fun.customName || fun.description;
     });
-
+  
     this.getGrvStep();
     this.getGrvStepReason();
     this.getValListDayoff();
@@ -362,6 +395,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    //Tạo formGroup
+    this.exportGroup = this.formBuilder.group({
+      dataExport: ['all', Validators.required],
+      format: ['excel', Validators.required],
+    });
     this.grvMoreFunction = await this.getFormModel('DPT040102');
     this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
@@ -1312,33 +1350,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formModel;
-    var dialog = this.callfc
-      .openForm(
-        PopupRolesDynamicComponent,
-        '',
-        950,
-        650,
-        '',
-        [
-          this.process,
-          title,
-          this.action === 'copy' ? 'copy' : 'add',
-          roleType,
-        ],
-        '',
-        dialogModel
-      );
+    var dialog = this.callfc.openForm(
+      PopupRolesDynamicComponent,
+      '',
+      950,
+      650,
+      '',
+      [this.process, title, this.action === 'copy' ? 'copy' : 'add', roleType],
+      '',
+      dialogModel
+    );
 
-      dialog.closed.subscribe((e) => {
-        if (e?.event && e?.event.length > 0) {
-          if (!this.isChange) this.isChange = true;
-          this.process.permissions = e.event;
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        if (!this.isChange) this.isChange = true;
+        this.process.permissions = e.event;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
-  valueRadioInfo($event, view){
+  valueRadioInfo($event, view) {
     if (view === 'AllowCopyView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowCopy = true;
@@ -1504,30 +1536,135 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
+
   //Bieu mau
   clickViewTemp(temp) {}
+  onScroll(e: any) {}
+  navChanged(e: any) {
+    switch (e?.nextId) {
+      case '1': {
+        this.type = 'excel';
+        break;
+      }
+      case '2': {
+        this.type = 'word';
+        break;
+      }
+    }
+    // this.exportGroup.controls['format'].setValue(id);
+  }
+  openFormTemplet(val: any, data: any) {
+    switch (val) {
+      case 'add':
+      case 'edit': {
+        var option = new DialogModel();
+        option.FormModel = this.dialog.formModel;
+        option.DataService = data;
+        this.callfc
+          .openForm(
+            CodxExportAddComponent,
+            null,
+            900,
+            700,
+            null,
+            { action: val, type: this.type, reportID: this.process.recID },
+            '',
+            option
+          )
+          .closed.subscribe((item) => {
+            if (item.event && item.event.length > 0) {
+              var typeR = item.event[1];
+              if (typeR == 'excel') {
+                if (val == 'add') this.loadEx();
+                else if (val == 'edit') {
+                  var index = this.dataEx.findIndex(
+                    (x) => x.recID == item.event[0]?.recID
+                  );
+                  if (index >= 0) {
+                    this.dataEx[index] = item.event[0];
+                  }
+                }
+              } else if (typeR == 'word') {
+                if (val == 'add') this.loadWord();
+                else if (val == 'edit') {
+                  var index = this.dataWord.findIndex(
+                    (x) => x.recID == item.event[0]?.recID
+                  );
+                  if (index >= 0) {
+                    this.dataWord[index] = item.event[0];
+                  }
+                }
+              }
+            }
+          });
+        break;
+      }
+      case 'delete': {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        //SYS003
+        this.notiService.alertCode('SYS003').subscribe((x) => {
+          if (x.event.status == 'Y') {
+            var method =
+              this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
+            this.api
+              .execActionData<any>(method, [data], 'DeleteAsync')
+              .subscribe((item) => {
+                if (item[0] == true) {
+                  this.notiService.notifyCode('SYS008');
+                  if (this.type == 'excel')
+                    this.dataEx = this.dataEx.filter(
+                      (x) => x.recID != item[1][0].recID
+                    );
+                  else if (this.type == 'word')
+                    this.dataWord = this.dataWord.filter(
+                      (x) => x.recID != item[1][0].recID
+                    );
+                } else this.notiService.notifyCode('SYS022');
+              });
+          }
+        });
+        break;
+      }
+    }
+  }
+  loadEx() {
+    this.request.predicates = 'ReportID=@0';
+    this.request.dataValues = this.process.recID;
+    this.request.entityName = 'AD_ExcelTemplates';
+    this.className = 'ExcelTemplatesBusiness';
+    this.fetch().subscribe((item) => {
+      this.dataEx = item;
+    });
+  }
+  loadWord() {
+    this.request.predicates = 'ReportID=@0';
+    this.request.dataValues = this.process.recID;
+    this.request.entityName = 'AD_WordTemplates';
+    this.className = 'WordTemplatesBusiness';
+    this.fetch().subscribe((item) => {
+      this.dataWord = item;
+    });
+  }
 
-  addTemplet() {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.dialog.formModel.formName;
-    gridModel.entityName = this.dialog.formModel.entityName;
-    gridModel.funcID = this.dialog.formModel.funcID;
-    gridModel.gridViewName = this.dialog.formModel.gridViewName;
-    gridModel.page = this.dialog.dataService.request.page;
-    gridModel.pageSize = this.dialog.dataService.request.pageSize;
-    gridModel.predicate = this.dialog.dataService.request.predicates;
-    gridModel.dataValue = this.dialog.dataService.request.dataValues;
-    gridModel.entityPermission = this.dialog.formModel.entityPer;
-    //
-    this.callfc.openForm(
-      CodxImportComponent,
-      null,
-      null,
-      800,
-      '',
-      [gridModel, this.process.recID],
-      null
-    );
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.method,
+        this.request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
   }
   //#region Trường tùy chỉnh
   clickShow(e, id) {
@@ -1578,11 +1715,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.rank = 5;
 
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1637,11 +1769,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1686,17 +1813,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   editCustomField(field, textTitle, enabled) {
+    let oldStepID = field?.stepID;
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1721,14 +1844,37 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
-              this.stepList.forEach((obj) => {
-                if (obj.recID == this.fieldCrr.stepID) {
-                  let index = obj.fields.findIndex(
-                    (x) => x.recID == this.fieldCrr.recID
-                  );
-                  if (index != -1) {
-                    obj.fields[index] = this.fieldCrr;
+              if (oldStepID == this.fieldCrr.stepID) {
+                this.stepList.forEach((obj) => {
+                  if (obj.recID == this.fieldCrr.stepID) {
+                    let index = obj.fields.findIndex(
+                      (x) => x.recID == this.fieldCrr.recID
+                    );
+                    if (index != -1) {
+                      obj.fields[index] = this.fieldCrr;
+                    }
+                    if (this.action == 'edit') {
+                      let check = this.listStepEdit.some(
+                        (id) => id == obj?.recID
+                      );
+                      if (!check) {
+                        this.listStepEdit.push(obj?.recID);
+                      }
+                    }
                   }
+                });
+              } else {
+                this.stepList.forEach((obj) => {
+                  if (obj.recID == oldStepID) {
+                    let index = obj.fields.findIndex(
+                      (x) => x.recID == this.fieldCrr.recID
+                    );
+                    if (index != -1) {
+                      obj.fields.splice(index, 1);
+                    }
+                  }
+                  if (obj.recID == this.fieldCrr.stepID)
+                    obj.fields.push(this.fieldCrr);
                   if (this.action == 'edit') {
                     let check = this.listStepEdit.some(
                       (id) => id == obj?.recID
@@ -1737,8 +1883,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                       this.listStepEdit.push(obj?.recID);
                     }
                   }
-                }
-              });
+                });
+              }
+
               this.changeDetectorRef.detectChanges();
             }
           });
@@ -1834,11 +1981,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
     if (event.previousContainer === event.container) {
-      //   // if (stepID) {
       this.dropFields(event, stepID);
-      //   //   } else {
-      //   //     this.dropSteps(event);
-      //   //   }
     } else {
       this.dropFieldsToStep(event, stepID);
     }
@@ -1962,7 +2105,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (stepCopy['fields']?.length > 0) {
       stepCopy['fields']?.forEach((fields) => {
         fields['recID'] = Util.uid();
-        fields['stepID'] = this.step['recID'];
+        fields['stepID'] = stepCopy['recID'];
         fields['createdOn'] = new Date();
         fields['createdBy'] = this.userId;
         fields['modifiedOn'] = null;
@@ -2904,10 +3047,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     value['type'] = value['taskType'] || type;
     value['refID'] = value['recID'];
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: value,
         listValue: listTaskConvert,
-      });
+        step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: value,
+      //   listValue: listTaskConvert,
+      // });
     }
   }
 

@@ -1,4 +1,3 @@
-import { CM_Address } from './../../models/tmpCrm.model';
 import { Component, OnInit, Optional } from '@angular/core';
 import { DialogRef, DialogData, CacheService } from 'codx-core';
 
@@ -9,7 +8,7 @@ import { DialogRef, DialogData, CacheService } from 'codx-core';
 })
 export class PopupAddressComponent implements OnInit {
   dialog: any;
-  data = new CM_Address();
+  data: any;
   gridViewSetup: any;
   title = '';
   constructor(

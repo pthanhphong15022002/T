@@ -1,118 +1,144 @@
-<div class="container-body p-5">
-  <div class="d-flex justify-content-between mb-4">
-    <div class="h3">
-      <codx-label name="lblQuickAdd" [formModel]="dialog.formModel" [default]="title + ' ' + 'nhanh liên hệ'"></codx-label>
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [data]="data"
+></codx-form>
+<ng-template #header>
+  <div class="d-flex justify-content-between w-100">
+    <div class="d-flex justify-content-start">
+      <div class="h3">
+        <codx-label
+          name="lblQuickAdd"
+          [formModel]="form.formModel"
+          [default]="title + ' ' + 'nhanh liên hệ'"
+        ></codx-label>
+      </div>
     </div>
     <div class="d-flex justify-content-end">
-      <i class="icon-close icon-18 text-hover-danger" (click)="dialog.close()"></i>
+      <i
+        class="icon-close icon-18 text-hover-danger"
+        (click)="dialog.close()"
+      ></i>
     </div>
   </div>
-  <div class="d-flex flex-column mb-4" style="flex-grow: 1;">
-    <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" name="lblLastName" default="Họ và đệm">
-      </codx-label>
-      <codx-input type="text" [crrValue]="lastName" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="lastName">
-      </codx-input>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
-    <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" name="lblFirstName"  default="Tên">
-      </codx-label>
-      <codx-input type="text" [crrValue]="firstName" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="firstName">
-      </codx-input>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
-    <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" fiedName="PhoneNumber">
-      </codx-label>
-      <codx-input type="text" [crrValue]="data?.phoneNumber" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="phoneNumber">
-      </codx-input>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
-    <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" fiedName="Email">
-      </codx-label>
-      <codx-input type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)"
-        [formModel]="dialog.formModel" field="email">
-      </codx-input>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
-    <div class="form-group">
-      <div class="d-flex justify-content-between">
-        <div>
-          <codx-input type="switch" class="me-2" [crrValue]="data?.allowCall" (valueChange)="valueChange($event)"
-            [formModel]="dialog.formModel" field="allowCall"> </codx-input>
-        </div>
-        <div class="w-100">
-          <codx-label [formModel]="dialog.formModel" fiedName="AllowCall">
-          </codx-label>
-        </div>
-      </div>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
-    <div class="form-group">
-      <div class="d-flex justify-content-between">
-        <div>
-          <codx-input type="switch" class="me-2" [crrValue]="data?.allowEmail" (valueChange)="valueChange($event)"
-            [formModel]="dialog.formModel" field="allowEmail"> </codx-input>
-        </div>
-        <div class="w-100">
-          <codx-label [formModel]="dialog.formModel" fiedName="AllowEmail">
-          </codx-label>
-        </div>
-      </div>
-      <!-- <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="CustomerID"
-        [disabled]="false"
-      >
-      </codx-input> -->
-    </div>
+</ng-template>
+<ng-template #body>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="ContactType">
+    </codx-label>
+    <codx-input
+      [disabled]="type == 'formAdd' || isCheckContactType ? true : false"
+      [crrValue]="contactType"
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event)"
+      field="contactType"
+    >
+    </codx-input>
   </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="LastName"> </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="lastName"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
+    </codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="firstName"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <codx-label [formModel]="dialog.formModel" [fiedName]="'Mobile'">
+        </codx-label>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-label
+          class="text-gray-500 me-2"
+          [formModel]="dialog.formModel"
+          [fiedName]="'AllowCall'"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          field="allowCall"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      [field]="'mobile'"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
+        </codx-label>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-label
+          class="text-gray-500 me-2"
+          [formModel]="form.formModel"
+          [fiedName]="'AllowEmail'"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="allowEmail"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      [field]="'personalEmail'"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+<ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="me-2">
-      <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
-        <codx-label name="lblCancel" [formModel]="dialog.formModel" default="Hủy"></codx-label>
+      <button
+        type="button"
+        (click)="dialog.close()"
+        class="btn btn-outline-primary"
+      >
+        <codx-label
+          name="lblCancel"
+          [formModel]="dialog.formModel"
+          default="Hủy"
+        ></codx-label>
       </button>
     </div>
     <div class="">
       <button type="button" (click)="onSave()" class="btn btn-primary">
-        <codx-label name="lblSave" [formModel]="dialog.formModel" default="Đồng ý"></codx-label>
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Đồng ý"
+        ></codx-label>
       </button>
     </div>
   </div>
-</div>
+</ng-template>

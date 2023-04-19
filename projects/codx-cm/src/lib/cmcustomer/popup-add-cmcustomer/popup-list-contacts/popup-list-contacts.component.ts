@@ -1,4 +1,3 @@
-import { CM_Contacts } from './../../../models/tmpCrm.model';
 import { CodxCmService } from './../../../codx-cm.service';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import {
@@ -23,8 +22,10 @@ export class PopupListContactsComponent implements OnInit {
   lstContacts = [];
   currentContact = 0;
   moreFuncAdd = '';
-  contact: CM_Contacts;
+  contact: any;
   lstSearch = [];
+  type: any;
+  contactType = '';
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
@@ -34,7 +35,10 @@ export class PopupListContactsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-
+    this.type = dt?.data[0];
+    if(this.type == 'formAdd'){
+      this.contactType = '1';
+    }
   }
 
   ngOnInit(): void {
@@ -58,9 +62,14 @@ export class PopupListContactsComponent implements OnInit {
     else return;
   }
 
+  valueChange(e){
+    this.contactType = e.data;
+  }
+
   changeContacts(index, item) {
     this.currentContact = index;
     this.contact = item;
+    this.contact.contactType = this.contactType;
     this.changeDet.detectChanges();
   }
 
@@ -72,13 +81,19 @@ export class PopupListContactsComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
+    var obj = {
+      moreFuncName: this.moreFuncAdd,
+      action: 'add',
+      dataContact: null,
+      type: this.type
+    }
     var dialog = this.callFc.openForm(
       PopupQuickaddContactComponent,
       '',
       500,
       500,
       '',
-      [this.moreFuncAdd, 'add', null],
+      obj,
       '',
       opt
     );

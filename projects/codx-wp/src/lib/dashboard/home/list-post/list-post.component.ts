@@ -163,8 +163,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforDelete(option: RequestOption, data: any) {
-    if (!option || !data) return false;
+  beforDelete(option: RequestOption, data: string) {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'CommentsBusiness';
@@ -174,9 +173,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   // xóa bài viết
   deletePost(data: any) {
-    if (data) {
+    if (data?.recID) {
       (this.listview.dataService as CRUDService)
-        .delete([data.recID],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
+        .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
         .subscribe();
     }
   }
