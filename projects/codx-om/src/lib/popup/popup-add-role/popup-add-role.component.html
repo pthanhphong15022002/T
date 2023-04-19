@@ -6,13 +6,14 @@
           <div *ngIf="okrPlan != null && okrPlan?.permissions != null">
             <ng-container *ngFor="let perm of okrPlan?.permissions; index as i;">
               <ng-container
-                *ngIf="perm?.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm?.isSharing  || perm?.isSharing == null)) || (modeSharing && perm?.isSharing))">
+                *ngIf="perm?.isActive != false">
                 <div (click)="changePermission(i)"
                   [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                   class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
                   <div class="d-flex align-items-center w-100">
                     <div class="symbol symbol-30 symbol-circle me-3">
-                      <div *ngIf="perm?.objectID == null || perm?.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                      <div
+                        *ngIf="perm?.objectID == null || perm?.objectID == ''; then thenAvatar1 else elsethenAvatar1">
                       </div>
                       <ng-template #thenAvatar1>
                         <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"
@@ -28,7 +29,7 @@
                       </ng-template>
                     </div>
                   </div>
-                  <ng-container *ngIf="!this.propertiesFolder && okrPlan?.assign && !perm?.isParentShare">
+                  <ng-container *ngIf="okrPlan?.assign && !perm?.isParentShare">
                     <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
                       (click)="removeUserRight(i)">
                       <i class="icon-close text-danger icon-16"></i>
@@ -42,7 +43,7 @@
           </div>
         </div>
         <div class="add-user" [ngClass]="">
-          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
             (valueChange)="onSaveRole($event)">
           </codx-input>
         </div>
@@ -53,143 +54,166 @@
             <thead>
               <tr>
                 <th scope="col">
-                  <codx-label [default]="titleFunction" [fiedName]="'titleFunction'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Chức năng" name="lblFunction" formname="'fmPermisstionOM'"></codx-label>
                 </th>
                 <th scope="col">
-                  <codx-label [default]="titleDescription" [fiedName]="'titleDescription'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Mô tả" name="lblDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </th>
                 <th scope="col">
-                  <codx-label [default]="titleAllow" [fiedName]="'titleAllow'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép" name="lblAllow" [formName]="'fmPermisstionOM'"></codx-label>
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleFunction" [fiedName]="'titleFunction'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Toàn quyền" name="lblFull"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleRightDescription" [fiedName]="'titleRightDescription'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Người dùng có tất cả quyền " name="lblFullDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'full')"
-                    (focus)="controlFocus(true)">
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'full',currentPemission)"
+                    >
                   </codx-input>
                 </td>
               </tr>
+
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleCreateFolder" [fiedName]="'titleCreateFolder'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Tạo mới" name="lblCreate"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleAllowCreateFolder" [fiedName]="'titleAllowCreateFolder'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép tạo mới" name="lblCreateDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'create')">
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'create',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleView" [fiedName]="'titleView'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Xem" name="lblView" [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleViewDescription" [fiedName]="'titleViewDescription'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép xem bộ mục tiêu" name="lblViewDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="read" [checked]="read"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'read')">
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'read',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleUpdate" [fiedName]="'titleUpdate'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Chỉnh sửa" name="lblEdit"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleUpdateDescription" [fiedName]="'titleUpdateDescription'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép chỉnh sửa bộ mục tiêu" name="lblEditDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" field="update" [checked]="update"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'update')">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="edit" [checked]="edit"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'edit',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
+
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleDelete" [fiedName]="'titleDelete'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Phát hành" name="lblPublish"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleDeleteDesc" [fiedName]="'titleDeleteDesc'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép phát hành bộ mục tiêu" name="lblPublishDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'delete')">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="publish" [checked]="publish"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'publish',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleShare" [fiedName]="'titleShare'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Phân bổ" name="lblAssign" [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleShareDesc" [fiedName]="'titleShareDesc'" [formName]="'fmPermisstionDM'"></codx-label>
-                </td>
-                <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'share')">
-                  </codx-input>
-                </td>
-              </tr>
-              <tr>
-                <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleAssign" [fiedName]="'titleAssign'" [formName]="'fmPermisstionDM'"></codx-label>
-                </td>
-                <td>
-                  <codx-label [default]="titleAssignDesc" [fiedName]="'titleAssignDesc'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép phân bổ bộ mục tiêu" name="lblAssignDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" field="assign" [checked]="assign"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'assign')">
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'assign',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleUpload" [fiedName]="'titleUpload'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Xóa" name="lblDelete"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="titleUploadDesc" [fiedName]="'titleUploadDesc'" [formName]="'fmPermisstionDM'"></codx-label>
+                  <codx-label default="Cho phép xóa bộ mục tiêu" name="lblDeleteDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'delete',currentPemission)">
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Chia sẻ" name="lblShare"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép chia sẻ bộ mục tiêu" name="lblShareDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'share',currentPemission)">
+                  </codx-input>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label default="Đính kèm" name="lblUpload"
+                    [formName]="'fmPermisstionOM'"></codx-label>
+                </td>
+                <td>
+                  <codx-label default="Cho phép đính kèm tệp" name="lblUploadDescription"
+                    [formName]="'fmPermisstionOM'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'upload')">
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'upload',currentPemission)">
                   </codx-input>
                 </td>
               </tr>
-              <tr>
-                <td class="font-size-lg text-dark">
-                  <codx-label [default]="titleDownload" [fiedName]="'titleDownload'" [formName]="'fmPermisstionDM'"></codx-label>
-                </td>
-                <td>
-                  <codx-label [default]="titleDownloadDesc" [fiedName]="'titleDownloadDesc'" [formName]="'fmPermisstionDM'"></codx-label>
-                </td>
-                <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
-                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'download')">
-                  </codx-input>
-                </td>
-              </tr>
+
             </tbody>
           </table>
         </div>
-        <div class="row mt-2">
+        <!-- <div class="row mt-2">
           <div class="col-xl-4 col-lg-6 col-md-6">
             <div class="form-group row mb-0 pl-3">
               <label class="col-12 pr-0 col-form-label">
-                <codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'" [formName]="'fmPermisstionDM'"></codx-label>
+                <codx-label default="Ngày hiệu lực" name="lblFromDate"
+                  [formName]="'fmPermisstionOM'"></codx-label>
               </label>
               <div class="col-12">
                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
@@ -201,7 +225,8 @@
           <div class="col-xl-4 col-lg-6 col-md-6">
             <div class="form-group row mb-0">
               <label class="col-12 pr-0 col-form-label">
-                <codx-label [default]="titleToDate" [fiedName]="'titleToDate'" [formName]="'fmPermisstionDM'"></codx-label>
+                <codx-label default="Ngày hết hạn" name="lblToDate"
+                  [formName]="'fmPermisstionOM'"></codx-label>
               </label>
               <div class="col-12">
                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
@@ -211,12 +236,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-template>
   <ng-template #footer>
-    <button type="button" [disabled]="checkCurrentRightUpdate()" 
-      class="btn btn-primary"><codx-label [default]="titleSave" [fiedName]="'titleSave'" [formName]="'fmPermisstionDM'"></codx-label> </button>
+    <button type="button" (click)="onSaveForm()" class="btn btn-primary">
+      <codx-label default="Lưu" name="lblSave" [formName]="'fmPermisstionOM'"></codx-label> </button>
   </ng-template>
 </codx-form>

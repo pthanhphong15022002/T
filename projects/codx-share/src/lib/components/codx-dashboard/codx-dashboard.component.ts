@@ -101,11 +101,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     minimum: 0,
     maximum: 10,
     interval: 1,
-    // lineStyle: { width: 0 },
-    // labelFormat: '{value}°C',
-
-    // majorTickLines: { width: 0 },
-    // minorTickLines: { width: 0 }
   };
   legendSetting: Object = {
     visible: true,
@@ -521,8 +516,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-accumulationchart')) {
         const chartObj = args.element.querySelector('ejs-accumulationchart')
           .ej2_instances[0];
-        chartObj.height = '80%';
-        chartObj.width = '100%';
+        chartObj.height = '50%';
+        chartObj.width = '50%';
         // if (args.element.offsetHeight < chartObj.element.offsetHeight) {
         //   chartObj.height = '80%';
         //   chartObj.width = '80%';
