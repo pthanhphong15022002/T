@@ -60,6 +60,7 @@ import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -286,6 +287,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
   listStepAproverOld = [];
+  listStepAproveRemove = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -580,6 +582,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.dialog.close(res.update);
               }
             });
+        } else {
+          if (this.listStepAproveRemove?.length > 0)
+            this.dpService
+              .removeApprovalStep(this.listStepAproveRemove)
+              .subscribe();
         }
       });
   }
@@ -659,6 +666,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (this.recIDCategory) {
               this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
             }
+          } else {
+            if (this.listStepAproveRemove?.length > 0)
+              this.dpService
+                .removeApprovalStep(this.listStepAproveRemove)
+                .subscribe();
           }
           this.dialog.close();
         } else return;
@@ -1596,9 +1608,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getUserByApproverStep(listStepApprover) {
     if (listStepApprover?.length > 0) {
       var listAppover = [];
-      listStepApprover.forEach(
-        (x) => (listAppover = listAppover.concat(x.approvers))
-      );
+      listStepApprover.forEach((x) => {
+        listAppover = listAppover.concat(x.approvers);
+        //list add new cân xóa
+        if (this.listStepAproverOld.some((st) => st.recID == x.recID)) {
+          this.listStepAproveRemove.push(x);
+        }
+      });
       //Hoi khanh xu ly thế nào
       console.log(listAppover);
     }
@@ -3858,5 +3874,4 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return this.guidEmpty;
   }
-  //#endregion
 }
