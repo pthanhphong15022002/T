@@ -1,33 +1,17 @@
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  CallFuncService,
-  NotificationsService,
-  AuthStore,
-  CacheService,
-  FormModel,
-  ViewsComponent,
-} from 'codx-core';
-import { CodxEsService } from 'projects/codx-es/src/public-api';
+import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, NotificationsService, UIComponent, ViewModel, ViewsComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxEsService } from 'projects/codx-es/src/public-api';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 
 @Component({
-  selector: 'lib-view-basic-salary-detail',
-  templateUrl: './view-basic-salary-detail.component.html',
-  styleUrls: ['./view-basic-salary-detail.component.css'],
+  selector: 'lib-view-award-detail',
+  templateUrl: './view-award-detail.component.html',
+  styleUrls: ['./view-award-detail.component.css']
 })
-export class ViewBasicSalaryDetailComponent implements OnInit {
+export class ViewAwardDetailComponent {
+
   constructor(
     private esService: CodxEsService,
     private hrService: CodxHrService,
@@ -42,13 +26,15 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
     this.user = this.authStore.get();
   }
 
+
   @Input() funcID: any;
   @Input() itemDetail: any;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
-  @Output() clickMF = new EventEmitter();
+  @Output() clickMFunction = new EventEmitter();
+  @Output() uploaded = new EventEmitter();
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -62,10 +48,9 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   gridViewSetup: any ={};
 
 
-  olderItem: any;
-  ngOnInit() {
-    this.itemDetailStt = 1;
-    this.itemDetailDataStt = 1;
+  ngOnInit(): void {
+    // this.itemDetailStt = 1;
+    // this.itemDetailDataStt = 1;
     if(this.formModel){
       this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -73,7 +58,6 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
         if(res) this.gridViewSetup = res;
       });
     }
-   
   }
   ngAfterViewInit() {
     this.tabControl = [
@@ -84,21 +68,13 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
       // { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     ];
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.getOldSalaries();
+
+  changeDataMF(e: any, data: any) {
+    this.hrService.handleShowHideMF(e, data, this.view);
   }
-  changeDataMF(e: any, data: any) {}
-  openFormFuncID(event: any, data: any = null){
-    this.clickMF.emit({event: event, data: data});
+  
+  clickMF(evt: any, data: any = null){
+    this.clickMFunction.emit({event: evt, data: data});
   }
 
-  getOldSalaries(){
-    if(this.itemDetail){
-      this.hrService.getOldBasicSalary(this.itemDetail).subscribe(res =>{
-          this.olderItem = res;
-          console.log(this.olderItem)
-      });
-    }
-    this.df.detectChanges();
-  }
 }
