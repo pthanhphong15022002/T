@@ -71,6 +71,7 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   funcID: string;
   grvSetup: any;
+  genderGrvSetup: any;
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -85,31 +86,34 @@ export class EmployeeAwardsComponent extends UIComponent {
   cmtStatus: string = '';
   dialogAddEdit: DialogRef;
 
+  itemDetail;
   onInit(): void {
+    this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
+      if (res) {
+        this.grvSetup = res;
+      }
+    });
     this.cache
-      .gridViewSetup('EAwards', 'grvEAwards')
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
       .subscribe((res) => {
-        if (res) {
-          this.grvSetup = res;
-        }
+        this.genderGrvSetup = res?.Gender;
       });
     if (!this.funcID) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
     }
-
   }
 
   ngAfterViewInit(): void {
     this.views = [
-      {
-        type: ViewType.list,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.templateList,
-          headerTemplate: this.headerTemplate,
-        },
-      },
+      // {
+      //   type: ViewType.list,
+      //   active: true,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateList,
+      //     headerTemplate: this.headerTemplate,
+      //   },
+      // },
       {
         type: ViewType.listdetail,
         sameData: true,
@@ -121,15 +125,18 @@ export class EmployeeAwardsComponent extends UIComponent {
       },
     ];
     this.view.dataService.methodDelete = 'DeleteEmployeeAwardInfoAsync';
-
   }
 
-  ngAfterViewChecked(){
-    if(!this.formGroup?.value){
-      this.hrService.getFormGroup(this.view?.formModel?.formName,
-        this.view?.formModel?.gridViewName).then(res =>{
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName
+        )
+        .then((res) => {
           this.formGroup = res;
-        })
+        });
     }
   }
 
@@ -145,9 +152,12 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   handleAction(event) {}
   onMoreMulti(event) {}
-  changeItemDetail(event) {}
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
 
   clickMF(event, data) {
+    console.log(event, data)
     switch (event.functionID) {
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
@@ -207,12 +217,11 @@ export class EmployeeAwardsComponent extends UIComponent {
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
-        empObj: actionType == 'add' ? null: this.currentEmpObj,
+        empObj: actionType == 'add' ? null : this.currentEmpObj,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      console.log(res);
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
@@ -263,9 +272,8 @@ export class EmployeeAwardsComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      if(res?.event){
-        this.view.dataService.update(res.event[0]).subscribe((res) => {
-        })
+      if (res?.event) {
+        this.view.dataService.update(res.event[0]).subscribe((res) => {});
       }
       this.df.detectChanges();
     });
@@ -273,28 +281,34 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   getIdUser(string1, tring2) {}
 
-  valueChangeComment(event){
+  valueChangeComment(event) {
     this.cmtStatus = event.data;
   }
-  onSaveUpdateForm(){
-    this.hrService.UpdateEmployeeAwardInfo(this.editStatusObj).subscribe(res =>{
-      if(res){
-        this.notify.notifyCode('SYS007');
-        res[0].emp = this.currentEmpObj;
-        this.hrService.addBGTrackLogEAwards(
-          res[0].recID,
-          this.cmtStatus,
-          this.view.formModel.entityName,
-          'C1',
-          null
-        ).subscribe((res) => {
-          
-        });
-        this.dialogEditStatus && this.dialogEditStatus.close(res)
-      }
-    })
+  onSaveUpdateForm() {
+    this.hrService
+      .UpdateEmployeeAwardInfo(this.editStatusObj)
+      .subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('SYS007');
+          res[0].emp = this.currentEmpObj;
+          this.hrService
+            .addBGTrackLogEAwards(
+              res[0].recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null
+            )
+            .subscribe((res) => {});
+          this.dialogEditStatus && this.dialogEditStatus.close(res);
+        }
+      });
   }
-  closeUpdateStatusForm(dialog: DialogRef){
+  closeUpdateStatusForm(dialog: DialogRef) {
     dialog.close();
   }
+  clickEvent(event, data) {
+    this.clickMF(event?.event, event?.data);
+  }
+getDetailEAward(event, data){}
 }
