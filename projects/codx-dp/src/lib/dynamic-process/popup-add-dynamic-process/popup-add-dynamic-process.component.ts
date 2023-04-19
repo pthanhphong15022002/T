@@ -285,6 +285,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
+  listStepAproverOld = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -342,6 +343,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action == 'edit') {
       this.loadEx();
       this.loadWord();
+      this.loadListApproverStep();
       // this.showID = true;
       this.checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
@@ -1586,7 +1588,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
-        this.getUserByApproverStep(res?.event)
+        this.getUserByApproverStep(res?.event);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
     });
@@ -1598,8 +1600,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (x) => (listAppover = listAppover.concat(x.approvers))
       );
       //Hoi khanh xu ly thế nào
-      console.log(listAppover)
+      console.log(listAppover);
     }
+  }
+  loadListApproverStep() {
+    this.dpService
+      .getListAproverStepByCategoryID(this.process.processNo)
+      .subscribe((res) => {
+        if (res) {
+          this.listStepAproverOld = res;
+        }
+      });
   }
   //Bieu mau
   clickViewTemp(temp) {}

@@ -673,4 +673,21 @@ export class CodxDpService {
       categoryID
     );
   }
+
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
+  removeListApprovalStep(listAppoverStep) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListApprovalStepAsync',
+      listAppoverStep
+    );
+  }
 }
