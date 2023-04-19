@@ -1,19 +1,25 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
+  OnInit,
   Output,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { UIComponent } from 'codx-core';
 
 @Component({
   selector: 'codx-carousel-stage',
   templateUrl: './carousel-stage.component.html',
   styleUrls: ['./carousel-stage.component.scss'],
 })
-export class CarouselStageComponent {
+export class CarouselStageComponent extends UIComponent
+implements OnInit, AfterViewInit {
   @Input() dataSource: any;
   @Input() fieldName: any;
   @Input() maxSize: any;
@@ -25,6 +31,9 @@ export class CarouselStageComponent {
   listDefaultView: any[] = [];
   listStep: any[] = [];
 
+  colorReasonSuccess:any;
+  colorReasonFail:any;
+
   // type string
   selectedIndex: string = '0';
   viewSetting: string = '';
@@ -34,31 +43,38 @@ export class CarouselStageComponent {
   idElementCrr: any;
   readonly viewCarouselForPage: string = 'viewCarouselForPage';
   readonly viewCarouselDefault: string = 'viewCarouselDefault';
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private config: NgbCarouselConfig,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private inject: Injector,
   ) {
+    super(inject);
     config.showNavigationArrows = false;
     config.showNavigationIndicators = true;
     config.interval = 0;
+    this.getColorReason();
+
   }
-  ngOnInit() {}
 
   ngAfterViewInit(): void {}
+  onInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSource']) {
-      this.listTreeView = [];
-      this.viewSetting = '';
-      this.selectedIndex = '0';
+      this.clearDataBefore();
       this.listStep = changes['dataSource'].currentValue;
-      let stepCrr = this.listStep?.filter(x=>x.stepStatus=='1')[0]
-      if(stepCrr)this.idElementCrr = stepCrr.stepID ;else this.idElementCrr =  this.listStep[0].stepID
       this.handleDateMaxSize(this.listStep, this.maxSize);
+      this.idElementCrr = this.autoClick(this.listStep);
       this.changeDetectorRef.detectChanges();
     }
   }
 
+  clearDataBefore(){
+    this.listTreeView = [];
+    this.viewSetting = '';
+    this.selectedIndex = '0';
+  }
   handleDateMaxSize(list, maxSize) {
     if (list && list.length > maxSize) {
       var index = 0;
@@ -80,7 +96,7 @@ export class CarouselStageComponent {
     }
   }
 
-  getColorStepName(status: string, stepID) {
+  getColorStepName(status: string) {
     if (status == '1') {
       return 'step current ';
     } else if (status == '3' || status == '4' || status == '5' || !status) {
@@ -89,9 +105,15 @@ export class CarouselStageComponent {
     return 'step';
   }
   getbackgroundColor(item) {
+    if(item.isSuccessStep) {
+      return '--primary-color:' + this.colorReasonSuccess?.color;
+    }
+    else if(item.isFailStep) {
+      return '--primary-color:' + this.colorReasonFail?.color;
+    }
     return item?.backgroundColor
-      ? '--primary-color:' + item?.backgroundColor
-      : '--primary-color: #23468c';
+    ? '--primary-color:' + item?.backgroundColor
+    : '--primary-color: #23468c';
   }
 
   findStatusInDoing(listStep, index) {
@@ -125,5 +147,26 @@ export class CarouselStageComponent {
       this.eventClicked.emit(result);
     }
     this.changeDetectorRef.detectChanges();
+  }
+  autoClick(listStep){
+    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0]
+    if(stepCrr) {
+        return stepCrr.stepID;
+    }
+    return this.guidEmpty;
+  }
+
+  getColorReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
   }
 }

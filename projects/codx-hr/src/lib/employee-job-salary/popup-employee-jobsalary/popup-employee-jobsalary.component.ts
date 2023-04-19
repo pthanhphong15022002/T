@@ -54,7 +54,7 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.funcID = data?.data?.funcID;
-     this.employeeId = data?.data?.employeeId;
+    this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
@@ -228,7 +228,7 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
         });
     } else {
       this.hrSevice
-        .UpdateEmployeeJobSalariesInfo(this.formModel.currentData)
+        .UpdateEmployeeJobSalariesInfo(this.currentEJobSalaries)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007'); 
