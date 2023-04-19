@@ -283,14 +283,7 @@ export class RolesComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
-      case 'checkFolder':
-        this.createSubFolder = value;
-        this.changeDetectorRef.detectChanges();
-        break;
 
-      case 'checkSecurity':
-        this.security = value;
-        break;
       case "full":
         this.full = value;
         if (this.isSetFull) {
@@ -309,30 +302,7 @@ export class RolesComponent implements OnInit {
           this.download = value;
           this.assign = value;
         }
-        break;
-      case "approval":
-        this.approval = value;
-        //    if (!this.approval)
-        this.approvers = "";
-        break;
-      case "physical":
-        this.physical = value;
-        break;
-      case "revision":
-        this.revision = value;
-        break;
-      case "copyrightsControl":
-        this.copyrightsControl = value;
-        break;
-      case "sentemail":
-        this.sendEmail = value;
-        break;
-      case "postBlob":
-        this.postblog = value;
-        break;
-      case "assign":
-        this.assign = value;
-        break;
+        break;      
       case "fromdate":
         if (value != null)
           this.startDate = value.fromDate;
