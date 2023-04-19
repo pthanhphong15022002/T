@@ -249,7 +249,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      console.log(res);
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
