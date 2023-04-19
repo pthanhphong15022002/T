@@ -360,7 +360,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
       if (gvsVATInvoices[prop].isRequire) {
         console.log(prop);
         if (
-          gvsVATInvoices[prop].datatype === 'String' &&
+          gvsVATInvoices[prop].dataType === 'String' &&
           !vatInvoice[this.acService.toCamelCase(prop)]?.trim()
         ) {
           this.notiService.notifyCode(

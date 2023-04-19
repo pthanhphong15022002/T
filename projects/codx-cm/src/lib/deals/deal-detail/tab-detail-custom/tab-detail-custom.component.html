@@ -1,0 +1,377 @@
+<container-element [ngSwitch]="tabClicked">
+  <some-element *ngSwitchCase="tabInformation" [ngTemplateOutlet]="information"></some-element>
+  <some-element *ngSwitchCase="tabField" [ngTemplateOutlet]="field"></some-element>
+  <some-element *ngSwitchCase="tabContact" [ngTemplateOutlet]="contact"></some-element>
+  <some-element *ngSwitchCase="tabOpponent" [ngTemplateOutlet]="opponent"></some-element>
+  <some-element *ngSwitchCase="tabTask" [ngTemplateOutlet]="task"></some-element>
+  <some-element *ngSwitchCase="tabProduct" [ngTemplateOutlet]="product"></some-element>
+  <some-element *ngSwitchDefault></some-element>
+</container-element>
+<!-- nvthuan công việc -->
+<ng-template #task let-data="value">
+  <div>
+    thuận
+    <codx-task [stepId]="'2e1ac2bf-a73d-4706-9c7a-f6ae3e64ebbd'"></codx-task>
+  </div>
+  <!-- <div *ngFor="let step of data; let i = index">
+    <div>
+      <span
+        class="h4 me-3 justify-content-center align-items-center"
+        style="
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          background-color: rgb(45, 171, 255);
+          display: inline-flex;
+        "
+        >{{ i + 1 }}</span
+      >
+      <span class="h4">{{ step.stepName }}</span>
+    </div> -->
+    <!-- <codx-show-task [dataSource]=""></codx-show-task> -->
+  <!-- </div> -->
+</ng-template>
+<!-- nvthuan sản phẩm -->
+<ng-template #product>
+  <div class="h-100">
+    <!-- <codx-gridview-v2
+      #gridProductsLine
+      [formName]="fmProcductsLines.formName"
+      [gridViewName]="fmProcductsLines.gridViewName"
+      [entityName]="fmProcductsLines.entityName"
+      [editSettings]="editSettings"
+      [allowFiltering]="true"
+      [allowSorting]="true"
+      service="CM"
+      [autoLoad]="false"
+      rowHeight="40"
+    ></codx-gridview-v2> -->
+    <lib-popup-add-quotations></lib-popup-add-quotations>
+  </div>
+</ng-template>
+
+<ng-template #information>
+  <div class="d-flex flex-column">
+    <div class="mt-3">
+      <h2>    <codx-label default="Thông tin chung"></codx-label>  </h2>
+    </div>
+    <div class="mb-3">
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Tên cơ hội"></codx-label>:
+      </div>
+      <div class="col-4">
+        Lạc Việt - Thuê VP
+      </div>
+      <div class="col-2">
+        <codx-label default="Doanh số"></codx-label>:
+      </div>
+      <div class="col-4">
+        40,000,000 VND
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Khách hàng"></codx-label>:
+      </div>
+      <div class="col-4">
+        Công ty CPTH Lạc Việt
+      </div>
+      <div class="col-2">
+        <codx-label default="Ngày dự kiến đóng"></codx-label>:
+      </div>
+      <div class="col-4">
+       31/10/2022
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Loại cơ hội"></codx-label>:
+      </div>
+      <div class="col-4">
+       Khách hàng mới
+      </div>
+      <div class="col-2">
+        <codx-label default="Tỷ lệ thành công"></codx-label>:
+      </div>
+      <div class="col-4"> 70%</div>
+    </div>
+
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Nguồn cơ hội"></codx-label>:
+      </div>
+      <div class="col-4">
+      Tìm kiếm trên google
+      </div>
+      <div class="col-2">
+        <codx-label default="Quy trình"></codx-label>:
+      </div>
+      <div class="col-4"> Dịch vụ văn phòng cho thuê</div>
+    </div>
+
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Chiến dịch"></codx-label>:
+      </div>
+      <div class="col-4">
+    Chiến dịch A
+      </div>
+      <div class="col-2">
+        <codx-label default="Giai đoạn hiện tại"></codx-label>:
+      </div>
+      <div class="col-4"> Giới thiệu sản phẩm</div>
+    </div>
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Nhân viên bán hàng"></codx-label>:
+      </div>
+      <div class="col-4">
+      Nguyễn Văn Khoa
+      </div>
+      <div class="col-2">
+        <codx-label default="Bước tiếp theo"></codx-label>:
+      </div>
+      <div class="col-4"> Báo giá</div>
+    </div>
+    <div class="row py-2">
+      <div class="col-2">
+        <codx-label default="Nhân viên tư vấn"></codx-label>:
+      </div>
+      <div class="col-4">
+      Nguyễn Văn Khoa
+      </div>
+      <div class="col-2">
+        <codx-label default="Ngày cập nhật"></codx-label>:
+      </div>
+      <div class="col-4">31/01/20222</div>
+    </div>
+    </div>
+    <div class="mt-5">
+      <div class="mb-3">
+        <h2><codx-label default="Mô tả nhu cầu"></codx-label>  </h2>
+      </div>
+      <span class="py-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo harum error nisi magni iusto pariatur hic tempora nihil sapiente beatae? Soluta adipisci necessitatibus voluptate, quaerat exercitationem similique obcaecati eveniet repellat totam unde repellendus est voluptas sapiente incidunt natus doloribus deleniti sunt ex repudiandae blanditiis atque. Corporis dolor vel, voluptatem quo laudantium ea libero soluta quidem officiis molestiae molestias eum alias ut praesentium aliquid optio, voluptatum enim non explicabo. Suscipit autem deleniti aliquam atque delectus at earum laudantium natus provident optio aspernatur numquam sequi, explicabo voluptatibus! Quas maxime asperiores quibusdam, reprehenderit ea eaque mollitia quis nobis, omnis amet placeat ipsum veniam?</span>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #field>
+  <div class="d-flex flex-column">
+    <h1> TRƯỜNG TÙY CHỈNH CỦA A THẢO LÀM NHA </h1>
+  </div>
+</ng-template>
+
+<ng-template #contact>
+  <div class="row mb-2">
+    <div class="col-4 d-flex">
+      <div class="me-3">
+        <codx-img
+          [objectId]="data.recID"
+          [objectName]="data?.processName"
+          objectType="AD_Users"
+          [width]="35"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              Trần Quốc Hoàn
+            </div>
+            <div class="me-4">
+              <span class="text-gray-900"> Trưởng phòng mua hàng</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="mb-1">
+        <span class="icon-phone_android text-primary icon-16 me-1"></span>
+        <span class="text-gray-900">0702411141</span>
+      </div>
+      <div>
+        <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+        <span class="text-gray-900">tdnphuck42@gmail.com</span>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="mb-1">Liên hệ đặt hàng</div>
+    </div>
+  </div>
+
+  <div class="mb-2 mt-6">
+    <p class="bg-secondary text-white bg-opacity-25 p-2">
+      <button class="custom-icon-button" (click)="addContact()" >
+        <i class="icons icon-group_add icon-24 ">
+        </i>
+      </button>
+     </p>
+  </div>
+</ng-template>
+
+<ng-template #field>
+  <div class="d-flex flex-column">
+    <h1> TRƯỜNG TÙY CHỈNH CỦA A THẢO LÀM NHA </h1>
+  </div>
+</ng-template>
+
+<ng-template #opponent>
+  <div class="row mb-2 mt-3">
+    <div class="col-3 d-flex">
+
+      <div class="d-flex align-items-center">
+        <div>      <div class="d-flex" data-example="alignSelf">
+
+          <div class="me-3">
+            <codx-img
+              [objectId]="data.recID"
+              [objectName]="data?.processName"
+              objectType="AD_Users"
+              [width]="35"
+            >
+            </codx-img>
+          </div>
+
+          <div class="align-self-center">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              Trần Quốc Hoàn
+            </div>
+          </div>
+
+        </div></div>
+
+      </div>
+
+
+    </div>
+    <div class="col-3 d-flex flex-column">
+      <div class="d-flex" data-example="alignSelf">
+        <div class="align-self-center"> <span class="icon-card_travel icon-20 me-2"></span></div>
+        <div>
+          <div class="container">
+            <div class="row gy-1">
+              <div class="col-12">
+                Dịch vụ cho thuê văn phòng
+              </div>
+              <div class="col-12">
+                Thương mại
+              </div>
+              <div class="col-12">
+                Marketing
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-3 d-flex flex-column">
+      <div class="d-flex" data-example="alignSelf">
+        <div class="align-self-center"> <span class="icon-star icon-20 me-2"></span></div>
+        <div>
+          <div class="container">
+            <div class="row gy-1">
+              <div class="col-12">
+                Dịch vụ cho thuê văn phòng
+              </div>
+              <div class="col-12">
+                Thương mại
+              </div>
+              <div class="col-12">
+                Marketing
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-3 d-flex flex-column">
+      <div class="d-flex" data-example="alignSelf">
+        <div class="align-self-center"> <span class="icon-star_outline icon-20 me-2"></span></div>
+        <div>
+          <div class="container">
+            <div class="row gy-1">
+              <div class="col-12">
+                Dịch vụ cho thuê văn phòng
+              </div>
+              <div class="col-12">
+                Thương mại
+              </div>
+              <div class="col-12">
+                Marketing
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 mt-6">
+    <p class="bg-secondary text-white bg-opacity-25 p-2">
+      <button class="custom-icon-button" (click)="addContact()" >
+        <i class="icons icon-group_add icon-24 ">
+        </i>
+      </button>
+     </p>
+  </div>
+</ng-template>
+
+<ng-template #opportunity>
+  <div class="d-flex justify-content-between">
+    <div class="d-flex flex-column">
+      <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+        Trương Đặng Ngọc Phúc
+      </div>
+      <div class="d-flex align-items-start me-4 mb-1">
+        <div class="me-3">
+          <span class="icon-money icon-16 me-1"></span>
+          <codx-label
+            class="text-gray-600"
+            name="lblNumber"
+            default="Doanh số
+            kỳ vọng: "
+          ></codx-label>
+          <span class="ms-1">50.000.000 VND</span>
+        </div>
+        <div>
+          <span class="">%</span>
+          <codx-label
+            class="text-gray-600"
+            name="lblNumber"
+            default="Tỷ lệ
+            thành công: "
+          ></codx-label>
+          <span class="ms-1">70%</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-top">
+      <div class="d-flex flex-column">
+        <div class="badge badge-primary">Giới thiệu sản phẩm</div>
+        <div class="ms-5">
+          <span class="icon-money icon-16 me-1"></span>
+          <span class="text-gray-500 my-2">23/04/2023</span>
+        </div>
+      </div>
+      <div class="ms-3">
+        <!-- <codx-imgs
+          [isToolTip]="true"
+          [width]="35"
+          [objectId]="'ADMIN'"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
