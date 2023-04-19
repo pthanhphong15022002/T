@@ -32,7 +32,7 @@ export class SignalRService {
 
   public createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(environment.apiUrl + '/serverHub', {
+      .withUrl(environment.apiUrl + '/hubwp/chat', {
         accessTokenFactory: async () => {
           return this.authStore.get().token;
         }
