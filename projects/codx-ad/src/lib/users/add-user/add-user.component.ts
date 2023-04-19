@@ -31,6 +31,8 @@ import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Pos } from '@syncfusion/ej2-angular-progressbar';
+import { Post } from '@shared/models/post';
 
 @Component({
   selector: 'lib-add-user',
@@ -71,7 +73,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formUser: FormGroup;
   checkValueChangeUG = false;
   dataUG: any = new Array();
-  tmpPost: any;
+  tmpPost: any = null;
   dataCopy: any;
   dataComment: any;
   contentComment: any;
@@ -302,38 +304,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
     );
   }
 
-  // addUserTemp() {
-  //   this.checkBtnAdd = true;
-  //   let formGroup = this.form.formGroup.controls;
-  //   if (!this.adUser.buid) formGroup.buid.setValue(null);
-  //   if (
-  //     formGroup.userID.status == 'VALID' &&
-  //     formGroup.userName.status == 'VALID' &&
-  //     formGroup.buid.status == 'VALID' &&
-  //     formGroup.email.status == 'VALID'
-  //   ) {
-  //     this.dialog.dataService
-  //       .save((opt: any) => this.beforeSaveTemp(opt), 0, '', '', false)
-  //       .subscribe((res) => {
-  //         if (res.save) {
-  //           this.adUser.userID = res.save.userID;
-
-  //           this.getHTMLFirstPost(this.adUser);
-  //           this.adService.createFirstPost(this.tmpPost).subscribe();
-  //           this.imageUpload
-  //             .updateFileDirectReload(res.save.userID)
-  //             .subscribe((result) => {
-  //               if (result) {
-  //                 this.loadData.emit();
-  //               }
-  //             });
-  //           this.dataAfterSave = res.save;
-  //           console.log('check dataAfterSave', this.dataAfterSave);
-  //         }
-  //       });
-  //   } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
-  // }
-
   countListViewChoose() {
     if (this.viewChooseRole) {
       this.countListViewChooseRoleApp = this.viewChooseRole.filter(
@@ -344,128 +314,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       ).length;
     }
   }
-
-  // beforeSave(op: RequestOption) {
-  //   let data = [];
-  //   let checkDifference =
-  //     JSON.stringify(this.viewChooseRoleTemp) ===
-  //     JSON.stringify(this.viewChooseRole);
-  //   if (this.formType == 'add' || this.formType == 'copy') {
-  //     // this.isAddMode = true;
-  //     op.methodName = 'AddUserAsync';
-  //     if (this.formType == 'copy') {
-  //       this.viewChooseRole.map((dt) => {
-  //         dt.userID = this.adUser.userID;
-  //       });
-  //     }
-  //     this.adUser;
-
-  //     data = [
-  //       this.adUser,
-  //       this.viewChooseRole,
-  //       true,
-  //       false,
-  //       false,
-  //       // this.lstChangeModule,
-  //       this.checkBtnAdd,
-  //     ];
-  //   }
-  //   if (this.formType == 'edit') {
-  //     // this.isAddMode = false;
-  //     op.methodName = 'UpdateUserAsync';
-  //     data = [
-  //       this.adUser,
-  //       this.viewChooseRole,
-  //       checkDifference,
-  //       '0',
-  //       // this.lstChangeModule,
-  //     ];
-  //   }
-  //   op.data = data;
-  //   return true;
-  // }
-
-  // beforeSaveTemp(op: RequestOption) {
-  //   let data = [];
-  //   this.isAddMode = true;
-  //   op.methodName = 'AddUserAsync';
-  //   data = [
-  //     this.adUser,
-  //     this.viewChooseRole,
-  //     false,
-  //     false,
-  //     false,
-  //     // this.lstChangeModule,
-  //     this.checkBtnAdd,
-  //   ];
-  //   op.data = data;
-  //   return true;
-  // }
-
-  // updateAfterAdd() {
-  //   let checkDifference =
-  //     JSON.stringify(this.viewChooseRoleTemp) ===
-  //     JSON.stringify(this.viewChooseRole);
-  //   this.api
-  //     .execSv('SYS', 'ERM.Business.AD', 'UsersBusiness', 'UpdateUserAsync', [
-  //       this.adUser,
-  //       this.viewChooseRole,
-  //       checkDifference,
-  //       '0',
-  //       // this.lstChangeModule,
-  //     ])
-  //     .subscribe();
-  // }
-
-  // onAdd() {
-  //   this.dialog.dataService
-  //     .save((opt: any) => this.beforeSave(opt), 0)
-  //     .subscribe((res) => {
-  //       if (res.save) {
-  //         this.getHTMLFirstPost(this.adUser);
-  //         this.adService.createFirstPost(this.tmpPost).subscribe((res) => {});
-  //         this.imageUpload
-  //           .updateFileDirectReload(res.save.userID)
-  //           .subscribe((result) => {
-  //             if (result) {
-  //               this.loadData.emit();
-  //             }
-  //             this.dialog.close(res.save);
-  //           });
-  //         res.save.chooseRoles = res.save?.functions;
-  //         (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-  //         this.changeDetector.detectChanges();
-  //       }
-  //     });
-  // }
-
-  // onUpdate() {
-  //   this.dialog.dataService
-  //     .save((opt: any) => this.beforeSave(opt))
-  //     .subscribe((res) => {
-  //       if (res.update) {
-  //         if (this.imageUpload) {
-  //           this.imageUpload
-  //             .updateFileDirectReload(res.update.userID)
-  //             .subscribe((result) => {
-  //               if (result) {
-  //                 this.loadData.emit();
-  //               }
-  //               this.dialog.close(res.update);
-  //             });
-  //         }
-  //         res.update.chooseRoles = this.viewChooseRole;
-  //         (this.dialog.dataService as CRUDService)
-  //           .update(res.update)
-  //           .subscribe();
-  //         this.changeDetector.detectChanges();
-  //       } else {
-  //         this.saveSuccess = false;
-  //         this.checkBtnAdd = false;
-  //         this.detectorRef.detectChanges();
-  //       }
-  //     });
-  // }
 
   beforeSave(opt: RequestOption) {
     this.isSaving = true;
@@ -545,15 +393,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
       positionName
     );
     /*Binding dữ liệu vào html*/
+    let permission = {
+      memberType : "2",
+      objectID : "",
+      objectName: "",
+      objectType : "9"
+    }
+    let lstPermission = [];
+    lstPermission.push(permission);
     this.tmpPost = {
       contents: HTMLParse,
-      approveControl: '0',
       category: '1',
       shareControl: '9',
-      listTag: [],
+      attachments : 0,
+      medias: 0,
       createdOn: new Date(),
       createdBy: 'CODXADMIN',
       createdName: 'CoDX Administrator',
+      permissions : lstPermission
     };
   }
 

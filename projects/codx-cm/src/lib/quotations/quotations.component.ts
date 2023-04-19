@@ -63,6 +63,7 @@ export class QuotationsComponent extends UIComponent {
   clickMF(e, data) {}
 
   changeItemDetail(e) {}
+  
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       //this.cache.functionList('CM0202').subscribe((f) => {

@@ -63,6 +63,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() data: any = {}; // object category
 
   model: any;
+  isRequestListStep = false ; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
 
   constructor(
     private cfService: CallFuncService,
@@ -82,6 +83,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       console.log(this.data);
 
       this.dialogApproval = dialog;
+      this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -164,7 +166,12 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.data.countStep = this.lstStep.length;
       this.model.patchValue({ countStep: this.lstStep.length });
       this.updateApprovalStep();
-      this.dialogApproval && this.dialogApproval.close(true);
+       // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023
+       if(this.isRequestListStep){
+        this.dialogApproval && this.dialogApproval.close(this.lstStep);
+      }else{
+        this.dialogApproval && this.dialogApproval.close(true);
+      }
     }
   }
 

@@ -4,6 +4,7 @@
   [button]="btnAdd"
   [autoLoad]="false"
   [funcID]="funcID"
+  [toolbarDisplay]="false"
   (onActions)="onAction($event)"
 >
 </codx-views>
@@ -661,9 +662,7 @@
       >
     </div>
   </ng-container>
-  <ng-container
-    *ngIf="data.transType == 'TM_Tasks' || data.transType == 'CO_Meetings'"
-  >
+  <ng-container *ngIf="data.transType == 'TM_Tasks' || data.transType == 'CO_Meetings'">
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"

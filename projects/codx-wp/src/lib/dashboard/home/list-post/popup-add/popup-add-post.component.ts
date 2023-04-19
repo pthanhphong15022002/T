@@ -342,7 +342,7 @@ export class PopupAddPostComponent implements OnInit {
             memberType : this.MEMBERTYPE.SHARE,
             objectID : "",
             objectName: "",
-            objectType : fisrtPermission.objectType,
+            objectType : this.data.shareControl,
           };
           this.data.permissions.push(permission);
           this.data.shareName = "";

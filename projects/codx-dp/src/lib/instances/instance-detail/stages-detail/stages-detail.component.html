@@ -25,9 +25,8 @@
           (click)="openUpdateProgress(dataStep)"
           [disabled]="
             !isStart ||
-            !isClosed ||
-            instance.status == '1' ||
-            instance.status == '2' ||
+            isClosed ||
+            instance.status !== '2' ||
             !isRoleAll ||
             !progressStepControl
               ? true

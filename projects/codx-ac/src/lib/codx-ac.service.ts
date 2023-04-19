@@ -78,6 +78,7 @@ export class CodxAcService {
     return newMemo;
   }
 
+  /** Use irregularFields (optional) in case unable to transform some data prop names to gvs prop names respectively. */
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
@@ -97,6 +98,8 @@ export class CodxAcService {
       }
 
       if (controls[propName].invalid) {
+        console.log('invalid', { propName });
+
         const gvsPropName =
           irregularFields.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
@@ -109,6 +112,47 @@ export class CodxAcService {
         );
 
         isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  /** Use irregularDataPropName (optional) in case unable to transform some gvs prop names to data prop names respectively. */
+  validateFormDataUsingGvs(
+    gridViewSetup: any,
+    data: any,
+    irregularDataPropName: string[] = [],
+    ignoredFields: string[] = []
+  ): boolean {
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
+    let isValid = true;
+    for (const propName in gridViewSetup) {
+      if (gridViewSetup[propName].isRequire) {
+        if (ignoredFields.includes(propName.toLowerCase())) {
+          continue;
+        }
+
+        const dataPropName =
+          irregularDataPropName.find(
+            (i) => i.toLowerCase() === propName.toLowerCase()
+          ) ?? this.toCamelCase(propName);
+
+        if (
+          gridViewSetup[propName].dataType === 'String' &&
+          !data[dataPropName]?.trim()
+        ) {
+          console.log('invalid', { propName });
+
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            `"${gridViewSetup[propName]?.headerText}"`
+          );
+
+          isValid = false;
+        }
       }
     }
 
