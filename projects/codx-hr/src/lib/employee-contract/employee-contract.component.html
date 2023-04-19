@@ -38,11 +38,11 @@
           </codx-img>
           <codx-vll
             class="badge badge-sm"
-            [name]="'HR001'"
+            [name]="genderGrvSetup?.referedValue"
             [value]="data?.emp?.gender"
-            [showText]="false"
-            [showIcon]="true"
-            [showBgColor]="true"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="false"
           >
           </codx-vll>
         </div>
@@ -273,11 +273,11 @@
       <div class="justify-content-between">
         <codx-vll
         class="badge badge-sm"
-        [name]="'HR001'"
+        [name]="genderGrvSetup?.referedValue"
         [value]="data?.emp?.gender"
-        [showText]="false"
-        [showIcon]="true"
-        [showBgColor]="true"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="false"
       >
         
     </codx-vll>
@@ -401,11 +401,11 @@
       <div class="align-items-center me-3 mt-10">
         <div class="form-group">
           <label>
-            <codx-label fiedName="status" [formModel]="view.formModel">
+            <codx-label fiedName="Status" [formModel]="view.formModel">
             </codx-label>
           </label>
           <codx-input
-            [disabled]="'true'"
+            [disabled]="statusCbx"
             field="status"
             [formModel]="view.formModel"
             [Group]="formGroup"
