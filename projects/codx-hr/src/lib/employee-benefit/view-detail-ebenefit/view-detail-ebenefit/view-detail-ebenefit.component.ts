@@ -1,23 +1,20 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
+import {  Component, EventEmitter, Input, Output, ViewChild, OnInit,SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, DataRequest, FormModel, NotificationsService, ViewsComponent } from 'codx-core';
+import { AuthStore, FormModel, ViewsComponent } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
-
 @Component({
-  selector: 'lib-view-detail-ejobsalary',
-  templateUrl: './view-detail-ejobsalary.component.html',
-  styleUrls: ['./view-detail-ejobsalary.component.css']
+  selector: 'lib-view-detail-ebenefit',
+  templateUrl: './view-detail-ebenefit.component.html',
+  styleUrls: ['./view-detail-ebenefit.component.css']
 })
-export class ViewDetailEjobsalaryComponent implements OnInit{
+export class ViewDetailEbenefitComponent implements OnInit{
   constructor(
     private authStore: AuthStore,
     private hrService: CodxHrService,
     private router: ActivatedRoute,
-    private df: ChangeDetectorRef,
-    private notify: NotificationsService,
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
@@ -27,11 +24,10 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
   @ViewChild('attachment') attachment;
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
 
-
-  @Input() funcID;
-  @Input() formModel;
-  @Input() view: ViewsComponent;
   @Input() itemDetail: any;
+  @Input() funcID;
+  @Input() view: ViewsComponent;
+  @Input() formModel;
   @Input() hideFooter = false;
   @Output() uploaded = new EventEmitter();
   @Output() clickMFunction = new EventEmitter();
@@ -40,15 +36,12 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
   tabControl: TabModel[] = [];
   renderFooter = false;
   isAfterRender = true;
-  benefitFuncID = 'HRTApp04';
+  benefitFuncID = 'HRTApp05';
   benefitFormModel : FormModel;
   benefitFormGroup : FormGroup;
-  lstBenefit;
   active = 1;
-  dataOldSalary;
-  console = console;
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -63,33 +56,25 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes?.itemDetail &&
-      changes.itemDetail?.previousValue?.recID !=
-        changes.itemDetail?.currentValue?.recID
-    ) {
-      // this.hrService.loadDataEContract(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
-      //   if (res) {
-      //     this.itemDetail = res;
-      //     this.df.detectChanges();
-      //   }
-      // });
-    }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (
+  //     changes?.itemDetail &&
+  //     changes.itemDetail?.previousValue?.recID !=
+  //       changes.itemDetail?.currentValue?.recID
+  //   ) {
+  //     this.hrService.loadDataEContract(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
+  //       if (res) {
+  //         this.itemDetail = res;
+  //         this.df.detectChanges();
+  //       }
+  //     });
+  //   }
 
-    // console.log('thong tin hdld', this.itemDetail);
 
-    //Get old salary on detail body
-    this.hrService
-    .GetOldSalaries(this.itemDetail)
-    .subscribe((res) => {
-      this.dataOldSalary = res;
-    })
-
-    if(this.itemDetail.benefits){
-      this.lstBenefit = JSON.parse(this.itemDetail.benefits)
-    }
-  }
+  //   if(this.itemDetail.benefits){
+  //     this.lstBenefit = JSON.parse(this.itemDetail.benefits)
+  //   }
+  // }
 
   ngAfterViewInit(): void {
     this.tabControl = [

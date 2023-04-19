@@ -118,7 +118,7 @@ export class CM_Deals {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-
+  bit;
 }
 
 export class CM_Permissions {
@@ -241,7 +241,7 @@ export class CM_Contacts {
   objectType: string;
   objectID: string;
   objectName: string;
-  cumulatedPonumbers: number;
+  cumulatedPoints: number;
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
@@ -256,4 +256,50 @@ export class CM_Contacts {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class BS_AddressBook {
+  recID: string;
+  adressType: string;
+  adressName: string;
+  objectType: string;
+  objectID: string;
+  street: string;
+  city: string;
+  countryID: string;
+  provinceID: string;
+  districtID: string;
+  postalCode: string;
+  regionID: string;
+  timeZone: string;
+  longitude: string;
+  latitude: string;
+  distance: string;
+  primaryContact: string;
+  secondContact: string;
+  phone: string;
+  phoneExt: string;
+  faxNo: string;
+  mobile: string;
+  email: string;
+  sMS: string;
+  webPage: string;
+  delRouteID: string;
+  calendarID: string;
+  interval: string;
+  duration: string;
+  lastUpdated: Date;
+  note: string;
+  stop: boolean;
+  isDefault: boolean;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  owner: string;
+  bUID: string;
+  employeeID: string;
+  positionID: string;
+  orgUnitID: string;
+  divisionID: string;
 }

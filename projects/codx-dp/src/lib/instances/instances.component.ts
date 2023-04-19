@@ -1785,15 +1785,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
-      )
-      .subscribe((item: any) => {
+    this.codxDpService.getESCategoryByCategoryID(this.process.processNo).subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
           this.codxDpService
