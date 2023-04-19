@@ -285,6 +285,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
+  listStepAproverOld = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -342,6 +343,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action == 'edit') {
       this.loadEx();
       this.loadWord();
+      this.loadListApproverStep();
       // this.showID = true;
       this.checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
@@ -514,7 +516,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepEdit || [],
         this.listStepDelete || [],
         listStepDrop || [],
-        this.lstTmp
+        this.lstTmp,
       ];
     }
     op.data = data;
@@ -1551,7 +1553,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //Gửi duyệt
+  //Setting gửi duyệt
   async clickSettingApprove() {
     let category;
     if (this.action == 'edit')
@@ -1568,11 +1570,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   actionOpenFormApprove(transID) {
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
-    // var category = this.categories[value];
-    // if (!category) return;
     let data = {
       transID: transID,
       type: '0',
+      isRequestListStep: true,
     };
 
     let popupApprover = this.callfc.openForm(
@@ -1587,9 +1588,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
+        this.getUserByApproverStep(res?.event);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
     });
+  }
+  getUserByApproverStep(listStepApprover) {
+    if (listStepApprover?.length > 0) {
+      var listAppover = [];
+      listStepApprover.forEach(
+        (x) => (listAppover = listAppover.concat(x.approvers))
+      );
+      //Hoi khanh xu ly thế nào
+      console.log(listAppover);
+    }
+  }
+  loadListApproverStep() {
+    this.dpService
+      .getListAproverStepByCategoryID(this.process.processNo)
+      .subscribe((res) => {
+        if (res) {
+          this.listStepAproverOld = res;
+        }
+      });
   }
   //Bieu mau
   clickViewTemp(temp) {}
@@ -3837,6 +3858,5 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return this.guidEmpty;
   }
-  formDataCopyProccess(listValue: any) {}
   //#endregion
 }

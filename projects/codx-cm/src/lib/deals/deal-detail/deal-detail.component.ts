@@ -3,7 +3,7 @@ import { CRUDService } from 'codx-core';
 import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 
 @Component({
-  selector: 'codx-deail-detail',
+  selector: 'codx-deal-detail',
   templateUrl: './deal-detail.component.html',
   styleUrls: ['./deal-detail.component.scss']
 })

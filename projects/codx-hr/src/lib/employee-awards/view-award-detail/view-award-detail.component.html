@@ -63,7 +63,8 @@
       <div class="d-flex align-items-center  mb-5 col-6">
         <codx-label fiedName="awardFormCategory" [formModel]="formModel" class="text-gray-700 label-colon col-4">
         </codx-label>
-        <span class="fw-bold" [innerHTML]="itemDetail?.awardFormCategory| formatvalue : formModel : 'awardFormCategory' | async">
+        <span class="fw-bold"
+          [innerHTML]="itemDetail?.awardFormCategory| formatvalue : formModel : 'awardFormCategory' | async">
         </span>
       </div>
 
@@ -77,14 +78,17 @@
       <div class="d-flex align-items-center  mb-5 col-6">
         <codx-label fiedName="inYear" [formModel]="formModel" class="text-gray-700 label-colon col-4">
         </codx-label>
-        <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async">
+        <!-- <span class="fw-bold" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
+        <span class="fw-bold">
+          {{ itemDetail?.inYear}}
         </span>
       </div>
 
       <div class="d-flex align-items-center mb-5 col-12">
         <codx-label fiedName="awardLevelCategory" [formModel]="formModel" class="text-gray-700 label-colon col-2">
         </codx-label>
-        <span class="fw-bold" [innerHTML]="itemDetail?.awardLevelCategory | formatvalue : formModel : 'awardLevelCategory'| async">
+        <span class="fw-bold"
+          [innerHTML]="itemDetail?.awardLevelCategory | formatvalue : formModel : 'awardLevelCategory'| async">
         </span>
       </div>
 
@@ -93,8 +97,8 @@
         </codx-label>
         <span class="fw-bold" [innerHTML]="itemDetail?.awardPlace | formatvalue : formModel : 'awardPlace'| async">
         </span>
-      </div>     
-      
+      </div>
+
       <div class="d-flex align-items-center mb-5 col-12">
         <codx-label fiedName="reason" [formModel]="formModel" class="text-gray-700 label-colon col-2">
         </codx-label>

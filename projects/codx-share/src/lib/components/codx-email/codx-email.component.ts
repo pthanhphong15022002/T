@@ -908,27 +908,27 @@ export class CodxEmailComponent implements OnInit {
       this.saveSelection.restore();
       console.log(this.saveSelection);
       let html =
-        '<span codx-data="[' +
+        '<span codx-data="' +
         data?.fieldName +
-        ']">[' +
+        '">[' +
         data?.headerText +
         ']</span>';
       if (data.data.referedType == '2') {
         html =
-          '<span codx-data="[' +
+          '<span codx-data="' +
           data?.fieldName +
           '|vll:' +
           data?.data?.referedValue +
-          ']">[' +
+          '">[' +
           data?.headerText +
           ']</span>';
       } else if (data.data.referedType == '3') {
         html =
-          '<span codx-data="[' +
+          '<span codx-data="' +
           data?.fieldName +
           '|cbx:' +
           data?.data?.referedValue +
-          ']">[' +
+          '">[' +
           data?.headerText +
           ']</span>';
       }

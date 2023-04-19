@@ -105,15 +105,15 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
-      // {
-      //   type: ViewType.list,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template: this.templateList,
-      //     headerTemplate: this.headerTemplate,
-      //   },
-      // },
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
       {
         type: ViewType.listdetail,
         sameData: true,

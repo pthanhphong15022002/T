@@ -69,6 +69,7 @@ export class CodxApproveStepsComponent
   @Input() data: any = {}; // object category
 
   model: any;
+  isRequestListStep = false ; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
 
   constructor(
     private cfService: CallFuncService,
@@ -84,10 +85,10 @@ export class CodxApproveStepsComponent
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.data = dialogData?.data.data;
-
       console.log(this.data);
 
       this.dialogApproval = dialog;
+      this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -172,7 +173,13 @@ export class CodxApproveStepsComponent
         this.model.patchValue({ countStep: this.lstStep.length });
       }
       this.updateApprovalStep();
-      this.dialogApproval && this.dialogApproval.close(true);
+      // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023
+      if(this.isRequestListStep){
+        this.dialogApproval && this.dialogApproval.close(this.lstStep);
+      }else{
+        this.dialogApproval && this.dialogApproval.close(true);
+      }
+      
     }
   }
 
