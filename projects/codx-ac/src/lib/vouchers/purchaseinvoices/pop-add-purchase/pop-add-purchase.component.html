@@ -425,99 +425,59 @@
       [allowTextWrap]="false"></codx-gridview-v2>
   </div>
   <ng-container *ngIf="form?.formGroup && modegrid == 2 && gridViewLines">
-    <div class="table-responsive mt-2"
-      style="height: 400px; border-radius: 5px;background-color: rgba(229, 229, 229, 0.67)">
-      <table id="myTable" class="table table-hover">
-        <thead style="
-            position: sticky;
-            top: 0;
-            background-color: var(--primary-active);
-            color: white;
-          ">
-          <tr>
-            <th style="
-                width: 50px;
-                white-space: nowrap;
-                padding: 10px 10px;
-              ">
-              <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmPurchaseInvoicesLines">
-              </codx-label>
-            </th>
-            <th style="
-                width: 200px;
-                white-space: nowrap;
-                padding: 10px 10px;
-              ">
-              <div class="d-flex">
-                <i style="color: white" class="icon-i-box-seam icon-18 me-2"></i>
-                <codx-label class="fw-bold" fiedName="ItemID" [formModel]="fmPurchaseInvoicesLines">
+    <div class="table-responsive mt-3">
+      <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
+        <thead>
+            <tr>
+              <th class="w-50px text-center">
+                <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
-              </div>
-            </th>
-            <th style="
-                width: 200px;
-                white-space: nowrap;
-                position: sticky;
-                top: 0;
-                padding: 10px 10px;
-              ">
-              <div class="d-flex">
-                <i style="color: white" class="icon-i-cash icon-18 me-2"></i>
-                <span class="fs-6 fw-bold">Thông tin mua hàng</span>
-              </div>
-            </th>
-            <th style="
-                width: 200px;
-                white-space: nowrap;
-                position: sticky;
-                top: 0;
-                padding: 10px 10px;
-              ">
-              <div class="d-flex">
-                <i style="color: white" class="icon-i-journal-text icon-18 me-2"></i>
-                <span class="fs-6 fw-bold">Thông tin thuế</span>
-              </div>
-            </th>
-            <th style="
-                width: 200px;
-                white-space: nowrap;
-                position: sticky;
-                top: 0;
-                padding: 10px 10px;
-              ">
-              <div class="d-flex">
-                <i style="color: white" class="icon-i-graph-up icon-18 me-2"></i>
-                <span class="fs-6 fw-bold">Thông tin phân tích</span>
-              </div>
-            </th>
-            <th style="width: 50px;" *ngIf="purchaseInvoicesLines.length > 0"></th>
-          </tr>
+              </th>
+              <th class="w-30">
+                <div class="d-flex">
+                  <i class="icon-i-box icon-16 me-2 icon-add text-gray-700"></i>
+                  <codx-label class="fw-bold" fiedName="ItemID" [formModel]="fmPurchaseInvoicesLines">
+                  </codx-label>
+                </div>
+              </th>
+              <th class="w-30">
+                <div class="d-flex">
+                  <i class="icon-list-check icon-16 me-2 text-gray-700"></i>
+                  <span class="fw-bold">Thông tin mua hàng</span>
+                </div>
+              </th>
+              <th class="w-30">
+                <div class="d-flex">
+                  <i class="icon-i-journal-text icon-16 me-2 text-gray-700"></i>
+                  <span class="fw-bold">Thông tin thuế</span>
+                </div>
+              </th>
+              <th>
+                <div class="d-flex">
+                  <i class="icon-i-graph-up icon-16 me-2 text-gray-700"></i>
+                  <span class="fw-bold">Thông tin phân tích</span>
+                </div>
+              </th>
+              <th *ngIf="purchaseInvoicesLines.length > 0" style="width: 50px"></th>
+            </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #dee2e6" *ngFor="
+        <tbody class="border-bottom" *ngFor="
             let item of purchaseInvoicesLines
               | slice : (page - 1) * pageSize : page * pageSize
           ">
           <tr>
-            <td class="fs-5" style="padding: 10px 10px">
-              <span>
-                <div style="
-                  background: var(--primary-active);
-                  width: 28px;
-                  height: 28px;
-                  align-items: center;
-                  border-radius: 50px;
-                " class="d-flex justify-content-start">
-                <span style="display: block; margin: auto; color: white" class="fs-5 fw-bold">
-                  {{ item.rowNo }}
-                </span>
-              </div>
-              </span>
+            <td class="text-center fw-bold">
+              {{ item.rowNo }}
             </td>
-            <td style="padding: 10px 10px">
-              <ng-container *ngFor="let name of itemName">
-                <span *ngIf="name.itemID == item.itemID" class="fw-bold line-clamp line-clamp-1 fs-5">
-                  {{name.itemName}}</span>
-              </ng-container>
+            <td>
+              <span #itemID class="fs-6 fw-bold" [innerHTML]="
+                        item.itemID
+                          | formatvalue
+                            : fmPurchaseInvoicesLines
+                            : 'itemID'
+                            : itemID
+                          | async
+                      "></span>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="item.idiM0 != null && item.idiM0 != ''">
                   <codx-label class="text-gray-700 label-colon"
@@ -696,12 +656,12 @@
       </table>
       <ng-container *ngIf="modegrid == 2">
         <div class="container w-90 h-90">
-          <div style="background: none;" class="list-empty card card-flush h-100">
-            <div class="d-flex flex-column flex-center justify-content-center">
-              <button style="border-radius: 49px" type="button" class="btn btn-light-primary mt-2" (click)="addRow()">
+          <div style="background: none" class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center mt-2">
+              <button type="button" class="btn btn-circle btn-light-primary" (click)="addRow()">
                 <div class="d-flex align-items-center">
-                  <i class="icon-add_box icon-18"></i>
-                  <span class="fs-6 fw-bold">Thêm dòng</span>
+                  <i class="icon-add icon-16 me-1"></i>
+                  <span>Thêm dòng</span>
                 </div>
               </button>
             </div>

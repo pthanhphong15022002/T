@@ -62,7 +62,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   detailActive = 1;
   countDetail = 0;
   pageCount: any;
-  itemName: any;
   journal: IJournal;
   purchaseinvoices: PurchaseInvoices;
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
@@ -188,15 +187,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           }
         });
     }
-
-    this.api
-      .exec('IV', 'ItemsBusiness', 'LoadAllDataAsync')
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.itemName = res;
-        }
-      });
-
     this.api
       .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
