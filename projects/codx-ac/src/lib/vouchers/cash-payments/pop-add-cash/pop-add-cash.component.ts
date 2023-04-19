@@ -118,7 +118,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.cashpayment = dialog.dataService!.dataSelected;
+    this.cashpayment = {...dialog.dataService!.dataSelected};
     var model = new CashPaymentLine();
     this.keymodel = Object.keys(model);
     this.cache
@@ -179,13 +179,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.loadTotal();
             }
           });
-      this.api
-            .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [
-              this.journalNo
-            ])
-            .subscribe((res) => {
-              this.lockFields = res[1];
-            })
+        this.api
+          .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [
+            this.journalNo,
+          ])
+          .subscribe((res) => {
+            this.lockFields = res[1];
+          });
       }
       if (this.cashpayment?.subType == '2') {
         this.acService
@@ -339,18 +339,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           break;
         case 'reasonid':
-          let idx = 0;
           let text = e?.component?.itemsSelected[0]?.ReasonName;
-          // let index = this.reason.findIndex((x) => x.field == 'reasonid');
-          // if (index > -1) {
-          //   this.reason.splice(index,1);
-          // }
-          this.setReason(field, text, idx);
-          break;
-        case 'payee':
-          idx = 2;
-          text = e.data;
-          this.setReason(field, text, idx);
+          this.setReason(field, text, 0);
           break;
         case 'objectid':
           let data = e.component.itemsSelected[0];
@@ -372,6 +362,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             }
           });
       }
+    }
+    console.log(this.dialog.dataService.dataSelected);
+  }
+
+  valuechangePayee(e: any) {
+    let text;
+    if (e.crrValue) {
+      text = e.crrValue;
+      this.setReason('payname', text, 2);
+    } else {
+      let index = this.reason.findIndex((x) => x.field == 'payname');
+      if (index > -1) {
+        this.reason.splice(index, 1);
+      }
+      this.cashpayment.memo = this.acService.setMemo(
+        this.cashpayment,
+        this.reason
+      );
+      this.form.formGroup.patchValue(this.cashpayment);
     }
   }
 
@@ -753,13 +762,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 return true;
               })
               .subscribe((res) => {
-                if (res != null) {
-                  this.acService
+                if (res.save) {
+                  if (this.cashpayment.subType === '1') {
+                    this.acService
                     .addData('AC', 'CashPaymentsLinesBusiness', 'UpdateAsync', [
                       this.cashpaymentline,
                       this.cashpaymentlineDelete,
                     ])
                     .subscribe();
+                  }
                   if (this.cashpayment.subType === '2') {
                     this.acService
                       .addData('AC', 'VoucherLineRefsBusiness', 'UpdateAsync', [
@@ -769,8 +780,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       .subscribe();
                   }
                   this.dialog.close({
-                    update:true,
-                    data : this.cashpayment
+                    update: true,
+                    data: this.cashpayment,
                   });
                   this.dt.detectChanges();
                 }
@@ -959,17 +970,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
   }
 
-  loadReason(){
+  loadReason() {
     this.api
-          .exec<any>('AC', 'CashPaymentsBusiness', 'LoadReason', [
-            this.reason,
-            this.cashpayment,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.reason = res;
-            }
-          })
+      .exec<any>('AC', 'CommonBusiness', 'LoadReason', [
+        '1',
+        this.reason,
+        this.cashpayment,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.reason = res;
+        }
+      });
   }
   //#endregion
 }

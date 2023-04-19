@@ -26,7 +26,7 @@
         <div class="col-6 p-0">
             <div class="btn-like btn-feed delay-500">
                 <div *ngIf="!data.myVoted;else myVoted">
-                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary" (dblclick)="dbLikePost(data)">
                         <span class="fw-bold text-dark">
                             <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                         </span>
@@ -39,7 +39,7 @@
                     </ng-container>
                 </div>
                 <ng-template #myVoted>
-                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <div (dblclick)="votePost(data, data.myVoteType)" class="d-flex align-items-center justify-content-center text-hover-primary">
                         <img *ngIf="dVll[data.myVoteType]?.icon"
                             src="assets/themes/wp/default/img/{{dVll[data.myVoteType]?.icon}}"
                             style="width: 18px; height: 18px">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-    <div class="isHiden border-top" [class.isShow]="data.isShowComment">
+    <div class="isHiden border-top" [class.isShow]="isShowComment">
         <codx-comments 
             [parent]="data"
             [refID]="data.recID"
@@ -76,9 +76,9 @@
                 <ng-container *ngTemplateOutlet="cmt1; context: { $implicit: cm }"></ng-container>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="pageIndex < totalPage">
+        <ng-container *ngIf="data.totalComment > 0 && !data.full">
             <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(true)">
+                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(data)">
                     <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>
@@ -87,14 +87,23 @@
 </ng-container>
 <!-- lv1 -->
 <ng-template #cmt1 let-comment1>
-    <div class="c1" [attr.dt]="setDicData(comment1)" id="{{comment1.recID}}">
-        <codx-comments 
-            [funcID]="funcID" 
-            [data]="comment1"
-            [formModel]="formModel" 
-            (evtDeleteComment)="deleteComment($event)"
-            (evtReplyTo)="replyTo($event)">
-        </codx-comments>
+    <div class="c1" [attr.dt]="setDicData(comment1)" [id]="comment1.recID">
+        <div>
+            <codx-comments 
+                [funcID]="funcID" 
+                [data]="comment1"
+                [formModel]="formModel" 
+                (evtDeleteComment)="deleteComment($event)"
+                (evtReplyTo)="replyTo($event)">
+            </codx-comments>
+        </div>
+        <ng-container *ngIf="comment1.totalComment > 0 && !comment1.full">
+            <div class="ms-16">
+                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment1)">
+                    <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
+                </span>
+            </div>
+        </ng-container>
         <ng-container *ngIf="comment1.listComment">
             <div class="ms-15" *ngFor="let item of comment1.listComment">
                 <ng-container *ngTemplateOutlet="cmt2 context: { $implicit: item }"></ng-container>
@@ -115,7 +124,7 @@
 </ng-template>
 <!-- lv2 -->
 <ng-template #cmt2 let-comment2>
-    <div class="c2" [attr.dt]="setDicData(comment2)" id="{{comment2.recID}}">
+    <div class="c2" [attr.dt]="setDicData(comment2)" [id]="comment2.recID">
         <div>
             <codx-comments 
                 [funcID]="funcID" 
@@ -126,9 +135,9 @@
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
         </div>
-        <ng-container *ngIf="comment2.totalSubComment > 0 && !comment2.isShowComment">
+        <ng-container *ngIf="comment2.totalComment > 0 && !comment2.full">
             <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="loadSubComment(comment2)">
+                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment2)">
                     <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>
@@ -149,11 +158,12 @@
                 (evtSendComment)="sendComment($event,comment2)">
             </codx-comments>
         </ng-container>
+        
     </div>
 </ng-template>
 <!-- lv3 -->
 <ng-template #cmt3 let-comment3>
-    <div [attr.dt]="setDicData(comment3)" id="{{comment3.recID}}">
+    <div class="c3" [attr.dt]="setDicData(comment3)" [id]="comment3.recID">
         <div>
             <codx-comments 
                 [funcID]="funcID" 
@@ -164,9 +174,9 @@
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
         </div>
-        <ng-container *ngIf="comment3.totalSubComment > 0 && !comment3.isShowComment">
+        <ng-container *ngIf="comment3.totalComment > 0 && !comment3.full">
             <div class="ms-16">
-                <span class="text-gray-400 text-hover-underline" (click)="loadSubComment(comment3)">
+                <span class="text-gray-400 text-hover-underline" (click)="getCommentsAsync(comment3)">
                     <codx-label [classList]="'fw-bolder'" [formModel]="formModel" name="lblReadMore" default="Xem thêm"></codx-label>
                 </span>
             </div>

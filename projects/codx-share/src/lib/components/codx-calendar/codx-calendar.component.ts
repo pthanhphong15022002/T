@@ -107,12 +107,10 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   @Output() settingValue: any;
 
   constructor(
-    private injector: Injector,
-    private change: ChangeDetectorRef,
+    injector: Injector,
     private route: ActivatedRoute,
     private codxShareSV: CodxShareService,
-    @Optional() dialogRef: DialogRef,
-    @Optional() dt: DialogData
+    @Optional() dialogRef: DialogRef
   ) {
     super(injector);
     this.dialog = dialogRef;
@@ -736,6 +734,13 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getCalendarSetting(resource, dataResourceModel) {
+    dataResourceModel.map((resource) => {
+      if (resource.transType === 'TM_MyTasks') {
+        resource.transType = 'TM_Tasks';
+        resource.title = resource.description;
+        console.log(resource);
+      }
+    });
     let a = this.calendar_setting.createComponent(CalendarCenterComponent);
     a.instance.resources = resource;
     a.instance.resourceModel = dataResourceModel;

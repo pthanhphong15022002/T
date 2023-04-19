@@ -5,6 +5,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
   DialogRef,
@@ -18,9 +20,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { ActivatedRoute } from '@angular/router';
 import { PopupEmployeeJobsalaryComponent } from './popup-employee-jobsalary/popup-employee-jobsalary.component';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-job-salary',
@@ -46,7 +46,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eContractHeaderText;
+  eJobSalaryHeader;
   eBasicSalariesFormModel: FormModel;
   currentEmpObj: any = null;
   grvSetup: any;
@@ -59,6 +59,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   dialogEditStatus: any;
   dataCategory;
   cmtStatus: string = '';
+  genderGrvSetup: any;
 
   //#region eJobSalaryFuncID
   actionAddNew = 'HRTPro04A01';
@@ -90,9 +91,16 @@ export class EmployeeJobSalaryComponent extends UIComponent {
         }
       });
 
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    }
+    //Load data field gender from database
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
+
+    // if (!this.funcID) {
+    //   this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    // }
   }
 
   ngAfterViewInit(): void {
@@ -119,7 +127,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
 
     //Get Header text when view detail
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
-      this.eContractHeaderText = res;
+      this.eJobSalaryHeader = res;
     });
   }
 
@@ -231,11 +239,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   popupUpdateEJobSalaryStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
-    console.log('data sau khi mo form', data);
-    // console.log('form model trc khi mo form', this.view.formModel);
-    // console.log('form group trc khi mo form', this.formGroup);
-    // console.log('edit object', this.editStatusObj);
-
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
@@ -248,7 +251,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      // console.log('res sau khi update status', res);
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe((res) => {});
       }
@@ -268,7 +270,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   //             this.dataCategory.processID,
   //             this.view.formModel.entityName,
   //             this.view.formModel.funcID,
-  //             '<div> Hợp đồng lao động - ' + this.itemDetail.contractNo + '</div>'
+  //             '<div> Lương chức danh - ' + this.itemDetail.contractNo + '</div>'
   //           )
   //           .subscribe((result) => {
   //             if (result?.msgCodeError == null && result?.rowCount) {
@@ -300,8 +302,8 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   //         (p) => p.Category == this.view.formModel.entityName
   //       );
   //       if (index > -1) {
-  //         let eContractsObj = parsedJSON[index];
-  //         if (eContractsObj['ApprovalRule'] == '1') {
+  //         let eJobSalaryObj = parsedJSON[index];
+  //         if (eJobSalaryObj['ApprovalRule'] == '1') {
   //           this.release();
   //         } else {
   //         }
@@ -370,7 +372,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
-  //#region  Handle detail data
+  //#region Handle detail data
   getDetailESalary(event, data) {
     if (data) {
       this.itemDetail = data;

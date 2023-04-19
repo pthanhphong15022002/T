@@ -986,7 +986,6 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     if (data.status != '1' && data.status != '2') {
       this.notificationsService.notify(
         'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
@@ -1181,8 +1180,6 @@ export class InstancesComponent
   }
 
   autoMoveStage(dataInstance) {
-    debugger;
-
     var checkTransferControl = this.process.steps.find(
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
@@ -1743,7 +1740,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_ExcelTemplates';
-    this.className = 'ExcelTemplatesBusiness';
+    this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
     });
@@ -1752,7 +1749,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_WordTemplates';
-    this.className = 'WordTemplatesBusiness';
+    this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
     });
@@ -1788,15 +1785,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
-      )
-      .subscribe((item: any) => {
+    this.codxDpService.getESCategoryByCategoryID(this.process.processNo).subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
           this.codxDpService
@@ -2073,7 +2062,6 @@ export class InstancesComponent
   getColorReason(){
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
-        debugger;
         for (let item of res.datas) {
           if (item.value === 'S') {
             this.colorReasonSuccess = item;

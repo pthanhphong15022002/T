@@ -675,17 +675,10 @@
             default="Người xét duyệt"
           >
           </codx-label>
-          <!-- <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="sharePerm(controlShare, 'followers')"
-          >
-            <i class="icon-person_add_alt_1 icon-16"></i>
-          </button> -->
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles('A')"
+            (click)="clickSettingApprove()"
           >
             <i class="icon-settings icon-16"></i>
           </button>
@@ -2162,6 +2155,7 @@
         </button>
       </div>
     </div>
+    <codx-task [stepId]="step.recID"></codx-task>
   </div>
 </ng-template>
 <!-- Popup thêm giai đoạn  -->

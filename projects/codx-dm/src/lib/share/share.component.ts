@@ -73,7 +73,7 @@ export class ShareComponent implements OnInit {
   isShare = true;
   requestTitle = '';
   ownerID :any;
-  toPermission: Permission[];
+  toPermission: Permission[] = [];
   byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
@@ -141,7 +141,7 @@ export class ShareComponent implements OnInit {
         o.id = f[0].objectID;
         this.ownerID = [o];
         o.objectID = f[0].objectID;
-        this.byPermission.push(o);
+        this.toPermission.push(o);
         
       }
     }
@@ -172,6 +172,7 @@ export class ShareComponent implements OnInit {
   }
 
   onSaveRole($event, type: string) { 
+    debugger
    // console.log($event);
     var list = [];
     if ($event.data) {
@@ -179,7 +180,7 @@ export class ShareComponent implements OnInit {
       for(var i=0; i<data.length; i++) {
         var item = data[i];
         var perm = new Permission;
-        if(type == "by" && data[i].objectType == "1")
+        if(type == "to" && data[i].objectType == "1")
         {
           var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
           perm.objectID = o[0].objectID;
@@ -263,16 +264,15 @@ export class ShareComponent implements OnInit {
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
 
     if (!this.isShare && this.requestTitle === '') {  
       this.errorshow = true;
-      this.changeDetectorRef.detectChanges();
       return;
     }
-    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
+    
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;

@@ -2,7 +2,7 @@
   #view
   [funcID]="funcID"
   service="HR"
-  assemblyName="HR"
+  assemblyName="ERM.Business.HR"
   entityName="HR_EJobSalaries"
   className="EJobSalariesBusiness"
   [method]="method"
@@ -51,12 +51,12 @@
           >
           </codx-img>
           <codx-vll
-            class="me-2 badge badge-sm"
-            [name]="'HR001'"
+            class="badge badge-sm"
+            [name]="genderGrvSetup?.referedValue"
             [value]="data?.emp?.gender"
-            [showText]="false"
-            [showIcon]="true"
-            [showBgColor]="true"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="false"
           >
           </codx-vll>
         </div>
@@ -121,7 +121,7 @@
             <div class="align-self-center fw-bold">
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.effectedDate?.headerText"
               >
@@ -130,7 +130,7 @@
               <span> - </span>
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['ExpiredDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['ExpiredDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.expiredDate?.headerText"
               >
@@ -148,30 +148,32 @@
           <span class="icon-event_notes icon-15 me-1"></span>
           <div class="align-self-center fw-bold d-flex align-items-center">
             <span
-              [title]="
-                eContractHeaderText ? eContractHeaderText['DecisionNo'] : ''
-              "
+              [title]="eJobSalaryHeader ? eJobSalaryHeader['DecisionNo'] : ''"
             >
               {{ data?.decisionNo }}
             </span>
             <span class="p-dot mx-1"> ⚫ </span>
             <span
-              [title]="
-                eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
-              "
+              [title]="eJobSalaryHeader ? eJobSalaryHeader['SignedDate'] : ''"
             >
               {{ data?.signedDate | fmDT }}</span
             >
           </div>
         </div>
         <div class="d-flex flex-row">
-          <div>
-            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+          <div class="me-2">
+            <codx-attachment-temp
+              [objectID]="data?.recID"
+              [formModel]="view.formModel"
+            >
+            </codx-attachment-temp>
+
+            <!-- <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
               <i class="icon-attach_file text-primary icon-15"></i>
               <div class="align-self-center notification-count me-4">
                 {{ data?.attachments }}
               </div>
-            </div>
+            </div> -->
           </div>
           <codx-vll
             [formModel]="view.formModel"
@@ -183,44 +185,9 @@
           >
           </codx-vll>
         </div>
-      </div>
-      <!-- <codx-attachment
-      #attachment
-      [objectType]="dialog.formModel.entityName"
-      [objectId]="master?.iterationID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      referType="source"
-      [formModel]="dialog.formModel"
-      [functionID]="funcID"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="full"        
-      showMessage="0"
-    >
-    </codx-attachment> -->
-      <codx-attachment
-        #attachment
-        [objectId]="data?.recID"
-        [objectType]="view.formModel.entityName"
-        hideFolder="1"
-        hideImageUpload="0"
-        hideImageThumb="0"
-        hideUploadBtn="1"
-        hideDes="1"
-        type="inline"
-        allowMultiFile="1"
-        [formModel]="view.formModel"
-        displayThumb="full"
-        showMessage="0"
-      >
-      </codx-attachment>
+      </div> 
     </div>
+
     <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
@@ -337,18 +304,27 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
+  <codx-vll
+    class="badge badge-sm p-gender"
+    [name]="genderGrvSetup?.referedValue"
+    [value]="data?.emp?.gender"
+    [showText]="true"
+    [showIcon]="false"
+    [showBgColor]="false"
+  >
+  </codx-vll>
   <ng-template #titleTmp let-data>
     <div class="w-100">
       <div class="justify-content-between">
-        <codx-vll
+        <!-- <codx-vll
           class="badge badge-sm"
-          [name]="'HR001'"
+          [name]="genderGrvSetup?.referedValue"
           [value]="data?.emp?.gender"
-          [showText]="false"
-          [showIcon]="true"
-          [showBgColor]="true"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="false"
         >
-        </codx-vll>
+        </codx-vll> -->
         <span>
           {{ data?.emp?.employeeName }}
         </span>
@@ -401,7 +377,7 @@
             <div class="align-self-center fw-bold">
               <span
                 [title]="
-                  eContractHeaderText ? eContractHeaderText['EffectedDate'] : ''
+                  eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.effectedDate?.headerText"
               >
@@ -444,7 +420,7 @@
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [view]="view"
-    [formModel] = "view.formModel"
+    [formModel]="view.formModel"
     (uploaded)="getDetailESalary($event, data)"
     (clickMFunction)="clickEvent($event, data)"
   >
