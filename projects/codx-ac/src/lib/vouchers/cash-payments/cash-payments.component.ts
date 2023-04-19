@@ -202,7 +202,7 @@ export class CashPaymentsComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+      .edit({...this.view.dataService.dataSelected})
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
@@ -343,7 +343,6 @@ export class CashPaymentsComponent extends UIComponent {
         bm[i].disabled = true;
       }
     }
-    this.loadDatadetail(this.itemSelected);
   }
 
   changeItemDetail(event) {
