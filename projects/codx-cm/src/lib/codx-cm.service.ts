@@ -69,6 +69,14 @@ export class CodxCmService {
       [contact, funcID, recIDCrm, isDelete]
     );
   }
+  getStepInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsByInstanceIDAsync',
+      data
+    );
+  }
 
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
