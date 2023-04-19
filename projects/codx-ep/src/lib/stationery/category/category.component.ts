@@ -221,7 +221,6 @@ export class StationeryCategoryComponent
 
   edit(data?) {
     if (data) {
-      data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
 

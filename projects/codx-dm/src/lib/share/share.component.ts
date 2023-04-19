@@ -271,7 +271,7 @@ export class ShareComponent implements OnInit {
       this.errorshow = true;
       return;
     }
-    debugger
+    
     if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;

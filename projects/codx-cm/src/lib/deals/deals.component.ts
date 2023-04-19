@@ -1,16 +1,15 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ButtonModel, CacheService, FormModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CmcustomerDetailComponent } from '../cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
+import { UIComponent, ViewModel, ButtonModel, FormModel, CacheService, ViewType, SidebarModel } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
-import { PopupAddOpportunityComponent } from './popup-add-opportunity/popup-add-opportunity.component';
+import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 
 @Component({
-  selector: 'lib-opportunity',
-  templateUrl: './opportunity.component.html',
-  styleUrls: ['./opportunity.component.scss']
+  selector: 'lib-deals',
+  templateUrl: './deals.component.html',
+  styleUrls: ['./deals.component.scss']
 })
-export class OpportunityComponent extends UIComponent
+export class DealsComponent extends UIComponent
 implements OnInit, AfterViewInit {
 
   // extension core
@@ -48,7 +47,7 @@ implements OnInit, AfterViewInit {
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('opportunityDetail') opportunityDetail: OpportunityComponent;
+  @ViewChild('dealsComponent') dealsComponent: DealsComponent;
   @ViewChild('itemContactName', { static: true })
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
@@ -349,7 +348,7 @@ implements OnInit, AfterViewInit {
       titleAction:  action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội'
     };
     var dialogCustomField = this.callfc.openSide(
-      PopupAddOpportunityComponent,
+      PopupAddDealComponent,
       obj,
       option
     );
@@ -433,3 +432,4 @@ implements OnInit, AfterViewInit {
   //#endregion
 
 }
+
