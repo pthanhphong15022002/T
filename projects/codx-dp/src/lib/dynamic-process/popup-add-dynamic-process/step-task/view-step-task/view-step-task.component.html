@@ -338,17 +338,25 @@
 </ng-template>
 <ng-template #comment>
   <div>
-    <codx-comment-temp [objectID]="dataInput['recID']"></codx-comment-temp>
+    <codx-comment-temp [objectID]="dataInput['recID']" [viewType]="'3'" [openViewPopup]="false"></codx-comment-temp>
   </div>
 </ng-template>
 <ng-template #attachments>
-  <div>
-    <codx-history
-      #history
-      [objectID]="dataInput['recID']"
-      [formModel]="form.formModel"
-    ></codx-history>
-  </div>
+  <codx-attachment
+    #attachment
+    [objectId]="dataInput['recID']"
+    hideFolder="1"
+    hideImageUpload="0"
+    hideImageThumb="0"
+    hideUploadBtn="1"
+    hideDes="1"
+    type="block"
+    allowMultiFile="1"
+    displayThumb="full"
+    showMessage="0"
+    [dataSelected]="dataInput['recID']"
+  >
+  </codx-attachment>
 </ng-template>
 
 <!-- End Form Group -->
