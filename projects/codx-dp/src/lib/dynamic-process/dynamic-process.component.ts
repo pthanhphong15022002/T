@@ -878,20 +878,14 @@ export class DynamicProcessComponent
   }
   //setting trình kí
   settingSubmit(categoryID) {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        categoryID
-      )
+    this.codxDpService
+      .getESCategoryByCategoryID(categoryID)
       .subscribe((item: any) => {
         if (item) {
           this.cache.functionList('ESS22').subscribe((f) => {
             if (f) {
               if (!f || !f.gridViewName || !f.formName) return;
-               this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+              this.cache.gridView(f.gridViewName).subscribe((gridview) => {
                 this.cache
                   .gridViewSetup(f.formName, f.gridViewName)
                   .subscribe((grvSetup) => {
@@ -913,7 +907,7 @@ export class DynamicProcessComponent
                         data: item,
                         isAdd: false,
                         headerText: this.titleAction,
-                        dataType : 'auto'
+                        dataType: 'auto',
                       },
                       option
                     );

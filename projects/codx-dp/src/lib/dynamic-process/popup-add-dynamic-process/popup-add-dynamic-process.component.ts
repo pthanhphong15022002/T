@@ -59,6 +59,7 @@ import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-d
 import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
+import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -264,6 +265,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dataWord = [];
   active = '1';
   exportGroup: FormGroup;
+  recIDCategory = ''; //recID khi sinh categoryES
   //end data Test
   isShowstage = true;
   titleAdd = '';
@@ -291,7 +293,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private dpService: CodxDpService,
-    private CodxDpService: CodxDpService,
     private authStore: AuthStore,
     private formBuilder: FormBuilder,
     @Optional() dialog: DialogRef,
@@ -369,7 +370,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefaultCF = fun.customName || fun.description;
     });
-  
+
     this.getGrvStep();
     this.getGrvStepReason();
     this.getValListDayoff();
@@ -502,17 +503,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
-      data = [this.process];
+      data = [this.process, this.recIDCategory];
     } else {
       op.methodName = 'UpdateProcessAsync';
       const listStepDrop = this.convertListStepDrop();
       data = [
         this.process,
+        this.recIDCategory,
         this.listStepAdd || [],
         this.listStepEdit || [],
         this.listStepDelete || [],
         listStepDrop || [],
-        this.lstTmp,
+        this.lstTmp
       ];
     }
     op.data = data;
@@ -540,7 +542,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.imageAvatar.clearData();
         if (res) {
           this.dialog.close(res.save);
-        } else this.dialog.close();
+        } else {
+          this.dialog.close();
+          //xoa Aprover
+          if (this.recIDCategory) {
+            this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+          }
+        }
       });
   }
 
@@ -643,6 +651,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.dpService
               .deleteFileTask([this.listFileTask])
               .subscribe((rec) => {});
+          }
+          if (this.action == 'add' || this.action == 'copy') {
+            //xoa Aprover
+            if (this.recIDCategory) {
+              this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+            }
           }
           this.dialog.close();
         } else return;
@@ -1387,6 +1401,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //end
+  //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Popup setiing autoNumber - Thao lam dung sua Please
   openAutoNumPopup() {
@@ -1535,11 +1550,51 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
   }
-  //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
+  //Gửi duyệt
+  async clickSettingApprove() {
+    let category;
+    if (this.action == 'edit')
+      category = await firstValueFrom(
+        this.dpService.getESCategoryByCategoryID(this.process.processNo)
+      );
+    if (category) {
+      this.actionOpenFormApprove(category.recID);
+    } else {
+      let transID = Util.uid();
+      this.actionOpenFormApprove(transID);
+    }
+  }
+  actionOpenFormApprove(transID) {
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    // var category = this.categories[value];
+    // if (!category) return;
+    let data = {
+      transID: transID,
+      type: '0',
+    };
+
+    let popupApprover = this.callfc.openForm(
+      CodxApproveStepsComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      data,
+      '',
+      dialogModel
+    );
+    popupApprover.closed.subscribe((res) => {
+      if (res?.event) {
+        this.recIDCategory = transID;
+      } else this.recIDCategory = '';
+    });
+  }
   //Bieu mau
   clickViewTemp(temp) {}
   onScroll(e: any) {}
+
   navChanged(e: any) {
     switch (e?.nextId) {
       case '1': {
@@ -3611,7 +3666,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getListStepByProcessIDCopy(oldProccesID, newProccessID, valueListStr) {
     var data = [oldProccesID, newProccessID, valueListStr];
 
-    this.CodxDpService.getListStepByIdProccessCopy(data).subscribe((data) => {
+    this.dpService.getListStepByIdProccessCopy(data).subscribe((data) => {
       if (data) {
         var res = data[0];
         var listObjectId = data[1];
