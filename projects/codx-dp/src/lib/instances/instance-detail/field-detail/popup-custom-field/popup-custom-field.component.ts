@@ -121,8 +121,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isSaving = true;
     var data = [this.fiels[0]?.stepID, this.fiels];
     this.dpService.updateFiels(data).subscribe((res) => {
-      if (res) this.dialog.close(this.fiels);
-      else this.dialog.close();
+      if (res) {
+        this.dialog.close(this.fiels);
+        this.notiService.alertCode('SYS007');
+      } else this.dialog.close();
     });
   }
 }

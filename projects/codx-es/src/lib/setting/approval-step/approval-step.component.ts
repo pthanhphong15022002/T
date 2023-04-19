@@ -330,11 +330,14 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       }
     });
 
-    this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
-      console.log('result delete aaappppp', res);
-      if (res == true) {
-        this.addEditItem.emit(true);
-      }
-    });
+    if(this.lstDeleteStep?.length>0){
+      this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
+        console.log('result delete aaappppp', res);
+        if (res == true) {
+          this.addEditItem.emit(true);
+        }
+      });
+    }
+   
   }
 }
