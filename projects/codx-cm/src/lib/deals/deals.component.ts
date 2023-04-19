@@ -23,11 +23,11 @@ implements OnInit, AfterViewInit {
   kanban: any;
 
   // config api get data
-  service = 'DP';
-  assemblyName = 'ERM.Business.DP';
-  entityName = 'DP_Processes';
-  className = 'ProcessesBusiness';
-  method = 'GetListProcessesAsync';
+  service = 'CM';
+  assemblyName = 'ERM.Business.CM';
+  entityName = 'CM_Deals';
+  className = 'DealsBusiness';
+  method = 'GetListDealsAsync';
   idField = 'recID';
 
   @Input() showButtonAdd = false;
@@ -310,7 +310,7 @@ implements OnInit, AfterViewInit {
     switch(this.funcID) {
       case 'CM0201': {
          //statements;
-         this.addOpportunity();
+         this.addDeal();
          break;
       }
     default: {
@@ -320,7 +320,7 @@ implements OnInit, AfterViewInit {
    }
   }
 
-  addOpportunity(){
+  addDeal(){
     this.view.dataService.addNew().subscribe((res) => {
       // const funcIDApplyFor = this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       // const applyFor = this.process.applyFor;
@@ -335,12 +335,12 @@ implements OnInit, AfterViewInit {
       // formMD.gridViewName = fun.gridViewName;
       option.Width =  '800px';
       option.zIndex = 1001;
-      this.openFormOpportunity( formMD, option, 'add');
+      this.openFormDeal( formMD, option, 'add');
 
     });
   }
 
-  openFormOpportunity(formMD, option, action) {
+  openFormDeal(formMD, option, action) {
 
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
