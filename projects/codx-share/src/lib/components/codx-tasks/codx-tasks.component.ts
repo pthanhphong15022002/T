@@ -259,7 +259,8 @@ export class CodxTasksComponent
       this.funcID != 'MWP0063' &&
       this.funcID != 'MWP0064' &&
       this.funcID != 'TMT0402' &&
-      this.funcID != 'TMT0403';
+      this.funcID != 'TMT0403' &&
+      this.funcID != 'OMT014';
 
     this.showMoreFunc = this.funcID != 'TMT0206' && this.funcID != 'MWP0063';
 

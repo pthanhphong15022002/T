@@ -81,7 +81,6 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // add mesage
     this.signalRSV.chat.subscribe((res: any) => {
-      debugger
       if (res?.mssg){
         let mssg = res.mssg;
         let data = this.codxListView.dataService.data;

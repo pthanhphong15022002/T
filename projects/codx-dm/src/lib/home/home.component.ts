@@ -427,9 +427,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     //Thay đổi tên Folder
     this.dmSV.isNodeChange.subscribe((res) => {
       if (res) {
+        
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree != null) tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
+        var index  = this.data.findIndex((x) => x.recID == res.recID);
+        if(index >= 0)
+        {
+          this.data[index] = res;
+        }
       }
     });
 
@@ -453,6 +459,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if(index >= 0)
         {
           this.data[index] = res;
+          this.detectorRef.detectChanges();
         }
       }
     })

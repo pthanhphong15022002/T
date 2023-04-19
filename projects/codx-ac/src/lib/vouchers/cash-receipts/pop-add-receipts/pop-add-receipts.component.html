@@ -77,7 +77,7 @@
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
-            <div class="col-6">
+            <div class="col-5">
               <!-- Sổ quỹ tiền mặt -->
               <div class="form-group">
                 <span *ngIf="vllCashbook" class="fw-bold codx-label required">{{vllCashbook.text}}&nbsp;</span>
@@ -86,7 +86,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-3 ps-0">
               <!-- Số tiền -->
               <div class="form-group">
                 <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
@@ -210,14 +210,14 @@
               <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmCashReceiptsLines">
               </codx-label>
             </th>
-            <th class="w-20">
+            <th>
               <div class="d-flex">
                 <i class="icon-brush icon-16 me-2 icon-add text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Note" [formModel]="fmCashReceiptsLines">
                 </codx-label>
               </div>
             </th>
-            <th class="w-150px">
+            <th class="w-200px">
               <div class="d-flex">
                 <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Dr" [formModel]="fmCashReceiptsLines">
@@ -262,7 +262,7 @@
               </div>
             </td>
             <td>
-              <span *ngIf="item.dr != null && item.dr != ''" class="fw-bold line-clamp line-clamp-1">{{
+              <span *ngIf="item.dr != null && item.dr != ''" class="fw-bold fs-6 text-dark">{{
                 item.dr.toLocaleString("it-IT") }}</span>
             </td>
             <td>
