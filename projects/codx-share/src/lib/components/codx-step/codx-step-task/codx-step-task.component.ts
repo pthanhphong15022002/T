@@ -1,15 +1,15 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
-import { CodxDpService } from 'projects/codx-dp/src/public-api';
+
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'codx-task',
-  templateUrl: './codx-task.component.html',
-  styleUrls: ['./codx-task.component.scss']
+  selector: 'codx-step-task',
+  templateUrl: './codx-step-task.component.html',
+  styleUrls: ['./codx-step-task.component.scss']
 })
-export class CodxTaskComponent implements OnInit, OnChanges {
+export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() stepId: any;
   @Input() dataSources: any;
@@ -44,7 +44,7 @@ export class CodxTaskComponent implements OnInit, OnChanges {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-    private dpService: CodxDpService,
+  
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
   ) {
