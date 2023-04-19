@@ -450,8 +450,6 @@ import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.compone
 import { ScrollSpyDirective } from './scroll-spy.directive';
 import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewContractDetailComponent } from './employee-contract/view-contracts-detail/view-contracts-detail.component';
-import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
-import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { EmployeeBasicSalaryComponent } from './employee-basic-salary/employee-basic-salary.component';
 import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-salary.component';
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
@@ -462,10 +460,8 @@ import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess
 import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
 import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/view-award-detail.component';
+import { TestComponent } from './test/test.component';
 export const routes: Routes = [
-  {
-    path: '',
-    children: [
       {
         path: '',
         component: LayoutNoAsideComponent,
@@ -488,6 +484,11 @@ export const routes: Routes = [
             path: 'empinfosub/:funcID',
             component: EmployeeInfomationComponent,
           },
+          {
+            path: 'employeedetail/:funcID',
+            //component: EmployeeProfileComponent,
+            component: EmployeeDetailComponent,
+          },
         ],
       },
       
@@ -505,17 +506,6 @@ export const routes: Routes = [
       //     },
       //   ]
       // },
-      {
-        path: '',
-        component: LayoutOnlyHeaderComponent,
-        children: [
-          {
-            path: 'employeedetail/:funcID',
-            //component: EmployeeProfileComponent,
-            component: EmployeeDetailComponent,
-          },
-        ],
-      },
       {
         path: '',
         component: LayoutComponent,
@@ -642,13 +632,10 @@ export const routes: Routes = [
           },
         ],
       },
-    ],
-  },
 ];
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  ApprovalHrComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
@@ -731,6 +718,7 @@ const T_Component: Type<any>[] = [
   ViewDetailEjobsalaryComponent,
   EmployeeAwardsComponent,
   ViewAwardDetailComponent,
+  TestComponent
 ];
 @NgModule({
   imports: [

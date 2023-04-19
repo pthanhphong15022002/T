@@ -31,6 +31,8 @@ import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Pos } from '@syncfusion/ej2-angular-progressbar';
+import { Post } from '@shared/models/post';
 
 @Component({
   selector: 'lib-add-user',
@@ -71,7 +73,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formUser: FormGroup;
   checkValueChangeUG = false;
   dataUG: any = new Array();
-  tmpPost: any;
+  tmpPost: any = null;
   dataCopy: any;
   dataComment: any;
   contentComment: any;
@@ -391,15 +393,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
       positionName
     );
     /*Binding dữ liệu vào html*/
+    let permission = {
+      memberType : "2",
+      objectID : "",
+      objectName: "",
+      objectType : "9"
+    }
+    let lstPermission = [];
+    lstPermission.push(permission);
     this.tmpPost = {
       contents: HTMLParse,
-      approveControl: '0',
       category: '1',
       shareControl: '9',
-      listTag: [],
+      attachments : 0,
+      medias: 0,
       createdOn: new Date(),
       createdBy: 'CODXADMIN',
       createdName: 'CoDX Administrator',
+      permissions : lstPermission
     };
   }
 
