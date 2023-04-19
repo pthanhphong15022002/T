@@ -88,7 +88,7 @@
             <div class="form-group">
               <!-- Sổ quỹ tiền mặt -->
               <div class="form-group">
-                <span *ngIf="vllCashbook" class="fw-bold fs-6">{{vllCashbook.text}}</span>
+                <span *ngIf="vllCashbook" class="fw-bold codx-label required">{{vllCashbook.text}}&nbsp;</span>
                 <codx-input #cashBook [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
                   (valueChange)="valueChange($event)">
                 </codx-input>
@@ -139,7 +139,7 @@
                 <codx-label fiedName="Payee" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
-                  (valueChange)="valueChange($event)"></codx-input>
+                  (controlBlur)="valuechangePayee($event)"></codx-input>
               </div>
             </div>
           </div>
@@ -394,8 +394,8 @@
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
   <div class="h-100" *ngIf="cashpayment.subType === '2'">
-    <codx-gridview-v2 #gridVoucherLineRefs formName="VoucherLineRefs" gridViewName="grvVoucherLineRefs"
-      entityName="AC_VoucherLineRefs" [templateMore]="morefunction" [editSettings]="editSettings"
+    <codx-gridview-v2 #gridVoucherLineRefs formName="SettledInvoices" gridViewName="grvSettledInvoices"
+      entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [height]="gridHeight"
       [autoLoad]="false" rowHeight="40" (cellChanged)="voucherLineRefsChanged($event)"
       (created)="gridCreated($event, gridVoucherLineRefs)"></codx-gridview-v2>
