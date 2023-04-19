@@ -34,6 +34,7 @@ export class FieldDetailComponent implements OnInit {
   @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
   @Output() actionSaveCF = new EventEmitter<any>();
+  @Output() saveDataStep = new EventEmitter<any>();
 
   viewsCrr: any;
   currentRate = 0;
@@ -142,14 +143,16 @@ export class FieldDetailComponent implements OnInit {
     );
     dialogFields.closed.subscribe((e) => {
       if (e && e?.event) {
-        var fields = e?.event;
+        var fields = e?.event;       
         fields.forEach((obj) => {
           var idx = this.dataStep.fields.findIndex((x) => x.recID == obj.recID);
           if (idx != -1) this.dataStep.fields[idx].dataValue = obj.dataValue;
         });
+        this.saveDataStep.emit(this.dataStep)
       }
     });
   }
+
 
   partNum(num): number {
     return Number.parseInt(num);

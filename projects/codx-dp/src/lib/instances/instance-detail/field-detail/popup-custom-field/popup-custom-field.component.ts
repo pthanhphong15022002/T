@@ -121,7 +121,6 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isSaving = true;
     var data = [this.fiels[0]?.stepID, this.fiels];
     this.dpService.updateFiels(data).subscribe((res) => {
-      debugger;
       if (res) this.dialog.close(this.fiels);
       else this.dialog.close();
     });

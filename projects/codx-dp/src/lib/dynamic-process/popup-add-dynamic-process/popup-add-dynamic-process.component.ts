@@ -1600,6 +1600,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
+        if(!this.isChange)this.isChange=true ;
         this.getUserByApproverStep(res?.event);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
@@ -1611,12 +1612,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       listStepApprover.forEach((x) => {
         listAppover = listAppover.concat(x.approvers);
         //list add new cân xóa
-        if (this.listStepAproverOld.some((st) => st.recID == x.recID)) {
+        if (!this.listStepAproverOld.some((st) => st.recID == x.recID)) {
           this.listStepAproveRemove.push(x);
         }
       });
       //Hoi khanh xu ly thế nào
       console.log(listAppover);
+      console.log(this.listStepAproveRemove);
     }
   }
   loadListApproverStep() {
