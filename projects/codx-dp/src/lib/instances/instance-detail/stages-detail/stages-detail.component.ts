@@ -586,11 +586,27 @@ export class StagesDetailComponent implements OnInit {
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: value,
         listValue: listTaskConvert,
         step: this.dataStep,
-      });
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: value,
+      //   listValue: listTaskConvert,
+      //   step: this.dataStep,
+      // });
     }
   }
 

@@ -166,11 +166,11 @@
               </div>
             </div>
             <div style="margin-right: -11px; margin-top: -5px">
-              <codx-update-progress
+              <!-- <codx-update-progress
                 [progress]="progress"
                 [isUpdate]="false"
-                [typeProgress]="2"
-              ></codx-update-progress>
+                [typeProgress]="3"
+              ></codx-update-progress> -->
             </div>
           </div>
         </div>
@@ -303,6 +303,8 @@
         [objectID]="dataSelect.recID"
         [funcID]="formModel.funcID"
         [dataTree]="treeTask"
+        [transID]="dataSelect.recID"
+        [approveStatus]="dataSelect.approveStatus"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
