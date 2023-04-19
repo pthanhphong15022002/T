@@ -1,0 +1,443 @@
+<ng-container *ngIf="dataSelected?.recID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelected"
+    [hideMF]="false"
+    [footer]="tabs"
+    (clickMF)="clickMF($event, dataSelected)"
+  >
+    <ng-template #header let-data>
+      <div class="container_detail mt-3">
+        <div class="d-flex flex-grow-1 mb-4">
+          <div class="me-3">
+            <codx-img
+              [objectId]="dataSelected.recID"
+              [objectName]="getNameCrm(dataSelected)"
+              [referType]="'avt'"
+              [imgOn]="dataSelected?.modifiedOn"
+              [objectType]="entityName"
+              [width]="35"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  {{
+                    funcID == "CM0101"
+                      ? dataSelected.customerName
+                      : funcID == "CM0102"
+                      ? dataSelected.contactName
+                      : funcID == "CM0103"
+                      ? dataSelected.partnerName
+                      : dataSelected.competitorName
+                  }}
+                </div>
+                <div
+                  class="d-flex align-items-start me-4 mb-1"
+                  *ngIf="funcID == 'CM0102'"
+                >
+                  <div class="me-3" *ngIf="dataSelected?.mobile">
+                    <span
+                      [ngClass]="
+                        dataSelected?.allowCall
+                          ? 'icon-phone_android text-primary'
+                          : 'icon-phonelink_erase'
+                      "
+                      class="icon-16 me-1"
+                    ></span>
+                    <span
+                      [ngClass]="dataSelected?.allowCall ? 'text-primary' : ''"
+                      class="text-gray-900"
+                      >{{ dataSelected?.mobile }}</span
+                    >
+                  </div>
+                  <div *ngIf="dataSelected?.personalEmail">
+                    <span
+                      [ngClass]="
+                        dataSelected?.allowEmail
+                          ? 'icon-email text-primary'
+                          : 'icon-print_disabled'
+                      "
+                      class="icon-16 me-1 text-gray-900"
+                    ></span>
+                    <span
+                      [ngClass]="dataSelected?.allowEmail ? 'text-primary' : ''"
+                      class="text-gray-900"
+                      >{{ dataSelected?.personalEmail }}</span
+                    >
+                  </div>
+                </div>
+                <div class="me-4 mb-1">
+                  <span
+                    class="icon-location_on icon-16 me-1 text-gray-700"
+                  ></span>
+                  <span class="text-gray-900"
+                    >Xã phú mậu, thành phố Huế, Thừa thiên Huế</span
+                  >
+                </div>
+              </div>
+              <div
+                class="d-flex flex-column align-items-start"
+                *ngIf="dataSelected?.industries"
+              >
+                <codx-tag
+                  [entityName]="entityName"
+                  [disabled]="true"
+                  [isEdit]="false"
+                  [value]="dataSelected?.industries"
+                >
+                </codx-tag>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="funcID != 'CM0104' && contactPerson != null"
+          [ngClass]="
+            funcID == 'CM0101' || funcID == 'CM0103'
+              ? 'd-flex align-items-start'
+              : ''
+          "
+        >
+          <div class="d-flex">
+            <div
+              class="me-3"
+              style="white-space: nowrap"
+              *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+            >
+              <codx-label
+                class="text-dark"
+                fiedName="Memo"
+                [formModel]="formModel"
+                default="Liên hệ: "
+              ></codx-label>
+            </div>
+            <div class="d-flex flex-grow-1 mb-4">
+              <div class="me-3">
+                <codx-img
+                  [objectId]="contactPerson.recID"
+                  [objectName]="contactPerson.contactName"
+                  [imgOn]="contactPerson?.modifiedOn"
+                  [objectType]="'CM_Contacts'"
+                  [width]="35"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column flex-grow-1">
+                <div
+                  [ngClass]="
+                    funcID == 'CM0102'
+                      ? 'd-flex
+                  justify-content-between'
+                      : ''
+                  "
+                >
+                  <div class="d-flex flex-column">
+                    <div
+                      class="fw-bold fs-6 text-dark codx-text-overflow-1line"
+                    >
+                      {{ contactPerson?.contactName }}
+                    </div>
+                    <div class="d-flex align-items-start me-4 mb-1">
+                      <div class="me-3" *ngIf="contactPerson?.mobile">
+                        <span
+                          [ngClass]="
+                            contactPerson.allowCall
+                              ? 'icon-phone_android text-primary'
+                              : 'icon-phonelink_erase'
+                          "
+                          class="icon-16 me-1"
+                        ></span>
+                        <span
+                          [ngClass]="
+                            contactPerson.allowCall ? 'text-primary' : ''
+                          "
+                          class="text-gray-900"
+                          >{{ contactPerson?.mobile }}</span
+                        >
+                      </div>
+                      <div *ngIf="contactPerson?.personalEmail">
+                        <span
+                          [ngClass]="
+                            contactPerson.allowEmail
+                              ? 'icon-email text-primary'
+                              : 'icon-print_disabled'
+                          "
+                          class="icon-16 me-1 text-gray-900"
+                        ></span>
+                        <span
+                          [ngClass]="
+                            contactPerson.allowEmail ? 'text-primary' : ''
+                          "
+                          class="text-gray-900"
+                          >{{ contactPerson.personalEmail }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body let-data>
+      <div class="instance-select">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="name" class="nav nav-tabs">
+          <ng-container *ngFor="let item of tabDetail; let i = index">
+            <li [ngbNavItem]="item.name" class="nav-item">
+              <a ngbNavLink class="nav-link">
+                <div class="d-flex align-item-center">
+                  <i
+                    [ngClass]="
+                      item.icon +
+                      ' ' +
+                      (item.name == name ? 'text-primary' : '')
+                    "
+                    class="me-2"
+                  ></i
+                  ><span>
+                    <codx-label
+                      [name]="'tab' + item.name"
+                      [formModel]="'SYS'"
+                      [default]="item.textDefault"
+                    >
+                    </codx-label>
+                  </span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <ng-container
+                  *ngTemplateOutlet="tabIns; context: { $implicit: item.name }"
+                >
+                </ng-container>
+              </ng-template>
+            </li>
+          </ng-container>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="py-5"></div>
+      </div>
+      <ng-template #tabIns let-name>
+        <div id="viewModeDetail" class="view-step-box">
+          <ng-container *ngIf="name == 'Information'">
+            <codx-information
+              [funcID]="funcID"
+              [dataSelected]="dataSelected"
+              [formModel]="formModel"
+            >
+            </codx-information>
+          </ng-container>
+          <ng-container *ngIf="name == 'Contact'">
+            <div
+              class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2"
+            >
+              <button
+                type="button"
+                class="btn btn-clean btn-sm btn-icon btn-icon-md"
+                (click)="clickAddContact('add', null, moreFuncAdd)"
+              >
+                <i class="icon-person_add_alt_1 icon-18 text-primary"></i>
+              </button>
+            </div>
+            <div *ngIf="listContacts != null && listContacts.length > 0">
+              <div *ngFor="let item of listContacts">
+                <ng-container
+                  [ngTemplateOutlet]="contacts"
+                  [ngTemplateOutletContext]="{ $implicit: item }"
+                >
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="name == 'Task'">
+            <ng-container
+              [ngTemplateOutlet]="task"
+              [ngTemplateOutletContext]="{ value: dataSelected }"
+            >
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Opportunity'">
+            <ng-container [ngTemplateOutlet]="opportunity"> </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Product'">
+            <ng-container [ngTemplateOutlet]="product"> </ng-container>
+          </ng-container>
+          <ng-container *ngIf="name == 'Offered'">
+            <ng-container>Sản phẩm cung cấp </ng-container>
+          </ng-container>
+        </div>
+      </ng-template>
+    </ng-template>
+    <ng-template #tabs let-data>
+      <codx-tabs
+        [entityName]="entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelected.recID"
+        [funcID]="formModel.funcID"
+        [dataTree]="treeTask"
+      ></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
+
+<ng-template #contacts let-data>
+  <div class="row mb-2 has-action-menu-od">
+    <div class="col-4 d-flex">
+      <div class="me-3">
+        <codx-img
+          [objectId]="data.recID"
+          [objectName]="data?.contactName"
+          [objectType]="'CM_Contacts'"
+          [width]="35"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              {{ data?.contactName }}
+            </div>
+            <div class="me-4">
+              <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+              <span class="text-gray-900"
+                >Xã phú mậu, thành phố Huế, Thừa thiên Huế</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column justify-content-center">
+      <div class="mb-1" *ngIf="data?.mobile">
+        <span
+          [ngClass]="
+            data.allowCall
+              ? 'icon-phone_android text-primary'
+              : 'icon-phonelink_erase'
+          "
+          class="icon-16 me-1"
+        ></span>
+        <span
+          [ngClass]="data.allowCall ? 'text-primary' : ''"
+          class="text-gray-900"
+          >{{ data.mobile }}</span
+        >
+      </div>
+      <div *ngIf="data?.personalEmail">
+        <span
+          [ngClass]="
+            data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
+          "
+          class="icon-16 me-1 text-gray-900"
+        ></span>
+        <span
+          [ngClass]="data.allowEmail ? 'text-primary' : ''"
+          class="text-gray-900"
+          >{{ data.personalEmail }}</span
+        >
+      </div>
+    </div>
+    <div class="col-4 d-flex justify-content-start">
+      <div
+        class="mb-1"
+        *ngIf="
+          data?.contactType != null && data?.contactType.split(';').length > 0
+        "
+      >
+        <ng-container *ngFor="let item of data?.contactType.split(';')">
+          <div class="mb-1">
+            {{ item | vll : vllContactType : "text" | async }}
+          </div>
+        </ng-container>
+      </div>
+      <div class="action-menu-od d-flex ms-5">
+        <codx-mfunc
+          [formModel]="formModelContact"
+          [isBookMark]="true"
+          [dataItem]="data"
+          [type]="'hover'"
+          (clickMF)="clickMFContact($event, data)"
+        >
+        </codx-mfunc>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #opportunity>
+  <div class="d-flex justify-content-between">
+    <div class="d-flex flex-column">
+      <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+        Trương Đặng Ngọc Phúc
+      </div>
+      <div class="d-flex align-items-start me-4 mb-1">
+        <div class="me-3">
+          <span class="icon-money icon-16 me-1"></span>
+          <codx-label
+            class="text-gray-600"
+            name="lblNumber"
+            default="Doanh số
+            kỳ vọng: "
+          ></codx-label>
+          <span class="ms-1">50.000.000 VND</span>
+        </div>
+        <div>
+          <span class="">%</span>
+          <codx-label
+            class="text-gray-600"
+            name="lblNumber"
+            default="Tỷ lệ
+            thành công: "
+          ></codx-label>
+          <span class="ms-1">70%</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-top">
+      <div class="d-flex flex-column">
+        <div class="badge badge-primary">Giới thiệu sản phẩm</div>
+        <div class="ms-5">
+          <span class="icon-money icon-16 me-1"></span>
+          <span class="text-gray-500 my-2">23/04/2023</span>
+        </div>
+      </div>
+      <div class="ms-3">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="35"
+          [objectId]="'ADMIN'"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #task let-data="value">
+  <codx-show-task [dataSource]="data"></codx-show-task>
+  <!-- <div *ngFor="let step of data; let i = index">
+    <div>
+      <span class="h4 me-3 justify-content-center align-items-center" style="
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          background-color: rgb(45, 171, 255);
+          display: inline-flex;
+        ">{{ i + 1 }}</span>
+      <span class="h4">{{ step.stepName }}</span>
+    </div>
+    <codx-show-task [dataSource]="step"></codx-show-task>
+  </div> -->
+</ng-template>
+<ng-template #product let-data="value">
+  <codx-table></codx-table>
+</ng-template>

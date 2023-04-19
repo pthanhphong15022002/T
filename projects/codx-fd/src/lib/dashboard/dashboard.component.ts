@@ -1,8 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
-import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
-import { Post } from '@shared/models/post';
-import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent, SortModel } from 'codx-core';
+import {  AuthService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent, SortModel } from 'codx-core';
 
 @Component({
   selector: 'lib-dashboard',
@@ -12,9 +10,9 @@ import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewMo
 })
 export class DashboardComponent extends UIComponent  {
   dataServiceWP:CRUDService;
-  predicate = `Category =@0 && Stop=false`;
-  dataValue = "3";
-  predicateCoins = `Owner =@0   `;
+  predicate = `Category="@0" && Stop=false `;
+  dataValue = "";
+  predicateCoins = `Owner =@0  `;
   dataValueCoins = "";
   predicateWP = "Category =@0 && Stop=false";
   dataValueWP = "3";
@@ -52,16 +50,6 @@ export class DashboardComponent extends UIComponent  {
     this.user = this.auth.userValue;
     this.dataValueCoins = this.user.userID;
     this.getDataAmountCard();
-    this.dataServiceWP = new CRUDService(this.injector);
-    this.dataServiceWP.predicate = this.predicateWP;
-    this.dataServiceWP.dataValue = this.dataValueWP;
-    let arrSort:SortModel[] = [];
-    let sort = new SortModel();
-    sort.field = "CreatedOn";
-    sort.dir = "desc";
-    arrSort.push(sort);
-    this.dataServiceWP.setSort(arrSort);
-    this.dataServiceWP.pageSize = 7;
   }
 
   lstCountCard:any[] = [];

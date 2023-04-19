@@ -21,11 +21,13 @@ import {
   AuthStore,
   CallFuncService,
   AlertConfirmInputConfig,
+  FilesService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
+import { SignalRService } from '../../drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'codx-user-inner',
@@ -51,7 +53,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   private unsubscribe: Subscription[] = [];
   functionList: any;
   formModel: any;
-
+  modifiedOn = new Date();
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -63,7 +65,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private codxShareSV: CodxShareService,
     private change: ChangeDetectorRef,
     private element: ElementRef,
-    private callSV: CallFuncService
+    private signalRSV:SignalRService,
+    private callSV: CallFuncService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -95,24 +99,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     // if (this.functionList) {
 
     // }
-    this.refreshAvatar();
   }
 
   ngAfterViewInit() {
     MenuComponent.reinitialization();
   }
 
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.change.detectChanges();
-      }
-    });
-  }
-
   logout() {
+    
+    let ele = document.getElementsByTagName("codx-chat-container");
+    ele[0].remove();
     this.auth.logout('');
     // document.location.reload();
   }
@@ -217,9 +213,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
-    let modifiedOn = new Date();
-    var obj = { modifiedOn: modifiedOn };
-    this.codxShareSV.dataRefreshImage.next(obj);
+    this.modifiedOn = new Date();
+    this.fileSv.dataRefreshImage.next(this.user);
   }
 
   clearCache() {

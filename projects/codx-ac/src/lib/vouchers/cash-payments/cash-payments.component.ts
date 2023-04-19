@@ -218,6 +218,12 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event['update']) {
+            this.itemSelected = res.event['data'];
+            this.loadDatadetail(this.itemSelected);
+          }
+        });
       });
   }
 
@@ -341,8 +347,16 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    this.itemSelected = event?.data;
-    this.loadDatadetail(event?.data);
+    if (event?.data.result) {
+      return;
+    } else {
+      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.loadDatadetail(this.itemSelected);
+      }
+    }
   }
 
   loadDatadetail(data) {

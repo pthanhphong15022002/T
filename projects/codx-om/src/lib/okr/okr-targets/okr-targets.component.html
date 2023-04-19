@@ -1,4 +1,4 @@
-<div class="w-100 h-100 mw-1000px mx-auto" *ngIf="formModel?.funcID!=undefined">
+<div class="w-100 h-100 container mx-auto" *ngIf="formModel?.funcID!=undefined">
   <div class="h-100 mt-3">
     <div class="" [ngClass]="isHiddenChart ? 'd-none': 'd-block'">
 
@@ -147,26 +147,26 @@
           <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
           <!-- <span class="okr-node border-3px rounded-circle border pe-1 "
             [ngClass]="item?.okrType==krType?'border-warning':'border-primary'"></span> -->
-          <span class="icon-brightness_1 fs-12px" [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
+          <span class="icon-brightness_1 fs-12px d-flex align-items-center " [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
             <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <div class="d-flex flex-wrap">
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.target "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.current "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.actual?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.actual "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
                 <!-- <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span> -->
               </div>
             </div>
@@ -176,7 +176,7 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-end col-6 ps-5">
-          <span class="col-3 text-truncate text-center" [innerHTML]="getRangeDate(item?.rangeDate)" [ngbTooltip]="getRangeDate(item?.rangeDate)"></span>
+          <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="item?.rangeDateText"></span>
           <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'" class="ps-5"></codx-img>
           <div class="d-flex ps-5 align-items-end">
             <div class="d-flex flex-column align-items-center kr-process w-150px pe-2  pb-2">

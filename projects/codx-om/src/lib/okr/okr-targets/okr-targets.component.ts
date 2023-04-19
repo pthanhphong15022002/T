@@ -19,7 +19,6 @@ import {
   ApiHttpService,
   NotificationsService,
   ButtonModel,
-  FormModel,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
@@ -31,11 +30,9 @@ import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/po
 import { PopupAddOBComponent } from '../../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupCheckInComponent } from '../../popup/popup-check-in/popup-check-in.component';
-import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
 import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { ok } from 'assert';
 const _isAdd = true;
 const _isSubKR = true;
 const _isEdit = false;
@@ -622,11 +619,13 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.target = newOKR?.target;
     oldOKR.owner = newOKR?.owner;
     oldOKR.umid = newOKR?.umid;
+    oldOKR.umName=this.getUMName(newOKR?.umid);
     oldOKR.confidence = newOKR?.confidence;
     oldOKR.category = newOKR?.category;
     oldOKR.actual = newOKR?.actual;
     oldOKR.current = newOKR?.current;
     oldOKR.rangeDate = newOKR?.rangeDate;
+    oldOKR.rangeDateText = this.getRangeDate(newOKR?.rangeDate);
     if(newOKR?.okrTasks !=null && newOKR?.okrTasks.length>0){
       oldOKR.okrTasks= newOKR?.okrTasks;
     }

@@ -1,0 +1,236 @@
+<codx-form
+  #form
+  [headerText]="titleAction"
+  [subHeader]="subHeader"
+  [body]="body"
+  [openMore]="true"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  [footer]="footer"
+></codx-form>
+
+<ng-template #subHeader>
+  <codx-tag
+    field="tags"
+    [entityName]="formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    (valueChange)="valueChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #body>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="Title"
+          [default]="'Tên cơ hội'"
+        >
+        </codx-label>
+        <codx-input
+          field="title"
+          type="text"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="CampaignID"
+          [Group]="form.formGroup"
+          [default]="'Chiến dịch'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="memo"
+          [default]="'Liên hệ'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="EndDate"
+          [Group]="form.formGroup"
+          [default]="'Nhân viên bán hàng'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName=""
+          [default]="'Liên hệ'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName=""
+          [Group]="form.formGroup"
+          [default]="'Nhân viên tư vấn'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName=""
+          [default]="'Loại cơ hội'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="ExpectedRevenue"
+
+          [default]="'Doanh số dư kiến'"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="expectedRevenue"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName=""
+          [default]="'Nguồn cơ hội'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="SuccessRate"
+
+          [default]="'Tỷ lệ thành công'"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="successRate"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="productType"
+          [default]="'Loại sản phẩm'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [default]="'Quy trình'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="memo"
+          [default]="'Mô tả nhu cầu'"
+        >
+        </codx-label>
+        <codx-input
+          field="memo"
+          type="textarea"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="EndDate"
+          [Group]="form.formGroup"
+          [default]="'Ngày đến hạn'"
+        >
+        </codx-label>
+        <codx-input
+          field="endDate"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <div></div>
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveOpportunity()"
+    >
+      <codx-label default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

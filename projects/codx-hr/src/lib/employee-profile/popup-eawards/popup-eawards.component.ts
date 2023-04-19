@@ -62,7 +62,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.fromListView = data?.data?.fromListView;
     this.empObj = data?.data?.empObj;
 
-
   }
 
   allowToViewEmp(): boolean {
@@ -96,7 +95,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
         this.empObj = emp[0][0];
-        //console.log('employee cua form', this.employeeObj);
         this.cr.detectChanges();
       }
     });
@@ -164,10 +162,12 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
       return;
     } 
     if(this.actionType === 'copy') delete this.awardObj.recID;
+    
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeAwardInfo(this.formModel.currentData).subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS006');
+          p[0].emp = this.empObj;
           this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS023'); this.awardObj.isSuccess = true;
       });
@@ -177,6 +177,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
+            p[0].emp = this.empObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

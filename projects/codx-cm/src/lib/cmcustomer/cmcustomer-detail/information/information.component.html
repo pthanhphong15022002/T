@@ -1,0 +1,573 @@
+<div *ngIf="dataSelected != null">
+  <div class="d-flex flex-column">
+    <div class="mb-3">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark fw-bold"
+          name="lblInformation"
+          default="Thông tin chung"
+        >
+        </codx-label>
+      </div>
+      <ng-container
+        *ngIf="
+          funcID == 'CM0101' || funcID == 'CM0103' || funcID == 'CM0104';
+          then customers;
+          else contacts
+        "
+      >
+      </ng-container>
+    </div>
+    <div class="mb-3" *ngIf="dataSelected?.memo">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark fw-bold"
+          fiedName="Memo"
+          [formModel]="formModel"
+          default="Mô
+        tả"
+        >
+        </codx-label>
+      </div>
+      <div>
+        {{ dataSelected?.memo }}
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="funcID == 'CM0104'">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark fw-bold"
+          name="lblProsCons"
+          [formModel]="formModel"
+          default="Ưu / Nhược điểm"
+        >
+        </codx-label>
+      </div>
+      <div class="row">
+        <div class="col-6 row">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              [formModel]="formModel"
+              fiedName="Advantage"
+              default="Ưu điểm:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.advantage }}
+          </div>
+        </div>
+        <div class="col-6 row">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              [formModel]="formModel"
+              fiedName="Disadvantage"
+              default="Nhược điểm:"
+            ></codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.disadvantage }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark fw-bold"
+          name="lblAddress"
+          default="Thông tin địa chỉ"
+        >
+        </codx-label>
+      </div>
+      <div>Dữ liệu thêm sau</div>
+    </div>
+  </div>
+</div>
+<ng-template #customers>
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row" *ngIf="dataSelected?.customerID">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="CustomerID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.customerID }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.shortName">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="ShortName"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.shortName }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.phone">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Phone"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.phone }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.faxNo">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="FaxNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.faxNo }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.email">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Email"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.email }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.webPage">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="WebPage"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.webPage }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.source"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Source"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.source }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.customerFrom"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="CustomerFrom"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected.customerFrom
+                | formatvalue : formModel : 'CustomerFrom'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0103' && dataSelected?.partnerFrom"
+        >
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="PartnerFrom"
+              [formModel]="formModel"
+              default="Là đối tác từ:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.partnerFrom }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.consultantID"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="ConsultantID"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.consultantID }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.taxCode"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="TaxCode"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.taxCode }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.establishDate"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="EstablishDate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected.establishDate
+                | formatvalue : formModel : 'EstablishDate'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.sizing"
+        >
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Sizing"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.sizing }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.annualRevenue"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="AnnualRevenue"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.annualRevenue }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.segmentID">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="SegmentID"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.segmentID }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.workingDays">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="WorkingDays"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.workingDays }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="funcID == 'CM0101'">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="OfficialHour"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              [checked]="dataSelected?.officialHour"
+              field="OfficialHour"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.bankAccount"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="BankAccount"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.bankAccount }}
+          </div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="funcID == 'CM0101' && dataSelected?.bankName"
+        >
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="BankName"
+              [formModel]="formModel"
+              default="Mở tại ngân hàng:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.bankName }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contacts>
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row" *ngIf="dataSelected?.birthday">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Birthday"
+              [formModel]="formModel"
+              default="Ngày sinh:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.birthday }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.website">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Website"
+              [formModel]="formModel"
+              default="Website:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.website }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.source">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Source"
+              [formModel]="formModel"
+              default="Nguồn khách hàng:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.source }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="AllowCall"
+              [formModel]="formModel"
+              default="Không gọi điện:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              [checked]="dataSelected?.allowCall"
+              field="allowCall"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="AllowEmail"
+              [formModel]="formModel"
+              default="Không gửi mail:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              [checked]="dataSelected?.allowEmail"
+              field="allowEmail"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName=""
+              [formModel]="formModel"
+              default="Tổ chức:"
+            ></codx-label>
+          </div>
+          <div class="col-6">Công ty CPTH Lạc Việt</div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.jobTitle">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="JobTitle"
+              [formModel]="formModel"
+              default="Chức danh:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.jobTitle }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.field">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Field"
+              [formModel]="formModel"
+              default="Lĩnh vực hoạt động:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.field }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.career">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="Career"
+              [formModel]="formModel"
+              default="Ngành nghề:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.career }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.bankAccount">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="BankAccount"
+              [formModel]="formModel"
+              default="Tài khoản ngân hàng:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.bankAccount }}
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.bankName">
+          <div class="col-6">
+            <codx-label
+              class="text-gray-300"
+              fiedName="BankName"
+              [formModel]="formModel"
+              default="Mở tại ngân hàng:"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6">
+            {{ dataSelected?.bankName }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

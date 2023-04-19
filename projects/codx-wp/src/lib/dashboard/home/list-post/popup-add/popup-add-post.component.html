@@ -56,11 +56,10 @@
             <!-- contents -->
             <div class="wp-contents">
                 <codx-input 
-                    format="ed" 
                     [class]="'border-none'" 
                     [copyStyle]="copyFormat"
                     type="textarea" 
-                    [crrValue]="data.content" 
+                    [crrValue]="data.contents" 
                     [placeholder]="mssgPlacehHolder"
                     (valueChange)="valueChange($event)">
                 </codx-input>
@@ -69,29 +68,26 @@
             <div class="wp-contents-files">
                 <codx-view-files #codxViewFiles 
                     [allowEdit]="true" 
-                    [formModel]="dialogRef.formModel" 
+                    [formModel]="formModel" 
                     [objectType]="'WP_Comments'"
                     [medias]="data.medias"
                     [objectID]="data.recID">
                 </codx-view-files>
             </div>
             <!-- template chia sẻ --> 
-            <ng-container *ngIf="data.category == '4' && data.refType">
+            <!-- <ng-container *ngIf="data.category == '4' && data.refType">
                 <div class="wp-template-share">
                     <ng-container [ngSwitch]="data.refType">
-                        <!-- chia sẻ bài viết -->
                         <ng-container *ngSwitchCase="'WP_Comments'">
                             <ng-container
                                 *ngTemplateOutlet="templateSharePost; context: { $implicit: data.shares }">
                             </ng-container>
                         </ng-container>
-                        <!-- chia sẻ tin tức sự kiện -->
                         <ng-container *ngSwitchCase="'WP_News'">
                             <ng-container
                                 *ngTemplateOutlet="templateShareNews; context: { $implicit: data.news }">
                             </ng-container>
                         </ng-container>
-                        <!-- chia sẻ hệ thống phản hồi -->
                         <ng-container *ngSwitchCase="'FD_Cards'">
                             <ng-container
                                 *ngTemplateOutlet="templateShareCard; context: { $implicit: data.card }">
@@ -99,12 +95,17 @@
                         </ng-container>
                     </ng-container>
                 </div>
+            </ng-container> -->
+            <ng-container *ngIf="data.category == CATEGORY.SHARE || data.category == CATEGORY.FEEDBACK">
+                <div class="wp-template-share">
+                    <wp-post-share [objectID]="data.refID" [refType]="data.refType" [formModel]="formModel"></wp-post-share>
+                </div>  
             </ng-container>
         </div>
         <!-- template emoji, tag, uploadFile -->
         <div class="d-flex justify-content-between align-items-center body-function">
             <div class="text-gray-500 fw-bold">
-                <codx-label [formModel]="dialogRef.formModel" name="lblMore" default="Thêm vào bài viết">
+                <codx-label [formModel]="formModel" name="lblMore" default="Thêm vào bài viết">
                 </codx-label>
             </div>
             <div class="d-flex justify-content-between align-items-center">
@@ -140,7 +141,7 @@
                     <button (click)="clickUploadFile()" 
                         type="button" 
                         data-toggle="tooltip" 
-                        title="File đính kèm"
+                        title="Đính kèm file"
                         class="btn btn-icon btn-md ms-2 ng-star-inserted">
                         <i class="icon-photo icon-24 text-success"></i>
                     </button>
@@ -210,15 +211,17 @@
     <ng-template #templateSharePost let-post>
         <div class="WP_Comments">
             <div class="pic-feed p-4">
-                <codx-view-files 
-                    [formModel]="dialogRef.formModel" 
-                    [objectType]="'WP_Comments'"
-                    [medias]="post.medias"
-                    [objectID]="post.recID">
-                </codx-view-files>
+                <ng-container *ngIf="post.attachments > 0">
+                    <codx-view-files 
+                        [formModel]="formModel" 
+                        [objectType]="'WP_Comments'"
+                        [medias]="post.medias"
+                        [objectID]="post.recID">
+                    </codx-view-files>
+                </ng-container>
             </div>
             <div class="text-dark text-feed p-4">
-                <p [innerHTML]="post.content"></p>
+                <p [innerHTML]="post.contents"></p>
             </div>
             <div class="d-flex border-top p-4">
                 <codx-img 
@@ -275,7 +278,7 @@
                 <codx-file 
                     [objectID]="news.recID"
                     [objectType]="'WP_News'"
-                    [funcID]="dialogRef.formModel.funcID">
+                    [funcID]="formModel.funcID">
                 </codx-file>  
             </ng-container>
         </div>
@@ -310,7 +313,8 @@
         [comboboxName]="'Share_Users'" 
         [multiple]="true" 
         [width]="width"
-        [value]="strPermissionTag"
+        [value]="crrPermisionTag"
+        [allowRemove]="false"
         [height]="height" 
         (clickSave)="addPerrmissonTags($event)">
     </codx-combobox-popup>

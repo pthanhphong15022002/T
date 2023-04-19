@@ -31,6 +31,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   headerText: any;
   exportAddForm: FormGroup;
   submitted = false;
+  reportID = '';//anh Thảo thêm để thêm biến lưu cho temEx
   fileCount = 0;
   module: any;
   @ViewChild('attachment') attachment: AttachmentComponent
@@ -46,6 +47,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   ) {
     this.action = dt.data?.action;
     this.type = dt.data?.type;
+    this.reportID = dt.data?.reportID
     if (this.action == "add") {
       this.headerText = "Thêm " + this.type + " Template";
     }
@@ -96,6 +98,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.exportAddForm.value.buid = "a";
     //Thêm mới
     if (this.action == "add") {
+      this.exportAddForm.value.reportID = this.reportID;
       if (this.fileCount > 0) {
         debugger
         this.api

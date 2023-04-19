@@ -46,8 +46,6 @@
           </codx-input>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="OffsetAcctID" [formModel]="form.formModel">
@@ -66,9 +64,6 @@
           </codx-input>
         </div>
       </div>
-      
-    </div>
-    <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
@@ -87,9 +82,7 @@
           </codx-input>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
+      <div *ngIf="loadControl('DIM3')" class="col-6">
         <div class="form-group">
           <codx-label fiedName="DIM3" [formModel]="form.formModel">
           </codx-label>
@@ -98,7 +91,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div *ngIf="loadControl('DIM1')" class="col-6">
         <div class="form-group">
           <codx-label fiedName="DIM1" [formModel]="form.formModel">
           </codx-label>
@@ -107,9 +100,7 @@
           </codx-input>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
+      <div *ngIf="loadControl('DIM2')" class="col-6">
         <div class="form-group">
           <codx-label fiedName="DIM2" [formModel]="form.formModel">
           </codx-label>
@@ -118,7 +109,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
+      <div *ngIf="loadControl('ProjectID')" class="col-6">
         <div class="form-group">
           <codx-label fiedName="ProjectID" [formModel]="form.formModel">
           </codx-label>
@@ -127,8 +118,6 @@
           </codx-input>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="form-group">
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>
