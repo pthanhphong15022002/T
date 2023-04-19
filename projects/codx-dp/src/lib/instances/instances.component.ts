@@ -986,7 +986,6 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     if (data.status != '1' && data.status != '2') {
       this.notificationsService.notify(
         'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
@@ -1181,8 +1180,6 @@ export class InstancesComponent
   }
 
   autoMoveStage(dataInstance) {
-    debugger;
-
     var checkTransferControl = this.process.steps.find(
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
@@ -2073,7 +2070,6 @@ export class InstancesComponent
   getColorReason(){
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
-        debugger;
         for (let item of res.datas) {
           if (item.value === 'S') {
             this.colorReasonSuccess = item;
