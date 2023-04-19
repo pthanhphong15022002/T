@@ -167,7 +167,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.model.patchValue({ countStep: this.lstStep.length });
       this.updateApprovalStep();
        // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023
-       if(this.isRequestListStep){
+      if(this.isRequestListStep){
         this.dialogApproval && this.dialogApproval.close(this.lstStep);
       }else{
         this.dialogApproval && this.dialogApproval.close(true);
