@@ -51,7 +51,6 @@ implements OnInit, AfterViewInit {
     let instanceID = this.data?.processID;
     if(instanceID){
       this.cmService.getStepInstance([instanceID]).subscribe(res =>{
-        console.log('----------',res);
         this.listStep = res;    
       })
     }
