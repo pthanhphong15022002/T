@@ -15,9 +15,10 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../codx-ac.service';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
+import { CodxAcService } from '../../codx-ac.service';
+import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
 
 @Component({
   selector: 'lib-sales-invoices',
@@ -40,6 +41,7 @@ export class SalesInvoicesComponent
   functionName: string;
   journalNo: string;
   selectedData: ISalesInvoice;
+  salesInvoicesLines: ISalesInvoicesLine[] = [];
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -128,6 +130,15 @@ export class SalesInvoicesComponent
     console.log(e);
 
     this.selectedData = e?.data;
+
+    const salesInvoicesLinesOptions = new DataRequest();
+    salesInvoicesLinesOptions.entityName = 'SM_SalesInvoicesLines';
+    salesInvoicesLinesOptions.predicates = 'TransID=@0';
+    salesInvoicesLinesOptions.dataValues = this.selectedData.recID;
+    salesInvoicesLinesOptions.pageLoading = false;
+    this.acService
+      .loadDataAsync('SM', salesInvoicesLinesOptions)
+      .subscribe((res) => (this.salesInvoicesLines = res));
   }
 
   handleClickAdd(e): void {
@@ -183,6 +194,25 @@ export class SalesInvoicesComponent
 
   edit(e, data): void {
     console.log('edit', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe((res) => {
+      let options = new SidebarModel();
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      options.isFull = true;
+
+      this.callfc.openSide(
+        PopupAddSalesInvoiceComponent,
+        {
+          formType: 'edit',
+          formTitle: `${e.text} ${this.functionName}`,
+          journalNo: this.journalNo,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
 
   copy(e, data): void {

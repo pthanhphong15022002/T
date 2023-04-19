@@ -31,8 +31,8 @@ import { PopAddLineComponent } from './vouchers/purchaseinvoices/pop-add-line/po
 import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
 import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
 import { PeriodicComponent } from './periodic/periodic.component';
-import { SalesInvoicesComponent } from './sales-invoices/sales-invoices.component';
-import { PopupAddSalesInvoiceComponent } from './sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
+import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
+import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 
 export const routes: Routes = [
   {
