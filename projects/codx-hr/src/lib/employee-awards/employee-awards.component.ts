@@ -79,6 +79,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   eAwardsHeaderText;
   formGroup: FormGroup;
   currentEmpObj: any;
+  eAwardObj: any;
   editStatusObj: any;
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
@@ -169,18 +170,18 @@ export class EmployeeAwardsComponent extends UIComponent {
         break;
       //Edit
       case 'SYS03':
-        this.currentEmpObj = data;
+        this.eAwardObj = data;
         this.handlerEAwards(
           event.text + ' ' + this.view.function.description,
           'edit',
-          this.currentEmpObj
+          this.eAwardObj
         );
         this.df.detectChanges();
         break;
       //Copy
       case 'SYS04':
-        this.currentEmpObj = data;
-        this.copyValue(event.text, this.currentEmpObj);
+        this.eAwardObj = data;
+        this.copyValue(event.text, this.eAwardObj);
         this.df.detectChanges();
         break;
     }
@@ -194,6 +195,7 @@ export class EmployeeAwardsComponent extends UIComponent {
     option.Width = '550px';
     option.FormModel = this.view.formModel;
 
+    this.currentEmpObj = data?.emp;
     //open form
     let dialogAdd = this.callfc.openSide(
       PopupEAwardsComponent,
@@ -205,6 +207,7 @@ export class EmployeeAwardsComponent extends UIComponent {
         employeeId: data?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
+        empObj: actionType == 'add' ? null: this.currentEmpObj,
       },
       option
     );

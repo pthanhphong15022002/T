@@ -77,7 +77,7 @@
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
-            <div class="col-6">
+            <div class="col-5">
               <!-- Sổ quỹ tiền mặt -->
               <div class="form-group">
                 <span *ngIf="vllCashbook" class="fw-bold fs-6">{{vllCashbook.text}}</span>
@@ -86,7 +86,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-3 ps-0">
               <!-- Số tiền -->
               <div class="form-group">
                 <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
@@ -209,14 +209,14 @@
               <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmCashReceiptsLines">
               </codx-label>
             </th>
-            <th class="w-20">
+            <th>
               <div class="d-flex">
                 <i class="icon-brush icon-16 me-2 icon-add text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Note" [formModel]="fmCashReceiptsLines">
                 </codx-label>
               </div>
             </th>
-            <th class="w-150px">
+            <th class="w-200px">
               <div class="d-flex">
                 <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Dr" [formModel]="fmCashReceiptsLines">
@@ -260,15 +260,15 @@
               </div>
             </td>
             <td>
-              <span *ngIf="item.dr != null && item.dr != ''" class="fw-bold line-clamp line-clamp-1">{{
+              <span *ngIf="item.dr != null && item.dr != ''" class="fw-bold fs-6 text-dark">{{
                 item.dr.toLocaleString("it-IT") }}</span>
             </td>
             <td>
               <div *ngIf="(item.diM2 != null && item.diM2 != '') || (item.diM3 != null && item.diM3 != '')"
-                class="d-flex align-items-center flex-wrap aqua">
+                class="d-flex align-items-center flex-wrap">
                 <ng-container *ngIf="item.diM2 != null && item.diM2 != ''">
-                  <div class="d-flex align-items-center mb-1">
-                    <codx-label class="text-nowrap label-colon text-dark fw-bold me-1" fiedName="DIM2" [formModel]="fmCashReceiptsLines">
+                  <div class="d-flex align-items-center mb-1 me-1">
+                    <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="DIM2" [formModel]="fmCashReceiptsLines">
                     </codx-label>
                     <span #diM2 class="text-gray-600" [innerHTML]="
                         item.diM2
@@ -281,9 +281,9 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.diM3 != null && item.diM3 != ''">
-                  <div class="text-gray-500 me-2"><span class="icon-i-dot icon-20"></span></div>
+                  <div class="text-gray-600 me-1"><span class="icon-i-dot icon-22"></span></div>
                   <div class="d-flex align-items-center mb-1">
-                    <codx-label class="text-nowrap label-colon text-dark fw-bold me-1" fiedName="DIM3" [formModel]="fmCashReceiptsLines">
+                    <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="DIM3" [formModel]="fmCashReceiptsLines">
                     </codx-label>
                     <span #diM3 class="text-gray-600" [innerHTML]="
                         item.diM3
@@ -297,10 +297,10 @@
                 </ng-container>
               </div>
               <div *ngIf="(item.diM1 != null && item.diM1 != '') || (item.projectID != null && item.projectID != '')"
-                class="d-flex align-items-center flex-wrap mb-1 red">
+                class="d-flex align-items-center flex-wrap">
                 <ng-container>
-                  <div class="d-flex align-items-center">
-                    <codx-label class="text-nowrap label-colon me-1" fiedName="DIM1" [formModel]="fmCashReceiptsLines">
+                  <div class="d-flex align-items-center mb-1 me-1">
+                    <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="DIM1" [formModel]="fmCashReceiptsLines">
                     </codx-label>
                     <span #diM1 class="text-gray-600" [innerHTML]="
                         item.diM1
@@ -313,9 +313,9 @@
                   </div>
                 </ng-container>
                 <ng-container>
-                  <div class="mx-2 text-gray-500">|</div>
-                  <div class="d-flex align-items-center">
-                  <codx-label class="text-nowrap label-colon me-1" fiedName="ProjectID" [formModel]="fmCashReceiptsLines">
+                  <div class="me-1 text-gray-600"><span class="icon-i-dot icon-22"></span></div>
+                  <div class="d-flex align-items-center mb-1">
+                  <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="ProjectID" [formModel]="fmCashReceiptsLines">
                   </codx-label>
                   <span #projectID class="text-gray-600" [innerHTML]="
                       item.projectID
@@ -330,10 +330,10 @@
               </div>
               <div
                 *ngIf="(item.assetGroupID != null && item.assetGroupID != '') || (item.loanContractID != null && item.loanContractID != '')"
-                class="d-flex align-items-center flex-wrap mb-1">
+                class="d-flex align-items-center flex-wrap">
                 <ng-container *ngIf="item.assetGroupID != null && item.assetGroupID != ''">
-                  <div class="d-flex align-items-center">
-                  <codx-label class="text-nowrap label-colon me-1" fiedName="AssetGroupID"
+                  <div class="d-flex align-items-center mb-1 me-1">
+                  <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="AssetGroupID"
                     [formModel]="fmCashReceiptsLines">
                   </codx-label>
                   <span #assetGroupID class="text-gray-600" [innerHTML]="
@@ -347,9 +347,9 @@
                   </div>
                 </ng-container>
                 <ng-container *ngIf="item.loanContractID != null && item.loanContractID != ''">
-                  <div class="mx-2 text-gray-500">|</div>
-                  <div class="d-flex align-items-center">
-                  <codx-label class="text-nowrap label-colon me-1" fiedName="LoanContractID"
+                  <div class="me-1 text-gray-600"><span class="icon-i-dot icon-22"></span></div>
+                  <div class="d-flex align-items-center mb-1">
+                  <codx-label class="text-nowrap label-colon text-dark fw-bold" fiedName="LoanContractID"
                     [formModel]="fmCashReceiptsLines">
                   </codx-label>
                   <span #loanContractID class="text-gray-600" [innerHTML]="

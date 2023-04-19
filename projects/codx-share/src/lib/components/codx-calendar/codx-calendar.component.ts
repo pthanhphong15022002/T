@@ -107,12 +107,10 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   @Output() settingValue: any;
 
   constructor(
-    private injector: Injector,
-    private change: ChangeDetectorRef,
+    injector: Injector,
     private route: ActivatedRoute,
     private codxShareSV: CodxShareService,
-    @Optional() dialogRef: DialogRef,
-    @Optional() dt: DialogData
+    @Optional() dialogRef: DialogRef
   ) {
     super(injector);
     this.dialog = dialogRef;

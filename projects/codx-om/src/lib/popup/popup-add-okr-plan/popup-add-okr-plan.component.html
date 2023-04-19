@@ -6,33 +6,38 @@
         <div class=" bg-white d-flex justify-content-between flex-column h-100 w-100 ">
             <div class="d-flex justify-content-between align-items-center pt-10 pb-3 px-15">
                 <span class="fs-2 fw-bold">{{curOrgName}}</span>
-                <span class="fs-4 fw-bold">{{okrPlan?.periodID}}</span>
+                <span class="d-flex justify-content-between align-items-center ">
+                    <span class="icon-i-calendar2-week-fill me-2"></span>
+                    <span class="fs-4 fw-bold">{{okrPlan?.periodID}}</span>
+                </span>
             </div>
-            <!-- <div class="d-flex align-items-center flex-row cursor-pointer w-100 px-15 min-h-table pb-3 bg-info">
-                <div class="w-60 d-flex justify-content-center align-items-center border border-light">
-                    <codx-label default="Mục tiêu/Kết quả" name="lblOKR"> </codx-label>
+            <div class="d-flex align-items-center flex-row  w-100 px-15 pb-3">
+                <div class="d-flex align-items-center flex-row w-100  ">
+                    <div class="w-60 d-flex justify-content-center align-items-center min-h-table bg-table-title border-end border-light pe-1">
+                        <codx-label default="Mục tiêu/Kết quả" name="lblOKR"> </codx-label>
+                    </div>
+                    <div class="w-40 d-flex justify-content-between ">
+                        <div class="w-30 d-flex justify-content-center align-items-center  bg-table-title min-h-table border-end border-light">
+                            <codx-label default="Thang đo" name="lblMensurement"> </codx-label>
+                        </div>
+                        <div class="w-30 d-flex justify-content-center align-items-center  bg-table-title min-h-table border-end border-light ">
+                            <codx-label default="Chỉ tiêu" name="lblTarget"> </codx-label>
+                        </div>
+                        <div class="w-30 d-flex align-items-center justify-content-center  bg-table-title min-h-table ">
+                            <codx-label default="Đơn vị tính" name="lblUMID"> </codx-label>
+                        </div>
+                        <span class="w-10 d-block"> </span>
+                    </div>
+    
                 </div>
-                <div class="w-40 d-flex justify-content-between ">
-                    <div class="w-30 d-flex justify-content-center align-items-center  border border-light">
-                        <codx-label default="Thang đo" name="lblOKR"> </codx-label>
-                    </div>
-                    <div class="w-30 d-flex justify-content-center align-items-center  border border-light">
-                        <codx-label default="Chỉ tiêu" name="lblOKR"> </codx-label>
-                    </div>
-                    <div class="w-30 d-flex align-items-center justify-content-center  border border-light">
-                        <codx-label default="Đơn vị tính" name="lblOKR"> </codx-label>
-                    </div>
-                    <span class="w-10"></span>
-                </div>
-
-            </div> -->
+            </div>
+            
             <div class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto">
                 <div class="flex-column d-flex justify-content-start px-15">
                     <div class="d-flex justify-content-start flex-column " *ngFor="let ob of dataOKR;let i=index">
                         <div class="d-flex justify-content-start flex-column pb-3" *ngIf="ob.isDeleted!=true">
                             <div class="d-flex align-items-center flex-row cursor-pointer w-100 ">
-                                <div class="w-60 d-flex justify-content-start align-items-end border-top  border-bottom border-start ">
-
+                                <div class="w-60 d-flex justify-content-start align-items-end border-top border-bottom border-start ">
                                     <span class=" ps-2 me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
                                     <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
                                         <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
