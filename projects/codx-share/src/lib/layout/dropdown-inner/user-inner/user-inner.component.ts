@@ -21,6 +21,7 @@ import {
   AuthStore,
   CallFuncService,
   AlertConfirmInputConfig,
+  FilesService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
@@ -52,7 +53,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   private unsubscribe: Subscription[] = [];
   functionList: any;
   formModel: any;
-
+  modifiedOn = new Date();
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -65,7 +66,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private change: ChangeDetectorRef,
     private element: ElementRef,
     private signalRSV:SignalRService,
-    private callSV: CallFuncService
+    private callSV: CallFuncService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -97,25 +99,14 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     // if (this.functionList) {
 
     // }
-    this.refreshAvatar();
   }
 
   ngAfterViewInit() {
     MenuComponent.reinitialization();
   }
 
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.change.detectChanges();
-      }
-    });
-  }
-
   logout() {
-    debugger
+    
     let ele = document.getElementsByTagName("codx-chat-container");
     ele[0].remove();
     this.auth.logout('');
@@ -222,9 +213,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
-    let modifiedOn = new Date();
-    var obj = { modifiedOn: modifiedOn };
-    this.codxShareSV.dataRefreshImage.next(obj);
+    this.modifiedOn = new Date();
+    this.fileSv.dataRefreshImage.next(this.user);
   }
 
   clearCache() {
