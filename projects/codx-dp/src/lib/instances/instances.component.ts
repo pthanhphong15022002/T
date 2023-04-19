@@ -1740,7 +1740,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_ExcelTemplates';
-    this.className = 'ExcelTemplatesBusiness';
+    this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
     });
@@ -1749,7 +1749,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_WordTemplates';
-    this.className = 'WordTemplatesBusiness';
+    this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
     });
