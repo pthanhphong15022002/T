@@ -7,20 +7,20 @@
 >
 </codx-views>
 <ng-template #template>
-  <div class="px-5 roledetail rounded-5 bg-body" id="kt_content">
+  <div class="roledetail rounded-2 bg-body" id="kt_content">
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex h-100 w-100">
         <div
-          class="roledetail-aside aside-detail hover-scroll-overlay-y w-250px min-w-250px me-3 pe-3"
+          class="roledetail-aside aside-detail hover-scroll-overlay-y w-250px min-w-250px ms-3 me-4 pe-1 pt-2"
         >
-          <div class="aside-menu pe-6 mt-4">
+          <div class="aside-menu mt-0">
             <ng-container *ngFor="let data of myTree; let i = index">
               <a
                 class="d-flex align-items-center menu-item my-1"
                 [class.active]="selectIndex === i"
                 (click)="asideClick($event, i, data)"
               >
-                <img class="me-3 w-30px h-30px" [src]="data.smallIcon" />
+                <img class="me-2 w-30px h-30px" [src]="data.smallIcon" />
                 <span class="text-dark fw-bold"> {{ data.customName }}</span>
               </a>
             </ng-container>
@@ -28,7 +28,7 @@
         </div>
         <div class="h-100 w-100 role-content">
           <div
-            class="d-flex align-items-center justify-content-between mb-3 setting-sticky menu-action-role mt-4"
+            class="d-flex align-items-center justify-content-between ms-1 me-4 setting-sticky menu-action-role mt-4"
           >
             <div class="d-flex align-items-center">
               <div class="fs-3 fw-bold text-dark">
@@ -86,7 +86,7 @@
                   </a>
                   <ng-template ngbNavContent>
                     <div class="detail-scroll">
-                      <table class="w-100 table table-row-bordered gs-3 gy-3">
+                      <table class="w-100 table table-row-bordered g-3 table-sticky">
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
                             <th scope="col" class="w-150px">
@@ -98,7 +98,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-150px">
+                            <th scope="col" class="w-125px">
                               <codx-label
                                 name="lblAllowView"
                                 formName="Roles"
@@ -107,7 +107,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-170px">
+                            <th scope="col">
                               <codx-label
                                 name="lblpermissionControl"
                                 formName="Roles"
@@ -125,7 +125,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-170px">
+                            <th scope="col">
                               <codx-label
                                 name="lblRead"
                                 formName="Roles"
@@ -134,7 +134,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-170px">
+                            <th scope="col">
                               <codx-label
                                 name="lblDelete"
                                 formName="Roles"
@@ -143,7 +143,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-170px">
+                            <th scope="col">
                               <codx-label
                                 name="lblEdit"
                                 formName="Roles"
@@ -152,8 +152,8 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-120px">
-                              <codx-label
+                            <th scope="col" class="w-125px">
+                              <codx-label class="text-nowrap"
                                 name="lblExport"
                                 formName="Roles"
                                 default="
