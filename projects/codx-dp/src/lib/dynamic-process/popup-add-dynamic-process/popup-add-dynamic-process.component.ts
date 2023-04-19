@@ -261,7 +261,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
   ];
   dataEx = [];
-  dataWord=[]
+  dataWord = [];
   active = '1';
   exportGroup: FormGroup;
   //end data Test
@@ -283,7 +283,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
- 
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -339,6 +339,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
     }
     if (this.action == 'edit') {
+      this.loadEx();
+      this.loadWord();
       // this.showID = true;
       this.checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
@@ -367,7 +369,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefaultCF = fun.customName || fun.description;
     });
-    if (this.action == 'edit') this.loadEx();
+  
     this.getGrvStep();
     this.getGrvStepReason();
     this.getValListDayoff();
@@ -393,8 +395,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-     //Tạo formGroup
-     this.exportGroup = this.formBuilder.group({
+    //Tạo formGroup
+    this.exportGroup = this.formBuilder.group({
       dataExport: ['all', Validators.required],
       format: ['excel', Validators.required],
     });
@@ -1537,8 +1539,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Bieu mau
   clickViewTemp(temp) {}
-  onScroll(e: any) {
-  }
+  onScroll(e: any) {}
   navChanged(e: any) {
     switch (e?.nextId) {
       case '1': {
@@ -1550,7 +1551,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       }
     }
-   // this.exportGroup.controls['format'].setValue(id);
+    // this.exportGroup.controls['format'].setValue(id);
   }
   openFormTemplet(val: any, data: any) {
     switch (val) {
@@ -1583,8 +1584,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                     this.dataEx[index] = item.event[0];
                   }
                 }
-              }
-              else if (typeR == 'word') {
+              } else if (typeR == 'word') {
                 if (val == 'add') this.loadWord();
                 else if (val == 'edit') {
                   var index = this.dataWord.findIndex(
@@ -1603,36 +1603,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         //SYS003
-        this.notiService
-          .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
-          .closed.subscribe((x) => {
-            if (x.event.status == 'Y') {
-              var method =
-                this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
-              this.api
-                .execActionData<any>(method, [data], 'DeleteAsync')
-                .subscribe((item) => {
-                  if (item[0] == true) {
-                    this.notiService.notifyCode('RS002');
-                    if (this.type == 'excel')
-                      this.dataEx = this.dataEx.filter(
-                        (x) => x.recID != item[1][0].recID
-                      );
-                    else if (this.type == 'word')
-                      this.dataWord = this.dataWord.filter(
-                        (x) => x.recID != item[1][0].recID
-                      );
-                  } else this.notiService.notifyCode('SYS022');
-                });
-            }
-          });
+        this.notiService.alertCode('SYS003').subscribe((x) => {
+          if (x.event.status == 'Y') {
+            var method =
+              this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
+            this.api
+              .execActionData<any>(method, [data], 'DeleteAsync')
+              .subscribe((item) => {
+                if (item[0] == true) {
+                  this.notiService.notifyCode('SYS008');
+                  if (this.type == 'excel')
+                    this.dataEx = this.dataEx.filter(
+                      (x) => x.recID != item[1][0].recID
+                    );
+                  else if (this.type == 'word')
+                    this.dataWord = this.dataWord.filter(
+                      (x) => x.recID != item[1][0].recID
+                    );
+                } else this.notiService.notifyCode('SYS022');
+              });
+          }
+        });
         break;
       }
     }
   }
   loadEx() {
-    this.request.predicates = "ReportID=@0" ;
-    this.request.dataValues = this.process.recID ;
+    this.request.predicates = 'ReportID=@0';
+    this.request.dataValues = this.process.recID;
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1640,8 +1638,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   loadWord() {
-    this.request.predicates = "ReportID=@0" ;
-    this.request.dataValues = this.process.recID ;
+    this.request.predicates = 'ReportID=@0';
+    this.request.dataValues = this.process.recID;
     this.request.entityName = 'AD_WordTemplates';
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1717,11 +1715,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.rank = 5;
 
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1776,11 +1769,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
           let option = new SidebarModel();
-          // let formModel = this.dialog?.formModel;
-          // formModel.formName = 'DPStepsFields';
-          // formModel.gridViewName = 'grvDPStepsFields';
-          // formModel.entityName = 'DP_Steps_Fields';
-          // formModel.funcID = 'DPT0301';
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -3059,10 +3047,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     value['type'] = value['taskType'] || type;
     value['refID'] = value['recID'];
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: value,
         listValue: listTaskConvert,
-      });
+        step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: value,
+      //   listValue: listTaskConvert,
+      // });
     }
   }
 
