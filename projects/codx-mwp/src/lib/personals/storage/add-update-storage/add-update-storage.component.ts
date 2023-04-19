@@ -48,11 +48,11 @@ export class AddUpdateStorageComponent implements OnInit {
   action: "add" | "edit" = "add";
   headerText:string = "";
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @Output() loadData = new EventEmitter();
 
   constructor(
     private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
+    private notifySV : NotificationsService,
     private api: ApiHttpService,
     private cache: CacheService,
     @Optional() dialogData?: DialogData,
@@ -86,6 +86,8 @@ export class AddUpdateStorageComponent implements OnInit {
       this.action = this.dialogData.action;
       this.storage = JSON.parse(JSON.stringify(this.dialogData.data));
       this.data = JSON.parse(JSON.stringify(this.dialogData.data));
+
+
     }
   }
 
@@ -96,52 +98,59 @@ export class AddUpdateStorageComponent implements OnInit {
   }
 
   //btn save click
-  submit() {
+  submit(){
     this.action == 'add' ? this.addStorage() : this.editStorage(); 
   }
 
   //insert storage
   addStorage() {
-    this.data.storageType = 'WP_Comments';
-    this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
+    if(this.data){
+      this.imageUpload
+      .updateFileDirectReload(this.data.recID)
       .subscribe((res) => {
-        if (res.save) {
-          if (this.imageUpload) {
-            this.imageUpload
-              .updateFileDirectReload(this.data.recID)
-              .subscribe((result) => {
-                this.loadData.emit();
-                this.dialogRef.close(this.data);
-              });
-          }
+        if(res){
+          this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertAsync",[this.data])
+          .subscribe((res:boolean) => {
+            this.notifySV.notifyCode(res ? "SYS006" : "SYS023");
+            this.dialogRef.close(res ? this.data : null);
+          });
+        }
+        else
+        {
+          this.dialogRef.close(null);
         }
       });
+    }
+    
   }
   //edit storage
   editStorage() {
     debugger
-    this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
+    if(this.data){
+      this.imageUpload
+      .updateFileDirectReload(this.data.recID)
       .subscribe((res) => {
-        if (res.update) {
-          if (this.imageUpload) {
-            this.imageUpload
-              .updateFileDirectReload(this.data.recID)
-              .subscribe((result) => {
-                this.loadData.emit();
-                this.dialogRef.close(res.update);
-              });
-          }
+        if(res){
+          this.api.execSv(
+          "WP","ERM.Business.WP","StoragesBusiness","UpdateAsync",[this.data])
+          .subscribe((res:boolean) => {
+            this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
+            this.dialogRef.close(res ? this.data : null);
+          });
+        }
+        else
+        {
+          this.dialogRef.close(null);
         }
       });
+    }
   }
 
   beforeSave(op: RequestOption) {
     op.service = 'WP';
     op.assemblyName = 'ERM.Business.WP';
     op.className = 'StoragesBusiness';
-    op.methodName = this.action == 'add' ? 'CreateStorageAsync' : 'UpdateStorageAsync';
+    op.methodName = this.action == 'add' ? 'InsertAsync' : 'UpdateStorageAsync';
     op.data = this.data
     return true;
   }

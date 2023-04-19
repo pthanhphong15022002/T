@@ -1127,6 +1127,16 @@ export class CodxHrService {
       [objectID, comment, objectType, actionType, createdBy]
     );
   }
+
+  GetOldSalaries(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetOldSalariesAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EExperience
@@ -1246,6 +1256,15 @@ export class CodxHrService {
       'EBasicSalariesBusiness',
       'ReceiveToAddBGTrackLog',
       [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
+  getOldBasicSalary(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetOldBasicSalaryAsync',
+      data
     );
   }
   //#endregion

@@ -176,7 +176,6 @@
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
         (outStepInstance)="outStepInstance($event)"
-
       >
       </codx-instance-detail>
     </ng-template>
@@ -255,7 +254,7 @@
           <div *ngFor="let item of listSteps">
             <div
               *ngIf="item.stepID === data.stepID"
-              [ngStyle]="{ 'background-color': item['backgroundColor'] }"
+              [ngStyle]="{ 'background-color': (data.status == '3' || data.status == '4' ) ? colorReasonSuccess?.color : (data.status == '5' || data.status == '6' ) ? colorReasonFail?.color : item['backgroundColor'] }"
               class="me-2 badge badge-primary"
             >
               <span
@@ -432,7 +431,7 @@
       >
       </ng-container>
       <ng-container *ngIf="dataTemplet?.length > 0">
-        <div *ngFor="let item of dataTemplet">
+        <div *ngFor="let item of dataEx">
           <div class="d-flex w-100">
             <div class="w-20px h-20px me-2">
               <codx-input
@@ -441,7 +440,7 @@
                 [formModel]="form.formModel"
                 ControlName="format"
                 [crrValue]="item.recID"
-                (valueChange)="selectTemp(item.recID)"
+                (valueChange)="selectTemp(item.recID, item.templateName )"
               ></codx-input>
             </div>
             <div class="d-flex align-items-center py-2">
@@ -451,7 +450,17 @@
                   style="color: #347442"
                 ></i>
               </span>
-              <span class="fw-bold text-dark">{{ item.templateName }}</span>
+              <span>
+                <div class="d-flex flex-column w-100">
+                  <div class="fw-bold text-dark">
+                    {{ item.templateName }}
+                  </div>
+                  <div class="fs-7 text-gray-500 text-italic">
+                    {{ item.description }}
+                  </div>
+                </div>
+                </span>
+              <!-- <span class="fw-bold text-dark">{{ item.templateName }}</span> -->
             </div>
           </div>
         </div>

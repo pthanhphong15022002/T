@@ -449,7 +449,7 @@ export class PopupAddKRComponent extends UIComponent {
     //   this.editTargets.push({ ...this.kr.targets[i] });
     // }
 
-    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 780 : 420;
+    let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 580 : 220;
     this.dialogTargets = this.callfc.openForm(
       template,
       '',

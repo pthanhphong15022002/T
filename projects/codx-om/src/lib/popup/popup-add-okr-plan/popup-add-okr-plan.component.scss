@@ -32,7 +32,6 @@ input {
 }
 #om-input-text {
     width: 100%;
-    text-align: left;
 }
 .e-input-group ,.e-control-wrapper ,.e-editable-elements{
     
@@ -81,4 +80,14 @@ input {
 }
 .e-input-group.e-control-wrapper,.e-input-group {
     border: 0px !important;
+}
+.om-hover-mf{
+    opacity: 0.1;
+}
+.om-hover-mf
+{&:hover{
+    opacity: 1;
+}}
+.bg-table-title{
+    background-color: #e4e2ee;
 }

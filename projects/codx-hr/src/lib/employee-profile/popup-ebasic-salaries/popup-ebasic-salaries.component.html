@@ -223,7 +223,7 @@
       <div class="col-6 d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
-            [width]="35"
+            [width]="50"
             class="me-3"
             [objectId]="employeeObj?.employeeID"
             [referType]="'avt'"
@@ -231,7 +231,7 @@
             [objectType]="'HR_Employees'"
           >
           </codx-img>
-          <codx-vll
+          <!-- <codx-vll
             *ngIf="employeeObj?.gender != null"
             class="badge badge-sm"
             [name]="'HR001'"
@@ -240,9 +240,9 @@
             [showIcon]="true"
             [showBgColor]="true"
           >
-          </codx-vll>
+          </codx-vll> -->
         </div>
-        <div *ngIf="employeeObj != null" class="d-flex flex-column">
+        <!-- <div *ngIf="employeeObj != null" class="d-flex flex-column">
           <div class="fw-bold">
             <span class="text-dark me-2">{{ employeeObj?.employeeName }}</span>
             <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
@@ -254,7 +254,7 @@
           <div class="text-gray-700">
             <span [innerHTML]="employeeObj?.orgUnitID"></span>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="col-6" *ngIf="actionType != 'edit'">
         <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>

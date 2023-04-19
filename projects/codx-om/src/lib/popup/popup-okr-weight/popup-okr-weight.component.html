@@ -54,7 +54,7 @@
             <td class="text-center" >
               <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
               [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-              [value]="child?.progress ">
+              [value]="child?.progress " [disabled]="true">
             </codx-inplace>
           </td>         
 
@@ -85,7 +85,7 @@
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
 
 
       <div class="d-flex justify-content-end w-100 my-5">
