@@ -105,18 +105,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 20;
     this.getSetting();
-    this.refreshAvatar();
   }
 
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.dt.detectChanges();
-      }
-    });
-  }
+ 
 
   //get thiết lập
   getSetting() {

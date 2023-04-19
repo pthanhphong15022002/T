@@ -33,7 +33,6 @@ import { FileService } from '@shared/services/file.service';
 })
 export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
-  dataRefreshImage = new BehaviorSubject<any>(null);
   dataUpdateShowEvent = new BehaviorSubject<any>(null);
   dateChange = new BehaviorSubject<any>(null);
   dataResourceModel = new BehaviorSubject<any>(null);
