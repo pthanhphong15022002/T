@@ -79,7 +79,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // get comment
   getCommentsAsync(data:any){ 
-    debugger
     if(!Array.isArray(data.listComment))
     {
       data.listComment = [];
@@ -139,6 +138,7 @@ export class TreeviewCommentComponent implements OnInit {
   }
   // votes post
   votePost(data: any, voteType = null) {
+    debugger
     if(data && voteType){
       this.api.execSv(
         "WP",

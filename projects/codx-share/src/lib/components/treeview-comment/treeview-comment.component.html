@@ -39,7 +39,7 @@
                     </ng-container>
                 </div>
                 <ng-template #myVoted>
-                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <div (dblclick)="votePost(data, data.myVoteType)" class="d-flex align-items-center justify-content-center text-hover-primary">
                         <img *ngIf="dVll[data.myVoteType]?.icon"
                             src="assets/themes/wp/default/img/{{dVll[data.myVoteType]?.icon}}"
                             style="width: 18px; height: 18px">

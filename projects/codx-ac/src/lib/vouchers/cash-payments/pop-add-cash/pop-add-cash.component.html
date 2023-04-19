@@ -109,36 +109,10 @@
           <div class="row">
             <div class="col-4">
               <div class="form-group">
-                <!-- Sổ quỹ tiền mặt -->
-                <div class="form-group">
-                  <span *ngIf="vllCashbook" class="fw-bold fs-6">{{vllCashbook.text}}</span>
-                  <codx-input #cashBook [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="form-group">
-                <!-- Địa chỉ -->
-                <div class="form-group">
-                  <codx-label fiedName="TotalAmt" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt"
-                    (valueChange)="valueChange($event)" [min]="0"></codx-input>
-                </div>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="form-group">
-                <!-- Lý do chi -->
-                <div class="form-group">
-                  <codx-label fiedName="ReasonID" [formModel]="form.formModel">
-                  </codx-label>
-                  <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
+                <span *ngIf="vllCashbook" class="fw-bold codx-label required">{{vllCashbook.text}}&nbsp;</span>
+                <codx-input #cashBook [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
               </div>
             </div>
           </div>
@@ -167,13 +141,54 @@
               </div>
             </div>
           </div>
-          <!-- Diễn giải -->
-          <div class="form-group">
-            <codx-label fiedName="Memo" [formModel]="form.formModel">
-            </codx-label>
-            <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
-              (valueChange)="valueChange($event)">
-            </codx-input>
+          <div class="col-4">
+            <div class="form-group">
+              <!-- Lý do chi -->
+              <div class="form-group">
+                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <!-- Loại đối tượng -->
+              <div class="form-group">
+                <codx-label fiedName="ObjectID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+                  (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <!-- Người nhận tiền -->
+              <div class="form-group">
+                <codx-label fiedName="Payee" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
+                  (controlBlur)="valuechangePayee($event)"></codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div #noteRef class="col-10">
+            <!-- Diễn giải -->
+            <div class="form-group">
+              <codx-label fiedName="Memo" [formModel]="form.formModel">
+              </codx-label>
+              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
           </div>
         </div>
         
@@ -492,23 +507,11 @@
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
   <div class="h-100" *ngIf="cashpayment.subType === '2'">
-    <codx-gridview-v2
-      #gridVoucherLineRefs
-      formName="VoucherLineRefs"
-      gridViewName="grvVoucherLineRefs"
-      entityName="AC_VoucherLineRefs"
-      [templateMore]="morefunction"
-      [editSettings]="editSettings"
-      [allowFiltering]="true"
-      [allowSorting]="true"
-      [dataValues]="form.data.recID"
-      service="AC"
-      [height]="gridHeight"
-      [autoLoad]="false"
-      rowHeight="40"
-      (cellChanged)="voucherLineRefsChanged($event)"
-      (created)="gridCreated($event, gridVoucherLineRefs)"
-    ></codx-gridview-v2>
+    <codx-gridview-v2 #gridVoucherLineRefs formName="SettledInvoices" gridViewName="grvSettledInvoices"
+      entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
+      [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [height]="gridHeight"
+      [autoLoad]="false" rowHeight="40" (cellChanged)="voucherLineRefsChanged($event)"
+      (created)="gridCreated($event, gridVoucherLineRefs)"></codx-gridview-v2>
   </div>
   <div class="form-group mt-6 mb-0 row">
     <div class="col-12">
