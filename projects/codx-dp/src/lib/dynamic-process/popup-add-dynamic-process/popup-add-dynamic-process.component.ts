@@ -2427,6 +2427,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskList.push(task);
         }
       }
+      taskGroup['indexNo'] = index + 1;
       this.taskGroupList.splice(index - 1, 0, taskGroup);
       this.sumTimeStep();
       // add role vào step
