@@ -2495,6 +2495,22 @@ codx-toolbar{
   position: relative;
   z-index: 99;
 }
+.text-gray-700.text-gray-500{
+  color: var(--gray-500)!important;
+}
+.text-gray-700.text-gray-600{
+  color: var(--gray-600)!important;
+}
+
+.okr-inplace{
+  .e-editable-value{
+    white-space: normal!important;
+    margin: 0!important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper{
+    padding: 0!important;
+  }
+}
 
 
 
