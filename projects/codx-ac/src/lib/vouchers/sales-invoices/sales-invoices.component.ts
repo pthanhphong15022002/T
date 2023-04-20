@@ -42,6 +42,13 @@ export class SalesInvoicesComponent
   journalNo: string;
   selectedData: ISalesInvoice;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
+  totalRow: { totalQuantity: number; totalPrice: number; totalVat: number } = {
+    totalQuantity: 0,
+    totalPrice: 0,
+    totalVat: 0,
+  };
+  page: number = 1;
+  pageSize: number = 10;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -138,7 +145,21 @@ export class SalesInvoicesComponent
     salesInvoicesLinesOptions.pageLoading = false;
     this.acService
       .loadDataAsync('SM', salesInvoicesLinesOptions)
-      .subscribe((res) => (this.salesInvoicesLines = res));
+      .subscribe((res: ISalesInvoicesLine[]) => {
+        this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo);
+
+        // calculate totalRow
+        this.totalRow = {
+          totalQuantity: 0,
+          totalPrice: 0,
+          totalVat: 0,
+        };
+        for (const l of this.salesInvoicesLines) {
+          this.totalRow.totalQuantity += l.quantity;
+          this.totalRow.totalPrice += l.costAmt;
+          this.totalRow.totalVat += l.vatAmt;
+        }
+      });
   }
 
   handleClickAdd(e): void {
@@ -217,6 +238,25 @@ export class SalesInvoicesComponent
 
   copy(e, data): void {
     console.log('copy', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      let options = new SidebarModel();
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      options.isFull = true;
+
+      this.callfc.openSide(
+        PopupAddSalesInvoiceComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+          journalNo: this.journalNo,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
 
   export(data) {

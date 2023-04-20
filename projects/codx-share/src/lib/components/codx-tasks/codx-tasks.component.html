@@ -64,7 +64,7 @@
     [title]="data.userNameCreate"
     [titleCss]="'fs-6'"
     [subTitle]="data.positionNameCreate"
-    [desc]="data.taskName"
+    [descTmp]="descTmp"
     [formModel]="view.formModel"
     [footer]="footerList"
     [dataItem]="data"
@@ -75,7 +75,9 @@
   [icoStatus2]="data?.priority"
   [icoStatusVll2]="vllPriority" -->
 </ng-template>
-
+<ng-template #descTmp let-item>
+  <div class="line-clamp line-clamp-2 text-dark">{{item.taskName}}</div>
+</ng-template>
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"

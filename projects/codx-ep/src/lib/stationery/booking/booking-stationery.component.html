@@ -30,7 +30,7 @@
     [typeMF]="'hover'"
     [title]="data?.owner | formatvalue : formModel : 'Owner' | async"
     [subTitle]="data?.positionName"
-    [subTitleCss]="'text-gray-600'"
+    [subTitleCss]="'text-gray-500 fs-7'"
     [content]="data?.reasonID | formatvalue : formModel : 'ReasonID' | async"
     [footer]="footerTmp"
     [icoCss]="
@@ -46,6 +46,8 @@
   >
   </codx-temp-full>
 </ng-template>
+
+
 
 <ng-template #panelRightRef>
   <booking-stationery-view-detail
