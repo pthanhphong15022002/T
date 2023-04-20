@@ -32,13 +32,13 @@ import { ViewListCmComponent } from './cmcustomer/view-list-cm/view-list-cm.comp
 import { PopupListContactsComponent } from './cmcustomer/popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './cmcustomer/popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxTableComponent } from './task/codx-table/codx-table.component';
-import { OpportunityComponent } from './opportunity/opportunity.component';
-import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
-import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
 import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
+import { DealsComponent } from './deals/deals.component';
+import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
+import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
+import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 const routes: Routes = [
   {
     path: '',
@@ -55,7 +55,7 @@ const routes: Routes = [
       {
         // gán tạm để làm UI
         path: 'sales/:funcID',
-        component: OpportunityComponent,
+        component: DealsComponent,
       },
       {
         path: '**',
@@ -84,12 +84,12 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupListContactsComponent,
     PopupQuickaddContactComponent,
     CodxTableComponent,
-    OpportunityComponent,
-    OpportunityDetailComponent,
-    TabDetailCustomComponent,
     QuotationsComponent,
     PopupAddQuotationsComponent,
-    PopupAddOpportunityComponent,
+    DealsComponent,
+    PopupAddDealComponent,
+    DealDetailComponent,
+    TabDetailCustomComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

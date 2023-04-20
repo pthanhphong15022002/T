@@ -88,7 +88,9 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
     this.getOldSalaries();
   }
   changeDataMF(e: any, data: any) {}
-  openFormFuncID(event: any){}
+  openFormFuncID(event: any, data: any = null){
+    this.clickMF.emit({event: event, data: data});
+  }
 
   getOldSalaries(){
     if(this.itemDetail){

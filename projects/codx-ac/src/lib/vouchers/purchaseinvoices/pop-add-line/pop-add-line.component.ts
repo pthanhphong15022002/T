@@ -12,6 +12,8 @@ import {
   FormModel,
   NotificationsService,
   DialogData,
+  CodxInputComponent,
+  CodxComboboxComponent,
 } from 'codx-core';
 import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
 
@@ -22,13 +24,18 @@ import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.mod
 })
 export class PopAddLineComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('idiM0') idiM0: CodxInputComponent;
+  @ViewChild('idiM1') idiM1: CodxInputComponent;
+  @ViewChild('idiM2') idiM2: CodxInputComponent;
+  @ViewChild('idiM3') idiM3: CodxInputComponent;
+  @ViewChild('idiM6') idiM6: CodxInputComponent;
+  @ViewChild('idiM7') idiM7: CodxInputComponent;
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
   gridViewSetup: any;
   validate: any = 0;
   type: any;
-  itemName: any;
   lsVatCode: any;
   journals: any;
   objectIdim: any;
@@ -57,15 +64,6 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
         }
       });
     this.api
-      .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [
-        this.purchaseInvoicesLines.itemID,
-      ])
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.itemName = res.itemName;
-        }
-      });
-    this.api
       .exec('BS', 'VATCodesBusiness', 'LoadAllDataAsync')
       .subscribe((res: any) => {
         if (res != null) {
@@ -89,10 +87,45 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
             .exec('IV', 'ItemsBusiness', 'LoadDataAsync', [e.data])
             .subscribe((res: any) => {
               if (res != null) {
-                this.itemName = res.itemName;
+               this.purchaseInvoicesLines.itemName = res.itemName;
+               this.purchaseInvoicesLines.umid = res.umid;
+               this.form.formGroup.patchValue(this.purchaseInvoicesLines);
               }
             });
+            (this.idiM0.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            (this.idiM1.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            (this.idiM2.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            (this.idiM3.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            (this.idiM6.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            (this.idiM7.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+            this.idiM0.crrValue = null;
+            this.idiM1.crrValue = null;
+            this.idiM2.crrValue = null;
+            this.idiM3.crrValue = null;
+            this.idiM6.crrValue = null;
+            this.idiM7.crrValue = null;
+            this.purchaseInvoicesLines.idiM0 = null;
+            this.purchaseInvoicesLines.idiM1 = null;
+            this.purchaseInvoicesLines.idiM2 = null;
+            this.purchaseInvoicesLines.idiM3 = null;
+            this.purchaseInvoicesLines.idiM6 = null;
+            this.purchaseInvoicesLines.idiM7 = null;
+            this.form.formGroup.patchValue(this.purchaseInvoicesLines);
           break;
+          case 'vatid':
+          var vat = e.component.itemsSelected[0];
+          this.purchaseInvoicesLines.vatAmt =
+            vat.TaxRate * this.purchaseInvoicesLines.netAmt;
+          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
+          break;
+      }
+    }
+  }
+
+  calculateAtm(e:any){
+    if (e.crrValue) {
+      this.purchaseInvoicesLines[e.ControlName] = e.crrValue;
+      switch (e.ControlName) {
         case 'unitPrice':
         case 'quantity':
           this.purchaseInvoicesLines.netAmt =
@@ -104,12 +137,6 @@ export class PopAddLineComponent extends UIComponent implements OnInit {
                 element.taxRate * this.purchaseInvoicesLines.netAmt;
             }
           });
-          this.form.formGroup.patchValue(this.purchaseInvoicesLines);
-          break;
-        case 'vatid':
-          var vat = e.component.itemsSelected[0];
-          this.purchaseInvoicesLines.vatAmt =
-            vat.TaxRate * this.purchaseInvoicesLines.netAmt;
           this.form.formGroup.patchValue(this.purchaseInvoicesLines);
           break;
       }

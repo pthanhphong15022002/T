@@ -174,9 +174,11 @@ export class CopyComponent implements OnInit {
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
               files[index].fileName = this.fullName;
+            
             }
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
+            this.dmSV.ChangeOneFolder.next(files[index]);
+            this.changeDetectorRef.detectChanges();
             this.dialog.close();     
          //   that.notificationsService.notify(res.message);    
           }

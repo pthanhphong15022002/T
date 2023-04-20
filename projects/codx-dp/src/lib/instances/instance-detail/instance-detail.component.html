@@ -262,6 +262,7 @@
                     [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
+                    (outDataStep)="saveDataStep($event)"
                     [viewsCurrent]="viewsCurrent"
                     [frmModelInstancesTask]="frmModelInstancesTask"
                   ></codx-stages-detail>
@@ -285,6 +286,7 @@
                     (actionSaveCF)="actionSaveCustomField($event)"
                     [titleHeaderFormCF]="titleDefault"
                     [viewsCurrent]="viewsCurrent"
+                    (saveDataStep)="saveDataStep($event)"
                   >
                   </codx-field-detail>
                 </ng-container>

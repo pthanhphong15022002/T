@@ -170,8 +170,8 @@ export class InstancesComponent
   addFieldsControl = '1';
   isLockButton = false;
   esCategory: any;
-  colorReasonSuccess:any;
-  colorReasonFail:any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
 
   //test temp
   dataTemplet = [
@@ -222,7 +222,7 @@ export class InstancesComponent
   listOwnerInMove = [];
   listStageManagerInMove = [];
   idTemp = '';
-  nameTemp ='';
+  nameTemp = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -1610,7 +1610,13 @@ export class InstancesComponent
       }
     }
   }
-
+  saveDatasInstance(e) {
+    this.dataSelected.datas = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    if(this.kanban){
+      this.kanban.updateCard(this.dataSelected);
+    }
+  }
   //Export file
   exportFile() {
     var gridModel = new DataRequest();
@@ -1710,7 +1716,8 @@ export class InstancesComponent
   downloadFile(data: any) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
     this.saveByteArray(
-      'DP_Instances_' + this.dataSelected.title +'_'+this.nameTemp || 'excel',
+      'DP_Instances_' + this.dataSelected.title + '_' + this.nameTemp ||
+        'excel',
       sampleArr
     );
   }
@@ -1776,7 +1783,7 @@ export class InstancesComponent
   //end export
 
   //Xét duyệt
-  selectTemp(recID,nameTemp) {
+  selectTemp(recID, nameTemp) {
     if (recID) {
       this.isLockButton = false;
       this.idTemp = recID;
@@ -1785,14 +1792,8 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
-      )
+    this.codxDpService
+      .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
@@ -2067,7 +2068,7 @@ export class InstancesComponent
     }
   }
 
-  getColorReason(){
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {

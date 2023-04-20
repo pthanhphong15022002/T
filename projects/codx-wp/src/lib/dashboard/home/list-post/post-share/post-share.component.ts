@@ -33,7 +33,11 @@ export class PostShareComponent implements OnInit {
 
   getData(){
     if(this.refType == "WP_Comments"){
-      this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","GetPostByIDAsync",[this.objectID])
+      this.api.execSv("WP",
+      "ERM.Business.WP",
+      "CommentsBusiness",
+      "GetPostByIDAsync",
+      [this.objectID])
       .subscribe((res:any) => {
         this.data = res;
         this.dt.detectChanges();
@@ -41,7 +45,11 @@ export class PostShareComponent implements OnInit {
       });
     }
     else if(this.refType == "WP_News"){
-      this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetPostByIDAsync",[this.objectID])
+      this.api.execSv("WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostByIDAsync",
+      [this.objectID])
       .subscribe((res:any) => {
         this.data = res;
         this.dt.detectChanges();
@@ -50,7 +58,11 @@ export class PostShareComponent implements OnInit {
     }
     else
     {
-      this.api.execSv("FD","ERM.Business.FD","CardsBusiness","GetCardFromWPAsync",[this.objectID])
+      this.api.execSv("FD",
+      "ERM.Business.FD",
+      "CardsBusiness",
+      "GetCardFromWPAsync",
+      [this.objectID])
       .subscribe((res:any) => {
         this.data = res;
         this.dt.detectChanges();

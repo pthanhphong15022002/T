@@ -15,6 +15,7 @@ export const environment = {
   saas: 1,
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout,
+  hideFavCount: false,
   externalLogin: {
     amazonId: '',
     facebookId: '',

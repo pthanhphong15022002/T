@@ -5,7 +5,7 @@
   [hideMF]="(formModel.funcID == 'DMT06' && favoriteID == '3')?true:false">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div [title]="data.folderName != undefined ? data.folderName : data.fileName"
+  <div [title]="data.folderName  ? data.folderName : data.fileName"
     class="d-flex align-items-start w-100 dms-card-icon">
     <div *ngIf="(data.folderName && !data?.extension) then folder else file"></div>
     <ng-template #folder>

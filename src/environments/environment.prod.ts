@@ -16,6 +16,7 @@ export const environment = {
   tenantFirst: true,
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout
+  hideFavCount: false,
   externalLogin: {
     amazonId: '',
     facebookId: '',

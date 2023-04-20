@@ -2416,12 +2416,22 @@ codx-toolbar{
   text-align: right;
 }
 
-
+.table-sticky{
+  position: relative;
+  th{
+    position: sticky;
+    top: 0; 
+    background-color: inherit;
+    z-index: 99;
+  }
+}
 /*** ac-dialog ***/
 
 .ac-dialog{
 
-
+  .card-body.h-100{
+    padding-bottom: 50px;
+  }
   .codx-detail-footer {
     position: absolute;
     z-index: 101;
@@ -2473,14 +2483,6 @@ codx-toolbar{
   }
 }
 /**** end ac-dialog ***/
-div[id*="ej2_dropdownlist_"]{
-  width:auto!important;
-}
-
-div[id*="ej2_dropdownlist_"] li{
-  padding-right: 20px!important;
-}
-
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;

@@ -80,6 +80,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() listUserIdRole: string[] = [];
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
+  @Output() outDataStep= new EventEmitter<any>();
 
   dateActual: any;
   startDate: any;
@@ -245,6 +246,10 @@ export class StagesDetailComponent implements OnInit {
           }
         }
       });
+  }
+  saveDataStep(e){
+    this.dataStep = e
+    this.outDataStep.emit(this.dataStep)
   }
 
   ngAfterViewInit(): void {
