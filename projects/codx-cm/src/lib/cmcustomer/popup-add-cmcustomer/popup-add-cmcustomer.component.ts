@@ -15,6 +15,7 @@ import {
   NotificationsService,
   CacheService,
   CRUDService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -45,6 +46,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   refValue = '';
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
+  listAddressDelete: BS_AddressBook[] = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -155,6 +157,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.contactsPerson?.recID,
       null,
       this.listAddress,
+      this.listAddressDelete
     ];
     op.data = data;
     return true;
@@ -337,6 +340,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             gridViewSetup: res,
             action: action,
             data: data,
+            listAddress: this.listAddress,
           };
           var dialog = this.callFc.openForm(
             PopupAddressComponent,
@@ -354,40 +358,42 @@ export class PopupAddCmCustomerComponent implements OnInit {
                 var address = new BS_AddressBook();
                 address = e.event;
                 var index = this.listAddress.findIndex(
-                  (x) => x.recID == address.objectID
+                  (x) => x.recID != null && x.recID == address.recID
                 );
-                if (index != -1) {
-                  this.listAddress.splice(index, 1);
-                  this.listAddress.push(address);
-                } else {
-                  var checkCoincide = this.listAddress.some(
-                    (x) =>
-                      x.adressType == address.adressType &&
-                      x.street == address.street &&
-                      x.countryID == address.countryID &&
-                      x.provinceID == address.provinceID &&
-                      x.districtID == address.districtID &&
-                      x.regionID == x.regionID
-                  );
-                  if (!checkCoincide) {
-                    var check = this.listAddress.some(
-                      (x) => x.adressType == '1' && address.adressType == '1'
-                    );
-                    if (!check) {
-                      if (address.adressType == '1') {
-                        this.data.countryID = address.countryID;
-                        this.data.provinceID = address.provinceID;
-                        this.data.districtID = address.districtID;
-                        this.data.regionID = address.regionID;
-                        this.data.wardID = address.regionID;
-                        this.data.address = address.adressName;
-                      }
-                      this.listAddress.push(address);
+                var checkCoincide = this.listAddress.some(
+                  (x) =>
+                    x.recID != address.recID &&
+                    x.adressType == address.adressType &&
+                    x.street == address.street &&
+                    x.countryID == address.countryID &&
+                    x.provinceID == address.provinceID &&
+                    x.districtID == address.districtID &&
+                    x.regionID == x.regionID
+                );
+                var check = this.listAddress.some(
+                  (x) =>
+                    x.recID != address.recID &&
+                    x.adressType == '1' &&
+                    address.adressType == '1'
+                );
+                if (!checkCoincide || !check) {
+                  if (index != -1) {
+                    this.listAddress.splice(index, 1);
+                    this.listAddress.push(address);
+                  } else {
+                    if (address.adressType == '1') {
+                      this.data.countryID = address.countryID;
+                      this.data.provinceID = address.provinceID;
+                      this.data.districtID = address.districtID;
+                      this.data.regionID = address.regionID;
+                      this.data.wardID = address.regionID;
+                      this.data.address = address.adressName;
                     }
-                  }else{
-                    this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
+                    this.listAddress.push(address);
                   }
                 }
+              } else {
+                this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
               }
             }
           });
@@ -395,7 +401,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
       });
   }
 
-  removeAddress(data, index) {}
+  removeAddress(data, index) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.listAddress.splice(index, 1);
+        this.listAddressDelete.push(data);
+      }
+    });
+  }
 
   //#region Contact
   //Open list contacts

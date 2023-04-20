@@ -33,7 +33,9 @@ export class PopupAddressComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = dt?.data?.data;
+
     this.action = dt?.data?.action;
+
     this.isDisable = this.action == 'edit' && this.data?.adressType == '1';
     this.dialog = dialog;
     this.title = dt?.data?.title;
@@ -41,6 +43,9 @@ export class PopupAddressComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.action == 'add'){
+      this.data.recID = Guid.newGuid();
+    }
     if (this.action == 'edit') this.setNameAdress();
   }
 
@@ -120,30 +125,42 @@ export class PopupAddressComponent implements OnInit {
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
               ? e?.component?.itemsSelected[0]?.CountryName
-              : '';
+              : null;
           break;
         case 'provinceID':
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
               ? e?.component?.itemsSelected[0]?.ProvinceName + ', '
-              : '';
+              : null;
           break;
         case 'districtID':
           this.nameDistrict =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
               ? e?.component?.itemsSelected[0]?.DistrictName + ', '
-              : '';
+              : null;
           break;
         case 'regionID':
           this.nameRegion =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
               ? e?.component?.itemsSelected[0]?.RegionName + ', '
-              : '';
+              : null;
           break;
       }
     }
+  }
+}
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }
