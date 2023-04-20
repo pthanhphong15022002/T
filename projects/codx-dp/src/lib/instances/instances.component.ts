@@ -661,61 +661,6 @@ export class InstancesComponent
       });
   }
 
-  //End
-
-  //Event
-  clickMF(e, data?) {
-    this.dataSelected = data;
-    this.titleAction = e.text;
-    this.moreFunc = e.functionID;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data, e.text);
-        break;
-      case 'SYS04':
-        this.copy(data, e.text);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'DP09':
-        // listStep by Id Instacess is null
-        this.moveStage(e.data, data, this.lstStepInstances);
-        break;
-      case 'DP02':
-        this.moveReason(e.data, data, !this.isMoveSuccess);
-        break;
-      case 'DP10':
-        this.moveReason(e.data, data, this.isMoveSuccess);
-        break;
-      //Đóng nhiệm vụ = true;
-      case 'DP14':
-        this.openOrClosed(data, true);
-        break;
-      //Mở nhiệm vụ = false;
-      case 'DP15':
-        this.openOrClosed(data, false);
-        break;
-      //export File
-      case 'DP16':
-        this.isFormExport = true;
-        this.showFormExport();
-        break;
-      //trinh kí File
-      case 'DP17':
-        this.isFormExport = false;
-        this.showFormSubmit();
-        break;
-      case 'DP21':
-        this.handelStartDay(data);
-        break;
-      //xuat khau du lieu
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
@@ -781,7 +726,7 @@ export class InstancesComponent
     return true;
   }
 
-  //#popup roles
+  //#Event
   changeDataMF(e, data) {
     if (e != null && data != null) {
       if (data.status != '1') {
@@ -827,7 +772,8 @@ export class InstancesComponent
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed || data.status != '2') res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2')
+                res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -867,6 +813,12 @@ export class InstancesComponent
               }
 
               break;
+           //an khi aprover rule
+            case 'DP17':
+              if (!this.process?.approvalRule) {
+                res.isblur = true;
+              }
+              break;
             case 'SYS004':
             case 'SYS002':
             case 'DP21':
@@ -894,6 +846,58 @@ export class InstancesComponent
           }
         });
       }
+    }
+  }
+
+  clickMF(e, data?) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data, e.text);
+        break;
+      case 'SYS04':
+        this.copy(data, e.text);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'DP09':
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, this.lstStepInstances);
+        break;
+      case 'DP02':
+        this.moveReason(e.data, data, !this.isMoveSuccess);
+        break;
+      case 'DP10':
+        this.moveReason(e.data, data, this.isMoveSuccess);
+        break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
+      //export File
+      case 'DP16':
+        this.isFormExport = true;
+        this.showFormExport();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.isFormExport = false;
+        this.showFormSubmit();
+        break;
+      case 'DP21':
+        this.handelStartDay(data);
+        break;
+      //xuat khau du lieu
+      case 'SYS002':
+        this.exportFile();
+        break;
     }
   }
   //End
@@ -979,8 +983,7 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notify(
-'DP037');
+      this.notificationsService.notify('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1608,7 +1611,7 @@ export class InstancesComponent
   saveDatasInstance(e) {
     this.dataSelected.datas = e;
     this.view.dataService.update(this.dataSelected).subscribe();
-    if(this.kanban){
+    if (this.kanban) {
       this.kanban.updateCard(this.dataSelected);
     }
   }
