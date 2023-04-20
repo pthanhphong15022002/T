@@ -31,6 +31,7 @@ export class ViewDetailContractsComponent implements OnInit {
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
+  @Input() hideMF = false;
   @Input() hideFooter = false;
   @Output() uploaded = new EventEmitter();
   @Output() clickMFunction = new EventEmitter();
@@ -75,7 +76,7 @@ export class ViewDetailContractsComponent implements OnInit {
     }
 
     console.log('thong tin hdld', this.itemDetail);
-    if(this.itemDetail.benefits){
+    if(this.itemDetail?.benefits){
       this.lstBenefit = JSON.parse(this.itemDetail.benefits)
     }
   }
@@ -91,8 +92,7 @@ export class ViewDetailContractsComponent implements OnInit {
   }
 
   changeDataMF(e: any, data: any) {
-    debugger
-    this.hrService.handleShowHideMF(e, data, this.view);
+    this.hrService.handleShowHideMF(e, data, this.formModel);
   } 
 
   // clickMF(val: any, datas: any = null){
