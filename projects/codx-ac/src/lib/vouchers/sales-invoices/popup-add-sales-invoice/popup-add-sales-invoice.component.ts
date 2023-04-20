@@ -5,20 +5,20 @@ import {
   CodxGridviewV2Component,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   RequestOption,
   UIComponent,
-  Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { CodxAcService } from '../../../codx-ac.service';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../../journals/journals.service';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { CodxAcService } from '../../../codx-ac.service';
-import { JournalService } from '../../../journals/journals.service';
-import { P } from '@angular/cdk/keycodes';
+import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -94,11 +94,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
 
-      // this.journalService.setAccountCbxDataSourceByJournal(
-      //   this.journal,
-      //   this.cbxCashAcctID,
-      //   this.cbxOffsetAcctID
-      // );
+      this.editSettings.mode =
+        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
       // if (this.isEdit) {
       //   this.hiddenFields = this.journalService.getHiddenFields(this.journal);
@@ -163,7 +160,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         !this.acService.validateFormDataUsingGvs(
           this.gvsSalesInvoicesLines,
           salesInvoiceLine,
-          ['umid', 'vatid']
+          ['umid', 'vatid', 'idiM4']
         )
       ) {
         return;
@@ -201,10 +198,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   deleteRow(data): void {
     this.deletedSalesInvoicesLines.push(data);
-
-    this.salesInvoicesLines = this.salesInvoicesLines.filter(
-      (s) => s.recID !== data.recID
-    );
+    this.grid.deleteRow(data);
   }
 
   addRow(): void {
@@ -212,7 +206,39 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       .exec('SM', 'SalesInvoicesLinesBusiness', 'GetDefault')
       .subscribe((res: ISalesInvoicesLine) => {
         console.log(res);
-        this.grid.addRow(res, this.salesInvoicesLines.length);
+
+        let index = this.salesInvoicesLines.length;
+        res.rowNo = index + 1;
+
+        if (this.editSettings.mode === 'Normal') {
+          this.grid.addRow(res, index);
+        } else {
+          const dialogModel = new DialogModel();
+          dialogModel.FormModel = this.fmSalesInvoicesLines;
+
+          this.callfc
+            .openForm(
+              PopupAddSalesInvoicesLineComponent,
+              'This param is not working',
+              500,
+              700,
+              '',
+              {
+                formType: 'add',
+                salesInvoicesLine: res,
+                index: index,
+                gvs: this.gvsSalesInvoicesLines,
+              },
+              '',
+              dialogModel
+            )
+            .closed.pipe(tap((t) => console.log(t)))
+            .subscribe(({ event }) => {
+              for (const line of event) {
+                this.grid.addRow(line, this.salesInvoicesLines.length);
+              }
+            });
+        }
       });
   }
   //#endregion
@@ -240,6 +266,21 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
           if (closeAfterSaving) {
             this.dialogRef.close();
           } else {
+            this.dialogRef.dataService
+              .addNew(() =>
+                this.api.exec(
+                  'SM',
+                  'SalesInvoicesBusiness',
+                  'GetDefaultAsync',
+                  [this.dialogData.data?.journalNo]
+                )
+              )
+              .subscribe((res: ISalesInvoice) => {
+                console.log(res);
+                this.form.formGroup.patchValue(res);
+
+                this.salesInvoicesLines = [];
+              });
           }
         }
       });

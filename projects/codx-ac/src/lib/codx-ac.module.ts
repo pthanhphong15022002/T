@@ -33,6 +33,7 @@ import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-li
 import { PeriodicComponent } from './periodic/periodic.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
+import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 
 export const routes: Routes = [
   {
@@ -115,6 +116,7 @@ export const routes: Routes = [
     PeriodicComponent,
     SalesInvoicesComponent,
     PopupAddSalesInvoiceComponent,
+    PopupAddSalesInvoicesLineComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
