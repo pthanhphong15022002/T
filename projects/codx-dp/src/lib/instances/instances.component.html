@@ -176,6 +176,7 @@
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
         (outStepInstance)="outStepInstance($event)"
+        (saveDatasInstance)="saveDatasInstance($event)"
       >
       </codx-instance-detail>
     </ng-template>
@@ -336,6 +337,7 @@
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
     (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
   >
   </codx-instance-detail>
 </ng-template>

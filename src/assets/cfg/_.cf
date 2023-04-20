@@ -8,6 +8,7 @@
   "saas": 0,
   "layoutCZ": "",
   "themeMode": "body",
+  "hideFavCount":false,
   "captchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
   "captchaEnable": 0,
   "externalLogin": {

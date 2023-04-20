@@ -1,56 +1,113 @@
-<codx-form #form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog" [data]="data">
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  [formModel]="dialog.formModel"
+>
 </codx-form>
 
 <ng-template #body>
   <div class="form-group">
-    <codx-label fiedName="AddressType" [formModel]="dialog.formModel"></codx-label>
-    <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="addressType">
+    <codx-label
+      fiedName="AdressType"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="adressType"
+    >
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="PostalCode" [formModel]="dialog.formModel"></codx-label>
-    <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="postalCode">
+    <codx-label
+      fiedName="PostalCode"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="postalCode"
+    >
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="CountryID" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="countryID">
+    <codx-label
+      fiedName="CountryID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="countryID"
+    >
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="ProvinceID" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="provinceID">
+    <codx-label
+      fiedName="ProvinceID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="provinceID"
+    >
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="DistrictID" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="districtID">
+    <codx-label
+      fiedName="DistrictID"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="districtID"
+    >
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="WardID" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="wardID">
+    <codx-label fiedName="RegionID" [formModel]="form.formModel"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="regionID">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label fiedName="Address" [formModel]="dialog.formModel"></codx-label>
-    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"  field="address">
+    <codx-label fiedName="Street" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      field="street"
+    >
     </codx-input>
   </div>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="me-2">
-      <button type="button" (click)="dialog.close()" class="btn btn-outline-primary">
-        <codx-label name="lblCancel" [formModel]="dialog.formModel" default="Hủy"></codx-label>
+      <button
+        type="button"
+        (click)="dialog.close()"
+        class="btn btn-outline-primary"
+      >
+        <codx-label
+          name="lblCancel"
+          [formModel]="dialog.formModel"
+          default="Hủy"
+        ></codx-label>
       </button>
     </div>
     <div class="">
       <button type="button" (click)="onSave()" class="btn btn-primary">
-        <codx-label name="lblSave" [formModel]="dialog.formModel" default="Đồng ý"></codx-label>
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Đồng ý"
+        ></codx-label>
       </button>
     </div>
   </div>
-
 </ng-template>
-

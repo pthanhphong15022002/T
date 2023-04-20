@@ -44,6 +44,7 @@ export class PurchaseInvoicesLines {
   ieTypeID: any;
   inventAcctID: any;
   itemID: any;
+  itemName:any;
   lineDiscAmt: any;
   lineDiscPct: any;
   lineStatus: any;

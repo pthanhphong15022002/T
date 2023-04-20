@@ -401,7 +401,11 @@
         </codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0102' ? 'Note' : 'Memo'"> </codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="funcID == 'CM0102' ? 'Note' : 'Memo'"
+        >
+        </codx-label>
 
         <codx-input
           [formModel]="form.formModel"
@@ -618,7 +622,10 @@
         </div>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" [fiedName]="funcID == 'CM0101' ? 'BankAccount' : 'BankAcctNo'">
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="funcID == 'CM0101' ? 'BankAccount' : 'BankAcctNo'"
+        >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -628,7 +635,10 @@
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-        <codx-label [formModel]="form.formModel" [fiedName]=" funcID == 'CM0101' ? 'BankName' : 'BankID'">
+        <codx-label
+          [formModel]="form.formModel"
+          [fiedName]="funcID == 'CM0101' ? 'BankName' : 'BankID'"
+        >
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -727,23 +737,65 @@
       ></span>
     </div>
   </div>
-  <div class="d-flex flex-column">
-    <div class="row">
-      <div class="col-4">
-        <span class="text-gray-600">Hóa đơn:</span>
+  <div
+    class="d-flex flex-column"
+    *ngIf="listAddress != null && listAddress.length > 0"
+  >
+    <ng-container *ngFor="let item of listAddress">
+      <div class="row">
+        <div class="col-4">
+          <span
+            class="label-colon text-gray-600"
+            [innerHTML]="
+              item?.adressType
+                | formatvalue : formModelAddress : 'AdressType'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="col-8">
+          <span *ngIf="item?.street"
+            [innerHTML]="
+              item?.street
+                | formatvalue : formModelAddress : 'Street'
+                | async
+            "
+          ></span>
+          <span class="me-1" *ngIf="item?.street">,</span>
+          <span *ngIf="item?.regionID"
+            [innerHTML]="
+              item?.regionID
+                | formatvalue : formModelAddress : 'RegionID'
+                | async
+            "
+          ></span>
+          <span class="me-1" *ngIf="item?.regionID">,</span>
+          <span *ngIf="item?.districtID"
+            [innerHTML]="
+              item?.districtID
+                | formatvalue : formModelAddress : 'DistrictID'
+                | async
+            "
+          ></span>
+          <span class="me-1" *ngIf="item?.districtID">,</span>
+          <span *ngIf="item?.provinceID"
+            [innerHTML]="
+              item?.provinceID
+                | formatvalue : formModelAddress : 'ProvinceID'
+                | async
+            "
+          ></span>
+          <span class="me-1" *ngIf="item?.provinceID">,</span>
+          <span *ngIf="item?.countryID"
+            [innerHTML]="
+              item?.countryID
+                | formatvalue : formModelAddress : 'CountryID'
+                | async
+            "
+          ></span>
+        </div>
       </div>
-      <div class="col-8">
-        23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4">
-        <span class="text-gray-600">Giao hàng:</span>
-      </div>
-      <div class="col-8">
-        23 Nguyễn Thị Huỳnh, Quận Phú Nhuận, Thành phố Hồ Chí Minh, Việt Nam
-      </div>
-    </div>
+    </ng-container>
   </div>
 </ng-template>
 <ng-template #footer>
@@ -800,6 +852,7 @@
             [objectId]="contactsPerson.recID"
             [objectName]="contactsPerson.contactName"
             objectType="CM_Contacts"
+            [imgOn]="contactsPerson?.modifiedOn"
             [width]="35"
           >
           </codx-img>

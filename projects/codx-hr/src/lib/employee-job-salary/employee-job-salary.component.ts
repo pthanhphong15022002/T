@@ -59,6 +59,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   dialogEditStatus: any;
   dataCategory;
   cmtStatus: string = '';
+  genderGrvSetup: any;
 
   //#region eJobSalaryFuncID
   actionAddNew = 'HRTPro04A01';
@@ -88,6 +89,13 @@ export class EmployeeJobSalaryComponent extends UIComponent {
         if (res) {
           this.grvSetup = Util.camelizekeyObj(res);
         }
+      });
+
+    //Load data field gender from database
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
       });
 
     // if (!this.funcID) {
