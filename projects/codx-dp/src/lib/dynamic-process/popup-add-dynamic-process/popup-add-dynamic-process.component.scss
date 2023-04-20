@@ -457,16 +457,16 @@ codx-attachment{
       .step-node{
         border: 2px solid #1BC5BD;
         border-radius: 100%;
-        width: 30px;
-        height: 30px;
-        line-height: 25px;
+        width: 40px;
+        height: 40px;
+        line-height: 30px;
         text-align: center;
         background-color: #fff;
         font-family: sans-serif;
-        font-size: 14px; font-weight: bold;
+        font-size: 20px; font-weight: bold;
         position: relative;
         color: #1BC5BD;
-        margin-right: 15px;
+        margin-right: 20px;
         z-index: 999;
       }
       .step-node.active{
@@ -477,12 +477,12 @@ codx-attachment{
       .process-step::after {
         content: "";
         background-color: #dbdbdb;
-        height: 2px;
+        height: 3px;
         width: 100%;
         position: absolute;
-        margin-top: 15px;
+        margin-top: 20px;
         top: 0;
-        left: 17px;
+        left: 20px;
         bottom: 0;
       }
 
@@ -499,4 +499,13 @@ codx-attachment{
         top: 0;
         width: 14px;
       }
+}
+
+.approverStepClass {
+  width: 200px !important;
+}
+.approverStepClass .popover-body {
+  width: 200px !important;
+  background-color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }
