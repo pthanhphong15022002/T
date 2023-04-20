@@ -286,8 +286,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
-  listStepAproverOld = [];
-  listStepAproveRemove = [];
+  listStepApprover = [];
+  listStepApproveDelete = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -546,12 +546,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.imageAvatar.clearData();
         if (res) {
           this.dialog.close(res.save);
-        } else {
-          this.dialog.close();
-          //xoa Aprover
-          if (this.recIDCategory) {
-            this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-          }
+          this.dpService.upDataApprovalStep(this.listStepApprover,this.listStepApproveDelete);
+        // } else {
+        //   this.dialog.close();
+        //   //xoa Aprover
+        //   if (this.recIDCategory) {
+        //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+        //   }
         }
       });
   }
@@ -563,6 +564,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          this.dpService.upDataApprovalStep(this.listStepApprover,this.listStepApproveDelete);
+
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
@@ -582,12 +585,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.dialog.close(res.update);
               }
             });
-        } else {
-          if (this.listStepAproveRemove?.length > 0)
-          this.dpService
-            .removeListApprovalStep(this.listStepAproveRemove)
-            .subscribe();
-        }
+        } 
       });
   }
 
@@ -661,17 +659,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               .deleteFileTask([this.listFileTask])
               .subscribe((rec) => {});
           }
-          if (this.action == 'add' || this.action == 'copy') {
-            //xoa Aprover
-            if (this.recIDCategory) {
-              this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-            }
-          } else {
-            if (this.listStepAproveRemove?.length > 0)
-              this.dpService
-                .removeListApprovalStep(this.listStepAproveRemove)
-                .subscribe();
-          }
+          // if (this.action == 'add' || this.action == 'copy') {
+          //   //xoa Aprover hoi lai cach xu ly nay
+          //   if (this.recIDCategory) {
+          //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+          //   }
+          // } else {
+          //   // if (this.listStepAproveRemove?.length > 0)
+          //   //   this.dpService
+          //   //     .removeListApprovalStep(this.listStepAproveRemove)
+          //   //     .subscribe();
+          // }
           this.dialog.close();
         } else return;
       });
@@ -1586,6 +1584,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       transID: transID,
       type: '0',
       isRequestListStep: true,
+      lstStep : this.listStepApprover
     };
 
     let popupApprover = this.callfc.openForm(
@@ -1601,24 +1600,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
         if(!this.isChange)this.isChange=true ;
-        this.getUserByApproverStep(res?.event);
+        this.listStepApprover = res?.event?.listStepApprover;
+        this.listStepApproveDelete = res?.event?.listStepApproveDelete;
+        this.getUserByApproverStep(res?.event?.listStepApprover);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
     });
   }
+
   getUserByApproverStep(listStepApprover) {
     if (listStepApprover?.length > 0) {
       var listAppover = [];
       listStepApprover.forEach((x) => {
         listAppover = listAppover.concat(x.approvers);
-        //list add new cân xóa
-        if (!this.listStepAproverOld.some((st) => st.recID == x.recID)) {
-          this.listStepAproveRemove.push(x);
-        }
       });
       //Hoi khanh xu ly thế nào
       console.log(listAppover);
-      console.log(this.listStepAproveRemove);
     }
   }
   loadListApproverStep() {
@@ -1626,7 +1623,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .getListAproverStepByCategoryID(this.process.processNo)
       .subscribe((res) => {
         if (res) {
-          this.listStepAproverOld = res;
+          this.listStepApprover = res;
         }
       });
   }
