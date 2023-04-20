@@ -10,14 +10,8 @@
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
   <div>
-    thuan
-    <!-- <codx-step-task
-      [stepId]="'13b64973-2c47-4945-bf6a-1a06edb0545a'"
-      [isShowButton]="true"
-      [isShowMore]="true"
-    ></codx-step-task> -->
   </div>
-  <!-- <div *ngFor="let step of data; let i = index">
+  <div *ngFor="let step of listStep; let i = index">
     <div>
       <span
         class="h4 me-3 justify-content-center align-items-center"
@@ -31,9 +25,13 @@
         >{{ i + 1 }}</span
       >
       <span class="h4">{{ step.stepName }}</span>
-    </div> -->
-    <!-- <codx-show-task [dataSource]=""></codx-show-task> -->
-  <!-- </div> -->
+    </div> 
+    <codx-step-task
+      [dataSources]="step"
+      [isShowButton]="false"
+      [isShowMore]="true"
+    ></codx-step-task>
+  </div>
 </ng-template>
 <!-- nvthuan sản phẩm -->
 <ng-template #product>

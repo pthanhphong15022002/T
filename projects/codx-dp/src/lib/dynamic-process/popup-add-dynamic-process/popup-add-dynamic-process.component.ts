@@ -584,9 +584,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             });
         } else {
           if (this.listStepAproveRemove?.length > 0)
-            this.dpService
-              .removeApprovalStep(this.listStepAproveRemove)
-              .subscribe();
+          this.dpService
+            .removeListApprovalStep(this.listStepAproveRemove)
+            .subscribe();
         }
       });
   }
@@ -669,7 +669,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           } else {
             if (this.listStepAproveRemove?.length > 0)
               this.dpService
-                .removeApprovalStep(this.listStepAproveRemove)
+                .removeListApprovalStep(this.listStepAproveRemove)
                 .subscribe();
           }
           this.dialog.close();
@@ -1600,6 +1600,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
+        if(!this.isChange)this.isChange=true ;
         this.getUserByApproverStep(res?.event);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
@@ -1611,12 +1612,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       listStepApprover.forEach((x) => {
         listAppover = listAppover.concat(x.approvers);
         //list add new cân xóa
-        if (this.listStepAproverOld.some((st) => st.recID == x.recID)) {
+        if (!this.listStepAproverOld.some((st) => st.recID == x.recID)) {
           this.listStepAproveRemove.push(x);
         }
       });
       //Hoi khanh xu ly thế nào
       console.log(listAppover);
+      console.log(this.listStepAproveRemove);
     }
   }
   loadListApproverStep() {

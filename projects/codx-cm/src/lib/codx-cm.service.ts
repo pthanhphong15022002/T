@@ -69,6 +69,14 @@ export class CodxCmService {
       [contact, funcID, recIDCrm, isDelete]
     );
   }
+  getStepInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsInstanceByInstanceIDAsync',
+      data
+    );
+  }
 
   getListAddress(entityName, recID){
     return this.api.exec<any>(
