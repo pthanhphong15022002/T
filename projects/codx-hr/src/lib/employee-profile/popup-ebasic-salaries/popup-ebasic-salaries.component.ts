@@ -201,4 +201,31 @@ export class PopupEBasicSalariesComponent
         });
     }
   }
+
+  valueChange(event) {
+    if (event?.field === 'signerID' && event?.component && event?.data != '') {
+      let employee = event?.component?.itemsSelected[0];
+      if (employee) {
+        if (employee.PositionID) {
+          this.hrService
+            .getPositionByID(employee.PositionID)
+            .subscribe((res) => {
+              if (res) {
+                this.EBasicSalaryObj.signerPosition = res.positionName;
+                this.formGroup.patchValue({
+                  signerPosition: this.EBasicSalaryObj.signerPosition,
+                });
+                this.cr.detectChanges();
+              }
+            });
+        } else {
+          this.EBasicSalaryObj.signerPosition = null;
+          this.formGroup.patchValue({
+            signerPosition: this.EBasicSalaryObj.signerPosition,
+          });
+        }
+      }
+      this.cr.detectChanges();
+    }
+  }
 }
