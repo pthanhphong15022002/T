@@ -57,7 +57,7 @@
           <div class="text-gray-700">
             <span
               [innerHTML]="
-                data?.positionID
+              data?.emp?.positionID
                   | formatvalue : view.formModel : 'positionID'
                   | async
               "
@@ -66,7 +66,7 @@
           <div class="text-gray-700">
             <span
               [innerHTML]="
-                data?.orgUnitID
+              data?.emp?.orgUnitID
                   | formatvalue : view.formModel : 'orgUnitID'
                   | async
               "
@@ -296,7 +296,7 @@
       <div class="justify-content-between">
         <span
           [innerHTML]="
-            data.emp.positionID
+            data?.emp?.positionID
               | formatvalue : view.formModel : 'PositionID'
               | async
           "

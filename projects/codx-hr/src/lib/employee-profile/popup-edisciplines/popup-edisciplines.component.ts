@@ -75,6 +75,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.disciplineObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
 
   }
+  
 
   initForm() {
     if (this.actionType == 'add') {

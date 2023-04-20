@@ -111,17 +111,19 @@ export class EmployeeDisciplineComponent extends UIComponent {
   onSaveUpdateForm(){
     this.hrService.UpdateEmployeeDisciplineInfo(this.editStatusObj).subscribe((res) => {
       if(res != null){
+        debugger
         this.notify.notifyCode('SYS007');
-        res[0].emp = this.currentEmpObj;
+        res.emp = this.currentEmpObj;
         this.view.formModel.entityName
         this.hrService.addBGTrackLog(
-          res[0].recID,
+          res.recID,
           this.cmtStatus,
           this.view.formModel.entityName,
           'C1',
           null,
           'EDisciplinesBusiness'
         ).subscribe((res) => {
+          debugger
           console.log('kq luu track log', res);
           
         });
@@ -203,7 +205,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
       // console.log('res sau khi update status', res);
       if(res?.event){
         debugger
-        this.view.dataService.update(res.event[0]).subscribe((res) => {
+        this.view.dataService.update(res.event).subscribe((res) => {
         })
       }
       this.df.detectChanges();

@@ -198,7 +198,6 @@ export class EmployeeContractComponent extends UIComponent {
           'EContractsBusiness'
         ).subscribe((res) => {
           console.log('kq luu track log', res);
-          
         });
         this.dialogEditStatus && this.dialogEditStatus.close(res);
       }
@@ -207,7 +206,7 @@ export class EmployeeContractComponent extends UIComponent {
   changeDataMf(event, data){
     // console.log('data changedata MF', event);
     // console.log('data di voi mf', data.signStatus);
-    this.hrService.handleShowHideMF(event, data, this.view);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 
   clickEvent(event, data){

@@ -459,12 +459,10 @@ import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee
 import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
-<<<<<<< HEAD
 import { EmployeeDisciplineComponent } from './employee-discipline/employee-discipline.component';
-=======
 import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/view-award-detail.component';
 import { TestComponent } from './test/test.component';
->>>>>>> 6f44f88bb3a7f83b7e9e84736e003ed11a2ad5d2
+import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
 export const routes: Routes = [
       {
         path: '',
@@ -725,12 +723,10 @@ const T_Component: Type<any>[] = [
   ViewDetailContractsComponent,
   ViewDetailEjobsalaryComponent,
   EmployeeAwardsComponent,
-<<<<<<< HEAD
-  EmployeeDisciplineComponent
-=======
+  EmployeeDisciplineComponent,
   ViewAwardDetailComponent,
-  TestComponent
->>>>>>> 6f44f88bb3a7f83b7e9e84736e003ed11a2ad5d2
+  TestComponent,
+  ApprovalHRContractComponent
 ];
 @NgModule({
   imports: [
