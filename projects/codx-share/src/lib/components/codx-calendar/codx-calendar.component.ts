@@ -509,7 +509,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataTM.gridViewName = 'grvMyTasks';
     requestDataTM.pageLoading = true;
     requestDataTM.page = 1;
-    requestDataTM.pageSize = 1000;
+    requestDataTM.pageSize = 50;
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
@@ -528,7 +528,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataCO.gridViewName = 'grvTMMeetings';
     requestDataCO.pageLoading = true;
     requestDataCO.page = 1;
-    requestDataCO.pageSize = 1000;
+    requestDataCO.pageSize = 10;
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {

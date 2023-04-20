@@ -635,7 +635,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //Set chiều cao view list
   setHeight()
   {
-    this.maxHeightScroll = this.divHome.nativeElement.offsetHeight - 60;
+    this.maxHeightScroll = window.innerHeight - 210;
   }
   //Refesh lại data
   refeshData()
