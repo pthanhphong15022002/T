@@ -10,6 +10,7 @@ export class InformationComponent implements OnInit {
   @Input() funcID = 'CM0101'; //True - Khách hàng; False - Liên hệ
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Input() gridViewSetup: any;
   constructor() { }
 
   ngOnInit(): void {
