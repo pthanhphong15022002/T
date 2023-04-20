@@ -18,6 +18,7 @@ import {
   CacheService,
   CRUDService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -29,6 +30,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { BookingItems } from '../../../models/bookingItems.model';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 export class Device {
   id;
@@ -186,7 +188,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if(res ){
         Array.from(res).forEach((um:any)=>{
           this.listUM.push({umid:um?.umid,umName:um?.umName});
-        });        
+        });
       }
     });
     this.cache
@@ -607,7 +609,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-    let itemData = this.data;    
+    let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [
       itemData,
@@ -1202,7 +1204,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         (tmpSta.quantity = this.attendeesNumber),
         (tmpSta.itemName = item.ResourceName),
         (tmpSta.umid = item.UMID),
-        (tmpSta.umName = item.UMID), 
+        (tmpSta.umName = item.UMID),
         (tmpSta.objectType = 'EP_Resources'),
         (tmpSta.objectID = item.RecID);
         let tmpUM = this.listUM.filter((obj) => {
@@ -1571,6 +1573,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
         window.open(url, '_blank');
       });
+  }
+
+  openAuto(){
+    let op = new DialogModel();
+    op.IsFull = true;
+    this.callfc.openForm(PopupAddAutoNumberComponent,'',0,0,this.funcID,null,'',op);
   }
   // connectMeetingNow() {
   //   this.codxEpService
