@@ -61,6 +61,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
     await this.getStepById(this.stepId);
     if(this.isLockSuccess){
       await this.removeSuccess();
@@ -259,7 +260,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     } else {//task
       this.taskGroupList?.forEach(group => {
-        if (group.recID == event.groupTaskID) {
+        if (group.refID == event.groupTaskID) {
           group?.task?.forEach(task => {
             if (task.recID == event.taskID) {
               task['progress'] = event.progressTask;
