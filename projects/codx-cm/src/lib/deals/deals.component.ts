@@ -124,6 +124,10 @@ export class DealsComponent
   }
 
   onInit(): void {
+     //test no chosse 
+     this.dataObj = {
+      processID:'327eb334-5695-468c-a2b6-98c0284d0620'
+    }
     this.request = new ResourceModel();
     this.request.service = 'CM';
     this.request.assemblyName = 'CM';
@@ -142,6 +146,7 @@ export class DealsComponent
     this.button = {
       id: this.btnAdd,
     };
+   
 
     this.views = [
       {
