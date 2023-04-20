@@ -15,6 +15,7 @@ import {
   ViewType,
   RequestOption,
   SidebarModel,
+  FormModel,
 } from 'codx-core';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -48,6 +49,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
   itemName: any;
   lsVatCode: any;
   gridViewLines: any;
+  fmPurchaseInvoicesLines: FormModel = {
+    formName: 'PurchaseInvoicesLines',
+    gridViewName: 'grvPurchaseInvoicesLines',
+    entityName: 'PS_PurchaseInvoicesLines',
+  };
   purchaseInvoicesLines: Array<PurchaseInvoicesLines> = [];
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
