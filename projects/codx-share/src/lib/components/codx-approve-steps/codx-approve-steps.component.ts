@@ -88,7 +88,7 @@ export class CodxApproveStepsComponent
 
       this.dialogApproval = dialog;
       this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
-      this.lstStep = dialogData?.data?.lstStep??[] // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
+      this.lstStep = dialogData?.data?.lstStep // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -130,8 +130,8 @@ export class CodxApproveStepsComponent
   }
 
   initForm() {
-    // Thao lam de gui danh sach step co san qua -20/04/2023
-    if(this.isRequestListStep){
+    // Thao lam de gui danh sach step qua ve  -20/04/2023
+    if(this.isRequestListStep && this.lstStep?.length >0){
       this.currentStepNo = this.lstStep.length + 1;
     }else{
       if (this.transId != '') {

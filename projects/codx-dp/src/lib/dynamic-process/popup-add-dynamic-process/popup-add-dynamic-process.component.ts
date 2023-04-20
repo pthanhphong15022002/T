@@ -286,7 +286,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
-  listStepApprover = [];
+  listStepApprover :any;
   listStepApproveDelete = [];
 
   constructor(
@@ -345,7 +345,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action == 'edit') {
       this.loadEx();
       this.loadWord();
-      this.loadListApproverStep();
+     // this.loadListApproverStep();
       // this.showID = true;
       this.checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
@@ -1618,15 +1618,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       console.log(listAppover);
     }
   }
-  loadListApproverStep() {
-    this.dpService
-      .getListAproverStepByCategoryID(this.process.processNo)
-      .subscribe((res) => {
-        if (res) {
-          this.listStepApprover = res;
-        }
-      });
-  }
+  // loadListApproverStep() {
+  //   this.dpService
+  //     .getListAproverStepByCategoryID(this.process.processNo)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.listStepApprover = res;
+  //       }
+  //     });
+  // }
   //Bieu mau
   clickViewTemp(temp) {}
   onScroll(e: any) {}
