@@ -54,13 +54,11 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
-import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
 import { lastValueFrom, firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -289,7 +287,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listStepApproverView = []; //view thôi ko có quyền gì cả
   listStepApprover: any;
   listStepApproveDelete = [];
-  viewApproverStep : any;
+  viewApproverStep: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -1640,10 +1638,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popoverApproverStep(p, data) {
     if (!data) {
       p.close();
-      return ;
+      return;
     }
-    if(p.isOpen()) p.close();
-    this.viewApproverStep =data
+    if (p.isOpen()) p.close();
+    this.viewApproverStep = data;
     p.open();
   }
   //Bieu mau
@@ -3385,9 +3383,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuration($event) {
     if ($event && $event != null) {
-      this.step[$event.field]= $event.data;
-      if(!$event.data || $event.data == '0') {
-        this.step[$event.field]= 0;
+      this.step[$event.field] = $event.data;
+      if (!$event.data || $event.data == '0') {
+        this.step[$event.field] = 0;
       }
     }
   }
@@ -3500,8 +3498,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action === 'add' || this.action === 'copy') {
       this.stepSuccess = this.handleStepReason(this.stepSuccess, '1');
       this.stepFail = this.handleStepReason(this.stepFail, '2');
-    }
-    else if (this.action === 'edit') {
+    } else if (this.action === 'edit') {
       this.stepSuccess = this.stepList.find((x) => x.isSuccessStep == true);
       this.stepFail = this.stepList.find((x) => x.isFailStep == true);
     }
@@ -3831,13 +3828,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.isInvalidDuration(x?.durationHour)
     );
     if (findExistDuration) {
-      this.notiService.notifyCode('DP025', 0, '"' + findExistDuration.stepName+ '"');
+      this.notiService.notifyCode(
+        'DP025',
+        0,
+        '"' + findExistDuration.stepName + '"'
+      );
       return true;
     }
     return false;
   }
   isInvalidDuration(duration) {
-    return ( !duration  ||  duration <= 0 );
+    return !duration || duration <= 0;
   }
 
   checkValidStepReason() {
