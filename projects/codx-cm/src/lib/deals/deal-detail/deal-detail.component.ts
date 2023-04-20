@@ -16,7 +16,7 @@ export class DealDetailComponent  implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-
+  @Input() tmpDataSelect: any;
   @ViewChild('tabDetailViewDetail') tabDetailViewDetail: TabDetailCustomComponent;
 
 
@@ -49,7 +49,6 @@ export class DealDetailComponent  implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    debugger;
     this.listTab(this.funcID);
     this.nameDetail == 'Information'
   }
