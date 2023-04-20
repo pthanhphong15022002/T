@@ -565,8 +565,7 @@ export class DynamicProcessComponent
           case 'DP02022':
           case 'DP02032':
           case 'SYS03':
-            let isEdit = data.write;
-            if (!isEdit || this.funcID == 'DP0203' || this.funcID === 'DP04') {
+            if (!data.write || this.funcID == 'DP0203' || this.funcID === 'DP04') {
               if (res.functionID == 'SYS03') res.disabled = true;
               else res.isblur = true;
             }
@@ -576,8 +575,7 @@ export class DynamicProcessComponent
           case 'DP02014':
           case 'DP02024':
           case 'DP02034':
-            let isAssign = data.assign;
-            if (!isAssign) res.isblur = true;
+            if (!data.assign) res.isblur = true;
             break;
           //Phát hành
           // case 'DP01015':
@@ -598,6 +596,9 @@ export class DynamicProcessComponent
               res.disabled = true;
             }
             break;
+            case 'DP01015':
+              if (!data.approveRule) res.isblur = true;
+              break;           
         }
       });
     }

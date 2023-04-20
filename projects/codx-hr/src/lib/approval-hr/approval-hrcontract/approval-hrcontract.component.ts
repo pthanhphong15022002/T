@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
+import { CacheService } from 'codx-core';
+import { CodxHrService } from '../../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
-import { CacheService, DataRequest } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
 
 @Component({
-  selector: 'lib-test',
-  templateUrl: './test.component.html',
-  styleUrls: ['./test.component.css']
+  selector: 'lib-approval-hrcontract',
+  templateUrl: './approval-hrcontract.component.html',
+  styleUrls: ['./approval-hrcontract.component.css']
 })
-export class TestComponent {
+export class ApprovalHRContractComponent {
   className = 'EContractsBusiness';
   method = 'GetListApprovalAsync';
   idField = 'recID';
@@ -19,6 +19,7 @@ export class TestComponent {
   gridViewSetup: any;
   request : any;
   formModel:any;
+
   constructor(private cache:CacheService,
     private hrService: CodxHrService,
     private router: ActivatedRoute){
