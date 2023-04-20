@@ -538,9 +538,11 @@ export class CodxDpService {
     );
   }
 
-  getAdminRoleDP(userID){
+  getAdminRoleDP(userID) {
     return this.api.exec<any>(
-      'AD', 'UserRolesBusiness', 'CheckUserRolesAsync',
+      'AD',
+      'UserRolesBusiness',
+      'CheckUserRolesAsync',
       [userID, 'DP']
     );
   }
@@ -552,7 +554,9 @@ export class CodxDpService {
         .filter((x) => x.objectType == 'O')
         .map((x) => x.objectID);
       if (userOrgID != null && userOrgID.length > 0) {
-        let o = await firstValueFrom(this.getListUserByListOrgUnitIDAsync(userOrgID, 'O'));
+        let o = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userOrgID, 'O')
+        );
         if (o != null && o.length > 0) {
           if (lstOrg != null && lstOrg.length > 0) {
             lstOrg = this.getUserArray(lstOrg, o);
@@ -566,7 +570,9 @@ export class CodxDpService {
         .map((x) => x.objectID);
 
       if (userDepartmentID != null && userDepartmentID.length > 0) {
-        let d = await firstValueFrom(this.getListUserByListOrgUnitIDAsync(userDepartmentID, 'D'));
+        let d = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
+        );
         if (d != null && d.length > 0) {
           if (lstOrg != null && lstOrg.length > 0) {
             lstOrg = this.getUserArray(lstOrg, d);
@@ -579,7 +585,9 @@ export class CodxDpService {
         .filter((x) => x.objectType == 'P')
         .map((x) => x.objectID);
       if (userPositionID != null && userPositionID.length > 0) {
-        let p = await firstValueFrom(this.getListUserByListOrgUnitIDAsync(userPositionID, 'P'));
+        let p = await firstValueFrom(
+          this.getListUserByListOrgUnitIDAsync(userPositionID, 'P')
+        );
         if (p != null && p.length > 0) {
           if (lstOrg != null && lstOrg.length > 0) {
             lstOrg = this.getUserArray(lstOrg, p);
@@ -637,9 +645,74 @@ export class CodxDpService {
     }, []);
     return arr3;
   }
+
   //check trinfh ki
-  checkApprovalStep(recID){
-   return this.api.exec('ES','ApprovalStepsBusiness','CheckApprovalStepByTranIDAsync',recID)
+  checkApprovalStep(recID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'CheckApprovalStepByTranIDAsync',
+      recID
+    );
   }
-  
+  //delete ApproverStep DeleteByTransIDAsync
+  removeApprovalStep(tranID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteByTransIDAsync',
+      tranID
+    );
+  }
+  getESCategoryByCategoryID(categoryID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      categoryID
+    );
+  }
+
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
+  removeListApprovalStep(listAppoverStep) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListApprovalStepAsync',
+      listAppoverStep
+    );
+  }
+  //up + add + delete es tại DP
+  upDataApprovalStep(listStep, listStepDelete) {
+    if (listStep?.length > 0)
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'UpdateApprovalStepsAsync',
+          [listStep]
+        )
+        .subscribe();
+
+    if (listStepDelete?.length > 0) {
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'DeleteListApprovalStepAsync',
+          [listStepDelete]
+        )
+        .subscribe();
+    }
+  }
 }

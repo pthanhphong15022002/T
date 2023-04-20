@@ -184,10 +184,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   getCacheData() {
-    this.codxEpService.getListUM().subscribe((res:any)=>{
-      if(res ){
-        Array.from(res).forEach((um:any)=>{
-          this.listUM.push({umid:um?.umid,umName:um?.umName});
+    this.codxEpService.getListUM().subscribe((res: any) => {
+      if (res) {
+        Array.from(res).forEach((um: any) => {
+          this.listUM.push({ umid: um?.umid, umName: um?.umName });
         });
       }
     });
@@ -687,8 +687,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.equipments = [];
       this.data.equipments = tmpEquip;
       this.data.stopOn = this.data.endDate;
-      if(this.data.online!=true){
-        this.data.onlineUrl=null;
+      if (this.data.online != true) {
+        this.data.onlineUrl = null;
       }
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
@@ -1119,7 +1119,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     let dlLink = this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
     dlLink.closed.subscribe((res: any) => {
-      if (res?.event && typeof(res?.event)=== 'string') {
+      if (res?.event && typeof res?.event === 'string') {
         this.data.onlineUrl = res?.event;
       }
     });
@@ -1207,13 +1207,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         (tmpSta.umName = item.UMID),
         (tmpSta.objectType = 'EP_Resources'),
         (tmpSta.objectID = item.RecID);
-        let tmpUM = this.listUM.filter((obj) => {
-          return obj.umid == tmpSta.umid;
-        });
-        if(tmpUM!=null && tmpUM.length>0){
-          tmpSta.umName=tmpUM[0]?.umName;
-        }
-        this.lstStationery.push(tmpSta);
+      let tmpUM = this.listUM.filter((obj) => {
+        return obj.umid == tmpSta.umid;
+      });
+      if (tmpUM != null && tmpUM.length > 0) {
+        tmpSta.umName = tmpUM[0]?.umName;
+      }
+      this.lstStationery.push(tmpSta);
     });
     this.lstStationery = [
       ...new Map(
@@ -1314,11 +1314,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   eventApply(e) {
-    var listUserID = '';
-    var listDepartmentID = '';
+    var assignTo = '';
     var listUserIDByOrg = '';
+    var listDepartmentID = '';
+    var listUserID = '';
+    var listPositionID = '';
+    var listEmployeeID = '';
     var listGroupMembersID = '';
     var type = 'U';
+    if(e ==null ) return;
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
         type = obj.objectType;
@@ -1330,12 +1334,32 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
+            break;
           case 'UG':
             listGroupMembersID += obj.id + ';';
             break;
         }
       }
     });
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.codxEpService
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueUser(res);
+          }
+        });
+    }
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueUser(listUserID);
@@ -1357,19 +1381,28 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    if (listGroupMembersID != '') {
-      listGroupMembersID = listGroupMembersID.substring(
-        0,
-        listGroupMembersID.length - 1
-      );
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
       this.codxEpService
-        .getListUserIDByListGroupID(listGroupMembersID)
+        .getListUserIDByListEmployeeID(listEmployeeID)
         .subscribe((res) => {
-          if (res && res?.length > 0) {
+          if (res && res.length > 0) {
             this.valueUser(res);
           }
         });
     }
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.codxEpService
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notificationsService.notifyCode('TM066');
+            this.valueUser(res[0]);
+          } else this.notificationsService.notifyCode('TM066');
+        });
+    }
+
   }
   valueUser(resourceID) {
     if (resourceID != '') {
@@ -1468,6 +1501,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
     this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
+    this.resources.splice(this.resources.indexOf(tempDelete), 1);
     this.attendeesNumber = this.attendeesList.length + 1 + this.guestNumber;
     this.changeDetectorRef.detectChanges();
   }

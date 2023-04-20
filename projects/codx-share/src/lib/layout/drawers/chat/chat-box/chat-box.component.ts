@@ -598,7 +598,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
 
   //
   clickViewMember(data:any){
-    debugger
   }
 }
 

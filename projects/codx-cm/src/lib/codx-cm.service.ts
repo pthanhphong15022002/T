@@ -69,6 +69,23 @@ export class CodxCmService {
       [contact, funcID, recIDCrm, isDelete]
     );
   }
+  getStepInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsInstanceByInstanceIDAsync',
+      data
+    );
+  }
+
+  getListAddress(entityName, recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'LoadDataAsync',
+      [entityName, recID]
+    );
+  }
 
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
@@ -79,5 +96,15 @@ export class CodxCmService {
     formModel['funcID'] = functionID;
     return formModel;
   }
+
+  //#region API For Deal
+  getListCustomer(){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetListCustomersAsync'
+    );
+  }
+  //#endregion
 
 }

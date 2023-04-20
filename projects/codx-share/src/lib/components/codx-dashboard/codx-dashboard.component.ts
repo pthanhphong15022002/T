@@ -31,6 +31,10 @@ import { LayoutPanelComponent } from './layout-panel/layout-panel.component';
 import { PopupAddChartComponent } from './popup-add-chart/popup-add-chart.component';
 import { PopupAddPanelComponent } from './popup-add-panel/popup-add-panel.component';
 import { PopupSelectTemplateComponent } from './popup-select-template/popup-select-template.component';
+import {
+  CircularGauge,
+  CircularGaugeComponent,
+} from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
   selector: 'codx-dashboard',
@@ -101,11 +105,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     minimum: 0,
     maximum: 10,
     interval: 1,
-    // lineStyle: { width: 0 },
-    // labelFormat: '{value}°C',
-
-    // majorTickLines: { width: 0 },
-    // minorTickLines: { width: 0 }
   };
   legendSetting: Object = {
     visible: true,
@@ -521,8 +520,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-accumulationchart')) {
         const chartObj = args.element.querySelector('ejs-accumulationchart')
           .ej2_instances[0];
-        chartObj.height = '80%';
-        chartObj.width = '100%';
+        chartObj.height = '50%';
+        chartObj.width = '50%';
         // if (args.element.offsetHeight < chartObj.element.offsetHeight) {
         //   chartObj.height = '80%';
         //   chartObj.width = '80%';
@@ -544,6 +543,18 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
           let instance = window.ng.getComponent(component) as TreeMapComponent;
+          instance.width = '80%';
+          instance.height = '50%';
+          instance.refresh();
+        }
+      }
+      if (args.element.querySelector('ejs-circulargauge')) {
+        let component =
+          args.element.getElementsByTagName('ejs-circulargauge')[0];
+        if (component) {
+          let instance = window.ng.getComponent(
+            component
+          ) as CircularGaugeComponent;
           instance.width = '80%';
           instance.height = '80%';
           instance.refresh();

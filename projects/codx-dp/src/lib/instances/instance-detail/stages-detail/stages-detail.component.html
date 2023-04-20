@@ -25,9 +25,8 @@
           (click)="openUpdateProgress(dataStep)"
           [disabled]="
             !isStart ||
-            !isClosed ||
-            instance.status == '1' ||
-            instance.status == '2' ||
+            isClosed ||
+            instance.status !== '2' ||
             !isRoleAll ||
             !progressStepControl
               ? true
@@ -179,6 +178,7 @@
     [isUpdate]="isUpdate"
     [titleHeaderFormCF]="titleDefault"
     [viewsCurrent]="viewsCurrent"
+    (saveDataStep)="saveDataStep($event)"
   >
   </codx-field-detail>
   <!-- nvthuan -->
@@ -555,7 +555,7 @@
           : ''
       "
     >
-      <codx-progress [progress]="data?.value?.progress"> </codx-progress>
+      <codx-progress-layout [progress]="data?.value?.progress"> </codx-progress-layout>
     </div>
     <span>
       <codx-img

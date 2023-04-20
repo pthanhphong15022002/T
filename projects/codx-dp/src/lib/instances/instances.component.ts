@@ -170,8 +170,8 @@ export class InstancesComponent
   addFieldsControl = '1';
   isLockButton = false;
   esCategory: any;
-  colorReasonSuccess:any;
-  colorReasonFail:any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
 
   //test temp
   dataTemplet = [
@@ -222,7 +222,7 @@ export class InstancesComponent
   listOwnerInMove = [];
   listStageManagerInMove = [];
   idTemp = '';
-  nameTemp ='';
+  nameTemp = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -827,7 +827,7 @@ export class InstancesComponent
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed) res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2') res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -980,18 +980,12 @@ export class InstancesComponent
     }
     if (data.status == '1') {
       this.notificationsService.notify(
-        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+'DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notify(
-        'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1181,8 +1175,6 @@ export class InstancesComponent
   }
 
   autoMoveStage(dataInstance) {
-    debugger;
-
     var checkTransferControl = this.process.steps.find(
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
@@ -1613,7 +1605,13 @@ export class InstancesComponent
       }
     }
   }
-
+  saveDatasInstance(e) {
+    this.dataSelected.datas = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    if(this.kanban){
+      this.kanban.updateCard(this.dataSelected);
+    }
+  }
   //Export file
   exportFile() {
     var gridModel = new DataRequest();
@@ -1713,7 +1711,8 @@ export class InstancesComponent
   downloadFile(data: any) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
     this.saveByteArray(
-      'DP_Instances_' + this.dataSelected.title +'_'+this.nameTemp || 'excel',
+      'DP_Instances_' + this.dataSelected.title + '_' + this.nameTemp ||
+        'excel',
       sampleArr
     );
   }
@@ -1743,7 +1742,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_ExcelTemplates';
-    this.className = 'ExcelTemplatesBusiness';
+    this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
     });
@@ -1752,7 +1751,7 @@ export class InstancesComponent
     this.requestTemp.predicates = 'ReportID=@0';
     this.requestTemp.dataValues = this.process.recID;
     this.requestTemp.entityName = 'AD_WordTemplates';
-    this.className = 'WordTemplatesBusiness';
+    this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
     });
@@ -1779,7 +1778,7 @@ export class InstancesComponent
   //end export
 
   //Xét duyệt
-  selectTemp(recID,nameTemp) {
+  selectTemp(recID, nameTemp) {
     if (recID) {
       this.isLockButton = false;
       this.idTemp = recID;
@@ -1788,14 +1787,8 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
-      )
+    this.codxDpService
+      .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
@@ -2070,10 +2063,9 @@ export class InstancesComponent
     }
   }
 
-  getColorReason(){
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
-        debugger;
         for (let item of res.datas) {
           if (item.value === 'S') {
             this.colorReasonSuccess = item;

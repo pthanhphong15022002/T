@@ -71,12 +71,12 @@
                     >
                   </div>
                 </div>
-                <div class="me-4 mb-1">
+                <div class="me-4 mb-1" *ngIf="dataSelected.address">
                   <span
                     class="icon-location_on icon-16 me-1 text-gray-700"
                   ></span>
                   <span class="text-gray-900"
-                    >Xã phú mậu, thành phố Huế, Thừa thiên Huế</span
+                    >{{dataSelected.address}}</span
                   >
                 </div>
               </div>
@@ -111,7 +111,7 @@
             >
               <codx-label
                 class="text-dark"
-                fiedName="Memo"
+                name="lblContact"
                 [formModel]="formModel"
                 default="Liên hệ: "
               ></codx-label>
@@ -229,6 +229,8 @@
               [funcID]="funcID"
               [dataSelected]="dataSelected"
               [formModel]="formModel"
+              [gridViewSetup]="gridViewSetup"
+              [entityName]="entityName"
             >
             </codx-information>
           </ng-container>
@@ -304,10 +306,10 @@
             <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
               {{ data?.contactName }}
             </div>
-            <div class="me-4">
+            <div class="me-4" *ngIf="data.address">
               <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
               <span class="text-gray-900"
-                >Xã phú mậu, thành phố Huế, Thừa thiên Huế</span
+                >{{data.address}}</span
               >
             </div>
           </div>
@@ -352,8 +354,12 @@
         "
       >
         <ng-container *ngFor="let item of data?.contactType.split(';')">
-          <div class="mb-1">
-            {{ item | vll : vllContactType : "text" | async }}
+          <div class="mb-1" [innerHTML]="
+          item
+            | formatvalue : formModelContact : 'ContactType'
+            | async
+        ">
+            <!-- {{ item | vll : vllContactType : "text" | async }} -->
           </div>
         </ng-container>
       </div>

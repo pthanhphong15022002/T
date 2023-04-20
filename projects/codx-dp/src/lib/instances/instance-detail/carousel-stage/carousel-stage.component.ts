@@ -65,7 +65,7 @@ implements OnInit, AfterViewInit {
       this.clearDataBefore();
       this.listStep = changes['dataSource'].currentValue;
       this.handleDateMaxSize(this.listStep, this.maxSize);
-      this.idElementCrr = this.autoClick(this.listStep);
+      this.status != '1' && this.autoClick(this.listStep);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -74,6 +74,7 @@ implements OnInit, AfterViewInit {
     this.listTreeView = [];
     this.viewSetting = '';
     this.selectedIndex = '0';
+    this.idElementCrr='';
   }
   handleDateMaxSize(list, maxSize) {
     if (list && list.length > maxSize) {
@@ -81,8 +82,7 @@ implements OnInit, AfterViewInit {
       for (let i = 0; i < list.length; i += maxSize) {
         const combinedItem = { items: list.slice(i, i + maxSize) };
         this.selectedIndex == '0' &&
-          (this.status == '1' || this.status == '2') &&
-          this.findStatusInDoing(combinedItem, index);
+          ( this.status == '2') && this.findStatusInDoing(combinedItem, index);
         this.listTreeView.push(combinedItem);
         index++;
       }
@@ -90,8 +90,7 @@ implements OnInit, AfterViewInit {
       this.viewSetting = this.viewCarouselForPage;
     } else if (list && list.length <= maxSize && list.length > 0) {
       this.listDefaultView = list;
-      (this.status == '1' || this.status == '2') &&
-        this.findStatusInDoing(this.listDefaultView, null);
+      (this.status == '2') && this.findStatusInDoing(this.listDefaultView, null);
       this.viewSetting = this.viewCarouselDefault;
     }
   }
@@ -117,16 +116,16 @@ implements OnInit, AfterViewInit {
   }
 
   findStatusInDoing(listStep, index) {
+    this.currentStep = this.listStep.findIndex( (item) => item.stepStatus == '1');
     if (index) {
       var indexResult = listStep.items.findIndex(
         (item) => item.stepStatus == '1'
       );
       if (indexResult > -1) {
-        this.currentStep = this.listStep.findIndex(
-          (item) => item.stepStatus == '1'
-        );
+
         this.selectedIndex =
           index == 0 || index ? index.toString() : this.selectedIndex;
+
       }
     }
   }
@@ -137,23 +136,26 @@ implements OnInit, AfterViewInit {
     this.idElementCrr = id;
     var index = this.dataSource.findIndex((x) => x.stepID == id);
     if (index != -1) {
-      var isView =
-        this.currentStep < index && (this.status == '1' || this.status == '2');
+      var isView = this.currentStep == index && (this.status == '1' || this.status == '2');
       var result = {
         index: index,
         id: id,
-        isOnlyView: !isView,
+        isOnlyView: isView,
       };
       this.eventClicked.emit(result);
     }
     this.changeDetectorRef.detectChanges();
   }
   autoClick(listStep){
-    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0]
+    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0];
+    var stepId = '';
     if(stepCrr) {
-        return stepCrr.stepID;
+      stepId = stepCrr.stepID;
     }
-    return this.guidEmpty;
+    else {
+      stepId = this.guidEmpty;
+    }
+    this.idElementCrr = stepId;
   }
 
   getColorReason(){

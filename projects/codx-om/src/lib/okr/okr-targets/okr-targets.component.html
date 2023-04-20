@@ -154,19 +154,19 @@
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.target "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.current?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.current "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
               </div>
               <span class="mx-2 text-gray-400">|</span>
               <div class="d-flex align-items-center">
                 <span class="text-gray-500 me-1">{{okrGrv?.krGrv?.actual?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.actual "></span>
-                <span [innerHTML]="getUMName(item?.umid)"></span>
+                <span [innerHTML]="item?.umName"></span>
                 <!-- <span [innerHTML]="item?.umid | formatvalue : okrFM?.krFM : 'UMID' | async"></span> -->
               </div>
             </div>
@@ -176,7 +176,7 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-end col-6 ps-5">
-          <span class="col-3 text-truncate text-center" [innerHTML]="getRangeDate(item?.rangeDate)" [ngbTooltip]="getRangeDate(item?.rangeDate)"></span>
+          <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="item?.rangeDateText"></span>
           <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'" class="ps-5"></codx-img>
           <div class="d-flex ps-5 align-items-end">
             <div class="d-flex flex-column align-items-center kr-process w-150px pe-2  pb-2">

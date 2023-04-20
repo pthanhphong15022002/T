@@ -85,6 +85,7 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = {};
 
+  @Input() curSignerType;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
@@ -252,6 +253,8 @@ export class PdfComponent
   oSignfile: any;
   onInit() {
     this.curSelectedHLA = null;
+    // console.log('approver', );
+
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
         this.vllSupplier = res.datas;
@@ -318,6 +321,10 @@ export class PdfComponent
               //con dau
               if (signer.stamp) {
                 signer.stamp = environment.urlUpload + '/' + signer.stamp;
+              }
+              //approverType
+              if (signer.authorID == this.curSignerType) {
+                signer.approverType = this.curSignerType;
               }
             });
             if (this.isApprover) {
@@ -496,7 +503,8 @@ export class PdfComponent
               this.recID,
               this.fileInfo.fileID,
               this.isApprover,
-              this.user.userID
+              this.user.userID,
+              this.stepNo
             )
             .subscribe((res) => {
               if (res) {
@@ -647,7 +655,9 @@ export class PdfComponent
   //get
   getAreaOwnerName(authorID) {
     return this.lstSigners.find((signer) => {
-      return signer.authorID == authorID;
+      return (
+        signer.authorID == authorID || signer?.roleType == this.curSignerType
+      );
     })?.fullName;
   }
 
@@ -726,7 +736,8 @@ export class PdfComponent
               this.recID,
               this.fileInfo.fileID,
               this.isApprover,
-              this.user.userID
+              this.user.userID,
+              this.stepNo
             )
             .subscribe((res) => {
               if (res) {
@@ -809,7 +820,8 @@ export class PdfComponent
                 this.recID,
                 this.fileInfo.fileID,
                 this.isApprover,
-                this.user.userID
+                this.user.userID,
+                this.stepNo
               )
               .subscribe((res) => {
                 if (res) {
@@ -844,14 +856,18 @@ export class PdfComponent
         return ele.getAttribute('data-page-number') == e.pageNumber;
       }
     );
-    if (rendedPage?.firstChild) {
-      let warpper = rendedPage?.firstChild;
+    let warpper = rendedPage?.querySelector('.canvasWrapper');
+    if (warpper) {
       let virtual = document.createElement('div');
       let id = 'layer' + e.pageNumber.toString();
+      let addedLayer = document.getElementById(id);
+      if (addedLayer) {
+        addedLayer.remove();
+      }
       virtual.id = id;
       virtual.className = 'manualCanvasLayer';
       virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
-      virtual.style.border = '1px solid #eee';
+      virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -890,7 +906,8 @@ export class PdfComponent
           if (
             (area.labelType != '8' && !this.isApprover && !area.isLock) ||
             (this.isApprover &&
-              area.signer == this.curSignerID &&
+              (area.signer == this.curSignerID ||
+                area.signer == this.curSignerType) &&
               area.stepNo == this.stepNo)
           ) {
             isRender = true;
@@ -906,7 +923,9 @@ export class PdfComponent
               : !area.isLock;
           if (isRender) {
             let curSignerInfo = this.lstSigners.find(
-              (signer) => signer.authorID == area.signer
+              (signer) =>
+                signer.authorID == area.signer ||
+                this.curSignerType == area.signer
             );
             let url = '';
             let isChangeUrl = false;
@@ -948,7 +967,10 @@ export class PdfComponent
                 break;
               }
               case 'S3': {
-                let url = curSignerInfo?.stamp ?? area.labelValue;
+                url = curSignerInfo?.stamp ?? area.labelValue;
+                if (area.labelValue != url) {
+                  isChangeUrl = true;
+                }
                 let isUrl = this.checkIsUrl(url);
                 this.addArea(
                   url,
@@ -1424,8 +1446,16 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
+    let userID = area.signer;
+    if (userID == this.curSignerType) {
+      userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
+    }
+
+    if (userID == '') {
+      return;
+    }
     let model = {
-      userID: area.signer,
+      userID: userID,
       signatureType: area.signatureType,
     };
     let data = {
@@ -1459,6 +1489,9 @@ export class PdfComponent
       data
     );
     popupSignature.closed.subscribe((res) => {
+      if (res == null || res.event == null) {
+        return;
+      }
       if (res?.event[0]) {
         area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
@@ -1712,7 +1745,8 @@ export class PdfComponent
             this.recID,
             this.fileInfo.fileID,
             this.isApprover,
-            this.user.userID
+            this.user.userID,
+            this.stepNo
           )
           .subscribe((res) => {
             if (res) {
@@ -1973,7 +2007,8 @@ export class PdfComponent
         this.recID,
         this.fileInfo.fileID,
         this.isApprover,
-        this.user.userID
+        this.user.userID,
+        this.stepNo
       )
       .subscribe((res) => {
         if (res) {
@@ -2209,7 +2244,8 @@ export class PdfComponent
                       this.recID,
                       this.fileInfo.fileID,
                       this.isApprover,
-                      this.user.userID
+                      this.user.userID,
+                      this.stepNo
                     )
                     .subscribe((res) => {
                       if (res) {
@@ -2297,7 +2333,8 @@ export class PdfComponent
                         this.recID,
                         this.fileInfo.fileID,
                         this.isApprover,
-                        this.user.userID
+                        this.user.userID,
+                        this.stepNo
                       )
                       .subscribe((res) => {
                         if (res) {

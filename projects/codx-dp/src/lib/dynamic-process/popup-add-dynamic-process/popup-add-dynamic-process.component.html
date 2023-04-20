@@ -670,63 +670,140 @@
         <div class="d-flex align-items-center mb-2">
           <codx-label
             class="fw-bold fs-5 text-dark me-3"
-            name="lblApprover"
+            fiedName="ApproveRule"
             [formModel]="dialog.formModel"
-            default="Người xét duyệt"
           >
           </codx-label>
-          <!-- <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="sharePerm(controlShare, 'followers')"
-          >
-            <i class="icon-person_add_alt_1 icon-16"></i>
-          </button> -->
+          <div class="me-3">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="process?.approveRule"
+              field="approveRule"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles('A')"
+            [disabled]="!process?.approveRule"
+            (click)="clickSettingApprove()"
           >
             <i class="icon-settings icon-16"></i>
           </button>
         </div>
-        <div>
-          <codx-label
-            class="fw-normal text-gray-400"
-            name="lblApproverControl"
-            [formModel]="dialog.formModel"
-            default="Có quyền xét duyệt các tài liệu của nhiệm vụ trong quy trình"
-          >
-          </codx-label>
-        </div>
-      </div>
-
-      <div
-        class="d-flex flex-wrap"
-        *ngIf="process.permissions != null && process.permissions?.length > 0"
-      >
-        <ng-container *ngFor="let perm of process.permissions; index as i">
+        <ng-container *ngIf="process?.approveRule">
+          <div class="mb-2" >
+            <codx-label
+              class="fw-normal text-gray-400"
+              name="lblDescriptionApproveRule"
+              [formModel]="dialog.formModel"
+              default="Các bước duyệt khi thực hiện trình kí"
+            >
+            </codx-label>
+          </div>
           <div
-            *ngIf="perm.roleType == 'A'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+            class="progress-approval ms-3 mx-3"
+            *ngIf="listStepApproverView?.length > 0"
           >
-            <div class="me-2">
-              <codx-img
-                [width]="20"
-                [objectId]="perm.objectName"
-                objectType="AD_Users"
-              >
-              </codx-img>
-            </div>
-            <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-            <!-- <ng-container *ngIf="checkAssignRemove(i)">
-              <div class="action-menu-od" (click)="removeUser(i)">
-                <i class="icon-close text-danger icon-16"></i>
+            <ng-container
+              *ngFor="let item of listStepApproverView; let i = index"
+            >
+              <div class="process-step" placement="top">
+                <div
+                  class="step-node cursor-pointer"
+                  [style.color]="''"
+                  [ngStyle]="{ border: '2px solid ' + '' }"
+                  #popoverDetails="ngbPopover"
+                  [ngbPopover]="popupViewApproverStep"
+                  (mouseenter)="popoverApproverStep(popoverDetails, item)"
+                  (mouseleave)="popoverApproverStep(popoverDetails, null)"
+                  popoverClass="approverStepClass"
+                  container="body"
+                  placement="top bottom"
+                >
+                  {{ i + 1 }}
+                </div>
+                <div class="text-gray-600 fw-bold">
+                  {{ item.stepType | vll : "ES002" : "text" | async }}
+                </div>
               </div>
-            </ng-container> -->
+            </ng-container>
+          </div>
+          <div
+            class="center w-400 mt-5 mb-3"
+            *ngIf="listStepApproverView?.length == 0"
+          >
+            <codx-label
+              name="lblNotSetup"
+              default="Chưa thiết lập"
+              [formModel]="dialog.formModel"
+            >
+            </codx-label>
           </div>
         </ng-container>
       </div>
+      <ng-template #popupViewApproverStep>
+        <div class="">
+          <div class="text-gray-600 fw-bold">
+            {{ viewApproverStep.stepName }}
+          </div>
+          <div class="d-flex flex-wrap">
+            <ng-container *ngFor="let approver of viewApproverStep.approvers">
+              <div
+                class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+              >
+                <codx-temp-full
+                  cardCss="card-template p-3"
+                  *ngIf="
+                    approver.roleType?.length == 1 || approver.roleType == 'PA'
+                  "
+                  [imageId]="approver.approver"
+                  [title]="approver.name"
+                  [subTitle]="approver.position"
+                  [imageObjType]="'AD_Users'"
+                  [modeImgs]="true"
+                  [titleLine]="3"
+                >
+                </codx-temp-full>
+
+                <codx-temp-full
+                  cardCss="card-template p-3"
+                  *ngIf="
+                    approver.roleType.length > 1 && approver.roleType != 'PA'
+                  "
+                  [imageSrc]="
+                    './assets/themes/sys/default/img/' +
+                    (viewApproverStep.icon
+                      ? viewApproverStep.icon
+                      : 'share_default.svg')
+                  "
+                  imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
+                  [title]="approver.approver | vll : 'ES014' : 'text' | async"
+                  [subTitle]="
+                    approver.approver | vll : 'ES014' : 'text' | async
+                  "
+                  [modeImgs]="true"
+                  [titleLine]="3"
+                >
+                </codx-temp-full>
+
+                <!-- <ng-template #footer1 let-data>
+                <div
+                  class="d-flex align-items-center justify-content-end"
+                >
+                  <span
+                    class="icon-access_time icon-14 me-1"
+                  ></span
+                  >{{ data.leadtime }} giờ
+                </div>
+              </ng-template> -->
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
   <!--Tùy chỉnh quy trình-->
@@ -972,58 +1049,6 @@
                     [checked]="!process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
                     (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
-                    readonly
-                  >
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group margin-form mb-4">
-        <div class="row">
-          <div class="col-6">
-            <div>
-              <codx-label fiedName="ApproveRule" [formModel]="dialog.formModel">
-              </codx-label>
-            </div>
-            <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                name="lblFollowerControl"
-                [formModel]="dialog.formModel"
-                default="Có quyền xem các nhiệm vụ trong quy trình"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="col-6 row">
-            <div class="col-6">
-              <div class="d-flex align-items-center">
-                <div class="me-5">
-                  <codx-input
-                    name="approve-radio"
-                    type="radio"
-                    style="width: 100%"
-                    field="yes"
-                    [label]="titleRadioYes"
-                    [checked]="process?.approveRule ?? false"
-                    [crrValue]="process?.approveRule"
-                    (valueChange)="valueRadioInfo($event, 'ApproveRuleView')"
-                  >
-                  </codx-input>
-                </div>
-                <div class="me-5">
-                  <codx-input
-                    name="approve-radio"
-                    type="radio"
-                    style="width: 100%"
-                    field="no"
-                    [label]="titleRadioNo"
-                    [checked]="!process?.approveRule ?? false"
-                    [crrValue]="process?.approveRule"
-                    (valueChange)="valueRadioInfo($event, 'ApproveRuleView')"
                     readonly
                   >
                   </codx-input>
@@ -1413,7 +1438,9 @@
                   ></i
                   ><codx-label
                     [default]="'Excel Template'"
-                    [class]="'fw-bold ' + (type == 'excel' ? 'text-primary' : '')"
+                    [class]="
+                      'fw-bold ' + (type == 'excel' ? 'text-primary' : '')
+                    "
                   ></codx-label></div
               ></a>
             </li>
@@ -1426,7 +1453,9 @@
                   ></i
                   ><codx-label
                     [default]="'Word Template'"
-                    [class]="'fw-bold ' + (type == 'word' ? 'text-primary' : '')"
+                    [class]="
+                      'fw-bold ' + (type == 'word' ? 'text-primary' : '')
+                    "
                   ></codx-label></div
               ></a>
             </li>
@@ -2074,21 +2103,6 @@
                               </div>
                             </div>
                           </div>
-                          <!-- <div class="task-att">
-                            <codx-attachment
-                              #attachment
-                              hideFolder="1"
-                              hideImageUpload="0"
-                              hideImageThumb="0"
-                              hideUploadBtn="1"
-                              hideDes="1"
-                              type="inline"
-                              allowMultiFile="1"
-                              displayThumb="full"
-                              showMessage="1"
-                            >
-                            </codx-attachment>
-                          </div> -->
                           <codx-mfunc
                             [formModel]="grvMoreFunction"
                             (clickMF)="
@@ -3104,15 +3118,15 @@
               <div class="col-6">
                 <div class="position-relative">
                   <codx-input
-                    field="DurationDay"
+                    field="durationDay"
                     [formModel]=""
                     [Group]=""
-                    type="text"
+                    type="number"
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="step?.durationDay"
                     [crrValue]="step?.durationDay"
-                    (valueChange)="valueChangeDuraDay($event)"
+                    (valueChange)="valueChangeDuration($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-muted"
@@ -3132,12 +3146,12 @@
                     field="durationHour"
                     [formModel]=""
                     [Group]=""
-                    type="text"
+                    type="number"
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="'00.00'"
                     [crrValue]="step?.durationHour"
-                    (valueChange)="valueChangeDuraHour($event)"
+                    (valueChange)="valueChangeDuration($event)"
                   >
                   </codx-input>
                   <div

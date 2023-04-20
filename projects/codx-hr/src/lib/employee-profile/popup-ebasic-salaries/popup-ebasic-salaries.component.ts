@@ -62,7 +62,7 @@ export class PopupEBasicSalariesComponent
     this.actionType = data?.data?.actionType;
     this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
     this.formModel = dialog?.formModel;
-    this.employeeObj = data?.data?.employeeObj;
+    this.employeeObj = data?.data?.empObj;
     this.fromListView = data?.data?.fromListView;
   }
 
@@ -199,6 +199,33 @@ export class PopupEBasicSalariesComponent
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
+    }
+  }
+
+  valueChange(event) {
+    if (event?.field === 'signerID' && event?.component && event?.data != '') {
+      let employee = event?.component?.itemsSelected[0];
+      if (employee) {
+        if (employee.PositionID) {
+          this.hrService
+            .getPositionByID(employee.PositionID)
+            .subscribe((res) => {
+              if (res) {
+                this.EBasicSalaryObj.signerPosition = res.positionName;
+                this.formGroup.patchValue({
+                  signerPosition: this.EBasicSalaryObj.signerPosition,
+                });
+                this.cr.detectChanges();
+              }
+            });
+        } else {
+          this.EBasicSalaryObj.signerPosition = null;
+          this.formGroup.patchValue({
+            signerPosition: this.EBasicSalaryObj.signerPosition,
+          });
+        }
+      }
+      this.cr.detectChanges();
     }
   }
 }

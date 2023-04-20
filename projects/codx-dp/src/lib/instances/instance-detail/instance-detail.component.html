@@ -166,11 +166,11 @@
               </div>
             </div>
             <div style="margin-right: -11px; margin-top: -5px">
-              <codx-update-progress
+              <!-- <codx-update-progress
                 [progress]="progress"
                 [isUpdate]="false"
                 [typeProgress]="3"
-              ></codx-update-progress>
+              ></codx-update-progress> -->
             </div>
           </div>
         </div>
@@ -262,6 +262,7 @@
                     [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
                     [proccesNameMove]="proccesNameMove"
                     (saveAssign)="saveAssign($event)"
+                    (outDataStep)="saveDataStep($event)"
                     [viewsCurrent]="viewsCurrent"
                     [frmModelInstancesTask]="frmModelInstancesTask"
                   ></codx-stages-detail>
@@ -285,6 +286,7 @@
                     (actionSaveCF)="actionSaveCustomField($event)"
                     [titleHeaderFormCF]="titleDefault"
                     [viewsCurrent]="viewsCurrent"
+                    (saveDataStep)="saveDataStep($event)"
                   >
                   </codx-field-detail>
                 </ng-container>
@@ -303,6 +305,8 @@
         [objectID]="dataSelect.recID"
         [funcID]="formModel.funcID"
         [dataTree]="treeTask"
+        [transID]="dataSelect.recID"
+        [approveStatus]="dataSelect.approveStatus"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
@@ -353,17 +357,15 @@
     </div>
   </ng-template>
   <!-- mô tả -->
-  <div>
-    <ul class="d-flex align-items-center">
-      <li *ngFor="let item of listTypeTask" class="d-flex align-items-center">
-        <span class="me-1 fs-5 font-weight-bold">{{ item?.text }}: </span>
-        <div
-          class="me-5"
-          [ngStyle]="{ 'background-color': item?.color }"
-          style="height: 20px; width: 60px; border-radius: 5px"
-        ></div>
-      </li>
-    </ul>
+  <div class="d-flex flex-wrap pb-3">
+    <div *ngFor="let item of listTypeTask" class="d-flex align-items-center me-6">  
+      <div
+        class="me-2"
+        [ngStyle]="{ 'background-color': item?.color }"
+        style="height: 12px; width: 12px; border-radius: 2px"
+      ></div>
+      <span class="text-gray-700 fs-7">{{ item?.text }}</span>
+    </div>
   </div>
 </ng-template>
 

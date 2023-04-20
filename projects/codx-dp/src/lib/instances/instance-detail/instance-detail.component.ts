@@ -51,7 +51,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
-  @Input() viewType = 'd';
+ // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
@@ -61,6 +61,8 @@ export class InstanceDetailComponent implements OnInit {
   @Input() stepStart: any;
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
+  @Output() saveDatasInstance = new EventEmitter<any>();
+
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -218,6 +220,29 @@ export class InstanceDetailComponent implements OnInit {
       }
       //  this.getListStepsStatus();
     });
+  }
+  saveDataStep(e){
+   let stepInsIdx = this.listSteps.findIndex(x=>{x.recID==e.recID})
+   if(stepInsIdx!=-1){
+    this.listSteps[stepInsIdx] = e ;
+   }
+   this.loadingDatas();
+  }
+  loadingDatas(){
+    let listField =[]
+    this.listSteps.forEach(st=>{
+      listField = listField.concat(st.fields)
+    })
+    let datas = '';
+    if(listField?.length>0){ 
+      listField.forEach(obj=>{
+        datas += '"'+obj.fieldName+'":"'+obj.dataValue+'",'
+      })
+    }
+    datas = datas.substring(0,datas.length-1) ;
+    datas = "[{"+datas+"}]";
+    this.dataSelect.datas =datas ;
+    this.saveDatasInstance.emit(datas)
   }
 
   getStageByStep(listSteps) {
@@ -476,7 +501,7 @@ export class InstanceDetailComponent implements OnInit {
     this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
-    if (this.viewType == 'd') {
+    if (this.viewsCurrent == 'd-') {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;

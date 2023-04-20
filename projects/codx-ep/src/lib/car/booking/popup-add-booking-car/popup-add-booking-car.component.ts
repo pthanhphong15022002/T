@@ -888,6 +888,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       }
     });
     this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);
+    this.resources.splice(this.resources.indexOf(tempDelete), 1);
     this.data.attendees = this.lstPeople.length + 1;
     this.detectorRef.detectChanges();
   }
@@ -1114,10 +1115,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
   }
   eventApply(e) {
-    var listUserID = '';
-    var listDepartmentID = '';
+    var assignTo = '';
     var listUserIDByOrg = '';
+    var listDepartmentID = '';
+    var listUserID = '';
+    var listPositionID = '';
+    var listEmployeeID = '';
+    var listGroupMembersID = '';
     var type = 'U';
+    if(e ==null ) return;
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
         type = obj.objectType;
@@ -1129,9 +1135,32 @@ export class PopupAddBookingCarComponent extends UIComponent {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
+            break;
         }
       }
     });
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.codxEpService
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueUser(res);
+          }
+        });
+    }
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueUser(listUserID);
@@ -1153,6 +1182,28 @@ export class PopupAddBookingCarComponent extends UIComponent {
           }
         });
     }
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.codxEpService
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueUser(res);
+          }
+        });
+    }
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.codxEpService
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notificationsService.notifyCode('TM066');
+            this.valueUser(res[0]);
+          } else this.notificationsService.notifyCode('TM066');
+        });
+    }
+
   }
   valueUser(resourceID) {
     if (resourceID != '') {

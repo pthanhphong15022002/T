@@ -15,6 +15,8 @@ export class CodxTaskComponent implements OnInit, OnChanges {
   @Input() dataSources: any;
   @Input() isLockSuccess = false;
   @Input() isSaveProgress = true;
+  @Input() isShowMore = true;
+  @Input() isShowButton = true;
   @Input() typeProgress = 1;
   @Output() valueChangeProgress = new EventEmitter<any>();
 
@@ -27,7 +29,7 @@ export class CodxTaskComponent implements OnInit, OnChanges {
   listTypeTask = [];
   taskList = [];
   taskGroupList = [];
-
+  grvMoreFunction: FormModel;
 
   moreDefaut = {
     share: true,
@@ -49,7 +51,8 @@ export class CodxTaskComponent implements OnInit, OnChanges {
     this.user = this.authStore.get();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
@@ -64,6 +67,40 @@ export class CodxTaskComponent implements OnInit, OnChanges {
     }
   }
 
+  async getFormModel(functionID) {
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = {}
+    formModel['formName'] = f?.formName;
+    formModel['gridViewName'] = f?.gridViewName;
+    formModel['entityName'] = f?.entityName;
+    formModel['funcID'] = functionID;
+    return formModel;
+  }
+
+  clickMFTask(event, data) {
+    // let typeTask = '';
+    // switch (event?.functionID) {
+    //   case 'SYS02':
+    //     // this.deleteTask(taskList, task);
+    //     break;
+    //   case 'SYS03':
+    //     if (data.taskType) {
+    //       typeTask = this.listTypeTask.find(
+    //         (type) => type.value === data.taskType
+    //       );
+    //     }
+    //     this.handleTask(null, 'edit');
+    //     break;
+    //   case 'SYS04':
+    //     typeTask = data.taskType;
+    //     this.handleTask(data, 'copy');
+    //     break;
+      // case 'DP07':
+      //   jobType = data.taskType;
+      //   this.viewTask(task);
+      //   break;
+    // }
+  }
   removeSuccess() {
     if (this.taskGroupList?.length > 0) {
       for (let i = 0; i < this.taskGroupList.length;) {
@@ -238,6 +275,9 @@ export class CodxTaskComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  openPopupTaskGroup(){}
+  openTypeTask(){}
 
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {

@@ -22,6 +22,7 @@ import { PopupAddressComponent } from '../popup-address/popup-address.component'
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxCmService } from '../../codx-cm.service';
+import { BS_AddressBook } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-popup-add-cmcustomer',
@@ -38,9 +39,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
   funcID = '';
   contacts = [];
   gridViewSetup: any;
-  moreFuncName: '';
+  moreFuncAdd = '';
+  moreFuncEdit = '';
   contactsPerson: any;
   refValue = '';
+  listAddress: BS_AddressBook[] = [];
+  formModelAddress: FormModel;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -57,16 +61,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.action = dt.data[0];
     this.title = dt.data[1];
     if (this.action == 'edit') {
-      this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res)=>{
-        if(res){
+      this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res) => {
+        if (res) {
           this.contactsPerson = res;
         }
       });
       this.getAvatar(this.data);
+      this.getListAddress(this.dialog.formModel.entityName, this.data?.recID);
     }
   }
 
   ngOnInit(): void {
+    this.getFormModelAddress();
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -81,11 +87,20 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (m) this.moreFuncAdd = m.customName;
+        if (edit) this.moreFuncEdit = edit.customName;
       }
     });
   }
 
+  getListAddress(entityName, recID) {
+    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listAddress = res;
+      }
+    });
+  }
   // getLastAndFirstName(contactName) {
   //   if (contactName != null) {
   //     var nameArr = contactName.split(' ');
@@ -102,10 +117,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.data.field = e.data;
   }
 
-  valueChangeContact(e){
+  valueChangeContact(e) {
     this.data[e.field] = e?.data;
-    if(this.data.objectType){
-
+    if (this.data.objectType) {
     }
   }
 
@@ -127,22 +141,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.action === 'add' || this.action == 'copy') {
       op.method = 'AddCrmAsync';
       op.className = 'CustomersBusiness';
-
-      data = [
-        this.funcID == 'CM0101' ? this.data : null,
-        this.funcID == 'CM0102' ? this.data : null,
-        this.funcID == 'CM0103' ? this.data : null,
-        this.funcID == 'CM0104' ? this.data : null,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.contactsPerson?.recID,
-      ];
     } else {
-      op.method = 'UpdateCustomerAsync';
+      op.method = 'UpdateCrmAsync';
       op.className = 'CustomersBusiness';
-
-      data = [this.data, this.funcID, this.contactsPerson?.recID];
     }
+    data = [
+      this.funcID == 'CM0101' ? this.data : null,
+      this.funcID == 'CM0102' ? this.data : null,
+      this.funcID == 'CM0103' ? this.data : null,
+      this.funcID == 'CM0104' ? this.data : null,
+      this.funcID,
+      this.dialog.formModel.entityName,
+      this.contactsPerson?.recID,
+      null,
+      this.listAddress,
+    ];
     op.data = data;
     return true;
   }
@@ -204,10 +217,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.data.phone != null && this.data.phone.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
     }
-    if (
-      this.data.email != null &&
-      this.data.email.trim() != ''
-    ) {
+    if (this.data.email != null && this.data.email.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
     }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
@@ -297,27 +307,95 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
-  openPopupAddress() {
+  getFormModelAddress() {
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMAddressBook';
+    dataModel.gridViewName = 'grvCMAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
+    dataModel.funcID = this.funcID;
+    this.formModelAddress = dataModel;
+  }
+
+  openPopupAddress(data = new BS_AddressBook(), action = 'add') {
     let opt = new DialogModel();
     let dataModel = new FormModel();
     var title =
-      this.moreFuncName + ' ' + this.gridViewSetup?.Address?.headerText;
-    dataModel.formName = this.dialog.formModel.formName;
-    dataModel.gridViewName = this.dialog.formModel.gridViewName;
-    dataModel.entityName = this.dialog.formModel.entityName;
+      (action == 'add' ? this.moreFuncAdd : this.moreFuncEdit) +
+      ' ' +
+      this.gridViewSetup?.Address?.headerText;
+    dataModel.formName = 'CMAddressBook';
+    dataModel.gridViewName = 'grvCMAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
-    this.callFc.openForm(
-      PopupAddressComponent,
-      '',
-      500,
-      550,
-      '',
-      [title],
-      '',
-      opt
-    );
+    this.cache
+      .gridViewSetup('CMAddressBook', 'grvCMAddressBook')
+      .subscribe((res) => {
+        if (res) {
+          var obj = {
+            title: title,
+            gridViewSetup: res,
+            action: action,
+            data: data,
+          };
+          var dialog = this.callFc.openForm(
+            PopupAddressComponent,
+            '',
+            500,
+            550,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialog.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              if (e?.event?.adressType) {
+                var address = new BS_AddressBook();
+                address = e.event;
+                var index = this.listAddress.findIndex(
+                  (x) => x.recID == address.objectID
+                );
+                if (index != -1) {
+                  this.listAddress.splice(index, 1);
+                  this.listAddress.push(address);
+                } else {
+                  var checkCoincide = this.listAddress.some(
+                    (x) =>
+                      x.adressType == address.adressType &&
+                      x.street == address.street &&
+                      x.countryID == address.countryID &&
+                      x.provinceID == address.provinceID &&
+                      x.districtID == address.districtID &&
+                      x.regionID == x.regionID
+                  );
+                  if (!checkCoincide) {
+                    var check = this.listAddress.some(
+                      (x) => x.adressType == '1' && address.adressType == '1'
+                    );
+                    if (!check) {
+                      if (address.adressType == '1') {
+                        this.data.countryID = address.countryID;
+                        this.data.provinceID = address.provinceID;
+                        this.data.districtID = address.districtID;
+                        this.data.regionID = address.regionID;
+                        this.data.wardID = address.regionID;
+                        this.data.address = address.adressName;
+                      }
+                      this.listAddress.push(address);
+                    }
+                  }else{
+                    this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
   }
+
+  removeAddress(data, index) {}
 
   //#region Contact
   //Open list contacts
@@ -329,21 +407,25 @@ export class PopupAddCmCustomerComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    var dialog = this.callFc.openForm(
-      PopupListContactsComponent,
-      '',
-      500,
-      550,
-      '',
-      ['formAdd'],
-      '',
-      opt
-    );
-    dialog.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        if (e.event?.recID) this.contactsPerson = e.event;
-      }
-    });
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var dialog = this.callFc.openForm(
+          PopupListContactsComponent,
+          '',
+          500,
+          550,
+          '',
+          ['formAdd'],
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            if (e.event?.recID) this.contactsPerson = e.event;
+          }
+        });
+      });
   }
 
   //Open popup add contacts
@@ -355,27 +437,32 @@ export class PopupAddCmCustomerComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    var obj = {
-      moreFuncName: this.moreFuncName,
-      action: 'add',
-      dataContact: null,
-      type: 'formAdd'
-    }
-    var dialog = this.callFc.openForm(
-      PopupQuickaddContactComponent,
-      '',
-      500,
-      500,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialog.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        if (e.event?.recID) this.contactsPerson = e.event;
-      }
-    });
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: this.moreFuncAdd,
+          action: 'add',
+          dataContact: null,
+          type: 'formAdd',
+          gridViewSetup: res,
+        };
+        var dialog = this.callFc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          500,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            if (e.event?.recID) this.contactsPerson = e.event;
+          }
+        });
+      });
   }
   //#endregion
 }
