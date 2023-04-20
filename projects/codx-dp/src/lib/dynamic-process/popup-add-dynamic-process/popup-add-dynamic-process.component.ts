@@ -3329,25 +3329,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeAssignCtrl($event) {
     if ($event && $event != null) {
-      //  let secleted = $event.data;
       this.step.assignControl = $event.data;
     }
     this.changeDetectorRef.detectChanges();
   }
   valueChangeTransferCtrl($event) {
     if ($event && $event != null) {
-      //  let secleted = $event.data;
       this.step.transferControl = $event.data;
     }
   }
-  valueChangeDuraDay($event) {
+  valueChangeDuration($event) {
     if ($event && $event != null) {
-      this.step.durationDay = $event.data;
-    }
-  }
-  valueChangeDuraHour($event) {
-    if ($event && $event != null) {
-      this.step.durationHour = $event.data;
+      this.step[$event.field]= $event.data;
+      if(!$event.data || $event.data == '0') {
+        this.step[$event.field]= 0;
+      }
     }
   }
   valueChangeStartCtrl($event) {
@@ -3457,15 +3453,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   autoHandleStepReason() {
     if (this.action === 'add' || this.action === 'copy') {
-      // create step reason fail with value is 1
-      // this.createStepReason(this.stepSuccess, '1');
       this.stepSuccess = this.handleStepReason(this.stepSuccess, '1');
-
-      // create step reason fail with value is 2
-      //this.createStepReason(this.stepFail, '2');
       this.stepFail = this.handleStepReason(this.stepFail, '2');
     }
-    // edit step reason success/fail
     else if (this.action === 'edit') {
       this.stepSuccess = this.stepList.find((x) => x.isSuccessStep == true);
       this.stepFail = this.stepList.find((x) => x.isFailStep == true);
@@ -3476,11 +3466,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.stepFail = data.find((x) => x.isFailStep == true);
     this.changeDetectorRef.detectChanges();
   }
-
-  // createStepReason(stepReason: any, reasonValue: any) {
-  //   stepReason = this.handleStepReason(stepReason, reasonValue);
-  // }
-
   handleReason(
     reason: DP_Steps_Reasons,
     reasonValue: string,
@@ -3797,32 +3782,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ischeckDurationTime(stepList) {
     var findExistDuration = stepList.find(
       (x) =>
-        this.isInvalidDuration(x?.durationDay) ||
+        this.isInvalidDuration(x?.durationDay) &&
         this.isInvalidDuration(x?.durationHour)
     );
     if (findExistDuration) {
-      this.notiService.notifyCode(
-        'DP025',
-        0,
-        '"' + this.strTitleDuration(findExistDuration.durationDay) + '"',
-        '"' + findExistDuration.stepName + '"'
-      );
+      this.notiService.notifyCode('DP025', 0, '"' + findExistDuration.stepName+ '"');
       return true;
     }
     return false;
   }
-
   isInvalidDuration(duration) {
-    return (
-      duration === undefined ||
-      duration === null ||
-      duration < 0 ||
-      duration === ''
-    );
+    return ( !duration  ||  duration <= 0 );
   }
-  strTitleDuration(durationDay): string {
-    return this.isInvalidDuration(durationDay) ? this.strDay : this.strHour;
-  }
+
   checkValidStepReason() {
     if (
       this.stepSuccess.reasons.length === 0 &&

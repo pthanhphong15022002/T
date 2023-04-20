@@ -65,7 +65,7 @@ implements OnInit, AfterViewInit {
       this.clearDataBefore();
       this.listStep = changes['dataSource'].currentValue;
       this.handleDateMaxSize(this.listStep, this.maxSize);
-      this.idElementCrr = this.autoClick(this.listStep);
+      this.status != '1' && this.autoClick(this.listStep);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -74,6 +74,7 @@ implements OnInit, AfterViewInit {
     this.listTreeView = [];
     this.viewSetting = '';
     this.selectedIndex = '0';
+    this.idElementCrr='';
   }
   handleDateMaxSize(list, maxSize) {
     if (list && list.length > maxSize) {
@@ -81,8 +82,7 @@ implements OnInit, AfterViewInit {
       for (let i = 0; i < list.length; i += maxSize) {
         const combinedItem = { items: list.slice(i, i + maxSize) };
         this.selectedIndex == '0' &&
-          (this.status == '1' || this.status == '2') &&
-          this.findStatusInDoing(combinedItem, index);
+          ( this.status == '2') && this.findStatusInDoing(combinedItem, index);
         this.listTreeView.push(combinedItem);
         index++;
       }
@@ -90,8 +90,7 @@ implements OnInit, AfterViewInit {
       this.viewSetting = this.viewCarouselForPage;
     } else if (list && list.length <= maxSize && list.length > 0) {
       this.listDefaultView = list;
-      (this.status == '1' || this.status == '2') &&
-        this.findStatusInDoing(this.listDefaultView, null);
+      (this.status == '2') && this.findStatusInDoing(this.listDefaultView, null);
       this.viewSetting = this.viewCarouselDefault;
     }
   }
@@ -127,6 +126,7 @@ implements OnInit, AfterViewInit {
         );
         this.selectedIndex =
           index == 0 || index ? index.toString() : this.selectedIndex;
+
       }
     }
   }
@@ -149,11 +149,15 @@ implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   autoClick(listStep){
-    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0]
+    let stepCrr = listStep?.filter(x=>x.stepStatus == '1')[0];
+    var stepId = '';
     if(stepCrr) {
-        return stepCrr.stepID;
+      stepId = stepCrr.stepID;
     }
-    return this.guidEmpty;
+    else {
+      stepId = this.guidEmpty;
+    }
+    this.idElementCrr = stepId;
   }
 
   getColorReason(){
