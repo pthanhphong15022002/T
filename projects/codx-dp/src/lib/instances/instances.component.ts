@@ -827,7 +827,7 @@ export class InstancesComponent
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed) res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2') res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -980,17 +980,12 @@ export class InstancesComponent
     }
     if (data.status == '1') {
       this.notificationsService.notify(
-        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+'DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notify(
-        'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }

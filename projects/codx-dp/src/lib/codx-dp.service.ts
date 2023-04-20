@@ -690,4 +690,29 @@ export class CodxDpService {
       listAppoverStep
     );
   }
+  //up + add + delete es tại DP
+  upDataApprovalStep(listStep, listStepDelete) {
+    if (listStep?.length > 0)
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'UpdateApprovalStepsAsync',
+          [listStep]
+        )
+        .subscribe();
+
+    if (listStepDelete?.length > 0) {
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'DeleteListApprovalStepAsync',
+          [listStepDelete]
+        )
+        .subscribe();
+    }
+  }
 }

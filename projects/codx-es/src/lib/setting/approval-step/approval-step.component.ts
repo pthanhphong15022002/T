@@ -63,7 +63,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() data: any = {}; // object category
 
   model: any;
-  isRequestListStep = false ; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
 
   constructor(
     private cfService: CallFuncService,
@@ -83,7 +82,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       console.log(this.data);
 
       this.dialogApproval = dialog;
-      this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -133,7 +131,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       gridModels.entityName = this.formModel.entityName;
       gridModels.gridViewName = this.formModel.gridViewName;
       gridModels.pageLoading = false;
-      gridModels.srtColumns = "StepNo";
+      gridModels.srtColumns = 'StepNo';
       gridModels.srtDirections = 'asc';
 
       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
@@ -166,12 +164,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.data.countStep = this.lstStep.length;
       this.model.patchValue({ countStep: this.lstStep.length });
       this.updateApprovalStep();
-       // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023
-      if(this.isRequestListStep){
-        this.dialogApproval && this.dialogApproval.close(this.lstStep);
-      }else{
-        this.dialogApproval && this.dialogApproval.close(true);
-      }
+      this.dialogApproval && this.dialogApproval.close(true);
     }
   }
 
@@ -330,7 +323,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       }
     });
 
-    if(this.lstDeleteStep?.length>0){
+    if (this.lstDeleteStep?.length > 0) {
       this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
         console.log('result delete aaappppp', res);
         if (res == true) {
@@ -338,6 +331,5 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
     }
-   
   }
 }

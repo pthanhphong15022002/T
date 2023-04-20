@@ -1387,6 +1387,7 @@ export class StagesDetailComponent implements OnInit {
         }
       });
     }
+   
   }
 
   async changeDataMF(e, type, data = null) {

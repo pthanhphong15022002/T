@@ -286,8 +286,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissions: any;
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
-  listStepAproverOld = [];
-  listStepAproveRemove = [];
+  listStepApproverView = []; //view thôi ko có quyền gì cả
+  listStepApprover: any;
+  listStepApproveDelete = [];
+  viewApproverStep : any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -546,12 +548,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.imageAvatar.clearData();
         if (res) {
           this.dialog.close(res.save);
-        } else {
-          this.dialog.close();
-          //xoa Aprover
-          if (this.recIDCategory) {
-            this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-          }
+          this.dpService.upDataApprovalStep(
+            this.listStepApprover,
+            this.listStepApproveDelete
+          );
+          // } else {
+          //   this.dialog.close();
+          //   //xoa Aprover
+          //   if (this.recIDCategory) {
+          //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+          //   }
         }
       });
   }
@@ -563,6 +569,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          this.dpService.upDataApprovalStep(
+            this.listStepApprover,
+            this.listStepApproveDelete
+          );
+
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
@@ -582,11 +593,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.dialog.close(res.update);
               }
             });
-        } else {
-          if (this.listStepAproveRemove?.length > 0)
-          this.dpService
-            .removeListApprovalStep(this.listStepAproveRemove)
-            .subscribe();
         }
       });
   }
@@ -661,17 +667,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               .deleteFileTask([this.listFileTask])
               .subscribe((rec) => {});
           }
-          if (this.action == 'add' || this.action == 'copy') {
-            //xoa Aprover
-            if (this.recIDCategory) {
-              this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-            }
-          } else {
-            if (this.listStepAproveRemove?.length > 0)
-              this.dpService
-                .removeListApprovalStep(this.listStepAproveRemove)
-                .subscribe();
-          }
+          // if (this.action == 'add' || this.action == 'copy') {
+          //   //xoa Aprover hoi lai cach xu ly nay
+          //   if (this.recIDCategory) {
+          //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+          //   }
+          // } else {
+          //   // if (this.listStepAproveRemove?.length > 0)
+          //   //   this.dpService
+          //   //     .removeListApprovalStep(this.listStepAproveRemove)
+          //   //     .subscribe();
+          // }
           this.dialog.close();
         } else return;
       });
@@ -1586,6 +1592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       transID: transID,
       type: '0',
       isRequestListStep: true,
+      lstStep: this.listStepApprover,
     };
 
     let popupApprover = this.callfc.openForm(
@@ -1600,35 +1607,44 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
-        if(!this.isChange)this.isChange=true ;
-        this.getUserByApproverStep(res?.event);
+        if (!this.isChange) this.isChange = true;
+        this.listStepApprover = res?.event?.listStepApprover;
+        this.listStepApproveDelete = res?.event?.listStepApproveDelete;
+        this.listStepApproverView = this.listStepApprover;
+        this.getUserByApproverStep(res?.event?.listStepApprover);
         this.recIDCategory = transID;
       } else this.recIDCategory = '';
     });
   }
+
   getUserByApproverStep(listStepApprover) {
     if (listStepApprover?.length > 0) {
       var listAppover = [];
       listStepApprover.forEach((x) => {
         listAppover = listAppover.concat(x.approvers);
-        //list add new cân xóa
-        if (!this.listStepAproverOld.some((st) => st.recID == x.recID)) {
-          this.listStepAproveRemove.push(x);
-        }
       });
       //Hoi khanh xu ly thế nào
       console.log(listAppover);
-      console.log(this.listStepAproveRemove);
     }
   }
+  //lay danh sách view
   loadListApproverStep() {
     this.dpService
       .getListAproverStepByCategoryID(this.process.processNo)
       .subscribe((res) => {
         if (res) {
-          this.listStepAproverOld = res;
+          this.listStepApproverView = res;
         }
       });
+  }
+  popoverApproverStep(p, data) {
+    if (!data) {
+      p.close();
+      return ;
+    }
+    if(p.isOpen()) p.close();
+    this.viewApproverStep =data
+    p.open();
   }
   //Bieu mau
   clickViewTemp(temp) {}
@@ -3358,25 +3374,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeAssignCtrl($event) {
     if ($event && $event != null) {
-      //  let secleted = $event.data;
       this.step.assignControl = $event.data;
     }
     this.changeDetectorRef.detectChanges();
   }
   valueChangeTransferCtrl($event) {
     if ($event && $event != null) {
-      //  let secleted = $event.data;
       this.step.transferControl = $event.data;
     }
   }
-  valueChangeDuraDay($event) {
+  valueChangeDuration($event) {
     if ($event && $event != null) {
-      this.step.durationDay = $event.data;
-    }
-  }
-  valueChangeDuraHour($event) {
-    if ($event && $event != null) {
-      this.step.durationHour = $event.data;
+      this.step[$event.field]= $event.data;
+      if(!$event.data || $event.data == '0') {
+        this.step[$event.field]= 0;
+      }
     }
   }
   valueChangeStartCtrl($event) {
@@ -3486,15 +3498,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   autoHandleStepReason() {
     if (this.action === 'add' || this.action === 'copy') {
-      // create step reason fail with value is 1
-      // this.createStepReason(this.stepSuccess, '1');
       this.stepSuccess = this.handleStepReason(this.stepSuccess, '1');
-
-      // create step reason fail with value is 2
-      //this.createStepReason(this.stepFail, '2');
       this.stepFail = this.handleStepReason(this.stepFail, '2');
     }
-    // edit step reason success/fail
     else if (this.action === 'edit') {
       this.stepSuccess = this.stepList.find((x) => x.isSuccessStep == true);
       this.stepFail = this.stepList.find((x) => x.isFailStep == true);
@@ -3505,11 +3511,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.stepFail = data.find((x) => x.isFailStep == true);
     this.changeDetectorRef.detectChanges();
   }
-
-  // createStepReason(stepReason: any, reasonValue: any) {
-  //   stepReason = this.handleStepReason(stepReason, reasonValue);
-  // }
-
   handleReason(
     reason: DP_Steps_Reasons,
     reasonValue: string,
@@ -3826,32 +3827,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ischeckDurationTime(stepList) {
     var findExistDuration = stepList.find(
       (x) =>
-        this.isInvalidDuration(x?.durationDay) ||
+        this.isInvalidDuration(x?.durationDay) &&
         this.isInvalidDuration(x?.durationHour)
     );
     if (findExistDuration) {
-      this.notiService.notifyCode(
-        'DP025',
-        0,
-        '"' + this.strTitleDuration(findExistDuration.durationDay) + '"',
-        '"' + findExistDuration.stepName + '"'
-      );
+      this.notiService.notifyCode('DP025', 0, '"' + findExistDuration.stepName+ '"');
       return true;
     }
     return false;
   }
-
   isInvalidDuration(duration) {
-    return (
-      duration === undefined ||
-      duration === null ||
-      duration < 0 ||
-      duration === ''
-    );
+    return ( !duration  ||  duration <= 0 );
   }
-  strTitleDuration(durationDay): string {
-    return this.isInvalidDuration(durationDay) ? this.strDay : this.strHour;
-  }
+
   checkValidStepReason() {
     if (
       this.stepSuccess.reasons.length === 0 &&

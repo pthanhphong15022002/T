@@ -127,11 +127,11 @@
   <div class="d-flex flex-column py-2">
     <div class="d-flex justify-content-start py-1">
       <i class="icon-view_comfy pe-1"></i>
-      <div> {{data.dealName}} </div>
+      <div> {{data?.dealName}} </div>
     </div>
     <div class="d-flex justify-content-start py-1">
       <i class="icon-k pe-1"></i>
-      <div> {{data.customerID}} </div>
+      <div> {{getCustomerName(data?.customerID)}} </div>
     </div>
     <div class="d-flex justify-content-star py-1">
       <div class="d-flex align-items-start pe-4">
@@ -226,6 +226,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
+    [tmpDataSelect]="handleDataTmp(dataSelected)"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
