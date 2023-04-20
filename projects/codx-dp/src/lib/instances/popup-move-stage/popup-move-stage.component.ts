@@ -391,7 +391,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.instancesStepOld.roles[index].objectID = this.owner;
         this.instancesStepOld.roles[index].objectName = tmp?.userName;
         this.instancesStepOld.roles[index].objectType = 'U';
-      }  
+      }
     }else{
       var u = new DP_Instances_Steps_Roles;
       u['objectID'] = this.owner;
@@ -458,17 +458,6 @@ export class PopupMoveStageComponent implements OnInit {
   removeReasonInSteps(listStepCbx, stepReason) {
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
-  }
-
-  UpdateRequireCompletedCheck(item: any, checkValue, isCheck) {
-    if (!!item) {
-      if (isCheck && item.requireCompleted) {
-        checkValue++;
-      } else if (!isCheck && item.requireCompleted) {
-        checkValue--;
-      }
-    }
-    return checkValue ?? 0;
   }
   setToDay() {
     this.instancesStepOld.actualEnd = new Date();
@@ -659,5 +648,37 @@ export class PopupMoveStageComponent implements OnInit {
     groupNew.progress = groupNew.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
+  }
+
+
+    isCheckRequiredTask(listTask){
+    // if(data.parentID) {
+    //   var parentIds = data?.parentID.split(';');
+    //   var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
+    //   if(filteredList.length != parentIds.length) {
+    //     var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
+    //     checkbox.checked = false;
+    //     var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+
+    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+    //     return false;
+    //   }
+    // }
+    // if(listTask.length > 0 && listTask) {
+    //     for(let item of listTask)
+    //     {
+
+    //     }
+    // }
+
+    // var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
+    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
+
+    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
+    //     return false;
+
+    return true;
+
   }
 }

@@ -807,13 +807,9 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (!data.permissionCloseInstances || data.status != '2') {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed
-                )
-                  res.disabled = true;
+              if(this.checkMoreReason(data,null))
+              {
+                res.disabled = true;
               }
               break;
             //Copy
@@ -841,31 +837,14 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (!data.permissionCloseInstances || data.status != '2') {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseFail
-                )
-                  res.disabled = true;
+              if (this.checkMoreReason(data,!this.isUseFail)) {
+                res.disabled = true;
               }
               break;
             case 'DP10':
-              if (
-                !data.permissionCloseInstances ||
-                (data.permissionCloseInstances && data.status != '2')
-              ) {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseSuccess
-                ) {
+                if (this.checkMoreReason(data,!this.isUseSuccess)) {
                   res.disabled = true;
                 }
-              }
-
               break;
             case 'SYS004':
             case 'SYS002':
@@ -897,6 +876,15 @@ export class InstancesComponent
     }
   }
   //End
+  checkMoreReason(data,isUseReason) {
+    if( data.status != '2' || isUseReason ) {
+      return true;
+    }
+    if( !data.permissionCloseInstances || !data.permissionMoveInstances || data.closed) {
+      return true;
+    }
+    return false;
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
