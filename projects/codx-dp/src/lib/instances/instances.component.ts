@@ -66,18 +66,16 @@ export class InstancesComponent
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
   @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
-  @Output() valueListID = new EventEmitter<any>();
-  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
 
-  views: Array<ViewModel> = [];
+  @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
 
+  views: Array<ViewModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -240,7 +238,7 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-    //thao tesst
+  
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -291,17 +289,7 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
-    // if (!this.haveDataService) {
-    //   let dataProcess = await firstValueFrom(
-    //     this.codxDpService.getProcessByProcessID(this.processID)
-    //   );
-    //   if (dataProcess && dataProcess.read) {
-    //     this.loadData(dataProcess);
-    //     // this.continueLoad = true ;
-    //   } else {
-    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-    //   }
-    // }
+ 
     this.views = [
       {
         type: ViewType.listdetail,
@@ -397,20 +385,6 @@ export class InstancesComponent
         break;
     }
   }
-  getPropertyColumn() {
-    let dataColumns =
-      this.kanban?.columns?.map((column) => {
-        return {
-          recID: column['dataColums']?.recID,
-          icon: column['dataColums']?.icon || null,
-          iconColor: column['dataColums']?.iconColor || null,
-          backgroundColor: column['dataColums']?.backgroundColor || null,
-          textColor: column['dataColums']?.textColor || null,
-        };
-      }) || [];
-
-    return dataColumns;
-  }
 
   getAdminRoleDP() {
     if (!this.user.administrator) {
@@ -426,6 +400,21 @@ export class InstancesComponent
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
+  }
+  
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
   }
 
   //CRUD
