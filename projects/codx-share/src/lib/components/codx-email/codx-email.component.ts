@@ -10,7 +10,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NodeSelection } from '@syncfusion/ej2-angular-richtexteditor';
+import {
+  NodeSelection,
+  RichTextEditorComponent,
+} from '@syncfusion/ej2-angular-richtexteditor';
 import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
@@ -23,6 +26,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  Util,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EmailSendTo } from 'projects/codx-es/src/lib/codx-es.model';
@@ -39,8 +43,9 @@ export class CodxEmailComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('dataView', { static: false }) dataView: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
-  @ViewChild('richtexteditor', { static: false })
-  richtexteditor: CodxInputComponent;
+  @ViewChild('richtexteditor') richtexteditor: CodxInputComponent;
+  @ViewChild('defaultRTE')
+  public defaultRTE: RichTextEditorComponent;
 
   @ViewChild('listviewInstance', { static: false })
   public listviewInstance: any;
@@ -890,53 +895,45 @@ export class CodxEmailComponent implements OnInit {
   getfileCount(e: any) {}
 
   public selection: NodeSelection = new NodeSelection();
-  public range: Range;
-  public saveSelection: NodeSelection;
+  //public range: Range;
+  //public saveSelection: NodeSelection;
 
   getPosition() {
-    this.range = this.selection.getRange(document);
+    //this.range = this.selection.getRange(document);
   }
 
   insert(data: any) {
+    const tempElem: HTMLElement = this.richtexteditor.control.createElement(
+      this.richtexteditor.control.enterKey
+    );
+    debugger;
     console.log('message', this.data.message);
     console.log(
       'before angularvalue',
       this.richtexteditor.control.angularValue
     );
     if (data && data != null) {
-      this.saveSelection = this.selection.save(this.range, document);
-      this.saveSelection.restore();
-      console.log(this.saveSelection);
+      // this.saveSelection = this.selection.save(this.range, document);
+      // this.saveSelection.restore();
+      //console.log(this.saveSelection);
       let html =
-        '<span codx-data="' +
-        data?.fieldName +
-        '">[' +
-        data?.headerText +
-        ']</span>';
+        '<span contenteditable="false" class="e-mention-chip" ><span class="e-success" codx-data="{0}">#{1}</span></span>';
       if (data.data.referedType == '2') {
-        html =
-          '<span codx-data="' +
-          data?.fieldName +
-          '|vll:' +
-          data?.data?.referedValue +
-          '">[' +
-          data?.headerText +
-          ']</span>';
+        var key = data?.fieldName + '|vll:' + data?.data?.referedValue;
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
       } else if (data.data.referedType == '3') {
-        html =
-          '<span codx-data="' +
-          data?.fieldName +
-          '|cbx:' +
-          data?.data?.referedValue +
-          '">[' +
-          data?.headerText +
-          ']</span>';
+        var key = data?.fieldName + '|cbx:' + data?.data?.referedValue;
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
+      } else {
+        var key = data?.fieldName + '';
+        var value = data?.headerText;
+        html = Util.stringFormat(html, key, value);
       }
 
-      this.richtexteditor.control.executeCommand('insertHTML', '&nbsp;');
       this.richtexteditor.control.executeCommand('insertHTML', html);
-      this.richtexteditor.control.executeCommand('insertHTML', '&nbsp;');
-
+      //const range: Range = this.richtexteditor.control.getRange();
       // this.richtexteditor.control.executeCommand('fontColor', 'gray');
       // this.richtexteditor.control.executeCommand(
       //   'insertText',
@@ -944,17 +941,17 @@ export class CodxEmailComponent implements OnInit {
       // );
       // this.richtexteditor.control.executeCommand('fontColor', 'black');
 
-      this.range = this.selection.getRange(document);
+      //this.range = this.selection.getRange(document);
 
-      this.data.message = this.richtexteditor.control.angularValue;
-
-      console.log('control', this.richtexteditor);
-      console.log('angularvalue', this.richtexteditor.control.angularValue);
-
+      // console.log('control', this.richtexteditor);
+      // console.log('angularvalue', this.richtexteditor.control.angularValue);
+      this.data.message =
+        this.richtexteditor?.control?.contentModule?.editableElement?.innerHTML;
       this.dialogETemplate.patchValue({ message: this.data.message });
 
       this.cr.detectChanges();
     }
+    // this.saveSelection.Clear(document);
   }
 
   isInside: boolean = false;
@@ -980,7 +977,6 @@ export class CodxEmailComponent implements OnInit {
 
   clickItem(item) {
     console.log('clickItem', item);
-
     if (item) {
       this.insert(item);
     }
@@ -1004,7 +1000,7 @@ export class CodxEmailComponent implements OnInit {
   keyUp(event) {
     console.log(this.richtexteditor.control.angularValue);
 
-    this.range = this.selection.getRange(document);
+    //this.range = this.selection.getRange(document);
   }
 
   onActionComplete(args: any): void {}

@@ -14,7 +14,7 @@ export class InformationComponent implements OnInit {
   @Input() formModel: any;
   @Input() gridViewSetup: any;
   @Input() entityName = '';
-  listAddress = [];
+  @Input() listAddress = [];
   formModelAddress: FormModel;
   constructor(
     private cmSv: CodxCmService,
@@ -22,7 +22,6 @@ export class InformationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getListAddress(this.entityName, this.dataSelected?.recID);
     this.getFormModelAddress();
   }
 
@@ -35,11 +34,5 @@ export class InformationComponent implements OnInit {
     this.formModelAddress = dataModel;
   }
 
-  getListAddress(entityName, recID) {
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      if (res && res.length > 0) {
-        this.listAddress = res;
-      }
-    });
-  }
+
 }
