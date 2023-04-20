@@ -198,7 +198,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   deleteRow(data): void {
     this.deletedSalesInvoicesLines.push(data);
-    this.grid.deleteRow(data);
+    this.grid.deleteRow(data,true);
   }
 
   addRow(): void {
