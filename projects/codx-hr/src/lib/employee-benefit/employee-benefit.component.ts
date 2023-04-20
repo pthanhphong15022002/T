@@ -30,6 +30,11 @@ export class EmployeeBenefitComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
+  //Detail
+  @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
+  @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
+  itemDetail;
+
   //Get data
   views: Array<ViewModel> = [];
   funcID: string;
@@ -52,6 +57,8 @@ export class EmployeeBenefitComponent extends UIComponent {
   dialogEditStatus: any;
   dataCategory;
   cmtStatus: string = '';
+  genderGrvSetup: any;
+  eBenefitHeader;
 
   //#region Update modal Status
   actionUpdateCanceled = 'HRTPro05AU0';
@@ -76,6 +83,12 @@ export class EmployeeBenefitComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -89,7 +102,21 @@ export class EmployeeBenefitComponent extends UIComponent {
           headerTemplate: this.headerTemplate,
         },
       },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
     ];
+
+    //Get Header text when view detail
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
+      this.eBenefitHeader = res;
+    });
   }
 
   //Call api delete
@@ -135,7 +162,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   popupUpdateEbenefitStatus(funcID, data) {
-    this.hrService.handleUpdateRecordStatus(funcID, data); 
+    this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
@@ -272,4 +299,23 @@ export class EmployeeBenefitComponent extends UIComponent {
       );
     }
   }
+
+  //#region Handle detail data
+  getDetailESalary(event, data) {
+    if (data) {
+      this.itemDetail = data;
+
+      this.df.detectChanges();
+    }
+  }
+
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  clickEvent(event, data) {
+    this.clickMF(event?.event, event?.data);
+  }
+
+  //#endregion
 }

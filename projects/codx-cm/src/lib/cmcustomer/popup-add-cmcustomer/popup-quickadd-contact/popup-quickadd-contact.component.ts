@@ -37,7 +37,8 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.action = dt?.data?.action;
     this.type = dt?.data?.type;
     this.recIDCm = dt?.data?.recIDCm;
-    this.objectType = dt?.data?.objectType
+    this.objectType = dt?.data?.objectType;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     if(this.type == 'formAdd'){
       this.contactType = '1';
     }
@@ -48,16 +49,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+
   }
 
   // getLastAndFirstName(contactName) {

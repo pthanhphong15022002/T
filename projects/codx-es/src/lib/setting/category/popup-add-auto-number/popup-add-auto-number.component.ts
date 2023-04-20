@@ -7,16 +7,19 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { log } from 'console';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddSegmentComponent } from '../popup-add-segment/popup-add-segment.component';
 
 @Component({
   selector: 'lib-popup-add-auto-number',
@@ -51,14 +54,29 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   isAdd: boolean = true;
 
+  basicCollapsed: boolean = false;
+  advanceCollapsed:boolean = true;
   headerText = 'Thiết lập số tự động';
   subHeaderText = '';
+  columns: any=[];
+   grvSegments:string = 'grvAutoNumberSegments';
+   formNameSegments:string = 'AutoNumberSegments';
+   entitySegments:string = 'AD_AutoNumberSegments'
+   editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+    mode: 'Dialog',
+  };
+
+  autoAssignRule:string='2';
   constructor(
     private cache: CacheService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private auth: AuthStore,
     private notify: NotificationsService,
+    private callfunc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -96,6 +114,11 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.formModel.gridViewName = 'grvAutoNumbers';
     this.dialog.formModel = this.formModel;
 
+    this.cache.gridViewSetup(this.formNameSegments,this.grvSegments).subscribe((res:any)=>{
+      this.columns = Object.values(res) as any[];
+      console.log(this.columns);
+
+    })
     if (this.functionID) {
       this.fmANumberDefault = new FormModel();
       this.fmANumberDefault.entityName = 'AD_AutoNumberDefaults';
@@ -126,6 +149,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         });
 
       this.esService.getAutoNumber;
+
+
     }
 
     this.esService.setCacheFormModel(this.formModel);
@@ -458,5 +483,21 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         this.notify.notifyCode('AD018');
       }
     }, 500);setTimeout
+  }
+
+  collapse(name:string){
+    if(name == 'basic'){
+      this.basicCollapsed = !this.basicCollapsed;
+      this.advanceCollapsed = !this.basicCollapsed;
+    }
+    if(name == 'advance'){
+      this.advanceCollapsed = !this.advanceCollapsed;
+      this.basicCollapsed = !this.advanceCollapsed;
+    }
+  }
+
+  addSegment(){
+    let option = new DialogModel;
+    this.callfunc.openForm(PopupAddSegmentComponent,'',400,600,'',[null,this.columns],'',option);
   }
 }

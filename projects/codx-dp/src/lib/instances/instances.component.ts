@@ -66,18 +66,16 @@ export class InstancesComponent
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
   @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
-  @Output() valueListID = new EventEmitter<any>();
-  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
 
-  views: Array<ViewModel> = [];
+  @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
 
+  views: Array<ViewModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -170,8 +168,8 @@ export class InstancesComponent
   addFieldsControl = '1';
   isLockButton = false;
   esCategory: any;
-  colorReasonSuccess:any;
-  colorReasonFail:any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
 
   //test temp
   dataTemplet = [
@@ -222,7 +220,7 @@ export class InstancesComponent
   listOwnerInMove = [];
   listStageManagerInMove = [];
   idTemp = '';
-  nameTemp ='';
+  nameTemp = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -240,7 +238,7 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-    //thao tesst
+  
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -291,17 +289,7 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
-    // if (!this.haveDataService) {
-    //   let dataProcess = await firstValueFrom(
-    //     this.codxDpService.getProcessByProcessID(this.processID)
-    //   );
-    //   if (dataProcess && dataProcess.read) {
-    //     this.loadData(dataProcess);
-    //     // this.continueLoad = true ;
-    //   } else {
-    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-    //   }
-    // }
+ 
     this.views = [
       {
         type: ViewType.listdetail,
@@ -397,20 +385,6 @@ export class InstancesComponent
         break;
     }
   }
-  getPropertyColumn() {
-    let dataColumns =
-      this.kanban?.columns?.map((column) => {
-        return {
-          recID: column['dataColums']?.recID,
-          icon: column['dataColums']?.icon || null,
-          iconColor: column['dataColums']?.iconColor || null,
-          backgroundColor: column['dataColums']?.backgroundColor || null,
-          textColor: column['dataColums']?.textColor || null,
-        };
-      }) || [];
-
-    return dataColumns;
-  }
 
   getAdminRoleDP() {
     if (!this.user.administrator) {
@@ -426,6 +400,21 @@ export class InstancesComponent
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
+  }
+  
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
   }
 
   //CRUD
@@ -661,61 +650,6 @@ export class InstancesComponent
       });
   }
 
-  //End
-
-  //Event
-  clickMF(e, data?) {
-    this.dataSelected = data;
-    this.titleAction = e.text;
-    this.moreFunc = e.functionID;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data, e.text);
-        break;
-      case 'SYS04':
-        this.copy(data, e.text);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'DP09':
-        // listStep by Id Instacess is null
-        this.moveStage(e.data, data, this.lstStepInstances);
-        break;
-      case 'DP02':
-        this.moveReason(e.data, data, !this.isMoveSuccess);
-        break;
-      case 'DP10':
-        this.moveReason(e.data, data, this.isMoveSuccess);
-        break;
-      //Đóng nhiệm vụ = true;
-      case 'DP14':
-        this.openOrClosed(data, true);
-        break;
-      //Mở nhiệm vụ = false;
-      case 'DP15':
-        this.openOrClosed(data, false);
-        break;
-      //export File
-      case 'DP16':
-        this.isFormExport = true;
-        this.showFormExport();
-        break;
-      //trinh kí File
-      case 'DP17':
-        this.isFormExport = false;
-        this.showFormSubmit();
-        break;
-      case 'DP21':
-        this.handelStartDay(data);
-        break;
-      //xuat khau du lieu
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
@@ -781,7 +715,7 @@ export class InstancesComponent
     return true;
   }
 
-  //#popup roles
+  //#Event
   changeDataMF(e, data) {
     if (e != null && data != null) {
       if (data.status != '1') {
@@ -827,7 +761,8 @@ export class InstancesComponent
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed) res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2')
+                res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -867,6 +802,12 @@ export class InstancesComponent
               }
 
               break;
+           //an khi aprover rule
+            case 'DP17':
+              if (!this.process?.approvalRule) {
+                res.isblur = true;
+              }
+              break;
             case 'SYS004':
             case 'SYS002':
             case 'DP21':
@@ -894,6 +835,58 @@ export class InstancesComponent
           }
         });
       }
+    }
+  }
+
+  clickMF(e, data?) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data, e.text);
+        break;
+      case 'SYS04':
+        this.copy(data, e.text);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'DP09':
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, this.lstStepInstances);
+        break;
+      case 'DP02':
+        this.moveReason(e.data, data, !this.isMoveSuccess);
+        break;
+      case 'DP10':
+        this.moveReason(e.data, data, this.isMoveSuccess);
+        break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
+      //export File
+      case 'DP16':
+        this.isFormExport = true;
+        this.showFormExport();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.isFormExport = false;
+        this.showFormSubmit();
+        break;
+      case 'DP21':
+        this.handelStartDay(data);
+        break;
+      //xuat khau du lieu
+      case 'SYS002':
+        this.exportFile();
+        break;
     }
   }
   //End
@@ -979,18 +972,12 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notify(
-        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+      this.notificationsService.notify('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notify(
-        'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1610,7 +1597,13 @@ export class InstancesComponent
       }
     }
   }
-
+  saveDatasInstance(e) {
+    this.dataSelected.datas = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    if (this.kanban) {
+      this.kanban.updateCard(this.dataSelected);
+    }
+  }
   //Export file
   exportFile() {
     var gridModel = new DataRequest();
@@ -1710,7 +1703,8 @@ export class InstancesComponent
   downloadFile(data: any) {
     var sampleArr = this.base64ToArrayBuffer(data[0]);
     this.saveByteArray(
-      'DP_Instances_' + this.dataSelected.title +'_'+this.nameTemp || 'excel',
+      'DP_Instances_' + this.dataSelected.title + '_' + this.nameTemp ||
+        'excel',
       sampleArr
     );
   }
@@ -1776,7 +1770,7 @@ export class InstancesComponent
   //end export
 
   //Xét duyệt
-  selectTemp(recID,nameTemp) {
+  selectTemp(recID, nameTemp) {
     if (recID) {
       this.isLockButton = false;
       this.idTemp = recID;
@@ -1785,14 +1779,8 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
-      )
+    this.codxDpService
+      .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
@@ -2067,7 +2055,7 @@ export class InstancesComponent
     }
   }
 
-  getColorReason(){
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {

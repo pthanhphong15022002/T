@@ -236,6 +236,10 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
       });
     }else{
       this.handelDataOutput(isUpdate)
+      this.dataSource['progress'] = this.progressData ;
+      this.dataSource['note'] = this.note ;
+      this.dataSource['actualEnd'] = this.actualEnd;
+      // this.progress = this.progressData;
       this.popupUpdateProgress.close();
     }
   }

@@ -80,6 +80,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() listUserIdRole: string[] = [];
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
+  @Output() outDataStep= new EventEmitter<any>();
 
   dateActual: any;
   startDate: any;
@@ -245,6 +246,10 @@ export class StagesDetailComponent implements OnInit {
           }
         }
       });
+  }
+  saveDataStep(e){
+    this.dataStep = e
+    this.outDataStep.emit(this.dataStep)
   }
 
   ngAfterViewInit(): void {
@@ -1093,30 +1098,30 @@ export class StagesDetailComponent implements OnInit {
   }
 
   getObjectIdRole(task, group) {
-    // if (task?.taskType != 'M' && group) {
-    //   let objectId =
-    //     task?.roles.find((role) => role?.roleType == 'P')['objectID'] ||
-    //     task?.roles[0]?.objectID;
-    //   return objectId;
-    // } else {
-    //   let objectId =
-    //     task?.roles.find((role) => role?.roleType == 'O')['objectID'] ||
-    //     task?.roles[0]?.objectID;
-    //   return objectId;
-    // }
+    if (task?.taskType != 'M' && group) {
+      let objectId =
+        task?.roles.find((role) => role?.roleType == 'P')?.objectID ||
+        task?.roles[0]?.objectID;
+      return objectId;
+    } else {
+      let objectId =
+        task?.roles.find((role) => role?.roleType == 'O')?.objectID||
+        task?.roles[0]?.objectID;
+      return objectId;
+    }
   }
   getObjectNameRole(task, group) {
-    // if (task?.taskType != 'M' && group) {
-    //   let objectName =
-    //     task?.roles.find((role) => role?.roleType == 'P')['objectName'] ||
-    //     task?.roles[0]?.objectName;
-    //   return objectName;
-    // } else {
-    //   let objectName =
-    //     task?.roles.find((role) => role?.roleType == 'O')['objectName'] ||
-    //     task?.roles[0]?.objectName;
-    //   return objectName;
-    // }
+    if (task?.taskType != 'M' && group) {
+      let objectName =
+        task?.roles.find((role) => role?.roleType == 'P')?.objectName ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    } else {
+      let objectName =
+        task?.roles.find((role) => role?.roleType == 'O')?.objectName ||
+        task?.roles[0]?.objectName;
+      return objectName;
+    }
   }
 
   copyValue(dataCopy, data) {
@@ -1382,6 +1387,7 @@ export class StagesDetailComponent implements OnInit {
         }
       });
     }
+   
   }
 
   async changeDataMF(e, type, data = null) {

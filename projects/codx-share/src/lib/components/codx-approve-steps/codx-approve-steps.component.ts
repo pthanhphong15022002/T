@@ -69,7 +69,7 @@ export class CodxApproveStepsComponent
   @Input() data: any = {}; // object category
 
   model: any;
-
+  isRequestListStep = false ; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
   constructor(
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -84,10 +84,11 @@ export class CodxApproveStepsComponent
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.data = dialogData?.data.data;
-
       console.log(this.data);
 
       this.dialogApproval = dialog;
+      this.isRequestListStep = dialogData?.data?.isRequestListStep??false ; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
+      this.lstStep = dialogData?.data?.lstStep // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -129,29 +130,34 @@ export class CodxApproveStepsComponent
   }
 
   initForm() {
-    if (this.transId != '') {
-      let gridModels = new DataRequest();
-      gridModels.dataValue = this.transId;
-      gridModels.predicate = 'TransID=@0';
-      gridModels.funcID = this.formModel.funcID;
-      gridModels.entityName = this.formModel.entityName;
-      gridModels.gridViewName = this.formModel.gridViewName;
-      gridModels.pageLoading = false;
-      gridModels.srtColumns = "StepNo";
-      gridModels.srtDirections = 'asc';
-
-      this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-        if (res && res?.length >= 0) {
-          this.lstStep = res;
-          this.currentStepNo = this.lstStep.length + 1;
-          this.lstOldData = [...res];
-          this.cr.detectChanges();
-        }
-      });
-    } else {
-      this.lstStep = [];
+    // Thao lam de gui danh sach step qua ve  -20/04/2023
+    if(this.isRequestListStep && this.lstStep?.length >0){
       this.currentStepNo = this.lstStep.length + 1;
-    }
+    }else{
+      if (this.transId != '') {
+        let gridModels = new DataRequest();
+        gridModels.dataValue = this.transId;
+        gridModels.predicate = 'TransID=@0';
+        gridModels.funcID = this.formModel.funcID;
+        gridModels.entityName = this.formModel.entityName;
+        gridModels.gridViewName = this.formModel.gridViewName;
+        gridModels.pageLoading = false;
+        gridModels.srtColumns = "StepNo";
+        gridModels.srtDirections = 'asc';
+  
+        this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+          if (res && res?.length >= 0) {
+            this.lstStep = res;
+            this.currentStepNo = this.lstStep.length + 1;
+            this.lstOldData = [...res];
+            this.cr.detectChanges();
+          }
+        });
+      } else {
+        this.lstStep = [];
+        this.currentStepNo = this.lstStep.length + 1;
+      }
+    }  
   }
 
   setTransID(transID) {
@@ -171,8 +177,18 @@ export class CodxApproveStepsComponent
         this.data.countStep = this.lstStep.length;
         this.model.patchValue({ countStep: this.lstStep.length });
       }
-      this.updateApprovalStep();
-      this.dialogApproval && this.dialogApproval.close(true);
+      // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023- va goi save từ bên DP
+      if (this.isRequestListStep) {
+        let objRequest = {
+          listStepApprover: this.lstStep,
+          listStepApproverDelete: this.lstDeleteStep,
+        };
+        this.dialogApproval && this.dialogApproval.close(objRequest);
+      } else {
+        this.updateApprovalStep();
+        this.dialogApproval && this.dialogApproval.close(true);
+      }
+      
     }
   }
 
@@ -331,12 +347,13 @@ export class CodxApproveStepsComponent
         }
       }
     });
-
-    this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
-      console.log('result delete aaappppp', res);
-      if (res == true) {
-        this.addEditItem.emit(true);
-      }
-    });
+    if (this.lstDeleteStep?.length > 0){
+      this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
+        console.log('result delete aaappppp', res);
+        if (res == true) {
+          this.addEditItem.emit(true);
+        }
+      });
+    }
   }
 }

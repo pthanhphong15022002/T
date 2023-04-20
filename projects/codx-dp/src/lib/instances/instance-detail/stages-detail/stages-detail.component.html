@@ -178,6 +178,7 @@
     [isUpdate]="isUpdate"
     [titleHeaderFormCF]="titleDefault"
     [viewsCurrent]="viewsCurrent"
+    (saveDataStep)="saveDataStep($event)"
   >
   </codx-field-detail>
   <!-- nvthuan -->
@@ -554,7 +555,7 @@
           : ''
       "
     >
-      <codx-progress [progress]="data?.value?.progress"> </codx-progress>
+      <codx-progress-layout [progress]="data?.value?.progress"> </codx-progress-layout>
     </div>
     <span>
       <codx-img
