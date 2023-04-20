@@ -287,8 +287,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listPermissionsSaved: any;
   lstTmp: DP_Processes_Permission[] = [];
   listStepApproverView = []; //view thôi ko có quyền gì cả
-  listStepApprover :any;
+  listStepApprover: any;
   listStepApproveDelete = [];
+  viewApproverStep : any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -547,13 +548,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.imageAvatar.clearData();
         if (res) {
           this.dialog.close(res.save);
-          this.dpService.upDataApprovalStep(this.listStepApprover,this.listStepApproveDelete);
-        // } else {
-        //   this.dialog.close();
-        //   //xoa Aprover
-        //   if (this.recIDCategory) {
-        //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
-        //   }
+          this.dpService.upDataApprovalStep(
+            this.listStepApprover,
+            this.listStepApproveDelete
+          );
+          // } else {
+          //   this.dialog.close();
+          //   //xoa Aprover
+          //   if (this.recIDCategory) {
+          //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+          //   }
         }
       });
   }
@@ -565,7 +569,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
-          this.dpService.upDataApprovalStep(this.listStepApprover,this.listStepApproveDelete);
+          this.dpService.upDataApprovalStep(
+            this.listStepApprover,
+            this.listStepApproveDelete
+          );
 
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -586,7 +593,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.dialog.close(res.update);
               }
             });
-        } 
+        }
       });
   }
 
@@ -1585,7 +1592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       transID: transID,
       type: '0',
       isRequestListStep: true,
-      lstStep : this.listStepApprover
+      lstStep: this.listStepApprover,
     };
 
     let popupApprover = this.callfc.openForm(
@@ -1600,7 +1607,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     popupApprover.closed.subscribe((res) => {
       if (res?.event) {
-        if(!this.isChange)this.isChange=true ;
+        if (!this.isChange) this.isChange = true;
         this.listStepApprover = res?.event?.listStepApprover;
         this.listStepApproveDelete = res?.event?.listStepApproveDelete;
         this.listStepApproverView = this.listStepApprover;
@@ -1629,6 +1636,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.listStepApproverView = res;
         }
       });
+  }
+  popoverApproverStep(p, data) {
+    if (!data) {
+      p.close();
+      return ;
+    }
+    if(p.isOpen()) p.close();
+    this.viewApproverStep =data
+    p.open();
   }
   //Bieu mau
   clickViewTemp(temp) {}
