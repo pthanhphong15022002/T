@@ -893,7 +893,8 @@ export class PdfComponent
           if (
             (area.labelType != '8' && !this.isApprover && !area.isLock) ||
             (this.isApprover &&
-              area.signer == this.curSignerID &&
+              (area.signer == this.curSignerID ||
+                area.signer == this.curSignerType) &&
               area.stepNo == this.stepNo)
           ) {
             isRender = true;
@@ -907,7 +908,7 @@ export class PdfComponent
               : area.allowEditAreas == false
               ? false
               : !area.isLock;
-          if (!isRender) {
+          if (isRender) {
             let curSignerInfo = this.lstSigners.find(
               (signer) =>
                 signer.authorID == area.signer ||

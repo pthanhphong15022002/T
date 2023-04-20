@@ -27,7 +27,7 @@
       <span class="h4">{{ step.stepName }}</span>
     </div> 
     <codx-step-task
-      [stepId]="step?.recID"
+      [dataSources]="step"
       [isShowButton]="false"
       [isShowMore]="true"
     ></codx-step-task>
