@@ -3080,7 +3080,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
         if (!checkExistProgress) {
           let index = this.process['permissions'].findIndex(
-            (permissions) => permissions.objectID == roleOld['objectID']
+            (permissions) => permissions.objectID == roleOld['objectID'] && permissions.roleType == 'R'
           );
           if (index > -1) {
             var tmp = this.process.permissions[index];
