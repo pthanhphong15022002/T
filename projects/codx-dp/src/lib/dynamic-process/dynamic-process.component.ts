@@ -131,6 +131,7 @@ export class DynamicProcessComponent
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any = [];
+  isSaveName: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -787,6 +788,12 @@ export class DynamicProcessComponent
   }
 
   async editName() {
+    if(!this.isSaveName) return;
+    this.isSaveName = false;
+      setTimeout(() => {
+        this.isSaveName = true;
+      },3000);
+      
     if (!this.processName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -808,19 +815,20 @@ export class DynamicProcessComponent
       this.notificationsService.notifyCode('DP021');
     } else {
       this.dpService
-        .renameProcess([this.processName, this.processRename['recID']])
-        .subscribe((res) => {
-          if (res) {
-            this.processRename['processName'] = this.processName;
-            this.processRename['modifiedOn'] = res || new Date();
-            this.processRename['modifiedBy'] = this.user?.userID;
-            this.processName = '';
-            this.popupEditName.close();
-            this.notificationsService.notifyCode('SYS007');
-          } else {
-            this.notificationsService.notifyCode('DP030');
-          }
-        });
+      .renameProcess([this.processName, this.processRename['recID']])
+      .subscribe((res) => {
+        if (res) {
+          this.processRename['processName'] = this.processName;
+          this.processRename['modifiedOn'] = res || new Date();
+          this.processRename['modifiedBy'] = this.user?.userID;
+          this.processName = '';
+          this.popupEditName.close();
+          this.notificationsService.notifyCode('SYS007');
+        } else {
+          this.notificationsService.notifyCode('DP030');
+        }
+      });
+      
     }
   }
 

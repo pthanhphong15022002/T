@@ -1307,28 +1307,28 @@ export class StagesDetailComponent implements OnInit {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02'://xóa
-            if (task?.isTaskDefault || (!this.isRoleAll && !isGroup)) {
+            if (task?.isTaskDefault || (!this.isRoleAll && !isGroup && !this.isUpdate)) {
               res.disabled = true;
             }
             break;
           case 'DP13'://sửa
           case 'SYS03'://sửa
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup && !isTask && !this.isUpdate)){
               res.disabled = true;
             }
             break;
           case 'SYS04'://copy
-            if (!this.isRoleAll && !isGroup){
+            if ((!this.isRoleAll && !isGroup) || !this.isUpdate){
               res.disabled = true;
             }
             break;
           case 'SYS003'://đính kèm file
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask)){
+            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask && !this.isUpdate)){
               res.isblur = true;
             }
             break;
           case 'DP20':// tiến độ
-            if (!this.isRoleAll && !isGroup && !isTask){
+            if ((!this.isRoleAll && !isGroup && !isTask) || !this.isUpdate){
               res.isblur = true;
             }
             break;
@@ -1354,33 +1354,33 @@ export class StagesDetailComponent implements OnInit {
           case 'DP07':
             res.disabled = true;
             break;
-          case 'SYS02':
-            if (group?.isTaskDefault || (!this.isRoleAll && !isGroup)) {
+          case 'SYS02'://xóa
+            if (group?.isTaskDefault || (!this.isRoleAll && !isGroup) || !this.isUpdate) {
               res.disabled = true;
             }
             break;
           case 'SYS04'://copy
-            if (!this.isRoleAll){
+            if (!this.isRoleAll || !this.isUpdate){
               res.disabled = true;
             }
             break;
           case 'SYS03'://sửa
-            if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
+            if (!this.leadtimeControl || !(this.isRoleAll || isGroup || this.isUpdate)){
               res.disabled = true;
             }
             break;
           case 'SYS003'://đính kèm file
-            if (!this.leadtimeControl || !(this.isRoleAll || isGroup)){
+            if (!this.leadtimeControl || !(this.isRoleAll || isGroup|| this.isUpdate)){
               res.isblur = true;
             }
             break;
           case 'DP08':// thêm công việc
-            if (!this.isRoleAll && !isGroup){
+            if ((!this.isRoleAll && !isGroup) || !this.isUpdate){
               res.isblur = true;
             }
             break;
           case 'DP20':// tiến độ
-            if (!this.progressTaskGroupControl || (!this.isRoleAll && !isGroup)){
+            if (!this.progressTaskGroupControl || !(this.isRoleAll && isGroup && this.isUpdate)){
               res.isblur = true;
             }
             break;
