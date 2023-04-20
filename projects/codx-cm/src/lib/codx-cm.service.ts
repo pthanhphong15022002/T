@@ -97,4 +97,14 @@ export class CodxCmService {
     return formModel;
   }
 
+  //#region API For Deal
+  getListCustomer(){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetListCustomersAsync'
+    );
+  }
+  //#endregion
+
 }
