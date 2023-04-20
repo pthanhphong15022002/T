@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false">
 </codx-views>
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white rounded-2 pt-4 px-6 d-flex flex-column">
+  <div class="w-100 h-100 bg-white rounded-2 pt-4 px-6 d-flex flex-column scroll-y">
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
         <div class="w-100px text-center bgC5C7D0 active py-2 om-rounded-pill-left" *ngIf="funcID!=compFuncID">

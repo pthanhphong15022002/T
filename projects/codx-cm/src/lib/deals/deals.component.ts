@@ -1,6 +1,25 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewModel, ButtonModel, FormModel, CacheService, ViewType, SidebarModel } from 'codx-core';
+import {
+  UIComponent,
+  ViewModel,
+  ButtonModel,
+  FormModel,
+  CacheService,
+  ViewType,
+  SidebarModel,
+  ResourceModel,
+} from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
 import { CM_Customers } from '../models/cm_model';
@@ -8,10 +27,16 @@ import { CM_Customers } from '../models/cm_model';
 @Component({
   selector: 'lib-deals',
   templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.scss']
+  styleUrls: ['./deals.component.scss'],
 })
-export class DealsComponent extends UIComponent
-implements OnInit, AfterViewInit {
+export class DealsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -32,11 +57,10 @@ implements OnInit, AfterViewInit {
   idField = 'recID';
 
   // data structure
-  listCustomer: CM_Customers[]=[];
+  listCustomer: CM_Customers[] = [];
 
   // type of string
-  customerName:string ='';
-
+  customerName: string = '';
 
   @Input() showButtonAdd = false;
   @ViewChild('templateDetail', { static: true })
@@ -75,6 +99,11 @@ implements OnInit, AfterViewInit {
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+  hideMoreFC = true;
+  listHeader: any;
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -86,7 +115,6 @@ implements OnInit, AfterViewInit {
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-
     // Get API
     this.getListCustomer();
   }
@@ -94,10 +122,32 @@ implements OnInit, AfterViewInit {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
   }
+
   onInit(): void {
+     //test no chosse 
+     this.dataObj = {
+      processID:'327eb334-5695-468c-a2b6-98c0284d0620'
+    }
+    this.request = new ResourceModel();
+    this.request.service = 'CM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DealsBusiness';
+    this.request.method = 'GetListDealsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+
     this.button = {
       id: this.btnAdd,
     };
+   
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -114,6 +164,19 @@ implements OnInit, AfterViewInit {
           template: this.itemViewList,
         },
       },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
     ];
 
     this.router.params.subscribe((param: any) => {
@@ -123,6 +186,7 @@ implements OnInit, AfterViewInit {
       }
     });
   }
+
   ngAfterViewInit(): void {
     this.crrFuncID = this.funcID;
     let formModel = this.view?.formModel;
@@ -206,11 +270,11 @@ implements OnInit, AfterViewInit {
   }
 
   //#region  get data
-  getListCustomer(){
-    this.codxCmService.getListCustomer().subscribe(res => {
-          if(res) {
-            this.listCustomer = res[0];
-          }
+  getListCustomer() {
+    this.codxCmService.getListCustomer().subscribe((res) => {
+      if (res) {
+        this.listCustomer = res[0];
+      }
     });
   }
   //#endregion
@@ -224,7 +288,14 @@ implements OnInit, AfterViewInit {
   }
 
   afterLoad() {
-    this.showButtonAdd = ['CM0201' ,'CM0101' ,'CM02' ,'CM0102' , 'CM0103','CM0104'].includes(this.funcID);
+    this.showButtonAdd = [
+      'CM0201',
+      'CM0101',
+      'CM02',
+      'CM0102',
+      'CM0103',
+      'CM0104',
+    ].includes(this.funcID);
     let formModel = this.view?.formModel;
     if (this.funcID == 'CM0101') {
       this.cacheSv
@@ -305,6 +376,12 @@ implements OnInit, AfterViewInit {
     }
   }
 
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeDataMF($event, data) {}
+
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
@@ -318,8 +395,29 @@ implements OnInit, AfterViewInit {
     }
   }
 
-  clickMoreFunc(e) {
-    this.clickMF(e.e, e.data);
+  dblClick(e, data) {}
+
+  getPropertiesHeader(data, type) {
+    if (this.listHeader?.length == 0) {
+      this.listHeader = this.getPropertyColumn();
+    }
+    let find = this.listHeader?.find((item) => item.recID === data.keyField);
+    return find ? find[type] : '';
+  }
+
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
   }
 
   //#region Search
@@ -328,20 +426,20 @@ implements OnInit, AfterViewInit {
 
   //#region CRUD
   add() {
-    switch(this.funcID) {
+    switch (this.funcID) {
       case 'CM0201': {
-         //statements;
-         this.addDeal();
-         break;
+        //statements;
+        this.addDeal();
+        break;
       }
-    default: {
-         //statements;
-         break;
+      default: {
+        //statements;
+        break;
       }
-   }
+    }
   }
 
-  addDeal(){
+  addDeal() {
     this.view.dataService.addNew().subscribe((res) => {
       // const funcIDApplyFor = this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       // const applyFor = this.process.applyFor;
@@ -354,19 +452,17 @@ implements OnInit, AfterViewInit {
       // formMD.entityName = fun.entityName;
       // formMD.formName = fun.formName;
       // formMD.gridViewName = fun.gridViewName;
-      option.Width =  '800px';
+      option.Width = '800px';
       option.zIndex = 1001;
-      this.openFormDeal( formMD, option, 'add');
-
+      this.openFormDeal(formMD, option, 'add');
     });
   }
 
   openFormDeal(formMD, option, action) {
-
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
-      formMD:formMD,
-      titleAction:  action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội'
+      formMD: formMD,
+      titleAction: action === 'add' ? 'Thêm cơ hội' : 'Copy cơ hội',
     };
     var dialogCustomField = this.callfc.openSide(
       PopupAddDealComponent,
@@ -393,10 +489,7 @@ implements OnInit, AfterViewInit {
     });
   }
 
-  changeDataMF($event, data){
-
-  }
-  addPartner(funcID){
+  addPartner(funcID) {
     // this.view.dataService.addNew().subscribe((res: any) => {
     //   let option = new SidebarModel();
     //   option.DataService = this.view?.dataService;
@@ -414,9 +507,7 @@ implements OnInit, AfterViewInit {
     //   );
     //   dialog.closed.subscribe((e) => {
     //     if (!e?.event) this.view.dataService.clear();
-
     //   });
-
     // });
   }
 
@@ -452,16 +543,14 @@ implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  getCustomerName(customerID:any)
-  {
-    return this.listCustomer.find(x=>x.customerID === customerID)?.customerName;;
+  getCustomerName(customerID: any) {
+    return this.listCustomer.find((x) => x.customerID === customerID)
+      ?.customerName;
   }
 
-  handleDataTmp(data){
+  handleDataTmp(data) {
     return {
-      customerName: this.getCustomerName(data.customerID)
+      customerName: this.getCustomerName(data.customerID),
     };
   }
-
 }
-

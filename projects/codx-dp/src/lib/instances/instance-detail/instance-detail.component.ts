@@ -126,7 +126,7 @@ export class InstanceDetailComponent implements OnInit {
   user: any;
   maxSize: number = 4;
   ownerInstance: string[] = [];
-
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,

@@ -733,7 +733,7 @@
           </div>
           <div
             class="center w-400 mt-5 mb-3"
-            *ngIf="listStepApproverView?.length == 0"
+            *ngIf="listStepApproverView && listStepApproverView.length == 0"
           >
             <codx-label
               name="lblNotSetup"
@@ -1598,7 +1598,9 @@
                           (click)="openFormTemplet('edit', item)"
                         >
                           <span class="icon-edit text-primary icon-16"></span>
-                          <span class="ms-2">Chỉnh sửa</span>
+                          <span class="ms-2">
+                           <codx-label name="lblEdit"  default='Chỉnh sửa' ></codx-label>
+                          </span>
                         </div>
                       </a>
                       <a ngbDropdownItem class="dropdown-item">
@@ -1607,7 +1609,7 @@
                           (click)="openFormTemplet('delete', item)"
                         >
                           <span class="icon-delete text-danger icon-16"></span>
-                          <span class="ms-2">Xóa</span>
+                          <codx-label name="lblDelete" default='Xóa'></codx-label>                     
                         </div>
                       </a>
                     </div>
