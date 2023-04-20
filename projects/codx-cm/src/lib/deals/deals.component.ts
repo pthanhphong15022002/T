@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UIComponent, ViewModel, ButtonModel, FormModel, CacheService, ViewType, SidebarModel } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
+import { CM_Customers } from '../models/cm_model';
 
 @Component({
   selector: 'lib-deals',
@@ -29,6 +30,13 @@ implements OnInit, AfterViewInit {
   className = 'DealsBusiness';
   method = 'GetListDealsAsync';
   idField = 'recID';
+
+  // data structure
+  listCustomer: CM_Customers[]=[];
+
+  // type of string
+  customerName:string ='';
+
 
   @Input() showButtonAdd = false;
   @ViewChild('templateDetail', { static: true })
@@ -77,6 +85,10 @@ implements OnInit, AfterViewInit {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+
+    // Get API
+    this.getListCustomer();
   }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -104,7 +116,6 @@ implements OnInit, AfterViewInit {
       },
     ];
 
-    // bắt sự kiện tại đây chứ k dc bắt trên viewChanged nha cu, sự kiện viewChange dc emit khi view đã đc change, k đúng với case này.
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.funcID = param.funcID;
@@ -193,6 +204,16 @@ implements OnInit, AfterViewInit {
   onLoading(e) {
     // this.afterLoad();
   }
+
+  //#region  get data
+  getListCustomer(){
+    this.codxCmService.getListCustomer().subscribe(res => {
+          if(res) {
+            this.listCustomer = res[0];
+          }
+    });
+  }
+  //#endregion
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -430,6 +451,17 @@ implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+  getCustomerName(customerID:any)
+  {
+    return this.listCustomer.find(x=>x.customerID === customerID)?.customerName;;
+  }
+
+  handleDataTmp(data){
+    return {
+      customerName: this.getCustomerName(data.customerID)
+    };
+  }
 
 }
 
