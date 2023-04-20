@@ -7,8 +7,8 @@
   "
 >
   <div class="header-job py-3 px-5">
-    <div class="d-flex align-items-center justify-content-between mb-2">
-      <div class="d-flex align-items-top">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-top mb-2">
         <span class="fw-bold fs-4 text-dark me-2">{{
           dataStep?.stepName
         }}</span>
@@ -33,7 +33,7 @@
               : false
           "
         >
-          <span class="icon-14 icon-update me-1"></span>
+          <span class="icon-16 icon-update me-1"></span>
           <codx-label
             fiedName="lblProgress"
             formName="DPInstancesSteps"
@@ -272,7 +272,7 @@
                 <div class="card-job stages-task">
                   <div
                     *ngIf="groupTask?.recID"
-                    class="d-flex align-items-center justify-content-between card-job-expand pb-3"
+                    class="d-flex align-items-center justify-content-between card-job-expand"
                   >
                     <div
                       class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
@@ -555,7 +555,7 @@
           : ''
       "
     >
-      <codx-progress [progress]="data?.value?.progress"> </codx-progress>
+      <codx-progress-layout [progress]="data?.value?.progress"> </codx-progress-layout>
     </div>
     <span>
       <codx-img

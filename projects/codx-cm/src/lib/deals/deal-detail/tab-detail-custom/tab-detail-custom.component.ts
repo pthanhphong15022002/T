@@ -24,17 +24,16 @@ implements OnInit, AfterViewInit {
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
 
-  // fmProcductsLines: FormModel = {
-  //   formName: 'CMProducts',
-  //   gridViewName: 'grvCMProducts',
-  //   entityName: 'CM_Products',
-  // };
-  // editSettings: EditSettingsModel = {
-  //   allowEditing: true,
-  //   allowAdding: true,
-  //   allowDeleting: true,
-  //   mode: 'Normal',
-  // };
+  fmProcductsLines: FormModel = {
+    formName: 'CMProducts',
+    gridViewName: 'grvCMProducts',
+    entityName: 'CM_Products',
+  };
+  editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+  };
 
   constructor(
     private inject: Injector,
