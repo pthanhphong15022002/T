@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'codx-progress',
+  selector: 'codx-progress-layout',
   templateUrl: './progress.component.html',
   styleUrls: ['./progress.component.css']
 })
