@@ -135,7 +135,7 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-    cardCss="border w-200px h-100 card-vpp"
+    cardCss="border w-200px h-200px card-vpp"
     [imageObjType]="'EP_Resources'"
     [imageObjName]="data?.resourceName"
     [imageId]="data?.recID"
@@ -147,7 +147,7 @@
 </ng-template>
 
 <ng-template #cardItemFooter let-data>
-  <div class="d-flex flex-column flex-grow-1 mt-2">
+  <div class="d-flex flex-column flex-grow-1">
     <div class="fw-bold line-clamp line-clamp-1 text-start">
       {{ data?.resourceName }}
     </div>
