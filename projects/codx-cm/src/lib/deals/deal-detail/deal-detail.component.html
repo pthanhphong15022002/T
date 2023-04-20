@@ -11,7 +11,7 @@
     <ng-template #header let-data>
       <div class="container_detail mt-3">
         <div class="d-flex justify-content-start pb-3">
-          <div class="fs-2">{{ dataSelected?.processName }}</div>
+          <div class="fs-2">{{ dataSelected?.dealName }}</div>
           <div></div>
           <div class="fs-2 ms-auto">250.000.000</div>
         </div>
@@ -19,7 +19,9 @@
           <div>
             <codx-label default="Khách hàng:" class="fs-6"></codx-label>
           </div>
-          <div class="fs-6">{{ dataSelected?.processName }}</div>
+          <div class="fs-6">
+            {{tmpDataSelect.customerName}}
+          </div>
           <div class="fs-6 ms-auto">
             <div class="d-flex flex-row">
               <i class="icon-monetization_on pe-1"></i>
@@ -149,7 +151,7 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <ccodx-tab-deal-detail [tabClicked]="nameDetail" [data]="dataSelected" ></ccodx-tab-deal-detail>
+  <codx-tab-deal-detail [tabClicked]="nameDetail" [data]="dataSelected" ></codx-tab-deal-detail>
 </ng-template>
 <ng-template #tabs let-data>
   <codx-tabs

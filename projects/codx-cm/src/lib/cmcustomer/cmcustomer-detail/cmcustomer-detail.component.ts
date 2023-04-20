@@ -18,6 +18,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CM_Contacts } from '../../models/cm_model';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -32,8 +33,7 @@ export class CmcustomerDetailComponent implements OnInit {
   @Input() entityName = '';
   moreFuncAdd = '';
   moreFuncEdit = '';
-  vllContactType = 'CRM025';
-  contactPerson: any;
+  vllContactType = '';
   listContacts = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
@@ -53,6 +53,9 @@ export class CmcustomerDetailComponent implements OnInit {
   id = '';
   tabDetail = [];
   formModelContact: FormModel;
+  gridViewSetup: any;
+  listAddress = [];
+  contactPerson = new CM_Contacts();
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -69,23 +72,36 @@ export class CmcustomerDetailComponent implements OnInit {
         if (m) this.moreFuncAdd = m.defaultName;
       }
     });
+    // this.getGridviewSetup();
+    // this.getVllByGridViewSetupContact();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataSelected.recID) {
       if (this.dataSelected.recID == this.id) return;
       this.id = this.dataSelected.recID;
-      this.getContactByObjectID(this.id);
       this.getListContactByObjectID(this.id);
+      this.getListAddress(this.entityName, this.dataSelected?.recID);
+
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
   }
 
-  getContactByObjectID(objectID) {
-    this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
+  getGridviewSetup() {
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
+  }
+
+  getVllByGridViewSetupContact() {
+    this.cache.gridViewSetup('CMContacts', 'grvCMContacts').subscribe((res) => {
       if (res) {
-        this.contactPerson = res;
+        this.vllContactType = res?.ContactType?.referedValue;
       }
     });
   }
@@ -94,7 +110,16 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
+        this.contactPerson = this.listContacts.find(
+          (x) => x.contactType == '1'
+        );
       }
+    });
+  }
+
+  getListAddress(entityName, recID) {
+    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
+      this.listAddress = res;
     });
   }
 
@@ -133,49 +158,14 @@ export class CmcustomerDetailComponent implements OnInit {
         },
       ];
     } else if (funcID == 'CM0102') {
-      if (this.dataSelected.isCustomer == true) {
-        this.tabDetail = [
-          {
-            name: 'Information',
-            textDefault: 'Thông tin chung',
-            icon: 'icon-info',
-            isActive: true,
-          },
-          {
-            name: 'Task',
-            textDefault: 'Công việc',
-            icon: 'icon-format_list_numbered',
-            isActive: false,
-          },
-          {
-            name: 'Opportunity',
-            textDefault: 'Cơ hội',
-            icon: 'icon-add_shopping_cart',
-            isActive: false,
-          },
-          {
-            name: 'Product',
-            textDefault: 'Sản phẩm đã mua',
-            icon: 'icon-shopping_bag',
-            isActive: false,
-          },
-        ];
-      } else {
-        this.tabDetail = [
-          {
-            name: 'Information',
-            textDefault: 'Thông tin chung',
-            icon: 'icon-info',
-            isActive: true,
-          },
-          {
-            name: 'Task',
-            textDefault: 'Công việc',
-            icon: 'icon-format_list_numbered',
-            isActive: false,
-          },
-        ];
-      }
+      this.tabDetail = [
+        {
+          name: 'Information',
+          textDefault: 'Thông tin chung',
+          icon: 'icon-info',
+          isActive: true,
+        },
+      ];
     } else if (funcID == 'CM0103') {
       this.tabDetail = [
         {
@@ -239,31 +229,35 @@ export class CmcustomerDetailComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    var obj = {
-      moreFuncName: title,
-      action: action,
-      dataContact: data,
-      type: 'formDetail',
-      recIDCm: this.dataSelected?.recID,
-      objectType: '1'
-    }
-    var dialog = this.callFc.openForm(
-      PopupQuickaddContactComponent,
-      '',
-      500,
-      500,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialog.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        this.getListContactByObjectID(this.dataSelected?.recID);
-        this.getContactByObjectID(this.dataSelected?.recID);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: title,
+          action: action,
+          dataContact: data,
+          type: 'formDetail',
+          recIDCm: this.dataSelected?.recID,
+          objectType: '1',
+          gridViewSetup: res,
+        };
+        var dialog = this.callFc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          500,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.getListContactByObjectID(this.dataSelected?.recID);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+      });
   }
 
   delete(data) {

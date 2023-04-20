@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core
 import { EditSettingsModel } from '@syncfusion/ej2-gantt';
 import { UIComponent, FormModel, SidebarModel } from 'codx-core';
 import { PopupAddCmCustomerComponent } from '../../../cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
   selector: 'codx-tab-deal-detail',
@@ -14,6 +15,7 @@ implements OnInit, AfterViewInit {
   @Input() data: any;
 
   titleAction: string = '';
+  listStep = [];
 
   readonly tabInformation: string = 'Information';
   readonly tabField: string = 'Field';
@@ -22,27 +24,36 @@ implements OnInit, AfterViewInit {
   readonly tabTask: string = 'Task';
   readonly tabProduct: string = 'Product';
 
-  // fmProcductsLines: FormModel = {
-  //   formName: 'CMProducts',
-  //   gridViewName: 'grvCMProducts',
-  //   entityName: 'CM_Products',
-  // };
-  // editSettings: EditSettingsModel = {
-  //   allowEditing: true,
-  //   allowAdding: true,
-  //   allowDeleting: true,
-  //   mode: 'Normal',
-  // };
+  fmProcductsLines: FormModel = {
+    formName: 'CMProducts',
+    gridViewName: 'grvCMProducts',
+    entityName: 'CM_Products',
+  };
+  editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+  };
 
   constructor(
     private inject: Injector,
-
+    private cmService: CodxCmService,
   ) {
     super(inject);
   }
   ngAfterViewInit() {}
-  onInit(): void {}
+  onInit(): void {
+   this.getListInstanceStep();
+  }
 
+  getListInstanceStep(){
+    let instanceID = this.data?.processID;
+    if(instanceID){
+      this.cmService.getStepInstance([instanceID]).subscribe(res =>{
+        this.listStep = res;    
+      })
+    }
+  }
 
   addContact(){
     var contact = 'CM0103'; // contact

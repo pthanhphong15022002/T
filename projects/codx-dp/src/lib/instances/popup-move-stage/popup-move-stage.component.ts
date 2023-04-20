@@ -1,4 +1,4 @@
-import { DP_Instances_Permissions } from './../../models/models';
+import { DP_Instances_Permissions, DP_Instances_Steps_Roles } from './../../models/models';
 import {
   ChangeDetectorRef,
   Component,
@@ -385,13 +385,20 @@ export class PopupMoveStageComponent implements OnInit {
 
   setRoles() {
     var index = this.instancesStepOld.roles.findIndex(x => x.roleType == 'S');
-    if (this.instancesStepOld.roles[index].objectID != this.owner) {
-      var tmp = this.lstParticipants.find(x => x.userID == this.owner)
-      this.instancesStepOld.roles[index].objectID = this.owner;
-      this.instancesStepOld.roles[index].objectName = tmp?.userName;
-      this.instancesStepOld.roles[index].objectType = 'U';
+    var tmp = this.lstParticipants.find(x => x.userID == this.owner)
+    if(index != -1){
+      if (this.instancesStepOld.roles[index].objectID != this.owner) {
+        this.instancesStepOld.roles[index].objectID = this.owner;
+        this.instancesStepOld.roles[index].objectName = tmp?.userName;
+        this.instancesStepOld.roles[index].objectType = 'U';
+      }  
+    }else{
+      var u = new DP_Instances_Steps_Roles;
+      u['objectID'] = this.owner;
+      u['objectName'] = tmp?.userName;;
+      u['objectType'] = 'U';
+      this.instancesStepOld.roles.push(u);
     }
-
   }
 
   valueChange($event) {

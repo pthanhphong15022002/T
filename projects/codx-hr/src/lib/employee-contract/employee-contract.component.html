@@ -18,18 +18,17 @@
 </codx-views>
 <!-- <<<< -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
-    <div class="w-25">
+  <div class="d-flex align-items-center p-2 border-bottom w-100">
+    <div class="w-100 px-3">
       <div class="d-flex align-items-start">
         <!-- highlight row -->
         <!-- <span class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
           [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'">
         </span> -->
         <!-- end highlight -->
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column justify-content-center me-3">
           <codx-img
             [width]="35"
-            class="me-3"
             [objectId]="data?.emp?.employeeID"
             [referType]="'avt'"
             [objectName]="data?.emp?.employeeName"
@@ -47,14 +46,12 @@
           </codx-vll>
         </div>
         <div class="d-flex flex-column">
-          <div>
-            <div class="fw-bold">
-              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
-              <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-              <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-            </div>
+          <div class="d-flex align-items-center">
+            <span class="me-2 text-dark fw-bold text-nowrap">{{ data?.emp?.employeeName }}</span>
+            <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+            <span class="text-danger">{{ data?.emp?.employeeID }}</span>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-500 fs-7 mb-1">
             <span
               [innerHTML]="
               data?.emp?.positionID
@@ -76,11 +73,11 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-250px min-w-250px px-3">
       <div class="d-flex flex-column">
         <div
-          [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
-          class="fw-bold"
+          [class]="data.isCurrent ? 'text-dark' : 'text-dark'"
+          class="fw-bold mb-1"
         >
           <span
             [title]="
@@ -97,11 +94,11 @@
         <div class="d-flex flex-row">
           <i
             class="icon-calendar_today icon-14 me-1"
-            [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+            [class]="data.isCurrent ? 'text-primary' : 'text-primary'"
           ></i>
           <div
-            [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
-            class="align-self-center fw-bold"
+            [class]="data.isCurrent ? 'text-dark' : 'text-dark'"
+            
           >
             <span
               [title]="
@@ -123,10 +120,10 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-200px min-w-200px px-3">
       <div class="d-flex flex-column">
-        <div class="text-gray-700 d-flex flex-row">
-          <span class="icon-event_notes icon-15 me-1"></span>
+        <div class="text-gray-700 d-flex flex-row mb-1">
+          <span class="icon-event_notes icon-16 me-1"></span>
           <div class="align-self-center fw-bold">
             <span
               [title]="
@@ -146,12 +143,10 @@
           </div>
         </div>
         <div class="d-flex flex-row">
-          <div>
-            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
-              <i class="icon-attach_file text-primary icon-13"></i>
-              <div class="align-self-center notification-count me-4 bg-primary">
-                {{ data?.attachments }}
-              </div>
+          <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
+            <i class="icon-attach_file text-primary icon-13"></i>
+            <div class="align-self-center notification-count me-4 bg-primary">
+              {{ data?.attachments }}
             </div>
           </div>
           <codx-vll
@@ -161,6 +156,7 @@
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
+            ngClass="badge badge-sm"
           >
           </codx-vll>
         </div>
@@ -183,7 +179,7 @@
       </codx-attachment>
     </div>
 
-    <div class="w-25">
+    <div class="w-150px min-w-150px px-3">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -191,6 +187,7 @@
         [showText]="true"
         [showIcon]="false"
         [showBgColor]="true"
+        ngClass="badge badge-sm"
       >
       </codx-vll>
     </div>
@@ -214,18 +211,20 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblContractType" [default]="'Loại hợp đồng | Thời hạn'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblContractNum" [default]="'Số hợp đồng | Ngày ký'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-100 p-3 fw-bold text-dark">
+      <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
+    <div class="w-250px min-w-250px p-3 fw-bold text-dark">
+      <codx-label name="lblContractType" [default]="'Loại hợp đồng | Thời hạn'"></codx-label>
+    </div>
+    <div class="w-200px min-w-200px p-3 fw-bold text-dark">
+      <codx-label name="lblContractNum" [default]="'Số hợp đồng | Ngày ký'"></codx-label>
+    </div>
+    <div class="w-150px min-w-150px p-3 fw-bold text-dark">
+      <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+      </div>
+  </div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>

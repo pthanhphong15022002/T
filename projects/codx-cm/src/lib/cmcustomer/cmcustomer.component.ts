@@ -344,7 +344,7 @@ export class CmCustomerComponent
     //     });
     // }
     this.view.dataService.methodSave = 'AddCrmAsync';
-    this.view.dataService.methodUpdate = 'UpdateCustomerAsync';
+    this.view.dataService.methodUpdate = 'UpdateCrmAsync';
 
     this.detectorRef.detectChanges();
   }
@@ -409,7 +409,7 @@ export class CmCustomerComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF(e){
+  changeDataMF(e) {
     console.log(e);
   }
 
@@ -440,7 +440,7 @@ export class CmCustomerComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            this.customerDetail.listTab(this.funcID);
+            // this.customerDetail.listTab(this.funcID);
           }
         });
       });
@@ -476,8 +476,10 @@ export class CmCustomerComponent
             if (e && e.event != null) {
               this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
-              this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
-              this.customerDetail.listTab(this.funcID);
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.customerDetail.getListContactByObjectID(this.dataSelected?.recID);
+              this.customerDetail.getListAddress(this.entityName, this.dataSelected?.recID);
+              // this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
           });
@@ -511,7 +513,9 @@ export class CmCustomerComponent
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
+            this.dataSelected = JSON.parse(
+              JSON.stringify(this.view.dataService.data[0])
+            );
             this.customerDetail.listTab(this.funcID);
             this.detectorRef.detectChanges();
           }

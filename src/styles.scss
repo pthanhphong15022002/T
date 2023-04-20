@@ -2482,15 +2482,48 @@ codx-toolbar{
     margin-bottom: 10px;
   }
 }
+
+
 /**** end ac-dialog ***/
-div[id*="ej2_dropdownlist_"]{
-  width:auto!important;
+
+.e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {
+  font-family: 'icomoon';
+  content: "\ecb0";
 }
 
-div[id*="ej2_dropdownlist_"] li{
-  padding-right: 20px!important;
+.codx-detail-toolbar{
+  position: relative;
+  z-index: 99;
+}
+.text-gray-700.text-gray-500{
+  color: var(--gray-500)!important;
+}
+.text-gray-700.text-gray-600{
+  color: var(--gray-600)!important;
 }
 
+.okr-inplace{
+  .e-editable-value{
+    white-space: normal!important;
+    margin: 0!important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper{
+    padding: 0!important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+///
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;
