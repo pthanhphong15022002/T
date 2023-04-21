@@ -139,45 +139,9 @@ export class StagesDetailComponent implements OnInit {
   stepNameSuccess: string = '';
   stepNameFail: string = '';
   stepNameReason: string = '';
-
+  idTaskEnd: string = '';
+  isContinueTaskEnd: boolean = false;
   isRoleAll = false;
-
-  roleStep = {
-    addTask: true,
-    addGroup: true,
-    editTaskInstance: true,
-    editGroupTaskInstance: true,
-    edittask: true,
-    editGroupTask: true,
-    deleteTask: false,
-    deleteTaskGroup: false,
-    deleteTaskInstance: true,
-    deleteGroupTaskInstance: true,
-  };
-  roleGroupTask = {
-    addTask: true,
-    addGroup: false,
-    editTaskInstance: true,
-    editGroupTaskInstance: true,
-    edittask: true,
-    editGroupTask: true,
-    deleteTask: false,
-    deleteTaskGroup: false,
-    deleteTaskInstance: true,
-    deleteGroupTaskInstance: true,
-  };
-  roleTask = {
-    addTask: false,
-    addGroup: false,
-    editTaskInstance: false,
-    editGroupTaskInstance: false,
-    edittask: false,
-    editGroupTask: false,
-    deleteTask: false,
-    deleteTaskGroup: false,
-    deleteTaskInstance: false,
-    deleteGroupTaskInstance: false,
-  };
   leadtimeControl = false; //sửa thời hạn công việc mặc định
   progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
   progressStepControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
@@ -657,13 +621,30 @@ export class StagesDetailComponent implements OnInit {
       this.taskGroupList = step['taskGroups'];
       if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
         let taskGroup = new DP_Instances_Steps_TaskGroups();
-        taskGroup['task'] =
-          taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
-          [];
+        taskGroup['task'] = taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) || [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskList = step['tasks'];
+      this. getTaskEnd();
+    }
+  }
+
+  getTaskEnd(){
+    let countGroup = this.taskGroupList?.length;
+    if(countGroup > 0){
+      for(let i = countGroup-1; i >= 0; i--){
+        let countTask = 0;
+        try {
+          countTask = this.taskGroupList[i]['task']?.length;
+        } catch (error) {
+          countTask = 0;
+        }
+        if(countTask > 0){
+          this.idTaskEnd = this.taskGroupList[i]['task'][countTask-1].recID;
+          return;
+        }
+      }
     }
   }
 
@@ -982,6 +963,9 @@ export class StagesDetailComponent implements OnInit {
             this.popupUpdateProgress.close();
             this.calculateProgressStep();
             this.saveAssign.emit(true);
+            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
+              this.isContinueTaskEnd = true;
+            }
           } else {
             this.popupUpdateProgress.close();
           }
@@ -1073,9 +1057,9 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
-
+          debugger
           // a thuận gán isCheck để autoMove
-          if (this.step.progress == 100 ) {
+          if (this.step.progress == 100 || this.isContinueTaskEnd ) {
             let dataInstance = {
               instance: this.instance,
               listStep: this.listStep,
