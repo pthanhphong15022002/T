@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Optional } from "@angular/core";
-import { CacheService, AuthStore, NotificationsService, DialogRef, DialogData } from "codx-core";
+import { CacheService, AuthStore, NotificationsService, DialogRef, DialogData, ApiHttpService } from "codx-core";
 import { CodxEsService } from "../../../codx-es.service";
 
 @Component({
@@ -19,17 +19,21 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   disableDataFormat:boolean = false;
   disableDataFormatSelect:boolean = false;
   vllDataFormat: string = 'AD010';
+  autoNoSetting:any={};
   constructor(private cache: CacheService,
     private cr: ChangeDetectorRef,
-    private esService: CodxEsService,
-    private auth: AuthStore,
+    private api: ApiHttpService,
     private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData){
       this.dialog = dialog;
-      if(dt?.data && dt?.data.length){
-        if(dt.data[0]) this.data=dt?.data[0];
-        if(dt.data[1] && dt.data[1].length) this.colums = dt.data[1];
+      if(dt?.data && Object.keys(dt.data).length){
+       if(dt.data.segment) this.data= dt.data.segment;
+       if(dt.data.columns) this.colums = dt.data.columns;
+       if(dt.data.autoNoSetting) this.autoNoSetting = dt.data.autoNoSetting;
+       if(Object.keys(this.data).length == 0 && Object.keys(this.autoNoSetting).length){
+        this.data.numberSettingID = this.autoNoSetting.numberSettingID;
+       }
       }
   }
 
@@ -72,11 +76,10 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
       this.disableCharNum = true;
       this.disableDataFormat = false;
     }
-    debugger
   }
 
   onSaveForm(){
-
+    this.dialog.close(this.data);
   }
 
 }

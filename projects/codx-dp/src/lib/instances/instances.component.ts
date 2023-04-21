@@ -170,7 +170,7 @@ export class InstancesComponent
   esCategory: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-
+  ownerStepProcess: any;
   //test temp
   dataTemplet = [
     {
@@ -906,6 +906,16 @@ export class InstancesComponent
     this.detectorRef.detectChanges();
   }
 
+  checkOwnerRoleProcess(roles){
+    if(roles != null && roles.length > 0){
+      var checkOwner = roles.find(x => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    }else{
+      return null;
+    }
+  }
+
   showInput(data) {}
 
   //begin code Thao
@@ -1158,7 +1168,7 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (checkTransferControl == '1') {
+    if (checkTransferControl == '1' || checkTransferControl == '2') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
