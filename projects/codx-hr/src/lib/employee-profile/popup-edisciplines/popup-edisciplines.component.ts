@@ -7,6 +7,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -28,7 +29,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   indexSelected;
   actionType;
   notitfy: NotificationsService;
+  employeeObj: any;
   funcID;
+  openFrom: string
   idField = 'RecID';
   employId;
   isAfterRender = false;
@@ -64,12 +67,15 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
+    this.openFrom = data?.data?.openFrom;
+    this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
-    this.disciplineObj = data?.data?.dataInput;
+    this.disciplineObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
 
   }
+  
 
   initForm() {
     if (this.actionType == 'add') {
@@ -103,6 +109,24 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     }
   }
 
+  handleSelectEmp(evt){
+    if(evt.data != null){
+      this.employId = evt.data
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.employId;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.employeeObj = emp[0][0]
+          console.log('employee cua form', this.employeeObj);
+          this.cr.detectChanges();
+        }
+      });
+    }
+  }
+
   onInit(): void {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
@@ -120,6 +144,8 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    this.disciplineObj.status = '1'
+    this.disciplineObj.approveStatus = '1'
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -134,15 +160,17 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
+            p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
-        .UpdateEmployeeDisciplineInfo(this.formModel.currentData)
+        .UpdateEmployeeDisciplineInfo(this.disciplineObj)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
+            p.emp = this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

@@ -296,6 +296,7 @@
         [multiple]="true"
         [listCombobox]="listCombobox"
         [type]="'all'"
+        [disabled]="isTaskDefault"
       ></codx-user>
     </div>
 
@@ -344,7 +345,7 @@
   
   <ng-container>
     <div class="d-flex align-items-center justify-content-between mt-4"
-      *ngIf="showLabelAttachment"
+      *ngIf="showLabelAttachment || !isTaskDefault"
       style="float: left; clear: left">
       <div class="d-flex align-items-center mb-2">
         <div class="fw-bold text-primary">
@@ -355,7 +356,7 @@
       </div>
     </div>
     <div>
-      <codx-attachment
+      <codx-attachment 
         #attachment
         [objectId]="stepsTasks?.recID"
         hideFolder="1"
@@ -387,6 +388,7 @@
     type="button"
     class="btn btn-light-primary me-3"
     (click)="addFile($event)"
+    [disabled]="isTaskDefault"
   >
     <i class="icon-cloud_upload fs-5"></i
     ><span>

@@ -58,7 +58,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   validate: any = 0;
   journalNo: string;
   VATType: any;
-  objectName: any;
   detailActive = 1;
   countDetail = 0;
   pageCount: any;
@@ -126,18 +125,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    if (this.purchaseinvoices.objectID != null) {
-      this.api
-        .exec<any>('PS', 'PurchaseInvoicesBusiness', 'GetVendorNameAsync', [
-          this.purchaseinvoices.objectID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.objectName = res;
-          }
-        });
-    }
-
     this.cache
       .gridViewSetup('PurchaseInvoices', 'grvPurchaseInvoices')
       .subscribe((res) => {
@@ -323,7 +310,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res) {
-            this.objectName = res;
+            this.purchaseinvoices.invoiceName = res;
+            this.form.formGroup.patchValue(this.purchaseinvoices);
           }
         });
     }
@@ -404,7 +392,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             PopAddLineComponent,
             '',
             650,
-            800,
+            850,
             '',
             obj,
             '',
@@ -560,7 +548,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
             PopAddLineComponent,
             '',
             650,
-            800,
+            850,
             '',
             obj,
             '',
@@ -794,11 +782,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
                       'ERM.Business.PS',
                       'PurchaseInvoicesLinesBusiness',
                       'AddAsync',
-                      [this.purchaseinvoices, this.purchaseInvoicesLines]
+                      [this.purchaseInvoicesLines]
                     )
                     .subscribe((res) => {
                       if (res) {
-                        this.saveVAT();
+                        //this.saveVAT();
                       }
                     });
                   this.dialog.close();

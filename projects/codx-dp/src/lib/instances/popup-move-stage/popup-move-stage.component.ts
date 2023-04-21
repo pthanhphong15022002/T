@@ -1,4 +1,4 @@
-import { DP_Instances_Permissions } from './../../models/models';
+import { DP_Instances_Permissions, DP_Instances_Steps_Roles } from './../../models/models';
 import {
   ChangeDetectorRef,
   Component,
@@ -342,7 +342,10 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
 
-    this.beforeSave();
+    if(this.isCheckRequiredTask(this.listTask))
+    {
+      return;
+    }
   }
   beforeSave() {
     if (
@@ -360,7 +363,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
     if (
       (!!this.listTask || !!this.listTaskGroup) &&
-      this.stepIdClick === this.stepIdOld
+        this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
@@ -385,13 +388,20 @@ export class PopupMoveStageComponent implements OnInit {
 
   setRoles() {
     var index = this.instancesStepOld.roles.findIndex(x => x.roleType == 'S');
-    if (this.instancesStepOld.roles[index].objectID != this.owner) {
-      var tmp = this.lstParticipants.find(x => x.userID == this.owner)
-      this.instancesStepOld.roles[index].objectID = this.owner;
-      this.instancesStepOld.roles[index].objectName = tmp?.userName;
-      this.instancesStepOld.roles[index].objectType = 'U';
+    var tmp = this.lstParticipants.find(x => x.userID == this.owner)
+    if(index != -1){
+      if (this.instancesStepOld.roles[index].objectID != this.owner) {
+        this.instancesStepOld.roles[index].objectID = this.owner;
+        this.instancesStepOld.roles[index].objectName = tmp?.userName;
+        this.instancesStepOld.roles[index].objectType = 'U';
+      }
+    }else{
+      var u = new DP_Instances_Steps_Roles;
+      u['objectID'] = this.owner;
+      u['objectName'] = tmp?.userName;;
+      u['objectType'] = 'U';
+      this.instancesStepOld.roles.push(u);
     }
-
   }
 
   valueChange($event) {
@@ -451,17 +461,6 @@ export class PopupMoveStageComponent implements OnInit {
   removeReasonInSteps(listStepCbx, stepReason) {
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
-  }
-
-  UpdateRequireCompletedCheck(item: any, checkValue, isCheck) {
-    if (!!item) {
-      if (isCheck && item.requireCompleted) {
-        checkValue++;
-      } else if (!isCheck && item.requireCompleted) {
-        checkValue--;
-      }
-    }
-    return checkValue ?? 0;
   }
   setToDay() {
     this.instancesStepOld.actualEnd = new Date();
@@ -632,7 +631,7 @@ export class PopupMoveStageComponent implements OnInit {
       if(event?.groupTaskID){
         var group = this.listTaskGroup.find(x=>x.recID === event?.groupTaskID);
         var groupNew = {
-          progress: event?.progressTask,
+          progress: event?.progressGroupTask,
          };
          this.updateDataGroup(group,groupNew);
       }
@@ -649,8 +648,21 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.modifiedBy = this.user.userID;
   }
   updateDataGroup(groupNew:any, groupOld: any) {
-    groupNew.progress = groupNew.progress;
+    groupNew.progress = groupOld.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
+  }
+
+
+    isCheckRequiredTask(listTask){
+    if(listTask.length > 0 && listTask) {
+        for(let item of listTask){
+          if(item.requireCompleted && item.progress < this.oneHundredNumber) {
+            this.notiService.notifyCode('DP022');
+            return true;
+          }
+        }
+    }
+    return false;
   }
 }

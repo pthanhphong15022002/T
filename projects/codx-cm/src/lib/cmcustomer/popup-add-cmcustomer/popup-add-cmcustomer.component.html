@@ -391,12 +391,12 @@
         </codx-input>
       </div>
       <div class="form-group" *ngIf="funcID == 'CM0101'">
-        <codx-label [formModel]="form.formModel" fiedName="Source">
+        <codx-label [formModel]="form.formModel" fiedName="CustomerResource">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          field="source"
+          field="customerResource"
         >
         </codx-input>
       </div>
@@ -739,10 +739,10 @@
   </div>
   <div
     class="d-flex flex-column"
-    *ngIf="listAddress != null && listAddress.length > 0"
+    *ngIf="listAddress != null && listAddress.length > 0; index as i"
   >
     <ng-container *ngFor="let item of listAddress">
-      <div class="row">
+      <div class="row mb-1">
         <div class="col-4">
           <span
             class="label-colon text-gray-600"
@@ -753,46 +753,30 @@
             "
           ></span>
         </div>
-        <div class="col-8">
-          <span *ngIf="item?.street"
+        <div class="col-6">
+          <span *ngIf="item?.adressName"
             [innerHTML]="
-              item?.street
-                | formatvalue : formModelAddress : 'Street'
+              item?.adressName
+                | formatvalue : formModelAddress : 'AdressName'
                 | async
             "
           ></span>
-          <span class="me-1" *ngIf="item?.street">,</span>
-          <span *ngIf="item?.regionID"
-            [innerHTML]="
-              item?.regionID
-                | formatvalue : formModelAddress : 'RegionID'
-                | async
-            "
-          ></span>
-          <span class="me-1" *ngIf="item?.regionID">,</span>
-          <span *ngIf="item?.districtID"
-            [innerHTML]="
-              item?.districtID
-                | formatvalue : formModelAddress : 'DistrictID'
-                | async
-            "
-          ></span>
-          <span class="me-1" *ngIf="item?.districtID">,</span>
-          <span *ngIf="item?.provinceID"
-            [innerHTML]="
-              item?.provinceID
-                | formatvalue : formModelAddress : 'ProvinceID'
-                | async
-            "
-          ></span>
-          <span class="me-1" *ngIf="item?.provinceID">,</span>
-          <span *ngIf="item?.countryID"
-            [innerHTML]="
-              item?.countryID
-                | formatvalue : formModelAddress : 'CountryID'
-                | async
-            "
-          ></span>
+        </div>
+        <div class="col-2">
+          <div class="d-flex justify-content-end align-items-center">
+            <button
+              class="btn btn-sm btn-icon btn-light-warning"
+              (click)="openPopupAddress(item, 'edit')"
+            >
+              <i class="icon icon-14 icon-edit"></i>
+            </button>
+            <button
+              class="btn btn-sm btn-icon btn-light-danger ms-2"
+              (click)="removeAddress(item, i)"
+            >
+              <i class="icon icon-14 icon-close"></i>
+            </button>
+          </div>
         </div>
       </div>
     </ng-container>
