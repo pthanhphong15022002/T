@@ -371,9 +371,13 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.stepIdOld = '';
     }
-    this.instancesStepOld.taskGroups = this.listTaskGroupDone;
-    this.instancesStepOld.tasks = this.listTaskDone;
-    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone,'T');
+    }
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpGroup= this.convertTmpDataInTask(this.listTaskGroupDone,'G');
+    }
+    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld,listTmpTask,listTmpGroup];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];
@@ -640,17 +644,19 @@ export class PopupMoveStageComponent implements OnInit {
        var task = this.listTaskDone.find(x=>x.recID === event?.taskID);
        var taskNew = {
         progress: event?.progressTask,
-        actualEnd: event?.event,
+        actualEnd: event?.actualEnd,
         isUpdate: event?.isUpdate,
-        note: event?.note
+        note: event?.note,
        };
-
       this.updateDataTask(task,taskNew);
       }
       if(event?.groupTaskID){
         var group = this.listTaskGroupDone.find(x=>x.recID === event?.groupTaskID);
         var groupNew = {
           progress: event?.progressGroupTask,
+          isUpdate: event?.isUpdate,
+          actualEnd: event?.actualEnd,
+          note: event?.note,
          };
          this.updateDataGroup(group,groupNew);
       }
@@ -663,15 +669,39 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
+    taskNew.isUpdate = taskNew.isUpdate
   }
   updateDataGroup(groupNew:any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
+    groupNew.isUpdate = groupOld.isUpdate
   }
 
+  handleTmpInTask(data,type){
+    var tmpProgressUpdate = {
+      stepID: data.stepID,
+      recID: data.recID,
+      type:type,
+      progress:data.progress,
+      note: data.note,
+      actualEnd: data.actualEnd,
+      isUpdate: data.isUpdate
+    }
+    return tmpProgressUpdate;
+  }
 
-    isCheckRequiredTask(listTask){
+  convertTmpDataInTask(list,type){
+    var listTmp = [];
+    debugger
+    for(let item of list) {
+      var obj = this.handleTmpInTask(item,type);
+      listTmp.push(obj);
+    }
+    return listTmp;
+  }
+
+  isCheckRequiredTask(listTask){
     if(listTask.length > 0 && listTask) {
         for(let item of listTask){
           if(item.requireCompleted && item.progress < this.oneHundredNumber) {
