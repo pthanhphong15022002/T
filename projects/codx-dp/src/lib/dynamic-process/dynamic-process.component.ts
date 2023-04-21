@@ -587,9 +587,8 @@ export class DynamicProcessComponent
 
           //   break;
           case 'SYS02': // xoa
-            let isDelete = data.delete;
             if (
-              !isDelete ||
+              !data.delete ||
               data.deleted ||
               this.funcID == 'DP0203' ||
               this.funcID === 'DP04'
@@ -599,7 +598,7 @@ export class DynamicProcessComponent
             break;
             case 'DP01015':
               if (!data.approveRule) res.isblur = true;
-              break;           
+              break;
         }
       });
     }
@@ -793,7 +792,7 @@ export class DynamicProcessComponent
       setTimeout(() => {
         this.isSaveName = true;
       },3000);
-      
+
     if (!this.processName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -828,7 +827,7 @@ export class DynamicProcessComponent
           this.notificationsService.notifyCode('DP030');
         }
       });
-      
+
     }
   }
 

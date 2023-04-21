@@ -59,7 +59,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() okrGrv:any;  
   @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
   @Input() isCollapsed = false;
-  @Input() listUM=[] ;
+  @Input() listUM=[] ;  
+  @Input() currentUser ;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =new EventEmitter();
   dtStatus = [];
   krTitle = '';
@@ -1007,7 +1008,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
+      [okr.okrName, okr.recID, okr.okrType, this.funcID, title,this.currentUser],
       '',
       dModel
     );
