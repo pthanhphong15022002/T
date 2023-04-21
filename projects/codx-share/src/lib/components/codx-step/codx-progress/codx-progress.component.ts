@@ -296,9 +296,9 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
 
 }
 export class progressOutput {
-		stepID: string;
-		groupTaskID: string;                                    
-		taskID: string;
+		stepID: string = null;
+		groupTaskID: string = null;                                    
+		taskID: string = null;
 		type: string;
 		progressStep: number = null;
 		progressGroupTask: number = null;
