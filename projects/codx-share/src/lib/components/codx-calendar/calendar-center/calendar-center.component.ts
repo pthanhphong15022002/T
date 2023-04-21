@@ -64,8 +64,7 @@ export class CalendarCenterComponent
 
   constructor(
     private injector: Injector,
-    private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef,
+    private shareService: CodxShareService,
     private codxCalendarSV: CodxCalendarService
   ) {
     super(injector);
@@ -80,19 +79,19 @@ export class CalendarCenterComponent
   }
 
   onInit(): void {
-    this.codxShareSV.getListResource('1').subscribe((res: any) => {
+    this.shareService.getListResource('1').subscribe((res: any) => {
       if (res) {
         this.listRoom = [];
         this.listRoom = res;
       }
     });
-    this.codxShareSV.getListResource('2').subscribe((res: any) => {
+    this.shareService.getListResource('2').subscribe((res: any) => {
       if (res) {
         this.listCar = [];
         this.listCar = res;
       }
     });
-    this.codxShareSV.getListResource('3').subscribe((res: any) => {
+    this.shareService.getListResource('3').subscribe((res: any) => {
       if (res) {
         this.listDriver = [];
         this.listDriver = res;
@@ -135,7 +134,7 @@ export class CalendarCenterComponent
         toDate: event.data.toDate,
         type: event?.data.type,
       };
-      this.codxShareSV.dateChange.next(obj);
+      this.shareService.dateChange.next(obj);
     }
   }
 
@@ -240,7 +239,7 @@ export class CalendarCenterComponent
   getMoreInfoBookingCars(recID: any) {
     this.selectBookingAttendeesCar = '';
     this.driverName = ' ';
-    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
+    this.shareService.getListAttendees(recID).subscribe((attendees: any) => {
       if (attendees) {
         let lstAttendees = attendees;
         lstAttendees.forEach((element) => {
@@ -254,7 +253,7 @@ export class CalendarCenterComponent
         if (this.driverName == ' ') {
           this.driverName = null;
         }
-        this.change.detectChanges();
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -263,12 +262,12 @@ export class CalendarCenterComponent
     this.selectBookingItems = [];
     this.selectBookingAttendeesRoom = '';
 
-    this.codxShareSV.getListItems(recID).subscribe((item: any) => {
+    this.shareService.getListItems(recID).subscribe((item: any) => {
       if (item) {
         this.selectBookingItems = item;
       }
     });
-    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
+    this.shareService.getListAttendees(recID).subscribe((attendees: any) => {
       if (attendees) {
         let lstAttendees = attendees;
         lstAttendees.forEach((element) => {

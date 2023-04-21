@@ -67,9 +67,10 @@
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
                                             [value]="ob?.confidence" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
-                                    <div class="w-10 d-flex align-items-center justify-content-start ps-2 om-hover-mf">
-                                        <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                            (click)="deleteOKR(obType,i,0,0)"></span>
+                                    <div class="w-50px d-flex align-items-center justify-content-start ps-1">
+                                        <button type="button" class="btn btn-icon btn-sm btn-light-primary om-hover-mf" ngbTooltip="Xóa" (click)="deleteOKR(obType,i,0,0)">
+                                            <i class="icon-delete"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -115,11 +116,15 @@
                                                 [value]="kr?.umid" [cssClass]="' w-100 om-input text-center'"
                                                 (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                         </div>
-                                        <div class="w-10 d-flex align-items-center justify-content-between ps-2 om-hover-mf">
-                                            <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                                    (click)="deleteOKR(krType,i,ii,0)"></span>
-                                            <span class="icon-post_add cursor-pointer text-primary w-fit" ngbTooltip="Thêm kết quả phụ"
-                                                (click)="addOKR(skrType,i,ii)"></span>
+                                        <div class="w-50px d-flex align-items-center justify-content-between ps-1">
+                                            <button type="btn" class="btn btn-icon btn-light-danger om-hover-mf me-1"  ngbTooltip="Xóa"
+                                                    (click)="deleteOKR(krType,i,ii,0)">
+                                                <i class="icon-delete"></i>    
+                                            </button>
+                                            <button type="button" class="btn btn-icon btn-light-primary om-hover-mf" ngbTooltip="Thêm kết quả phụ"
+                                                (click)="addOKR(skrType,i,ii)">
+                                                <i class="icon-post_add"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -175,9 +180,11 @@
                                                     (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
                                             </div>
 
-                                            <div class="w-10 d-flex align-items-center justify-content-start ps-2 om-hover-mf">
-                                                <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                                    (click)="deleteOKR(skrType,i,ii,iii)"></span>
+                                            <div class="w-50px d-flex align-items-center justify-content-start ps-2">
+                                                <button type="button" class="btn btn-icon btn-light-danger om-hover-mf" ngbTooltip="Xóa"
+                                                    (click)="deleteOKR(skrType,i,ii,iii)">
+                                                    <i class="icon-delete"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
