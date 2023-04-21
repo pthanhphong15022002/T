@@ -3,16 +3,20 @@ import {
   Component,
   Injector,
   Input,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import {
+  DialogModel,
   DialogRef,
   FormModel,
   UIComponent,
 } from 'codx-core';
 import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
+import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
+import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 
 @Component({
   selector: 'view-okr',
@@ -28,12 +32,14 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   @Input() okrVll:any;
   @Input() okrGrv:any;
 
+  @ViewChild('showTask') showTask: any;
   dialogRef: DialogRef;
   formModel: FormModel;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
   listUM=[];
+  selectOKR: any;
 
   constructor(
     private injector: Injector,
@@ -102,5 +108,46 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
     else{
       return umid;
     }
+  }
+  showTasks(evt:any,data:any){    
+    evt.stopPropagation();
+    evt.preventDefault();
+    if(evt !=null && data!=null){
+      this.selectOKR=data;
+      let dialogShowTask = this.callfc.openForm(this.showTask, '', 1280, 720, null);
+    }
+  }
+  //Xem chi tiết OB
+  showOB(obj: any, popupTitle: any) {
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    dModel.FormModel = this.okrFM?.obFM;
+    let dialogShowOB = this.callfc.openForm(
+      PopupShowOBComponent,
+      '',
+      null,
+      null,
+      null,
+      [obj, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
+      '',
+      dModel
+    );
+  }
+  //Xem chi tiết KR
+  showKR(kr: any, popupTitle: any) {
+    let dModel = new DialogModel();
+    popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
+    dModel.IsFull = true;
+    dModel.FormModel = this.okrFM?.krFM;
+    let dialogShowKR = this.callfc.openForm(
+      PopupShowKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
+      '',
+      dModel
+    );
   }
 }

@@ -8,7 +8,7 @@
                 <span class="fs-2 fw-bold">{{curOrgName}}</span>
                 <span class="d-flex justify-content-between align-items-center ">
                     <span class="icon-i-calendar2-week-fill me-2"></span>
-                    <span class="fs-4 fw-bold">{{okrPlan?.periodID}}</span>
+                    <span class="fs-4 fw-bold" [ngbTooltip]="'Mã kỳ'">{{okrPlan?.periodID}}</span>
                 </span>
             </div>
             <div class="d-flex align-items-center flex-row  w-100 px-9 pb-3">
@@ -55,21 +55,22 @@
                                 <div class="w-40 d-flex justify-content-start ">
                                     <div
                                         class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom  border-top">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
                                             [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
                                             [value]="ob?.category" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
                                     <div
                                         class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom border-top border-end">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
                                             [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
                                             [value]="ob?.confidence" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
-                                    <div class="w-10 d-flex align-items-center justify-content-start ps-2 om-hover-mf">
-                                        <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                            (click)="deleteOKR(obType,i,0,0)"></span>
+                                    <div class="w-50px d-flex align-items-center justify-content-start ps-1">
+                                        <button type="button" class="btn btn-icon btn-sm btn-light-primary om-hover-mf" ngbTooltip="Xóa" (click)="deleteOKR(obType,i,0,0)">
+                                            <i class="icon-delete"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -115,11 +116,15 @@
                                                 [value]="kr?.umid" [cssClass]="' w-100 om-input text-center'"
                                                 (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                         </div>
-                                        <div class="w-10 d-flex align-items-center justify-content-between ps-2 om-hover-mf">
-                                            <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                                    (click)="deleteOKR(krType,i,ii,0)"></span>
-                                            <span class="icon-post_add cursor-pointer text-primary w-fit" ngbTooltip="Thêm kết quả phụ"
-                                                (click)="addOKR(skrType,i,ii)"></span>
+                                        <div class="w-50px d-flex align-items-center justify-content-between ps-1">
+                                            <button type="btn" class="btn btn-icon btn-light-danger om-hover-mf me-1"  ngbTooltip="Xóa"
+                                                    (click)="deleteOKR(krType,i,ii,0)">
+                                                <i class="icon-delete"></i>    
+                                            </button>
+                                            <button type="button" class="btn btn-icon btn-light-primary om-hover-mf" ngbTooltip="Thêm kết quả phụ"
+                                                (click)="addOKR(skrType,i,ii)">
+                                                <i class="icon-post_add"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -175,9 +180,11 @@
                                                     (valueChange)="skrChange($event,i,ii,iii)"></codx-inplace>
                                             </div>
 
-                                            <div class="w-10 d-flex align-items-center justify-content-start ps-2 om-hover-mf">
-                                                <span class="icon-delete cursor-pointer text-danger w-fit me-2" ngbTooltip="Xóa"
-                                                    (click)="deleteOKR(skrType,i,ii,iii)"></span>
+                                            <div class="w-50px d-flex align-items-center justify-content-start ps-2">
+                                                <button type="button" class="btn btn-icon btn-light-danger om-hover-mf" ngbTooltip="Xóa"
+                                                    (click)="deleteOKR(skrType,i,ii,iii)">
+                                                    <i class="icon-delete"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -208,8 +215,8 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-end my-5 px-9" (click)="onSaveForm()">
-                <button type="button" class="btn btn-primary"><codx-label default="Lưu"
+            <div class="d-flex justify-content-end my-5 px-9">
+                <button type="button" class="btn btn-primary" (click)="onSaveForm()" [disabled]="onSaving"><codx-label default="Lưu"
                         fiedName="lblSave"></codx-label></button>
             </div>
         </div>

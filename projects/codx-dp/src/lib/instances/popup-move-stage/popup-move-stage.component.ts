@@ -347,6 +347,10 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
 
+    if(this.isCheckRequiredTask(this.listTask))
+    {
+      return;
+    }
     this.beforeSave();
   }
   beforeSave() {
@@ -365,7 +369,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
     if (
       (!!this.listTask || !!this.listTaskGroup) &&
-      this.stepIdClick === this.stepIdOld
+        this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
@@ -650,53 +654,36 @@ export class PopupMoveStageComponent implements OnInit {
           (x) => x.recID === event?.groupTaskID
         );
         var groupNew = {
-          progress: event?.progressTask,
-        };
-        this.updateDataGroup(group, groupNew);
+          progress: event?.progressGroupTask,
+         };
+         this.updateDataGroup(group,groupNew);
       }
     }
   }
-  updateDataTask(taskNew: any, taskOld: any) {
-    taskNew.actualEnd = taskOld.actualEnd;
+  updateDataTask(taskNew:any, taskOld: any) {
+    taskNew.actualEnd = taskOld?.actualEnd;
     taskNew.isUpdate = taskOld.isUpdate;
     taskNew.note = taskOld.note;
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
   }
-  updateDataGroup(groupNew: any, groupOld: any) {
-    groupNew.progress = groupNew.progress;
+  updateDataGroup(groupNew:any, groupOld: any) {
+    groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
   }
 
-  isCheckRequiredTask(listTask) {
-    // if(data.parentID) {
-    //   var parentIds = data?.parentID.split(';');
-    //   var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
-    //   if(filteredList.length != parentIds.length) {
-    //     var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
-    //     checkbox.checked = false;
-    //     var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
 
-    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-    //     return false;
-    //   }
-    // }
-    // if(listTask.length > 0 && listTask) {
-    //     for(let item of listTask)
-    //     {
-
-    //     }
-    // }
-
-    // var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
-
-    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-    //     return false;
-
-    return true;
+    isCheckRequiredTask(listTask){
+    if(listTask.length > 0 && listTask) {
+        for(let item of listTask){
+          if(item.requireCompleted && item.progress < this.oneHundredNumber) {
+            this.notiService.notifyCode('DP022');
+            return true;
+          }
+        }
+    }
+    return false;
   }
 }

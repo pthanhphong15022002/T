@@ -1,4 +1,4 @@
-<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
+<codx-form [headerText]=" oldKR?.okrType=='R'?'Xem chi tiết kết quả':'Xem chi tiết kết quả phụ'" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
@@ -85,7 +85,7 @@
                         style="height: 30px; width: 30px">
                         <i class="icon-edit_square justify-content-center align-items-center text-light"></i>
                       </div>
-                      <codx-label name="lbl" default="Thực hiện và kế hoạch" class="ps-2 fs-5 fw-bolder">
+                      <codx-label name="lbl" default="Thực hiện và kế hoạch" class="ps-2 fs-5 fw-bold">
                       </codx-label>
                     </div>
                     <!-- <span type="button" (click)="checkIn($event, dataKR)"
@@ -107,13 +107,13 @@
                         style="height: 30px; width: 30px">
                         <i class="icon-history justify-content-center align-items-center text-light"></i>
                       </div>
-                      <codx-label name="lbl" default="Lịch sử cập nhật" class="ps-2 fs-5 fw-bolder"></codx-label>
+                      <codx-label name="lbl" default="Lịch sử cập nhật" class="ps-2 fs-5 fw-bold"></codx-label>
                     </div>
-                    <span type="button"
-                      class="w-110px d-flex py-2 px-4 bg-color rounded justify-content-center">
-                      <span class="icon-edit_square btn-text-primary text-light me-1"></span>
-                      <codx-label class="text-light" fiedName="lbl" default="Cập nhật"></codx-label>
-                    </span>
+                    <button type="button"
+                      class="btn btn-primary">
+                      <i class="icon-edit_square icon-16"></i>
+                      <codx-label fiedName="lbl" default="Cập nhật"></codx-label>
+                    </button>
                   </div>
 
                   <div class="px-10">
@@ -170,7 +170,7 @@
                                   %
                                 </div>
                               </div>
-                              <span class="fs-6 fw-bolder me-5 w-50px">
+                              <span class="fs-6 fw-bold me-5 w-50px">
                                 {{ item?.cummulated }}
                               </span>
                               <span class="position-relative text-primary icon-attach_file me-2">
@@ -231,7 +231,7 @@
                   <!--Content-->
                   <div class="ms-5 ps-5">
                     <span class="icon-i-signpost-2 text-primary"></span>
-                    <codx-label default="Liên kết" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
+                    <codx-label default="Liên kết" class="ps-2 fs-5 fw-bold" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAlign && listAlign.length>0" class="px-5">
                     <view-okr [dataOKR]="listAlign" [isCollapsedAll]="false" [okrFM]="okrFM" [okrGrv]="okrGrv"
@@ -240,7 +240,7 @@
                   <!--Content-->
                   <div class="ms-5 ps-5 pt-5">
                     <span class="icon-i-signpost-2 text-primary"></span>
-                    <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
+                    <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bold" name="lblLink"></codx-label>
                   </div>
                   <div *ngIf="listAssign && listAssign.length>0" class="px-5">
                     <view-okr [dataOKR]="listAssign" [isCollapsedAll]="false" [okrFM]="okrFM"  [okrGrv]="okrGrv"
@@ -259,9 +259,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex justify-content-center">
-                <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [dataValue]="dataKR.recID" [predicate]="'RefID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
-            
+              <div class="mw-1000px mx-auto">
+                <div class="overflow-auto mt-5" >
+                  <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="oldKR?.recID"
+                    [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
+                </div>
               </div>
             </ng-template>
           </e-tabitem>
@@ -300,7 +302,14 @@
                 <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Cập nhật </ng-template>
+            <ng-template #content> 
+              <div class="h-100">
+                <div class="mw-1000px mx-auto mt-5">
+                  <codx-history [objectID]="dataKR?.recID" [formModel]="formModel"
+                    [funcID]="formModel?.funcID"></codx-history>
+                </div>
+              </div>
+            </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>

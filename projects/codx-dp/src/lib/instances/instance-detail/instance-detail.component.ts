@@ -112,6 +112,7 @@ export class InstanceDetailComponent implements OnInit {
   titleDefault = '';
 
   isHiddenReason: boolean = false;
+  //viewHour = { timelineViewMode: "Hour"}
 
   instanceId: string;
   proccesNameMove: string;
