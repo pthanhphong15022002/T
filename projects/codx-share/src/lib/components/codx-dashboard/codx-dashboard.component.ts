@@ -582,7 +582,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       let iGenPanels = setInterval(() => {
         if (
           this.objDashboard &&
-          this.objDashboard.element.childElementCount > 0
+          this.objDashboard?.element?.childElementCount > 0
         ) {
           clearInterval(iGenPanels);
           this.panels.forEach((ele: any) => {

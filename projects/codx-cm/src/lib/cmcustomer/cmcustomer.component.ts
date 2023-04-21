@@ -477,8 +477,13 @@ export class CmCustomerComponent
               this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.getListContactByObjectID(this.dataSelected?.recID);
-              this.customerDetail.getListAddress(this.entityName, this.dataSelected?.recID);
+              this.customerDetail.getListContactByObjectID(
+                this.dataSelected?.recID
+              );
+              this.customerDetail.getListAddress(
+                this.entityName,
+                this.dataSelected?.recID
+              );
               // this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
@@ -506,17 +511,21 @@ export class CmCustomerComponent
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
           PopupAddCmCustomerComponent,
-          ['copy', this.titleAction],
+          ['copy', this.titleAction, this.dataSelected.recID],
           option
         );
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.dataSelected = JSON.parse(
-              JSON.stringify(this.view.dataService.data[0])
+            this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
+            this.customerDetail.getListContactByObjectID(
+              this.dataSelected?.recID
             );
-            this.customerDetail.listTab(this.funcID);
+            this.customerDetail.getListAddress(
+              this.entityName,
+              this.dataSelected?.recID
+            );
             this.detectorRef.detectChanges();
           }
         });
