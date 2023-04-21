@@ -23,7 +23,15 @@
           type="button"
           class="btn btn-primary btn-sm d-flex align-items-center"
           (click)="openUpdateProgress(dataStep)"
-          [disabled]="!isStart || isClosed || isUpdate ||!isRoleAll ||!progressStepControl? true : false"
+          [disabled]="
+            !isStart ||
+            isClosed ||
+            isUpdate ||
+            !isRoleAll ||
+            !progressStepControl
+              ? true
+              : false
+          "
         >
           <span class="icon-16 icon-update me-1"></span>
           <codx-label
@@ -89,7 +97,9 @@
             [setRequire]="false"
             default="Kỳ vọng:"
           ></codx-label
-          ><span class="ms-1 me-1 text-dark fw-bold">{{ dataStep?.durationDay }} </span>
+          ><span class="ms-1 me-1 text-dark fw-bold"
+            >{{ dataStep?.durationDay }}
+          </span>
           <codx-label
             name="lblDay"
             formName="DPInstancesSteps"
@@ -97,7 +107,9 @@
             default="ngày"
           >
           </codx-label
-          ><span class="ms-1 me-1 text-dark fw-bold">{{ dataStep?.durationHour }}</span>
+          ><span class="ms-1 me-1 text-dark fw-bold">{{
+            dataStep?.durationHour
+          }}</span>
           <codx-label
             name="lblHours"
             formName="DPInstancesSteps"
@@ -118,40 +130,81 @@
         </div> -->
       </div>
     </div>
-    <div class="d-flex align-items-center justify-content-between">
-      <div
-        class="d-flex align-items-center"
-        *ngIf="lstIDInvo != null && lstIDInvo != ''"
-      >
+    <div class="row">
+      <div class="col-3 d-flex align-items-center">
+        <codx-label
+          name="lblOwnerStepProcess"
+          default="Người phụ trách giai đoạn:"
+          class="me-2 fw-bold"
+        ></codx-label>
+        <div *ngIf="ownerStepProcess">
+          <codx-imgs
+            [objectId]="ownerStepProcess"
+            [isToolTip]="true"
+            [width]="30"
+            objectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
+        <div *ngIf="!ownerStepProcess">
+          <codx-label
+            name="lblOwnerStepProcess"
+            default="Người phụ trách giai đoạn"
+            class="text-gray-400 font-italic fw-normal"
+          ></codx-label>
+        </div>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <codx-label
+          name="lblOwner"
+          default="Người phụ trách nhiệm vụ tại giai đoạn:"
+          class="me-2 fw-bold"
+        ></codx-label>
+        <div *ngIf="dataStep.owner">
+          <codx-imgs
+            [objectId]="dataStep.owner"
+            [isToolTip]="true"
+            [width]="30"
+            objectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
+        <div *ngIf="!dataStep.owner">
+          <codx-label
+            name="lblOwner"
+            default="Người phụ trách nhiệm vụ tại giai đoạn"
+            class="text-gray-400 font-italic fw-normal"
+          ></codx-label>
+        </div>
+      </div>
+
+      <div class="col-3 d-flex justify-content-end align-items-center">
         <codx-label
           class="me-2 fw-bold"
           name="lblInvolved"
           default="Người liên
           quan:"
         ></codx-label>
-        <codx-imgs
-          [objectId]="lstIDInvo != null || lstIDInvo != '' ? lstIDInvo : ''"
-          [isToolTip]="true"
-          [width]="30"
-          objectType="AD_Users"
-          [numberImages]="3"
-        >
-        </codx-imgs>
-      </div>
-      <div class="d-flex align-items-center" *ngIf="dataStep.owner">
-        <codx-label
-          name="lblOwner"
-          default="Người phụ trách nhiệm vụ tại giai đoạn:"
-          class="me-2 fw-bold"
-        ></codx-label>
-        <codx-imgs
-          [objectId]="dataStep.owner"
-          [isToolTip]="true"
-          [width]="30"
-          objectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
+        <div *ngIf="lstIDInvo != null && lstIDInvo != ''">
+          <codx-imgs
+            [objectId]="lstIDInvo != null || lstIDInvo != '' ? lstIDInvo : ''"
+            [isToolTip]="true"
+            [width]="30"
+            objectType="AD_Users"
+            [numberImages]="3"
+          >
+          </codx-imgs>
+        </div>
+        <div *ngIf="lstIDInvo == null || lstIDInvo == ''">
+          <codx-label
+            name="lblInvolved"
+            default="Người liên
+          quan"
+            class="text-gray-400 font-italic fw-normal"
+          ></codx-label>
+        </div>
       </div>
     </div>
   </div>
@@ -304,7 +357,9 @@
                       <codx-mfunc
                         *ngIf="isStart && !isClosed"
                         [formModel]="frmModelInstancesTask"
-                        (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
+                        (changeDataMF)="
+                          changeDataMFGroupTask($event, groupTask)
+                        "
                         (clickMF)="clickMFTaskGroup($event, groupTask)"
                         [isBookMark]="true"
                         [dataItem]="moreDefaut"
@@ -417,8 +472,12 @@
                               [type]="'hover'"
                               [dataItem]="moreDefaut"
                               [formModel]="frmModelInstancesTask"
-                              (changeDataMF)="changeDataMFTask($event, task, groupTask)"
-                              (clickMF)="clickMFTask($event, groupTask?.task, task)"
+                              (changeDataMF)="
+                                changeDataMFTask($event, task, groupTask)
+                              "
+                              (clickMF)="
+                                clickMFTask($event, groupTask?.task, task)
+                              "
                             >
                             </codx-mfunc>
                           </div>
@@ -528,7 +587,8 @@
           : ''
       "
     >
-      <codx-progress-layout [progress]="data?.value?.progress"> </codx-progress-layout>
+      <codx-progress-layout [progress]="data?.value?.progress">
+      </codx-progress-layout>
     </div>
     <span>
       <codx-img
@@ -751,22 +811,22 @@
     <div class="header-info py-3 px-5">
       <div class="fw-bold fs-4 text-dark">{{ dataStep?.stepName }}</div>
       <div class="d-flex justify-content-start py-2">
-        <div >
+        <div>
           <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>:
         </div>
-        <span class="ps-1 text-dark fw-bold">{{ dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
+        <span class="ps-1 text-dark fw-bold">{{
+          dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy"
+        }}</span>
       </div>
       <div class="d-flex justify-content-start">
-        <div >
-          <codx-label default="Giai đoạn đánh dấu"></codx-label>:
-        </div>
-        <span class="ps-1 text-dark fw-bold" >{{ stepNameEnd }}</span>
+        <div><codx-label default="Giai đoạn đánh dấu"></codx-label>:</div>
+        <span class="ps-1 text-dark fw-bold">{{ stepNameEnd }}</span>
       </div>
       <div class="d-flex justify-content-start py-2" *ngIf="!!proccesNameMove">
-        <div >
+        <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>:
         </div>
-        <span class="ps-1 text-dark fw-bold" >{{ proccesNameMove }}</span>
+        <span class="ps-1 text-dark fw-bold">{{ proccesNameMove }}</span>
       </div>
     </div>
   </div>

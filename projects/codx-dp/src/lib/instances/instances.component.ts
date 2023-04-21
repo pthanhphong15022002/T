@@ -170,7 +170,7 @@ export class InstancesComponent
   esCategory: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-
+  ownerStepProcess: any;
   //test temp
   dataTemplet = [
     {
@@ -238,7 +238,7 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-  
+
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -289,7 +289,7 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
- 
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -401,7 +401,7 @@ export class InstancesComponent
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
   }
-  
+
   getPropertyColumn() {
     let dataColumns =
       this.kanban?.columns?.map((column) => {
@@ -905,6 +905,16 @@ export class InstancesComponent
     formModel.entityName = 'DP_Instances';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
+  }
+
+  checkOwnerRoleProcess(roles){
+    if(roles != null && roles.length > 0){
+      var checkOwner = roles.find(x => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    }else{
+      return null;
+    }
   }
 
   showInput(data) {}
