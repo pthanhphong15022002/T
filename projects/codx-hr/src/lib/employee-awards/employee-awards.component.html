@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-    [className]="className" [method]="method" [views]="views" [autoLoad]="true" idField="recID" [button]="buttonAdd"
-    (buttonClick)="addAward($event)" (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)"
-    (selectedChange)="changeItemDetail($event)">
+    [views]="views" [button]="buttonAdd" (buttonClick)="addAward($event)" idField="recID" [className]="className"
+    [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" [autoLoad]="true"
+    (onActions)="handleAction($event)" (oneMoreMulti)="onMoreMulti($event)">
 </codx-views>
 
 <!-- header -->
@@ -120,7 +120,8 @@
                             <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
                                 {{ data?.attachments }}
                             </div> -->
-                            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel"></codx-attachment-temp>
+                            <codx-attachment-temp [objectID]="data.recID"
+                                [formModel]="view.formModel"></codx-attachment-temp>
 
                         </div>
                     </div>
@@ -161,9 +162,8 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
     <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
-        cardCss="card codx_cardcenter p-3" [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'"
-        [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data"
-        [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
+        [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
+        [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
         <!-- info view -->
         <ng-template #titleTmp let-data>
             <div class="w-100">
@@ -179,7 +179,8 @@
                     </span>
                 </div>
                 <div class="justify-content-between text-gray-700">
-                    <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
+                    <span
+                        [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
                 </div>
                 <!-- end emp info -->
 
@@ -233,8 +234,8 @@
 
 <ng-template #templateItemDetailRight let-data>
     <lib-view-award-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
-    [view]="view" (clickMFunction)="clickEvent($event, data)" (uploaded)="getDetailEAward($event, data)">
-  </lib-view-award-detail>
+        [view]="view" (clickMFunction)="clickEvent($event, data)" (uploaded)="getDetailEAward($event, data)">
+    </lib-view-award-detail>
 </ng-template>
 <!-- end list & detail -->
 
