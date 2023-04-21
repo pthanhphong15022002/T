@@ -26,6 +26,7 @@ import {
   FormModel,
   AuthStore,
   CodxDetailTmpComponent,
+  SidebarModel,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -489,10 +490,25 @@ export class InstanceDetailComponent implements OnInit {
   clickDetailGanchart(recID) {
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: data,
         listValue: this.ganttDsClone,
-      });
+        // step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: data,
+      //   listValue: this.ganttDsClone,
+      // });
     }
   }
 
