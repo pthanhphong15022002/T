@@ -256,7 +256,14 @@
           <div *ngFor="let item of listSteps">
             <div
               *ngIf="item.stepID === data.stepID"
-              [ngStyle]="{ 'background-color': (data.status == '3' || data.status == '4' ) ? colorReasonSuccess?.color : (data.status == '5' || data.status == '6' ) ? colorReasonFail?.color : item['backgroundColor'] }"
+              [ngStyle]="{
+                'background-color':
+                  data.status == '3' || data.status == '4'
+                    ? colorReasonSuccess?.color
+                    : data.status == '5' || data.status == '6'
+                    ? colorReasonFail?.color
+                    : item['backgroundColor']
+              }"
               class="me-2 badge badge-primary"
             >
               <span
@@ -308,14 +315,30 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+      <ng-container *ngFor="let item of listSteps">
+        <div *ngIf="item.stepID === data.stepID">
+          <div *ngIf="item.owner">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="25"
+              [objectId]="item?.owner"
+              ojectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+          <div *ngIf="!item.owner">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="25"
+              [objectId]="data?.owner"
+              ojectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
@@ -443,7 +466,7 @@
                 [formModel]="form.formModel"
                 ControlName="format"
                 [crrValue]="item.recID"
-                (valueChange)="selectTemp(item.recID, item.templateName )"
+                (valueChange)="selectTemp(item.recID, item.templateName)"
               ></codx-input>
             </div>
             <div class="d-flex align-items-center py-2">
@@ -462,7 +485,7 @@
                     {{ item.description }}
                   </div>
                 </div>
-                </span>
+              </span>
               <!-- <span class="fw-bold text-dark">{{ item.templateName }}</span> -->
             </div>
           </div>
