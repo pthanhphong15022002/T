@@ -1169,7 +1169,7 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (checkTransferControl == '1') {
+    if (checkTransferControl == '1' || checkTransferControl == '2') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
