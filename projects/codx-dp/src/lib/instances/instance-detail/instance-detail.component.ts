@@ -61,6 +61,8 @@ export class InstanceDetailComponent implements OnInit {
   @Input() stepStart: any;
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
+  @Output() saveDatasInstance = new EventEmitter<any>();
+
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -124,7 +126,7 @@ export class InstanceDetailComponent implements OnInit {
   user: any;
   maxSize: number = 4;
   ownerInstance: string[] = [];
-
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -218,6 +220,29 @@ export class InstanceDetailComponent implements OnInit {
       }
       //  this.getListStepsStatus();
     });
+  }
+  saveDataStep(e){
+   let stepInsIdx = this.listSteps.findIndex(x=>{x.recID==e.recID})
+   if(stepInsIdx!=-1){
+    this.listSteps[stepInsIdx] = e ;
+   }
+   this.loadingDatas();
+  }
+  loadingDatas(){
+    let listField =[]
+    this.listSteps.forEach(st=>{
+      listField = listField.concat(st.fields)
+    })
+    let datas = '';
+    if(listField?.length>0){ 
+      listField.forEach(obj=>{
+        datas += '"'+obj.fieldName+'":"'+obj.dataValue+'",'
+      })
+    }
+    datas = datas.substring(0,datas.length-1) ;
+    datas = "[{"+datas+"}]";
+    this.dataSelect.datas =datas ;
+    this.saveDatasInstance.emit(datas)
   }
 
   getStageByStep(listSteps) {

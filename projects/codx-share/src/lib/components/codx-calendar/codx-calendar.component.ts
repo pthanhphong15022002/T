@@ -734,6 +734,13 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getCalendarSetting(resource, dataResourceModel) {
+    dataResourceModel.map((resource) => {
+      if (resource.transType === 'TM_MyTasks') {
+        resource.transType = 'TM_Tasks';
+        resource.title = resource.description;
+        console.log(resource);
+      }
+    });
     let a = this.calendar_setting.createComponent(CalendarCenterComponent);
     a.instance.resources = resource;
     a.instance.resourceModel = dataResourceModel;

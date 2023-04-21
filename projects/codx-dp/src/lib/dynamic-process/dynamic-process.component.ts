@@ -131,6 +131,7 @@ export class DynamicProcessComponent
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any = [];
+  isSaveName: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -565,8 +566,7 @@ export class DynamicProcessComponent
           case 'DP02022':
           case 'DP02032':
           case 'SYS03':
-            let isEdit = data.write;
-            if (!isEdit || this.funcID == 'DP0203' || this.funcID === 'DP04') {
+            if (!data.write || this.funcID == 'DP0203' || this.funcID === 'DP04') {
               if (res.functionID == 'SYS03') res.disabled = true;
               else res.isblur = true;
             }
@@ -576,8 +576,7 @@ export class DynamicProcessComponent
           case 'DP02014':
           case 'DP02024':
           case 'DP02034':
-            let isAssign = data.assign;
-            if (!isAssign) res.isblur = true;
+            if (!data.assign) res.isblur = true;
             break;
           //Phát hành
           // case 'DP01015':
@@ -598,6 +597,9 @@ export class DynamicProcessComponent
               res.disabled = true;
             }
             break;
+            case 'DP01015':
+              if (!data.approveRule) res.isblur = true;
+              break;           
         }
       });
     }
@@ -786,6 +788,12 @@ export class DynamicProcessComponent
   }
 
   async editName() {
+    if(!this.isSaveName) return;
+    this.isSaveName = false;
+      setTimeout(() => {
+        this.isSaveName = true;
+      },3000);
+      
     if (!this.processName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -807,19 +815,20 @@ export class DynamicProcessComponent
       this.notificationsService.notifyCode('DP021');
     } else {
       this.dpService
-        .renameProcess([this.processName, this.processRename['recID']])
-        .subscribe((res) => {
-          if (res) {
-            this.processRename['processName'] = this.processName;
-            this.processRename['modifiedOn'] = res || new Date();
-            this.processRename['modifiedBy'] = this.user?.userID;
-            this.processName = '';
-            this.popupEditName.close();
-            this.notificationsService.notifyCode('SYS007');
-          } else {
-            this.notificationsService.notifyCode('DP030');
-          }
-        });
+      .renameProcess([this.processName, this.processRename['recID']])
+      .subscribe((res) => {
+        if (res) {
+          this.processRename['processName'] = this.processName;
+          this.processRename['modifiedOn'] = res || new Date();
+          this.processRename['modifiedBy'] = this.user?.userID;
+          this.processName = '';
+          this.popupEditName.close();
+          this.notificationsService.notifyCode('SYS007');
+        } else {
+          this.notificationsService.notifyCode('DP030');
+        }
+      });
+      
     }
   }
 
@@ -878,20 +887,14 @@ export class DynamicProcessComponent
   }
   //setting trình kí
   settingSubmit(categoryID) {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        categoryID
-      )
+    this.codxDpService
+      .getESCategoryByCategoryID(categoryID)
       .subscribe((item: any) => {
         if (item) {
           this.cache.functionList('ESS22').subscribe((f) => {
             if (f) {
               if (!f || !f.gridViewName || !f.formName) return;
-               this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+              this.cache.gridView(f.gridViewName).subscribe((gridview) => {
                 this.cache
                   .gridViewSetup(f.formName, f.gridViewName)
                   .subscribe((grvSetup) => {
@@ -913,7 +916,7 @@ export class DynamicProcessComponent
                         data: item,
                         isAdd: false,
                         headerText: this.titleAction,
-                        dataType : 'auto'
+                        dataType: 'auto',
                       },
                       option
                     );

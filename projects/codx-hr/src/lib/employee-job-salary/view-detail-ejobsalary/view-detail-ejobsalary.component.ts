@@ -48,7 +48,7 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
   dataOldSalary;
   console = console;
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;

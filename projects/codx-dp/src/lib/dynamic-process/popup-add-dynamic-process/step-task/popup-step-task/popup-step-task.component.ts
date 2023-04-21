@@ -483,7 +483,7 @@ export class PopupJobComponent implements OnInit {
     if (this.taskGroupList?.length > 0) {
       if (index >= 0) {
         for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
+          if (Number(group['indexNo']) < index) {
             sum += this.getHour(group);
           }
         }
@@ -521,7 +521,15 @@ export class PopupJobComponent implements OnInit {
     let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      return this.getHour(task);
+      let maxTime = this.getHour(task);
+      if(task.taskGroupID){
+        let groupFind = this.taskGroupList?.find(group => group['recID'] == task.taskGroupID);
+        if(groupFind){
+          let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
+          maxTime += time;
+        }
+      }     
+      return maxTime;
     } else {
       const parentIds = task?.parentID.split(';');
       let maxTime = 0;

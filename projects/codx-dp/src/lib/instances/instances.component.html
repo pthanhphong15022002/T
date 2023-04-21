@@ -19,6 +19,7 @@
   [viewActiveType]="viewMode"
 >
 </codx-views>
+
 <!-- KANBAN -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
@@ -176,6 +177,7 @@
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
         (outStepInstance)="outStepInstance($event)"
+        (saveDatasInstance)="saveDatasInstance($event)"
       >
       </codx-instance-detail>
     </ng-template>
@@ -336,6 +338,7 @@
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
     (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
   >
   </codx-instance-detail>
 </ng-template>

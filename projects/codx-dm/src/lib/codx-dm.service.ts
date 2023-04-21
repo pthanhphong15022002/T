@@ -676,12 +676,11 @@ export class CodxDMService {
             }
           } else {
             list[index] = res;
-            if (that.idMenuActive == 'DMT02' || that.idMenuActive == 'DMT02') {
-              that.nodeChange.next(list[index]);
-            }
+            that.nodeChange.next(list[index]);
           }
           // this.isBookmark = !this.isBookmark;
           this.listFolder = list;
+          
           //this.ChangeData.next(true);
           this.addFile.next(true);
           //that.changeDetectorRef.detectChanges();

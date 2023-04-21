@@ -1,9 +1,99 @@
 <div *ngIf="dataSelected != null">
   <div class="d-flex flex-column">
+    <div
+      class="mb-3"
+      *ngIf="
+        (funcID == 'CM0102' && dataSelected?.objectType) ||
+        dataSelected?.objectID ||
+        dataSelected?.contactType
+      "
+    >
+      <div class="mb-3">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          name="lblObjectLink"
+          [formModel]="formModel"
+          default="Đối tượng liên kết"
+        >
+        </codx-label>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group row" *ngIf="dataSelected?.objectType">
+            <div class="col-6">
+              <codx-label
+                class="label-colon text-gray-300"
+                fiedName="ObjectType"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="col-6"
+              [innerHTML]="
+                dataSelected?.objectType
+                  | formatvalue : formModel : 'ObjectType'
+                  | async
+              "
+            ></div>
+          </div>
+          <div class="form-group row" *ngIf="dataSelected?.objectID">
+            <div class="col-6">
+              <codx-label
+                class="label-colon text-gray-300"
+                fiedName="ObjectID"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="col-6"
+              [innerHTML]="
+                dataSelected?.objectID
+                  | formatvalue : formModel : 'ObjectID'
+                  | async
+              "
+            >
+              <!-- {{ dataSelected?.objectID }} -->
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group row" *ngIf="dataSelected?.contactType">
+            <div class="col-6">
+              <codx-label
+                class="label-colon text-gray-300"
+                fiedName="ContactType"
+                [formModel]="formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="col-6">
+              <ng-container
+                *ngFor="let item of dataSelected?.contactType.split(';')"
+              >
+                <div
+                  class="mb-1"
+                  [innerHTML]="
+                    item | formatvalue : formModel : 'ContactType' | async
+                  "
+                >
+                  <!-- {{
+                    item
+                      | vll : gridViewSetup?.ContactType?.referedValue : "text"
+                      | async
+                  }} -->
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="mb-3">
       <div class="mb-3">
         <codx-label
-          class="text-dark fw-bold"
+          class="text-dark text-primary fw-bold"
           name="lblInformation"
           default="Thông tin chung"
         >
@@ -21,7 +111,7 @@
     <div class="mb-3" *ngIf="dataSelected?.memo">
       <div class="mb-3">
         <codx-label
-          class="text-dark fw-bold"
+          class="text-dark text-primary fw-bold"
           fiedName="Memo"
           [formModel]="formModel"
           default="Mô
@@ -31,6 +121,21 @@
       </div>
       <div>
         {{ dataSelected?.memo }}
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="dataSelected?.note">
+      <div class="mb-3">
+        <codx-label
+          class="text-dark text-primary fw-bold"
+          fiedName="Note"
+          [formModel]="formModel"
+          default="Mô
+        tả"
+        >
+        </codx-label>
+      </div>
+      <div>
+        {{ dataSelected?.note }}
       </div>
     </div>
     <div class="mb-3" *ngIf="funcID == 'CM0104'">
@@ -73,16 +178,41 @@
         </div>
       </div>
     </div>
-    <div class="mb-3">
+    <div class="mb-3" *ngIf="listAddress != null && listAddress.length > 0">
       <div class="mb-3">
         <codx-label
-          class="text-dark fw-bold"
+          class="text-dark text-primary fw-bold"
           name="lblAddress"
           default="Thông tin địa chỉ"
         >
         </codx-label>
       </div>
-      <div>Dữ liệu thêm sau</div>
+      <div class="d-flex flex-column">
+        <ng-container *ngFor="let item of listAddress">
+          <div class="row">
+            <div class="col-3">
+              <span
+                class="label-colon text-gray-600"
+                [innerHTML]="
+                  item?.adressType
+                    | formatvalue : formModelAddress : 'AdressType'
+                    | async
+                "
+              ></span>
+            </div>
+            <div class="col-9">
+              <span
+                *ngIf="item?.adressName"
+                [innerHTML]="
+                  item?.adressName
+                    | formatvalue : formModelAddress : 'AdressName'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>
@@ -99,8 +229,16 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.customerID }}
+          <div
+            class="col-6"
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.customerID
+                | formatvalue : formModel : 'CustomerID'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.customerID }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.shortName">
@@ -112,8 +250,15 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.shortName }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.shortName
+                | formatvalue : formModel : 'ShortName'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.shortName }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.phone">
@@ -125,8 +270,13 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.phone }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.phone | formatvalue : formModel : 'Phone' | async
+            "
+          >
+            <!-- {{ dataSelected?.phone }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.faxNo">
@@ -138,8 +288,13 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.faxNo }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.faxNo | formatvalue : formModel : 'FaxNo' | async
+            "
+          >
+            <!-- {{ dataSelected?.faxNo }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.email">
@@ -151,8 +306,13 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.email }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.email | formatvalue : formModel : 'Email' | async
+            "
+          >
+            <!-- {{ dataSelected?.email }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.webPage">
@@ -164,24 +324,36 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.webPage }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.webPage
+                | formatvalue : formModel : 'WebPage'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.webPage }} -->
           </div>
         </div>
         <div
           class="form-group row"
-          *ngIf="funcID == 'CM0101' && dataSelected?.source"
+          *ngIf="funcID == 'CM0101' && dataSelected?.customerResource"
         >
           <div class="col-6">
             <codx-label
               class="label-colon text-gray-300"
-              fiedName="Source"
+              fiedName="CustomerResource"
               [formModel]="formModel"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.source }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.source | formatvalue : formModel : 'Source' | async
+            "
+          >
+            <!-- {{ dataSelected?.source }} -->
           </div>
         </div>
         <div
@@ -213,12 +385,18 @@
               class="text-gray-300"
               fiedName="PartnerFrom"
               [formModel]="formModel"
-              default="Là đối tác từ:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.partnerFrom }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.partnerFrom
+                | formatvalue : formModel : 'PartnerFrom'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.partnerFrom }} -->
           </div>
         </div>
         <div
@@ -232,8 +410,15 @@
               [formModel]="formModel"
             ></codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.consultantID }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.consultantID
+                | formatvalue : formModel : 'ConsultantID'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.consultantID }} -->
           </div>
         </div>
       </div>
@@ -252,8 +437,15 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.taxCode }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.taxCode
+                | formatvalue : formModel : 'TaxCode'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.taxCode }} -->
           </div>
         </div>
         <div
@@ -289,8 +481,13 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.sizing }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.sizing | formatvalue : formModel : 'Sizing' | async
+            "
+          >
+            <!-- {{ dataSelected?.sizing }} -->
           </div>
         </div>
         <div
@@ -305,8 +502,15 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.annualRevenue }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.annualRevenue
+                | formatvalue : formModel : 'AnnualRevenue'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.annualRevenue }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.segmentID">
@@ -317,8 +521,15 @@
               [formModel]="formModel"
             ></codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.segmentID }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.segmentID
+                | formatvalue : formModel : 'SegmentID'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.segmentID }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.workingDays">
@@ -330,8 +541,15 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.workingDays }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.workingDays
+                | formatvalue : formModel : 'WorkingDays'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.workingDays }} -->
           </div>
         </div>
         <div class="form-group row" *ngIf="funcID == 'CM0101'">
@@ -366,8 +584,15 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.bankAccount }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.bankAccount
+                | formatvalue : formModel : 'BankAccount'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.bankAccount }} -->
           </div>
         </div>
         <div
@@ -376,15 +601,21 @@
         >
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
+              class="label-colon text-gray-300"
               fiedName="BankName"
               [formModel]="formModel"
-              default="Mở tại ngân hàng:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.bankName }}
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.bankName
+                | formatvalue : formModel : 'BankName'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.bankName }} -->
           </div>
         </div>
       </div>
@@ -396,176 +627,426 @@
   <div class="row">
     <div class="col-6">
       <div class="d-flex flex-column">
+        <div class="form-group row" *ngIf="dataSelected?.contactID">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="ContactID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.contactID
+                | formatvalue : formModel : 'ContactID'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.contactID }} -->
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.salutation">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Salutation"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.salutation
+                | formatvalue : formModel : 'Salutation'
+                | async
+            "
+          >
+            <!-- {{
+              dataSelected?.salutation
+                | vll : gridViewSetup?.Salutation?.referedValue : "text"
+                | async
+            }} -->
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.gender">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Gender"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.gender | formatvalue : formModel : 'Gender' | async
+            "
+          >
+            <!-- {{ dataSelected?.gender | vll : gridViewSetup?.Gender?.referedValue : "text" | async }} -->
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.webPage">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="WebPage"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.webPage
+                | formatvalue : formModel : 'WebPage'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.webPage }} -->
+          </div>
+        </div>
         <div class="form-group row" *ngIf="dataSelected?.birthday">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
+              class="label-colon text-gray-300"
               fiedName="Birthday"
               [formModel]="formModel"
-              default="Ngày sinh:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.birthday }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.birthday
+                | formatvalue : formModel : 'Birthday'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.website">
+        <div class="form-group row" *ngIf="dataSelected?.birthPlace">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="Website"
+              class="label-colon text-gray-300"
+              fiedName="BirthPlace"
               [formModel]="formModel"
-              default="Website:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.website }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.birthPlace
+                | formatvalue : formModel : 'BirthPlace'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.source">
+        <div class="form-group row" *ngIf="dataSelected?.idCardNo">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="Source"
+              class="label-colon text-gray-300"
+              fiedName="IDCardNo"
               [formModel]="formModel"
-              default="Nguồn khách hàng:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.source }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.idCardNo
+                | formatvalue : formModel : 'IDCardNo'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="dataSelected?.issuedOn">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="AllowCall"
+              class="label-colon text-gray-300"
+              fiedName="IssuedOn"
               [formModel]="formModel"
-              default="Không gọi điện:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            <codx-input
-              class="test-check"
-              type="switch"
-              style="width: 100%"
-              [checked]="dataSelected?.allowCall"
-              field="allowCall"
-              [disabled]="true"
-            >
-            </codx-input>
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.issuedOn
+                | formatvalue : formModel : 'IssuedOn'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="dataSelected?.issuedBy">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="AllowEmail"
+              class="label-colon text-gray-300"
+              fiedName="IssuedBy"
               [formModel]="formModel"
-              default="Không gửi mail:"
             >
             </codx-label>
           </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.issuedBy
+                | formatvalue : formModel : 'IssuedBy'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.nationality">
           <div class="col-6">
-            <codx-input
-              class="test-check"
-              type="switch"
-              style="width: 100%"
-              [checked]="dataSelected?.allowEmail"
-              field="allowEmail"
-              [disabled]="true"
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Nationality"
+              [formModel]="formModel"
             >
-            </codx-input>
+            </codx-label>
           </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.nationality
+                | formatvalue : formModel : 'Nationality'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.ethnicGroup">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="EthnicGroup"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.ethnicGroup
+                | formatvalue : formModel : 'EthnicGroup'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.religion">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Religion"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.religion
+                | formatvalue : formModel : 'Religion'
+                | async
+            "
+          ></div>
         </div>
       </div>
     </div>
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="dataSelected?.education">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName=""
+              class="label-colon text-gray-300"
+              fiedName="Education"
               [formModel]="formModel"
-              default="Tổ chức:"
-            ></codx-label>
+            >
+            </codx-label>
           </div>
-          <div class="col-6">Công ty CPTH Lạc Việt</div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.education
+                | formatvalue : formModel : 'Education'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.maritalStatus">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="MaritalStatus"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.maritalStatus
+                | formatvalue : formModel : 'MaritalStatus'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.income">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Income"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.income | formatvalue : formModel : 'Income' | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.occupation">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Occupation"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.occupation
+                | formatvalue : formModel : 'Occupation'
+                | async
+            "
+          ></div>
         </div>
         <div class="form-group row" *ngIf="dataSelected?.jobTitle">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
+              class="label-colon text-gray-300"
               fiedName="JobTitle"
               [formModel]="formModel"
-              default="Chức danh:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.jobTitle }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.jobTitle
+                | formatvalue : formModel : 'JobTitle'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.field">
+        <div class="form-group row" *ngIf="dataSelected?.department">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="Field"
+              class="label-colon text-gray-300"
+              fiedName="Department"
               [formModel]="formModel"
-              default="Lĩnh vực hoạt động:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.field }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.department
+                | formatvalue : formModel : 'Department'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.career">
+        <div class="form-group row" *ngIf="dataSelected?.phone">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="Career"
+              class="label-colon text-gray-300"
+              fiedName="Phone"
               [formModel]="formModel"
-              default="Ngành nghề:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.career }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.phone | formatvalue : formModel : 'Phone' | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.bankAccount">
+        <div class="form-group row" *ngIf="dataSelected?.phoneExt">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="BankAccount"
+              class="label-colon text-gray-300"
+              fiedName="PhoneExt"
               [formModel]="formModel"
-              default="Tài khoản ngân hàng:"
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            {{ dataSelected?.bankAccount }}
-          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.phoneExt
+                | formatvalue : formModel : 'PhoneExt'
+                | async
+            "
+          ></div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.bankName">
+        <div class="form-group row" *ngIf="dataSelected?.email">
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="BankName"
+              class="label-colon text-gray-300"
+              fiedName="Email"
               [formModel]="formModel"
-              default="Mở tại ngân hàng:"
             >
             </codx-label>
           </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.email | formatvalue : formModel : 'Email' | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.bankAcctNo">
           <div class="col-6">
-            {{ dataSelected?.bankName }}
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="BankAcctNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
           </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.bankAcctNo
+                | formatvalue : formModel : 'BankAcctNo'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="form-group row" *ngIf="dataSelected?.bankID">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="BankID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.bankID | formatvalue : formModel : 'BankID' | async
+            "
+          ></div>
         </div>
       </div>
     </div>
