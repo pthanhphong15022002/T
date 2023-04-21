@@ -10,6 +10,7 @@ import {
   FormModel,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, tap } from 'rxjs';
@@ -110,7 +111,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       salesInvoicesLinesOptions.pageLoading = false;
       this.acService
         .loadDataAsync('SM', salesInvoicesLinesOptions)
-        .subscribe((res) => (this.salesInvoicesLines = res));
+        .subscribe(
+          (res) =>
+            (this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo))
+        );
     }
 
     this.cache
@@ -134,10 +138,9 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickSave(closeAfterSaving: boolean): void {
+  onClickSave(closeAfterSaving: boolean): void {
     console.log(this.salesInvoice);
     console.log(this.salesInvoicesLines);
-    console.log(this.grid.formGroup);
 
     let ignoredFields = [];
     if (this.journal.voucherNoRule === '2') {
@@ -180,78 +183,28 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     );
   }
 
-  close(): void {
+  onClickClose(): void {
     this.dialogRef.close();
   }
 
-  handleInputChange(e): void {
+  onInputChange(e): void {
     if (e.field.toLowerCase() === 'objectid') {
       this.customerName = e.component.itemsSelected[0].ObjectName;
     }
   }
 
-  handleCreate(e): void {}
+  onCreate(e): void {}
 
-  handleCellChange(e): void {
+  onCellChange(e): void {
     console.log('onCellChange', e);
   }
 
-  // for dialog mode
-  handleClickMF(e, data): void {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deleteRow(data);
-        break;
-      case 'SYS03':
-        this.editRow(e, data);
-        break;
-      case 'SYS04':
-        this.copyRow(e, data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-    }
-  }
-
-  editRow(e, data): void {
-    console.log('editRow', data);
-
-    const dialogModel = new DialogModel();
-    dialogModel.FormModel = this.fmSalesInvoicesLines;
-
-    this.callfc
-      .openForm(
-        PopupAddSalesInvoicesLineComponent,
-        'This param is not working',
-        500,
-        700,
-        '',
-        {
-          formType: 'edit',
-          salesInvoicesLine: data,
-          gvs: this.gvsSalesInvoicesLines,
-        },
-        '',
-        dialogModel
-      )
-      .closed.pipe(tap((t) => console.log(t)))
-      .subscribe(({ event }) => {
-        this.grid.updateRow(event.index, event);
-      });
-  }
-
-  copyRow(e, data): void {}
-
-  export(data): void {
-  }
-
-  deleteRow(data): void {
+  onClickDeleteRow(data): void {
     this.deletedSalesInvoicesLines.push(data);
     this.grid.deleteRow(data, true);
   }
 
-  addRow(): void {
+  onClickAddRow(): void {
     this.api
       .exec('SM', 'SalesInvoicesLinesBusiness', 'GetDefault')
       .subscribe((res: ISalesInvoicesLine) => {
@@ -284,12 +237,49 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
             )
             .closed.pipe(tap((t) => console.log(t)))
             .subscribe(({ event }) => {
-              for (const line of event) {
-                this.grid.addRow(line, this.salesInvoicesLines.length);
+              if (this.editSettings.mode === 'Normal') {
+                for (const line of event) {
+                  this.grid.addRow(line, this.salesInvoicesLines.length);
+                }
+              } else {
+                this.salesInvoicesLines = [
+                  ...this.salesInvoicesLines,
+                  ...event,
+                ];
               }
             });
         }
       });
+  }
+
+  onClickCopyRow(data): void {
+    this.grid.addRow(
+      {
+        ...data,
+        rowNo: this.salesInvoicesLines.length + 1,
+        recID: Util.uid(),
+        transID: '00000000-0000-0000-0000-000000000000',
+      },
+      this.salesInvoicesLines.length
+    );
+  }
+
+  // dialog mode only
+  onDeleteRow(e): void {
+    console.log(e);
+    this.deletedSalesInvoicesLines.push(e);
+    this.salesInvoicesLines = this.salesInvoicesLines.filter(
+      (l) => l.recID !== e.recID
+    );
+  }
+
+  onUpdateRow(e): void {
+    const index = this.salesInvoicesLines.findIndex((l) => l.recID === e.recID);
+    this.salesInvoicesLines[index] = e;
+  }
+
+  onCopyRow(e): void {
+    this.salesInvoicesLines = [...this.salesInvoicesLines, ...e];
   }
   //#endregion
 

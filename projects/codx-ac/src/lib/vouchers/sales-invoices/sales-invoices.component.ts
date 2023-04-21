@@ -42,53 +42,11 @@ export class SalesInvoicesComponent
   journalNo: string;
   selectedData: ISalesInvoice;
   salesInvoicesLines: ISalesInvoicesLine[] = [];
-  totalRow: { totalQuantity: number; totalPrice: number; totalVat: number } = {
-    totalQuantity: 0,
-    totalPrice: 0,
-    totalVat: 0,
-  };
-  page: number = 1;
-  pageSize: number = 10;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
-  fmSalesInvoicesLines: FormModel = {
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-  };
-  ths: { field: string; label: string }[] = [
-    {
-      field: 'lblNum',
-      label: 'STT',
-    },
-    {
-      field: 'lblProduct',
-      label: 'Mặt hàng',
-    },
-    {
-      field: 'lblQty',
-      label: 'Số lượng',
-    },
-    {
-      field: 'lblPrice',
-      label: 'Đơn giá',
-    },
-    {
-      field: 'lblCost',
-      label: 'Thành tiền',
-    },
-    {
-      field: 'lblTaxRate',
-      label: 'Thuế suất',
-    },
-    {
-      field: 'lblTax',
-      label: 'Tiền thuế',
-    },
   ];
 
   constructor(inject: Injector, private acService: CodxAcService) {
@@ -126,14 +84,13 @@ export class SalesInvoicesComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName =
-        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+      this.functionName = this.acService.toCamelCase(res.defaultName);
     });
   }
   //#endregion
 
   //#region Event
-  handleChange(e) {
+  onChange(e) {
     console.log(e);
 
     this.selectedData = e?.data;
@@ -147,22 +104,10 @@ export class SalesInvoicesComponent
       .loadDataAsync('SM', salesInvoicesLinesOptions)
       .subscribe((res: ISalesInvoicesLine[]) => {
         this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo);
-
-        // calculate totalRow
-        this.totalRow = {
-          totalQuantity: 0,
-          totalPrice: 0,
-          totalVat: 0,
-        };
-        for (const l of this.salesInvoicesLines) {
-          this.totalRow.totalQuantity += l.quantity;
-          this.totalRow.totalPrice += l.costAmt;
-          this.totalRow.totalVat += l.vatAmt;
-        }
       });
   }
 
-  handleClickAdd(e): void {
+  onClickAdd(e): void {
     this.view.dataService
       .addNew(() =>
         this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
@@ -190,7 +135,7 @@ export class SalesInvoicesComponent
       });
   }
 
-  handleClickMF(e, data) {
+  onClickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -206,7 +151,9 @@ export class SalesInvoicesComponent
         break;
     }
   }
+  //#endregion
 
+  //#region Method
   delete(data): void {
     this.view.dataService.delete([data], true).subscribe((res: any) => {
       console.log({ res });
@@ -282,9 +229,6 @@ export class SalesInvoicesComponent
       null
     );
   }
-  //#endregion
-
-  //#region Method
   //#endregion
 
   //#region Function

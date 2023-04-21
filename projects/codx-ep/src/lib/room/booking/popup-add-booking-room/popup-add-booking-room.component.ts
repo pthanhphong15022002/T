@@ -1612,7 +1612,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   openAuto(){
     let op = new DialogModel();
     op.IsFull = true;
-    this.callfc.openForm(PopupAddAutoNumberComponent,'',0,0,this.funcID,null,'',op);
+    this.callfc.openForm(PopupAddAutoNumberComponent,'',0,0,this.funcID,{functionID:this.funcID},'',op);
   }
   // connectMeetingNow() {
   //   this.codxEpService

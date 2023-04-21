@@ -85,6 +85,7 @@ export class StagesDetailComponent implements OnInit {
 
   dateActual: any;
   startDate: any;
+  endDate: any;
   progress: string = '0';
   lstFields = [];
   comment: string;
@@ -161,7 +162,6 @@ export class StagesDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.checkRole();
     this.getValueListReason();
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -250,12 +250,30 @@ export class StagesDetailComponent implements OnInit {
             (date.getMonth() + 1) +
             '/' +
             date.getFullYear();
+
+        }
+        if (changes['dataStep'].currentValue?.endDate != null) {
+          var endDate = new Date(changes['dataStep'].currentValue?.endDate);
+          this.endDate =
+          endDate.getHours() +
+            ':' +
+            endDate.getMinutes() +
+            ' ' +
+            endDate.getDate() +
+            '/' +
+            (endDate.getMonth() + 1) +
+            '/' +
+            endDate.getFullYear();
+
         }
         var tasks = changes['dataStep'].currentValue?.tasks;
         var taskGroups = changes['dataStep'].currentValue?.taskGroups;
         this.lstFields = changes['dataStep'].currentValue?.fields;
+        console.log(changes['dataStep'].currentValue);
+        
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
+        this.checkRole();
         this.step = changes['dataStep'].currentValue;
         this.progress = this.step?.progress.toString();
       } else {

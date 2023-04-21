@@ -43,6 +43,8 @@ export class PopupEBasicSalariesComponent
   actionArray = ['add', 'edit', 'copy'];
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
+  genderGrvSetup: any;
+
   //end
   constructor(
     injector: Injector,
@@ -98,7 +100,12 @@ export class PopupEBasicSalariesComponent
       }
     });
     //get emp from beginning
-    if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId);
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
+    if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId, 'employeeID');
     this.showEmpInfo = this.allowToViewEmp();
   }
 
@@ -106,11 +113,11 @@ export class PopupEBasicSalariesComponent
   handleSelectEmp(evt) {
     if (evt.data != null) {
       this.employeeId = evt.data;
-      this.getEmployeeInfoById(this.employeeId);
+      this.getEmployeeInfoById(this.employeeId, evt?.field);
     }
   }
   //
-  getEmployeeInfoById(empId: string) {
+  getEmployeeInfoById(empId: string, fieldName: string) {
     let empRequest = new DataRequest();
     empRequest.entityName = 'HR_Employees';
     empRequest.dataValues = empId;
@@ -118,11 +125,31 @@ export class PopupEBasicSalariesComponent
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        this.employeeObj = emp[0][0];
-        //console.log('employee cua form', this.employeeObj);
+        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'signerID') 
+        {
+          if (emp[0][0]?.positionID) {
+            this.hrService
+              .getPositionByID(emp[0][0]?.positionID)
+              .subscribe((res) => {
+                if (res) {
+                  this.EBasicSalaryObj.signerPosition = res.positionName;
+                  this.formGroup.patchValue({
+                    signerPosition: this.EBasicSalaryObj.signerPosition,
+                  });
+                  this.cr.detectChanges();
+                }
+              });
+          } else {
+            this.EBasicSalaryObj.signerPosition = null;
+            this.formGroup.patchValue({
+              signerPosition: this.EBasicSalaryObj.signerPosition,
+            });
+          }
+        }
+        }
         this.cr.detectChanges();
-      }
-    });
+      })
   }
 
   ngAfterViewInit() {}
@@ -203,8 +230,18 @@ export class PopupEBasicSalariesComponent
   }
 
   valueChange(event) {
+    if (
+      event?.field === 'employeeID' &&
+      event?.component &&
+      event?.data != ''
+    ) {
+      this.employeeObj = event?.data?.dataSelected[0]?.dataSelected;
+      this.cr.detectChanges();
+    }
+
     if (event?.field === 'signerID' && event?.component && event?.data != '') {
-      let employee = event?.component?.itemsSelected[0];
+      let employee = event?.data?.dataSelected[0]?.dataSelected;
+
       if (employee) {
         if (employee.PositionID) {
           this.hrService

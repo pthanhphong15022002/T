@@ -78,7 +78,7 @@
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
-        (valueChange)="changeCbb($event)">
+        (valueChange)="changeCbb($event)" [disabled]="(formModel?.funcID == 'ODT41' && type == 'edit' && dispatch?.approveStatus == '3')?true:false">
       </codx-input>
     </div>
     <div class="col-6">

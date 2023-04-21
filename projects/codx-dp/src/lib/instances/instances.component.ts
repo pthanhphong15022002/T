@@ -238,7 +238,6 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
