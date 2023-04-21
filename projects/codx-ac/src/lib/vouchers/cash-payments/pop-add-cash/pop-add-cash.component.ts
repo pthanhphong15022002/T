@@ -118,7 +118,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.cashpayment = {...dialog.dataService!.dataSelected};
+    this.cashpayment = { ...dialog.dataService!.dataSelected };
     var model = new CashPaymentLine();
     this.keymodel = Object.keys(model);
     this.cache
@@ -243,6 +243,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   close() {
     this.dialog?.close();
   }
+
   loadTotal() {
     var totals = 0;
     this.cashpaymentline.forEach((element) => {
@@ -705,13 +706,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Method
+
   onSave() {
-    // tu dong khi luu, khong check voucherNo
-    let ignoredFields: string[] = [];
-    if (this.journal.voucherNoRule === '2') {
-      ignoredFields.push('VoucherNo');
-    }
-    this.checkValidate(ignoredFields);
+    this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -764,11 +761,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (res.save) {
                   if (this.cashpayment.subType === '1') {
                     this.acService
-                    .addData('AC', 'CashPaymentsLinesBusiness', 'UpdateAsync', [
-                      this.cashpaymentline,
-                      this.cashpaymentlineDelete,
-                    ])
-                    .subscribe();
+                      .addData(
+                        'AC',
+                        'CashPaymentsLinesBusiness',
+                        'UpdateAsync',
+                        [this.cashpaymentline, this.cashpaymentlineDelete]
+                      )
+                      .subscribe();
                   }
                   if (this.cashpayment.subType === '2') {
                     this.acService
@@ -827,6 +826,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         });
     }
   }
+
+  onDiscard() {
+    this.dialog.dataService
+      .addNew((o) => this.setDefault(o))
+      .subscribe((res) => {
+        this.cashpayment = res;
+        this.form.formGroup.patchValue(this.cashpayment);
+        
+      });
+  }
   //#endregion
 
   //#region Function
@@ -849,7 +858,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  checkValidate(ignoredFields: string[] = []) {
+  checkValidate() {
+    // tu dong khi luu, khong check voucherNo
+    let ignoredFields: string[] = [];
+    if (this.journal.voucherNoRule === '2') {
+      ignoredFields.push('VoucherNo');
+    }
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
 
     var keygrid = Object.keys(this.gridViewSetup);

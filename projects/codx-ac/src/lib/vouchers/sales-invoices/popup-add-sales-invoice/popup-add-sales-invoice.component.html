@@ -25,7 +25,7 @@
         </ng-template>
         <ng-template #content>
           <div class="row mt-6">
-            <div class="col-7">
+            <div class="col-8">
               <div class="row">
                 <div class="col-5 form-group">
                   <codx-label
@@ -36,7 +36,7 @@
                     field="objectID"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
+                    (valueChange)="onInputChange($event)"
                   ></codx-input>
                 </div>
                 <div class="col-7 form-group">
@@ -144,7 +144,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-2"></div>
+            <div class="col-1"></div>
             <div class="col-3">
               <div class="row">
                 <div class="col-6 form-group">
@@ -156,7 +156,7 @@
                     field="currencyID"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
-                    (valueChange)="handleInputChange($event)"
+                    (valueChange)="onInputChange($event)"
                   ></codx-input>
                 </div>
                 <div class="col-6 form-group">
@@ -486,22 +486,34 @@
           ></codx-label>
         </ng-template>
         <ng-template #content>
-          <codx-gridview-v2
-            #grid
-            [formName]="fmSalesInvoicesLines.formName"
-            [gridViewName]="fmSalesInvoicesLines.gridViewName"
-            [entityName]="fmSalesInvoicesLines.entityName"
-            service="SM"
-            [templateMore]="more"
-            [editSettings]="editSettings"
-            [allowFiltering]="true"
-            [allowSorting]="true"
-            [autoLoad]="false"
-            [height]="200"
-            [dataSource]="salesInvoicesLines"
-            (cellChanged)="handleCellChange($event)"
-            (created)="handleCreate($event)"
-          ></codx-gridview-v2>
+          <ng-container *ngIf="editSettings.mode === 'Normal'; else dialogMode">
+            <codx-gridview-v2
+              #grid
+              [formName]="fmSalesInvoicesLines.formName"
+              [gridViewName]="fmSalesInvoicesLines.gridViewName"
+              [entityName]="fmSalesInvoicesLines.entityName"
+              service="SM"
+              [templateMore]="more"
+              [editSettings]="editSettings"
+              [allowFiltering]="true"
+              [allowSorting]="true"
+              [autoLoad]="false"
+              [height]="200"
+              [dataSource]="salesInvoicesLines"
+              (cellChanged)="onCellChange($event)"
+              (created)="onCreate($event)"
+            ></codx-gridview-v2>
+          </ng-container>
+          <ng-template #dialogMode>
+            <lib-table-line-detail
+              [salesInvoicesLines]="salesInvoicesLines"
+              [hasMF]="true"
+              [gvs]="gvsSalesInvoicesLines"
+              (delete)="onDeleteRow($event)"
+              (update)="onUpdateRow($event)"
+              (copy)="onCopyRow($event)"
+            ></lib-table-line-detail>
+          </ng-template>
         </ng-template>
       </e-tabitem>
     </e-tabitems>
@@ -509,7 +521,7 @@
 
   <button
     class="btn btn-light-primary btn-sm mt-3 d-flex align-items-center"
-    (click)="addRow()"
+    (click)="onClickAddRow()"
   >
     <i class="icon-add icon-16 me-1"></i>
     <codx-label
@@ -579,7 +591,7 @@
         <button
           type="button"
           class="btn btn-light-primary"
-          (click)="handleClickSave(false)"
+          (click)="onClickSave(false)"
         >
           <codx-label
             class="fs-6 fw-normal"
@@ -593,7 +605,7 @@
       <button
         type="button"
         class="btn btn-primary ms-3"
-        (click)="handleClickSave(true)"
+        (click)="onClickSave(true)"
       >
         <codx-label
           class="fs-6 fw-normal"
@@ -605,7 +617,7 @@
 
       <div
         class="ms-4 btn btn-icon btn-sm btn-light-primary btn-circle bg"
-        (click)="close()"
+        (click)="onClickClose()"
       >
         <i class="icon-close icon-16"></i>
       </div>
@@ -614,24 +626,22 @@
 </ng-template>
 
 <ng-template #more let-data>
-  <ng-container *ngIf="editSettings.mode === 'Normal'; else dialogMode">
-    <span
-      ngbTooltip="Xóa"
-      placement="bottom"
-      type="button"
-      class="btn btn-icon btn-light-danger ms-1"
-      (click)="deleteRow(data)"
-    >
-      <i class="icon-delete icon-16"></i>
-    </span>
-  </ng-container>
-  <ng-template #dialogMode>
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="fmSalesInvoicesLines"
-      (clickMF)="handleClickMF($event, data)"
-      [isBookMark]="true"
-      type="view"
-    ></codx-mfunc>
-  </ng-template>
+  <span
+    ngbTooltip="Sao chép"
+    placement="bottom"
+    type="button"
+    class="btn btn-icon btn-light-warning ms-1"
+    (click)="onClickCopyRow(data)"
+  >
+    <i class="icon-file_copy icon-16"></i>
+  </span>
+  <span
+    ngbTooltip="Xóa"
+    placement="bottom"
+    type="button"
+    class="btn btn-icon btn-light-danger ms-1"
+    (click)="onClickDeleteRow(data)"
+  >
+    <i class="icon-delete icon-16"></i>
+  </span>
 </ng-template>

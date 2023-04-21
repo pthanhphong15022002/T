@@ -62,7 +62,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row" *ngIf="data?.siSalary > 0">
           <span class="icon-monetization_on icon-15 me-1"></span>
           <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText">
             <span class="align-self-center fw-bold"
@@ -153,9 +153,8 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3" [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'"
-    [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'">
+    [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
+    [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
 
   </codx-temp-full>
 </ng-template>

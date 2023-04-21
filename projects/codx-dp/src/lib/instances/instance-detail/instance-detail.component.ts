@@ -114,7 +114,6 @@ export class InstanceDetailComponent implements OnInit {
   titleDefault = '';
 
   isHiddenReason: boolean = false;
-  //viewHour = { timelineViewMode: "Hour"}
 
   instanceId: string;
   proccesNameMove: string;
@@ -131,42 +130,54 @@ export class InstanceDetailComponent implements OnInit {
   maxSize: number = 4;
   ownerInstance: string[] = [];
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
-  timelineSettings:any={
+  //gan chart
+  vllViewGannt ='DP042'
+  timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
 
       formatter: (date: Date) => {
         let day = date.getDay();
-        let text='';
-        if(day == 0){
+        let text = '';
+        if (day == 0) {
           text = 'Chủ nhật';
         }
-        if(day == 1){
+        if (day == 1) {
           text = 'Thứ Hai';
         }
-        if(day == 2){
-          text ='Thứ Ba';
+        if (day == 2) {
+          text = 'Thứ Ba';
         }
-        if(day == 3){
+        if (day == 3) {
           text = 'Thứ Tư';
         }
-        if(day == 4){
+        if (day == 4) {
           text = 'Thứ Năm';
         }
-        if(day == 5){
+        if (day == 5) {
           text = 'Thứ Sáu';
         }
-        if(day == 6){
+        if (day == 6) {
           text = 'Thứ Bảy';
         }
-        return `${text} ( ${date.toLocaleDateString()} )`
+        return `${text} ( ${date.toLocaleDateString()} )`;
       },
     },
     bottomTier: {
       unit: 'Hour',
-      format: 'HH'
-    }
-  }
+      format: 'HH',
+    },
+  };
+
+  //  timelineSettings = {
+  //   topTier: {
+  //     unit: 'Month',
+  //   },
+  //   bottomTier: {
+  //     unit: 'Week',
+  //     count: 2,
+  //   },
+  // };
 
   constructor(
     private callfc: CallFuncService,
@@ -620,12 +631,12 @@ export class InstanceDetailComponent implements OnInit {
     this.clickStartInstances.emit(true);
   }
 
-  checkOwnerRoleProcess(roles){
-    if(roles != null && roles.length > 0){
-      var checkOwner = roles.find(x => x.roleType == 'S');
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
 
       return checkOwner != null ? checkOwner.objectID : null;
-    }else{
+    } else {
       return null;
     }
   }

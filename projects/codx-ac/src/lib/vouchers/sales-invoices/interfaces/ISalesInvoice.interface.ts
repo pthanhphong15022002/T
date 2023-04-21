@@ -12,7 +12,7 @@ export interface ISalesInvoice {
   invoiceDate: string;
   invoiceDueDate: string | null;
   invoiceName: string;
-  invoiceAdddess: string;
+  invoiceAddress: string;
   invoiceTaxCode: string;
   objectType: string;
   objectID: string;
