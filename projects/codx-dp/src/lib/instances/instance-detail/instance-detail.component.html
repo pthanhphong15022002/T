@@ -25,7 +25,11 @@
                   class="badge"
                   [ngStyle]="{
                     'background-color':
-                      stepValue['backgroundColor'] || '#3699ff'
+                    dataSelect.status == '3' || dataSelect.status == '4'
+                        ? colorSuccesss
+                        : dataSelect.status == '5' || dataSelect.status == '6'
+                        ? colorFail
+                        : stepValue['backgroundColor']
                   }"
                 >
                   <span

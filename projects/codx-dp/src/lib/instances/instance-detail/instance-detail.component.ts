@@ -64,6 +64,8 @@ export class InstanceDetailComponent implements OnInit {
   @Output() clickStartInstances = new EventEmitter<any>();
   @Output() saveDatasInstance = new EventEmitter<any>();
   @Input() lstStepProcess = [];
+  @Input() colorFail:any;
+  @Input() colorSuccesss:any;
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
