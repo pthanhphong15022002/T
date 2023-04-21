@@ -129,6 +129,8 @@ export class PopupOKRWeightComponent
         this.totalWeight += this.okrChild[i].weight;
         this.totalProgress += this.okrChild[i].weight*this.okrChild[i].progress;
       }  
+      this.totalWeight=  parseFloat(this.totalWeight.toFixed(2));
+      this.totalProgress=  parseFloat(this.totalProgress.toFixed(2));
       this.detectorRef.detectChanges();
     }
   }
@@ -149,6 +151,9 @@ export class PopupOKRWeightComponent
               this.totalProgress += kr?.weight*kr?.progress;
               this.totalWeight += kr?.weight;
             });
+            
+      this.totalWeight=  parseFloat(this.totalWeight.toFixed(2));
+      this.totalProgress=  parseFloat(this.totalProgress.toFixed(2));
             this.detectorRef.detectChanges();
           }
         });
@@ -167,6 +172,9 @@ export class PopupOKRWeightComponent
               this.totalProgress += ob?.weight * ob?.progress;
               this.totalWeight += ob?.weight;
             });
+            
+            this.totalWeight=  parseFloat(this.totalWeight.toFixed(2));
+            this.totalProgress=  parseFloat(this.totalProgress.toFixed(2));
             this.detectorRef.detectChanges();
           }
         });

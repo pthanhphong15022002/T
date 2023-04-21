@@ -75,13 +75,13 @@
             <codx-label default="Tổng cộng" name="lblTotal" class="fs-5 fw-bold"></codx-label>
           </td>
           <td class="">
-            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight.toFixed(2)"></span>
+            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight"></span>
           </td>
           <td class="text-center">
           </td>
           <td class="">
             <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" *ngIf="totalProgress!=0"
-              [innerHTML]="totalProgress.toFixed(2)"></span>
+              [innerHTML]="totalProgress"></span>
           </td>
         </tr>
       </tbody>
