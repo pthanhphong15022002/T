@@ -246,9 +246,6 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
 
   handelDataOutput(isUpdate){
     let dataOutput  = new progressOutput();
-    
-    dataOutput.groupTaskID = this.dataSource['taskGroupID'];
-    dataOutput.taskID = this.dataSource['recID'];
     dataOutput.isUpdate = isUpdate;
     dataOutput.actualEnd = this.actualEnd;
     dataOutput.note = this.note;
