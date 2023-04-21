@@ -21,6 +21,7 @@
           class="e-customStyle"
           title="Lịch các nhân"
           (navigated)="changeNewMonth($event)"
+          (renderDayCell)="onLoad($event)"
           [value]="dateChange"
         >
         </ejs-calendar>
@@ -227,7 +228,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="w-100"><ng-template #calendar_setting></ng-template>></div>
+      <div class="w-100"><ng-template #calendar_setting></ng-template></div>
     </div>
   </div>
 </ng-template>

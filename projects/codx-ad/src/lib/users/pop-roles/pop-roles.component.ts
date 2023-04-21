@@ -60,6 +60,7 @@ export class PopRolesComponent extends UIComponent {
   // isUserGroup = false;
   lstUserIDs: string[] = [];
   needValidate = true;
+  autoCreated = false;
 
   user: UserModel;
   ermSysTenant = ['', 'default'];
@@ -79,7 +80,7 @@ export class PopRolesComponent extends UIComponent {
     this.formType = dt?.data.formType;
     this.lstUserIDs = dt?.data?.lstMemIDs;
     this.needValidate = dt?.data?.needValidate;
-    console.log('lst uid', this.lstUserIDs);
+    this.autoCreated = dt.data?.autoCreated;
 
     this.user = authStore.get();
   }
@@ -162,7 +163,8 @@ export class PopRolesComponent extends UIComponent {
         .addUpdateAD_UserRoles(
           this.lstNeedAddRoles,
           this.lstUserIDs,
-          this.needValidate
+          this.needValidate,
+          this.autoCreated
         )
         .pipe(
           map((lstAddedRoles: tmpformChooseRole[]) => {

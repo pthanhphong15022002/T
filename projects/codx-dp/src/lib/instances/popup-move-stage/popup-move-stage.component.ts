@@ -346,6 +346,7 @@ export class PopupMoveStageComponent implements OnInit {
     {
       return;
     }
+    this.beforeSave();
   }
   beforeSave() {
     if (
@@ -640,7 +641,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   }
   updateDataTask(taskNew:any, taskOld: any) {
-    taskNew.actualEnd = taskOld.actualEnd;
+    taskNew.actualEnd = taskOld?.actualEnd;
     taskNew.isUpdate = taskOld.isUpdate;
     taskNew.note = taskOld.note;
     taskNew.progress = taskOld.progress;
@@ -648,7 +649,7 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.modifiedBy = this.user.userID;
   }
   updateDataGroup(groupNew:any, groupOld: any) {
-    groupNew.progress = groupOld.progress;
+    groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
   }
