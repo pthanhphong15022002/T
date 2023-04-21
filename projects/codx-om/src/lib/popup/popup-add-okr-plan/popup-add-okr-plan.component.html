@@ -8,7 +8,7 @@
                 <span class="fs-2 fw-bold">{{curOrgName}}</span>
                 <span class="d-flex justify-content-between align-items-center ">
                     <span class="icon-i-calendar2-week-fill me-2"></span>
-                    <span class="fs-4 fw-bold">{{okrPlan?.periodID}}</span>
+                    <span class="fs-4 fw-bold" [ngbTooltip]="'Mã kỳ'">{{okrPlan?.periodID}}</span>
                 </span>
             </div>
             <div class="d-flex align-items-center flex-row  w-100 px-9 pb-3">
@@ -55,14 +55,14 @@
                                 <div class="w-40 d-flex justify-content-start ">
                                     <div
                                         class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom  border-top">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
                                             [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
                                             [value]="ob?.category" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
                                     <div
                                         class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom border-top border-end">
-                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist"
+                                        <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
                                             [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
                                             [value]="ob?.confidence" (valueChange)="obChange($event,i)"></codx-inplace>
@@ -215,8 +215,8 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-end my-5 px-9" (click)="onSaveForm()">
-                <button type="button" class="btn btn-primary"><codx-label default="Lưu"
+            <div class="d-flex justify-content-end my-5 px-9">
+                <button type="button" class="btn btn-primary" (click)="onSaveForm()" [disabled]="onSaving"><codx-label default="Lưu"
                         fiedName="lblSave"></codx-label></button>
             </div>
         </div>

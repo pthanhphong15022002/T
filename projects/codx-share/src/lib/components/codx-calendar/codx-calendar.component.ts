@@ -1,3 +1,4 @@
+import { addClass } from '@syncfusion/ej2-base';
 declare var window: any;
 import {
   ChangeDetectorRef,
@@ -37,7 +38,15 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
   styleUrls: ['./codx-calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCalendarComponent extends UIComponent implements OnInit {
+export class CodxCalendarComponent extends UIComponent {
+  @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
+  @ViewChild('calendar_setting', { read: ViewContainerRef })
+  calendar_setting!: ViewContainerRef;
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+
+  @Output() dataResourceModel: any[] = [];
+  @Output() settingValue: any;
+
   headerText: any;
   dialog: DialogRef;
   funcID: any;
@@ -52,7 +61,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   tmpCalendarNote: any;
   views: Array<ViewModel> = [];
   functionList: any;
-
   message: any;
   listNote: any[] = [];
   itemUpdate: any;
@@ -97,24 +105,19 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   dataListViewTemp: any;
   dtService: CRUDService;
   isCollapsed = false;
-
-  @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
-  @ViewChild('calendar_setting', { read: ViewContainerRef })
-  calendar_setting!: ViewContainerRef;
-  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-
-  @Output() dataResourceModel: any[] = [];
-  @Output() settingValue: any;
+  fDayOfWeek: any;
+  lDayOfWeek: any;
+  lstDOWeek = [];
+  typeNavigate = 'Month';
 
   constructor(
     injector: Injector,
-    private route: ActivatedRoute,
     private codxShareSV: CodxShareService,
     @Optional() dialogRef: DialogRef
   ) {
     super(injector);
     this.dialog = dialogRef;
-    this.route.params.subscribe((params) => {
+    this.router.params.subscribe((params) => {
       if (params) {
         this.funcID = params['funcID'];
         this.cache.functionList(this.funcID).subscribe((res) => {
@@ -166,8 +169,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     }, 200);
   }
 
-  fDayOfWeek: any;
-  lDayOfWeek: any;
   loadData() {
     var tempCalendar = this.calendar_mini.element;
     var htmlE = tempCalendar as HTMLElement;
@@ -189,7 +190,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     this.getDayOfWeek(htmlE);
   }
 
-  lstDOWeek = [];
   getDayOfWeek(htmlE) {
     this.lstDOWeek = [];
     if (htmlE) {
@@ -214,7 +214,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     }
   }
 
-  typeNavigate = 'Month';
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
@@ -377,12 +376,12 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
                   ...this.WP_NotesTemp,
                   ...this.dataResourceModel,
                 ];
-              else if (transType == 'TM_Tasks')
+              else if (transType == 'TM_Tasks') {
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.TM_TasksTemp,
                 ];
-              else if (transType == 'CO_Meetings')
+              } else if (transType == 'CO_Meetings')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.CO_MeetingsTemp,
@@ -499,76 +498,100 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getRequestTM(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.TM_Tasks = [];
-    let requestDataTM: DataRequest = new DataRequest();
-    requestDataTM.predicate = predicate;
-    requestDataTM.dataValue = dataValue;
-    requestDataTM.funcID = 'TMT0201';
-    requestDataTM.formName = 'MyTasks';
-    requestDataTM.gridViewName = 'grvMyTasks';
-    requestDataTM.pageLoading = true;
-    requestDataTM.page = 1;
-    requestDataTM.pageSize = 1000;
-    requestDataTM.entityName = 'TM_Tasks';
-    requestDataTM.entityPermission = 'TM_MyTasks';
+
+    let requestDataTM: DataRequest = {
+      predicate: predicate,
+      dataValue: dataValue,
+      funcID: 'TMT0201',
+      formName: 'MyTasks',
+      gridViewName: 'grvMyTasks',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'TM_Tasks',
+      entityPermission: 'TM_MyTasks',
+    };
+
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'TM_Tasks');
     });
   }
 
   getRequestCO(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.CO_Meetings = [];
-    let requestDataCO: DataRequest = new DataRequest();
-    requestDataCO.predicates = predicate;
-    requestDataCO.dataValues = dataValue;
-    requestDataCO.funcID = 'TMT0501';
-    requestDataCO.formName = 'TMMeetings';
-    requestDataCO.gridViewName = 'grvTMMeetings';
-    requestDataCO.pageLoading = true;
-    requestDataCO.page = 1;
-    requestDataCO.pageSize = 1000;
-    requestDataCO.entityName = 'CO_Meetings';
-    requestDataCO.entityPermission = 'CO_TMMeetings';
+
+    let requestDataCO: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'TMT0501',
+      formName: 'TMMeetings',
+      gridViewName: 'grvTMMeetings',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'CO_Meetings',
+      entityPermission: 'CO_TMMeetings',
+    };
+
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'CO_Meetings');
     });
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.EP_BookingRooms = [];
-    let requestDataEP_Room: DataRequest = new DataRequest();
-    requestDataEP_Room.predicates = predicate;
-    requestDataEP_Room.dataValues = dataValue;
-    requestDataEP_Room.funcID = 'EP4T11';
-    requestDataEP_Room.formName = 'BookingRooms';
-    requestDataEP_Room.gridViewName = 'grvBookingRooms';
-    requestDataEP_Room.pageLoading = true;
-    requestDataEP_Room.page = 1;
-    requestDataEP_Room.pageSize = 1000;
-    requestDataEP_Room.entityName = 'EP_Bookings';
-    requestDataEP_Room.entityPermission = 'EP_BookingRooms';
+
+    let requestDataEP_Room: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'EP4T11',
+      formName: 'BookingRooms',
+      gridViewName: 'grvBookingRooms',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'EP_Bookings',
+      entityPermission: 'EP_BookingRooms',
+    };
+
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
     });
   }
 
   getRequestEP_BookingCar(predicate, dataValue, param, showEvent) {
-    if (showEvent == '0' || showEvent == 'false') return;
+    if (!showEvent || showEvent === 'false') {
+      return;
+    }
+
     this.EP_BookingCars = [];
-    let requestDataEP_Car: DataRequest = new DataRequest();
-    requestDataEP_Car.predicates = predicate;
-    requestDataEP_Car.dataValues = dataValue;
-    requestDataEP_Car.funcID = 'EP7T11';
-    requestDataEP_Car.formName = 'BookingCars';
-    requestDataEP_Car.gridViewName = 'grvBookingCars';
-    requestDataEP_Car.pageLoading = true;
-    requestDataEP_Car.page = 1;
-    requestDataEP_Car.pageSize = 1000;
-    requestDataEP_Car.entityName = 'EP_Bookings';
-    requestDataEP_Car.entityPermission = 'EP_BookingCars';
+
+    let requestDataEP_Car: DataRequest = {
+      predicates: predicate,
+      dataValues: dataValue,
+      funcID: 'EP7T11',
+      formName: 'BookingCars',
+      gridViewName: 'grvBookingCars',
+      pageLoading: true,
+      page: 1,
+      pageSize: 1000,
+      entityName: 'EP_Bookings',
+      entityPermission: 'EP_BookingCars',
+    };
+
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
       this.getModelShare(res[0], param.Template, 'EP_BookingCars');
     });
@@ -578,7 +601,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
-      this.countNotePin = 0;
       this.countNotePin = res[1];
       this.getModelShare(res[0], param.Template, 'WP_Notes');
     });
@@ -619,6 +641,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         }
         switch (transType) {
           case 'TM_Tasks':
+            debugger;
             this.TM_Tasks.push(paramValue);
             break;
           case 'WP_Notes':
@@ -737,8 +760,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     dataResourceModel.map((resource) => {
       if (resource.transType === 'TM_MyTasks') {
         resource.transType = 'TM_Tasks';
-        resource.title = resource.description;
-        console.log(resource);
       }
     });
     let a = this.calendar_setting.createComponent(CalendarCenterComponent);
@@ -754,5 +775,39 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         }
       }
     });
+  }
+
+  onLoad(args: any) {
+    /*Date need to be customized*/
+    // if (args.date.getDate() === 10) {
+    //   let span: HTMLElement;
+    //   span = document.createElement('span');
+    //   span.setAttribute('class', 'e-icons highlight');
+    //   addClass([args.element], ['special', 'e-day', 'birthday']);
+    //   args.element.firstElementChild.setAttribute('title', 'Birthday !');
+    //   args.element.setAttribute('title', ' Birthday !');
+    //   args.element.setAttribute('data-val', 'Birthday!');
+    //   args.element.appendChild(span);
+    // }
+    // if (args.date.getDate() === 15) {
+    //   let span: HTMLElement;
+    //   span = document.createElement('span');
+    //   span.setAttribute('class', 'e-icons highlight');
+    //   addClass([args.element], ['special', 'e-day', 'farewell']);
+    //   args.element.firstElementChild.setAttribute('title', 'Farewell !');
+    //   args.element.setAttribute('title', 'Farewell !');
+    //   args.element.setAttribute('data-val', 'Farewell!');
+    //   args.element.appendChild(span);
+    // }
+    // if (args.date.getDate() === 20) {
+    //   let span: HTMLElement;
+    //   span = document.createElement('span');
+    //   span.setAttribute('class', 'e-icons highlight');
+    //   addClass([args.element], ['special', 'e-day', 'vacation']);
+    //   args.element.firstElementChild.setAttribute('title', 'Vacation !');
+    //   args.element.setAttribute('title', 'Vacation !');
+    //   args.element.setAttribute('data-val', 'Vacation!');
+    //   args.element.appendChild(span);
+    // }
   }
 }

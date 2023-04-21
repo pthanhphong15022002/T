@@ -1,4 +1,4 @@
-.assignchart-task{
+.assignchart-task {
   border-radius: 4px 0 0 4px;
   margin-bottom: 1px;
   display: flex;
@@ -9,15 +9,17 @@
   height: 34px;
 }
 
-.assignchart-task span{
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: right;
+.assignchart-task {
+  codx-vll {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+  }
 }
 
-.topchart-user{
+.topchart-user {
   border-radius: 4px 0 0 4px;
   margin-bottom: 1px;
   display: flex;
@@ -28,7 +30,7 @@
   height: 34px;
 }
 
-.topchart-user span{
+.topchart-user span {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

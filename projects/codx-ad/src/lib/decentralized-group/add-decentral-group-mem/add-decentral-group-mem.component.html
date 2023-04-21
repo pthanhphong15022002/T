@@ -119,7 +119,7 @@
           <div class="d-flex align-items-top w-100">
             <codx-img
               class="me-3"
-              [objectId]="item?.memberID"
+              [objectId]="item?.memberIDs"
               objectType="AD_Users"
             >
             </codx-img>
@@ -153,7 +153,12 @@
 
 <ng-template #tabRoles>
   <div class="form-group mt-3">
-    <button type="button" class="btn btn-primary" (click)="onSave(false)">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="!form?.formGroup?.valid"
+      (click)="onSave(false)"
+    >
       <codx-label
         fiedName="titleUserRoles"
         [formModel]="form?.formModel"

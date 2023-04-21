@@ -217,6 +217,8 @@ export class PopupAddRoleComponent extends UIComponent {
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           this.detectorRef.detectChanges();
+          this.okrPlan.permissions.splice(index,1);          
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -227,7 +229,7 @@ export class PopupAddRoleComponent extends UIComponent {
         (element) =>
           !this.okrPlan.permissions.find((item) => item.objectID === element.id)
       );
-      if (data != null && data.lenth > 0) {
+      if (data != null && data.length > 0) {
         for (var i = 0; i < data.length; i++) {
           var item = data[i];
           var perm = { ...this.okrPlan.permissions[0] };

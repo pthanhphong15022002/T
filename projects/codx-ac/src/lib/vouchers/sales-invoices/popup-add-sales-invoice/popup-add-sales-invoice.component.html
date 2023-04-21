@@ -614,13 +614,24 @@
 </ng-template>
 
 <ng-template #more let-data>
-  <span
-    ngbTooltip="Xóa"
-    placement="bottom"
-    type="button"
-    class="btn btn-icon btn-light-danger ms-1"
-    (click)="deleteRow(data)"
-  >
-    <i class="icon-delete icon-16"></i>
-  </span>
+  <ng-container *ngIf="editSettings.mode === 'Normal'; else dialogMode">
+    <span
+      ngbTooltip="Xóa"
+      placement="bottom"
+      type="button"
+      class="btn btn-icon btn-light-danger ms-1"
+      (click)="deleteRow(data)"
+    >
+      <i class="icon-delete icon-16"></i>
+    </span>
+  </ng-container>
+  <ng-template #dialogMode>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="fmSalesInvoicesLines"
+      (clickMF)="handleClickMF($event, data)"
+      [isBookMark]="true"
+      type="view"
+    ></codx-mfunc>
+  </ng-template>
 </ng-template>

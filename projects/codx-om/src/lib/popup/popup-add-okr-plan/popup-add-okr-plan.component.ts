@@ -251,7 +251,6 @@ export class PopupAddOKRPlanComponent
   }
 
   deleteOKR(type: any, obIndex: number, krIndex: number, skrIndex: number) {
-debugger
     if (type) {
       switch (type) {
         case this.obType:
