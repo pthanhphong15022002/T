@@ -1331,9 +1331,17 @@ export class StagesDetailComponent implements OnInit {
             }
             break;
           case 'SYS03'://sửa
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup && !isTask && !this.isUpdate)){
+            if(!this.isUpdate){
               res.disabled = true;
-            }
+            }else{
+              if(!(this.isRoleAll || isGroup || isTask)){
+                res.disabled = true;  
+              }else{
+                if(task?.isTaskDefault && !this.leadtimeControl){
+                  res.disabled = true;                 
+                }
+              }
+            }           
             break;
           case 'SYS04'://copy
             if ((!this.isRoleAll && !isGroup) || !this.isUpdate){
@@ -1341,7 +1349,7 @@ export class StagesDetailComponent implements OnInit {
             }
             break;
           case 'SYS003'://đính kèm file
-            if (!this.leadtimeControl || (!this.isRoleAll && !isGroup &&  !isTask && !this.isUpdate)){
+            if (!task?.isTaskDefault && !this.isUpdate){
               res.isblur = true;
             }
             break;
@@ -1351,7 +1359,7 @@ export class StagesDetailComponent implements OnInit {
             }
             break;
           case 'DP13'://giao việc
-            if(!task?.createTask){
+            if(!task?.createTask || !this.isUpdate){
               res.isblur = true;
             }
             break;
@@ -1388,12 +1396,20 @@ export class StagesDetailComponent implements OnInit {
             }
             break;
           case 'SYS03'://sửa
-            if (!this.leadtimeControl || !(this.isRoleAll || isGroup || this.isUpdate)){
+            if(!this.isUpdate){
               res.disabled = true;
-            }
+            }else{
+              if(!(this.isRoleAll || isGroup)){
+                res.disabled = true;
+              }else{
+                if(group?.isTaskDefault && !this.leadtimeControl){
+                  res.disabled = true;                 
+                }
+              }
+            }            
             break;
           case 'SYS003'://đính kèm file
-            if (!this.leadtimeControl || !(this.isRoleAll || isGroup|| this.isUpdate)){
+            if (group?.isTaskDefault && !this.isUpdate){
               res.isblur = true;
             }
             break;
