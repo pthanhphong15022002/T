@@ -57,6 +57,7 @@ export class PopupAddOKRPlanComponent
   groupModel: any;
   okrGrv: any;
   mssgCode: any;
+  onSaving=false;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -250,12 +251,11 @@ export class PopupAddOKRPlanComponent
   }
 
   deleteOKR(type: any, obIndex: number, krIndex: number, skrIndex: number) {
-
+debugger
     if (type) {
       switch (type) {
         case this.obType:
 
-        console.log(this.dataOKR[obIndex]);
           if(this.dataOKR[obIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa mục tiêu tự động tạo');
             return;
@@ -269,14 +269,13 @@ export class PopupAddOKRPlanComponent
           break;
 
         case this.krType:
-          console.log(this.dataOKR[obIndex].items[krIndex]);
           
           if(this.dataOKR[obIndex].items[krIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa kết quả chính tự động tạo');
             return;
           }
           if(this.dataOKR[obIndex].items[krIndex].isAdd==true){
-            this.dataOKR[obIndex].items[krIndex].splice(krIndex,1);
+            this.dataOKR[obIndex].items.splice(krIndex,1);
           }
           else{
             this.dataOKR[obIndex].items[krIndex].isDeleted = true;
@@ -285,7 +284,6 @@ export class PopupAddOKRPlanComponent
           break;
 
         case this.skrType:
-          console.log(this.dataOKR[obIndex].items[krIndex].items[skrIndex]);
           if(this.dataOKR[obIndex].items[krIndex].items[skrIndex].autoCreated==true){
             this.notificationsService.notify('Không thể xóa kết quả phụ tự động tạo');
             return;
@@ -367,6 +365,7 @@ export class PopupAddOKRPlanComponent
   //-----------------------------------Logic Func------------------------------------//
   //---------------------------------------------------------------------------------//
   onSaveForm() {
+    this.onSaving=true;
     switch (this.inputValidate()) {
       case this.obType:
         this.notificationsService.notifyCode(
@@ -374,6 +373,7 @@ export class PopupAddOKRPlanComponent
           0,
           '"' + this.okrGrv.obGrv['okrName'].headerText + '"'
         );
+        this.onSaving=false;
         return;
       case this.krType:
         this.notificationsService.notifyCode(
@@ -381,6 +381,7 @@ export class PopupAddOKRPlanComponent
           0,
           '"' + this.okrGrv.krGrv['okrName'].headerText + '"'
         );
+        this.onSaving=false;
         return;
       case this.skrType:
         this.notificationsService.notifyCode(
@@ -388,6 +389,7 @@ export class PopupAddOKRPlanComponent
           0,
           '"' + this.okrGrv.skrGrv['okrName'].headerText + '"'
         );
+        this.onSaving=false;
         return;
     }
     this.codxOmService
@@ -400,6 +402,10 @@ export class PopupAddOKRPlanComponent
             this.notificationsService.notifyCode('SYS007');
           }
           this.dialogRef && this.dialogRef.close(true);
+        }        
+        else{
+          this.onSaving=false;
+          return ;
         }
       });
   }

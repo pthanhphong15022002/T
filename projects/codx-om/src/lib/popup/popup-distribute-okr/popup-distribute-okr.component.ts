@@ -69,10 +69,9 @@ export class PopupDistributeOKRComponent
   headerText = '';
   okrName = '';
   okrRecID: any;
-  curUser: any;
   userInfo: any;
   orgUnitTree: any;
-  isAfterRender = false;
+  isAfterRender = true;
   dataOKR: any;
   isAdd: boolean;
   funcID: '';
@@ -81,6 +80,7 @@ export class PopupDistributeOKRComponent
   distributeToType: any;
   distributeType: any;
   listDistribute = [];
+  currentUser: import("codx-core").UserModel;
 
   constructor(
     private injector: Injector,
@@ -99,7 +99,7 @@ export class PopupDistributeOKRComponent
     this.distributeType = dialogData.data[2];
     this.funcID = dialogData.data[3];
     this.headerText = dialogData?.data[4];
-    this.curUser = authStore.get();
+    this.currentUser =dialogData?.data[5];
     this.distributeToType = this.distributeType;
     if (this.distributeToType == this.typeKR) {
       this.radioKRCheck = true;
@@ -150,20 +150,20 @@ export class PopupDistributeOKRComponent
   //-----------------------Get Data Func---------------------//
   
   getOKRAssign() {
-    if (this.curUser?.employee != null) {
+    if (this.currentUser?.employee != null) {
       let tempOrgID = '';
       switch (this.funcID) {
         case OMCONST.FUNCID.COMP:
-          tempOrgID = this.curUser?.employee.companyID;
+          tempOrgID = this.currentUser?.employee.companyID;
           break;
         case OMCONST.FUNCID.DEPT:
-          tempOrgID = this.curUser?.employee.departmentID;
+          tempOrgID = this.currentUser?.employee.departmentID;
           break;
         case OMCONST.FUNCID.ORG:
-          tempOrgID = this.curUser?.employee.orgUnitID;
+          tempOrgID = this.currentUser?.employee.orgUnitID;
           break;
         case OMCONST.FUNCID.PERS:
-          tempOrgID = this.curUser?.employee.employeeID;
+          tempOrgID = this.currentUser?.employee.employeeID;
           break;
       }
       this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
@@ -324,35 +324,35 @@ export class PopupDistributeOKRComponent
     //await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }
-  public connDefaults(
-    connector: ConnectorModel,
-    diagram: Diagram
-  ): ConnectorModel {
-    connector.targetDecorator.shape = 'None';
-    connector.type = 'Orthogonal';
-    connector.constraints = 0;
-    connector.cornerRadius = 5;
-    connector.style.strokeColor = '#6d6d6d';
-    return connector;
-  }
+  // public connDefaults(
+  //   connector: ConnectorModel,
+  //   diagram: Diagram
+  // ): ConnectorModel {
+  //   connector.targetDecorator.shape = 'None';
+  //   connector.type = 'Orthogonal';
+  //   connector.constraints = 0;
+  //   connector.cornerRadius = 5;
+  //   connector.style.strokeColor = '#6d6d6d';
+  //   return connector;
+  // }
 
-  public nodeDefaults(obj: NodeModel): NodeModel {
-    obj.expandIcon = {
-      height: 15,
-      width: 15,
-      shape: 'Minus',
-      fill: 'lightgray',
-      offset: { x: 0.5, y: 1 },
-    };
-    obj.collapseIcon = {
-      height: 15,
-      width: 15,
-      shape: 'Plus',
-      fill: 'lightgray',
-      offset: { x: 0.5, y: 1 },
-    };
-    return obj;
-  }
+  // public nodeDefaults(obj: NodeModel): NodeModel {
+  //   obj.expandIcon = {
+  //     height: 15,
+  //     width: 15,
+  //     shape: 'Minus',
+  //     fill: 'lightgray',
+  //     offset: { x: 0.5, y: 1 },
+  //   };
+  //   obj.collapseIcon = {
+  //     height: 15,
+  //     width: 15,
+  //     shape: 'Plus',
+  //     fill: 'lightgray',
+  //     offset: { x: 0.5, y: 1 },
+  //   };
+  //   return obj;
+  // }
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

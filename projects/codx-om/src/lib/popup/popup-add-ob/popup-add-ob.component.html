@@ -1,4 +1,4 @@
-<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer"
   [dialog]="dialogRef" [formModel]="formModel" [data]="ob" *ngIf="isAfterRender">
   <ng-template #body>
     <ng-container *ngIf="form && form.formGroup">
@@ -62,8 +62,8 @@
   </ng-template>
 
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
+    <div class="d-flex justify-content-end" >
+      <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="onSaving">
         <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
