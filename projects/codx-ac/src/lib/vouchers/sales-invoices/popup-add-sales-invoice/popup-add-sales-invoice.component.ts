@@ -196,9 +196,59 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     console.log('onCellChange', e);
   }
 
+  // for dialog mode
+  handleClickMF(e, data): void {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteRow(data);
+        break;
+      case 'SYS03':
+        this.editRow(e, data);
+        break;
+      case 'SYS04':
+        this.copyRow(e, data);
+        break;
+      case 'SYS002':
+        this.export(data);
+        break;
+    }
+  }
+
+  editRow(e, data): void {
+    console.log('editRow', data);
+
+    const dialogModel = new DialogModel();
+    dialogModel.FormModel = this.fmSalesInvoicesLines;
+
+    this.callfc
+      .openForm(
+        PopupAddSalesInvoicesLineComponent,
+        'This param is not working',
+        500,
+        700,
+        '',
+        {
+          formType: 'edit',
+          salesInvoicesLine: data,
+          gvs: this.gvsSalesInvoicesLines,
+        },
+        '',
+        dialogModel
+      )
+      .closed.pipe(tap((t) => console.log(t)))
+      .subscribe(({ event }) => {
+        this.grid.updateRow(event.index, event);
+      });
+  }
+
+  copyRow(e, data): void {}
+
+  export(data): void {
+  }
+
   deleteRow(data): void {
     this.deletedSalesInvoicesLines.push(data);
-    this.grid.deleteRow(data,true);
+    this.grid.deleteRow(data, true);
   }
 
   addRow(): void {
