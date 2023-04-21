@@ -87,6 +87,7 @@
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
           (mouseleave)="pCr.close()"
+          container="body"
           placement="left right"
         >
           <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
@@ -123,7 +124,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
         (mouseleave)="pEd.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
         <span
@@ -295,7 +297,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEdDT.open()"
         (mouseleave)="pEdDT.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
