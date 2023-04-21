@@ -1400,7 +1400,7 @@ codx-vll {
   content: ":";
   position: absolute;
   right: 6px;
-  bottom: 0;
+  top: 0;
   height: 18px;
 }
 
@@ -2520,9 +2520,18 @@ codx-toolbar{
 .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
   text-transform: none!important;
 }
-
-
-
+.badge.me-0.me-2{
+  margin-right: 0!important;
+}
+.avatar-vllbadge{
+  position: relative;
+  .vll-badge{
+    position: absolute;
+    top: 50px;
+    width:60px;
+    left: 0;
+  }
+}
 
 
 
