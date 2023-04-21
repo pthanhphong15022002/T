@@ -58,6 +58,7 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
           </codx-label>
           <codx-input
+            [disabled]="action == 'edit' && data.objectType"
             [field]="'objectType'"
             [crrValue]="data.objectType"
             [type]="'valuelist'"
@@ -71,6 +72,7 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
           </codx-label>
           <codx-input
+            [disabled]="action == 'edit' && data.contactType"
             [field]="'contactType'"
             [crrValue]="data?.contactType"
             [type]="'valuelist'"
@@ -86,6 +88,7 @@
         [fiedName]="'ObjectID'"
       ></codx-label>
       <codx-input
+        [disabled]="action == 'edit' && data.objectID"
         [field]="'objectID'"
         [crrValue]="data?.objectID"
         type="combobox"
@@ -116,7 +119,7 @@
               ? 'ContactID'
               : funcID == 'CM0103'
               ? 'PartnerID'
-              : 'OpponentID'
+              : 'CompetitorID'
           "
         >
         </codx-label>
@@ -125,10 +128,10 @@
             funcID == 'CM0101'
               ? 'customerID'
               : funcID == 'CM0102'
-              ? 'ContactID'
+              ? 'contactID'
               : funcID == 'CM0103'
               ? 'partnerID'
-              : 'opponentID'
+              : 'competitorID'
           "
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -143,7 +146,7 @@
               ? 'CustomerName'
               : funcID == 'CM0103'
               ? 'PartnerName'
-              : 'OpponentName'
+              : 'CompetitorName'
           "
         >
         </codx-label>
@@ -155,7 +158,7 @@
               ? 'customerName'
               : funcID == 'CM0103'
               ? 'partnerName'
-              : 'opponentName'
+              : 'competitorName'
           "
         >
         </codx-input>
@@ -244,12 +247,12 @@
         </div>
         <ng-container [ngTemplateOutlet]="contacts"></ng-container>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0102' || funcID == 'CM0101'">
+      <div class="form-group">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
             <codx-label
               [formModel]="form.formModel"
-              [fiedName]="funcID == 'CM0101' ? 'Phone' : 'Mobile'"
+              [fiedName]="funcID == 'CM0101' ? 'Phone' : funcID == 'CM0102' ? 'Mobile' : 'CompanyPhone'"
             >
             </codx-label>
           </div>
@@ -272,11 +275,11 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [field]="funcID == 'CM0101' ? 'phone' : 'mobile'"
+          [field]="funcID == 'CM0101' ? 'phone' : funcID == 'CM0102' ? 'mobile' : 'companyPhone'"
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0104'">
         <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -285,12 +288,12 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
+      <div class="form-group">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
             <codx-label
               [formModel]="form.formModel"
-              [fiedName]="funcID == 'CM0101' ? 'Email' : 'PersonalEmail'"
+              [fiedName]="funcID == 'CM0101' || funcID == 'CM0104' ? 'Email' : 'PersonalEmail'"
             >
             </codx-label>
           </div>
@@ -312,7 +315,7 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [field]="funcID == 'CM0101' ? 'email' : 'personalEmail'"
+          [field]="funcID == 'CM0101' || funcID == 'CM0104' ? 'email' : 'personalEmail'"
         >
         </codx-input>
       </div>
@@ -403,14 +406,14 @@
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
-          [fiedName]="funcID == 'CM0102' ? 'Note' : 'Memo'"
+          [fiedName]="funcID == 'CM0102' || funcID == 'CM0104' ? 'Note' : 'Memo'"
         >
         </codx-label>
 
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [field]="funcID == 'CM0102' ? 'note' : 'memo'"
+          [field]="funcID == 'CM0102' || funcID == 'CM0104' ? 'note' : 'memo'"
         >
         </codx-input>
       </div>
@@ -434,7 +437,17 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="form-group" *ngIf="funcID == 'CM0104'">
+        <codx-label [formModel]="form.formModel" fiedName="CEO">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="ceo"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0104'">
         <codx-label [formModel]="form.formModel" fiedName="EstablishDate">
         </codx-label>
         <codx-input
@@ -565,7 +578,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0104'">
         <codx-label [formModel]="form.formModel" fiedName="Headcounts">
         </codx-label>
         <codx-input
@@ -575,7 +588,17 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="form-group" *ngIf="funcID == 'CM0104'">
+        <codx-label [formModel]="form.formModel" fiedName="Capital">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="capital"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0104'">
         <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
         </codx-label>
         <codx-input
@@ -585,7 +608,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="funcID == 'CM0101'">
+      <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0104'">
         <codx-label [formModel]="form.formModel" fiedName="SegmentID">
         </codx-label>
         <codx-input
@@ -675,7 +698,7 @@
       </div>
     </div>
   </div>
-  <div class="mb-4" *ngIf="funcID == 'CM0104'">
+  <!-- <div class="mb-4" *ngIf="funcID == 'CM0104'">
     <div class="mb-3">
       <codx-label
         name="lblProsCons"
@@ -719,7 +742,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="d-flex justify-content-between">
     <div class="mb-2">
       <codx-label
@@ -739,9 +762,9 @@
   </div>
   <div
     class="d-flex flex-column"
-    *ngIf="listAddress != null && listAddress.length > 0; index as i"
+    *ngIf="listAddress != null && listAddress.length > 0"
   >
-    <ng-container *ngFor="let item of listAddress">
+    <ng-container *ngFor="let item of listAddress; index as i">
       <div class="row mb-1">
         <div class="col-4">
           <span
@@ -754,7 +777,8 @@
           ></span>
         </div>
         <div class="col-6">
-          <span *ngIf="item?.adressName"
+          <span
+            *ngIf="item?.adressName"
             [innerHTML]="
               item?.adressName
                 | formatvalue : formModelAddress : 'AdressName'

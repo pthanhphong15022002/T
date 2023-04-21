@@ -39,10 +39,10 @@
                 <div class="flex-column d-flex justify-content-start px-9">
                     <div class="d-flex justify-content-start flex-column " *ngFor="let ob of dataOKR;let i=index">
                         <div class="d-flex justify-content-start flex-column pb-3" *ngIf="ob.isDeleted!=true">
-                            <div class="d-flex align-items-center flex-row cursor-pointer w-100 ">
+                            <div class="d-flex align-items-center flex-row cursor-pointer w-100">
                                 <div
-                                    class="w-60 d-flex justify-content-start align-items-end border-top border-bottom border-start ">
-                                    <span class=" ps-2 me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
+                                    class="w-60 d-flex justify-content-start align-items-center border-top border-bottom border-start ">
+                                    <span class="me-2 mb-2 ps-2" [inlineSVG]="okrVll?.ob?.icon"></span>
                                     <div class="w-100 min-h-table d-flex justify-content-center align-items-end">
                                         <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
                                             [class]="'om-input w-100 fw-bold'"
@@ -54,14 +54,14 @@
 
                                 <div class="w-40 d-flex justify-content-start ">
                                     <div
-                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom  border-top">
+                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom  border-top vll-inplace">
                                         <codx-inplace class="om-input w-80  fw-bold" field="category" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
                                             [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
                                             [value]="ob?.category" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
                                     <div
-                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom border-top border-end">
+                                        class="w-45 min-h-table d-flex justify-content-center align-items-center  border-bottom border-top border-end vll-inplace">
                                         <codx-inplace class="om-input w-80  fw-bold" field="confidence" type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
                                             [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
@@ -80,7 +80,7 @@
                                 <div class="d-flex align-items-center cursor-pointer w-100 "
                                     *ngIf="kr.isDeleted!=true && ob.isDeleted!=true">
                                     <div
-                                        class="w-60 d-flex align-items-end justify-content-start ps-4 border-bottom border-end">
+                                        class="w-60 d-flex align-items-center ps-4 border-bottom border-end">
                                         <span
                                             class="pb-3 icon-brightness_1 fs-12px d-flex align-items-center text-warning"></span>
                                         <div class="d-flex align-items-center w-100">
@@ -208,8 +208,8 @@
                         <div class="d-flex align-items-center cursor-pointer om-add-btn w-fit"
                             (click)="addOKR(obType,0,0)">
 
-                            <span class="me-2 mb-2" [inlineSVG]="okrVll?.ob?.icon"></span>
-                            <codx-label class="text-gray-600 om-border-bottom-add fw-bold" default="Thêm mục tiêu"
+                            <span class="me-3" [inlineSVG]="okrVll?.ob?.icon"></span>
+                            <codx-label class="text-gray-700 text-hover-primary om-border-bottom-add fw-bold fs-5" default="Thêm mục tiêu"
                                 fiedName="lblAddObject"></codx-label>
                         </div>
                     </div>
