@@ -80,10 +80,11 @@ export class AddDecentralGroupMemComponent extends UIComponent {
 
   openPopRoles() {
     let option = new DialogModel();
-    let needValidate = this.groupData.memberIDs?.split(';')?.length > 0;
+
+    let needValidate = this.groupData.memberIDs != '';
     let lstUserIDs = [this.groupData.groupID];
     if (needValidate) {
-      lstUserIDs.push(this.groupData.memberIDs?.split(';'));
+      lstUserIDs.push(...(this.groupData.memberIDs?.split(';') ?? undefined));
     }
 
     let obj = {
@@ -110,22 +111,37 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   changeLstMembers(event) {
     this.popAddMemberState = !this.popAddMemberState;
     if (event == null) return;
-    this.groupData.members = [];
 
-    event?.dataSelected?.forEach((mem) => {
-      let tmpGroupMem: GroupMembers = {
-        memberID: mem.UserID,
-        memberName: mem.UserName,
-        memberType: 'U',
-        groupID: '',
-        roleType: '',
-        description: '',
-        positionName: mem.PositionName,
-        orgUnitName: mem.OrgUnitName,
-      };
-      this.groupData.members.push(tmpGroupMem);
-    });
-    this.groupData.memberIDs = event?.id;
+    if (event?.id != '') {
+      let tmpAddNewIDs = '';
+      if (this.groupData.memberIDs != '') {
+        tmpAddNewIDs += ';';
+      }
+      tmpAddNewIDs += event?.id;
+
+      this.groupData.memberIDs += tmpAddNewIDs;
+      this.adServices
+        .addUserGroupMemberAsync(this.groupData)
+        .subscribe((result) => {
+          if (!result) {
+            this.groupData.memberIDs.replace(tmpAddNewIDs, '');
+          } else {
+            event?.dataSelected?.forEach((mem) => {
+              let tmpGroupMem: GroupMembers = {
+                memberID: mem.UserID,
+                memberName: mem.UserName,
+                memberType: 'U',
+                groupID: '',
+                roleType: '',
+                description: '',
+                positionName: mem.PositionName,
+                orgUnitName: mem.OrgUnitName,
+              };
+              this.groupData.members.push(tmpGroupMem);
+            });
+          }
+        });
+    }
   }
 
   removeMember(item) {
@@ -154,26 +170,35 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   }
 
   onSave(closePopup: boolean) {
-    this.dialog.dataService
-      .save((opt: RequestOption) => this.beforeSave(opt), 0)
-      .subscribe((res: any) => {
-        if (res && !res.error) {
-          if (!this.isSaved) {
-            this.groupData.groupID =
-              this.dialog.dataService.dataSelected.groupID;
-            this.groupData.members?.forEach((mem) => {
-              mem.groupID = this.dialog.dataService.dataSelected.groupID;
-            });
+    console.log('dirty', this.form.formGroup.dirty);
+    if (this.form?.formGroup?.dirty) {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0)
+        .subscribe((res: any) => {
+          if (res && !res.error) {
+            if (!this.isSaved) {
+              this.groupData.groupID =
+                this.dialog.dataService.dataSelected.groupID;
+              this.groupData.members?.forEach((mem) => {
+                mem.groupID = this.dialog.dataService.dataSelected.groupID;
+              });
 
-            this.isSaved = true;
-          }
+              this.isSaved = true;
+            }
 
-          if (closePopup) {
-            this.dialog.close(this.groupData);
-          } else {
-            this.openPopRoles();
+            if (closePopup) {
+              this.dialog.close(this.groupData);
+            } else {
+              this.openPopRoles();
+            }
           }
-        }
-      });
+        });
+    } else {
+      if (closePopup) {
+        this.dialog.close(this.groupData);
+      } else {
+        this.openPopRoles();
+      }
+    }
   }
 }

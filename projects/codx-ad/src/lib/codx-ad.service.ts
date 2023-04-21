@@ -349,7 +349,8 @@ export class CodxAdService {
 
   //#region AD_User new process
   removeAD_UserRoles(
-    lstAD_UserRoles: tmpformChooseRole[],
+    lstModuleIDs: string[],
+    lstModuleSales: string[],
     lstUserIDs: string[]
   ) {
     return this.api.execSv(
@@ -357,7 +358,7 @@ export class CodxAdService {
       'ERM.Business.AD',
       'UsersBusiness',
       'RemoveAD_UserRolesAsync',
-      [lstAD_UserRoles, lstUserIDs]
+      [lstModuleIDs, lstModuleSales, lstUserIDs]
     );
   }
 
@@ -383,6 +384,16 @@ export class CodxAdService {
       'ERM.Business.AD',
       'UserGroupsBusiness',
       'AddAsync',
+      [userGroupModel]
+    );
+  }
+
+  addUserGroupMemberAsync(userGroupModel) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'AddGroupMembersAsync',
       [userGroupModel]
     );
   }

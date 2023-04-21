@@ -191,13 +191,21 @@ export class PopRolesComponent extends UIComponent {
 
   removeRoles() {
     if (this.lstNeedRemoveRoles.length > 0) {
+      let lstRemoveModuleIDs = [];
+      let lstRemoveMDS = [];
+      this.lstNeedRemoveRoles.forEach((role) => {
+        lstRemoveModuleIDs.push(role.module);
+        if (!lstRemoveMDS.includes(role.moduleSales)) {
+          lstRemoveMDS.push(role.moduleSales);
+        }
+      });
       this.adService
-        .removeAD_UserRoles(this.lstNeedRemoveRoles, this.lstUserIDs)
-        .subscribe((lstRemovedRoles: tmpformChooseRole[]) => {
-          this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
-            return !lstRemovedRoles.includes(role);
-          });
-          console.log('after Remove', this.lstNeedRemoveRoles);
+        .removeAD_UserRoles(lstRemoveModuleIDs, lstRemoveMDS, this.lstUserIDs)
+        .subscribe((lstRemovedRoles: string[]) => {
+          // this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
+          //   return !lstRemovedRoles.includes(role);
+          // });
+          this.lstNeedRemoveRoles = [];
         });
     }
   }
