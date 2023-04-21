@@ -728,9 +728,18 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
             if (this.folderService.options.favoriteID == '1') list = 'DMT0226;DMT0227';
+            else if (this.folderService.options.favoriteID == '3')  {
+              if(data?.approvalStatus == '8') list = 'DMT0226'
+              else list = 'DMT0233'
+            }
             else list = 'DMT0227';
           } else {
             if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
+            else if (this.fileService.options.favoriteID == '3') 
+            {
+              if(data?.approvalStatus == '8') list = 'DMT0230'
+              else list = 'DMT0233'
+            }
             else list = 'DMT0231';
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
@@ -1186,6 +1195,18 @@ export class CodxDMService {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
     switch ($event.functionID) {
+      //Rút lại quyền sau khi đã duyệt
+      case 'DMT0233':
+        {
+          this.setRequest(
+            type,
+            data.recID,
+            data.id,
+            '-1',
+            true
+          );
+          break;
+        }
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
         this.setRequest(

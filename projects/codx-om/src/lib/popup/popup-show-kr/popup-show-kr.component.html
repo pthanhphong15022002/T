@@ -1,4 +1,4 @@
-<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
+<codx-form [headerText]=" oldKR?.okrType=='R'?'Xem chi tiết kết quả':'Xem chi tiết kết quả phụ'" [dialog]="dialogRef" [bodyCss]="'bgEDEDED h-100 pt-5'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
@@ -259,9 +259,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex justify-content-center">
-                <codx-tasks-share class="tasks-share-content" [funcID]="'OMT014'" [dataValue]="dataKR.recID" [predicate]="'RefID==@0'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
-            
+              <div class="mw-1000px mx-auto">
+                <div class="overflow-auto mt-5" >
+                  <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="oldKR?.recID"
+                    [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
+                </div>
               </div>
             </ng-template>
           </e-tabitem>
@@ -300,7 +302,14 @@
                 <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Cập nhật </ng-template>
+            <ng-template #content> 
+              <div class="h-100">
+                <div class="mw-1000px mx-auto mt-5">
+                  <codx-history [objectID]="dataKR?.recID" [formModel]="formModel"
+                    [funcID]="formModel?.funcID"></codx-history>
+                </div>
+              </div>
+            </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
