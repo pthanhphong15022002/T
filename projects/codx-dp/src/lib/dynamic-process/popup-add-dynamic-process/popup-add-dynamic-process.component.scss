@@ -443,3 +443,69 @@ codx-attachment{
   align-self: center;
   padding: 5px 12px;
 }
+
+::ng-deep {
+  .process-approval{
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      .process-step{
+        position: relative;
+        display: inline-block;
+      }
+
+      .step-node{
+        border: 2px solid #1BC5BD;
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #fff;
+        font-family: sans-serif;
+        font-size: 20px; font-weight: bold;
+        position: relative;
+        color: #1BC5BD;
+        margin-right: 20px;
+        z-index: 999;
+      }
+      .step-node.active{
+        border-color: #FFA800;
+        color: #FFA800;
+      }
+
+      .process-step::after {
+        content: "";
+        background-color: #dbdbdb;
+        height: 3px;
+        width: 100%;
+        position: absolute;
+        margin-top: 20px;
+        top: 0;
+        left: 20px;
+        bottom: 0;
+      }
+
+      .process-step:last-child::after {
+        visibility: hidden;
+      }
+
+      .node-color{
+        border-radius: 4px;
+        font-size: 14px;
+        height: 14px;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 14px;
+      }
+}
+
+.approverStepClass {
+  width: 200px !important;
+}
+.approverStepClass .popover-body {
+  width: 200px !important;
+  background-color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
+}

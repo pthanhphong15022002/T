@@ -477,8 +477,8 @@ export class CmCustomerComponent
               this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.getContactByObjectID(this.dataSelected?.recID);
               this.customerDetail.getListContactByObjectID(this.dataSelected?.recID);
+              this.customerDetail.getListAddress(this.entityName, this.dataSelected?.recID);
               // this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }

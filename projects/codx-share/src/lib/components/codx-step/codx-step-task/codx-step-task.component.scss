@@ -241,4 +241,25 @@
      height: 90%;
    }
  }
- 
+ ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 2s ease forwards;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

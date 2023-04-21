@@ -380,6 +380,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Gửi mail khi phát hành
+  sendMailAfterRelease(planRecID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SendMailAfterReleasePlanAsync',
+      [planRecID]
+    );
+  }
   //Lấy model
   getOKRModel(funcID:string) {
     return this.api.execSv(

@@ -89,4 +89,5 @@ export interface ISalesInvoicesLine {
   refType: string;
   refID: string | null;
   refNo: string;
+  rowNo: number;
 }
