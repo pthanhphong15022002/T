@@ -224,7 +224,7 @@
     <button
       type="button"
       class="btn btn-outline-primary me-3"
-      (click)="handleClickSave(false)"
+      (click)="onClickSave(false)"
     >
       <codx-label
         fiedName="lblSaveAndClear"
@@ -234,7 +234,7 @@
     </button>
   </ng-container>
 
-  <button type="button" class="btn btn-primary" (click)="handleClickSave(true)">
+  <button type="button" class="btn btn-primary" (click)="onClickSave(true)">
     <codx-label
       fiedName="lblSave"
       [formModel]="dialogRef.formModel"
