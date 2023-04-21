@@ -153,7 +153,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          console.log('moi add hop dong xong', res.event[0]);
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
@@ -358,9 +357,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   }
 
   copyValue(actionHeaderText, data) {
-    console.log('copy data', data);
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.HandleEJobSalary(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',

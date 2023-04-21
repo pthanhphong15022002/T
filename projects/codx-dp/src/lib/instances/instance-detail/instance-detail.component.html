@@ -258,7 +258,7 @@
         class="pt-3 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
       >
         <div class="">
-          <div class="">
+          <div class=" border">
             <div>
               <ng-container
                 *ngIf="viewModelDetail == 'G'"
@@ -380,6 +380,7 @@
     [rowHeight]="60"
     [readOnly]="true"
     [templateTaskbar]="ganttItems"
+    [timelineSettings]="timelineSettings"
     [toolbar]="[]"
   ></codx-gantt-chart>
   <ng-template #ganttItems let-data>
@@ -399,7 +400,7 @@
     </div>
   </ng-template>
   <!-- mô tả -->
-  <div class="d-flex flex-wrap pb-3">
+  <div class="d-flex flex-wrap pb-3 ms-5">
     <div
       *ngFor="let item of listTypeTask"
       class="d-flex align-items-center me-6"

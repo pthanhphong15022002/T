@@ -62,7 +62,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row" *ngIf="data?.siSalary > 0">
           <span class="icon-monetization_on icon-15 me-1"></span>
           <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText">
             <span class="align-self-center fw-bold"
@@ -72,7 +72,7 @@
         </div>
         <div class="d-flex flex-column">
           <div class="d-flex flex-row">
-            <span class="icon-calendar_today icon-15 me-1"></span>
+            <span class="icon-calendar_today fw-bold me-1"></span>
             <div class="align-self-center fw-bold">
               <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''"
                 [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
@@ -100,8 +100,10 @@
               {{ data?.decisionNo }}
             </span>
             <span> - </span>
-            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''">
-              {{ data?.signedDate | fmDT }}</span>
+            <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['SignedDate'] : ''"
+              [innerHTML]="data?.signedDate  | formatvalue : view.formModel : 'signedDate'| async">
+              <!-- {{ data?.signedDate | fmDT }} -->
+            </span>
           </div>
         </div>
         <div class="d-flex flex-row">
@@ -120,10 +122,10 @@
         </div>
       </div>
 
-      <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName" hideFolder="1"
+      <!-- <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName" hideFolder="1"
         hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
         [formModel]="view.formModel" displayThumb="full" showMessage="0">
-      </codx-attachment>
+      </codx-attachment> -->
     </div>
     <!-- end decision -->
 
@@ -151,79 +153,81 @@
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3" [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'"
-    [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
-    [typeMF]="'hover'">
-    <!-- info view -->
-    <ng-template #titleTmp let-data>
-      <div class="w-100">
-        <!-- emp info -->
+    [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
+    [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
 
-        <div class="justify-content-between text-dark fw-bold">
-          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
-            [showText]="true" [showIcon]="false" [showBgColor]="false">
-          </codx-vll>
-          <span class="fs-5 me-1">{{ data?.emp?.employeeName }}</span>
-          <span>
-            <i class="icon-qr_code_scanner icon-14 me-1"></i>
-            <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-          </span>
-        </div>
-        <div class="justify-content-between text-gray-700">
-          <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
-        </div>
-        <!-- end emp info -->
-        <!-- salaries -->
-        <div class="justify-content-between fs-5 fw-bold">
-          <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" *ngIf="data?.siSalary >0 ;else noSiSalary"
-            class="d-flex flex-row align-self-center fw-bold gap-1">
-            <span class="icon-attach_money align-self-center icon-15"></span>
-            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
-              [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-            </span>
-            <span> - </span>
-            <span class="icon-monetization_on icon-15 align-self-center fw-bold"></span>
-            <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText"
-              [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
-            </span>
-          </div>
-          <ng-template #noSiSalary>
-            <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'"
-              class="d-flex flex-row align-self-center fw-bold gap-1">
-              <span class="icon-attach_money align-self-center icon-15"></span>
-              <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
-                [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
-              </span>
-            </div>
-          </ng-template>
-        </div>
-        <!-- end salaries -->
-        <!-- effected day -->
-        <div class="d-flex flex-row align-self-center fs-5 fw-bold"
-          [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
-          <span class="icon-calendar_today fw-bold me-1"></span>
-          <span [ngbTooltip]="grvSetup?.EffectedDate?.headerText">{{ data.effectedDate | fmDT }}</span>
-        </div>
-        <!-- end day -->
-        <!-- status & owner -->
-        <div class="d-flex justify-content-between text-dark">
-          <span class="mt-2">
-            <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true"
-              [showBgColor]="true">
-            </codx-vll>
-          </span>
-          <!-- <span class="d-flex flex-row justify-content-end">
-            <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
-              [numberImages]="3" [mode]="false">
-            </codx-imgs>
-          </span> -->
-        </div>
-        <!-- end status & owner -->
-      </div>
-    </ng-template>
-    <!-- end -->
   </codx-temp-full>
 </ng-template>
+<!-- info view -->
+<ng-template #titleTmp let-data>
+  <div class="w-100">
+    <!-- emp info -->
+
+    <div class="justify-content-between text-dark fw-bold">
+      <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
+        [showText]="true" [showIcon]="false" [showBgColor]="false">
+      </codx-vll>
+      <span class="fs-5 me-1">{{ data?.emp?.employeeName }}</span>
+      <span>
+        <i class="icon-qr_code_scanner icon-14 me-1"></i>
+        <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+      </span>
+    </div>
+    <div class="justify-content-between text-gray-700">
+      <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
+    </div>
+    <!-- end emp info -->
+    <!-- salaries -->
+    <div class="justify-content-between fs-5 fw-bold">
+      <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'" *ngIf="data?.siSalary >0 ;else noSiSalary"
+        class="d-flex flex-row align-self-center fw-bold gap-1">
+        <span class="icon-attach_money align-self-center icon-15"></span>
+        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
+          [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+        </span>
+        <span> - </span>
+        <span class="icon-monetization_on icon-15 align-self-center fw-bold"></span>
+        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText"
+          [innerHTML]=" data?.siSalary | formatvalue : view.formModel : 'siSalary' | async">
+        </span>
+      </div>
+      <ng-template #noSiSalary>
+        <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'"
+          class="d-flex flex-row align-self-center fw-bold gap-1">
+          <span class="icon-attach_money align-self-center icon-15"></span>
+          <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.BSalary?.headerText"
+            [innerHTML]=" data?.bSalary | formatvalue : view.formModel : 'bSalary' | async">
+          </span>
+        </div>
+      </ng-template>
+    </div>
+    <!-- end salaries -->
+    <!-- effected day -->
+    <div class="d-flex flex-row align-self-center fs-5 fw-bold"
+      [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
+      <span class="icon-calendar_today fw-bold me-1"></span>
+      <span [title]="eBasicSalariesHeaderText ? eBasicSalariesHeaderText['EffectedDate'] : ''"
+        [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
+        [innerHTML]="data?.effectedDate  | formatvalue : view.formModel : 'effectedDate'| async">
+      </span>
+    </div>
+    <!-- end day -->
+    <!-- status & owner -->
+    <div class="d-flex justify-content-between text-dark">
+      <span class="mt-2">
+        <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true" [showBgColor]="true">
+        </codx-vll>
+      </span>
+      <!-- <span class="d-flex flex-row justify-content-end">
+        <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
+          [numberImages]="3" [mode]="false">
+        </codx-imgs>
+      </span> -->
+    </div>
+    <!-- end status & owner -->
+  </div>
+</ng-template>
+<!-- end -->
 
 <ng-template #templateItemDetailRight let-data>
   <lib-view-basic-salary-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"

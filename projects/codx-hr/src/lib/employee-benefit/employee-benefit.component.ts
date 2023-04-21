@@ -176,7 +176,6 @@ export class EmployeeBenefitComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      // console.log('res sau khi update status', res);
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe((res) => {});
       }
@@ -225,9 +224,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   copyValue(actionHeaderText, data) {
-    console.log('copy data', data);
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.HandleEBenefit(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',

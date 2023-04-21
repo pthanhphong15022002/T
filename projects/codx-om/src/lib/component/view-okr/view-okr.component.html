@@ -42,10 +42,10 @@
 
       <div class="d-flex align-items-center justify-content-end col-6 ps-5">
         <div class=" position-relative"  ngbTooltip="Người chịu trách nhiệm">
-          <span *ngIf="item?.hasAssign!=null"
+          <!-- <span *ngIf="item?.hasAssign!=null"
             class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
             <span class="icon-i-building text-primary"></span>
-          </span>
+          </span> -->
           <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
 
         </div>
@@ -105,12 +105,12 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-end col-6 ps-5">
-      <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="item?.rangeDateText"></span>
+      <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="'Kế hoạch chỉ tiêu: '+item?.rangeDateText"></span>
       <div class=" position-relative"  ngbTooltip="Người chịu trách nhiệm">
-        <span *ngIf="item?.hasAssign!=null"
+        <!-- <span *ngIf="item?.hasAssign!=null"
           class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
           <span class="icon-i-building text-primary"></span>
-        </span>
+        </span> -->
         <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
 
       </div>
