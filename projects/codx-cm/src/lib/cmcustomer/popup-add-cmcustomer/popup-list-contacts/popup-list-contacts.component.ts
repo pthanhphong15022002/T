@@ -7,6 +7,7 @@ import {
   DialogRef,
   FormModel,
   CacheService,
+  NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-quickadd-contact/popup-quickadd-contact.component';
 
@@ -26,19 +27,29 @@ export class PopupListContactsComponent implements OnInit {
   lstSearch = [];
   type: any;
   contactType = '';
+  recIDCm = '';
+  objectType = '';
+  objectName = '';
+  gridViewSetup: any;
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
     private changeDet: ChangeDetectorRef,
     private cmSv: CodxCmService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.type = dt?.data[0];
+    this.type = dt?.data?.type;
     if (this.type == 'formAdd') {
       this.contactType = '1';
     }
+    this.recIDCm = dt?.data?.recIDCm;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.objectType = dt?.data?.objectType;
+    this.objectName = dt?.data?.objectName;
+
   }
 
   ngOnInit(): void {
@@ -58,8 +69,26 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   onSave() {
-    if (this.contact != null) this.dialog.close(this.contact);
-    else return;
+    if(this.type == 'formDetail'){
+      if(this.contact.contactType == null || this.contact.contactType.trim() == ''){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['ContactType'].headerText + '"'
+        );
+        return;
+      }
+      this.cmSv.updateContactByPopupListCt(this.contact.recID, this.recIDCm, this.contact.contactType, this.objectType, this.objectName).subscribe(res => {
+        if(res){
+          this.dialog.close(res);
+        }
+      })
+    }else{
+      if (this.contact != null) this.dialog.close(this.contact);
+      else return;
+    }
+
+
   }
 
   valueChange(e) {
@@ -90,6 +119,8 @@ export class PopupListContactsComponent implements OnInit {
           dataContact: null,
           type: this.type,
           gridViewSetup: res,
+          contactType: this.contactType
+
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
