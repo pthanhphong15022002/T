@@ -363,7 +363,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           });
       }
     }
-    console.log(this.dialog.dataService.dataSelected);
   }
 
   valuechangePayee(e: any) {

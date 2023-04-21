@@ -1308,7 +1308,6 @@ export class StagesDetailComponent implements OnInit {
               res.disabled = true;
             }
             break;
-          case 'DP13'://sửa
           case 'SYS03'://sửa
             if (!this.leadtimeControl || (!this.isRoleAll && !isGroup && !isTask && !this.isUpdate)){
               res.disabled = true;
@@ -1326,6 +1325,11 @@ export class StagesDetailComponent implements OnInit {
             break;
           case 'DP20':// tiến độ
             if ((!this.isRoleAll && !isGroup && !isTask) || !this.isUpdate){
+              res.isblur = true;
+            }
+            break;
+          case 'DP13'://giao việc
+            if(!task?.createTask){
               res.isblur = true;
             }
             break;
