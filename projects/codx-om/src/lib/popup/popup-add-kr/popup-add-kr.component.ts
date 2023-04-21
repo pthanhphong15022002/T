@@ -76,6 +76,7 @@ export class PopupAddKRComponent extends UIComponent {
   modelCbb:any;
   dialogCheckIn: DialogRef;
   okrPlan: any;
+  onSaving=false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -232,6 +233,7 @@ export class PopupAddKRComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   onSaveForm() {    
+    this.onSaving=true;
     this.fGroupAddKR = this.form?.formGroup;
 
     this.kr.buid = this.kr.buid ?? this.curUser?.buid;
@@ -274,6 +276,10 @@ export class PopupAddKRComponent extends UIComponent {
         res.delete = true;
         this.afterSave(res);
       }
+      else{
+        this.onSaving=false;
+        return ;
+      }
     });
   }
 
@@ -283,6 +289,10 @@ export class PopupAddKRComponent extends UIComponent {
         res.write = true;
         res.delete = true;
         this.afterSave(res);
+      }
+      else{
+        this.onSaving=false;
+        return ;
       }
     });
   }
