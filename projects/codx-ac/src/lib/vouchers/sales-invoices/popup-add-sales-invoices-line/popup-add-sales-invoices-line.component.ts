@@ -53,7 +53,10 @@ export class PopupAddSalesInvoicesLineComponent
   //#region Init
   onInit(): void {
     this.dialogRef.beforeClose.subscribe(
-      (res) => (res.event = this.salesInvoicesLines)
+      (res) =>
+        (res.event = !this.isEdit
+          ? this.salesInvoicesLines
+          : this.salesInvoicesLine)
     );
 
     const title$ = this.cache.valueList('AC070').pipe(
