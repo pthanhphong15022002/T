@@ -43,6 +43,8 @@ export class PopupEBasicSalariesComponent
   actionArray = ['add', 'edit', 'copy'];
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
+  genderGrvSetup: any;
+
   //end
   constructor(
     injector: Injector,
@@ -98,6 +100,11 @@ export class PopupEBasicSalariesComponent
       }
     });
     //get emp from beginning
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
     if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId);
     this.showEmpInfo = this.allowToViewEmp();
   }

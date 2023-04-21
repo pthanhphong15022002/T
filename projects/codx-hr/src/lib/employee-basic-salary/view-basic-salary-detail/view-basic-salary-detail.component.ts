@@ -96,7 +96,6 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
     if(this.itemDetail){
       this.hrService.getOldBasicSalary(this.itemDetail).subscribe(res =>{
           this.olderItem = res;
-          console.log(this.olderItem)
       });
     }
     this.df.detectChanges();

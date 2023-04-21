@@ -87,6 +87,7 @@
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
           (mouseleave)="pCr.close()"
+          container="body"
           placement="left right"
         >
           <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
@@ -123,7 +124,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
         (mouseleave)="pEd.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
         <span
@@ -178,6 +180,8 @@
         [listSteps]="listInstanceStep"
         (outStepInstance)="outStepInstance($event)"
         (saveDatasInstance)="saveDatasInstance($event)"
+        [lstStepProcess]="listSteps"
+
       >
       </codx-instance-detail>
     </ng-template>
@@ -295,7 +299,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEdDT.open()"
         (mouseleave)="pEdDT.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
@@ -317,17 +322,17 @@
     <div class="d-flex justify-content-center">
       <ng-container *ngFor="let item of listSteps">
         <div *ngIf="item.stepID === data.stepID">
-          <div *ngIf="item.owner">
+          <div *ngIf="checkOwnerRoleProcess(item.roles)">
             <codx-imgs
               [isToolTip]="true"
               [width]="25"
-              [objectId]="item?.owner"
+              [objectId]="checkOwnerRoleProcess(item.roles)"
               ojectType="AD_Users"
               [numberImages]="1"
             >
             </codx-imgs>
           </div>
-          <div *ngIf="!item.owner">
+          <div *ngIf="checkOwnerRoleProcess(item.roles) == null">
             <codx-imgs
               [isToolTip]="true"
               [width]="25"
@@ -362,6 +367,7 @@
     [reasonStepsObject]="reasonStepsObject"
     (outStepInstance)="outStepInstance($event)"
     (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
   >
   </codx-instance-detail>
 </ng-template>
@@ -372,6 +378,7 @@
       [fiedName]="'CreatedOn'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['CreatedOn'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
@@ -382,6 +389,7 @@
       [fiedName]="'EndDate'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['EndDate'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
