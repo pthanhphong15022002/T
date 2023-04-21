@@ -78,6 +78,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
   @Input() listUserIdRole: string[] = [];
+  @Input() lstStepProcess: any;
   @Input() frmModelInstancesTask: FormModel;
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep= new EventEmitter<any>();
@@ -145,7 +146,7 @@ export class StagesDetailComponent implements OnInit {
   leadtimeControl = false; //sửa thời hạn công việc mặc định
   progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
   progressStepControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
-
+  ownerStepProcess: any;
   constructor(
     private callfc: CallFuncService,
     private notiService: NotificationsService,
@@ -198,6 +199,7 @@ export class StagesDetailComponent implements OnInit {
     };
     this.getgridViewSetup(this.frmModelInstancesGroup);
     this.frmModelInstancesSteps = await this.getFormModel('DPT0402');
+
   }
 
   getgridViewSetup(data) {
@@ -229,6 +231,13 @@ export class StagesDetailComponent implements OnInit {
     //Add '${implements OnChanges}' to the class.
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
+        if(this.lstStepProcess != null && this.lstStepProcess.length > 0){
+          this.lstStepProcess.forEach(element => {
+            if(element.stepID == this.dataStep.stepID){
+              this.ownerStepProcess = element.roles != null && element.roles.length > 0 ? this.checkOwnerRoleProcess(element.roles) : null;
+            }
+          });
+        }
         if (changes['dataStep'].currentValue?.startDate != null) {
           var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
@@ -1379,7 +1388,7 @@ export class StagesDetailComponent implements OnInit {
         }
       });
     }
-   
+
   }
 
   async changeDataMF(e, type, data = null) {
@@ -1613,7 +1622,15 @@ export class StagesDetailComponent implements OnInit {
     if (!value) return '';
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
+  checkOwnerRoleProcess(roles){
+    if(roles != null && roles.length > 0){
+      var checkOwner = roles.find(x => x.roleType == 'S');
 
+      return checkOwner != null ? checkOwner.objectID : null;
+    }else{
+      return null;
+    }
+  }
   //detail field
   // inputElmIDCustomField(e){
   //   this.currentElmID = e ;
