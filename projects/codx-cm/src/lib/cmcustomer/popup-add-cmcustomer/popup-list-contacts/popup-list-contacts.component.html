@@ -17,15 +17,15 @@
           default="Chọn liên hệ"
         ></codx-label>
       </div>
-      <div class="ms-3">
-        <codx-input
-          [disabled]="type == 'formAdd' ? true : false"
-          [field]="'contactType'"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
-          [crrValue]="contactType"
-        ></codx-input>
-      </div>
+    </div>
+    <div class="d-flex justify-content-between w-100">
+      <codx-input
+        [disabled]="type == 'formAdd' ? true : false"
+        [field]="'contactType'"
+        [formModel]="form.formModel"
+        (valueChange)="valueChange($event)"
+        [crrValue]="contactType"
+      ></codx-input>
     </div>
     <div class="d-flex justify-content-end">
       <i

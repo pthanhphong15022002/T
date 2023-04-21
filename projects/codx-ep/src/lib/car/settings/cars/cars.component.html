@@ -38,7 +38,7 @@
   </div>
 </ng-template>
 <ng-template #popupDevice let-dialog>
-  <div class="modal-header">
+  <div class="modal-header mx-5 my-5">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
@@ -56,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body  mx-5 my-5">
     <div class="py-2" *ngFor="let item of carsEquipments">
       <div class="d-flex flex-stack">
         <div class="d-flex">
@@ -96,7 +96,7 @@
 
 <ng-template #linkCol let-data>
   <div class="d-flex align-items-center">
-    <codx-img [objectId]="data?.driverRecID" [objectName]="data?.driverName" imageType="circle" [width]="25"
+    <codx-img [objectId]="data?.linkRecID" [objectName]="data?.linkName" imageType="circle" [width]="25"
       [objectType]="'EP_Resources'"></codx-img>
     <div class="ms-2">
       <span class="fw-bold" [innerHTML]="data?.linkID | formatvalue : formModel : 'LinkID' | async"></span>   

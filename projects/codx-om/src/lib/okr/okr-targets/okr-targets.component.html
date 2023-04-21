@@ -108,10 +108,10 @@
 
           <div class="d-flex align-items-center justify-content-end col-6 ps-5">
             <div class=" position-relative"  ngbTooltip="Người chịu trách nhiệm">
-              <span *ngIf="item?.hasAssign!=null"
+              <!-- <span *ngIf="item?.hasAssign!=null"
                 class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
                 <span class="icon-i-building text-primary"></span>
-              </span>
+              </span> -->
               <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
   
             </div>
@@ -124,7 +124,7 @@
                 <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
                   [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
-                  item?.okrTasks ? item?.okrTasks?.length : '' }}</span>
+                  item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
               </div>
               <codx-comment-temp [objectID]="item?.recID" [viewType]="3"  ngbTooltip="Bình luận"></codx-comment-temp>
               <span class="ms-2 me-2">
@@ -174,12 +174,12 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-end col-6 ps-5">
-          <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="item?.rangeDateText"></span>
+          <span class="col-3 text-truncate text-center" [innerHTML]="item?.rangeDateText" [ngbTooltip]="'Kế hoạch chỉ tiêu: '+item?.rangeDateText"></span>
           <div class=" position-relative"  ngbTooltip="Người chịu trách nhiệm">
-            <span *ngIf="item?.hasAssign!=null"
+            <!-- <span *ngIf="item?.hasAssign!=null"
               class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
               <span class="icon-i-building text-primary"></span>
-            </span>
+            </span> -->
             <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
 
           </div>
@@ -203,7 +203,7 @@
               <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
               <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
                 [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
-                item?.okrTasks ? item?.okrTasks?.length : '' }}</span>
+                item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
             </div>
             <codx-comment-temp [objectID]="item?.recID" [viewType]="3"  ngbTooltip="Bình luận"></codx-comment-temp>
             <span class="ms-2 me-2" *ngIf="item?.okrType==krType ">
@@ -233,24 +233,4 @@
         [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
     </div>
   </div>
-</ng-template>
-
-<ng-template #showCommnent let-dialog>
-  <div class="w-100 h-100 d-flex flex-column ">
-    <div class="px-5 py-5 d-flex justify-content-between">
-      <codx-label class="fs-3 fw-bold" default="Bình luận" name="lblComments"></codx-label>
-      <span class="icon-close cusor-pointer" (click)="dialog.close()"></span>
-    </div>
-    <div class="overflow-auto d-flex justify-content-center">
-      <div class="w-75">
-        <codx-tree-comment [objectID]="selectOKR?.recID" [objectType]="'OM_OKRs'" [actionType]="'C'" [addNew]="true"
-          [funcID]="funcID">
-        </codx-tree-comment>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #progressNumber let-data>
-
 </ng-template>

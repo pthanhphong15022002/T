@@ -92,6 +92,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
       data: this.groupData.groupRoles,
       lstMemIDs: lstUserIDs,
       needValidate: needValidate,
+      autoCreated: true,
     };
     let dialogRoles = this.callfc.openForm(
       PopRolesComponent,

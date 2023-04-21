@@ -38,9 +38,12 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.type = dt?.data?.type;
     this.recIDCm = dt?.data?.recIDCm;
     this.objectType = dt?.data?.objectType;
+
     this.gridViewSetup = dt?.data?.gridViewSetup;
     if(this.type == 'formAdd'){
       this.contactType = '1';
+    }else{
+      this.contactType = dt?.data?.contactType
     }
     if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
@@ -103,7 +106,6 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
           this.data = res;
-          this.data.contactType = this.contactType;
           this.dialog.close(this.data);
         } else {
           this.dialog.close();

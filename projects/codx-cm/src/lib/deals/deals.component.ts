@@ -33,6 +33,29 @@ export class DealsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @ViewChild('templateDetail', { static: true })
+  templateDetail: TemplateRef<any>;
+  @ViewChild('itemTemplate', { static: true })
+  itemTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList', { static: true })
+  itemViewList: TemplateRef<any>;
+  @ViewChild('itemCustomerName', { static: true })
+  itemCustomerName: TemplateRef<any>;
+  @ViewChild('itemContact', { static: true })
+  itemContact: TemplateRef<any>;
+  @ViewChild('itemAddress', { static: true }) itemAddress: TemplateRef<any>;
+  @ViewChild('itemPriority', { static: true }) itemPriority: TemplateRef<any>;
+  @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
+  @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
+  @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
+  @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
+  @ViewChild('dealsComponent') dealsComponent: DealsComponent;
+  @ViewChild('itemContactName', { static: true })
+  itemContactName: TemplateRef<any>;
+  @ViewChild('itemMoreFunc', { static: true })
+  itemMoreFunc: TemplateRef<any>;
+  @ViewChild('itemFields', { static: true })
+  itemFields: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
@@ -63,29 +86,7 @@ export class DealsComponent
   customerName: string = '';
 
   @Input() showButtonAdd = false;
-  @ViewChild('templateDetail', { static: true })
-  templateDetail: TemplateRef<any>;
-  @ViewChild('itemTemplate', { static: true })
-  itemTemplate: TemplateRef<any>;
-  @ViewChild('itemViewList', { static: true })
-  itemViewList: TemplateRef<any>;
-  @ViewChild('itemCustomerName', { static: true })
-  itemCustomerName: TemplateRef<any>;
-  @ViewChild('itemContact', { static: true })
-  itemContact: TemplateRef<any>;
-  @ViewChild('itemAddress', { static: true }) itemAddress: TemplateRef<any>;
-  @ViewChild('itemPriority', { static: true }) itemPriority: TemplateRef<any>;
-  @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
-  @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
-  @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-  @ViewChild('dealsComponent') dealsComponent: DealsComponent;
-  @ViewChild('itemContactName', { static: true })
-  itemContactName: TemplateRef<any>;
-  @ViewChild('itemMoreFunc', { static: true })
-  itemMoreFunc: TemplateRef<any>;
-  @ViewChild('itemFields', { static: true })
-  itemFields: TemplateRef<any>;
+  
   columnGrids = [];
   // showButtonAdd = false;
   button?: ButtonModel;
@@ -400,6 +401,7 @@ export class DealsComponent
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
+      debugger
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';

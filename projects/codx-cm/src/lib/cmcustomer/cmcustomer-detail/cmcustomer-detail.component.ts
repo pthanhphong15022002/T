@@ -19,6 +19,7 @@ import {
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
+import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -260,6 +261,45 @@ export class CmcustomerDetailComponent implements OnInit {
       });
   }
 
+  //Open list contacts
+  clickPopupContacts() {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          type: 'formDetail',
+          recIDCm: this.dataSelected?.recID,
+          objectName: this.dataSelected.customerName,
+          objectType: '1',
+          gridViewSetup: res,
+        }
+        var dialog = this.callFc.openForm(
+          PopupListContactsComponent,
+          '',
+          500,
+          550,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            if(e.event == true){
+              this.getListContactByObjectID(this.dataSelected?.recID);
+            }
+          }
+        });
+      });
+  }
+
   delete(data) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
@@ -286,6 +326,8 @@ export class CmcustomerDetailComponent implements OnInit {
       }
     });
   }
+
+
   //#endregion
   getNameCrm(data) {
     if (this.funcID == 'CM0101') {

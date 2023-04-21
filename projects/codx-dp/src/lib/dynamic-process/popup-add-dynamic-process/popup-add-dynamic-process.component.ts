@@ -3224,9 +3224,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data[field] = event;
     }
   }
-  getRole(task) {
+  getRole(task, type) {
     let role = task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return task?.taskType == "M" ? role?.objectID : role?.objectName;
+    return type == "ID" ? role?.objectID : role?.objectName;
   }
   //#End stage -- nvthuan
 
