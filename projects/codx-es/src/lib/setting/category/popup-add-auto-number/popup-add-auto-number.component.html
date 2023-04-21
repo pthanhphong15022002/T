@@ -20,8 +20,8 @@
               field="autoAssignRule"
               type="valuelist"
               [refValue]="'AD007'"
-              [crrValue]="autoAssignRule"
-              (valueChange)="valueChange($event)"
+              [crrValue]="autoDefaultData.autoAssignRule || '2'"
+              (valueChange)="valueDefaultChange($event)"
               (controlBlur)="blur($event)"
             >
             </codx-input>
@@ -100,7 +100,7 @@
           <div class="col-3">
             <div class="form-group">
               <div class="w-100 d-flex">
-                <div class="float-stat">
+                <div class="float-start w-50">
 
                   <codx-label fiedName="DateFormat" [formModel]="formModel">
                   </codx-label>
@@ -113,7 +113,7 @@
                   >
                   </codx-input>
                 </div>
-                <div class="float-end ms-3">
+                <div class="float-end ps-3 w-50">
                   <codx-label fiedName="Separator" [formModel]="formModel">
                   </codx-label>
                   <codx-input
@@ -215,7 +215,7 @@
 
     </div>
 
-    <div class="w-100 border mt-3">
+    <div class="w-100 border mt-3" [ngClass]="basicOnly ? 'bg-light':''">
       <div class="row p-3" id="AdvanceConfig" (click)="collapse('advance')" [attr.aria-expanded]="!advanceCollapsed"
       [attr.aria-controls]="'AdvanceConfig'">
         <div class="col-6">
@@ -259,8 +259,9 @@
                   [min]="0"
                   field="maxLength"
                   type="number"
-                  (valueChange)="valueChange($event)"
+                  (valueChange)="valueSettingChange($event)"
                   [showSpinButton]="false"
+                  [crrValue]="autoNoSetting.maxLength || 0"
                   (controlBlur)="blur($event)"
                 >
                 </codx-input>
@@ -276,7 +277,8 @@
                   [min]="0"
                   field="lastNumber"
                   type="number"
-                  (valueChange)="valueChange($event)"
+                  (valueChange)="valueSettingChange($event)"
+                  [crrValue]="autoNoSetting.lastNumber || 0"
                   [showSpinButton]="false"
                   (controlBlur)="blur($event)"
                 >
@@ -290,9 +292,7 @@
               </codx-label>
               <codx-input
                 type="text"
-
                 field="preview"
-                (valueChange)="valueChange($event, 'fixedString')"
                 (controlBlur)="blur($event)"
                 [disabled]="true"
               >
@@ -368,7 +368,7 @@
                   [editSettings]="editSettings"
                   [allowFiltering]="false"
                   [allowSorting]="false"
-
+                  [dataSource]="autoNoSegments"
 
                   service="EI"
                   [height]="400"
