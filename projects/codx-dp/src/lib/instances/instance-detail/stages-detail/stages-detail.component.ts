@@ -1097,32 +1097,37 @@ export class StagesDetailComponent implements OnInit {
     return role;
   }
 
-  getObjectIdRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'P')?.objectID ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    } else {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'O')?.objectID||
-        task?.roles[0]?.objectID;
-      return objectId;
-    }
+  getRole(task, type) {
+    let role = task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
+    return type == "ID" ? role?.objectID : role?.objectName;
   }
-  getObjectNameRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'P')?.objectName ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    } else {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'O')?.objectName ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    }
-  }
+
+  // getObjectIdRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectID ||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   } else {
+  //     let objectId =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectID||
+  //       task?.roles[0]?.objectID;
+  //     return objectId;
+  //   }
+  // }
+  // getObjectNameRole(task, group) {
+  //   if (task?.taskType != 'M' && group) {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'P')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   } else {
+  //     let objectName =
+  //       task?.roles.find((role) => role?.roleType == 'O')?.objectName ||
+  //       task?.roles[0]?.objectName;
+  //     return objectName;
+  //   }
+  // }
 
   copyValue(dataCopy, data) {
     if (typeof data === 'object') {
