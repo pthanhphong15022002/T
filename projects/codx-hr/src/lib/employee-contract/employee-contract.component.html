@@ -18,15 +18,15 @@
 </codx-views>
 <!-- <<<< -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-2 border-bottom w-100">
-    <div class="w-100 px-3">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
+    <div class="w-100 px-2">
       <div class="d-flex align-items-start">
         <!-- highlight row -->
         <!-- <span class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
           [class]="data.isCurrent ? 'bg-primary' : 'bg-transparent'">
         </span> -->
         <!-- end highlight -->
-        <div class="d-flex flex-column justify-content-center me-3">
+        <div class="d-flex flex-column flex-center me-4">
           <codx-img
             [width]="35"
             [objectId]="data?.emp?.employeeID"
@@ -36,7 +36,7 @@
           >
           </codx-img>
           <codx-vll
-            class="badge badge-sm"
+            class="badge badge-sm badge-light me-0"
             [name]="genderGrvSetup?.referedValue"
             [value]="data?.emp?.gender"
             [showText]="true"
@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <div class="w-250px min-w-250px px-3">
+    <div class="w-250px min-w-250px px-2">
       <div class="d-flex flex-column">
         <div
           [class]="data.isCurrent ? 'text-dark' : 'text-dark'"
@@ -120,7 +120,7 @@
       </div>
     </div>
 
-    <div class="w-200px min-w-200px px-3">
+    <div class="w-200px min-w-200px px-2">
       <div class="d-flex flex-column">
         <div class="text-gray-700 d-flex flex-row mb-1">
           <span class="icon-event_notes icon-16 me-1"></span>
@@ -179,7 +179,7 @@
       </codx-attachment>
     </div>
 
-    <div class="w-150px min-w-150px px-3">
+    <div class="w-150px min-w-150px px-2">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"

@@ -66,7 +66,7 @@
             <ng-template #content>
               <div class="h-100" *ngIf="!planNull ; else elseOKR">
                 <div class="h-100" *ngIf="dataOKR != null">
-                  <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
+                  <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel" [currentUser]="curUser"
                     [okrFM]="okrFM" [okrVll]="okrVll" [okrGrv]="okrGrv" [isCollapsed]="isCollapsed"
                     [groupModel]="groupModel" [curOrgUnitID]="curOrgID" [funcID]="funcID"
                     [isHiddenChart]="isHiddenChart" [listUM] = "listUM"
@@ -158,7 +158,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="h-100">
+              <div class="h-100  d-block mt-5">
                 <div class="mw-1000px mx-auto">
                   <codx-history [objectID]="dataOKRPlans?.recID" [formModel]="formModelPlan"
                     [funcID]="funcID"></codx-history>
