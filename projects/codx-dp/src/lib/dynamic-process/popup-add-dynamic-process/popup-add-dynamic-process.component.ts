@@ -2757,7 +2757,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   // drop
   async drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {
-    if (event.previousContainer === event.container) {
+    if (event.previousContainer === event.container) { // kéo ở trong
       if (event.previousIndex == event.currentIndex) return;
       if (data && isGroup) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
@@ -2770,7 +2770,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
         this.setIndex(event.container.data, 'indexNo');
       }
-    } else {
+    } else { // kéo ra ngoài
       let groupTaskIdOld = '';
       let dataDrop = event.previousContainer.data[event.previousIndex];
       if (data['recID']) {
@@ -2787,10 +2787,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
 
-      if (event.previousContainer.data.length > 0) {
-        groupTaskIdOld =
-          event.previousContainer.data[event.previousIndex]['taskGroupID'];
+      if (event.previousContainer.data.length > 0) {//
+        groupTaskIdOld = event.previousContainer.data[event.previousIndex]['taskGroupID'];
         dataDrop['taskGroupID'] = data?.recID;
+      }
+      if(data?.recID){
+        dataDrop['parentID'] = '';
       }
 
       transferArrayItem(
@@ -3222,31 +3224,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data[field] = event;
     }
   }
-  getObjectIdRole(task) {
-    if (task?.taskType != 'M') {
-      let objectId =
-        task?.roles.find((role) => role.roleType == 'P')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    } else {
-      let objectId =
-        task?.roles.find((role) => role.roleType == 'O')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    }
-  }
-  getObjectNameRole(task) {
-    if (task?.taskType != 'M') {
-      let objectName =
-        task?.roles.find((role) => role.roleType == 'P')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    } else {
-      let objectName =
-        task?.roles.find((role) => role.roleType == 'O')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    }
+  getRole(task, type) {
+    let role = task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
+    return type == "ID" ? role?.objectID : role?.objectName;
   }
   //#End stage -- nvthuan
 

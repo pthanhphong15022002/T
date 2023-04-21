@@ -1,4 +1,4 @@
-<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bg-gray-100 h-100 me-0 p-5 pe-3 pb-0'" [body]="alignKR">
+<codx-form [headerText]="'Xem chi tiết mục tiêu'" [dialog]="dialogRef" [bodyCss]="'bg-gray-100 h-100 me-0 p-5 pe-3 pb-0'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
@@ -220,7 +220,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-regular icon-i-chat me-2"></i>
@@ -232,7 +232,7 @@
                 Chia sẻ
               </div>
             </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
           <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
@@ -269,7 +269,14 @@
                 <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Cập nhật </ng-template>
+            <ng-template #content>
+              <div class="h-100">
+                <div class="mw-1000px mx-auto mt-5">
+                  <codx-history [objectID]="dataOKR?.recID" [formModel]="formModel"
+                    [funcID]="formModel?.funcID"></codx-history>
+                </div>
+              </div>
+            </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>

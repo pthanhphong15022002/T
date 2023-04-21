@@ -40,20 +40,7 @@ export class PopupAddOBComponent extends UIComponent {
   @ViewChild('form') form :CodxFormComponent;
 
   headerText = '';
-  subHeaderText = '';
-  month = 'Tháng';
-  quarter = 'Quý';
-
-  months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-  quarters = ['1', '2', '3', '4'];
-  quartersMonth = ['1', '4', '7', '10'];
-  typePlan = '';
-  planMonth = [];
-  planQuarter = [];
   allowCopyField=[];
-  listTarget = [];
-  
-  ops = ['m','q','y'];
   formModel: FormModel;
   dialogRef: DialogRef;
   isAfterRender: boolean;
@@ -67,6 +54,7 @@ export class PopupAddOBComponent extends UIComponent {
   ob:any;
   oldOB:any;
   okrPlan: any;
+  onSaving=false;
   listShares=[];
   okrRecID: any;
   shareModel: any;
@@ -184,6 +172,7 @@ export class PopupAddOBComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.onSaving=true;
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
@@ -219,6 +208,10 @@ export class PopupAddOBComponent extends UIComponent {
         res.delete = true;
         this.afterSave(res);
       }
+      else{
+        this.onSaving=false;
+        return ;
+      }
     });
   }
 
@@ -228,6 +221,10 @@ export class PopupAddOBComponent extends UIComponent {
         res.write = true;
         res.delete = true;
         this.afterSave(res);
+      }
+      else{
+        this.onSaving=false;
+        return ;
       }
     });
   }

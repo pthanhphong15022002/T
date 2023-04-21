@@ -1,4 +1,7 @@
-import { DP_Instances_Permissions, DP_Instances_Steps_Roles } from './../../models/models';
+import {
+  DP_Instances_Permissions,
+  DP_Instances_Steps_Roles,
+} from './../../models/models';
 import {
   ChangeDetectorRef,
   Component,
@@ -81,7 +84,7 @@ export class PopupMoveStageComponent implements OnInit {
   actionCheck: string = '';
   isSaving: boolean = false;
   listStepProccess: any;
-  user:any;
+  user: any;
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -284,7 +287,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.listTask = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroup = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
+    this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
+      (x) => x.progress < this.oneHundredNumber
+    );
   }
 
   onSave() {
@@ -342,6 +347,10 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
 
+    if(this.isCheckRequiredTask(this.listTask))
+    {
+      return;
+    }
     this.beforeSave();
   }
   beforeSave() {
@@ -360,7 +369,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
     if (
       (!!this.listTask || !!this.listTaskGroup) &&
-      this.stepIdClick === this.stepIdOld
+        this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
@@ -384,19 +393,35 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   setRoles() {
-    var index = this.instancesStepOld.roles.findIndex(x => x.roleType == 'S');
-    var tmp = this.lstParticipants.find(x => x.userID == this.owner)
-    if(index != -1){
-      if (this.instancesStepOld.roles[index].objectID != this.owner) {
-        this.instancesStepOld.roles[index].objectID = this.owner;
-        this.instancesStepOld.roles[index].objectName = tmp?.userName;
-        this.instancesStepOld.roles[index].objectType = 'U';
+    var tmp = this.lstParticipants.find((x) => x.userID == this.owner);
+    if (
+      this.instancesStepOld.roles != null &&
+      this.instancesStepOld.roles.length > 0
+    ) {
+      var index = this.instancesStepOld.roles.findIndex(
+        (x) => x.roleType == 'S'
+      );
+      if (index != -1) {
+        if (this.instancesStepOld.roles[index].objectID != this.owner) {
+          this.instancesStepOld.roles[index].objectID = this.owner;
+          this.instancesStepOld.roles[index].objectName = tmp?.userName;
+          this.instancesStepOld.roles[index].objectType = 'U';
+        }
+      } else {
+        var u = new DP_Instances_Steps_Roles();
+        u['objectID'] = this.owner;
+        u['objectName'] = tmp?.userName;
+        u['objectType'] = 'U';
+        u['roleType'] = 'S';
+        this.instancesStepOld.roles.push(u);
       }
-    }else{
-      var u = new DP_Instances_Steps_Roles;
+    } else {
+      this.instancesStepOld.roles = [];
+      var u = new DP_Instances_Steps_Roles();
       u['objectID'] = this.owner;
-      u['objectName'] = tmp?.userName;;
+      u['objectName'] = tmp?.userName;
       u['objectType'] = 'U';
+      u['roleType'] = 'S';
       this.instancesStepOld.roles.push(u);
     }
   }
@@ -563,11 +588,10 @@ export class PopupMoveStageComponent implements OnInit {
     var check = 'd-none';
     if (item?.requireCompleted) {
       check = 'text-danger';
-    }
-    else if (view == this.viewTask) {
+    } else if (view == this.viewTask) {
       for (let tasks of this.listTask) {
         if (tasks.parentID?.includes(item.refID)) {
-          check = 'text-orange'
+          check = 'text-orange';
           break;
         }
       }
@@ -615,29 +639,29 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     if (event) {
       if (event?.taskID) {
-       var task = this.listTask.find(x=>x.recID === event?.taskID);
-       var taskNew = {
-        progress: event?.progressTask,
-        actualEnd: event?.event,
-        isUpdate: event?.isUpdate,
-        note: event?.note
-       };
-
-       this.updateDataTask(task,taskNew);
-      }
-      if(event?.groupTaskID){
-        var group = this.listTaskGroup.find(x=>x.recID === event?.groupTaskID);
-        var groupNew = {
+        var task = this.listTask.find((x) => x.recID === event?.taskID);
+        var taskNew = {
           progress: event?.progressTask,
+          actualEnd: event?.event,
+          isUpdate: event?.isUpdate,
+          note: event?.note,
+        };
+
+        this.updateDataTask(task, taskNew);
+      }
+      if (event?.groupTaskID) {
+        var group = this.listTaskGroup.find(
+          (x) => x.recID === event?.groupTaskID
+        );
+        var groupNew = {
+          progress: event?.progressGroupTask,
          };
          this.updateDataGroup(group,groupNew);
       }
-
     }
-
   }
   updateDataTask(taskNew:any, taskOld: any) {
-    taskNew.actualEnd = taskOld.actualEnd;
+    taskNew.actualEnd = taskOld?.actualEnd;
     taskNew.isUpdate = taskOld.isUpdate;
     taskNew.note = taskOld.note;
     taskNew.progress = taskOld.progress;
@@ -645,40 +669,21 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.modifiedBy = this.user.userID;
   }
   updateDataGroup(groupNew:any, groupOld: any) {
-    groupNew.progress = groupNew.progress;
+    groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
   }
 
 
     isCheckRequiredTask(listTask){
-    // if(data.parentID) {
-    //   var parentIds = data?.parentID.split(';');
-    //   var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
-    //   if(filteredList.length != parentIds.length) {
-    //     var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
-    //     checkbox.checked = false;
-    //     var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
-
-    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-    //     return false;
-    //   }
-    // }
-    // if(listTask.length > 0 && listTask) {
-    //     for(let item of listTask)
-    //     {
-
-    //     }
-    // }
-
-    // var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-    //     var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
-
-    //     this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-    //     return false;
-
-    return true;
-
+    if(listTask.length > 0 && listTask) {
+        for(let item of listTask){
+          if(item.requireCompleted && item.progress < this.oneHundredNumber) {
+            this.notiService.notifyCode('DP022');
+            return true;
+          }
+        }
+    }
+    return false;
   }
 }

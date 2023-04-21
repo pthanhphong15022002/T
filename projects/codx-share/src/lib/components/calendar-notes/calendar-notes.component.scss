@@ -75,9 +75,10 @@ app-notes-home {
 .icon-gray {
   color: darkgray;
 }
-
+.cal-notes{
 .active [class*="icon-"] {
   color: var(--primary);
+}
 }
 
 .note-content .active {
