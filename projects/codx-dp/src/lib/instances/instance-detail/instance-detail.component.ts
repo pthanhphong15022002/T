@@ -129,6 +129,43 @@ export class InstanceDetailComponent implements OnInit {
   maxSize: number = 4;
   ownerInstance: string[] = [];
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
+  timelineSettings:any={
+    topTier: {
+      unit: 'Day',
+
+      formatter: (date: Date) => {
+        let day = date.getDay();
+        let text='';
+        if(day == 0){
+          text = 'Chủ nhật';
+        }
+        if(day == 1){
+          text = 'Thứ Hai';
+        }
+        if(day == 2){
+          text ='Thứ Ba';
+        }
+        if(day == 3){
+          text = 'Thứ Tư';
+        }
+        if(day == 4){
+          text = 'Thứ Năm';
+        }
+        if(day == 5){
+          text = 'Thứ Sáu';
+        }
+        if(day == 6){
+          text = 'Thứ Bảy';
+        }
+        return `${text} ( ${date.toLocaleDateString()} )`
+      },
+    },
+    bottomTier: {
+      unit: 'Hour',
+      format: 'HH'
+    }
+  }
+
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,

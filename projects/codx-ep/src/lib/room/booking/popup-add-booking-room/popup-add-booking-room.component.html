@@ -3,7 +3,7 @@
   [tabContent]="this.ep8Avaiable != null && (this.ep8Avaiable ==true || this.ep8Avaiable=='1') ? [tabGeneralInfo, tabPeopleInfo, tabStationery , tabMoreInfo, tabReminder] :[tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder]"
   [data]="data">
   <ng-template #tabGeneralInfo>
-    <!-- <button (click)="openAuto()">khjjjjjasdasdasd</button> -->
+    <button (click)="openAuto()">khjjjjjasdasdasd</button>
     <ng-container *ngIf="form && form.formGroup">
       <div class="row mx-0">
         <div class="col-4 form-group ps-0" *ngIf="grView?.bookingOn?.allowPopup">
