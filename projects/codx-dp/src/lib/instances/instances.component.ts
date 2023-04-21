@@ -238,7 +238,6 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-  
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -289,7 +288,7 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
- 
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -401,7 +400,7 @@ export class InstancesComponent
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
   }
-  
+
   getPropertyColumn() {
     let dataColumns =
       this.kanban?.columns?.map((column) => {

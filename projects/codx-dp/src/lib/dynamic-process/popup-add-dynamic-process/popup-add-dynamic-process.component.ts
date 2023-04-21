@@ -3477,18 +3477,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   checkedDayOff(value: string) {
     if (value !== '' && value) {
-      this.checkedSat =
-        (value?.split(';').length == 1 &&
-          value?.split(';')[0] == this.valueCheckBoxSat) ||
-        value?.split(';').length > 1
-          ? true
-          : false;
-      this.checkedSun =
-        (value?.split(';').length == 1 &&
-          value?.split(';')[0] == this.valueCheckBoxSun) ||
-        value?.split(';').length > 1
-          ? true
-          : false;
+      this.checkedSat = (value?.split(';').length == 1 &&value?.split(';')[0] == this.valueCheckBoxSat) || value?.split(';').length > 1;
+      this.checkedSun =(value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSun) || value?.split(';').length > 1;
     } else {
       this.checkedSat = false;
       this.checkedSun = false;
