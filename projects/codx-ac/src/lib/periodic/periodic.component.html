@@ -4,6 +4,8 @@
   [views]="views"
   [button]="button"
   entityName="SYS_FunctionList"
+  predicates="Language=@0"
+  [dataValues]="user?.language | uppercase"
 >
 </codx-views>
 

@@ -229,7 +229,7 @@
             </td>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
               <td class="w-200px text-center">
-                <span class="badge badge-square" [ngClass]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
               </td>
               <td class="w-200px">
                 <codx-temp-full [imageId]="item.approverID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer" [imageWidth]="25" [subTitle]="item.approverName">
@@ -256,7 +256,7 @@
             </ng-container>
             <ng-container *ngIf="funcID == 'DMT07'">
               <td class="w-200px text-center">
-                <span class="badge badge-square" [ngClass]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
               </td>
             </ng-container>
             <td class="w-200px">

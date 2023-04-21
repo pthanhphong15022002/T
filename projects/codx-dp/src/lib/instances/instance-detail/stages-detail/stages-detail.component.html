@@ -26,7 +26,7 @@
           [disabled]="
             !isStart ||
             isClosed ||
-            isUpdate ||
+            !isUpdate ||
             !isRoleAll ||
             !progressStepControl
               ? true
@@ -65,9 +65,9 @@
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
             [setRequire]="false"
-            default="Bắt đầu dự kiến:"
+            default="Thời gian dự kiến:"
           ></codx-label
-          ><span class="ms-1 text-dark fw-bold">{{ startDate }}</span>
+          ><span class="ms-1 text-dark fw-bold">{{ startDate }} - {{endDate}}</span>
         </div>
       </div>
       <div class="progress mt-1 h-15px w-200px">

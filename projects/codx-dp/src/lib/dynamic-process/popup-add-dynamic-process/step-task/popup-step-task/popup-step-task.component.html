@@ -326,7 +326,7 @@
         [default]="
           taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'
         "
-        [dataSource]="participant"
+        [dataSource]="taskType == 'M' ? participant : owner" 
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
         (valueList)="changeRoler($event)"
@@ -416,6 +416,24 @@
 
   <ng-container>
     <div
+      class="d-flex align-items-center nav-item w-100 mb-1"
+      *ngIf="showLabelAttachment"
+    >
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+      <div class="fw-bold text-primary">
+        <codx-label
+          name="lblAttachments"
+          [formModel]="form.formModel"
+          default="Tài liệu đính kèm"
+        >
+        </codx-label>
+      </div>
+    </div>
+  </div>
+  <div>
+
+    <div
       class="d-flex align-items-center justify-content-between mt-4"
       *ngIf="showLabelAttachment"
       style="float: left"
@@ -431,29 +449,29 @@
         </div>
       </div>
     </div>
-    <div>
+    <!-- <div> -->
       <codx-attachment
-        #attachment
-        [objectId]="stepsTasks?.recID"
-        hideFolder="1"
-        hideImageUpload="0"
-        hideImageThumb="0"
-        hideUploadBtn="1"
-        hideDes="1"
-        type="inline"
-        allowMultiFile="1"
-        (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)"
-        (viewFile)="getfileDelete($event)"
-        (fileDelete)="fileAdded($event)"
-        displayThumb="full"
-        showMessage="0"
-        [fdID]="folderID"
-        [fdName]="stepsTasks?.stepID"
-        [parentID]="folderID"
-        [dataSelected]="stepsTasks"
-      >
-      </codx-attachment>
+      #attachment
+      [objectType]="dialog.formModel.entityName"
+      [objectId]="stepsTasks?.recID"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      [functionID]="functionID"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+      displayThumb="full"
+    >
+    </codx-attachment>
+
+     
     </div>
   </ng-container>
 </ng-template>
