@@ -218,8 +218,9 @@ export class CatagoryComponent implements OnInit {
                 if (res) {
                   data['autoNoCode'] = res.autoNumber;
                   data['functionID'] = res.functionID;
-                  width = (screen.width * 40) / 100;
-                  height = 550;
+                  width = screen.width;
+                  height = screen.height;
+                  dialogModel.IsFull = true;
                   this.callfc.openForm(
                     component,
                     title,

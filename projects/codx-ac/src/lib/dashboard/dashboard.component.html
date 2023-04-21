@@ -1,6 +1,13 @@
-<div style="width: 100%;height: 100%;object-fit: cover;">
-<img src="../assets/themes/ac/default/img/dashboard.jpg" width="100%" height="100%" style="margin-top: -51px;
-height: 106%;
-margin-left: -63px;
-width: 104%;">
-</div>
+<codx-views #view 
+  [views]="views" 
+  [autoLoad]="true" 
+  [idField]="'recID'">
+</codx-views>
+<ng-template #itemTemplate>
+    <div style="width: 100%;height: 100%;object-fit: cover;">
+        <img src="../assets/themes/ac/default/img/dashboard.jpg" width="100%" height="100%" style="margin-top: -51px;
+        height: 106%;
+        margin-left: -63px;
+        width: 104%;">
+        </div>
+</ng-template>
