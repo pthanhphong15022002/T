@@ -58,6 +58,7 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
           </codx-label>
           <codx-input
+            [disabled]="action == 'edit' && data.objectType"
             [field]="'objectType'"
             [crrValue]="data.objectType"
             [type]="'valuelist'"
@@ -71,6 +72,7 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
           </codx-label>
           <codx-input
+            [disabled]="action == 'edit' && data.contactType"
             [field]="'contactType'"
             [crrValue]="data?.contactType"
             [type]="'valuelist'"
@@ -86,6 +88,7 @@
         [fiedName]="'ObjectID'"
       ></codx-label>
       <codx-input
+        [disabled]="action == 'edit' && data.objectID"
         [field]="'objectID'"
         [crrValue]="data?.objectID"
         type="combobox"
@@ -739,9 +742,9 @@
   </div>
   <div
     class="d-flex flex-column"
-    *ngIf="listAddress != null && listAddress.length > 0; index as i"
+    *ngIf="listAddress != null && listAddress.length > 0"
   >
-    <ng-container *ngFor="let item of listAddress">
+    <ng-container *ngFor="let item of listAddress; index as i">
       <div class="row mb-1">
         <div class="col-4">
           <span
@@ -754,7 +757,8 @@
           ></span>
         </div>
         <div class="col-6">
-          <span *ngIf="item?.adressName"
+          <span
+            *ngIf="item?.adressName"
             [innerHTML]="
               item?.adressName
                 | formatvalue : formModelAddress : 'AdressName'

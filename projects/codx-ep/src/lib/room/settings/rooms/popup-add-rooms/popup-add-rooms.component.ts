@@ -174,7 +174,10 @@ export class PopupAddRoomsComponent extends UIComponent {
                     //...
                     this.dialogRef && this.dialogRef.close(this.returnData);
                   }
-                  this.dialogRef && this.dialogRef.close(this.returnData);
+                  else{
+
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
                 });
             } else {
               this.dialogRef && this.dialogRef.close(this.returnData);

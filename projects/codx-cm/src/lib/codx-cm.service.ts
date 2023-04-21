@@ -68,6 +68,15 @@ export class CodxCmService {
       'UpdateContactCrmAsync',
       [contact, funcID, recIDCrm, isDelete]
     );
+  };
+
+  updateContactByPopupListCt(recID: string, recIDCm: string , contactType: string, objectType: string, objectName: string){
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'UpdateContactByPopContactsAsync',
+      [recID, recIDCm, contactType, objectType, objectName]
+    );
   }
   getStepInstance(data){
     return this.api.exec<any>(
