@@ -31,17 +31,17 @@
                 </div>
                 <div class="d-flex align-items-center morefc-list ms-3">
                     <ng-container *ngIf="group.groupType == '2'">
-                        <button type="button" class="cursor-pointer btn btn-icon btn-sm" (click)="clickAddMemeber()">
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="clickAddMemeber()">
                             <span class="icon-group_add icon-16"></span>
                         </button>    
                     </ng-container>
-                    <button type="button" class="cursor-pointer btn btn-icon btn-sm ms-1">
+                    <button type="button" class="btn-light btn btn-icon btn-sm ms-1">
                         <span class="icon-launch icon-16"></span>
                     </button>
-                    <button type="button" class="cursor-pointer btn btn-icon btn-sm ms-1" (click)="collapsed()">
+                    <button type="button" class="btn-light btn btn-icon btn-sm ms-1" (click)="collapsed()">
                         <span class="icon-horizontal_rule icon-16" ></span>
                     </button>
-                    <button type="button" class="cursor-pointer btn btn-icon btn-sm ms-1" (click)="closeChatBox()">
+                    <button type="button" class="btn-light btn btn-icon btn-sm ms-1" (click)="closeChatBox()">
                         <span class="icon-close icon-16"></span>
                     </button>
                 </div>   
@@ -277,7 +277,7 @@
         </div>
         <div class="chat-box-footer border-top bg-body">
             <div class="footer-emoji me-2" ngbDropdown>
-                <span class="icon-tag_faces icon-22" ngbDropdownToggle></span>
+                <span class="icon-tag_faces icon-20 text-hover-primary" ngbDropdownToggle></span>
                 <div ngbDropdownMenu class="dropdown-menu p-3 mb-3" aria-labelledby="dropdownMenuButton">
                     <emoji-mart 
                         [set]="emojiMode" 
@@ -288,8 +288,8 @@
                     </emoji-mart>
                 </div>
             </div>
-            <div class="footer-attachments">
-                <span class="icon-photo icon-22" (click)="clickUploadImages()"></span>
+            <div class="footer-attachments me-2">
+                <span class="icon-photo icon-20 text-hover-primary" (click)="clickUploadImages()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATMImages 
@@ -308,7 +308,7 @@
                 </div>
             </div>
             <div class="footer-attachments">
-                <span class="icon-attach_file icon-22" (click)="clickUploadFiles()"></span>
+                <span class="icon-attach_file icon-20 text-hover-primary" (click)="clickUploadFiles()"></span>
                 <div class="d-none">
                     <codx-attachment 
                         #codxATM 
@@ -329,11 +329,11 @@
                 <ng-container *ngIf="isReply">
                     <div class="footer-message-reply">
                         <div class="reply-content">
-                            <div class="d-block">
+                            <div class="d-block fw-bold">
                                 {{replyTo}}
                             </div>
                             <ng-container *ngIf="mssgReply.message">
-                                <span class="d-block">{{mssgReply.message}}</span>
+                                <div class="line-clamp line-clamp-1 text-gray-600">{{mssgReply.message}}</div>
                             </ng-container>
                             <ng-container *ngIf="mssgReply.messageType == '2'">
                                 <codx-temp-full 
@@ -359,7 +359,7 @@
                      [(ngModel)]="data.message">
                 </div>
             </div>
-            <button type="button" class="footer-button btn btn-icon btn-circle btn-light" (click)="sendMessage()">
+            <button type="button" class="footer-button btn btn-icon btn-light-primary" (click)="sendMessage()">
                 <span class="icon-send icon-16"></span>
             </button>
         </div>
