@@ -62,7 +62,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row" *ngIf="data?.siSalary > 0">
           <span class="icon-monetization_on icon-15 me-1"></span>
           <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.SISalary?.headerText">
             <span class="align-self-center fw-bold"
