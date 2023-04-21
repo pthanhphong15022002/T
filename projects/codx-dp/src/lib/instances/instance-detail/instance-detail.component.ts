@@ -26,6 +26,7 @@ import {
   FormModel,
   AuthStore,
   CodxDetailTmpComponent,
+  SidebarModel,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -51,7 +52,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
- // @Input() viewType = 'd';
+  // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
@@ -62,7 +63,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
   @Output() saveDatasInstance = new EventEmitter<any>();
-
+  @Input() lstStepProcess = [];
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -111,6 +112,7 @@ export class InstanceDetailComponent implements OnInit {
   titleDefault = '';
 
   isHiddenReason: boolean = false;
+  //viewHour = { timelineViewMode: "Hour"}
 
   instanceId: string;
   proccesNameMove: string;
@@ -126,7 +128,7 @@ export class InstanceDetailComponent implements OnInit {
   user: any;
   maxSize: number = 4;
   ownerInstance: string[] = [];
-  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -221,28 +223,30 @@ export class InstanceDetailComponent implements OnInit {
       //  this.getListStepsStatus();
     });
   }
-  saveDataStep(e){
-   let stepInsIdx = this.listSteps.findIndex(x=>{x.recID==e.recID})
-   if(stepInsIdx!=-1){
-    this.listSteps[stepInsIdx] = e ;
-   }
-   this.loadingDatas();
-  }
-  loadingDatas(){
-    let listField =[]
-    this.listSteps.forEach(st=>{
-      listField = listField.concat(st.fields)
-    })
-    let datas = '';
-    if(listField?.length>0){ 
-      listField.forEach(obj=>{
-        datas += '"'+obj.fieldName+'":"'+obj.dataValue+'",'
-      })
+  saveDataStep(e) {
+    let stepInsIdx = this.listSteps.findIndex((x) => {
+      x.recID == e.recID;
+    });
+    if (stepInsIdx != -1) {
+      this.listSteps[stepInsIdx] = e;
     }
-    datas = datas.substring(0,datas.length-1) ;
-    datas = "[{"+datas+"}]";
-    this.dataSelect.datas =datas ;
-    this.saveDatasInstance.emit(datas)
+    this.loadingDatas();
+  }
+  loadingDatas() {
+    let listField = [];
+    this.listSteps.forEach((st) => {
+      listField = listField.concat(st.fields);
+    });
+    let datas = '';
+    if (listField?.length > 0) {
+      listField.forEach((obj) => {
+        datas += '"' + obj.fieldName + '":"' + obj.dataValue + '",';
+      });
+    }
+    datas = datas.substring(0, datas.length - 1);
+    datas = '[{' + datas + '}]';
+    this.dataSelect.datas = datas;
+    this.saveDatasInstance.emit(datas);
   }
 
   getStageByStep(listSteps) {
@@ -258,7 +262,7 @@ export class InstanceDetailComponent implements OnInit {
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
         this.tmpTeps = data;
-        this.outStepInstance.emit({data: this.tmpTeps});
+        this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
           backgroundColor: data.backgroundColor,
@@ -368,7 +372,7 @@ export class InstanceDetailComponent implements OnInit {
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];
-      this.outStepInstance.emit({data: this.tmpTeps});
+      this.outStepInstance.emit({ data: this.tmpTeps });
       this.lstInv = this.getInvolved(this.tmpTeps.roles);
       this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
     }
@@ -489,10 +493,25 @@ export class InstanceDetailComponent implements OnInit {
   clickDetailGanchart(recID) {
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
         value: data,
         listValue: this.ganttDsClone,
-      });
+        // step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: data,
+      //   listValue: this.ganttDsClone,
+      // });
     }
   }
 
@@ -560,5 +579,15 @@ export class InstanceDetailComponent implements OnInit {
 
   startInstances() {
     this.clickStartInstances.emit(true);
+  }
+
+  checkOwnerRoleProcess(roles){
+    if(roles != null && roles.length > 0){
+      var checkOwner = roles.find(x => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    }else{
+      return null;
+    }
   }
 }
