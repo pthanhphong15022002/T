@@ -23,7 +23,7 @@
           type="button"
           class="btn btn-primary btn-sm d-flex align-items-center"
           (click)="openUpdateProgress(dataStep)"
-          [disabled]="!isStart || isClosed || isUpdate ||!isRoleAll ||!progressStepControl? true : false"
+          [disabled]="!isStart || isClosed || !isUpdate ||!isRoleAll ||!progressStepControl? true : false"
         >
           <span class="icon-16 icon-update me-1"></span>
           <codx-label
