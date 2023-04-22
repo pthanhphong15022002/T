@@ -269,8 +269,6 @@ export class StagesDetailComponent implements OnInit {
         var tasks = changes['dataStep'].currentValue?.tasks;
         var taskGroups = changes['dataStep'].currentValue?.taskGroups;
         this.lstFields = changes['dataStep'].currentValue?.fields;
-        console.log(changes['dataStep'].currentValue);
-        
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
         this.checkRole();
@@ -988,11 +986,18 @@ export class StagesDetailComponent implements OnInit {
             this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
+            this.isContinueTaskEnd = this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100;
             this.calculateProgressStep();
             this.saveAssign.emit(true);
-            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
-              this.isContinueTaskEnd = true;
-            }
+            // if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
+            //   if(this.dataProgress['progress'] == 100) {
+            //     this.isContinueTaskEnd = true;
+            //   }
+            //   else {
+            //    this.isContinueTaskEnd = false;
+            //   }
+
+            // }
           } else {
             this.popupUpdateProgress.close();
           }
@@ -1084,7 +1089,6 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
-          debugger
           // a thuận gán isCheck để autoMove
           if (this.step.progress == 100 || this.isContinueTaskEnd ) {
             let dataInstance = {
