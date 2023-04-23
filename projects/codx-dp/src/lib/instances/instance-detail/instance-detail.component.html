@@ -25,7 +25,7 @@
                   class="badge"
                   [ngStyle]="{
                     'background-color':
-                    dataSelect.status == '3' || dataSelect.status == '4'
+                      dataSelect.status == '3' || dataSelect.status == '4'
                         ? colorSuccesss
                         : dataSelect.status == '5' || dataSelect.status == '6'
                         ? colorFail
@@ -262,7 +262,7 @@
         class="pt-3 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
       >
         <div class="">
-          <div class=" border">
+          <div class="border">
             <div>
               <ng-container
                 *ngIf="viewModelDetail == 'G'"
@@ -377,14 +377,32 @@
 </ng-container>
 
 <ng-template #tempGanchart>
-  <codx-gantt-chart
+  <div class="d-flex flex-stack justify-content-between my-3">
+    <div></div>
+    <div>
+      <!-- <span>
+        <codx-label default="Tùy chọn thời gian"></codx-label>
+      </span> -->
+      <span>
+        <codx-input
+          type="valuelist"
+          [crrValue]="crrViewGant"
+          [refValue]="vllViewGannt"
+          (valueChange)="changeViewTimeGant($event)"
+        >
+        </codx-input>
+      </span>
+    </div>
+  </div>
+  <div class="">
+    <codx-gantt-chart
     [dataSource]="ganttDs"
     [taskFields]="taskFields"
     [taskbarHeight]="60"
     [rowHeight]="60"
     [readOnly]="true"
     [templateTaskbar]="ganttItems"
-    [timelineSettings]="null"
+    [timelineSettings]="timelineSettings"
     [toolbar]="[]"
   ></codx-gantt-chart>
   <ng-template #ganttItems let-data>
@@ -403,6 +421,8 @@
       </div>
     </div>
   </ng-template>
+  </div>
+
   <!-- mô tả -->
   <div class="d-flex flex-wrap pb-3 ms-5">
     <div
