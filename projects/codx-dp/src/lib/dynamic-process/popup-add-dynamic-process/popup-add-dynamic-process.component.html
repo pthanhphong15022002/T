@@ -2930,9 +2930,9 @@
           class="col-6 group-permission witdh-roles scroll-user"
           *ngIf="step.roles != null && step.roles?.length > 0"
         >
-          <ng-container *ngFor="let perm of step.roles; index as i">
+          <ng-container *ngFor="let role of step.roles; index as i">
             <div
-              *ngIf="perm.roleType == 'R'"
+              *ngIf="role.roleType == 'R'"
               class="me-4 d-flex align-items-center margin-form mb-4"
             >
               <div class="roles-step d-flex align-items-center">
@@ -2940,15 +2940,15 @@
                   <codx-img
                     class="me-2"
                     [width]="25"
-                    [objectId]="perm.objectName"
+                    [objectId]="role.objectName"
                     objectType="AD_Users"
                   >
                   </codx-img>
                 </div>
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+                <div class="text-dark fw-bold">{{ role.objectName }}</div>
                 <span class="mt-1">
                   <a
-                    (click)="deleteRoleTypeR(perm, step)"
+                    (click)="deleteRoleInstep(step, role, true)"
                     style="cursor: pointer"
                   >
                     <span class="icon-close icon-16 text-danger ms-3"></span>
