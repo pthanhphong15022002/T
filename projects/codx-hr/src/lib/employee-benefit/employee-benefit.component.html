@@ -156,7 +156,7 @@
             >
               {{ data?.decisionNo }}
             </span>
-            <span class="p-dot mx-1"> ⚫ </span>
+            <span> - </span>
             <span
               [title]="
                 eContractHeaderText ? eContractHeaderText['SignedDate'] : ''
@@ -312,7 +312,6 @@
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3"
     [imageId]="data?.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="40"
@@ -324,18 +323,18 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
-  <codx-vll
-    class="badge badge-sm p-gender"
-    [name]="genderGrvSetup?.referedValue"
-    [value]="data?.emp?.gender"
-    [showText]="true"
-    [showIcon]="false"
-    [showBgColor]="false"
-  >
-  </codx-vll>
   <ng-template #titleTmp let-data>
     <div class="w-100">
       <div class="justify-content-between">
+        <codx-vll
+          class="badge badge-sm p-gender"
+          [name]="genderGrvSetup?.referedValue"
+          [value]="data?.emp?.gender"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="false"
+        >
+        </codx-vll>
         <span>
           {{ data?.emp?.employeeName }}
         </span>

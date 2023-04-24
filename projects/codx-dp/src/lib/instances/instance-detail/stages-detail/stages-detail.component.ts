@@ -143,6 +143,7 @@ export class StagesDetailComponent implements OnInit {
   stepNameReason: string = '';
   idTaskEnd: string = '';
   isContinueTaskEnd: boolean = false;
+  isShowFromTaskEnd: boolean = false;
   isRoleAll = false;
   leadtimeControl = false; //sửa thời hạn công việc mặc định
   progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
@@ -994,20 +995,17 @@ export class StagesDetailComponent implements OnInit {
             this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
-            this.isContinueTaskEnd =
-              this.dataProgress?.recID == this.idTaskEnd &&
-              this.dataProgress['progress'] == 100;
             this.calculateProgressStep();
             this.saveAssign.emit(true);
-            // if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
-            //   if(this.dataProgress['progress'] == 100) {
-            //     this.isContinueTaskEnd = true;
-            //   }
-            //   else {
-            //    this.isContinueTaskEnd = false;
-            //   }
+            // chuyển tiếp công việc cuối cùng
+            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
+              this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);            
+              this.isContinueTaskEnd = true;            
+            }else{
+              this.isContinueTaskEnd = false;
+              this.isShowFromTaskEnd = false; 
+            }
 
-            // }
           } else {
             this.popupUpdateProgress.close();
           }
@@ -1030,6 +1028,23 @@ export class StagesDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  checkSuccessTaskRequired(taskID){
+    for (let group of this.taskGroupList) {
+      if (group['task']?.length > 0) {
+        for (let task of group['task']) {
+          if (task?.recID != taskID) {
+            if(!(task?.requireCompleted && task?.progress == 100)){
+              return false;
+            }else{
+              continue;
+            }
+          }
+        }
+      }
+    }
+    return true;
   }
 
   checkExitsParentID(taskList, task): string {
@@ -1100,11 +1115,12 @@ export class StagesDetailComponent implements OnInit {
           this.step.progress = Number(medium);
           this.progress = medium;
           // a thuận gán isCheck để autoMove
-          if (this.step.progress == 100 || this.isContinueTaskEnd) {
+          if (this.isContinueTaskEnd) {
             let dataInstance = {
               instance: this.instance,
               listStep: this.listStep,
               step: this.step,
+              isShowForm: this.isShowFromTaskEnd
             };
             this.serviceInstance.autoMoveStage(dataInstance);
           }

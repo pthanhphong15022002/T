@@ -131,19 +131,19 @@ export class PopupAddPostComponent implements OnInit {
       this.data = this.dialogData.data;
       if (this.status !== 'edit') {
         this.data.recID = Util.uid();
+        this.data.contents = "";
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
-        this.data.shareControl = this.SHARECONTROLS.OWNER;
-        this.data.contents = '';
-        if (this.status == 'share') {
-          // bài share
-          this.data.category = this.CATEGORY.SHARE;
-          this.data.refType = this.dialogData.refType;
-        } else {
-          // bài viết mới
-          this.data.category = this.CATEGORY.POST;
-          this.data.refType = 'WP_Comments';
-        }
+        this.data.shareControl = this.SHARECONTROLS.EVERYONE;
+        this.data.category = this.status === "share" ? this.CATEGORY.SHARE : this.CATEGORY.POST;
+        this.data.refType = this.dialogData.refType ? this.dialogData.refType : 'WP_Comments';
+        let permission = {
+          objectID: '',
+          objectName: '',
+          objectType: this.SHARECONTROLS.EVERYONE,
+          memberType: this.MEMBERTYPE.SHARE
+        };
+        this.data.permissions.push(permission);
       }
     }
     this.getSettingValue();
@@ -262,7 +262,8 @@ export class PopupAddPostComponent implements OnInit {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save().subscribe((res1: boolean) => {
+    this.codxViewFiles.save()
+    .subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
           if (res2) {
@@ -486,7 +487,8 @@ export class PopupAddPostComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let _param = JSON.parse(res);
-          if (_param['CopyFormat'] === '1') this.copyFormat = 'keepFormat';
+          if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
+          if (_param["Publishmode"]) this.data.shareControl = _param["Publishmode"]; 
         }
       });
   }

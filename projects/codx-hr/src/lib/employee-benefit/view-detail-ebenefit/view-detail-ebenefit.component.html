@@ -62,8 +62,14 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold">
-          {{ itemDetail?.decisionNo }}
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail.decisionNo
+              | formatvalue : view.formModel : 'decisionNo'
+              | async
+          "
+        >
         </span>
       </div>
 
@@ -74,13 +80,19 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold">
-          {{ itemDetail?.signedDate | fmDT }}
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail.signedDate
+              | formatvalue : view.formModel : 'signedDate'
+              | async
+          "
+        >
         </span>
       </div>
       <div class="d-flex align-items-center me-5 mb-5 col-5">
         <codx-label
-          fiedName="EffectedDate"
+          fiedName="benefitID"
           [formModel]="formModel"
           class="text-gray-700 label-colon"
         >
@@ -120,7 +132,14 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold" [innerHTML]="itemDetail?.effectedDate | fmDT">
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.effectedDate
+              | formatvalue : formModel : 'effectedDate'
+              | async
+          "
+        >
         </span>
       </div>
 
@@ -131,7 +150,14 @@
           class="text-gray-700 label-colon"
         >
         </codx-label>
-        <span class="fw-bold" [innerHTML]="itemDetail?.expiredDate | fmDT">
+        <span
+          class="fw-bold"
+          [innerHTML]="
+            itemDetail?.expiredDate
+              | formatvalue : formModel : 'expiredDate'
+              | async
+          "
+        >
         </span>
       </div>
 

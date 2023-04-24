@@ -407,8 +407,8 @@ export class PopupJobComponent implements OnInit {
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
           this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
-              this.step['durationDay'] = this.stepsTasks['durationDay'];
-              this.step['durationHour'] = this.stepsTasks['durationHour'];
+              this.step['durationDay'] = this.stepsTasks['durationDay'] || 0;
+              this.step['durationHour'] = this.stepsTasks['durationHour'] || 0;
               this.dialog.close({ data: this.stepsTasks, status: this.status });
             } 
           });
@@ -427,8 +427,8 @@ export class PopupJobComponent implements OnInit {
         if (maxtime > this.getHour(this.step)) {
           this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
-              this.step['durationDay'] = Math.floor(maxtime / 24);
-              this.step['durationHour'] = maxtime % 24;
+              this.step['durationDay'] = Math.floor(maxtime / 24 || 0);
+              this.step['durationHour'] = maxtime % 24 || 0;
               this.dialog.close({ data: this.stepsTasks, status: this.status });
             }
           });

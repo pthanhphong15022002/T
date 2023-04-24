@@ -17,7 +17,7 @@
             <ng-container *ngIf="data.totalComment > 0">
                 <span>{{data.totalComment}}</span>
                 <span class="ms-1">
-                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                    <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
                 </span>
             </ng-container>
         </div>

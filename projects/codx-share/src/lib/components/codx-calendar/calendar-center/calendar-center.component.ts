@@ -5,13 +5,11 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
-  ChangeDetectorRef,
   Input,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import moment from 'moment';
 import { CodxShareService } from '../../../codx-share.service';
-import { CodxCalendarService } from '../codx-calendar.service';
 
 @Component({
   selector: 'lib-calendar-center',
@@ -22,9 +20,15 @@ export class CalendarCenterComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  listRoom = [];
-  listCar = [];
-  listDriver = [];
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  @ViewChild('view') viewOrg!: ViewsComponent;
+
+  @Input() resources!: any;
+  @Input() resourceModel!: any;
+
   views: Array<ViewModel> | any = [];
   fields = {
     id: 'transID',
@@ -34,70 +38,19 @@ export class CalendarCenterComponent
     status: 'transType',
   };
   resourceID: any;
-  tempCarName = '';
-  driverName = '';
-  selectBookingAttendeesCar = '';
-  selectBookingAttendeesRoom = '';
-  tempDriverName = '';
-  selectBookingItems = [];
-  tempRoomName = '';
-  funcID: string;
   startTime: any;
   month: any;
   day: any;
-  daysOff = [];
-  calendarID: string;
-  vllPriority = 'TM005';
-  dayWeek = [];
   btnAdd = {
     id: 'btnAdd',
   };
+  vllPriority = 'TM005';
 
-  @Input() resources!: any;
-  @Input() resourceModel!: any;
-
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-  @ViewChild('view') viewOrg!: ViewsComponent;
-
-  constructor(
-    private injector: Injector,
-    private shareService: CodxShareService,
-    private codxCalendarSV: CodxCalendarService
-  ) {
+  constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
-    this.router.params.subscribe((params) => {
-      if (params) {
-        this.funcID = params['funcID'];
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
-        });
-      }
-    });
   }
 
-  onInit(): void {
-    this.shareService.getListResource('1').subscribe((res: any) => {
-      if (res) {
-        this.listRoom = [];
-        this.listRoom = res;
-      }
-    });
-    this.shareService.getListResource('2').subscribe((res: any) => {
-      if (res) {
-        this.listCar = [];
-        this.listCar = res;
-      }
-    });
-    this.shareService.getListResource('3').subscribe((res: any) => {
-      if (res) {
-        this.listDriver = [];
-        this.listDriver = res;
-      }
-    });
-  }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -138,78 +91,6 @@ export class CalendarCenterComponent
     }
   }
 
-  getParams(formName: string, fieldName: string) {
-    this.codxCalendarSV.getParams(formName, fieldName).subscribe((res) => {
-      if (res) {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.CalendarID == '') {
-          this.calendarID = 'STD';
-        } else {
-          this.calendarID = json.CalendarID;
-        }
-        this.getDayWeek(this.calendarID);
-        this.getDaysOff(this.calendarID);
-        // this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  getDayWeek(calendarID: string) {
-    // this.codxCalendarSV.getDayWeek(calendarID).subscribe((res) => {
-    //   if (res) {
-    //     this.dayWeek = res;
-    //     (
-    //       this.viewOrg?.currentView as any
-    //     )?.schedule?.scheduleObj?.first?.refresh();
-    //   }
-    // });
-  }
-
-  getDaysOff(calendarID: string) {
-    // this.codxCalendarSV.getDaysOff(calendarID).subscribe((res) => {
-    //   if (res) {
-    //     this.daysOff = res;
-    //     (
-    //       this.viewOrg?.currentView as any
-    //     )?.schedule?.scheduleObj?.first?.refresh();
-    //   }
-    // });
-  }
-
-  getCellContent(evt: any): string {
-    if (this.daysOff.length > 0) {
-      for (let i = 0; i < this.daysOff.length; i++) {
-        let day = new Date(this.daysOff[i].calendarDate);
-        if (
-          day &&
-          evt.getFullYear() == day.getFullYear() &&
-          evt.getMonth() == day.getMonth() &&
-          evt.getDate() == day.getDate()
-        ) {
-          var time = evt.getTime();
-          var ele = document.querySelectorAll('[data-date="' + time + '"]');
-          if (ele.length > 0) {
-            ele.forEach((item) => {
-              (item as any).style.color = this.daysOff[i].dayoffColor;
-              (item as any).style.backgroundColor =
-                this.daysOff[i].dayoffColor + '30';
-            });
-          }
-          let content =
-            '<div class="d-flex justify-content-between"><span >' +
-            this.daysOff[i].note +
-            '</span>' +
-            '<span class="' +
-            this.daysOff[i].symbol +
-            '"></span></div>';
-          return content;
-        }
-      }
-    }
-    return ``;
-  }
-
   //region EP
   showHour(date: any) {
     let temp = new Date(date);
@@ -224,85 +105,6 @@ export class CalendarCenterComponent
     return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
   //endRegion EP
-
-  //region EP_BookingCars
-  getResourceNameCar(resourceID: any) {
-    this.tempCarName = '';
-    this.listCar.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempCarName = r.resourceName;
-      }
-    });
-    return this.tempCarName;
-  }
-
-  getMoreInfoBookingCars(recID: any) {
-    this.selectBookingAttendeesCar = '';
-    this.driverName = ' ';
-    this.shareService.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          if (element.roleType != '2') {
-            this.selectBookingAttendeesCar =
-              this.selectBookingAttendeesCar + element.userID + ';';
-          } else {
-            this.driverName = this.getDriverName(element.userID);
-          }
-        });
-        if (this.driverName == ' ') {
-          this.driverName = null;
-        }
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  getMoreInfoBookingRooms(recID: any) {
-    this.selectBookingItems = [];
-    this.selectBookingAttendeesRoom = '';
-
-    this.shareService.getListItems(recID).subscribe((item: any) => {
-      if (item) {
-        this.selectBookingItems = item;
-      }
-    });
-    this.shareService.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          this.selectBookingAttendeesRoom =
-            this.selectBookingAttendeesRoom + element.userID + ';';
-        });
-        this.selectBookingAttendeesRoom;
-      }
-    });
-  }
-
-  getDriverName(resourceID: any) {
-    this.tempDriverName = '';
-    if (this.listDriver.length > 0) {
-      this.listDriver.forEach((r) => {
-        if (r.resourceID == resourceID) {
-          this.tempDriverName = r.resourceName;
-        }
-      });
-    }
-    return this.tempDriverName;
-  }
-  //endRegion EP_BookingCars
-
-  //region EP_BookingRooms
-  getResourceNameRoom(resourceID: any) {
-    this.tempRoomName = '';
-    this.listRoom.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempRoomName = r.resourceName;
-      }
-    });
-    return this.tempRoomName;
-  }
-  //endRegion EP_BookingRooms
 
   //region CO
   getDate(data) {
