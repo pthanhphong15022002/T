@@ -37,7 +37,7 @@ export class CodxViewFilesComponent implements OnInit {
   files:any[] = [];
   documents: number = 0;
   lstFileRemove:any[] = [];
-  lstPermission:any[] = [];
+  lstPermissionFile:any[] = [];
   size:number = 0;
   FILE_REFERTYPE = {
     IMAGE: 'image',
@@ -66,8 +66,6 @@ export class CodxViewFilesComponent implements OnInit {
     this.getFileByObjectID(this.objectID);
   }
 
-  setPermissionFile(){
-  }
   // get files by objectID
   getFileByObjectID(objectID:string){
     if(objectID){
@@ -180,14 +178,14 @@ export class CodxViewFilesComponent implements OnInit {
     this.codxATM.uploadFile();
   }
   // attachment return file
-  atmReturnedFile(evetn:any){
-    if(evetn.data)
+  atmReturnedFile(event:any){
+    if(event.data)
     {
-      this.addFiles(evetn.data);
+      this.selectFiles(event.data);
     }
   }
   // add files
-  addFiles(files:any[]){
+  selectFiles(files:any[]){
     debugger
     if(Array.isArray(files)){
       files.map((f:any) => {
@@ -242,7 +240,7 @@ export class CodxViewFilesComponent implements OnInit {
     {
       let lstFileAdd = this.files.filter(x => x.isNew);
       let $obs1 =  this.deleteFiles(this.lstFileRemove);
-      let $obs2 = this.saveFiles(lstFileAdd,this.objectID);
+      let $obs2 = this.addFiles(lstFileAdd,this.objectID);
       return forkJoin([$obs1,$obs2],(res1,res2) => {
         return (res1 && res2);
       });
@@ -267,9 +265,16 @@ export class CodxViewFilesComponent implements OnInit {
     }
     return of(true);
   }
-  saveFiles(files:any[],objectID:string):Observable<boolean>{
+  addFiles(files:any[],objectID:string):Observable<boolean>{
     if(files.length > 0){
       this.codxATM.objectId = objectID;
+      var p = new Permission()
+      p.read = true;
+      p.download = true;
+      p.objectType = "9";
+      p.isActive = true
+      this.lstPermissionFile.push(p);
+      this.codxATM.addPermissions = this.lstPermissionFile;
       this.codxATM.fileUploadList = JSON.parse(JSON.stringify(files));
       return this.codxATM.saveFilesMulObservable()
       .pipe(map((res:any) => {
