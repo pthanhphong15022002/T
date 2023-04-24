@@ -5,13 +5,11 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
-  ChangeDetectorRef,
   Input,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import moment from 'moment';
 import { CodxShareService } from '../../../codx-share.service';
-import { CodxCalendarService } from '../codx-calendar.service';
 
 @Component({
   selector: 'lib-calendar-center',
@@ -22,6 +20,15 @@ export class CalendarCenterComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  @ViewChild('view') viewOrg!: ViewsComponent;
+
+  @Input() resources!: any;
+  @Input() resourceModel!: any;
+
   views: Array<ViewModel> | any = [];
   fields = {
     id: 'transID',
@@ -31,38 +38,15 @@ export class CalendarCenterComponent
     status: 'transType',
   };
   resourceID: any;
-  tempCarName = '';
-  driverName = '';
-  selectBookingAttendeesCar = '';
-  selectBookingAttendeesRoom = '';
-  tempDriverName = '';
-  selectBookingItems = [];
-  tempRoomName = '';
   startTime: any;
   month: any;
   day: any;
-  daysOff = [];
-  calendarID: string;
-  vllPriority = 'TM005';
-  dayWeek = [];
   btnAdd = {
     id: 'btnAdd',
   };
+  vllPriority = 'TM005';
 
-  @Input() resources!: any;
-  @Input() resourceModel!: any;
-
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-  @ViewChild('view') viewOrg!: ViewsComponent;
-
-  constructor(
-    private injector: Injector,
-    private shareService: CodxShareService,
-    private codxCalendarSV: CodxCalendarService
-  ) {
+  constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
   }
 
@@ -105,20 +89,6 @@ export class CalendarCenterComponent
       };
       this.shareService.dateChange.next(obj);
     }
-  }
-
-  getParams(formName: string, fieldName: string) {
-    this.codxCalendarSV.getParams(formName, fieldName).subscribe((res) => {
-      if (res) {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.CalendarID == '') {
-          this.calendarID = 'STD';
-        } else {
-          this.calendarID = json.CalendarID;
-        }
-      }
-    });
   }
 
   //region EP
