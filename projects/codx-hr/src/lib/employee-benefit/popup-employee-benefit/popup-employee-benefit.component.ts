@@ -32,6 +32,7 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
+  genderGrvSetup: any;
 
   //Render Signer Position follow Singer ID
   data: any;
@@ -110,6 +111,41 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
       });
   }
 
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
+        if (fieldName === 'signerID') 
+        {
+          if (emp[0][0]?.positionID) {
+            this.hrSevice
+              .getPositionByID(emp[0][0]?.positionID)
+              .subscribe((res) => {
+                if (res) {
+                  this.currentEJobSalaries.signerPosition = res.positionName;
+                  this.formGroup.patchValue({
+                    signerPosition: this.currentEJobSalaries.signerPosition,
+                  });
+                  this.cr.detectChanges();
+                }
+              });
+          } else {
+            this.currentEJobSalaries.signerPosition = null;
+            this.formGroup.patchValue({
+              signerPosition: this.currentEJobSalaries.signerPosition,
+            });
+          }
+        }
+        }
+        this.cr.detectChanges();
+      })
+  }
+
   onInit(): void {
     if (!this.formModel) {
       this.hrSevice.getFormModel(this.funcID).then((formModel) => {
@@ -121,9 +157,23 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
     } else {
       this.initForm();
     }
+
+     //Load data field gender from database
+     this.cache
+     .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+     .subscribe((res) => {
+       this.genderGrvSetup = res?.Gender;
+     });
+
+     //Update Employee Information when CRUD then render
+     if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId, 'employeeID');
   }
 
   handleSelectEmp(evt){
+    if (evt.data === '') {
+      this.employeeObj = '';
+      this.genderGrvSetup = '';
+    }
     if(evt.data != null){
       this.employeeId = evt.data
       let empRequest = new DataRequest();
@@ -134,7 +184,6 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
       this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.employeeObj = emp[0][0]
-          // console.log('employee cua form', this.employeeObj);
           this.df.detectChanges();
         }
       });

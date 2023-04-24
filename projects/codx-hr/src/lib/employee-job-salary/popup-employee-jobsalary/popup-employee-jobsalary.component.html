@@ -9,20 +9,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group row mt-5">
-      <!-- <div class="col-4">
-            <codx-img
-              [width]="35"
-              class="me-3 col-3"
-              [objectId]="employeeObj?.employeeID"
-              [referType]="'avt'"
-              [objectName]="
-                employeeObj?.employeeName ?? employeeObj?.emp.employeeName
-              "
-              [objectType]="'HR_Employees'"
-            >
-            </codx-img>
-          </div> -->
+    <div class="form-group row mt-5"> 
       <div class="col-6">
         <div class="d-flex">
           <div class="d-flex flex-column">
@@ -84,15 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="actionType != 'edit'">
-        <!-- <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="employeeID"
-          [formModel]="formModel"
-          [Group]="formGroup"
-          (valueChange)="handleSelectEmp($event)"
-        >
-        </codx-input> -->
+      <div class="col-6" *ngIf="actionType != 'edit'"> 
         <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
         <codx-input
           field="employeeID"
@@ -101,33 +80,7 @@
           (valueChange)="handleSelectEmp($event)"
         >
         </codx-input>
-      </div>
-      <!-- <div *ngIf="actionType == 'edit' || actionType == 'copy' || (actionType == 'add' && employeeObj != null)">
-        <div class="d-flex">
-          <div class="d-flex flex-column">
-            <codx-img [width]="35" class="me-3" [objectId]="employeeObj.employeeID" [referType]="'avt'"
-              [objectName]="employeeObj.employeeName" [objectType]="'HR_Employees'">
-            </codx-img>
-            <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="employeeObj?.gender" [showText]="false"
-              [showIcon]="true" [showBgColor]="true">
-            </codx-vll>
-          </div>
-          <div class="d-flex flex-column">
-            <div>
-              <div class="text-dark fw-bold">
-                <span>
-                  {{ employeeObj.employeeName }}
-                </span>
-                <i class="icon-qr_code_scanner icon-14 me-1"></i>
-                <span>
-                  {{ employeeObj.employeeID }}
-                </span>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div> -->
+      </div> 
     </div>
     <div class="form-group row">
       <div class="col-6">
@@ -182,9 +135,7 @@
         ></codx-input>
       </div>
     </div>
-
     <hr />
-
     <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
