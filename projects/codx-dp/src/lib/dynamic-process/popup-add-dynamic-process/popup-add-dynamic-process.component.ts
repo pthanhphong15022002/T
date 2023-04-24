@@ -858,7 +858,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         //   this.currentTab++;
         //   this.processTab == 0 && this.processTab++;
         // }
-        
+
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
         this.processTab == 0 && this.processTab++;
@@ -1459,9 +1459,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   return;
     // }
 
-    //view new 
+    //view new
     if(!this.process?.processNo){
-      this.process.processNo = await firstValueFrom(this.dpService.genAutoNumber(this.funcID,this.entityName,'ProcessNo')); 
+      this.process.processNo = await firstValueFrom(this.dpService.genAutoNumber(this.funcID,this.entityName,'ProcessNo'));
     }
     this.instanceNoSetting = this.process.processNo ;
 
@@ -2697,7 +2697,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskList.splice(indexDb, 1);
         }
         this.sumTimeStep();
-        
+
         if(task?.roles?.length > 0){
           task?.roles.forEach((role) => {
             this.deleteRoleInstep(this.step, role);
@@ -2715,7 +2715,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (!check) {
           this.listStepEdit.push(stepID);
         }
-    } 
+    }
   }
 
   changeGroupTaskOfTask(taskData, taskGroupIdOld) {
@@ -3103,7 +3103,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         read: true,
         roleType: 'R',
       };
-      
+
       let checkStep = this.step?.roles?.some(
         (role) =>
           role.objectID == roleStep.objectID &&
@@ -3186,7 +3186,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           return true;
         }
       }
-    }   
+    }
     return false;
   }
 
@@ -3430,36 +3430,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuration($event) {
     if ($event && $event != null) {
-      var isBlock = true;
-      if($event.field == 'durationDay') {
-          if($event.data < this.dayStep) {
-            this.notiService.notifyCode('DP012');
-            return;
-          }
-      }
-      else if($event.field == 'durationHour')  {
-          if($event.data < this.hourStep) {
-            $event.data = this.step[$event.field];
-            this.notiService.notifyCode('DP012');
-            return;
-          }
-      }
+      // var isBlock = true;
+      // if($event.field == 'durationDay') {
+      //     if($event.data < this.dayStep) {
+      //       this.notiService.notifyCode('DP012');
+      //       return;
+      //     }
+      // }
+      // else if($event.field == 'durationHour')  {
+      //     if($event.data < this.hourStep) {
+      //       $event.data = this.step[$event.field];
+      //       this.notiService.notifyCode('DP012');
+      //       return;
+      //     }
+      // }
 
-      if(isBlock) {
-        this.step[$event.field] = $event.data;
-        if (!$event.data || $event.data == '0') {
-          this.step[$event.field] = 0;
-        }
-      }
-      this.updateStepChange(this.step?.recID);
+      // if(isBlock) {
+      //   this.step[$event.field] = $event.data;
+      //   if (!$event.data || $event.data == '0') {
+      //     this.step[$event.field] = 0;
+      //   }
+      // }
 
       // ko xóa
-      // if($event.type == 'D') {
-      //   this.step.durationDay = $event?.value;
-      // }
-      // else {
-      //   this.step.durationHour = $event?.value;
-      //}
+        this.step.durationDay = $event?.valueDay;
+        this.step.durationHour = $event?.valueHour;
+        this.updateStepChange(this.step?.recID);
     }
   }
 

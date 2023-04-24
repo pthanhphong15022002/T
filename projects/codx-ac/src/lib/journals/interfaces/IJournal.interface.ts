@@ -49,7 +49,7 @@ export interface IJournal {
   useExciseTax: boolean | null;
   otherControl: string;
   approvalControl: string;
-  approver: string;
+  approver: any;
   autoPost: any;
   unPostControl: boolean;
   unPostDays: number | null;
@@ -67,10 +67,10 @@ export interface IJournal {
   thumbnail: string;
   vatType: string;
   voucherNoRule: string;
-  creater: string;
-  poster: string;
-  unposter: string;
-  sharer: string;
+  creater: any;
+  poster: any;
+  unposter: any;
+  sharer: any;
   duplicateVoucherNo: string;
   dataValue: string;
   approvalType: string;
