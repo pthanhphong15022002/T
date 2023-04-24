@@ -229,40 +229,40 @@ export class PopupEBasicSalariesComponent
     }
   }
 
-  valueChange(event) {
-    if (
-      event?.field === 'employeeID' &&
-      event?.component &&
-      event?.data != ''
-    ) {
-      this.employeeObj = event?.data?.dataSelected[0]?.dataSelected;
-      this.cr.detectChanges();
-    }
+  // valueChange(event) {
+  //   if (
+  //     event?.field === 'employeeID' &&
+  //     event?.component &&
+  //     event?.data != ''
+  //   ) {
+  //     this.employeeObj = event?.data?.dataSelected[0]?.dataSelected;
+  //     this.cr.detectChanges();
+  //   }
 
-    if (event?.field === 'signerID' && event?.component && event?.data != '') {
-      let employee = event?.data?.dataSelected[0]?.dataSelected;
+  //   if (event?.field === 'signerID' && event?.component && event?.data != '') {
+  //     let employee = event?.data?.dataSelected[0]?.dataSelected;
 
-      if (employee) {
-        if (employee.PositionID) {
-          this.hrService
-            .getPositionByID(employee.PositionID)
-            .subscribe((res) => {
-              if (res) {
-                this.EBasicSalaryObj.signerPosition = res.positionName;
-                this.formGroup.patchValue({
-                  signerPosition: this.EBasicSalaryObj.signerPosition,
-                });
-                this.cr.detectChanges();
-              }
-            });
-        } else {
-          this.EBasicSalaryObj.signerPosition = null;
-          this.formGroup.patchValue({
-            signerPosition: this.EBasicSalaryObj.signerPosition,
-          });
-        }
-      }
-      this.cr.detectChanges();
-    }
-  }
+  //     if (employee) {
+  //       if (employee.PositionID) {
+  //         this.hrService
+  //           .getPositionByID(employee.PositionID)
+  //           .subscribe((res) => {
+  //             if (res) {
+  //               this.EBasicSalaryObj.signerPosition = res.positionName;
+  //               this.formGroup.patchValue({
+  //                 signerPosition: this.EBasicSalaryObj.signerPosition,
+  //               });
+  //               this.cr.detectChanges();
+  //             }
+  //           });
+  //       } else {
+  //         this.EBasicSalaryObj.signerPosition = null;
+  //         this.formGroup.patchValue({
+  //           signerPosition: this.EBasicSalaryObj.signerPosition,
+  //         });
+  //       }
+  //     }
+  //     this.cr.detectChanges();
+  //   }
+  // }
 }
