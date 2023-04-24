@@ -11,6 +11,7 @@
   idField="recID"
   [button]="buttonAdd"
   (buttonClick)="addBenefit($event)"
+  (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
 
@@ -50,12 +51,12 @@
           >
           </codx-img>
           <codx-vll
-            class="me-2 badge badge-sm"
-            [name]="'HR001'"
+            class="badge badge-sm"
+            [name]="genderGrvSetup?.referedValue"
             [value]="data?.emp?.gender"
-            [showText]="false"
-            [showIcon]="true"
-            [showBgColor]="true"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="false"
           >
           </codx-vll>
         </div>
@@ -166,13 +167,18 @@
           </div>
         </div>
         <div class="d-flex flex-row">
-          <div>
-            <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
+          <div class="me-2">
+            <codx-attachment-temp
+              [objectID]="data?.recID"
+              [formModel]="view.formModel"
+            >
+            </codx-attachment-temp>
+            <!-- <div class="d-flex flex-row" *ngIf="data?.attachments > 0">
               <i class="icon-attach_file text-primary icon-15"></i>
               <div class="align-self-center notification-count me-4">
                 {{ data?.attachments }}
               </div>
-            </div>
+            </div> -->
           </div>
           <codx-vll
             [formModel]="view.formModel"
@@ -185,7 +191,7 @@
           </codx-vll>
         </div>
       </div>
-      <codx-attachment
+      <!-- <codx-attachment
         #attachment
         [objectId]="data?.recID"
         [objectType]="view.formModel.entityName"
@@ -200,7 +206,7 @@
         displayThumb="full"
         showMessage="0"
       >
-      </codx-attachment>
+      </codx-attachment> -->
     </div>
     <div class="w-25">
       <codx-vll
@@ -300,3 +306,141 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Detail -->
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card codx_cardcenter p-3"
+    [imageId]="data?.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageWidth]="40"
+    [formModel]="view.formModel"
+    [titleTmp]="titleTmp"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'hover'"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+  <codx-vll
+    class="badge badge-sm p-gender"
+    [name]="genderGrvSetup?.referedValue"
+    [value]="data?.emp?.gender"
+    [showText]="true"
+    [showIcon]="false"
+    [showBgColor]="false"
+  >
+  </codx-vll>
+  <ng-template #titleTmp let-data>
+    <div class="w-100">
+      <div class="justify-content-between">
+        <span>
+          {{ data?.emp?.employeeName }}
+        </span>
+
+        <span>
+          <i class="icon-qr_code_scanner icon-14 me-1"></i>
+          <span class="text-danger">
+            {{ data?.emp?.employeeID }}
+          </span>
+        </span>
+      </div>
+
+      <div class="justify-content-between">
+        <span
+          [innerHTML]="
+            data.emp.positionID
+              | formatvalue : view.formModel : 'PositionID'
+              | async
+          "
+        ></span>
+      </div>
+
+      <div
+        class="d-flex flex-column"
+        [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
+      >
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
+            <div
+              class="align-self-center fw-bold"
+              [ngbTooltip]="grvSetup?.benefitID?.headerText"
+            >
+              <span
+                class="align-self-center fw-bold"
+                [innerHTML]="
+                  data.benefitID
+                    | formatvalue : view.formModel : 'benefitID'
+                    | async
+                "
+              >
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
+            <span class="icon-attach_money icon-15 me-1"></span>
+            <div
+              class="align-self-center fw-bold"
+              [ngbTooltip]="grvSetup?.benefitAmt?.headerText"
+            >
+              <span
+                class="align-self-center fw-bold"
+                [innerHTML]="
+                  data?.benefitAmt
+                    | formatvalue : view.formModel : 'benefitAmt'
+                    | async
+                "
+              >
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row">
+            <span class="icon-calendar_today icon-15 me-1"></span>
+            <div class="align-self-center fw-bold">
+              <span
+                [title]="eBenefitHeader ? eBenefitHeader['EffectedDate'] : ''"
+                [ngbTooltip]="grvSetup?.effectedDate?.headerText"
+              >
+                {{ data?.effectedDate | fmDT }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between text-dark">
+        <span class="mt-2">
+          <codx-vll
+            class="badge fw-bold"
+            [name]="'HRS102'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #panelRightListDetail let-data>
+  <lib-view-detail-ebenefit
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [view]="view"
+    [formModel]="view.formModel"
+    (uploaded)="getDetailESalary($event, data)"
+    (clickMFunction)="clickEvent($event, data)"
+  >
+  </lib-view-detail-ebenefit>
+</ng-template>
+
+<!--End Detail -->

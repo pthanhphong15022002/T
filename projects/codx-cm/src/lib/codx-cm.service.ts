@@ -61,12 +61,38 @@ export class CodxCmService {
     );
   }
 
-  updateContactCrm(contact, funcID, recIDCrm, isDelete = false){
+  updateContactCrm(recID){
     return this.api.exec<any>(
       'CM',
-      'CustomersBusiness',
-      'UpdateContactCrmAsync',
-      [contact, funcID, recIDCrm, isDelete]
+      'ContactsBusiness',
+      'DeleteContactInCMAsync',
+      [recID]
+    );
+  };
+
+  updateContactByPopupListCt(contact){
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'UpdateContactByPopContactsAsync',
+      [contact]
+    );
+  }
+  getStepInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsInstanceByInstanceIDAsync',
+      data
+    );
+  }
+
+  getListAddress(entityName, recID){
+    return this.api.exec<any>(
+      'BS',
+      'AddressBookBusiness',
+      'LoadDataAsync',
+      [entityName, recID]
     );
   }
 
@@ -79,5 +105,15 @@ export class CodxCmService {
     formModel['funcID'] = functionID;
     return formModel;
   }
+
+  //#region API For Deal
+  getListCustomer(){
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetListCustomersAsync'
+    );
+  }
+  //#endregion
 
 }

@@ -131,7 +131,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       gridModels.entityName = this.formModel.entityName;
       gridModels.gridViewName = this.formModel.gridViewName;
       gridModels.pageLoading = false;
-      gridModels.srtColumns = "StepNo";
+      gridModels.srtColumns = 'StepNo';
       gridModels.srtDirections = 'asc';
 
       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
@@ -323,11 +323,13 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       }
     });
 
-    this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
-      console.log('result delete aaappppp', res);
-      if (res == true) {
-        this.addEditItem.emit(true);
-      }
-    });
+    if (this.lstDeleteStep?.length > 0) {
+      this.esService.deleteApprovalStep(this.lstDeleteStep).subscribe((res) => {
+        console.log('result delete aaappppp', res);
+        if (res == true) {
+          this.addEditItem.emit(true);
+        }
+      });
+    }
   }
 }

@@ -25,6 +25,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   isCheckContactType = false;
   recIDCm: any;
   objectType: any;
+  objectName: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -37,9 +38,13 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.action = dt?.data?.action;
     this.type = dt?.data?.type;
     this.recIDCm = dt?.data?.recIDCm;
-    this.objectType = dt?.data?.objectType
+    this.objectType = dt?.data?.objectType;
+    this.objectName = dt?.data?.objectName;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     if(this.type == 'formAdd'){
       this.contactType = '1';
+    }else{
+      this.contactType = dt?.data?.contactType
     }
     if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
@@ -48,16 +53,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+
   }
 
   // getLastAndFirstName(contactName) {
@@ -96,7 +92,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     if(this.type == 'formDetail'){
       this.data.contactType = this.contactType;
     }
-    if (this.action == 'add' || this.action == 'copy') {
+    if (this.action == 'add') {
       data = [
         null,
         this.data,
@@ -105,20 +101,25 @@ export class PopupQuickaddContactComponent implements OnInit {
         this.dialog.formModel.funcID,
         this.dialog.formModel.entityName,
         this.recIDCm,
-        this.objectType
+        this.objectType,
+        ,
+        this.objectName
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
           this.data = res;
-          this.data.contactType = this.contactType;
           this.dialog.close(this.data);
         } else {
           this.dialog.close();
         }
       });
     } else {
-      this.dialog.close(this.data);
+      this.cmSv.updateContactByPopupListCt(this.data).subscribe(res => {
+        if(res){
+          this.dialog.close(res);
+        }
+      })
     }
   }
 

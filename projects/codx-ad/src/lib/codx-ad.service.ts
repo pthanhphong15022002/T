@@ -349,7 +349,8 @@ export class CodxAdService {
 
   //#region AD_User new process
   removeAD_UserRoles(
-    lstAD_UserRoles: tmpformChooseRole[],
+    lstModuleIDs: string[],
+    lstModuleSales: string[],
     lstUserIDs: string[]
   ) {
     return this.api.execSv(
@@ -357,21 +358,22 @@ export class CodxAdService {
       'ERM.Business.AD',
       'UsersBusiness',
       'RemoveAD_UserRolesAsync',
-      [lstAD_UserRoles, lstUserIDs]
+      [lstModuleIDs, lstModuleSales, lstUserIDs]
     );
   }
 
   addUpdateAD_UserRoles(
     lstAD_UserRoles: tmpformChooseRole[],
     lstUserIDs: string[],
-    needValidate: boolean
+    needValidate: boolean,
+    autoCreated: boolean
   ) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UsersBusiness',
       'AddUserRolesAsync',
-      [lstAD_UserRoles, lstUserIDs, needValidate]
+      [lstAD_UserRoles, lstUserIDs, needValidate, autoCreated]
     );
   }
   //#endregion
@@ -384,6 +386,36 @@ export class CodxAdService {
       'UserGroupsBusiness',
       'AddAsync',
       [userGroupModel]
+    );
+  }
+
+  addUserGroupMemberAsync(userGroupModel, isOverrideRoles: boolean) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'AddGroupMembersAsync',
+      [userGroupModel, isOverrideRoles]
+    );
+  }
+
+  validateGroupMemberRoles(sLstMemberIDs: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'ValidateMemberRolesAsync',
+      [sLstMemberIDs]
+    );
+  }
+
+  removeGroupMember(lstMDID: string[], lstMDSales: string[], groupMember) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'RemoveGroupMembersAsync',
+      [lstMDID, lstMDSales, groupMember]
     );
   }
   //#endregion

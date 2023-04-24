@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { ApprovalHrComponent } from './approval-hr/approval-hr.component';
 import { TestComponent } from './test/test.component';
+import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
     children: [
       {
         path: 'econtracts/:FuncID/:id',
-        component: TestComponent,
+        component: ApprovalHRContractComponent,
       },
     ],
   },

@@ -95,7 +95,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   };
 
   // dataSource: any;
-  dataSource2: any = [{ Country: 'Canada', GDP: 3.05, WorldShare: 2.04 }];
 
   // // custom code end
   titleSettings: object = {

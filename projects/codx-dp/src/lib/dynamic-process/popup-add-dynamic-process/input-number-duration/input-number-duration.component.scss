@@ -1,0 +1,11 @@
+::ng-deep .input-group-text {
+  line-height: 0.5;
+  font-size: 1rem;
+  border-left-color: transparent;
+  background-color: transparent;
+}
+
+::ng-deep .form-control {
+  border-left-color:hidden;
+  border-right-color: transparent;
+}

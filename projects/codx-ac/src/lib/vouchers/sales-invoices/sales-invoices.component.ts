@@ -48,41 +48,6 @@ export class SalesInvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  fmSalesInvoicesLines: FormModel = {
-    entityName: 'SM_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-  };
-  ths: { field: string; label: string }[] = [
-    {
-      field: 'lblNum',
-      label: 'STT',
-    },
-    {
-      field: 'lblProduct',
-      label: 'Mặt hàng',
-    },
-    {
-      field: 'lblQty',
-      label: 'Số lượng',
-    },
-    {
-      field: 'lblPrice',
-      label: 'Đơn giá',
-    },
-    {
-      field: 'lblCost',
-      label: 'Thành tiền',
-    },
-    {
-      field: 'lblTaxRate',
-      label: 'Thuế suất',
-    },
-    {
-      field: 'lblTax',
-      label: 'Tiền thuế',
-    },
-  ];
 
   constructor(inject: Injector, private acService: CodxAcService) {
     super(inject);
@@ -119,14 +84,13 @@ export class SalesInvoicesComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName =
-        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+      this.functionName = this.acService.toCamelCase(res.defaultName);
     });
   }
   //#endregion
 
   //#region Event
-  handleChange(e) {
+  onChange(e) {
     console.log(e);
 
     this.selectedData = e?.data;
@@ -138,10 +102,12 @@ export class SalesInvoicesComponent
     salesInvoicesLinesOptions.pageLoading = false;
     this.acService
       .loadDataAsync('SM', salesInvoicesLinesOptions)
-      .subscribe((res) => (this.salesInvoicesLines = res));
+      .subscribe((res: ISalesInvoicesLine[]) => {
+        this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo);
+      });
   }
 
-  handleClickAdd(e): void {
+  onClickAdd(e): void {
     this.view.dataService
       .addNew(() =>
         this.api.exec('SM', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
@@ -169,7 +135,7 @@ export class SalesInvoicesComponent
       });
   }
 
-  handleClickMF(e, data) {
+  onClickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -185,7 +151,9 @@ export class SalesInvoicesComponent
         break;
     }
   }
+  //#endregion
 
+  //#region Method
   delete(data): void {
     this.view.dataService.delete([data], true).subscribe((res: any) => {
       console.log({ res });
@@ -217,6 +185,25 @@ export class SalesInvoicesComponent
 
   copy(e, data): void {
     console.log('copy', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      let options = new SidebarModel();
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      options.isFull = true;
+
+      this.callfc.openSide(
+        PopupAddSalesInvoiceComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+          journalNo: this.journalNo,
+        },
+        options,
+        this.view.funcID
+      );
+    });
   }
 
   export(data) {
@@ -242,9 +229,6 @@ export class SalesInvoicesComponent
       null
     );
   }
-  //#endregion
-
-  //#region Method
   //#endregion
 
   //#region Function

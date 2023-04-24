@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CacheService,
   FormModel,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
@@ -81,7 +82,8 @@ export class CmCustomerComponent
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private notiService: NotificationsService
   ) {
     super(inject);
     if (!this.funcID)
@@ -344,7 +346,8 @@ export class CmCustomerComponent
     //     });
     // }
     this.view.dataService.methodSave = 'AddCrmAsync';
-    this.view.dataService.methodUpdate = 'UpdateCustomerAsync';
+    this.view.dataService.methodUpdate = 'UpdateCrmAsync';
+    this.view.dataService.methodDelete = 'DeleteCmAsync';
 
     this.detectorRef.detectChanges();
   }
@@ -409,7 +412,7 @@ export class CmCustomerComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF(e){
+  changeDataMF(e) {
     console.log(e);
   }
 
@@ -440,7 +443,7 @@ export class CmCustomerComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            this.customerDetail.listTab(this.funcID);
+            // this.customerDetail.listTab(this.funcID);
           }
         });
       });
@@ -476,8 +479,15 @@ export class CmCustomerComponent
             if (e && e.event != null) {
               this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
-              this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
-              this.customerDetail.listTab(this.funcID);
+              this.dataSelected = JSON.parse(JSON.stringify(e.event));
+              this.customerDetail.getListContactByObjectID(
+                this.dataSelected?.recID
+              );
+              this.customerDetail.getListAddress(
+                this.entityName,
+                this.dataSelected?.recID
+              );
+              // this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
           });
@@ -504,7 +514,7 @@ export class CmCustomerComponent
           this.titleAction + ' ' + this.view?.function.customName;
         var dialog = this.callfc.openSide(
           PopupAddCmCustomerComponent,
-          ['copy', this.titleAction],
+          ['copy', this.titleAction, this.dataSelected.recID],
           option
         );
         dialog.closed.subscribe((e) => {
@@ -512,7 +522,13 @@ export class CmCustomerComponent
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
             this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
-            this.customerDetail.listTab(this.funcID);
+            this.customerDetail.getListContactByObjectID(
+              this.dataSelected?.recID
+            );
+            this.customerDetail.getListAddress(
+              this.entityName,
+              this.dataSelected?.recID
+            );
             this.detectorRef.detectChanges();
           }
         });
@@ -522,7 +538,12 @@ export class CmCustomerComponent
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
+    var checkContact = false;
+    if(this.funcID == 'CM0102'){
+      checkContact = (data?.contactType?.split(';').some((x) => x == '1') && data.objectID != null && data.objectID.trim() != '') ? true : false;
+    }
+    if(!checkContact){
+      this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
@@ -531,12 +552,19 @@ export class CmCustomerComponent
           this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
+    }else{
+      this.notiService.notifyCode(
+        'Liên hệ này đang là liên hệ chính! Không xóa được'
+      );
+      return;
+    }
+
     this.detectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteCrmAsync';
-    opt.data = [itemSelected.recID, this.funcID];
+    opt.methodName = 'DeleteCmAsync';
+    opt.data = [itemSelected.recID, this.funcID, this.entityName];
     return true;
   }
   //#endregion
@@ -556,7 +584,7 @@ export class CmCustomerComponent
     } else if (this.funcID == 'CM0103') {
       return data.partnerName;
     } else {
-      return data.opponentName;
+      return data.competitorName;
     }
   }
 }

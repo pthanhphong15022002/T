@@ -236,15 +236,16 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
       });
     }else{
       this.handelDataOutput(isUpdate)
+      this.dataSource['progress'] = this.progressData ;
+      this.dataSource['note'] = this.note ;
+      this.dataSource['actualEnd'] = this.actualEnd;
+      // this.progress = this.progressData;
       this.popupUpdateProgress.close();
     }
   }
 
   handelDataOutput(isUpdate){
     let dataOutput  = new progressOutput();
-    
-    dataOutput.groupTaskID = this.dataSource['taskGroupID'];
-    dataOutput.taskID = this.dataSource['recID'];
     dataOutput.isUpdate = isUpdate;
     dataOutput.actualEnd = this.actualEnd;
     dataOutput.note = this.note;
@@ -295,9 +296,9 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
 
 }
 export class progressOutput {
-		stepID: string;
-		groupTaskID: string;                                    
-		taskID: string;
+		stepID: string = null;
+		groupTaskID: string = null;                                    
+		taskID: string = null;
 		type: string;
 		progressStep: number = null;
 		progressGroupTask: number = null;

@@ -290,7 +290,7 @@
       <div class="modal-footer">
         <div class="w-100 d-flex justify-content-end">
 
-          <button class="btn btn-primary" (click)="onSaveCheckIn()">
+          <button class="btn btn-primary" (click)="onSaveCheckIn()" [disabled]="onSaving">
             <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
           </button>
         </div>

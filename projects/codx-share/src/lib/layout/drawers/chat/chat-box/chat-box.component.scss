@@ -232,10 +232,10 @@ codx-chat-box.active{
     border-radius: 4px;
     padding: 4px;
 }
-.reply-content{
-    width: 90%;
-    line-break: anywhere;
-}
+// .reply-content{
+//     width: 90%;
+//     line-break: anywhere;
+// }
 
 .reply-content{
     max-width: 250px;
@@ -260,8 +260,8 @@ codx-chat-box.active{
     padding: 6px 10px;
     text-align: left;
     outline: none;
-    border: 1px solid gray;
-    border-radius: 20px;
+    border: 1px solid var(--gray-150);
+    border-radius: 3px;
 }
 
 .popup-vote{

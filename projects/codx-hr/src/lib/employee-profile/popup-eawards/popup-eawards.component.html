@@ -223,15 +223,13 @@
           <codx-img [width]="50" [objectId]="empObj?.employeeID" [referType]="'avt'"
             [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
           </codx-img>
-          <!-- <codx-vll *ngIf="empObj?.gender != null" class="badge badge-sm" [name]="'HR001'"
-            [value]="empObj?.gender" [showText]="false" [showIcon]="true" [showBgColor]="true">
-          </codx-vll> -->
+          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="empObj?.gender"
+          [showText]="true" [showIcon]="false" [showBgColor]="false">
+        </codx-vll>
         </div>
-        <!-- <div *ngIf="empObj != null" class="d-flex flex-column">
+        <div *ngIf="empObj != null" class="d-flex flex-column">
           <div class="fw-bold">
             <span class="text-dark me-2">{{ empObj?.employeeName }}</span>
-            <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-            <span class="text-danger">{{ empObj?.employeeID }}</span>
           </div>
           <div class="text-gray-700">
             <span [innerHTML]="empObj?.positionID"></span>
@@ -239,7 +237,7 @@
           <div class="text-gray-700">
             <span [innerHTML]="empObj?.orgUnitID"></span>
           </div>
-        </div> -->
+        </div>
       </div>
       <div class="col-6" *ngIf="actionType != 'edit'">
         <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
@@ -295,7 +293,7 @@
     <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-        <codx-input field="decisionNo" [formModel]="formModel" [Group]="formGroup"></codx-input>
+        <codx-input field="decisionNo" [formModel]="formModel" [disabled]="true" [Group]="formGroup"></codx-input>
       </div>
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
@@ -306,7 +304,8 @@
     <div class="form-group row">
       <div class="d-flex flex-stack">
         <codx-label fiedName="Signer" [formModel]="formModel"></codx-label>
-        <codx-input field="signerID" [formModel]="formModel" [showInput]="false" [multiple]="false"
+        <codx-input field="signerID" [formModel]="formModel" 
+        [showInput]="false" [multiple]="false"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>

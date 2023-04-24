@@ -7,6 +7,7 @@ import {
   DialogRef,
   FormModel,
   CacheService,
+  NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-quickadd-contact/popup-quickadd-contact.component';
 
@@ -26,19 +27,29 @@ export class PopupListContactsComponent implements OnInit {
   lstSearch = [];
   type: any;
   contactType = '';
+  recIDCm = '';
+  objectType = '';
+  objectName = '';
+  gridViewSetup: any;
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
     private changeDet: ChangeDetectorRef,
     private cmSv: CodxCmService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.type = dt?.data[0];
-    if(this.type == 'formAdd'){
+    this.type = dt?.data?.type;
+    if (this.type == 'formAdd') {
       this.contactType = '1';
     }
+    this.recIDCm = dt?.data?.recIDCm;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.objectType = dt?.data?.objectType;
+    this.objectName = dt?.data?.objectName;
+
   }
 
   ngOnInit(): void {
@@ -58,11 +69,35 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   onSave() {
-    if (this.contact != null) this.dialog.close(this.contact);
-    else return;
+    if(this.type == 'formDetail'){
+      this.contact.contactType = this.contactType;
+      this.contact.objectID = this.recIDCm;
+      this.contact.objectType = this.objectType;
+      this.contact.objectName = this.objectName;
+
+      if(this.contact.contactType == null || this.contact.contactType.trim() == ''){
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['ContactType'].headerText + '"'
+        );
+        return;
+      }
+
+      this.cmSv.updateContactByPopupListCt(this.contact).subscribe(res => {
+        if(res){
+          this.dialog.close(res);
+        }
+      })
+    }else{
+      if (this.contact != null) this.dialog.close(this.contact);
+      else return;
+    }
+
+
   }
 
-  valueChange(e){
+  valueChange(e) {
     this.contactType = e.data;
   }
 
@@ -81,39 +116,53 @@ export class PopupListContactsComponent implements OnInit {
     dataModel.entityName = 'CM_Contacts';
     dataModel.funcID = 'CM0102';
     opt.FormModel = dataModel;
-    var obj = {
-      moreFuncName: this.moreFuncAdd,
-      action: 'add',
-      dataContact: null,
-      type: this.type
-    }
-    var dialog = this.callFc.openForm(
-      PopupQuickaddContactComponent,
-      '',
-      500,
-      500,
-      '',
-      obj,
-      '',
-      opt
-    );
-    dialog.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        //gán tạm thời để xử lí liên hệ chính
-        this.contact = e.event;
-        this.lstContacts.push(this.contact);
-        this.lstSearch = this.lstContacts;
-        var index = this.lstSearch.findIndex(
-          (x) => x.recID == this.contact.recID
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: this.moreFuncAdd,
+          action: 'add',
+          dataContact: null,
+          type: this.type,
+          gridViewSetup: res,
+          contactType: this.contactType
+
+        };
+        var dialog = this.callFc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          500,
+          '',
+          obj,
+          '',
+          opt
         );
-        if (index > -1) {
-          this.changeContacts(index, this.contact);
-        } else {
-          this.changeContacts(0, this.lstSearch[0]);
-        }
-        this.changeDet.detectChanges()
-      }
-    });
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            //gán tạm thời để xử lí liên hệ chính
+            if (e.event?.recID) {
+              this.contact = e.event;
+              this.contactType = this.contact.contactType;
+              this.lstContacts.push(this.contact);
+              this.lstSearch = this.lstContacts;
+              var index = this.lstSearch.findIndex(
+                (x) => x.recID == this.contact.recID
+              );
+              if (index > -1) {
+                this.changeContacts(index, this.contact);
+              } else {
+                this.changeContacts(0, this.lstSearch[0]);
+              }
+            }else{
+              this.changeContacts(0, this.lstSearch[0]);
+
+            }
+            this.changeDet.detectChanges();
+
+          }
+        });
+      });
   }
 
   searchName(searchTerm) {
@@ -133,8 +182,7 @@ export class PopupListContactsComponent implements OnInit {
         this.lstSearch = [];
         this.contact = null;
       }
-      this.changeDet.detectChanges()
-
+      this.changeDet.detectChanges();
     });
   }
 }

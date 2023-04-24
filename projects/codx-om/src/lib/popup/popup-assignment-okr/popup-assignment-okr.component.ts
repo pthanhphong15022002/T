@@ -130,34 +130,17 @@ export class PopupAssignmentOKRComponent
 
   getOKRAssign() {
     this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
-      if (res) {        
+      if (res) {  
         this.dataOKR = res;
         this.codxOmService.getOKRDistributed(this.okrRecID).subscribe((links: any) => {
           if (links && links.length > 0) {
-
-            let oldLink = links[0];
-            // this.assignmentOKR.okrName = oldLink?.okrName;
-            // this.assignmentOKR.umid = oldLink?.umid;
-            // this.assignmentOKR.isActive = true;
-            // this.assignmentOKR.distributePct = oldLink?.distributePct;
-            // this.assignmentOKR.distributeValue = oldLink?.distributeValue;
-            // this.assignmentOKR.orgUnitID = oldLink?.orgUnitID;
-            // this.assignmentOKR.orgUnitName = oldLink?.orgUnitName;
-            // this.assignmentOKR.objectID = oldLink?.objectID;
-            this.assignmentOKR = oldLink;
-
+            this.assignmentOKR = links[0];
             this.detectorRef.detectChanges();
-            this.isAdd = false;
-            this.codxOmService
-              .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
-              .subscribe((ownerInfo) => {
-                if (ownerInfo) {
-                  this.assignTo(ownerInfo);                  
-                  this.isAfterRender = true;
-                }
-              });
-              
-              this.isAfterRender = true;
+            this.isAdd = false;              
+                     
+            this.isAfterRender = true;
+            this.assignTab.items[1].disabled=true;
+            this.assignTab.items[2].disabled=true;  
           } else {
             this.assignmentOKR.okrName = this.dataOKR?.okrName;
             this.assignmentOKR.umid = this.dataOKR?.umid;

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'codx-view-list-cm',
@@ -12,14 +13,28 @@ export class ViewListCmComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
-  constructor() { }
+  listContacts = [];
+  constructor(
+    private cmSv: CodxCmService,
+  ) { }
 
   ngOnInit(): void {
+    this.getListContactByObjectID(this.dataSelected.recID);
   }
+
 
 
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
+  }
+
+  getListContactByObjectID(objectID) {
+    this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.listContacts = res;
+
+      }
+    });
   }
 
   getNameCrm(data){

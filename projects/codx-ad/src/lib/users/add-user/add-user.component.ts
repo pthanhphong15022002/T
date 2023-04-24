@@ -270,6 +270,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       groupID: '',
       lstMemIDs: [this.adUser.userID],
       needValidate: true,
+      autoCreated: false,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
@@ -318,7 +319,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   beforeSave(opt: RequestOption) {
     this.isSaving = true;
     opt.methodName = 'AddUpdateUserAsync';
-    opt.data = [this.adUser, !this.isSaved];
+    opt.data = [this.adUser, !this.isSaved, this.formType];
     return true;
   }
 
@@ -394,23 +395,23 @@ export class AddUserComponent extends UIComponent implements OnInit {
     );
     /*Binding dữ liệu vào html*/
     let permission = {
-      memberType : "2",
-      objectID : "",
-      objectName: "",
-      objectType : "9"
-    }
+      memberType: '2',
+      objectID: '',
+      objectName: '',
+      objectType: '9',
+    };
     let lstPermission = [];
     lstPermission.push(permission);
     this.tmpPost = {
       contents: HTMLParse,
       category: '1',
       shareControl: '9',
-      attachments : 0,
+      attachments: 0,
       medias: 0,
       createdOn: new Date(),
       createdBy: 'CODXADMIN',
       createdName: 'CoDX Administrator',
-      permissions : lstPermission
+      permissions: lstPermission,
     };
   }
 

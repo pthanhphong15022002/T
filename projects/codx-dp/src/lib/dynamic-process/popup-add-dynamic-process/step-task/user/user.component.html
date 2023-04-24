@@ -9,7 +9,7 @@
       ></codx-label>
     </div>
     <div class="ms-3">
-      <button class="btn btn-icon btn-light" (click)="shareUser(controlUser)">
+      <button class="btn btn-icon btn-light" (click)="disabled ? '' : shareUser(controlUser)">
         <span class="icon-16" [ngClass]="icon"></span>
       </button>
     </div>

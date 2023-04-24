@@ -109,6 +109,15 @@
           </codx-input>
         </div>
       </div>
+      <div *ngIf="loadControl('ProjectID')" class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="ProjectID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label fiedName="Note" [formModel]="form.formModel">
         </codx-label>

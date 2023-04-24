@@ -69,6 +69,7 @@ export class PopupJobComponent implements OnInit {
   step: DP_Steps;
   listFileTask: string[] = [];
   user: any;
+  functionID = 'DP01';
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -116,18 +117,8 @@ export class PopupJobComponent implements OnInit {
     this.getTypeTask();
     this.getFormModel();
     this.roles = this.stepsTasks['roles'];
-    if (this.status == 'add' && this.taskType !== 'M') {
-      let user = new DP_Steps_Tasks_Roles();
-      user.objectName = this.user['userName'];
-      user.objectID = this.user['userID'];
-      user.objectType = "U";
-      user.roleType = "O";
-      user.taskID = this.stepsTasks['recID'];
-      this.owner.push(user);
-    }else{
-      this.owner = this.roles?.filter((role) => role.roleType === 'O');
-      this.participant = this.roles?.filter((role) => role.roleType === 'P');
-    }
+    this.owner = this.roles?.filter((role) => role.roleType === 'O');
+    this.participant = this.roles?.filter((role) => role.roleType === 'P');
 
     this.litsParentID = this.stepsTasks['parentID']
       ? this.stepsTasks['parentID']?.split(';')
@@ -203,7 +194,7 @@ export class PopupJobComponent implements OnInit {
     this.owner = owner;
   }
 
-  changeRoler(e, datas, type) {    
+  changeRoler(e) {    
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
@@ -212,11 +203,15 @@ export class PopupJobComponent implements OnInit {
           objectID: element.objectID,
           objectName: element.objectName,
           objectType: element.objectType,
-          roleType: type,
+          roleType: this.taskType == "M" ? "P" : "O",
           taskID: this.stepsTasks['recID'],
         });
     });
-    this.participant = listRole;
+    if(this.taskType == "M"){
+      this.participant = listRole;
+    }else{
+      this.owner = listRole;
+    }
   }
 
   async changeCombobox(value, key) {
@@ -402,6 +397,7 @@ export class PopupJobComponent implements OnInit {
         //No parentID
         this.checkSave(groupTask);
       } else {
+        // tính thời gian lớn nhất của group
         let timeMax = this.getTimeMaxGroupTask(groupTask['task'], this.stepsTasks);
         this.checkSave(groupTask, timeMax);
       }
@@ -424,7 +420,7 @@ export class PopupJobComponent implements OnInit {
         let listIdTask = this.stepsTasks['parentID'].split(';');
         let maxtime = 0;
         listIdTask?.forEach((id) => {
-          let time = this.getSumTimeTask(this.taskList,id);
+          let time = this.getSumTimeTask(this.taskList,id, false);
           maxtime = Math.max(time, maxtime);
         });
         maxtime += this.getHour(this.stepsTasks);
@@ -483,7 +479,7 @@ export class PopupJobComponent implements OnInit {
     if (this.taskGroupList?.length > 0) {
       if (index >= 0) {
         for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
+          if (Number(group['indexNo']) < index) {
             sum += this.getHour(group);
           }
         }
@@ -517,16 +513,25 @@ export class PopupJobComponent implements OnInit {
     return maxTime;
   }
 
-  getSumTimeTask(taskList: any[], taskId: string) {
+
+  getSumTimeTask(taskList: any[], taskId: string, isGroup = true) {
     let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      return this.getHour(task);
+      let maxTime = this.getHour(task);
+      if(task.taskGroupID && !isGroup){
+        let groupFind = this.taskGroupList?.find(group => group['recID'] == task.taskGroupID);
+        if(groupFind){
+          let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
+          maxTime += time;
+        }
+      }     
+      return maxTime;
     } else {
       const parentIds = task?.parentID.split(';');
       let maxTime = 0;
       parentIds?.forEach((parentId) => {
-        const parentTime = this.getSumTimeTask(taskList, parentId);
+        const parentTime = this.getSumTimeTask(taskList, parentId, isGroup);
         maxTime = Math.max(maxTime, parentTime);
       });
       const completionTime = this.getHour(task) + maxTime;

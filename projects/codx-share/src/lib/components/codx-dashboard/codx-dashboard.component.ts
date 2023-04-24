@@ -1,4 +1,3 @@
-declare var window: any;
 import {
   AfterViewInit,
   Component,
@@ -31,6 +30,10 @@ import { LayoutPanelComponent } from './layout-panel/layout-panel.component';
 import { PopupAddChartComponent } from './popup-add-chart/popup-add-chart.component';
 import { PopupAddPanelComponent } from './popup-add-panel/popup-add-panel.component';
 import { PopupSelectTemplateComponent } from './popup-select-template/popup-select-template.component';
+import {
+  CircularGauge,
+  CircularGaugeComponent,
+} from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
   selector: 'codx-dashboard',
@@ -248,7 +251,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
             (this.objDashboard as any).panelCollection.forEach((item: any) => {
               let component = item.getElementsByTagName('codx-chart')[0];
               if (component) {
-                let instance = window.ng.getComponent(
+                let newWindow = window as any;
+                let instance = newWindow.ng.getComponent(
                   component
                 ) as CodxChartsComponent;
                 instance.dataSource = this.dataSource.slice();
@@ -538,7 +542,23 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
-          let instance = window.ng.getComponent(component) as TreeMapComponent;
+          let newWindow = window as any;
+          let instance = newWindow.ng.getComponent(
+            component
+          ) as TreeMapComponent;
+          instance.width = '80%';
+          instance.height = '50%';
+          instance.refresh();
+        }
+      }
+      if (args.element.querySelector('ejs-circulargauge')) {
+        let component =
+          args.element.getElementsByTagName('ejs-circulargauge')[0];
+        if (component) {
+          let newWindow = window as any;
+          let instance = newWindow.ng.getComponent(
+            component
+          ) as CircularGaugeComponent;
           instance.width = '80%';
           instance.height = '80%';
           instance.refresh();
@@ -558,7 +578,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     if (this.panels && this.panels.length > 0) {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
-        this.objDashboard = window.ng.getComponent(
+        let newWindow = window as any;
+        this.objDashboard = newWindow.ng.getComponent(
           component
         ) as DashboardLayoutComponent;
       }
@@ -566,7 +587,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       let iGenPanels = setInterval(() => {
         if (
           this.objDashboard &&
-          this.objDashboard.element.childElementCount > 0
+          this.objDashboard?.element?.childElementCount > 0
         ) {
           clearInterval(iGenPanels);
           this.panels.forEach((ele: any) => {
@@ -674,7 +695,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     if (chartType) {
       let component = elePanel?.getElementsByTagName('layout-panel')[0];
       if (component) {
-        let instance = window.ng.getComponent(
+        let newWindow = window as any;
+        let instance = newWindow.ng.getComponent(
           component
         ) as LayoutPanelComponent;
         instance.isChart = true;
@@ -748,7 +770,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     this.createPanelContent(panelId, this.chart!, chartSetting.type);
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
-      let instance = window.ng.getComponent(component) as LayoutPanelComponent;
+      let newWindow = window as any;
+      let instance = newWindow.ng.getComponent(
+        component
+      ) as LayoutPanelComponent;
       instance.isChart = true;
     }
     //delete old setting of panel
@@ -979,7 +1004,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     let elePanel = document.getElementById(panelID);
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
-      let instance = window.ng.getComponent(component) as LayoutPanelComponent;
+      let newWindow = window as any;
+      let instance = newWindow.ng.getComponent(
+        component
+      ) as LayoutPanelComponent;
       instance.isChart = true;
     }
   }

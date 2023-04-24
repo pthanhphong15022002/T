@@ -5,6 +5,7 @@ import {
   CodxGridviewV2Component,
   DataRequest,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   RequestOption,
@@ -12,13 +13,13 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
+import { CodxAcService } from '../../../codx-ac.service';
+import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../../journals/journals.service';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { CodxAcService } from '../../../codx-ac.service';
-import { JournalService } from '../../../journals/journals.service';
-import { P } from '@angular/cdk/keycodes';
+import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 
 @Component({
   selector: 'lib-popup-add-sales-invoice',
@@ -40,6 +41,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   customerName: string;
   gvsSalesInvoices: any;
   gvsSalesInvoicesLines: any;
+  hiddenFields: string[] = [];
+  columns: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -75,6 +78,19 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   //#region Init
   override onInit(): void {
+    // this.cache
+    //   .gridViewSetup('SalesInvoicesLines', 'grvSalesInvoicesLines')
+    //   .pipe(
+    //     map((g) =>
+    //       Object.entries(g)
+    //         .map(([k, v]) => v)
+    //         .filter((c: any) => c.isVisible === true)
+    //         .sort((a: any, b: any) => a.columnOrder - b.columnOrder)
+    //     ),
+    //     tap((t) => console.log(t))
+    //   )
+    //   .subscribe((res) => (this.columns = res));
+
     this.acService.loadComboboxData('ObjectsAC', 'AC').subscribe((objects) => {
       this.customerName = objects?.find(
         (o) => o.ObjectID === this.salesInvoice.objectID
@@ -94,15 +110,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
 
-      // this.journalService.setAccountCbxDataSourceByJournal(
-      //   this.journal,
-      //   this.cbxCashAcctID,
-      //   this.cbxOffsetAcctID
-      // );
+      this.editSettings.mode =
+        this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-      // if (this.isEdit) {
-      //   this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-      // }
+      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
     });
 
     if (this.isEdit) {
@@ -113,7 +124,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       salesInvoicesLinesOptions.pageLoading = false;
       this.acService
         .loadDataAsync('SM', salesInvoicesLinesOptions)
-        .subscribe((res) => (this.salesInvoicesLines = res));
+        .subscribe(
+          (res) =>
+            (this.salesInvoicesLines = res.sort((a, b) => a.rowNo - b.rowNo))
+        );
     }
 
     this.cache
@@ -137,10 +151,9 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickSave(closeAfterSaving: boolean): void {
+  onClickSave(closeAfterSaving: boolean): void {
     console.log(this.salesInvoice);
     console.log(this.salesInvoicesLines);
-    console.log(this.grid.formGroup);
 
     let ignoredFields = [];
     if (this.journal.voucherNoRule === '2') {
@@ -163,7 +176,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
         !this.acService.validateFormDataUsingGvs(
           this.gvsSalesInvoicesLines,
           salesInvoiceLine,
-          ['umid', 'vatid']
+          ['umid', 'vatid', 'idiM4']
         )
       ) {
         return;
@@ -183,37 +196,107 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     );
   }
 
-  close(): void {
+  onClickClose(): void {
     this.dialogRef.close();
   }
 
-  handleInputChange(e): void {
+  onInputChange(e): void {
     if (e.field.toLowerCase() === 'objectid') {
       this.customerName = e.component.itemsSelected[0].ObjectName;
     }
   }
 
-  handleCreate(e): void {}
+  onCreate(e): void {
+    this.grid.disableField(this.hiddenFields);
+    // console.log(this.grid.columnsGrid);
+  }
 
-  handleCellChange(e): void {
+  onCellChange(e): void {
     console.log('onCellChange', e);
   }
 
-  deleteRow(data): void {
+  onClickDeleteRow(data): void {
     this.deletedSalesInvoicesLines.push(data);
-
-    this.salesInvoicesLines = this.salesInvoicesLines.filter(
-      (s) => s.recID !== data.recID
-    );
+    this.grid.deleteRow(data, true);
   }
 
-  addRow(): void {
+  onClickAddRow(): void {
     this.api
       .exec('SM', 'SalesInvoicesLinesBusiness', 'GetDefault')
       .subscribe((res: ISalesInvoicesLine) => {
         console.log(res);
-        this.grid.addRow(res, this.salesInvoicesLines.length);
+
+        let index = this.salesInvoicesLines.length;
+        res.rowNo = index + 1;
+
+        if (this.editSettings.mode === 'Normal') {
+          this.grid.addRow(res, index);
+        } else {
+          const dialogModel = new DialogModel();
+          dialogModel.FormModel = this.fmSalesInvoicesLines;
+
+          this.callfc
+            .openForm(
+              PopupAddSalesInvoicesLineComponent,
+              'This param is not working',
+              500,
+              700,
+              '',
+              {
+                formType: 'add',
+                salesInvoicesLine: res,
+                index: index,
+                gvs: this.gvsSalesInvoicesLines,
+                hiddenFields: this.hiddenFields,
+              },
+              '',
+              dialogModel
+            )
+            .closed.pipe(tap((t) => console.log(t)))
+            .subscribe(({ event }) => {
+              if (this.editSettings.mode === 'Normal') {
+                for (const line of event) {
+                  this.grid.addRow(line, this.salesInvoicesLines.length);
+                }
+              } else {
+                this.salesInvoicesLines = [
+                  ...this.salesInvoicesLines,
+                  ...event,
+                ];
+              }
+            });
+        }
       });
+  }
+
+  onClickCopyRow(data): void {
+    this.grid.addRow(
+      {
+        ...data,
+        rowNo: this.salesInvoicesLines.length + 1,
+        recID: Util.uid(),
+        transID: '00000000-0000-0000-0000-000000000000',
+      },
+      this.salesInvoicesLines.length
+    );
+  }
+
+  // dialog mode only
+  onDeleteRow(e): void {
+    console.log(e);
+    this.deletedSalesInvoicesLines.push(e);
+    this.salesInvoicesLines = this.salesInvoicesLines.filter(
+      (l) => l.recID !== e.recID
+    );
+  }
+
+  onUpdateRow(e): void {
+    const index = this.salesInvoicesLines.findIndex((l) => l.recID === e.recID);
+    this.salesInvoicesLines[index] = e;
+  }
+
+  onCopyRow(e): void {
+    this.salesInvoicesLines = [...this.salesInvoicesLines, ...e];
   }
   //#endregion
 
@@ -240,6 +323,21 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
           if (closeAfterSaving) {
             this.dialogRef.close();
           } else {
+            this.dialogRef.dataService
+              .addNew(() =>
+                this.api.exec(
+                  'SM',
+                  'SalesInvoicesBusiness',
+                  'GetDefaultAsync',
+                  [this.dialogData.data?.journalNo]
+                )
+              )
+              .subscribe((res: ISalesInvoice) => {
+                console.log(res);
+                this.form.formGroup.patchValue(res);
+
+                this.salesInvoicesLines = [];
+              });
           }
         }
       });

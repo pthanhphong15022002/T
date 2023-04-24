@@ -20,10 +20,113 @@
   [viewActiveType]="viewMode"
 ></codx-views>
 
+<!-- KANBAN -->
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="hideMoreFC"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+    (dblclick)="dblClick($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #viewColumKaban let-data>
+  <div
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    [id]="data?.keyField"
+  >
+    <div class="line-colums d-flex">
+      <span
+        [ngClass]="getPropertiesHeader(data, 'icon')"
+        [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+        style="font-size: 18px"
+        class="me-3"
+      >
+      </span>
+      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+        {{ data.headerText }}
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cardTitleTmp let-data>
+  <codx-temp-full
+    style="width: 100%"
+    [title]="data.title"
+    [descTmp]="descTmp"
+  >
+  </codx-temp-full>
+  <ng-template #descTmp>
+    noi dung gi day
+  </ng-template>
+</ng-template>
+
+<ng-template #footerKanban let-data>
+  <div class="d-flex justify-content-between align-items-center mt-1">
+    <div class="d-flex align-items-end codx-badge">
+      noi dung gi day
+      <!-- <ng-container>
+        <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data.status" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-md fs-7">
+        </codx-vll>
+      </ng-container> -->
+      <!-- <span
+        #pEd="ngbPopover"
+        [ngbPopover]="popperEndDate"
+        (mouseenter)="pEd.open()"
+        (mouseleave)="pEd.close()"
+        placement="right top botom left"
+      >
+        <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
+        <span
+          class="fs-7 text-gray-600"
+          #endDate
+          [innerHTML]="
+            data.endDate
+              | formatvalue
+                : view.formModel
+                : 'endDate'
+                : endDate
+                : 'DPInstances'
+                : 'grvDPInstances'
+              | async
+          "
+        ></span>
+      </span> -->
+    </div>
+    <!-- <div class="d-flex justify-content-center">
+      <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
+      </codx-imgs>
+    </div> -->
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="25"
+      [objectId]="data.owner"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+
+
+<!-- end kanban -->
+
 <!--grid view-->
-<ng-template #itemCustomerName let-data>
+<!-- <ng-template #itemDeailName let-data>
   <div>
-    {{ data?.processName }}
+    {{ data?.DealName }}
   </div>
 </ng-template>
 <ng-template #itemContactName let-data>
@@ -94,7 +197,7 @@
     [isBookMark]="true"
   >
   </codx-mfunc>
-</ng-template>
+</ng-template> -->
 <!--grid view-->
 
 <!--List view-->
@@ -111,7 +214,7 @@
     [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [title]="data.processName"
+    [title]="data.dealName"
     [descTmp]="descTmp"
     [body]="footer"
     [formModel]="view.formModel"
@@ -127,11 +230,11 @@
   <div class="d-flex flex-column py-2">
     <div class="d-flex justify-content-start py-1">
       <i class="icon-view_comfy pe-1"></i>
-      <div> {{data.processName}} </div>
+      <div> {{data?.dealName}} </div>
     </div>
     <div class="d-flex justify-content-start py-1">
       <i class="icon-k pe-1"></i>
-      <div> {{data.processName}} </div>
+      <div> {{getCustomerName(data?.customerID)}} </div>
     </div>
     <div class="d-flex justify-content-star py-1">
       <div class="d-flex align-items-start pe-4">
@@ -221,13 +324,14 @@
 <!--list details tempfull-->
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-deail-detail
-    #opportunityDetail
+  <codx-deal-detail
+    #dealsComponent
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
+    [tmpDataSelect]="handleDataTmp(dataSelected)"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
-  </codx-deail-detail>
+  </codx-deal-detail>
 </ng-template>

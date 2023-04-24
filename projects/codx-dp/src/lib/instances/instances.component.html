@@ -19,6 +19,7 @@
   [viewActiveType]="viewMode"
 >
 </codx-views>
+
 <!-- KANBAN -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
@@ -81,11 +82,12 @@
         </codx-vll>
       </div>
       <div class="d-flex justify-content-end">
-        <span
+        <div class="d-flex align-items-center"
           #pCr="ngbPopover"
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
           (mouseleave)="pCr.close()"
+          container="body"
           placement="left right"
         >
           <span class="text-gray-600 icon-16 icon-alarm_add me-1"></span>
@@ -103,7 +105,7 @@
                 | async
             "
           ></span>
-        </span>
+        </div>
       </div>
     </div>
   </ng-template>
@@ -117,12 +119,13 @@
           class="badge badge-light badge-md fs-7">
         </codx-vll>
       </ng-container> -->
-      <span
+      <span class="d-flex align-items-center"
         #pEd="ngbPopover"
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
         (mouseleave)="pEd.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="text-gray-600 icon-16 icon-av_timer me-1"></span>
         <span
@@ -176,6 +179,9 @@
         [reloadData]="reloadData"
         [listSteps]="listInstanceStep"
         (outStepInstance)="outStepInstance($event)"
+        (saveDatasInstance)="saveDatasInstance($event)"
+        [lstStepProcess]="listSteps"
+
       >
       </codx-instance-detail>
     </ng-template>
@@ -188,7 +194,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
+    [moreFuncCss]="'me-9'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.title"
@@ -254,7 +260,14 @@
           <div *ngFor="let item of listSteps">
             <div
               *ngIf="item.stepID === data.stepID"
-              [ngStyle]="{ 'background-color': (data.status == '3' || data.status == '4' ) ? colorReasonSuccess?.color : (data.status == '5' || data.status == '6' ) ? colorReasonFail?.color : item['backgroundColor'] }"
+              [ngStyle]="{
+                'background-color':
+                  data.status == '3' || data.status == '4'
+                    ? colorReasonSuccess?.color
+                    : data.status == '5' || data.status == '6'
+                    ? colorReasonFail?.color
+                    : item['backgroundColor']
+              }"
               class="me-2 badge badge-primary"
             >
               <span
@@ -262,9 +275,7 @@
                 [ngStyle]="{ color: item['iconColor'] }"
                 class="me-2"
               ></span>
-              <span [ngStyle]="{ color: item['textColor'] }">
-                {{ item.stepName }}</span
-              >
+              <span [ngStyle]="{ color: item['textColor'] }">{{ item.stepName }}</span>
             </div>
           </div>
         </ng-container>
@@ -286,7 +297,8 @@
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEdDT.open()"
         (mouseleave)="pEdDT.close()"
-        placement="right top botom left"
+        container="body"
+        placement="top right bottom"
       >
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
@@ -306,14 +318,30 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        ojectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+      <ng-container *ngFor="let item of listSteps">
+        <div *ngIf="item.stepID === data.stepID">
+          <div *ngIf="checkOwnerRoleProcess(item.roles)">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="25"
+              [objectId]="checkOwnerRoleProcess(item.roles)"
+              ojectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+          <div *ngIf="checkOwnerRoleProcess(item.roles) == null">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="25"
+              [objectId]="data?.owner"
+              ojectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
@@ -336,6 +364,10 @@
     [viewsCurrent]="'d-'"
     [reasonStepsObject]="reasonStepsObject"
     (outStepInstance)="outStepInstance($event)"
+    (saveDatasInstance)="saveDatasInstance($event)"
+    [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
   >
   </codx-instance-detail>
 </ng-template>
@@ -346,6 +378,7 @@
       [fiedName]="'CreatedOn'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['CreatedOn'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
@@ -356,6 +389,7 @@
       [fiedName]="'EndDate'"
       [formName]="'DPInstances'"
       [gridViewName]="'grvDPInstances'"
+      [default]="this.grvSetup['EndDate'].headerText"
       [setRequire]="false"
     ></codx-label>
   </span>
@@ -440,7 +474,7 @@
                 [formModel]="form.formModel"
                 ControlName="format"
                 [crrValue]="item.recID"
-                (valueChange)="selectTemp(item.recID, item.templateName )"
+                (valueChange)="selectTemp(item.recID, item.templateName)"
               ></codx-input>
             </div>
             <div class="d-flex align-items-center py-2">
@@ -459,7 +493,7 @@
                     {{ item.description }}
                   </div>
                 </div>
-                </span>
+              </span>
               <!-- <span class="fw-bold text-dark">{{ item.templateName }}</span> -->
             </div>
           </div>

@@ -463,6 +463,7 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.ReleasePlanORG:
       case OMCONST.MFUNCID.ReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
+        
         break;
       case OMCONST.MFUNCID.UnReleasePlanCOMP:
       case OMCONST.MFUNCID.UnReleasePlanDEPT:
@@ -582,18 +583,26 @@ getOrgTreeOKR() {
             if (res) {
               this.dataOKRPlans.status = status;
               this.notificationsService.notifyCode('SYS034'); //thành công
+              
             }
           });
         }        
       }));      
     }
-    else{
+    else if(status==OMCONST.VLL.PlanStatus.Ontracking){
       this.codxOmService
       .changePlanStatus(this.dataOKRPlans.recID, status)
       .subscribe((res) => {
         if (res) {
           this.dataOKRPlans.status = status;
           this.notificationsService.notifyCode('SYS034'); //thành công
+          if(status=OMCONST.VLL.PlanStatus.Ontracking){
+            this.codxOmService.sendMailAfterRelease(this.dataOKRPlans?.recID).subscribe((res=>{
+              if(res){
+                let x= res;
+              }
+            }))
+          }
         }
       });
     }

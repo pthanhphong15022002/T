@@ -9,33 +9,19 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="StringFormat" [formModel]="formModel">
-          </codx-label>
-          <codx-input
-            field="stringFormat"
-            [Group]="dialogAutoNum"
-            [formModel]="formModel"
-            (valueChange)="valueChange($event)"
-            (controlBlur)="blur($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="MaxLength" [formModel]="formModel">
-          </codx-label>
-          <div>
+
+    <div class="w-100">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label name="CreateAutoNumberWhen" default="Tạo số tự động khi" formName="sys">
+            </codx-label>
             <codx-input
-              [min]="0"
-              field="maxLength"
-              [formModel]="formModel"
-              [Group]="dialogAutoNum"
-              (valueChange)="valueChange($event)"
-              [showSpinButton]="false"
+              field="autoAssignRule"
+              type="valuelist"
+              [refValue]="'AD007'"
+              [crrValue]="autoDefaultData.autoAssignRule || '2'"
+              (valueChange)="valueDefaultChange($event)"
               (controlBlur)="blur($event)"
             >
             </codx-input>
@@ -43,128 +29,411 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="FixedString" [formModel]="formModel">
-          </codx-label>
-          <codx-input
-            type="text"
-            [Group]="dialogAutoNum"
-            [formModel]="formModel"
-            field="fixedString"
-            (valueChange)="valueChange($event, 'fixedString')"
-            (controlBlur)="blur($event)"
-          >
-          </codx-input>
+    <div class="w-100 border">
+      <div class="row p-3" id="BasicConfig" (click)="collapse('basic')" [attr.aria-expanded]="!basicCollapsed"
+      [attr.aria-controls]="'BasicConfig'">
+        <div class="col-6">
+          <div class="row">
+            <span class="fs-4 fw-bold text-dark w-100" [ngClass]="!basicCollapsed ? 'text-primary' : ''"><codx-label fiedName="BasicConfig" default="Cấu hình cơ bản" [formModel]="formModel">
+            </codx-label></span>
+
+          </div>
+          <div class="row">
+            <span class="w-100 text-muted"><codx-label fiedName="BasicConfigTitle" default="Số tự động được tạo theo Chuỗi ký tự và thời gian phát sinh" [formModel]="formModel">
+            </codx-label></span>
+          </div>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+          <codx-input type="switch" [disabled]="true" [crrValue]="!basicCollapsed"></codx-input>
+          <i class="text-primary ms-3 fs-4"  [ngClass]="!basicCollapsed ?'icon-keyboard_arrow_down': 'icon-keyboard_arrow_right' "></i>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="Separator" [formModel]="formModel">
-          </codx-label>
-          <codx-input
-            field="separator"
-            [Group]="dialogAutoNum"
-            [formModel]="formModel"
-            (valueChange)="valueChange($event)"
-            [disabled]="!lstEnableSeparator.includes(data?.stringFormat)"
-            (controlBlur)="blur($event)"
-          >
-          </codx-input>
+      <div class="w-100" id="BasicConfig" [ngbCollapse]="basicCollapsed">
+        <div class="row px-5 pt-5">
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="StringFormat" [formModel]="formModel">
+              </codx-label>
+              <codx-input
+                field="stringFormat"
+                [Group]="dialogAutoNum"
+                [formModel]="formModel"
+                (valueChange)="valueChange($event)"
+                (controlBlur)="blur($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="MaxLength" [formModel]="formModel">
+              </codx-label>
+              <div>
+                <codx-input
+                  [min]="0"
+                  field="maxLength"
+                  [formModel]="formModel"
+                  [Group]="dialogAutoNum"
+                  (valueChange)="valueChange($event)"
+                  [showSpinButton]="false"
+                  (controlBlur)="blur($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="FixedString" [formModel]="formModel">
+              </codx-label>
+              <codx-input
+                type="text"
+                [Group]="dialogAutoNum"
+                [formModel]="formModel"
+                field="fixedString"
+                (valueChange)="valueChange($event, 'fixedString')"
+                (controlBlur)="blur($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <div class="w-100 d-flex">
+                <div class="float-start w-50">
+
+                  <codx-label fiedName="DateFormat" [formModel]="formModel">
+                  </codx-label>
+                  <codx-input
+                    [Group]="dialogAutoNum"
+                    [formModel]="formModel"
+                    field="dateFormat"
+                    (valueChange)="valueChange($event)"
+                    (controlBlur)="blur($event)"
+                  >
+                  </codx-input>
+                </div>
+                <div class="float-end ps-3 w-50">
+                  <codx-label fiedName="Separator" [formModel]="formModel">
+                  </codx-label>
+                  <codx-input
+                    field="separator"
+                    [Group]="dialogAutoNum"
+                    [formModel]="formModel"
+                    (valueChange)="valueChange($event)"
+                    [disabled]="!lstEnableSeparator.includes(data?.stringFormat)"
+                    (controlBlur)="blur($event)"
+                  >
+                  </codx-input>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+
+            </div>
+          </div>
+          <div class="col" *ngIf="functionID && afterFgANumberDefault">
+            <div class="form-group">
+              <codx-label fiedName="AutoAssignRule" [formModel]="fmANumberDefault">
+              </codx-label>
+              <codx-input
+                [formModel]="fmANumberDefault"
+                field="autoAssignRule"
+                [crrValue]=""
+                [Group]="fgANumberDefault"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div> -->
+        <div class="row px-5 pb-5">
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="LastNumber" [formModel]="formModel">
+              </codx-label>
+              <codx-input
+                [Group]="dialogAutoNum"
+                [formModel]="formModel"
+                [showSpinButton]="false"
+                field="lastNumber"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label
+                name="lblReview"
+                default="Xem trước"
+                [formModel]="formModel"
+              >
+              </codx-label>
+              <codx-input
+                type="text"
+                cssClass="form-control"
+                [crrValue]="viewAutoNumber"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group  mt-5 pt-5">
+              <codx-input
+                type="checkbox"
+                labelPosition="after"
+                field="autoReset"
+                class="test-check"
+                (valueChange)="valueChange($event)"
+                (controlBlur)="blur($event)"
+                [crrValue]="data.autoReset"
+              >
+              </codx-input>
+              <codx-label class="ms-2" fiedName="autoReset" [formModel]="formModel">
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group pt-5 w-50">
+              <codx-input
+                field="interval"
+                [formModel]="formModel"
+                [Group]="dialogAutoNum"
+                [disabled]="!data.autoReset"
+              ></codx-input>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="DateFormat" [formModel]="formModel">
-          </codx-label>
-          <codx-input
-            [Group]="dialogAutoNum"
-            [formModel]="formModel"
-            field="dateFormat"
-            (valueChange)="valueChange($event)"
-            (controlBlur)="blur($event)"
-          >
-          </codx-input>
+
+    <div class="w-100 border mt-3" [ngClass]="basicOnly ? 'bg-light':''">
+      <div class="row p-3" id="AdvanceConfig" (click)="collapse('advance')" [attr.aria-expanded]="!advanceCollapsed"
+      [attr.aria-controls]="'AdvanceConfig'">
+        <div class="col-6">
+          <div class="row">
+            <span class="fs-4 fw-bold text-dark w-100" [ngClass]="!advanceCollapsed ? 'text-primary' : ''"><codx-label fiedName="BasicConfig" default="Cấu hình nâng cao" [formModel]="formModel">
+            </codx-label></span>
+
+          </div>
+          <div class="row">
+            <span class="w-100 text-muted"><codx-label name="AdvanceConfigTitle" default="Cho phép định nghĩa số tự động theo nhiều yếu tố khác nhau" formName="sys">
+            </codx-label></span>
+          </div>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+          <codx-input type="switch" [disabled]="true" [crrValue]="!advanceCollapsed"></codx-input>
+          <i class="text-primary ms-3 fs-4"  [ngClass]="!advanceCollapsed ?'icon-keyboard_arrow_down': 'icon-keyboard_arrow_right' "></i>
         </div>
       </div>
-      <div class="col" *ngIf="functionID && afterFgANumberDefault">
-        <div class="form-group">
-          <codx-label fiedName="AutoAssignRule" [formModel]="fmANumberDefault">
-          </codx-label>
-          <codx-input
-            [formModel]="fmANumberDefault"
-            field="autoAssignRule"
-            [crrValue]=""
-            [Group]="fgANumberDefault"
-          >
-          </codx-input>
+      <div class="w-100" id="AdvanceConfig" [ngbCollapse]="advanceCollapsed">
+        <div class="row px-5 pt-5">
+          <!-- <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="StringFormat" [formModel]="formModel">
+              </codx-label>
+              <codx-input
+                field="stringFormat"
+                [Group]="dialogAutoNum"
+                [formModel]="formModel"
+                (valueChange)="valueChange($event)"
+                (controlBlur)="blur($event)"
+              >
+              </codx-input>
+            </div>
+          </div> -->
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="MaxLength" [formModel]="formModel">
+              </codx-label>
+              <div>
+                <codx-input
+                  [min]="0"
+                  field="maxLength"
+                  type="number"
+                  (valueChange)="valueSettingChange($event)"
+                  [showSpinButton]="false"
+                  [crrValue]="autoNoSetting.maxLength || 0"
+                  (controlBlur)="blur($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label fiedName="LastNumber" [formModel]="formModel">
+              </codx-label>
+              <div>
+                <codx-input
+                  [min]="0"
+                  field="lastNumber"
+                  type="number"
+                  (valueChange)="valueSettingChange($event)"
+                  [crrValue]="autoNoSetting.lastNumber || 0"
+                  [showSpinButton]="false"
+                  (controlBlur)="blur($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <codx-label name="preview" default="Xem trước" formName="sys">
+              </codx-label>
+              <codx-input
+                type="text"
+                field="preview"
+                (controlBlur)="blur($event)"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <!-- <div class="w-100 d-flex">
+                <div class="float-stat">
+
+                  <codx-label fiedName="DateFormat" [formModel]="formModel">
+                  </codx-label>
+                  <codx-input
+                    [Group]="dialogAutoNum"
+                    [formModel]="formModel"
+                    field="dateFormat"
+                    (valueChange)="valueChange($event)"
+                    (controlBlur)="blur($event)"
+                  >
+                  </codx-input>
+                </div>
+                <div class="float-end ms-3">
+                  <codx-label fiedName="Separator" [formModel]="formModel">
+                  </codx-label>
+                  <codx-input
+                    field="separator"
+                    [Group]="dialogAutoNum"
+                    [formModel]="formModel"
+                    (valueChange)="valueChange($event)"
+                    [disabled]="!lstEnableSeparator.includes(data?.stringFormat)"
+                    (controlBlur)="blur($event)"
+                  >
+                  </codx-input>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+
+            </div>
+          </div>
+          <div class="col" *ngIf="functionID && afterFgANumberDefault">
+            <div class="form-group">
+              <codx-label fiedName="AutoAssignRule" [formModel]="fmANumberDefault">
+              </codx-label>
+              <codx-input
+                [formModel]="fmANumberDefault"
+                field="autoAssignRule"
+                [crrValue]=""
+                [Group]="fgANumberDefault"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div> -->
+        <div class="row px-5 pb-5">
+          <div class="col-12">
+            <div class="form-group">
+              <codx-label name="formatDetail" default="Chi tiết định dạng" formName="sys">
+              </codx-label>
+              <div class="w-100 border mt-2" *ngIf="columns.length">
+                <codx-gridview-v2
+                  #grid
+                  [formName]="formNameSegments"
+                  [gridViewName]="grvSegments"
+                  [entityName]="entitySegments"
+                  [editSettings]="editSettings"
+                  [allowFiltering]="false"
+                  [allowSorting]="false"
+                  [dataSource]="autoNoSegments"
+
+                  service="EI"
+                  [height]="400"
+                  [autoLoad]="false"
+                  rowHeight="40"
+
+                ></codx-gridview-v2>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-light-primary" (click)="addSegment()">
+              <i class="icon-i-plus"></i><span>
+                <codx-label name="AddSegment" default="Thêm yếu tố" formName="sys"></codx-label>
+              </span>
+            </button>
+          </div>
+          <!-- <div class="col-3">
+            <div class="form-group">
+              <codx-label
+                name="lblReview"
+                default="Xem trước"
+                [formModel]="formModel"
+              >
+              </codx-label>
+              <codx-input
+                type="text"
+                cssClass="form-control"
+                [crrValue]="viewAutoNumber"
+                [disabled]="true"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group  mt-5 pt-5">
+              <codx-input
+                type="checkbox"
+                labelPosition="after"
+                field="autoReset"
+                class="test-check"
+                (valueChange)="valueChange($event)"
+                (controlBlur)="blur($event)"
+                [crrValue]="data.autoReset"
+              >
+              </codx-input>
+              <codx-label class="ms-2" fiedName="autoReset" [formModel]="formModel">
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group pt-5 w-50">
+              <codx-input
+                field="interval"
+                [formModel]="formModel"
+                [Group]="dialogAutoNum"
+                [disabled]="!data.autoReset"
+              ></codx-input>
+            </div>
+          </div> -->
         </div>
       </div>
+
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label fiedName="LastNumber" [formModel]="formModel">
-          </codx-label>
-          <codx-input
-            [Group]="dialogAutoNum"
-            [formModel]="formModel"
-            [showSpinButton]="false"
-            field="lastNumber"
-            [disabled]="true"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label
-            name="lblReview"
-            default="Xem trước"
-            [formModel]="formModel"
-          >
-          </codx-label>
-          <codx-input
-            type="text"
-            cssClass="form-control"
-            [crrValue]="viewAutoNumber"
-            [disabled]="true"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group mt-2">
-          <codx-input
-            type="checkbox"
-            labelPosition="after"
-            field="autoReset"
-            class="test-check"
-            (valueChange)="valueChange($event)"
-            (controlBlur)="blur($event)"
-            [crrValue]="data.autoReset"
-          >
-          </codx-input>
-          <codx-label class="ms-2" fiedName="autoReset" [formModel]="formModel">
-          </codx-label>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-input
-            field="interval"
-            [formModel]="formModel"
-            [Group]="dialogAutoNum"
-            [disabled]="!data.autoReset"
-          ></codx-input>
-        </div>
-      </div>
-    </div>
+
+
+
   </ng-template>
 
   <ng-template #footer>

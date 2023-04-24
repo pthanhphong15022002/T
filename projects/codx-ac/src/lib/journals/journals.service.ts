@@ -107,11 +107,11 @@ export class JournalService {
       hiddenFields.push('DIM3');
     }
 
-    if (Boolean(journal?.projectControl)) {
+    if (!Boolean(journal?.projectControl)) {
       hiddenFields.push('ProjectID');
     }
 
-    if (Boolean(journal?.assetControl)) {
+    if (!Boolean(journal?.assetControl)) {
       hiddenFields.push('AssetID');
     }
 

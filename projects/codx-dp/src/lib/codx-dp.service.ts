@@ -673,4 +673,55 @@ export class CodxDpService {
       categoryID
     );
   }
+
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
+  removeListApprovalStep(listAppoverStep) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListApprovalStepAsync',
+      listAppoverStep
+    );
+  }
+  //up + add + delete es tại DP
+  upDataApprovalStep(listStep, listStepDelete) {
+    if (listStep?.length > 0)
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'UpdateApprovalStepsAsync',
+          [listStep]
+        )
+        .subscribe();
+
+    if (listStepDelete?.length > 0) {
+      this.api
+        .execSv(
+          'ES',
+          'ES',
+          'ApprovalStepsBusiness',
+          'DeleteListApprovalStepAsync',
+          [listStepDelete]
+        )
+        .subscribe();
+    }
+  }
+
+  copyAvatarById(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'CopyAvatarByIdProcessAsync',
+      data
+    );
+  }
 }

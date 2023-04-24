@@ -21,6 +21,7 @@ export class UserComponent implements OnInit {
   @Input() icon: string;
   @Input() style = {};
   @Input() type = 'all';
+  @Input() disabled = false;
   @Output() valueList = new EventEmitter();
 
   isPopupUserCbb = false;

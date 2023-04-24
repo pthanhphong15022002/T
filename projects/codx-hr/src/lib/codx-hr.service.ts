@@ -40,13 +40,17 @@ export class CodxHrService {
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   //#region moreFuncAction
-  actionAddNew = 'A01'
-  actionSubmit = 'A03'
-  actionUpdateCanceled = 'AU0'
-  actionUpdateInProgress = 'AU3'
-  actionUpdateRejected = 'AU4'
-  actionUpdateApproved = 'AU5'
-  actionUpdateClosed = 'AU9'
+  actionAddNew = 'A01';
+  actionSubmit = 'A03';
+  actionUpdateCanceled = 'AU0';
+  actionUpdateInProgress = 'AU3';
+  actionUpdateRejected = 'AU4';
+  actionUpdateApproved = 'AU5';
+  actionUpdateClosed = 'AU9';
+
+  actionEdit = 'SYS03';
+  actionDelete = 'SYS02';
+  actionCopy = 'SYS04';
   //#endregion
 
   constructor(
@@ -139,11 +143,18 @@ export class CodxHrService {
       );
   }
 
-  addBGTrackLog(objectID, comment, objectType, actionType, createdBy){
+  addBGTrackLog(
+    objectID,
+    comment,
+    objectType,
+    actionType,
+    createdBy,
+    Bussiness
+  ) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EContractsBusiness',
+      Bussiness,
       'ReceiveToAddBGTrackLog',
       [objectID, comment, objectType, actionType, createdBy]
     );
@@ -156,6 +167,16 @@ export class CodxHrService {
       'MoreFunctionsBusiness',
       'GetWithPermAsync',
       data
+    );
+  }
+
+  getListApprovalAsync(dtRequest, bussiness) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      bussiness,
+      'GetListApprovalAsync',
+      dtRequest
     );
   }
 
@@ -584,15 +605,6 @@ export class CodxHrService {
     );
   }
 
-  addBGTrackLogEAwards(objectID, comment, objectType, actionType, createdBy){
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAwardsBusiness',
-      'ReceiveToAddBGTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
-    );
-  }
   //#endregion
 
   //#region EDisciplinesBusiness
@@ -1118,7 +1130,7 @@ export class CodxHrService {
     );
   }
 
-  AddEJSlariesTrackLog(objectID, comment, objectType, actionType, createdBy){
+  AddEJSlariesTrackLog(objectID, comment, objectType, actionType, createdBy) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1128,7 +1140,7 @@ export class CodxHrService {
     );
   }
 
-  GetOldSalaries(data){
+  GetOldSalaries(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1249,16 +1261,7 @@ export class CodxHrService {
       data
     );
   }
-  addBGTrackLogEBasicSalaries(objectID, comment, objectType, actionType, createdBy){
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EBasicSalariesBusiness',
-      'ReceiveToAddBGTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
-    );
-  }
-  getOldBasicSalary(data){
+  getOldBasicSalary(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1728,7 +1731,7 @@ export class CodxHrService {
     );
   }
 
-  AddEBenefitTrackLog(objectID, comment, objectType, actionType, createdBy){
+  AddEBenefitTrackLog(objectID, comment, objectType, actionType, createdBy) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -2015,7 +2018,6 @@ export class CodxHrService {
     return this.expression.test(email);
   }
 
-
   // actionAddNew = 'A01'
   // actionSubmit = 'A03'
   // actionUpdateCanceled = 'AU0'
@@ -2024,84 +2026,123 @@ export class CodxHrService {
   // actionUpdateApproved = 'AU5'
   // actionUpdateClosed = 'AU9'
 
-  handleShowHideMF(evt, data, view){  
+  handleShowHideMF(evt, data, formModel) {
     // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
     let category = '4';
     let formName = 'HRParameters';
     this.getSettingValue(formName, category).subscribe((res) => {
-      if(res){
+      if (res) {
         let parsedJSON = JSON.parse(res?.dataValue);
         let index = parsedJSON.findIndex(
-          (p) => p.Category == view.formModel.entityName
+          (p) => p.Category == formModel.entityName
         );
-        if(index > -1){
+        if (index > -1) {
           let typeDocObj = parsedJSON[index];
-          if(typeDocObj['ApprovalRule'] != '1'){
-            let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+          if (typeDocObj['ApprovalRule'] != '1') {
+            let found = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionSubmit
+            );
             found.disabled = true;
-      
-            let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateRejected)
+
+            let found2 = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionUpdateRejected
+            );
             found2.disabled = true;
           }
-        }
-        else{
-          let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+        } else {
+          let found = evt.find(
+            (val) =>
+              val.functionID.substr(val.functionID.length - 3) ==
+              this.actionSubmit
+          );
           found.disabled = true;
-    
-          let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateRejected)
+
+          let found2 = evt.find(
+            (val) =>
+              val.functionID.substr(val.functionID.length - 3) ==
+              this.actionUpdateRejected
+          );
           found2.disabled = true;
         }
       }
-    })
+    });
 
-    if(view.formModel.entityName == 'HR_EContracts'){
-      //Xu li rieng cho HDLD
-    }
-    if(data.status == '0' || data.status == '2' || data.status == '4' || data.status == '5' || data.status == '9' ){
-      for(let i = 0; i < evt.length; i++){
-        let funcIDStr = evt[i].functionID
-        switch (funcIDStr.substr(funcIDStr.length - 3)){
+    // if (formModel.entityName == 'HR_EContracts') {
+    //   //Xu li rieng cho HDLD
+    // }
+    if (data.status == '0' || data.status == '2' ||
+      data.status == '4' ||   data.status == '9' ) 
+    {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        switch (funcIDStr.substr(funcIDStr.length - 3)) {
           case this.actionSubmit:
-            case this.actionUpdateCanceled:
-              case this.actionUpdateInProgress:
-                case this.actionUpdateRejected:
-                  case this.actionUpdateApproved:
-                    case this.actionUpdateClosed:
-                      evt[i].disabled = true;
-                      break;
+          case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+          case this.actionUpdateRejected:
+          case this.actionUpdateApproved:
+          case this.actionUpdateClosed:
+            evt[i].disabled = true;
+            break;
         }
       }
-    }
-    else if(data.status == '3'){
-      let found = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionSubmit)
+    } 
+    else if (data.status == '3') {
+      let found = evt.find((val) =>
+          val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
+      );
       found.disabled = true;
 
-      let found2 = evt.find(val => val.functionID.substr(val.functionID.length - 3) == this.actionUpdateInProgress)
+      let found2 = evt.find((val) =>
+          val.functionID.substr(val.functionID.length - 3) ==
+          this.actionUpdateInProgress
+      );
       found2.disabled = true;
-    }
-    else if(data.status == '6'){
-      for(let i = 0; i < evt.length; i++){
-        let funcIDStr = evt[i].functionID
-        switch (funcIDStr.substr(funcIDStr.length - 3)){
-            case this.actionUpdateCanceled:
-              case this.actionUpdateInProgress:
-                case this.actionUpdateRejected:
-                  case this.actionUpdateApproved:
-                    case this.actionUpdateClosed:
-                      evt[i].disabled = true;
-                      break;
+    } 
+    else if (data.status == '6') {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        switch (funcIDStr.substr(funcIDStr.length - 3)) {
+          case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+          case this.actionUpdateRejected:
+          case this.actionUpdateApproved:
+          case this.actionUpdateClosed:
+            evt[i].disabled = true;
+            break;
+        }
+      }
+    } else if (data.status == '5') {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        if (funcIDStr === this.actionEdit || funcIDStr === this.actionDelete){
+          evt[i].disabled = true;
+          break;
+        } 
+        switch (funcIDStr.substr(funcIDStr.length - 3)) {
+          case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+          case this.actionUpdateRejected:
+          case this.actionUpdateApproved:
+          case this.actionUpdateClosed:
+            evt[i].disabled = true;
+            break;
         }
       }
     }
   }
 
-  handleUpdateRecordStatus(functionID, data){
-    let funcIDRecognize = functionID.substr(functionID.length -3 );
-    switch(funcIDRecognize){
+  handleUpdateRecordStatus(functionID, data) {
+    let funcIDRecognize = functionID.substr(functionID.length - 3);
+    switch (funcIDRecognize) {
       case this.actionUpdateCanceled:
         data.status = '0';
         break;
-        
+
       case this.actionUpdateInProgress:
         data.status = '3';
         break;
@@ -2109,11 +2150,11 @@ export class CodxHrService {
       case this.actionUpdateRejected:
         data.status = '4';
         break;
-            
+
       case this.actionUpdateApproved:
         data.status = '5';
         break;
-              
+
       case this.actionUpdateClosed:
         data.status = '9';
         break;
@@ -2237,5 +2278,5 @@ export class CodxHrService {
 }
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { mergeMap } from 'rxjs';import { disableDebugTools } from '@angular/platform-browser';
-
+import { mergeMap } from 'rxjs';
+import { disableDebugTools } from '@angular/platform-browser';
