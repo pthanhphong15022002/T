@@ -34,7 +34,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() vllRefType: any = 'TM018';
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
-  @Input() isEdit = true ;  //mac dinh bằn true - Thao them sua ngay 23/2/2023
+  @Input() isEdit = true; //mac dinh bằn true - Thao them sua ngay 23/2/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -42,7 +42,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
-  @Input() dataSelected:any;
+  @Input() dataSelected: any;
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
@@ -62,7 +62,6 @@ export class CodxTabsComponent implements OnInit {
   constructor(
     injector: Injector,
     private api: ApiHttpService,
-    private dt: ChangeDetectorRef,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -135,7 +134,7 @@ export class CodxTabsComponent implements OnInit {
       this.api
         .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
           this.objectID,
-          createdBy
+          createdBy,
         ])
         .subscribe();
     }

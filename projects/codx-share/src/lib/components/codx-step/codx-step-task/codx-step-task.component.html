@@ -262,9 +262,9 @@
       <codx-img
         [width]="25"
         class="me-2"
-        [objectId]="getObjectIdRole(data?.value, data?.group)"
+        [objectId]="getRole(data?.value, 'ID')"
         objectType="AD_Users"
-        [objectName]="getObjectNameRole(data?.value, data?.group)"
+        [objectName]="getRole(data?.value, 'name')"
       ></codx-img>
     </span>
     <div class="notify" style="min-width: 40px;">

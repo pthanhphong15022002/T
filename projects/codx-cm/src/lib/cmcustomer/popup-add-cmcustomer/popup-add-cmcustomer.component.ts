@@ -44,6 +44,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   moreFuncEdit = '';
   contactsPerson: any;
   refValue = '';
+  recID: any;
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
@@ -62,14 +63,19 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.funcID = this.dialog.formModel.funcID;
     this.action = dt.data[0];
     this.title = dt.data[1];
+    if (this.action == 'copy') {
+      this.recID = dt?.data[2];
+      this.getListAddress(this.dialog.formModel.entityName, this.recID);
+    }
+    this.recID = dt?.data[2];
     if (this.action == 'edit') {
       this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res) => {
         if (res) {
           this.contactsPerson = res;
         }
       });
+      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
       this.getAvatar(this.data);
-      this.getListAddress(this.dialog.formModel.entityName, this.data?.recID);
     }
   }
 
@@ -94,6 +100,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (edit) this.moreFuncEdit = edit.customName;
       }
     });
+    if (this.action == 'copy') {
+      this.data.customerID = null;
+      this.data.contactID = null;
+      this.data.competitorID = null;
+      this.data.partnerID = null;
+    }
   }
 
   getListAddress(entityName, recID) {
@@ -155,9 +167,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.funcID,
       this.dialog.formModel.entityName,
       this.contactsPerson?.recID,
-      null,
+      this.funcID == 'CM0101' ? '1' : this.funcID == 'CM0103' ? '3' : null,
       this.listAddress,
-      this.listAddressDelete
+      this.listAddressDelete,
     ];
     op.data = data;
     return true;
@@ -376,24 +388,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
                     x.adressType == '1' &&
                     address.adressType == '1'
                 );
-                if (!checkCoincide || !check) {
+                if (!checkCoincide && !check) {
                   if (index != -1) {
                     this.listAddress.splice(index, 1);
-                    this.listAddress.push(address);
-                  } else {
-                    if (address.adressType == '1') {
-                      this.data.countryID = address.countryID;
-                      this.data.provinceID = address.provinceID;
-                      this.data.districtID = address.districtID;
-                      this.data.regionID = address.regionID;
-                      this.data.wardID = address.regionID;
-                      this.data.address = address.adressName;
-                    }
-                    this.listAddress.push(address);
                   }
+                  this.listAddress.push(address);
+                } else {
+                  this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
                 }
-              } else {
-                this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
               }
             }
           });
@@ -425,13 +427,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.cache
       .gridViewSetup(dataModel.formName, dataModel.gridViewName)
       .subscribe((res) => {
+        var obj = {
+          type: 'formAdd',
+        };
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
           500,
           550,
           '',
-          ['formAdd'],
+          obj,
           '',
           opt
         );

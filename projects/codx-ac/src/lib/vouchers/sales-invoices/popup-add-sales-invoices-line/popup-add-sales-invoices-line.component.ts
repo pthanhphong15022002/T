@@ -9,12 +9,11 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
-  RequestOption,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
-import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
+import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 
 @Component({
   selector: 'lib-popup-add-sales-invoices-line',
@@ -34,6 +33,8 @@ export class PopupAddSalesInvoicesLineComponent
   isEdit: boolean = false;
   gvs: any;
   formTitle: string;
+  action: string;
+  hiddenFields: string[] = [];
 
   constructor(
     private injector: Injector,
@@ -47,6 +48,8 @@ export class PopupAddSalesInvoicesLineComponent
     this.salesInvoicesLine = dialogData.data.salesInvoicesLine;
     this.index = dialogData.data.index;
     this.gvs = dialogData.data.gvs;
+    this.action = dialogData.data.action;
+    this.hiddenFields = dialogData.data.hiddenFields;
   }
   //#endregion
 
@@ -73,9 +76,12 @@ export class PopupAddSalesInvoicesLineComponent
       .moreFunction('CoDXSystem', '')
       .pipe(combineLatestWith(title$))
       .subscribe(([actions, title]) => {
-        const action = this.isEdit
-          ? actions.find((a) => a.functionID === 'SYS03')?.customName
-          : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
+        let action: string = this.action;
+        if (!action) {
+          action = this.isEdit
+            ? actions.find((a) => a.functionID === 'SYS03')?.customName
+            : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
+        }
 
         this.formTitle = `${action} ${title}`;
       });
@@ -85,7 +91,7 @@ export class PopupAddSalesInvoicesLineComponent
   //#endregion
 
   //#region Event
-  handleClickSave(closeAfterSaving: boolean) {
+  onClickSave(closeAfterSaving: boolean) {
     console.log(this.salesInvoicesLine);
 
     if (

@@ -69,6 +69,7 @@ export class PopupJobComponent implements OnInit {
   step: DP_Steps;
   listFileTask: string[] = [];
   user: any;
+  functionID = 'DP01';
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -396,6 +397,7 @@ export class PopupJobComponent implements OnInit {
         //No parentID
         this.checkSave(groupTask);
       } else {
+        // tính thời gian lớn nhất của group
         let timeMax = this.getTimeMaxGroupTask(groupTask['task'], this.stepsTasks);
         this.checkSave(groupTask, timeMax);
       }
@@ -418,7 +420,7 @@ export class PopupJobComponent implements OnInit {
         let listIdTask = this.stepsTasks['parentID'].split(';');
         let maxtime = 0;
         listIdTask?.forEach((id) => {
-          let time = this.getSumTimeTask(this.taskList,id);
+          let time = this.getSumTimeTask(this.taskList,id, false);
           maxtime = Math.max(time, maxtime);
         });
         maxtime += this.getHour(this.stepsTasks);
@@ -511,12 +513,13 @@ export class PopupJobComponent implements OnInit {
     return maxTime;
   }
 
-  getSumTimeTask(taskList: any[], taskId: string) {
+
+  getSumTimeTask(taskList: any[], taskId: string, isGroup = true) {
     let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
       let maxTime = this.getHour(task);
-      if(task.taskGroupID){
+      if(task.taskGroupID && !isGroup){
         let groupFind = this.taskGroupList?.find(group => group['recID'] == task.taskGroupID);
         if(groupFind){
           let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
@@ -528,7 +531,7 @@ export class PopupJobComponent implements OnInit {
       const parentIds = task?.parentID.split(';');
       let maxTime = 0;
       parentIds?.forEach((parentId) => {
-        const parentTime = this.getSumTimeTask(taskList, parentId);
+        const parentTime = this.getSumTimeTask(taskList, parentId, isGroup);
         maxTime = Math.max(maxTime, parentTime);
       });
       const completionTime = this.getHour(task) + maxTime;

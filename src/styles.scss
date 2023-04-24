@@ -1370,8 +1370,8 @@ codx-vll {
   padding: 0.375rem calc(0.45rem + 1px) !important;
 }
 
-.popup-attachment .fw-bold.line-clamp.line-clamp-1 {
-  word-break: break-word;
+.line-clamp.line-clamp-1 {
+  word-break: break-all;
 }
 
 .tab-content > .tab-pane {
@@ -1400,7 +1400,7 @@ codx-vll {
   content: ":";
   position: absolute;
   right: 6px;
-  bottom: 0;
+  top: 0;
   height: 18px;
 }
 
@@ -2511,13 +2511,27 @@ codx-toolbar{
     padding: 0!important;
   }
 }
-
+// .vll-inplace .rounded-pill{
+//   width: fit-content!important;
+//   padding: 3px 7px!important;
+//   margin: 0!important;
+//   border: 1px aqua solid!important;
+// }
 .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
   text-transform: none!important;
 }
-
-
-
+.badge.me-0.me-2{
+  margin-right: 0!important;
+}
+.avatar-vllbadge{
+  position: relative;
+  .vll-badge{
+    position: absolute;
+    top: 50px;
+    width:60px;
+    left: 0;
+  }
+}
 
 
 

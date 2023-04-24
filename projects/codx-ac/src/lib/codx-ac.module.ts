@@ -34,6 +34,9 @@ import { PeriodicComponent } from './periodic/periodic.component';
 import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
 import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
+import { SearchingComponent } from './searching/searching.component';
+import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
+import { NameByIdPipe } from './pipes/nameById.pipe';
 
 export const routes: Routes = [
   {
@@ -41,7 +44,7 @@ export const routes: Routes = [
     component: NosubAsideComponent,
     children: [
       {
-        path: 'accounting/:funcID',
+        path: 'periodic/:funcID',
         component: PeriodicComponent,
         data: { noReuse: true },
       },
@@ -71,8 +74,13 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'accounting/:funcID',
+        path: 'dashboard/:funcID',
         component: DashboardComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'searching/:funcID',
+        component: SearchingComponent,
         data: { noReuse: true },
       },
       {
@@ -117,6 +125,8 @@ export const routes: Routes = [
     SalesInvoicesComponent,
     PopupAddSalesInvoiceComponent,
     PopupAddSalesInvoicesLineComponent,
+    SearchingComponent,
+    TableLineDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -128,6 +138,7 @@ export const routes: Routes = [
     NgbModule,
     CodxReportModule,
     FormsModule,
+    NameByIdPipe,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

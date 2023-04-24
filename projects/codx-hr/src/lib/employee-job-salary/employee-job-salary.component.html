@@ -15,27 +15,6 @@
 >
 </codx-views>
 
-<ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblJobSalaries"
-      [default]="'Lương chức danh | Hiệu lực'"
-    ></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblApproveStatus"
-      [default]="'Tình trạng duyệt'"
-    ></codx-label>
-  </div>
-</ng-template>
-
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center min-h-100px">
     <div class="w-25">
@@ -165,6 +144,7 @@
             <codx-attachment-temp
               [objectID]="data?.recID"
               [formModel]="view.formModel"
+              [count]="data.attachments"
             >
             </codx-attachment-temp>
 
@@ -185,7 +165,7 @@
           >
           </codx-vll>
         </div>
-      </div> 
+      </div>
     </div>
 
     <div class="w-25">
@@ -212,6 +192,27 @@
         </codx-mfunc>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate let-data>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblJobSalaries"
+      [default]="'Lương chức danh | Hiệu lực'"
+    ></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblApproveStatus"
+      [default]="'Tình trạng duyệt'"
+    ></codx-label>
   </div>
 </ng-template>
 
@@ -292,8 +293,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3"
-    [imageId]="data?.emp?.employeeID"
+    [imageId]="data?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="40"
     [formModel]="view.formModel"
@@ -304,19 +304,11 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
-  <codx-vll
-    class="badge badge-sm p-gender"
-    [name]="genderGrvSetup?.referedValue"
-    [value]="data?.emp?.gender"
-    [showText]="true"
-    [showIcon]="false"
-    [showBgColor]="false"
-  >
-  </codx-vll>
+
   <ng-template #titleTmp let-data>
     <div class="w-100">
       <div class="justify-content-between">
-        <!-- <codx-vll
+        <codx-vll
           class="badge badge-sm"
           [name]="genderGrvSetup?.referedValue"
           [value]="data?.emp?.gender"
@@ -324,7 +316,7 @@
           [showIcon]="false"
           [showBgColor]="false"
         >
-        </codx-vll> -->
+        </codx-vll>
         <span>
           {{ data?.emp?.employeeName }}
         </span>
