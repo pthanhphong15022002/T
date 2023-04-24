@@ -238,10 +238,14 @@
               <input
               class="form-check-input"
               type="checkbox"
+              style=" cursor: pointer;"
               id="toggle" [(ngModel)]="isChecked"
+              [checked]="listClickedCoppy.indexOf(item) >= 0"
               (change)="checkValueCopy($event, item)"
             />
-              <span for="toggle" class="form-check-label ">
+              <span for="toggle" class="form-check-label" style=" cursor: pointer;"
+              (click)="checkValueCopy($event, item)"
+              >
                 {{ item?.text }}
               </span>
               <ng-container>
@@ -251,10 +255,13 @@
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        [checked]="isChecked"
+                        style=" cursor: pointer;"
+                        [checked]="listClickedCoppy.indexOf(cell) >= 0"
                         (change)="checkValueCopy($event, cell)"
                       />
-                      <span class="form-check-label">
+                      <span class="form-check-label" style=" cursor: pointer;"
+                      (click)="checkValueCopy($event, cell)"
+                      >
                         {{ cell?.text }}
                       </span>
                     </div>
@@ -271,11 +278,12 @@
               <input
                 class="form-check-input"
                 type="checkbox"
+                style=" cursor: pointer;"
                 (change)="checkValueCopy($event, item)"
                 [disabled]="i == 0 ? true : false"
-                [checked]="i == 0 ? true : false"
+                [checked]="i == 0 ? true : listClickedCoppy.indexOf(item) >= 0"
               />
-              <span class="form-check-label">
+              <span class="form-check-label"   style=" cursor: pointer;"  (click)="checkValueCopy($event, item)">
                 {{ item?.text }}
               </span>
             </div>

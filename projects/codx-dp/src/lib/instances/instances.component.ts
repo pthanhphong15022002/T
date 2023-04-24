@@ -1169,13 +1169,24 @@ export class InstancesComponent
     ).transferControl;
 
     if (checkTransferControl == '1' || checkTransferControl == '2' ) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.handleMoveStage(dataInstance);
+
+      if(dataInstance.isShowForm) {
+
+        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+        if (idx != -1) {
+          this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
         }
-      });
+      }
+      else {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.handleMoveStage(dataInstance);
+          }
+        });
+      }
+
     }
   }
   handleMoveStage(dataInstance) {
@@ -1262,8 +1273,6 @@ export class InstancesComponent
     };
     return result;
   }
-
-  completedLastTasks() {}
 
   checkFieldsIEmpty(fields) {
     return fields.includes((x) => !x.dataValue && x.isRequired);

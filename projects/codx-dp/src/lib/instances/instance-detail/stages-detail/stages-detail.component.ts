@@ -999,11 +999,11 @@ export class StagesDetailComponent implements OnInit {
             this.saveAssign.emit(true);
             // chuyển tiếp công việc cuối cùng
             if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
-              this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);            
-              this.isContinueTaskEnd = true;            
+              this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);
+              this.isContinueTaskEnd = true;
             }else{
               this.isContinueTaskEnd = false;
-              this.isShowFromTaskEnd = false; 
+              this.isShowFromTaskEnd = false;
             }
 
           } else {
@@ -1114,7 +1114,6 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
-          // a thuận gán isCheck để autoMove
           if (this.isContinueTaskEnd) {
             let dataInstance = {
               instance: this.instance,
