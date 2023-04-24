@@ -61,6 +61,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   eBenefitHeader;
 
   //#region Update modal Status
+  actionAddNew = 'HRTPro05A01';
   actionUpdateCanceled = 'HRTPro05AU0';
   actionUpdateInProgress = 'HRTPro05AU3';
   actionUpdateRejected = 'HRTPro05AU4';
@@ -138,12 +139,13 @@ export class EmployeeBenefitComponent extends UIComponent {
           res[0].emp = this.currentEmpObj;
           this.view.formModel.entityName;
           this.hrService
-            .AddEBenefitTrackLog(
+            .addBGTrackLog(
               res[0].recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
-              null
+              null,
+              'EBenefitsBusiness'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);
@@ -192,6 +194,10 @@ export class EmployeeBenefitComponent extends UIComponent {
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEbenefitStatus(event.functionID, oUpdate);
+        break;
+      //Propose increase benefit
+      case this.actionAddNew:
+        this.HandleEBenefit(event.text, 'add', data);
         break;
       //Delete
       case 'SYS02':

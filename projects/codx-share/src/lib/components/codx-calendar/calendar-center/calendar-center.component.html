@@ -3,15 +3,10 @@
   [views]="views"
   [button]="btnAdd"
   [autoLoad]="false"
-  [funcID]="funcID"
   [toolbarDisplay]="false"
   (onActions)="onAction($event)"
 >
 </codx-views>
-
-<ng-template #cellTemplate let-data>
-  <div [innerHtml]="getCellContent(data?.calendarDate)"></div>
-</ng-template>
 
 <ng-template #contentTmp let-data>
   <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_Tasks'">
@@ -631,10 +626,7 @@
 
 <ng-template #cardTemplate let-data>
   <ng-container *ngIf="data.transType == 'EP_BookingCars'">
-    <div
-      class="d-flex flex-column w-100"
-      (click)="getMoreInfoBookingCars(data.transID)"
-    >
+    <div class="d-flex flex-column w-100">
       <span
         >{{ showHour(data.data.startDate) }} -
         {{ showHour(data.data.endDate) }}</span
@@ -647,10 +639,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="data.transType == 'EP_BookingRooms'">
-    <div
-      class="d-flex flex-column w-100"
-      (click)="getMoreInfoBookingRooms(data.transID)"
-    >
+    <div class="d-flex flex-column w-100">
       <span
         >{{ showHour(data.data.startDate) }} -
         {{ showHour(data.data.endDate) }}</span
@@ -662,7 +651,9 @@
       >
     </div>
   </ng-container>
-  <ng-container *ngIf="data.transType == 'TM_Tasks' || data.transType == 'CO_Meetings'">
+  <ng-container
+    *ngIf="data.transType == 'TM_Tasks' || data.transType == 'CO_Meetings'"
+  >
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"

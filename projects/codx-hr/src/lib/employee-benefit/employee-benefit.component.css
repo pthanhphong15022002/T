@@ -1,16 +1,5 @@
-.p-dot {
-    font-size: 5px;
-    color: rgb(108, 108, 108);
-    opacity: 0.4;
-}
 
 .p-disabled {
     pointer-events: none;
     background: gray;
-}
-
-.p-gender{
-    position: absolute;
-    top: 42%;
-    left: 12px;
 }

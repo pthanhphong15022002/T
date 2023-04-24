@@ -84,6 +84,11 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     this.signalRSV.activeGroup.subscribe((res:any) => {
       this.getTotalMessage();
     });
+    // this.signalRSV.disConnected.subscribe((res) => {
+    //   debugger
+    //   let ele = document.getElementsByTagName("codx-chat-container");
+    //   ele[0].remove();
+    // })
   }
   // get total message
   getTotalMessage(){
@@ -166,14 +171,14 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     group.isRead = true;
     this.totalMessage -= group.messageMissed;
     group.messageMissed = 0;
-    this.signalRSV.sendData(group,"ActiveGroupAsync");
+    this.signalRSV.sendData("OpenGroupAsync",group.groupID);
     this.dt.detectChanges();
   }
   // select item search
   selectItemSeach(item: any) {
-    if(item.type != 'H'){
-      item.type = item.type == 'U' ? '1':'2';
-      this.signalRSV.sendData("GetGroupSearch",item);
+    if(item.type != 'H')
+    {
+      this.signalRSV.sendData("GetGroupSearch",item.id,item.type == 'U' ? '1':'2');
     }
   }
 
