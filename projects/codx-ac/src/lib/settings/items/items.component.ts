@@ -1,10 +1,8 @@
 import {
   Component,
   Injector,
-  Pipe,
-  PipeTransform,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   ButtonModel,
@@ -15,18 +13,9 @@ import {
   ViewType,
 } from 'codx-core';
 import { map } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
-import { CodxAcService } from '../../codx-ac.service';
-
-@Pipe({
-  name: 'nameById',
-})
-export class NameByIdPipe implements PipeTransform {
-  transform(data: any[], id: string, key: string, value: string) {
-    return data?.find((d) => d?.[key] === id)?.[value];
-  }
-}
 
 @Component({
   selector: 'lib-items',

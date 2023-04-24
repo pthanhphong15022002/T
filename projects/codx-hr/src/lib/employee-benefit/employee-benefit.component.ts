@@ -61,6 +61,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   eBenefitHeader;
 
   //#region Update modal Status
+  actionAddNew = 'HRTPro05A01';
   actionUpdateCanceled = 'HRTPro05AU0';
   actionUpdateInProgress = 'HRTPro05AU3';
   actionUpdateRejected = 'HRTPro05AU4';
@@ -138,12 +139,13 @@ export class EmployeeBenefitComponent extends UIComponent {
           res[0].emp = this.currentEmpObj;
           this.view.formModel.entityName;
           this.hrService
-            .AddEBenefitTrackLog(
+            .addBGTrackLog(
               res[0].recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
-              null
+              null,
+              'EBenefitsBusiness'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);
@@ -176,7 +178,6 @@ export class EmployeeBenefitComponent extends UIComponent {
       null
     );
     this.dialogEditStatus.closed.subscribe((res) => {
-      // console.log('res sau khi update status', res);
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe((res) => {});
       }
@@ -193,6 +194,10 @@ export class EmployeeBenefitComponent extends UIComponent {
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEbenefitStatus(event.functionID, oUpdate);
+        break;
+      //Propose increase benefit
+      case this.actionAddNew:
+        this.HandleEBenefit(event.text, 'add', data);
         break;
       //Delete
       case 'SYS02':
@@ -225,9 +230,7 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   copyValue(actionHeaderText, data) {
-    console.log('copy data', data);
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.HandleEBenefit(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',

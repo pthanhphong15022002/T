@@ -82,7 +82,7 @@
         </codx-vll>
       </div>
       <div class="d-flex justify-content-end">
-        <span
+        <div class="d-flex align-items-center"
           #pCr="ngbPopover"
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
@@ -105,7 +105,7 @@
                 | async
             "
           ></span>
-        </span>
+        </div>
       </div>
     </div>
   </ng-template>
@@ -119,7 +119,7 @@
           class="badge badge-light badge-md fs-7">
         </codx-vll>
       </ng-container> -->
-      <span
+      <span class="d-flex align-items-center"
         #pEd="ngbPopover"
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
@@ -194,7 +194,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'"
+    [moreFuncCss]="'me-9'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.title"
@@ -275,9 +275,7 @@
                 [ngStyle]="{ color: item['iconColor'] }"
                 class="me-2"
               ></span>
-              <span [ngStyle]="{ color: item['textColor'] }">
-                {{ item.stepName }}</span
-              >
+              <span [ngStyle]="{ color: item['textColor'] }">{{ item.stepName }}</span>
             </div>
           </div>
         </ng-container>
@@ -368,6 +366,8 @@
     (outStepInstance)="outStepInstance($event)"
     (saveDatasInstance)="saveDatasInstance($event)"
     [lstStepProcess]="listSteps"
+    [colorSuccesss]="colorReasonSuccess?.color"
+    [colorFail]="colorReasonFail?.color"
   >
   </codx-instance-detail>
 </ng-template>

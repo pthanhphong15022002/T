@@ -46,10 +46,6 @@ export class SignalRService {
   }
   // reciver from server
   public registerOnServerEvents() {
-    this.hubConnection.on('onConnect', (data) => {
-      this.connectionId = data;
-      this.userConnect.emit(data);
-    });
     this.hubConnection.on('ReceiveMessage', (res) => {
       if(res){
         let data = res.data;

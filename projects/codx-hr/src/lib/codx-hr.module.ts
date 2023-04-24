@@ -460,7 +460,7 @@ import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess
 import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
 import { EmployeeDisciplineComponent } from './employee-discipline/employee-discipline.component';
-import { ViewDetailEbenefitComponent } from './employee-benefit/view-detail-ebenefit/view-detail-ebenefit/view-detail-ebenefit.component';
+import { ViewDetailEbenefitComponent } from './employee-benefit/view-detail-ebenefit/view-detail-ebenefit.component';
 import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/view-award-detail.component';
 import { TestComponent } from './test/test.component';
 import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
