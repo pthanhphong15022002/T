@@ -1126,16 +1126,6 @@ export class CodxHrService {
     );
   }
 
-  AddEJSlariesTrackLog(objectID, comment, objectType, actionType, createdBy) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EJobSalariesBusiness',
-      'ReceiveToAddEJSalariesTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
-    );
-  }
-
   GetOldSalaries(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1724,16 +1714,6 @@ export class CodxHrService {
       'EBenefitsBusiness',
       'EditEmployeeBenefitMoreFunc',
       data
-    );
-  }
-
-  AddEBenefitTrackLog(objectID, comment, objectType, actionType, createdBy) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EBenefitsBusiness',
-      'ReceiveToAddEJSalariesTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
     );
   }
   //#endregion

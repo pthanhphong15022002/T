@@ -141,13 +141,13 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
    selectItem(group: any){
     group.isRead = true;
     group.messageMissed = 0;
-    this.signalRSV.sendData("ActiveGroupAsync",group);
+    this.signalRSV.sendData("OpenGroupAsync",group.groupID);
   }
    // select item search
    selectItemSeach(item: any) {
-    if(item.type != 'H'){
-      item.type = item.type == 'U' ? '1':'2';
-      this.signalRSV.sendData("GetGroupSearch",item);
+    if(item.type != 'H')
+    {
+      this.signalRSV.sendData("GetGroupSearch",item.id,item.type == 'U' ? '1':'2');
     }
   }
   

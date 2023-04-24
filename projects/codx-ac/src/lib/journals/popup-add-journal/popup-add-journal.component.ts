@@ -57,9 +57,8 @@ export class PopupAddJournalComponent
 
   journal: IJournal = {
     mixedPayment: false,
-    unpostControl: false,
-    postControl: false,
-    approval: false,
+    unPostControl: false,
+    autoPost: false,
   } as IJournal;
   oldJournal: IJournal;
   formTitle: string;
@@ -83,7 +82,7 @@ export class PopupAddJournalComponent
   isEdit: boolean = false;
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
-  disabledFields: string[] = [];
+  notAllowEditingFields: string[] = [];
   dataValueProps: string[] = [];
 
   vllDateFormat: any;
@@ -102,13 +101,11 @@ export class PopupAddJournalComponent
 
     this.journal = { ...this.journal, ...dialogRef.dataService?.dataSelected };
     this.oldJournal = { ...this.journal };
-    this.journal.approval = this.journal.approval == '1' ? true : false;
-    this.journal.postControl = ['1', '2'].includes(this.journal.postControl)
+    this.journal.multiCurrency =
+      this.journal.multiCurrency == '1' ? true : false;
+    this.journal.autoPost = ['1', '2'].includes(this.journal.autoPost)
       ? true
       : false;
-    this.journal.projectControl = this.journal.projectControl ? '1' : '0';
-    this.journal.assetControl = this.journal.assetControl ? '1' : '0';
-    this.journal.postSubControl = this.journal.postSubControl ? '1' : '0';
 
     if (dialogData.data.formType === 'edit') {
       this.isEdit = true;
@@ -169,7 +166,7 @@ export class PopupAddJournalComponent
           map((v) => v.datas.map((d) => d.value)),
           tap((t) => console.log(t))
         )
-        .subscribe((res) => (this.disabledFields = res));
+        .subscribe((res) => (this.notAllowEditingFields = res));
 
       this.api
         .exec(
@@ -288,24 +285,18 @@ export class PopupAddJournalComponent
     }
 
     if (!['0102', '0302', '0304'].includes(this.journal.journalType)) {
-      this.journal.invoiceType = null;
       this.journal.invoiceForm = null;
       this.journal.invoiceSeriNo = null;
     }
 
     let tempJournal: IJournal = { ...this.journal };
-    if (this.journal.approval) {
-      tempJournal.postControl = this.journal.postControl ? 1 : 0;
-      tempJournal.approval = 1;
+    tempJournal.autoPost = this.journal.approvalControl;
+    if (this.journal.approvalControl) {
+      tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
     } else {
-      tempJournal.postControl = this.journal.postControl ? 2 : 0;
-      tempJournal.approval = 0;
+      tempJournal.autoPost = this.journal.autoPost ? '2' : '0';
     }
-    tempJournal.projectControl =
-      this.journal.projectControl == '1' ? true : false;
-    tempJournal.assetControl = this.journal.assetControl == '1' ? true : false;
-    tempJournal.postSubControl =
-      this.journal.postSubControl == '1' ? true : false;
+    tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
     tempJournal.creater = this.journal.creater
       ? JSON.stringify(this.journal.creater)
       : this.journal.creater;
@@ -334,7 +325,7 @@ export class PopupAddJournalComponent
         this.oldJournal,
         tempJournal
       ).map((f) => f.toLowerCase());
-      const changedFields: string[] = this.disabledFields
+      const changedFields: string[] = this.notAllowEditingFields
         .filter((d) => changedProps.includes(d.toLowerCase()))
         .map((d) => this.gvs?.[d]?.headerText);
 
@@ -395,7 +386,6 @@ export class PopupAddJournalComponent
       .closed.subscribe(({ event }) => {
         console.log(event);
 
-        this.journal.invoiceType = event.invoiceType;
         this.journal.invoiceForm = event.invoiceForm;
         this.journal.invoiceSeriNo = event.invoiceSeriNo;
       });

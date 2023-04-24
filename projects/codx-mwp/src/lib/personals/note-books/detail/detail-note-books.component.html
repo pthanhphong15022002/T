@@ -3,13 +3,11 @@
   [views]="views"
   [button]="button"
   [funcID]="funcID"
-  (buttonClick)="openFormCreateDetail($event)"
   idField="recID"
-  [entityName]="functionList.entityName"
   service="WP"
   [predicate]="predicate"
   [dataValue]="dataValue"
-  (onLoading)="onLoading($event)"
+  (buttonClick)="openFormCreateDetail($event)"
 >
 </codx-views>
 

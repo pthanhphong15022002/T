@@ -91,14 +91,20 @@ export class InputNumberDurationComponent
       } else if (!value && value != 0) {
         value = this.dayMax;
       }
-    } else {
+    }
+    else if(this.dayMax == 0)
+    {
+        value = $event.target.value;
+    }
+    else  {
       value = this.minDayDefault;
     }
     value = this.isTurnInput(this.typeDay, value);
     $event.target.value = value;
     this.dayValue = $event.target.value;
     var data = {
-      value: value,
+      valueDay: value,
+      valueHour: this.hourValue,
       type: this.typeDay,
     };
 
@@ -117,7 +123,12 @@ export class InputNumberDurationComponent
       } else if (!value && value != 0) {
         value = this.hourMax;
       }
-    } else {
+    }
+    else if(this.hourMax == 0)
+    {
+        value = $event.target.value;
+    }
+    else {
       value = this.minHourDefault;
     }
 
@@ -125,7 +136,8 @@ export class InputNumberDurationComponent
     $event.target.value = value;
     this.hourValue = $event.target.value;
     var data = {
-      value: value,
+      valueHour: value,
+      valueDay: this.dayValue,
       type: this.typeHour,
     };
     this.eventInput.emit(data);
@@ -141,7 +153,13 @@ export class InputNumberDurationComponent
     if (type === this.typeDay) {
       if (value == this.maxDayDefault) {
         this.isView = true;
-      } else {
+        this.hourValue = this.minHourDefault;
+      }
+      else if(  value == this.secondMaxDayDefault && this.hourValue == this.maxHourDefault) {
+        this.hourValue = this.minHourDefault;
+        value = this.maxDayDefault;
+      }
+      else {
         this.isView = false;
       }
     } else if (type === this.typeHour) {
@@ -152,7 +170,8 @@ export class InputNumberDurationComponent
         this.isView = true;
         this.dayValue = this.maxDayDefault;
         value = this.minHourDefault;
-      } else {
+      }
+       else {
         this.isView = false;
       }
     } else {

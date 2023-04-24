@@ -42,7 +42,7 @@ export class WP_News{
         this.recID = Util.uid();
         this.newsType = "";
         this.category = "";
-        this.shareControl = "";
+        this.shareControl = "9";
         this.subject = "";
         this.subContent = "";
         this.refType = "";

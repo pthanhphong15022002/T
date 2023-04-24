@@ -48,7 +48,13 @@ export class NewsDetailComponent extends UIComponent {
       this.getUserPermission(this.funcID);
       this.getDataTagAsync("WP_News");
     });
-    
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc)
+      {
+        this.moreFunction = mFuc;
+      }
+    });
     
   }
   ngAfterViewInit(): void {
@@ -64,19 +70,19 @@ export class NewsDetailComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+  //load data by recID
   loadData(recID: string) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID)
-    .subscribe(
-      (res) => {
-        if (res) {
-          this.data = res[0];
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.listViews = res[1];
-          this.listNews = res[2];
-        }
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetPostInforAsync", [recID])
+    .subscribe((res) => {
+      if (res) {
+        this.data = res[0];
+        this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+        this.listViews = res[1];
+        this.listNews = res[2];
       }
-    );
+    });
   }
+  // get permisison 
   getUserPermission(funcID:string){
     if(funcID){
       let funcIDPermission  = funcID + "P";
@@ -89,6 +95,7 @@ export class NewsDetailComponent extends UIComponent {
       });
     }
   }
+  // get data tags
   getDataTagAsync(entityName:string){
     if(entityName){
       this.api
@@ -117,13 +124,19 @@ export class NewsDetailComponent extends UIComponent {
     this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
   // add
-  openPopupAdd(newsType: string) {
+  moreFunction:any = null;
+  openPopupAdd(type: string) {
     if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType , '', option);
+      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+      let data = {
+        action: mfc.defaultName,
+        type:type
+      }
+      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data , '', option);
     }
   }
   clickShowPopupSearch() {
