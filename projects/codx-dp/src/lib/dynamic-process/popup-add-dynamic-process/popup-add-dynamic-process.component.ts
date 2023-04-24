@@ -1452,13 +1452,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         description: 'DP_Instances',
       };
     }
+    let op = new DialogModel();
+    op.IsFull = true;
     let popupAutoNum = this.callfc.openForm(
       PopupAddAutoNumberComponent,
       '',
-      550,
-      (screen.width * 40) / 100,
+      0,
+       0,
       '',
-      obj
+      obj,
+      '',
+      op
     );
     popupAutoNum.closed.subscribe((res) => {
       if (res?.event) {
