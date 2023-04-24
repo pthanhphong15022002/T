@@ -37,7 +37,6 @@ export class CodxViewFilesComponent implements OnInit {
   files:any[] = [];
   documents: number = 0;
   lstFileRemove:any[] = [];
-  lstPermissionFile:any[] = [];
   size:number = 0;
   FILE_REFERTYPE = {
     IMAGE: 'image',
@@ -272,9 +271,11 @@ export class CodxViewFilesComponent implements OnInit {
       p.read = true;
       p.download = true;
       p.objectType = "9";
-      p.isActive = true
-      this.lstPermissionFile.push(p);
-      this.codxATM.addPermissions = this.lstPermissionFile;
+      p.isActive = true;
+      if(!Array.isArray(this.codxATM.addPermissions)){
+        this.codxATM.addPermissions = [];
+      }
+      this.codxATM.addPermissions.push(p);
       this.codxATM.fileUploadList = JSON.parse(JSON.stringify(files));
       return this.codxATM.saveFilesMulObservable()
       .pipe(map((res:any) => {
