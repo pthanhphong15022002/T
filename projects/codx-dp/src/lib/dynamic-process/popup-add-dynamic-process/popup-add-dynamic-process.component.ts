@@ -2326,6 +2326,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let stepNo = data['stepNo'];
     let index = this.stepList.findIndex((step) => step.recID == id);
     if (index >= 0) {
+      let stepDelete = JSON.parse(JSON.stringify(this.stepList[index]));
+      // console.log('---------',this.process.permissions);
+      
       this.stepList.splice(index, 1);
       this.setIndex(this.stepList, 'stepNo');
       this.viewStepSelect(
@@ -2333,6 +2336,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           ? this.stepList[this.stepList?.length - 1 || 0]
           : []
       );
+
+      if(stepDelete?.taskGroups?.length > 0){
+        stepDelete?.taskGroups?.forEach(group => {
+          if(group?.roles?.length > 0){
+            group?.roles?.forEach(role => {
+              this.deleteRoleInProcess(role, 'O')
+            })
+          }
+        })
+      }
+
+      if(stepDelete?.tasks?.length > 0){
+        stepDelete?.tasks?.forEach(task => {
+          if(task?.roles?.length > 0){
+            task?.roles?.forEach(role => {
+              this.deleteRoleInProcess(role, 'O')
+            })
+          }
+        })
+      }
+      // console.log('---------2',this.process.permissions);
+      // cập nhật thay đổi
       if (this.action == 'edit') {
         let index = this.listStepAdd.findIndex((stepID) => stepID == id);
         if (index >= 0) {
@@ -2460,27 +2485,30 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskGroupList.splice(index, 1);
           this.sumTimeStep();
         }
-        for (let i = 0; i < this.taskList.length; i++) {
+        for (let i = 0; i < this.taskList.length;) {
           if (this.taskList[i]['taskGroupID'] === data['recID']) {
+            const task = JSON.parse(JSON.stringify(this.taskList[i]));
             this.taskList.splice(i, 1);
+            if(task?.roles?.length > 0){
+              task?.roles.forEach((role) => {
+                this.deleteRoleInstep(this.step, role);
+                this.deleteRoleInProcess(role, role?.roleType);
+              })
+            }
+          }else{
+            i++;
           }
         }
         let check = this.listStepEdit.some((id) => id == data?.stepID);
         if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
         }
-        let checkExistStep = this.checkExistUser(
-          this.step,
-          data['roles'][0],
-          ''
-        );
-        if (!checkExistStep) {
-          let index = this.step?.roles.findIndex(
-            (roleFind) => roleFind.objectID === data['roles'][0]['objectID']
-          );
-          if (index > -1) {
-            this.step?.roles?.splice(index, 1);
-          }
+
+        if(data?.roles?.length > 0){
+          data?.roles.forEach((role) => {
+            this.deleteRoleInstep(this.step, role);
+            this.deleteRoleInProcess(role, role?.roleType);
+          })
         }
       }
     });
@@ -2636,18 +2664,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (!check && task?.stepID) {
           this.listStepEdit.push(task?.stepID);
         }
-        let checkExistStep = this.checkExistUser(
-          this.step,
-          task['roles'][0],
-          'P'
-        );
-        if (!checkExistStep) {
-          let index = this.step?.roles.findIndex(
-            (roleFind) => roleFind.objectID === task['roles'][0]['objectID']
-          );
-          if (index > -1) {
-            this.step?.roles?.splice(index, 1);
-          }
+        if(task?.roles?.length > 0){
+          task?.roles.forEach((role) => {
+            this.deleteRoleInstep(this.step, role);
+            this.deleteRoleInProcess(role, role?.roleType);
+          })
         }
       }
     });
@@ -2891,11 +2912,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkButtonContinue() {
     if (this.currentTab == 0) {
-      // if (!this.checkGroup) {
-      //   this.cache.message('DP015').subscribe((res) => {
-      //     if (res) this.errorMessage = res.customName || res.defaultName;
-      //   });
-      // }
       return (
         this.process.processName &&
         this.process.processName.trim() != '' &&
@@ -3043,6 +3059,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         read: true,
         roleType: 'R',
       };
+      
       let checkStep = this.step?.roles?.some(
         (role) =>
           role.objectID == roleStep.objectID &&
@@ -3063,47 +3080,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       if (roleOld) {
         // kiểm tra user có trong các groups khác không nếu thì xóa mà thì thôi.
-        let checkExistStep = this.checkExistUser(this.step, roleOld, 'P');
-        if (!checkExistStep) {
-          let index = this.step?.roles.findIndex(
-            (roleFind) => roleFind.objectID === roleOld['objectID']
-          );
-          if (index > -1) {
-            this.step?.roles?.splice(index, 1);
-          }
-        }
-
-        let checkExistProgress = false;
-        for (let step of this.stepList) {
-          let check = this.checkExistUser(step, roleOld, 'P');
-          if (check) {
-            checkExistProgress = true;
-            break;
-          }
-        }
-        if (!checkExistProgress) {
-          let index = this.process['permissions'].findIndex(
-            (permissions) => permissions.objectID == roleOld['objectID'] && permissions.roleType == 'R'
-          );
-          if (index > -1) {
-            var tmp = this.process.permissions[index];
-            var checkDelete = this.lstTmp?.some(
-              (x) => x.objectID == tmp.objectID && x.roleType != 'F'
-            );
-            if (!checkDelete) {
-              this.lstTmp.push(tmp);
-            }
-            this.process['permissions']?.splice(index, 1);
-          }
-        }
+        this.deleteRoleInstep(this.step, roleOld);
+        this.deleteRoleInProcess(roleOld, 'O');
       }
     }
   }
 
-  deleteRoleTypeR(role, step) {
-    let check = this.checkExistUser(step, role, 'P');
+  deleteRoleInstep(step, role, action = false ) {
+    let check = this.checkExistUserInStep(step, role, 'O');
     if (check) {
-      this.notiService.notifyCode('DP027', 0, role?.objectName);
+      if(action){
+        this.notiService.notifyCode('DP027', 0, role?.objectName);
+      }
     } else {
       let index = step?.roles?.findIndex(
         (r) => r.objectID == role.objectID && r.roleType == 'R'
@@ -3113,25 +3101,60 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
   }
+
+  deleteRoleInProcess(role, type){
+    let isExitRoleStep = this.checkRoleInProcess(role, type)
+    if (!isExitRoleStep) {
+      let index = this.process['permissions'].findIndex(
+        (permissions) => permissions.objectID == role['objectID'] && permissions.roleType == 'R'
+      );
+      if (index > -1) {
+        var tmp = this.process.permissions[index];
+        var checkDelete = this.lstTmp?.some(
+          (x) => x.objectID == tmp.objectID && x.roleType != 'F'
+        );
+        if (!checkDelete) {
+          this.lstTmp.push(tmp);
+        }
+        this.process['permissions']?.splice(index, 1);
+      }
+    }
+  }
   //test user exists in step
-  checkExistUser(step: any, user: any, type: string): boolean {
-    for (let element of step['taskGroups']) {
-      let check = element['roles'].some(
-        (x) => x.objectID == user.objectID && x.roleType == type
-      );
-      if (check) {
-        return true;
+  checkExistUserInStep(step:any, role: any, type: string): boolean {
+    if(step?.taskGroups?.length > 0){
+      for (let element of this.step?.taskGroups) {
+        let check = element['roles'].some(
+          (x) => x.objectID == role.objectID && x.roleType == type
+        );
+        if (check) {
+          return true;
+        }
       }
     }
-    for (let element of step['tasks']) {
-      let check = element['roles'].some(
-        (x) => x.objectID == user.objectID && x.roleType == type
-      );
-      if (check) {
-        return true;
+    if(step?.tasks?.length > 0){
+      for (let element of this.step?.tasks) {
+        let check = element['roles'].some(
+          (x) => x.objectID == role.objectID && x.roleType == type
+        );
+        if (check) {
+          return true;
+        }
       }
-    }
+    }   
     return false;
+  }
+
+  checkRoleInProcess(role, type){
+    let isExist = false;
+    for (let step of this.stepList) {
+      let check = this.checkExistUserInStep(step, role, type);
+      if (check) {
+        isExist = true;
+        break;
+      }
+    }
+    return isExist;
   }
 
   async getFormModel(functionID) {
@@ -3173,10 +3196,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       option.zIndex = 1011;
       option.FormModel = frmModel;
       let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
-      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
-      //   value: value,
-      //   listValue: listTaskConvert,
-      // });
     }
   }
 
