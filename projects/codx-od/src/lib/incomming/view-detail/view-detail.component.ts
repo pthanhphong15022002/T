@@ -1407,7 +1407,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    if (relationType == '1') {
+    if ((relationType == '1' && this.formModel.funcID != "ODT41") || (this.formModel.funcID == "ODT41" && relationType == '2')) {
       if (this.formModel.funcID == 'ODT31') {
         var text = this.ms020?.customName;
         if (!text) text = '';
