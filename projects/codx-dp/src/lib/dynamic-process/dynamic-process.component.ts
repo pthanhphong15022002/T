@@ -352,23 +352,30 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.totalInstance = this.totalInstance;
-                this.changeDetectorRef.detectChanges();
-              }
-            });
+
+         //   let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
+            // this.codxDpService.copyAvatarById(data).subscribe(res => {
+            //   if(res){
+            //     debugger;
+                var dialog = this.callfc.openForm(
+                  PopupAddDynamicProcessComponent,
+                  '',
+                  this.widthWin,
+                  this.heightWin,
+                  '',
+                  obj,
+                  '',
+                  dialogModel
+                );
+                dialog.closed.subscribe((e) => {
+                  if (!e?.event) this.view.dataService.clear();
+                  if (e && e.event != null) {
+                    e.event.totalInstance = this.totalInstance;
+                    this.changeDetectorRef.detectChanges();
+                  }
+                });
+            //   }
+            // });
           });
       });
     }

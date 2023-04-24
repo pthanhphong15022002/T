@@ -31,7 +31,6 @@ export class TreeviewCommentComponent implements OnInit {
   @Output() pushCommentEvt = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
   @ViewChild('codxATM') codxATM :AttachmentComponent;
-  @ViewChild('codxFile') codxFile : ImageGridComponent;
   
   
 
@@ -42,7 +41,6 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dVll: any = {};
-  totalComment:number = 0;
   vllL1480:any[] = [];
   constructor(
     private dt: ChangeDetectorRef,

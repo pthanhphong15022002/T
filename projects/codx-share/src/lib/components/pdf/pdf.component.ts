@@ -85,7 +85,7 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = {};
 
-  @Input() curSignerType;
+  @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
@@ -323,13 +323,13 @@ export class PdfComponent
                 signer.stamp = environment.urlUpload + '/' + signer.stamp;
               }
               //approverType
-              if (signer.authorID == this.curSignerType) {
-                signer.approverType = this.curSignerType;
-              }
+              // if (signer.authorID == this.curSignerType) {
+              //   signer.approverType = this.curSignerType;
+              // }
             });
             if (this.isApprover) {
               this.signerInfo = res?.approvers.find(
-                (approver) => approver.authorID == this.user.userID
+                (approver) => approver.authorID == this.oApprovalTrans.stepRecID
               );
 
               this.changeSignerInfo.emit(this.signerInfo);
@@ -656,7 +656,8 @@ export class PdfComponent
   getAreaOwnerName(authorID) {
     return this.lstSigners.find((signer) => {
       return (
-        signer.authorID == authorID || signer?.roleType == this.curSignerType
+        signer.authorID == authorID
+        // || signer?.roleType == this.curSignerType
       );
     })?.fullName;
   }
@@ -906,8 +907,9 @@ export class PdfComponent
           if (
             (area.labelType != '8' && !this.isApprover && !area.isLock) ||
             (this.isApprover &&
-              (area.signer == this.curSignerID ||
-                area.signer == this.curSignerType) &&
+              // (
+              area.signer == this.curSignerID &&
+              // ||                 area.signer == this.curSignerType)
               area.stepNo == this.stepNo)
           ) {
             isRender = true;
@@ -923,9 +925,8 @@ export class PdfComponent
               : !area.isLock;
           if (isRender) {
             let curSignerInfo = this.lstSigners.find(
-              (signer) =>
-                signer.authorID == area.signer ||
-                this.curSignerType == area.signer
+              (signer) => signer.authorID == area.signer
+              // ||                this.curSignerType == area.signer
             );
             let url = '';
             let isChangeUrl = false;
@@ -1311,12 +1312,12 @@ export class PdfComponent
     labelType,
     draggable: boolean,
     isSaveToDB: boolean,
-    authorID: string,
+    stepRecID: string,
     stepNo: number,
     area?: tmpSignArea
   ) {
     let tmpName: tmpAreaName = {
-      Signer: authorID,
+      Signer: stepRecID,
       Type: type,
       PageNumber: this.curPage - 1,
       StepNo: stepNo,
@@ -1446,10 +1447,10 @@ export class PdfComponent
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
-    let userID = area.signer;
-    if (userID == this.curSignerType) {
-      userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
-    }
+    let userID = this.oApprovalTrans.approver;
+    // if (userID == this.curSignerType) {
+    //   userID = this.lstSigners.find((x) => x.roleType == userID)?.authorID;
+    // }
 
     if (userID == '') {
       return;
@@ -2557,7 +2558,7 @@ export class PdfComponent
     let isChange = false;
     let lstRemoveHLA = [];
     Array.from(lstDelHLA).forEach((hla: HTMLElement) => {
-      if (hla.getAttribute('aria-Checked').toLowerCase() == 'true') {
+      if (hla.querySelector('.e-check')) {
         let delKey = hla.parentElement.dataset.id;
         let delHLA = this.lstHighlightTextArea.find((hl) => {
           if (hl.isAdded) {

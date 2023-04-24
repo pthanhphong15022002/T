@@ -47,6 +47,10 @@ export class CodxHrService {
   actionUpdateRejected = 'AU4';
   actionUpdateApproved = 'AU5';
   actionUpdateClosed = 'AU9';
+
+  actionEdit = 'SYS03';
+  actionDelete = 'SYS02';
+  actionCopy = 'SYS04';
   //#endregion
 
   constructor(
@@ -166,7 +170,7 @@ export class CodxHrService {
     );
   }
 
-  getListApprovalAsync(dtRequest, bussiness){
+  getListApprovalAsync(dtRequest, bussiness) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -2067,16 +2071,12 @@ export class CodxHrService {
       }
     });
 
-    if (formModel.entityName == 'HR_EContracts') {
-      //Xu li rieng cho HDLD
-    }
-    if (
-      data.status == '0' ||
-      data.status == '2' ||
-      data.status == '4' ||
-      data.status == '5' ||
-      data.status == '9'
-    ) {
+    // if (formModel.entityName == 'HR_EContracts') {
+    //   //Xu li rieng cho HDLD
+    // }
+    if (data.status == '0' || data.status == '2' ||
+      data.status == '4' ||   data.status == '9' ) 
+    {
       for (let i = 0; i < evt.length; i++) {
         let funcIDStr = evt[i].functionID;
         switch (funcIDStr.substr(funcIDStr.length - 3)) {
@@ -2090,22 +2090,39 @@ export class CodxHrService {
             break;
         }
       }
-    } else if (data.status == '3') {
-      let found = evt.find(
-        (val) =>
+    } 
+    else if (data.status == '3') {
+      let found = evt.find((val) =>
           val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
       );
       found.disabled = true;
 
-      let found2 = evt.find(
-        (val) =>
+      let found2 = evt.find((val) =>
           val.functionID.substr(val.functionID.length - 3) ==
           this.actionUpdateInProgress
       );
       found2.disabled = true;
-    } else if (data.status == '6') {
+    } 
+    else if (data.status == '6') {
       for (let i = 0; i < evt.length; i++) {
         let funcIDStr = evt[i].functionID;
+        switch (funcIDStr.substr(funcIDStr.length - 3)) {
+          case this.actionUpdateCanceled:
+          case this.actionUpdateInProgress:
+          case this.actionUpdateRejected:
+          case this.actionUpdateApproved:
+          case this.actionUpdateClosed:
+            evt[i].disabled = true;
+            break;
+        }
+      }
+    } else if (data.status == '5') {
+      for (let i = 0; i < evt.length; i++) {
+        let funcIDStr = evt[i].functionID;
+        if (funcIDStr === this.actionEdit || funcIDStr === this.actionDelete){
+          evt[i].disabled = true;
+          break;
+        } 
         switch (funcIDStr.substr(funcIDStr.length - 3)) {
           case this.actionUpdateCanceled:
           case this.actionUpdateInProgress:
