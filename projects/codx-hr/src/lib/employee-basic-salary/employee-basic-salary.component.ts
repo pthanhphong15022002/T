@@ -250,12 +250,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         //pass data
         actionType: actionType,
-        dataObj: data,
+        //dataObj: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
-        empObj: this.currentEmpObj,
+        //empObj: this.currentEmpObj,
         fromListView: true,
       },
       option

@@ -87,6 +87,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   dialogAddEdit: DialogRef;
 
   itemDetail;
+
   onInit(): void {
     this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
       if (res) {
@@ -225,10 +226,10 @@ export class EmployeeAwardsComponent extends UIComponent {
         actionType: actionType,
         dataInput: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        //empObj: actionType == 'add' ? null : this.currentEmpObj,
       },
       option
     );
