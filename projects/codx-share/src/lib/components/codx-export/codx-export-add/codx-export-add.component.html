@@ -84,16 +84,16 @@
     </div>
     <ng-container *ngIf="type == 'excel'">
       <div class="row">
-        <div class="col form-group">
-          <codx-label default="Xuất PDF"></codx-label>
+        <div class="col d-flex align-items-center">
+          <codx-label class="me-2" default="Xuất PDF"></codx-label>
           <codx-input 
             type="switch"
             [Group]="exportAddForm"
             ControlName="covertPDF"  
           ></codx-input>
         </div>
-        <div class="col form-group">
-          <codx-label default="Is default"></codx-label>
+        <div class="col d-flex align-items-center">
+          <codx-label class="me-2" default="Is default"></codx-label>
           <codx-input 
             type="switch"
             [Group]="exportAddForm"
