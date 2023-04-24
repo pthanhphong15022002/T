@@ -57,7 +57,9 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   data: any = {};
   autoDefaultData: any = {};
-  autoNoSetting:any ={};
+  autoNoSetting:any ={
+    lastNumber: 1,
+  };
   isAdd: boolean = true;
 
   basicCollapsed: boolean = false;
@@ -79,6 +81,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   autoAssignRule:string='2';
   autoNoSegments:any=[];
   addedSegments:any=[];
+  autoNumberSettingPreview:string ='';
   funcItem!:any;
   constructor(
     private cache: CacheService,
@@ -87,6 +90,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private notify: NotificationsService,
     private callfunc: CallFuncService,
+    private auth : AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -180,6 +184,12 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                   else if(this.autoDefaultData.autoNoType == '2'){
                     this.basicCollapsed = true;
                     this.advanceCollapsed = false;
+                    this.api.execSv("SYS",'ERM.Business.AD','AutoNumberSettingsBusiness','GetAsync',this.functionID).subscribe((res:any)=>{
+                      if(res){
+                        this.autoNoSetting = res;
+                      }
+
+                    })
                   }
                   this.cr.detectChanges();
                   this.afterFgANumberDefault = true;
@@ -278,6 +288,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   valueSettingChange(event:any,field:string =''){
     if(!field) field = event.field;
     this.autoNoSetting[field] = event.data;
+    this.setAutoSetingPreview();
   }
   onSaveForm() {
     if (this.dialogAutoNum.invalid == true) {
@@ -327,6 +338,17 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.autoDefaultData = res;
+            if(this.autoDefaultData.autoNoType == '2'){
+              this.api.execAction('AD_AutoNumberSettings',[this.autoNoSetting],this.autoNoSetting.recID ?'UpdateAsync' :"SaveAsync").subscribe((rs:any)=>{
+                if(this.addedSegments.length){
+                 this.api.execAction('AD_AutoNumberSegments',this.addedSegments,"SaveAsync").subscribe((res:any)=>{
+                  if(res){
+                    debugger
+                  }
+                 })
+                }
+              })
+            }
           }
         });
     }
@@ -560,16 +582,52 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     let dialog = this.callfunc.openForm(PopupAddSegmentComponent,'',400,600,'',{autoNoSetting:this.autoNoSetting,columns:this.columns,segment:null},'',option);
     dialog.closed.subscribe((res:any)=>{
       if(res.event){
-        debugger
         let newSegment = res.event;
+        newSegment.createdBy = this.auth.get().userID;
+        newSegment.createdOn = new Date;
         if(!newSegment.recID) newSegment.recID = Util.uid();
         this.addedSegments.push(newSegment);
         this.autoNoSegments.push(newSegment);
         this.autoNoSegments = this.autoNoSegments.slice();
-        if(this.grid){
-
-        }
+        this.setAutoSetingPreview();
       }
     })
+  }
+
+  setAutoSetingPreview(){
+    if(this.autoNoSegments.length){
+      let strFormat ='';
+      let arr = this.autoNoSegments.map((x:any)=> x.dataFormat);
+      // if(this.autoNoSetting.maxLength){
+      //   strFormat = this.truncateString(arr.join(''),this.autoNoSetting.maxLength);
+      // }
+      // else{
+      //   strFormat = arr.join('');
+      // }
+      strFormat = arr.join('');
+      if(this.autoNoSetting.lastNumber){
+        let str = this.autoNoSetting.lastNumber+'';
+        if(this.autoNoSetting.maxLength){
+          if(arr.length < this.autoNoSetting.maxLength - str.split('').length){
+            let stringFormat = strFormat+ '#'.repeat(this.autoNoSetting.maxLength- arr.length - str.split('').length || 0)+str;
+            strFormat = stringFormat;
+          }
+          else{
+            strFormat = this.truncateString(strFormat,this.autoNoSetting.maxLength - str.split('').length -1)
+            let stringFormat = strFormat+ '#'.repeat(this.autoNoSetting.maxLength- arr.length - str.split('').length || 0)+str;
+            strFormat = stringFormat;
+          }
+        }
+      }
+      this.autoNumberSettingPreview = strFormat;
+    }
+  }
+
+
+  private  truncateString(str:string, num:number,format:string ='') {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + format
   }
 }

@@ -4,8 +4,6 @@ import { ChangeDetectorRef, Injector, SimpleChanges } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
-  CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -23,7 +21,6 @@ export class PopupEmployeeJobsalaryComponent
   extends UIComponent
   implements OnInit
 {
-  console = console;
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
@@ -59,6 +56,7 @@ export class PopupEmployeeJobsalaryComponent
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
+    // console.log(data)
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
@@ -122,6 +120,20 @@ export class PopupEmployeeJobsalaryComponent
       });
   }
 
+  getEmployeeInfoById(empId: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        this.employeeObj = emp[0][0];
+        this.df.detectChanges();
+      }
+    });
+  }
+
   onInit(): void {
     if (!this.formModel) {
       this.hrSevice.getFormModel(this.funcID).then((formModel) => {
@@ -140,28 +152,22 @@ export class PopupEmployeeJobsalaryComponent
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
+
+    //Update Employee Information when CRUD then render
+    if (this.employeeId != null)
+      this.getEmployeeInfoById(this.employeeId);
   }
 
   ngOnChanges(changes: SimpleChanges) {}
 
   handleSelectEmp(evt) {
     if (evt.data === '') {
-      this.employeeObj = "";
-      this.genderGrvSetup = ""
+      this.employeeObj = '';
+      this.genderGrvSetup = '';
     }
     if (evt.data != null) {
       this.employeeId = evt.data;
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = this.employeeId;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp !== null && emp[1] > 0) {
-          this.employeeObj = emp[0][0];
-          this.df.detectChanges();
-        }
-      });
+      this.getEmployeeInfoById(this.employeeId);
     }
   }
 
@@ -194,9 +200,9 @@ export class PopupEmployeeJobsalaryComponent
         // }
         case 'signerID': {
           if (event.data.dataSelected.length === 0) {
-            this.currentEJobSalaries.signerPosition = "";
+            this.currentEJobSalaries.signerPosition = '';
             this.formGroup.patchValue({
-              signerPosition: "",
+              signerPosition: '',
             });
           }
           let employee = event.data?.dataSelected[0]?.dataSelected;
