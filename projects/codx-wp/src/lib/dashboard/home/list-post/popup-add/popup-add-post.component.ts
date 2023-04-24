@@ -487,7 +487,8 @@ export class PopupAddPostComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let _param = JSON.parse(res);
-          if (_param['CopyFormat'] === '1') this.copyFormat = 'keepFormat';
+          if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
+          if (_param["Publishmode"]) this.data.shareControl = _param["Publishmode"]; 
         }
       });
   }
