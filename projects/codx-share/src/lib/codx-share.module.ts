@@ -167,6 +167,7 @@ import { CodxStepTaskComponent } from './components/codx-step/codx-step-task/cod
 import { UpdateProgressComponent } from './components/codx-step/codx-progress/codx-progress.component';
 import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
+import { FillterReferType } from './components/codx-view-files/filterReferPipe.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -303,6 +304,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   MessageSystemPipe,
   SearchPipe,
+  FillterReferType
 ];
 
 @NgModule({

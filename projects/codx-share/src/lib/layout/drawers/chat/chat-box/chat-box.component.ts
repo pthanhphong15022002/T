@@ -487,8 +487,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   }
   // click vote mssg
   clickVoteMssg(mssg:any,vote:any){
-    let data = {groupID: this.groupID, mssgID:mssg.recID, voteType:vote.value};
-    this.signalR.sendData("VoteMessage",JSON.stringify(data));
+    this.signalR.sendData("VoteMessage",this.groupID,mssg.recID,vote.value);
     this.dt.detectChanges();
   }
 
