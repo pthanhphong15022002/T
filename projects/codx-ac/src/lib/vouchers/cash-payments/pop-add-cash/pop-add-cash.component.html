@@ -223,7 +223,8 @@
       [height]="gridHeight" [autoLoad]="false" rowHeight="30" (cellChanged)="cashPaymentLineChanged($event)"
       (created)="gridCreated($event, gridCashPaymentLine)"></codx-gridview-v2>
   </div>
-  <ng-container *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
+  <ng-container
+    *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
     <div class="table-responsive mt-3">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead>
@@ -290,8 +291,7 @@
             <td>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
                 <ng-container>
-                  <codx-label class="fw-bold label-colon"
-                    fiedName="DIM2" [formModel]="fmCashPaymentsLines">
+                  <codx-label class="fw-bold label-colon" fiedName="DIM2" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span #diM2 class="text-gray-700" [innerHTML]="
@@ -305,8 +305,7 @@
                   &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                 </ng-container>
                 <ng-container>
-                  <codx-label class="fw-bold label-colon"
-                    fiedName="DIM3" [formModel]="fmCashPaymentsLines">
+                  <codx-label class="fw-bold label-colon" fiedName="DIM3" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span #diM3 class="text-gray-700" [innerHTML]="
@@ -321,8 +320,7 @@
               </div>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
                 <ng-container>
-                  <codx-label class="fw-bold label-colon"
-                    fiedName="DIM1" [formModel]="fmCashPaymentsLines">
+                  <codx-label class="fw-bold label-colon" fiedName="DIM1" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span #diM1 class="text-gray-700" [innerHTML]="
@@ -336,8 +334,7 @@
                   &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                 </ng-container>
                 <ng-container>
-                  <codx-label class="fw-bold label-colon"
-                    fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
+                  <codx-label class="fw-bold label-colon" fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span #projectID class="text-gray-700" [innerHTML]="
@@ -353,7 +350,7 @@
             </td>
             <td>
               <codx-mfunc (changeDataMF)="loadBookmark($event)" [dataItem]="item" [formModel]="form.formModel"
-                  (clickMF)="clickMF($event, item)" isBookMark="false" type="hover"></codx-mfunc>
+                (clickMF)="clickMF($event, item)" isBookMark="false" type="hover"></codx-mfunc>
             </td>
           </tr>
         </tbody>
@@ -464,16 +461,31 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
+        <div *ngIf="cashpayment?.status == '0'" class="ms-2">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="onDiscard()">
+            <div class="d-flex align-items-center">
+              <i class="icon-settings_backup_restore icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
+                [formName]="formModel?.formName"></codx-label>
+            </div>
+          </button>
+        </div>
         <div *ngIf="formType != 'edit'" class="ms-2">
           <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            <div class="d-flex align-items-center">
+              <i class="icon-save_alt icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
+                [formName]="formModel?.formName"></codx-label>
+            </div>
           </button>
         </div>
         <div class="ms-2 me-2">
           <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            <div class="d-flex align-items-center">
+              <i class="icon-save icon-18"></i>
+              <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </div>
           </button>
         </div>
         <div class="ms-2">

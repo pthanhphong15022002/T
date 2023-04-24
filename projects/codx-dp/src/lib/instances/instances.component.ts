@@ -238,7 +238,6 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -1169,7 +1168,7 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (checkTransferControl == '1' || checkTransferControl == '2') {
+    if (checkTransferControl == '1' || checkTransferControl == '2' ) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
@@ -1184,7 +1183,7 @@ export class InstancesComponent
     var strStepsId = [];
     var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
     if (autoMoveStage.ischeck) {
-      if (autoMoveStage.transferControl == 1) {
+      if (autoMoveStage.transferControl == '1' || autoMoveStage.transferControl == '2') {
         var completedAllTask = this.completedAllTasks(
           dataInstance.step.stepID,
           dataInstance.listStep
@@ -1230,7 +1229,6 @@ export class InstancesComponent
               this.detailViewInstance.dataSelect = this.dataSelected;
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
-
             this.detectorRef.detectChanges();
           }
         });

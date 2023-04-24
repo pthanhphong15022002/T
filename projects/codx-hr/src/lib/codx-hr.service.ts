@@ -601,15 +601,6 @@ export class CodxHrService {
     );
   }
 
-  addBGTrackLogEAwards(objectID, comment, objectType, actionType, createdBy) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAwardsBusiness',
-      'ReceiveToAddBGTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
-    );
-  }
   //#endregion
 
   //#region EDisciplinesBusiness
@@ -1264,21 +1255,6 @@ export class CodxHrService {
       'EBasicSalariesBusiness',
       'UpdateEmployeeBasicSalariesInfoAsync',
       data
-    );
-  }
-  addBGTrackLogEBasicSalaries(
-    objectID,
-    comment,
-    objectType,
-    actionType,
-    createdBy
-  ) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EBasicSalariesBusiness',
-      'ReceiveToAddBGTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
     );
   }
   getOldBasicSalary(data) {

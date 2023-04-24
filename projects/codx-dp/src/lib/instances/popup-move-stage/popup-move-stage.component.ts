@@ -68,11 +68,8 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroup: any = [];
-  listTask: any = [];
   listTaskGroupDone: any = [];
   listTaskDone: any = [];
-  listTree: any = [];
   listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
@@ -84,7 +81,10 @@ export class PopupMoveStageComponent implements OnInit {
   actionCheck: string = '';
   isSaving: boolean = false;
   listStepProccess: any;
-  user: any;
+  user:any;
+
+  tmpTasks: any[] = [];
+  tmpGroups:any[] = [];
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -284,12 +284,10 @@ export class PopupMoveStageComponent implements OnInit {
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
 
     !this.instancesStepOld.actualEnd && this.setToDay();
-    this.listTask = this.instancesStepOld.tasks.filter(
+    this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
-      (x) => x.progress < this.oneHundredNumber
-    );
+    this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
   }
 
   onSave() {
@@ -347,7 +345,7 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
 
-    if(this.isCheckRequiredTask(this.listTask))
+    if(this.isCheckRequiredTask(this.listTaskDone))
     {
       return;
     }
@@ -368,13 +366,18 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.stepID = this.stepIdClick;
     }
     if (
-      (!!this.listTask || !!this.listTaskGroup) &&
+      (!!this.listTaskGroupDone || !!this.listTaskDone) &&
         this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
-
-    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone,'T');
+    }
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpGroup= this.convertTmpDataInTask(this.listTaskGroupDone,'G');
+    }
+    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld,listTmpTask,listTmpGroup];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];
@@ -571,33 +574,32 @@ export class PopupMoveStageComponent implements OnInit {
   updateProgressInstance() {
     if (
       this.listTaskDone?.length > 0 &&
-      this.listTask?.length > 0 &&
-      this.listTaskGroup?.length > 0 &&
       this.listTaskGroupDone?.length > 0
     ) {
       if (
-        this.listTaskDone.length == this.listTask.length &&
-        this.listTaskGroupDone.length == this.listTaskGroup.length
+        this.listTaskDone.length == this.listTaskDone.length &&
+        this.listTaskGroupDone.length == this.listTaskGroupDone.length
       ) {
         this.instancesStepOld.progress = 100;
       }
     }
   }
 
-  getColorTask(item, view): string {
-    var check = 'd-none';
-    if (item?.requireCompleted) {
-      check = 'text-danger';
-    } else if (view == this.viewTask) {
-      for (let tasks of this.listTask) {
-        if (tasks.parentID?.includes(item.refID)) {
-          check = 'text-orange';
-          break;
-        }
-      }
-    }
-    return check;
-  }
+  // getColorTask(item, view): string {
+  //   var check = 'd-none';
+  //   if (item?.requireCompleted) {
+  //     check = 'text-danger';
+  //   }
+  //   else if (view == this.viewTask) {
+  //     for (let tasks of this.listTaskDone) {
+  //       if (tasks.parentID?.includes(item.refID)) {
+  //         check = 'text-orange'
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return check;
+  // }
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
     if (lstRoles != null && lstRoles.length > 0) {
@@ -639,22 +641,22 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     if (event) {
       if (event?.taskID) {
-        var task = this.listTask.find((x) => x.recID === event?.taskID);
-        var taskNew = {
-          progress: event?.progressTask,
-          actualEnd: event?.event,
-          isUpdate: event?.isUpdate,
-          note: event?.note,
-        };
-
-        this.updateDataTask(task, taskNew);
+       var task = this.listTaskDone.find(x=>x.recID === event?.taskID);
+       var taskNew = {
+        progress: event?.progressTask,
+        actualEnd: event?.actualEnd,
+        isUpdate: event?.isUpdate,
+        note: event?.note,
+       };
+      this.updateDataTask(task,taskNew);
       }
-      if (event?.groupTaskID) {
-        var group = this.listTaskGroup.find(
-          (x) => x.recID === event?.groupTaskID
-        );
+      if(event?.groupTaskID){
+        var group = this.listTaskGroupDone.find(x=>x.recID === event?.groupTaskID);
         var groupNew = {
           progress: event?.progressGroupTask,
+          isUpdate: event?.isUpdate,
+          actualEnd: event?.actualEnd,
+          note: event?.note,
          };
          this.updateDataGroup(group,groupNew);
       }
@@ -667,15 +669,39 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
+    taskNew.isUpdate = taskNew.isUpdate
   }
   updateDataGroup(groupNew:any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
+    groupNew.isUpdate = groupOld.isUpdate
   }
 
+  handleTmpInTask(data,type){
+    var tmpProgressUpdate = {
+      stepID: data.stepID,
+      recID: data.recID,
+      type:type,
+      progress:data.progress,
+      note: data.note,
+      actualEnd: data.actualEnd,
+      isUpdate: data.isUpdate
+    }
+    return tmpProgressUpdate;
+  }
 
-    isCheckRequiredTask(listTask){
+  convertTmpDataInTask(list,type){
+    var listTmp = [];
+    debugger
+    for(let item of list) {
+      var obj = this.handleTmpInTask(item,type);
+      listTmp.push(obj);
+    }
+    return listTmp;
+  }
+
+  isCheckRequiredTask(listTask){
     if(listTask.length > 0 && listTask) {
         for(let item of listTask){
           if(item.requireCompleted && item.progress < this.oneHundredNumber) {

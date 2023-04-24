@@ -104,7 +104,7 @@ export class DP_Steps {
   durationDay: number = 0;
   durationHour: number = 0;
   numbererval: string;
-  excludeDayoff: string;
+  excludeDayoff: string = '7;8';
   owner: string;
   note: string;
   assignControl: string = '1';
