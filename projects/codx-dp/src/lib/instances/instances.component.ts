@@ -1735,8 +1735,8 @@ export class InstancesComponent
     link.click();
   }
   loadEx() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1744,8 +1744,8 @@ export class InstancesComponent
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
