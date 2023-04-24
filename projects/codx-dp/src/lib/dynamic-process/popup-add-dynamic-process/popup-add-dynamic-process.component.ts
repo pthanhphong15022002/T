@@ -162,6 +162,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  dayMax: any;
+  dayOld: any;
+  textDay: any;
+
+  // for hour
+  hourMax: any;
+  hourOld: any;
+  textHour: any;
+
+
 
   //stage-nvthuan
   user: any;
@@ -3364,7 +3374,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuration($event) {
     if ($event && $event != null) {
-
       var isBlock = true;
       if($event.field == 'durationDay') {
           if($event.data < this.dayStep) {
@@ -3387,6 +3396,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
 
+      // ko xóa
+      // if($event.type == 'D') {
+      //   this.step.durationDay = $event?.value;
+      // }
+      // else {
+      //   this.step.durationHour = $event?.value;
+      //}
     }
   }
 
