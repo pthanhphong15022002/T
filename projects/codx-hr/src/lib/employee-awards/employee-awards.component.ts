@@ -302,23 +302,14 @@ export class EmployeeAwardsComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLogEAwards(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null
-            )
-            .subscribe((res) => {});
-          // this.hrService.addBGTrackLog(
-          //   res[0].recID,
-          //   this.cmtStatus,
-          //   this.view.formModel.entityName,
-          //   'C1',
-          //   null,
-          //   'EAwardBusiness'
-          // ).subscribe(res =>{});
+          this.hrService.addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EAwardBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
