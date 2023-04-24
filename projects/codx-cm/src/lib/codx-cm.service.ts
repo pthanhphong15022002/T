@@ -61,12 +61,12 @@ export class CodxCmService {
     );
   }
 
-  updateContactCrm(contact, funcID, recIDCrm, isDelete = false){
+  updateContactCrm(recID){
     return this.api.exec<any>(
       'CM',
-      'CustomersBusiness',
+      'ContactsBusiness',
       'UpdateContactCrmAsync',
-      [contact, funcID, recIDCrm, isDelete]
+      [recID]
     );
   };
 

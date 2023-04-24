@@ -140,12 +140,6 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: false,
         },
         {
-          name: 'Task',
-          textDefault: 'Công việc',
-          icon: 'icon-format_list_numbered',
-          isActive: false,
-        },
-        {
           name: 'Opportunity',
           textDefault: 'Cơ hội',
           icon: 'icon-add_shopping_cart',
@@ -305,12 +299,9 @@ export class CmcustomerDetailComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        var check = this.dataSelected.contacts.some(
-          (x) => x.recID == data.recID && x.contactType == '1'
-        );
-        if (!check) {
+        if (!(data.recID == this.contactPerson.recID && data.contactType == '1')) {
           this.cmSv
-            .updateContactCrm(data, this.funcID, this.dataSelected?.recID, true)
+            .updateContactCrm(this.dataSelected?.recID)
             .subscribe((res) => {
               if (res && res.length > 0) {
                 this.dataSelected.contacts = res;
@@ -353,6 +344,20 @@ export class CmcustomerDetailComponent implements OnInit {
       case 'SYS04':
         // this.copy(data);
         break;
+    }
+  }
+
+  changeDataMFContact(e){
+    if (e != null){
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS002':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+      }})
     }
   }
 }

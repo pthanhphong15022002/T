@@ -694,7 +694,7 @@
           </button>
         </div>
         <ng-container *ngIf="process?.approveRule">
-          <div class="mb-2 mt-2" >
+          <div class="mb-2 mt-2">
             <codx-label
               class="fw-normal text-gray-400"
               name="lblDescriptionApproveRule"
@@ -855,25 +855,39 @@
           </div>
           <div class="col-6 row">
             <div #autoNumberSetting class="position-relative col-6">
-              <codx-input
+              <!-- <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
                 (valueChange)="valueChangeAutoNoCode($event)"
                 field="instanceNoSetting"
               >
+              </codx-input> -->
+              <codx-input
+                type="text"
+                [crrValue]="instanceNoEx"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+                [disabled]="true"
+              >
               </codx-input>
               <div
-                class="position-absolute cursor-pointer"
-                style="top: 7px; right: 13px"
+                class="position-absolute cursor-pointer text-primary form-control-feedback"
+                style="top:7px;right: 13px"
               >
+                <!-- <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2 "
+                  (click)="openAutoNumPopup()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button> -->
                 <i
-                  class="icon-settings form-control-feedback"
+                  class="icon-settings form-control-feedback text-hover-primary"
                   (click)="openAutoNumPopup()"
                 ></i>
               </div>
             </div>
-            <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
+            <!-- <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
               <codx-label
                 class=""
                 name="lblPreview"
@@ -881,7 +895,7 @@
                 default="Xem trước: "
               ></codx-label>
               <span class="text-gray-600">{{ instanceNoEx }}</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -1520,7 +1534,7 @@
                   <ng-template #tool>
                     <ng-container *ngFor="let x of moreFunction">
                       <div
-                        class="d-flex p-2 cursor-pointer"
+                        class="d-flex p-2 cursor-pointer dropdown-item"
                         (click)="openFormTemplet(x?.id, item)"
                       >
                         <span
@@ -1529,6 +1543,7 @@
                           [style.color]="x?.textColor"
                         ></span>
                         <codx-label
+                          [name]='x?.id'
                           [formModel]="dialog.formModel"
                           [default]="x?.text"
                         ></codx-label>
@@ -1599,7 +1614,10 @@
                         >
                           <span class="icon-edit text-primary icon-16"></span>
                           <span class="ms-2">
-                           <codx-label name="lblEdit"  default='Chỉnh sửa' ></codx-label>
+                            <codx-label
+                              name="lblEdit"
+                              default="Chỉnh sửa"
+                            ></codx-label>
                           </span>
                         </div>
                       </a>
@@ -1609,7 +1627,10 @@
                           (click)="openFormTemplet('delete', item)"
                         >
                           <span class="icon-delete text-danger icon-16"></span>
-                          <codx-label name="lblDelete" default='Xóa'></codx-label>
+                          <codx-label
+                            name="lblDelete"
+                            default="Xóa"
+                          ></codx-label>
                         </div>
                       </a>
                     </div>
@@ -2072,7 +2093,7 @@
                                 [width]="30"
                                 [objectId]="getRole(task, 'ID')"
                                 objectType="AD_Users"
-                                [objectName]="getRole(task,'name')"
+                                [objectName]="getRole(task, 'name')"
                               >
                               </codx-img>
                             </div>
@@ -2119,22 +2140,22 @@
                         </div>
                         <div class="task-att">
                           <codx-attachment
-                          #attachment
-                          [objectType]="dialog.formModel.entityName"
-                          [objectId]="task?.recID"
-                          hideFolder="1"
-                          hideImageUpload="0"
-                          hideImageThumb="0"
-                          hideUploadBtn="1"
-                          [showMessage]="0"
-                          hideDes="1"
-                          type="inline"
-                          allowMultiFile="1"
-                          referType="source"
-                          [formModel]="dialog.formModel"
-                          displayThumb="full"
-                        >
-                        </codx-attachment>
+                            #attachment
+                            [objectType]="dialog.formModel.entityName"
+                            [objectId]="task?.recID"
+                            hideFolder="1"
+                            hideImageUpload="0"
+                            hideImageThumb="0"
+                            hideUploadBtn="1"
+                            [showMessage]="0"
+                            hideDes="1"
+                            type="inline"
+                            allowMultiFile="1"
+                            referType="source"
+                            [formModel]="dialog.formModel"
+                            displayThumb="full"
+                          >
+                          </codx-attachment>
                         </div>
                       </div>
                     </ng-container>
@@ -3169,7 +3190,6 @@
                 </div>
               </div>
             </div>
-
 
             <!-- <codx-input-number-duration [textDay]="strDay" [textHour]="strHour"  field="durationDay">
 
