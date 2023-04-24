@@ -111,9 +111,9 @@
       overflow-y: auto;
     }
 
-    .e-tab.e-fill-mode .e-content {
+    .e-tab.e-fill-mode > .e-content {
       padding: 12px 0px;
-      height: calc(100vh - 44px) !important;
+      height: calc(100vh - 110px) !important;
       overflow: auto;
     }
 
