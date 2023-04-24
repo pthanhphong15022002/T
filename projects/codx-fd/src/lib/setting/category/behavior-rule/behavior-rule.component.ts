@@ -228,12 +228,18 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], true, (option: any) =>
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe();
+      .subscribe((res: any) =>{
+        if(res)
+        {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+          this.changedr.detectChanges();
+        }
+      });
   }
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteCompetencesAsync';
-    op.data = data;
+    op.data = data?.competenceID;
     return true;
   }
 
