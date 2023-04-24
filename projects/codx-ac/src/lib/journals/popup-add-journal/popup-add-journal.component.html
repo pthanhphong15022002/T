@@ -191,33 +191,36 @@
         journal.journalType == '0304'
       "
     >
-      <div class="d-flex align-items-top">
-        <div class="mb-2">
-          <codx-label
-            fiedName="lblUnknown"
-            [formModel]="form.formModel"
-            default="Thiết lập hóa đơn GTGT theo sổ nhật ký"
-            class="fw-bold"
-          ></codx-label>
-        </div>
-        <div class="d-flex align-items-center">
-          <div class="w-100 me-1">
+      <div class="d-flex align-items-top justify-content-between">
+        <div class="d-flex flex-column">
+          <div class="mb-2">
             <codx-label
               fiedName="lblUnknown"
               [formModel]="form.formModel"
-              default="Cấu hình loại hóa đơn & cách đánh số Hóa đơn GTGT cho hóa đơn bán hàng, phiếu xuất kho, phiếu xuất điều chuyển."
-              class="text-gray-500"
+              default="Thiết lập hóa đơn GTGT theo sổ nhật ký"
+              class="fw-bold"
             ></codx-label>
           </div>
-          <button type="button"
-          class="btn btn-icon btn-light-primary"
-          role="button"
-          (click)="openInvoiceForm()"
-        >
-          <span class="icon-edit-one icon-20 text-primary"></span>
-        </button>
+          <div class="d-flex align-items-center">
+            <div class="w-100 me-1">
+              <codx-label
+                fiedName="lblUnknown"
+                [formModel]="form.formModel"
+                default="Cấu hình loại hóa đơn & cách đánh số Hóa đơn GTGT cho hóa đơn bán hàng, phiếu xuất kho, phiếu xuất điều chuyển."
+                class="text-gray-500"
+              ></codx-label>
+            </div>
+          </div>
         </div>
-
+        <div class="w-30px ms-3">
+          <button type="button"
+            class="btn btn-icon btn-light-primary"
+            role="button"
+            (click)="openInvoiceForm()"
+          >
+            <span class="icon-edit-one icon-18"></span>
+          </button>
+        </div>
       </div>
     </ng-container>
   </ng-container>
@@ -303,7 +306,7 @@
             role="button"
             (click)="openSelectPopup('dr', journal.drAcctControl)"
           >
-            <i class="icon-edit-one icon-18 text-primary"></i>
+            <i class="icon-edit-one icon-18"></i>
           </button>
 
           <codx-combobox-popup
@@ -378,7 +381,7 @@
               role="button"
               (click)="openSelectPopup('cr', journal.crAcctControl)"
             >
-              <i class="icon-edit-one icon-18 text-primary"></i>
+              <i class="icon-edit-one icon-18"></i>
             </button>
   
             <codx-combobox-popup
