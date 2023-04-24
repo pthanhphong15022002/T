@@ -59,7 +59,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID"
+            [readonly]="taskGroupID || taskGroupList.length === 0"
           ></ejs-dropdownlist>
         </div>
       </div>
