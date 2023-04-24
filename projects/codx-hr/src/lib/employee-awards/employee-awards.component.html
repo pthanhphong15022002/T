@@ -106,7 +106,8 @@
                 <div class="text-gray-700 d-flex flex-row mb-1">
                     <span class="icon-event_notes icon-16 me-1"></span>
                     <div class="align-self-center">
-                        <span [innerHTML]="data?.inYear | formatvalue : view.formModel : 'inYear'| async"></span>
+                        <!-- <span [innerHTML]="data?.inYear | formatvalue : view.formModel : 'inYear'| async"></span> -->
+                        <span>{{data?.inYear}}</span>
                     </div>
                 </div>
                 <div class="d-flex flex-row">
@@ -208,8 +209,11 @@
                 </span>
                 <span class="mx-1"> - </span>
                 <span class="icon-event_notes icon-14 align-self-center me-1"></span>
-                <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText"
+                <!-- <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText"
                     [innerHTML]=" data?.inYear | formatvalue : view.formModel : 'inYear' | async">
+                </span> -->
+                <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText">
+                    {{data?.inYear}}
                 </span>
             </div>
 

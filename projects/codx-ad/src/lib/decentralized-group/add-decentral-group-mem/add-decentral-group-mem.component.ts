@@ -5,6 +5,7 @@ import {
   DialogRef,
   FormModel,
   LayoutAddComponent,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
@@ -40,6 +41,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private adServices: CodxAdService,
+    private notify: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -114,46 +116,92 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     if (event == null) return;
 
     if (event?.id != '') {
-      let tmpAddNewIDs = '';
-      if (this.groupData.memberIDs != '') {
-        tmpAddNewIDs += ';';
-      }
-      tmpAddNewIDs += event?.id;
-
-      this.groupData.memberIDs += tmpAddNewIDs;
       this.adServices
-        .addUserGroupMemberAsync(this.groupData)
-        .subscribe((result) => {
-          if (!result) {
-            this.groupData.memberIDs.replace(tmpAddNewIDs, '');
-          } else {
-            event?.dataSelected?.forEach((mem) => {
-              let tmpGroupMem: GroupMembers = {
-                memberID: mem.UserID,
-                memberName: mem.UserName,
-                memberType: 'U',
-                groupID: '',
-                roleType: '',
-                description: '',
-                positionName: mem.PositionName,
-                orgUnitName: mem.OrgUnitName,
-              };
-              this.groupData.members.push(tmpGroupMem);
+        .validateGroupMemberRoles(event?.id)
+        .subscribe((lstInvalidMemberIDs: string[]) => {
+          if (lstInvalidMemberIDs?.length > 0) {
+            let lstInvalidMemberNames = [];
+            event?.dataSelected?.forEach((x) => {
+              if (lstInvalidMemberIDs.includes(x.UserID)) {
+                lstInvalidMemberNames.push(x.UserName);
+              }
             });
+            //canh bao muon ghi de quyen khong
+            this.notify
+              .alertCode(
+                `Tài khoản ${lstInvalidMemberNames.join(
+                  ', '
+                )}, bạn có muốn ghi đè quyền`
+              )
+              .subscribe((e) => {
+                let isOverrideRoles = false;
+                if (e?.event?.status == 'Y') {
+                  isOverrideRoles = true;
+                }
+
+                this.addMember(event, isOverrideRoles);
+              });
+          } else {
+            this.addMember(event, false);
           }
         });
     }
   }
 
-  removeMember(item) {
-    this.groupData.members = this.groupData.members.filter(
-      (mem) => mem.memberID != item.memberID
-    );
-    let tmpMemberIDs = [];
-    this.groupData.members.forEach((mem) => {
-      tmpMemberIDs.push(mem.memberID);
+  addMember(event: any, isOverrideRoles: boolean) {
+    let lstMemberIDs = this.groupData.memberIDs;
+    this.groupData.memberIDs = event?.id;
+
+    this.adServices
+      .addUserGroupMemberAsync(this.groupData, isOverrideRoles)
+      .subscribe((result) => {
+        this.groupData.memberIDs = lstMemberIDs;
+        if (result) {
+          event?.dataSelected?.forEach((mem) => {
+            let tmpGroupMem: GroupMembers = {
+              memberID: mem.UserID,
+              memberName: mem.UserName,
+              memberType: 'U',
+              groupID: '',
+              roleType: '',
+              description: '',
+              positionName: mem.PositionName,
+              orgUnitName: mem.OrgUnitName,
+            };
+            this.groupData.members.push(tmpGroupMem);
+          });
+          if (this.groupData.memberIDs != '') {
+            this.groupData.memberID += ';';
+          }
+          this.groupData.memberID += event?.id;
+        }
+      });
+  }
+
+  removeMember(member) {
+    let lstMDID = [];
+    let lstMDS = [];
+
+    this.groupData.groupRoles.forEach((role) => {
+      lstMDID.push(role.module);
+      if (!lstMDS.includes(role.moduleSales)) {
+        lstMDS.push(role.moduleSales);
+      }
     });
-    this.groupData.memberIDs = tmpMemberIDs.join(';');
+    this.adServices
+      .removeGroupMember(lstMDID, lstMDS, member)
+      .subscribe((result) => {
+        if (result) {
+          this.groupData.members = this.groupData.members.filter(
+            (mem) => mem.memberID != member.memberID
+          );
+          let tmpMemberIDs = [];
+          this.groupData.members.forEach((mem) => {
+            tmpMemberIDs.push(mem.memberID);
+          });
+          this.groupData.memberIDs = tmpMemberIDs.join(';');
+        }
+      });
   }
 
   beforeSave(opt: RequestOption) {
