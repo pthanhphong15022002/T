@@ -122,8 +122,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false }
     ];
     if (this.view?.funcID == 'ODT41' || (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') || this.xd)
       this.tabControl.push({
@@ -131,15 +130,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         textDefault: 'Xét duyệt',
         isActive: false,
       });
-    this.api
-      .execSv(
-        'DM',
-        'DM',
-        'FileBussiness',
-        'GetFilesByTrackLogIDAsync',
-        '00ef0f56-cf6f-11ed-b735-d89ef34ba7ae'
-      )
-      .subscribe();
+
+    if(this.view?.funcID != 'ODT41')
+    {
+      this.tabControl.push({
+        name: 'AssignTo',
+        textDefault: 'Giao việc',
+        isActive: false,
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -1407,8 +1406,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    if (relationType == '1') {
-      if (this.formModel.funcID == 'ODT31') {
+    if ((relationType == '1' && this.formModel.funcID != "ODT41") || (this.formModel.funcID == "ODT41" && relationType == '2')) {
+      if (this.formModel.funcID == 'ODT31') 
+      {
         var text = this.ms020?.customName;
         if (!text) text = '';
         return Util.stringFormat(
@@ -1416,9 +1416,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
-      } else {
-        return 'Gửi đến ' + agencyName;
-      }
+      } 
+      return 'Gửi đến ' + agencyName;
     }
 
     return Util.stringFormat(

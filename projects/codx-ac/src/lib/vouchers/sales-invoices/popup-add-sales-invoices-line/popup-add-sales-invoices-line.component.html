@@ -37,7 +37,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM0')">
       <codx-label fiedName="idiM0" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM0"
@@ -45,7 +45,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM1')">
       <codx-label fiedName="idiM1" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM1"
@@ -54,7 +54,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM2')">
       <codx-label fiedName="idiM2" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM2"
@@ -62,7 +62,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM3')">
       <codx-label fiedName="idiM3" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM3"
@@ -79,7 +79,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-8 form-group">
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM4')">
       <codx-label fiedName="idiM4" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM4"
@@ -88,7 +88,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-4 form-group">
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('IDIM5')">
       <codx-label fiedName="idiM5" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM5"
@@ -96,7 +96,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-8 form-group">
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM6')">
       <codx-label fiedName="idiM6" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM6"
@@ -105,7 +105,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-4 form-group">
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('IDIM7')">
       <codx-label fiedName="idiM7" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM7"
@@ -113,7 +113,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-8 form-group">
+    <div class="col-8 form-group" *ngIf="!hiddenFields.includes('IDIM8')">
       <codx-label fiedName="idiM8" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM8"
@@ -122,7 +122,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" *ngIf="!hiddenFields.includes('IDIM9')">
       <codx-label fiedName="idiM9" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="idiM9"
@@ -192,7 +192,7 @@
       ></codx-input>
     </div>
 
-    <div class="col-4 form-group">
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
       <codx-label fiedName="diM1" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="diM1"
@@ -200,7 +200,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-4 form-group">
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')">
       <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="diM2"
@@ -208,7 +208,7 @@
         [Group]="form.formGroup"
       ></codx-input>
     </div>
-    <div class="col-4 form-group">
+    <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
       <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="diM3"
@@ -224,7 +224,7 @@
     <button
       type="button"
       class="btn btn-outline-primary me-3"
-      (click)="handleClickSave(false)"
+      (click)="onClickSave(false)"
     >
       <codx-label
         fiedName="lblSaveAndClear"
@@ -234,7 +234,7 @@
     </button>
   </ng-container>
 
-  <button type="button" class="btn btn-primary" (click)="handleClickSave(true)">
+  <button type="button" class="btn btn-primary" (click)="onClickSave(true)">
     <codx-label
       fiedName="lblSave"
       [formModel]="dialogRef.formModel"

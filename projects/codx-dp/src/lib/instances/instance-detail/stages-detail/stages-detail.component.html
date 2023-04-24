@@ -26,7 +26,7 @@
           [disabled]="
             !isStart ||
             isClosed ||
-            isUpdate ||
+            !isUpdate ||
             !isRoleAll ||
             !progressStepControl
               ? true
@@ -453,7 +453,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="ms-5">
+                            <!-- <div class="ms-5">
                               <codx-attachment
                                 hideFolder="1"
                                 hideImageUpload="0"
@@ -466,7 +466,7 @@
                                 showMessage="1"
                               >
                               </codx-attachment>
-                            </div>
+                            </div> -->
                             <codx-mfunc
                               *ngIf="isStart && !isClosed"
                               [type]="'hover'"
@@ -492,26 +492,24 @@
                         </div>
                         <div style="margin-left: 70px">
                           <codx-attachment
-                            [objectId]="task?.recID"
-                            hideFolder="1"
-                            hideImageUpload="0"
-                            hideImageThumb="0"
-                            hideUploadBtn="1"
-                            hideDes="1"
-                            type="inline"
-                            allowMultiFile="1"
-                            [functionID]="funcIDparent"
-                            (fileAdded)="fileAdded($event)"
-                            (fileCount)="getfileCount($event)"
-                            (viewFile)="getfileDelete($event)"
-                            displayThumb="full"
-                            showMessage="0"
-                            [fdID]="folderID"
-                            [fdName]="task?.stepID"
-                            [parentID]="folderID"
-                            [dataSelected]="task"
-                          >
-                          </codx-attachment>
+                          #attachment
+                          [objectType]="'DP_Instances_Steps_Tasks'"
+                          [objectId]="task?.recID"
+                          hideFolder="1"
+                          hideImageUpload="0"
+                          hideImageThumb="0"
+                          hideUploadBtn="1"
+                          [showMessage]="0"
+                          hideDes="1"
+                          type="inline"
+                          allowMultiFile="1"
+                          referType="source"
+                          [formModel]="formModel"
+                          (fileAdded)="fileAdded($event)"
+                          (fileCount)="getfileCount($event)"
+                          displayThumb="full"
+                        >
+                        </codx-attachment>
                         </div>
                       </div>
                     </ng-container>

@@ -111,8 +111,8 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
-        this.contactPerson = this.listContacts.find(
-          (x) => x.contactType == '1'
+        this.contactPerson = this.listContacts.find((x) =>
+          x.contactType.split(';').some((x) => x == '1')
         );
       }
     });
@@ -137,12 +137,6 @@ export class CmcustomerDetailComponent implements OnInit {
           name: 'Contact',
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
-          isActive: false,
-        },
-        {
-          name: 'Task',
-          textDefault: 'Công việc',
-          icon: 'icon-format_list_numbered',
           isActive: false,
         },
         {
@@ -239,7 +233,11 @@ export class CmcustomerDetailComponent implements OnInit {
           dataContact: data,
           type: 'formDetail',
           recIDCm: this.dataSelected?.recID,
-          objectType: '1',
+          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectName:
+            this.funcID == 'CM0101'
+              ? this.dataSelected.customerName
+              : this.dataSelected.partnerName,
           gridViewSetup: res,
         };
         var dialog = this.callFc.openForm(
@@ -276,10 +274,13 @@ export class CmcustomerDetailComponent implements OnInit {
         var obj = {
           type: 'formDetail',
           recIDCm: this.dataSelected?.recID,
-          objectName: this.dataSelected.customerName,
-          objectType: '1',
+          objectName:
+            this.funcID == 'CM0101'
+              ? this.dataSelected.customerName
+              : this.dataSelected.partnerName,
+          objectType: this.funcID == 'CM0101' ? '1' : '3',
           gridViewSetup: res,
-        }
+        };
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
           '',
@@ -292,9 +293,7 @@ export class CmcustomerDetailComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           if (e && e.event != null) {
-            if(e.event == true){
-              this.getListContactByObjectID(this.dataSelected?.recID);
-            }
+            this.getListContactByObjectID(this.dataSelected?.recID);
           }
         });
       });
@@ -305,15 +304,17 @@ export class CmcustomerDetailComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        var check = this.dataSelected.contacts.some(
-          (x) => x.recID == data.recID && x.contactType == '1'
-        );
-        if (!check) {
+        if (
+          !(data.recID == this.contactPerson.recID)
+        ) {
           this.cmSv
-            .updateContactCrm(data, this.funcID, this.dataSelected?.recID, true)
+            .updateContactCrm(data.recID)
             .subscribe((res) => {
-              if (res && res.length > 0) {
-                this.dataSelected.contacts = res;
+              if (res) {
+                this.getListContactByObjectID(this.dataSelected?.recID);
+                this.notiService.notifyCode(
+                  'SYS008'
+                );
                 this.changeDetectorRef.detectChanges();
               }
             });
@@ -326,7 +327,6 @@ export class CmcustomerDetailComponent implements OnInit {
       }
     });
   }
-
 
   //#endregion
   getNameCrm(data) {
@@ -353,6 +353,21 @@ export class CmcustomerDetailComponent implements OnInit {
       case 'SYS04':
         // this.copy(data);
         break;
+    }
+  }
+
+  changeDataMFContact(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS002':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
     }
   }
 }

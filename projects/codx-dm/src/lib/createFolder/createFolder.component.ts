@@ -417,9 +417,12 @@ export class CreateFolderComponent implements OnInit {
           this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
 
+          
           var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
           if(check.length == 0)
           {
+            var check2 = this.fileEditing.permissions.filter(x=> x.objectID == this.user.userID)
+            if(check2 && check2.length > 0) this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != check2[0].id)
             var perm = new Permission();
             perm.objectType = '1';
             perm.objectID = this.user.userID;
@@ -438,7 +441,9 @@ export class CreateFolderComponent implements OnInit {
             perm.assign = true;
             this.fileEditing.permissions.push(perm);
           }
-          //alert(1);
+          
+        
+          
           this.startDate = null;
           this.endDate = null;
           if (this.parentFolder != null) {

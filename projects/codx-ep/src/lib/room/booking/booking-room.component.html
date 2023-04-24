@@ -1,7 +1,20 @@
-<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entity"
-  [views]="views" [button]="buttons" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
-  [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
-  [autoLoad]="true" (onActions)="onActionClick($event)" (onLoading)="onLoading($event)"
+<codx-views #view 
+[funcID]="funcID" 
+[service]="service" 
+[assemblyName]="assemblyName" 
+[entityName]="entity"
+  [views]="views" 
+  [button]="buttons" 
+  (buttonClick)="click($event)" 
+  [moreFuncs]="moreFunc" 
+  [idField]="idField"
+  [className]="className" 
+  [method]="method" 
+  (selectedChange)="changeItemDetail($event)"
+   [selectedFirst]="true"
+  [autoLoad]="true" 
+  (onActions)="onActionClick($event)" 
+  (onLoading)="onLoading($event)"
   [viewActiveType]="viewType.schedule">
 </codx-views>
 
@@ -66,7 +79,7 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 " (click)="click(data)" [typeMF]="'hover'"
+  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2 card codx_cardcenter p-3 " (click)="click(data)" [typeMF]="'hover'"
     [title]="data?.requester " [subTitleTmp]="subTitleTmp" [icoCss]="
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"

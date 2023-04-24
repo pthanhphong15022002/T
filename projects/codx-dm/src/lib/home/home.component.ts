@@ -594,9 +594,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
-        if(this.funcID != "DMT00" && this.funcID != "DMT06") this.getDataByFuncID(this.funcID);
-        else if(this.funcID == "DMT06") 
+        if(this.funcID != "DMT00" && this.funcID != "DMT06" && this.funcID != "DMT07") this.getDataByFuncID(this.funcID);
+        else if(this.funcID == "DMT06" || this.funcID == "DMT07") 
         {
+          
           var vll = this.dmSV.loadValuelist("DM003") as any;
           if(isObservable(vll))
           {
