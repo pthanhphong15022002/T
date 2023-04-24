@@ -35,13 +35,6 @@ export class CodxCalendarComponent extends UIComponent {
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
 
   dataResourceModel = [];
-  fields = {
-    id: 'transID',
-    subject: { name: 'title' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    status: 'transType',
-  };
   request?: ResourceModel;
   views: Array<ViewModel> = [];
   listNote = [];
@@ -244,28 +237,43 @@ export class CodxCalendarComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           if (value == '0') {
-            if (transType == 'WP_Notes') this.WP_Notes = [];
-            else if (transType == 'TM_Tasks') this.TM_Tasks = [];
-            else if (transType == 'CO_Meetings') this.CO_Meetings = [];
-            else if (transType == 'EP_BookingRooms') this.EP_BookingRooms = [];
-            else if (transType == 'EP_BookingCars') this.EP_BookingCars = [];
-          } else {
-            if (this.checkWP_NotesParam)
-              if (transType == 'WP_Notes') this.WP_Notes = this.WP_NotesTemp;
-              else if (transType == 'TM_Tasks')
-                this.TM_Tasks = this.TM_TasksTemp;
-              else if (transType == 'CO_Meetings')
-                this.CO_Meetings = this.CO_MeetingsTemp;
-              else if (transType == 'EP_BookingRooms')
-                this.EP_BookingRooms = this.EP_BookingRoomsTemp;
-              else if (transType == 'EP_BookingCars')
-                this.EP_BookingCars = this.EP_BookingCarsTemp;
-          }
-          if (value == '0') {
+            if (transType == 'WP_Notes') {
+              this.WP_Notes = [];
+            }
+            if (transType == 'TM_Tasks') {
+              this.TM_Tasks = [];
+            }
+            if (transType == 'CO_Meetings') {
+              this.CO_Meetings = [];
+            }
+            if (transType == 'EP_BookingRooms') {
+              this.EP_BookingRooms = [];
+            }
+            if (transType == 'EP_BookingCars') {
+              this.EP_BookingCars = [];
+            }
+
             this.dataResourceModel = this.dataResourceModel.filter(
               (x) => x.transType != transType
             );
-          } else if (value == '1') {
+          } else {
+            if (this.checkWP_NotesParam)
+              if (transType == 'WP_Notes') {
+                this.WP_Notes = this.WP_NotesTemp;
+              }
+            if (transType == 'TM_Tasks') {
+              this.TM_Tasks = this.TM_TasksTemp;
+            }
+            if (transType == 'CO_Meetings') {
+              this.CO_Meetings = this.CO_MeetingsTemp;
+            }
+            if (transType == 'EP_BookingRooms') {
+              this.EP_BookingRooms = this.EP_BookingRoomsTemp;
+            }
+            if (transType == 'EP_BookingCars') {
+              this.EP_BookingCars = this.EP_BookingCarsTemp;
+            }
+
             if (
               this.checkWP_NotesParam == '0' ||
               this.checkTM_TasksParam == '0' ||
@@ -302,28 +310,30 @@ export class CodxCalendarComponent extends UIComponent {
                   ...this.WP_NotesTemp,
                   ...this.dataResourceModel,
                 ];
-              else if (transType == 'TM_Tasks') {
+              if (transType == 'TM_Tasks') {
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.TM_TasksTemp,
                 ];
-              } else if (transType == 'CO_Meetings')
+              }
+              if (transType == 'CO_Meetings')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.CO_MeetingsTemp,
                 ];
-              else if (transType == 'EP_BookingRooms')
+              if (transType == 'EP_BookingRooms')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.EP_BookingRoomsTemp,
                 ];
-              else if (transType == 'EP_BookingCars')
+              if (transType == 'EP_BookingCars')
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
                   ...this.EP_BookingCarsTemp,
                 ];
             }
           }
+
           if (this.calendar_mini) {
             this.calendar_mini.refresh();
             this.calendar_mini.value = this.FDdate;
@@ -626,7 +636,7 @@ export class CodxCalendarComponent extends UIComponent {
         color: TM_.ShowBackground,
         borderColor: TM_.ShowColor,
         text: 'TM_MyTasks',
-        status: 'TM_Tasks',
+        status: 'TM_MyTasks',
       },
     ];
     let WP_Params = [
@@ -677,11 +687,6 @@ export class CodxCalendarComponent extends UIComponent {
   }
 
   getCalendarSetting(resource, dataResourceModel) {
-    dataResourceModel.map((resource) => {
-      if (resource.transType === 'TM_MyTasks') {
-        resource.transType = 'TM_Tasks';
-      }
-    });
     let a = this.calendar_setting.createComponent(CalendarCenterComponent);
     a.instance.resources = resource;
     a.instance.resourceModel = dataResourceModel;
