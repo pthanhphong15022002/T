@@ -246,8 +246,8 @@ export class NewsComponent extends UIComponent {
         action: mfc.defaultName,
         type:type
       }
-      let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
-      modal.closed.subscribe((res: any) => {
+      let popup = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
+      popup.closed.subscribe((res: any) => {
         debugger
         if (res?.event) {
           let data = res.event;
@@ -256,7 +256,7 @@ export class NewsComponent extends UIComponent {
           {
             this.posts.unshift(data);
             if(this.posts.length > 4){
-              this.posts.splice(-1);
+              this.posts.pop();
             }
           }
           //video
