@@ -40,6 +40,8 @@ export class CodxHrService {
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   //#region moreFuncAction
+  actionEdit = 'S03';
+  actionDelete = 'S02';
   actionAddNew = 'A01';
   actionSubmit = 'A03';
   actionUpdateCanceled = 'AU0';
@@ -486,6 +488,16 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
+      data
+    );
+  }
+
+  loadDataEDisciplines(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDisciplinesBusiness',
+      'LoadEDisciplineWithEmpInfoAsync',
       data
     );
   }
@@ -1611,6 +1623,8 @@ export class CodxHrService {
       data
     );
   }
+
+
 
   addEContract(data: any) {
     return this.api.execSv<any>(
