@@ -96,12 +96,12 @@
         <div
           *ngIf="funcID != 'CM0104' && contactPerson != null"
           [ngClass]="
-            funcID == 'CM0101' || funcID == 'CM0103'
+            funcID == 'CM0101'
               ? 'd-flex align-items-start'
               : ''
           "
         >
-          <div class="d-flex" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+          <div class="d-flex" *ngIf="funcID == 'CM0101'">
             <div class="me-3" style="white-space: nowrap">
               <codx-label
                 class="text-dark"
@@ -268,7 +268,7 @@
           <ng-container *ngIf="name == 'Product'">
             <ng-container [ngTemplateOutlet]="product"> </ng-container>
           </ng-container>
-          <ng-container *ngIf="name == 'Offered'">
+          <ng-container *ngIf="name == 'Opportunity'">
             <ng-container>Sản phẩm cung cấp </ng-container>
           </ng-container>
         </div>
