@@ -37,6 +37,7 @@ export class VersionComponent implements OnInit {
   comment: string;
   path: any;
   historyID: string;
+  nameFile: string;
   fileEditing: FileUpload;
   fileUploadList: FileUpload[];
   interval: ItemInterval[];
@@ -70,7 +71,9 @@ export class VersionComponent implements OnInit {
     ) {
       this.dialog = dialog;
       this.formModel = data.data[0];
-      this.fileEditing = data.data[1]; 
+      this.fileEditing = data.data[1];
+      debugger
+      this.nameFile =  this.fileEditing?.fileName
       this.comment = '';
   }
 

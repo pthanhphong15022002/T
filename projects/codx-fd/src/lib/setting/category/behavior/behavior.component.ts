@@ -209,6 +209,29 @@ export class BehaviorComponent extends UIComponent implements OnInit {
       });
   }
 
+  copy(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    var obj = {
+      isModeAdd: true,
+      headerText: this.headerText,
+    };
+    this.view.dataService
+      .copy( )
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(AddBehaviorComponent, obj, option);
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            this.view.dataService.add(e.event, 0).subscribe();
+            this.changedr.detectChanges();
+          }
+        });
+      });
+  }
+
   delete(data) {
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -233,6 +256,9 @@ export class BehaviorComponent extends UIComponent implements OnInit {
           break;
         case 'SYS02':
           this.delete(data);
+          break;
+        case 'SYS04':
+          this.copy(data);
           break;
       }
     }
