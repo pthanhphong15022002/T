@@ -6,7 +6,7 @@
                   <div class="d-flex align-items-center col-form-label pb-0">                      
                       <codx-breadcumb end="1" start="0" max="3"></codx-breadcumb>
                       <span class="icon-keyboard_arrow_right icon-20"></span>
-                      <span class="text-dark-75">{{this.fileEditing.fileName}}</span>
+                      <span class="text-dark-75">{{this.nameFile}}</span>
                   </div>
                   <!-- <a [class.disabled]="disableFolder() ? true: null"
                       class="btn btn-icon btn-xs btn-light-primary">
@@ -83,7 +83,7 @@
                         <div class="w-100 float-start">
                             <div *ngIf="(displayThumb == 'full')"
                                 class="d-flex flex-column flex-grow-1 file-item float-start w-100">
-                                {{file.createdOn}}{{' | ' + file.createdBy}}
+                                {{file.createdOn | date: "dd/MM/yyyy"}}{{' | ' + file.createdBy}}
                             </div>                            
                         </div>
                     </ng-template>                   

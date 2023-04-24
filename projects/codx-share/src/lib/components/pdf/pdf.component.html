@@ -504,14 +504,15 @@
                   [cssClass]="cssClass"
                   [showHeader]="true"
                 >
+                  <!-- ||                             area.signer == this.curSignerType -->
+
                   <ng-template #template let-area="">
                     <div
                       class="annotationItem py-3 px-3"
                       *ngIf="
                         !this.isApprover ||
                         (this.isApprover &&
-                          (area.signer == this.curSignerID ||
-                            area.signer == this.curSignerType) &&
+                          area.signer == this.curSignerID &&
                           area.stepNo == this.stepNo)
                       "
                       (click)="goToSelectedAnnotation(area)"
@@ -753,6 +754,7 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
+                              isApprover &&
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
                               area.labelType != '8' &&
@@ -770,6 +772,7 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
+                              isApprover &&
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
                               area.labelType != '8' &&
