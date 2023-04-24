@@ -3138,68 +3138,10 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <div class="position-relative">
-                  <codx-input
-                    field="durationDay"
-                    [formModel]=""
-                    [Group]=""
-                    type="number"
-                    [height]="'100'"
-                    [min]="0"
-                    [crrValue]="step?.durationDay"
-                    (valueChange)="valueChangeDuration($event)"
-                  ></codx-input>
-                  <div
-                    class="position-absolute text-muted"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strDay"
-                    ></codx-label>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="position-relative">
-                  <codx-input
-                    field="durationHour"
-                    [formModel]=""
-                    [Group]=""
-                    type="number"
-                    [height]="'100'"
-                    [min]="0"
-                    [placeholder]="'00.00'"
-                    [crrValue]="step?.durationHour"
-                    (valueChange)="valueChangeDuration($event)"
-                  >
-                  </codx-input>
-                  <div
-                    class="position-absolute text-gray-400"
-                    style="top: 7px; right: 7px"
-                  >
-                    <codx-label
-                      fiedName="StepName"
-                      [formModel]=""
-                      [default]="strHour"
-                    ></codx-label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- <codx-input-number-duration [textDay]="strDay" [textHour]="strHour"  field="durationDay">
-
-            </codx-input-number-duration> -->
-
-
+            <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
+            (eventInput)="valueChangeDuration($event)">
+            </codx-input-number-duration>
           </div>
-
-          <!-- <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
-          (eventInput)="valueChangeDuration($event)">
-          </codx-input-number-duration> -->
         </div>
         <hr />
         <div class="row">
