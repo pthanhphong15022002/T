@@ -13,7 +13,7 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -41,6 +41,8 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   customerName: string;
   gvsSalesInvoices: any;
   gvsSalesInvoicesLines: any;
+  hiddenFields: string[] = [];
+  columns: any[] = [];
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -76,6 +78,19 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   //#region Init
   override onInit(): void {
+    // this.cache
+    //   .gridViewSetup('SalesInvoicesLines', 'grvSalesInvoicesLines')
+    //   .pipe(
+    //     map((g) =>
+    //       Object.entries(g)
+    //         .map(([k, v]) => v)
+    //         .filter((c: any) => c.isVisible === true)
+    //         .sort((a: any, b: any) => a.columnOrder - b.columnOrder)
+    //     ),
+    //     tap((t) => console.log(t))
+    //   )
+    //   .subscribe((res) => (this.columns = res));
+
     this.acService.loadComboboxData('ObjectsAC', 'AC').subscribe((objects) => {
       this.customerName = objects?.find(
         (o) => o.ObjectID === this.salesInvoice.objectID
@@ -98,9 +113,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       this.editSettings.mode =
         this.journal.inputMode == '2' ? 'Dialog' : 'Normal';
 
-      // if (this.isEdit) {
-      //   this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-      // }
+      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
     });
 
     if (this.isEdit) {
@@ -193,7 +206,10 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     }
   }
 
-  onCreate(e): void {}
+  onCreate(e): void {
+    this.grid.disableField(this.hiddenFields);
+    // console.log(this.grid.columnsGrid);
+  }
 
   onCellChange(e): void {
     console.log('onCellChange', e);
@@ -231,6 +247,7 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
                 salesInvoicesLine: res,
                 index: index,
                 gvs: this.gvsSalesInvoicesLines,
+                hiddenFields: this.hiddenFields,
               },
               '',
               dialogModel
