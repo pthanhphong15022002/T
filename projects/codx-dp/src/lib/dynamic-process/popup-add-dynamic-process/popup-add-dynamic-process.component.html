@@ -674,7 +674,7 @@
             [formModel]="dialog.formModel"
           >
           </codx-label>
-          <div class="me-3">
+          <div class="me-3 pt-2">
             <codx-input
               type="switch"
               class="test-check"
@@ -694,7 +694,7 @@
           </button>
         </div>
         <ng-container *ngIf="process?.approveRule">
-          <div class="mb-2" >
+          <div class="mb-2 mt-2" >
             <codx-label
               class="fw-normal text-gray-400"
               name="lblDescriptionApproveRule"
@@ -712,7 +712,7 @@
             >
               <div class="process-step" placement="top">
                 <div
-                  class="step-node cursor-pointer"
+                  class="step-node cursor-pointer d-flex flex-center"
                   [style.color]="''"
                   [ngStyle]="{ border: '2px solid ' + '' }"
                   #popoverDetails="ngbPopover"
@@ -725,7 +725,7 @@
                 >
                   {{ i + 1 }}
                 </div>
-                <div class="text-gray-600 fw-bold">
+                <div class="text-gray-700 mt-3">
                   {{ item.stepType | vll : "ES002" : "text" | async }}
                 </div>
               </div>
