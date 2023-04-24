@@ -226,7 +226,7 @@ export class DynamicProcessComponent
       dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
+      dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel)); 
       this.cache
         .gridViewSetup(
           this.view.formModel.formName,
@@ -234,40 +234,40 @@ export class DynamicProcessComponent
         )
         .subscribe((res) => {
           if (res) {
-            this.gridViewSetup = res;
-            var obj = {
-              action: 'add',
-              processNo: this.processNo,
-              showID: this.showID,
-              instanceNo: this.instanceNo,
-              titleAction: this.titleAction,
-              gridViewSetup: this.gridViewSetup,
-              lstGroup: this.lstGroup,
-            };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.totalInstance = this.totalInstance;
-                this.view.dataService.update(e.event).subscribe();
-                this.changeDetectorRef.detectChanges();
-              }
-              // if (e?.event == null)
-              //   this.view.dataService.delete(
-              //     [this.view.dataService.dataSelected],
-              //     false
-              //   );
-            });
-          }
+              this.gridViewSetup = res;
+              var obj = {
+                action: 'add',
+                processNo: this.processNo,
+                showID: this.showID,
+                instanceNo: this.instanceNo,
+                titleAction: this.titleAction,
+                gridViewSetup: this.gridViewSetup,
+                lstGroup: this.lstGroup,
+              };
+              var dialog = this.callfc.openForm(
+                PopupAddDynamicProcessComponent,
+                '',
+                this.widthWin,
+                this.heightWin,
+                '',
+                obj,
+                '',
+                dialogModel
+              );
+              dialog.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
+                if (e && e.event != null) {
+                  e.event.totalInstance = this.totalInstance;
+                  this.view.dataService.update(e.event).subscribe();
+                  this.changeDetectorRef.detectChanges();
+                }
+                // if (e?.event == null)
+                //   this.view.dataService.delete(
+                //     [this.view.dataService.dataSelected],
+                //     false
+                //   );
+              });
+            }
         });
     });
   }
@@ -352,23 +352,30 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.totalInstance = this.totalInstance;
-                this.changeDetectorRef.detectChanges();
-              }
-            });
+
+         //   let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
+            // this.codxDpService.copyAvatarById(data).subscribe(res => {
+            //   if(res){
+            //     debugger;
+                var dialog = this.callfc.openForm(
+                  PopupAddDynamicProcessComponent,
+                  '',
+                  this.widthWin,
+                  this.heightWin,
+                  '',
+                  obj,
+                  '',
+                  dialogModel
+                );
+                dialog.closed.subscribe((e) => {
+                  if (!e?.event) this.view.dataService.clear();
+                  if (e && e.event != null) {
+                    e.event.totalInstance = this.totalInstance;
+                    this.changeDetectorRef.detectChanges();
+                  }
+                });
+            //   }
+            // });
           });
       });
     }

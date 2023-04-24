@@ -674,7 +674,7 @@
             [formModel]="dialog.formModel"
           >
           </codx-label>
-          <div class="me-3">
+          <div class="me-3 pt-2">
             <codx-input
               type="switch"
               class="test-check"
@@ -694,7 +694,7 @@
           </button>
         </div>
         <ng-container *ngIf="process?.approveRule">
-          <div class="mb-2" >
+          <div class="mb-2 mt-2">
             <codx-label
               class="fw-normal text-gray-400"
               name="lblDescriptionApproveRule"
@@ -712,7 +712,7 @@
             >
               <div class="process-step" placement="top">
                 <div
-                  class="step-node cursor-pointer"
+                  class="step-node cursor-pointer d-flex flex-center"
                   [style.color]="''"
                   [ngStyle]="{ border: '2px solid ' + '' }"
                   #popoverDetails="ngbPopover"
@@ -725,7 +725,7 @@
                 >
                   {{ i + 1 }}
                 </div>
-                <div class="text-gray-600 fw-bold">
+                <div class="text-gray-700 mt-3">
                   {{ item.stepType | vll : "ES002" : "text" | async }}
                 </div>
               </div>
@@ -864,18 +864,25 @@
               >
               </codx-input> -->
               <codx-input
-              type="text"
-              [crrValue]="instanceNoEx"
-              [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
-              [disabled]="true"
-            >
-            </codx-input>
+                type="text"
+                [crrValue]="instanceNoEx"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+                [disabled]="true"
+              >
+              </codx-input>
               <div
-                class="position-absolute cursor-pointer text-primary"
+                class="position-absolute cursor-pointer text-primary form-control-feedback"
                 style="top: 7px; right: 13px"
               >
+                <!-- <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2 "
+                  (click)="openAutoNumPopup()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button> -->
                 <i
-                  class="icon-settings form-control-feedback"
+                  class="icon-settings form-control-feedback text-hover-primary"
                   (click)="openAutoNumPopup()"
                 ></i>
               </div>
@@ -1135,6 +1142,23 @@
         <div class="dropzone-msg-title mb-2">
           <i class="icon-image icon-30"></i>
         </div>
+        <div class="dropzone-msg-title mb-2">
+          <codx-label
+            name="lblContentAddAvatar"
+            [formModel]="dialog.formModel"
+            default="Chọn hình ảnh"
+            class="fw-bold"
+          >
+          </codx-label>
+        </div>
+        <span class="dropzone-msg-desc">
+          <codx-label
+            name="lblRequiredAvatar"
+            [formModel]="dialog.formModel"
+            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+            class="fw-bold"
+          ></codx-label>
+        </span>
       </ng-container>
     </div>
   </div>
@@ -1527,7 +1551,7 @@
                   <ng-template #tool>
                     <ng-container *ngFor="let x of moreFunction">
                       <div
-                        class="d-flex p-2 cursor-pointer"
+                        class="d-flex p-2 cursor-pointer dropdown-item"
                         (click)="openFormTemplet(x?.id, item)"
                       >
                         <span
@@ -1536,6 +1560,7 @@
                           [style.color]="x?.textColor"
                         ></span>
                         <codx-label
+                          [name]="x?.id"
                           [formModel]="dialog.formModel"
                           [default]="x?.text"
                         ></codx-label>
@@ -1606,7 +1631,10 @@
                         >
                           <span class="icon-edit text-primary icon-16"></span>
                           <span class="ms-2">
-                           <codx-label name="lblEdit"  default='Chỉnh sửa' ></codx-label>
+                            <codx-label
+                              name="lblEdit"
+                              default="Chỉnh sửa"
+                            ></codx-label>
                           </span>
                         </div>
                       </a>
@@ -1616,7 +1644,10 @@
                           (click)="openFormTemplet('delete', item)"
                         >
                           <span class="icon-delete text-danger icon-16"></span>
-                          <codx-label name="lblDelete" default='Xóa'></codx-label>
+                          <codx-label
+                            name="lblDelete"
+                            default="Xóa"
+                          ></codx-label>
                         </div>
                       </a>
                     </div>
@@ -2079,7 +2110,7 @@
                                 [width]="30"
                                 [objectId]="getRole(task, 'ID')"
                                 objectType="AD_Users"
-                                [objectName]="getRole(task,'name')"
+                                [objectName]="getRole(task, 'name')"
                               >
                               </codx-img>
                             </div>
@@ -2126,22 +2157,22 @@
                         </div>
                         <div class="task-att">
                           <codx-attachment
-                          #attachment
-                          [objectType]="dialog.formModel.entityName"
-                          [objectId]="task?.recID"
-                          hideFolder="1"
-                          hideImageUpload="0"
-                          hideImageThumb="0"
-                          hideUploadBtn="1"
-                          [showMessage]="0"
-                          hideDes="1"
-                          type="inline"
-                          allowMultiFile="1"
-                          referType="source"
-                          [formModel]="dialog.formModel"
-                          displayThumb="full"
-                        >
-                        </codx-attachment>
+                            #attachment
+                            [objectType]="dialog.formModel.entityName"
+                            [objectId]="task?.recID"
+                            hideFolder="1"
+                            hideImageUpload="0"
+                            hideImageThumb="0"
+                            hideUploadBtn="1"
+                            [showMessage]="0"
+                            hideDes="1"
+                            type="inline"
+                            allowMultiFile="1"
+                            referType="source"
+                            [formModel]="dialog.formModel"
+                            displayThumb="full"
+                          >
+                          </codx-attachment>
                         </div>
                       </div>
                     </ng-container>
@@ -2893,7 +2924,7 @@
                 >
                 </codx-img>
               </div>
-              <div class="text-gray-600">{{ perm.objectName }}</div>
+              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               <ng-container>
                 <div class="action-menu-od" (click)="removeRole(perm.objectID)">
                   <i class="icon-close text-danger icon-16"></i>
@@ -3176,12 +3207,16 @@
                 </div>
               </div>
             </div>
-
-
             <!-- <codx-input-number-duration [textDay]="strDay" [textHour]="strHour"  field="durationDay">
 
             </codx-input-number-duration> -->
+
+
           </div>
+
+          <!-- <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
+          (eventInput)="valueChangeDuration($event)">
+          </codx-input-number-duration> -->
         </div>
         <hr />
         <div class="row">

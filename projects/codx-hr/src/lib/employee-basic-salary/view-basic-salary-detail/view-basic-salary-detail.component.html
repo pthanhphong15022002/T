@@ -47,7 +47,7 @@
       <div class="d-flex align-items-center  mb-2 col-6">
         <codx-label fiedName="signedDate" [formModel]="formModel" class="text-gray-700 label-colon col-4">
         </codx-label>
-        <span class="fw-bold">
+        <span class="fw-bold"[innerHTML]="itemDetail?.signedDate| formatvalue: formModel: 'signedDate'| async">
           {{ itemDetail?.signedDate | fmDT }}
         </span>
       </div>

@@ -3,12 +3,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Ou
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthService, AuthStore, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CallFuncService, DialogModel, FormModel, NotificationsService, Util } from 'codx-core';
 import { Observable,forkJoin, map, from, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
+import { arrangeChild } from '@syncfusion/ej2-angular-diagrams';
+import { Permission } from '@shared/models/file.model';
 
 @Component({
   selector: 'codx-view-files',
@@ -24,16 +26,18 @@ export class CodxViewFilesComponent implements OnInit {
   @Input() medias: number = 0;
   @Input() format:string = "";
 
+
   @Output() selectFile = new EventEmitter();
   @Output() fileEmit = new EventEmitter();
 
+
   @ViewChild("codxATM") codxATM:AttachmentComponent;
+  
   user: any = null;
   files:any[] = [];
-  fileMedias:any[] = [];
-  fileDocuments:any[] = []
-  filesDelete:any[] = [];
-  filesAdd:any[] = [];
+  documents: number = 0;
+  lstFileRemove:any[] = [];
+  lstPermissionFile:any[] = [];
   size:number = 0;
   FILE_REFERTYPE = {
     IMAGE: 'image',
@@ -61,6 +65,7 @@ export class CodxViewFilesComponent implements OnInit {
   ngOnInit(): void {
     this.getFileByObjectID(this.objectID);
   }
+
   // get files by objectID
   getFileByObjectID(objectID:string){
     if(objectID){
@@ -72,64 +77,90 @@ export class CodxViewFilesComponent implements OnInit {
       'GetFilesByIbjectIDAsync',
       [this.objectID])
       .subscribe((res:any[]) => {
-        if(Array.isArray(res) && res.length > 0){
-          this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
-          this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
-          // view file chat
-          if(this.format == "grid"){
+        if(Array.isArray(res)){
+          // this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
+          // this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
+          // mode grid view file ở dạng khung chat
+          if(this.format == "grid")
+          {
             res.forEach((x:any) => {
-              if(x.referType === this.FILE_REFERTYPE.IMAGE){
+              if(x.referType === this.FILE_REFERTYPE.IMAGE)
                 x["source"] = this.codxShareSV.getThumbByUrl(x.url,200);
-              }
-              else if(x.referType === this.FILE_REFERTYPE.VIDEO){
+              else if(x.referType === this.FILE_REFERTYPE.VIDEO)
                 x["source"] = `${environment.urlUpload}/${x.url}`; 
-              }
             });
           }
           // view file portal
-          else {
-            if(Array.isArray(this.fileMedias))
-            {
-              this.medias = this.fileMedias.length;
+          else{
+            this.medias = res.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
+            this.documents = res.length - this.medias;
+            if(this.medias > 0){
               switch(this.medias){
                 case 1:
-                case 2:
-                  this.fileMedias.forEach(x => {
-                    if(x.referType === this.FILE_REFERTYPE.IMAGE){
-                      x["source"] = this.codxShareSV.getThumbByUrl(x.url,900/this.medias);
+                  res.forEach((x:any) => {
+                    if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                    {
+                      x.source = this.codxShareSV.getThumbByUrl(x.url,900);
+                      return;
                     }
                     else
                     {
-                      x["source"] = `${environment.urlUpload}/${x.url}`;
+                      x.source = `${environment.urlUpload}/${x.url}`;
+                      return;
                     }
+                  });
+                  break;
+                case 2:
+                  // this.fileMedias.forEach((x:any) => {
+                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                  //     x.source = this.codxShareSV.getThumbByUrl(x.url,450);
+                  //   else
+                  //     x.source = `${environment.urlUpload}/${x.url}`;
+                  // });
+
+                  res.forEach((x:any) => {
+                    if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                      x.source = this.codxShareSV.getThumbByUrl(x.url,450);
+                    else
+                      x.source = `${environment.urlUpload}/${x.url}`;
                   });
                   break;
                 case 3:
-                  this.fileMedias.forEach((x,index) => {
+                  // this.fileMedias.forEach((x :any,index) => {
+                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                  //   {
+                  //     if(index == 0)
+                  //       x.source = this.codxShareSV.getThumbByUrl(x.url,900);
+                  //     else
+                  //       x.source = this.codxShareSV.getThumbByUrl(x.url,450);
+                  //   }
+                  //   else
+                  //     x.source = `${environment.urlUpload}/${x.url}`;
+                  // });
+                  res.forEach((x :any,index:number) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                    {
-                      if(index == 0)
-                        x["source"] = this.codxShareSV.getThumbByUrl(x.url,900);
-                      else
-                        x["source"] = this.codxShareSV.getThumbByUrl(x.url,450);
-                    }
-                    else
-                    {
-                      x["source"] = `${environment.urlUpload}/${x.url}`;
-                    }
+                      x.source = this.codxShareSV.getThumbByUrl(x.url,index == 0 ? 900 : 450);
+                    else 
+                      x.source = `${environment.urlUpload}/${x.url}`;
                   });
                   break;
                 default:
-                  this.fileMedias.forEach(x => {
+                  // this.fileMedias.forEach((x:any) => {
+                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
+                  //     x.source = this.codxShareSV.getThumbByUrl(x.url,450);
+                  //   else
+                  //     x.source = `${environment.urlUpload}/${x.url}`;
+                  // });   
+
+                  res.forEach((x:any) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                      x["source"] = this.codxShareSV.getThumbByUrl(x.url,450);
+                      x.source = this.codxShareSV.getThumbByUrl(x.url,450);
                     else
-                      x["source"] = `${environment.urlUpload}/${x.url}`;
+                      x.source = `${environment.urlUpload}/${x.url}`;
                   });   
-                  break
+                  break;
               }
             }
-            
           }
           this.files = JSON.parse(JSON.stringify(res));
         }
@@ -147,73 +178,79 @@ export class CodxViewFilesComponent implements OnInit {
     this.codxATM.uploadFile();
   }
   // attachment return file
-  atmReturnedFile(evetn:any){
-    if(evetn.data)
+  atmReturnedFile(event:any){
+    if(event.data)
     {
-      this.addFiles(evetn.data);
+      this.selectFiles(event.data);
     }
   }
   // add files
-  addFiles(files:any[]){
+  selectFiles(files:any[]){
+    debugger
     if(Array.isArray(files)){
-      files.map((f) => {
+      files.map((f:any) => {
+        f.recID = Util.uid();
+        f.isNew = true;
         if(f.mimeType.includes('image'))
         {
-          f["source"] = f.avatar;
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.fileMedias.push(f);
+          f.source = f.avatar;
+          f.referType = this.FILE_REFERTYPE.IMAGE;
+          // this.fileMedias.push(f);
         }
         else if(f.mimeType.includes('video'))
         {
-          f['source'] = f.data.changingThisBreaksApplicationSecurity;
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileMedias.push(f);
+          f.source = f.data.changingThisBreaksApplicationSecurity;
+          f.referType = this.FILE_REFERTYPE.VIDEO;
+          // this.fileMedias.push(f);
         }
         else 
         {
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-          this.fileDocuments.push(f);
+          f.referType = this.FILE_REFERTYPE.APPLICATION;
+          // this.fileDocuments.push(f);
         }
       });
-      this.filesAdd = this.filesAdd.concat(files);
-      this.files = JSON.parse(JSON.stringify(this.filesAdd));
-      this.medias = this.fileMedias.length;
+      this.files = this.files.concat(files);
+      this.medias = this.files.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
+      this.documents = this.files.length - this.medias;
       this.dt.detectChanges();
     }
   }
   // remove files
-  removeFiles(file: any) {
-    this.deleteFiles
-    let _key = file.hasOwnProperty('recID') ? "recID" : "fileName";
-    let _index = this.files.findIndex(x => x[_key] === file.recID);
-    if(_index > -1 )
-    {
-      this.files.splice(_index,1);
-      this.filesDelete.push(file);
+  removeFiles(data: any) {
+    debugger
+    if(this.files.length > 0){
+      let idx = this.files.findIndex(x => x.recID === data.recID);
+      if(idx != -1 )
+      {
+        this.files.splice(idx,1);
+        if(!data.isNew)
+        {
+          this.lstFileRemove.push(data);
+        }
+        this.medias = this.files.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
+        this.documents = this.files.length - this.medias;
+        this.dt.detectChanges();
+      }
     }
-    if(file.referType === this.FILE_REFERTYPE.APPLICATION)
-    {
-      this.fileDocuments = this.fileDocuments.filter(x => x[_key] !== file[_key]);
-    }
-    else
-    {
-      this.fileMedias = this.fileMedias.filter(x =>x[_key] !== file[_key]);
-      this.medias = this.fileMedias.length;
-    }
-    this.dt.detectChanges();
   }
   // save
   save():Observable<boolean>{
-    let $obs1 =  this.deleteFiles(this.filesDelete);
-    let $obs2 = this.saveFiles(this.filesAdd);
-    return forkJoin([$obs1,$obs2],(res1,res2)=>{
-      if(res1 && res2) return true;
-      return false;
-    });
+    debugger
+    if(this.objectID)
+    {
+      let lstFileAdd = this.files.filter(x => x.isNew);
+      let $obs1 =  this.deleteFiles(this.lstFileRemove);
+      let $obs2 = this.addFiles(lstFileAdd,this.objectID);
+      return forkJoin([$obs1,$obs2],(res1,res2) => {
+        return (res1 && res2);
+      });
+    }
+    return of(false);
   }
   // delete files
   deleteFiles(files:any[]) :Observable<boolean>{
-    if(Array.isArray(files) && files.length > 0)
+    debugger
+    if(files.length > 0)
     {
       let _fileIDs = files.map(x => x.recID);
       return this.api.execSv<any>(
@@ -221,52 +258,46 @@ export class CodxViewFilesComponent implements OnInit {
         "ERM.Business.DM",
         "FileBussiness",
         "DeleteFilesAsync",
-        [_fileIDs]).pipe(map((res:boolean) => {
-          if(!res){
-            this.notifySvr.notify("Xóa file không thành công!");
-            return false;
-          }
-          return res;
+        [_fileIDs])
+        .pipe(map((res:any) => {
+          return res ? true : false;
         }));
     }
     return of(true);
   }
-  saveFiles(files:any[]):Observable<boolean>{
-    if(!this.objectID && !files){
-      return of(false);
+  addFiles(files:any[],objectID:string):Observable<boolean>{
+    if(files.length > 0){
+      this.codxATM.objectId = objectID;
+      var p = new Permission()
+      p.read = true;
+      p.download = true;
+      p.objectType = "9";
+      p.isActive = true
+      this.lstPermissionFile.push(p);
+      this.codxATM.addPermissions = this.lstPermissionFile;
+      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(files));
+      return this.codxATM.saveFilesMulObservable()
+      .pipe(map((res:any) => {
+        return res ? true : false;
+      }));
     }
-    else{
-      if(Array.isArray(files) && files.length > 0){
-        this.codxATM.objectId = this.objectID;
-        this.codxATM.fileUploadList = JSON.parse(JSON.stringify(files));
-        return this.codxATM.saveFilesMulObservable().pipe(map((res:any) => {
-          if(!res){
-            this.notifySvr.notify("Thêm file không thành công!");
-            return false;
-          }
-          return true;
-        }));
-      }
-      else return of(true);
-    }
+    else return of(true);
   }
   // format file size
   formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
-
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
   //click view file document
-  clickFileDocument(file){
-    if(file?.recID)
+  clickFileDocument(file:any){
+    if(file.recID)
     {
-      this.fileSV.getFile(file.recID).subscribe(item=>{
+      this.fileSV.getFile(file.recID)
+      .subscribe((item:any) => {
         if(item)
         {
           var option = new DialogModel();
@@ -276,12 +307,21 @@ export class CodxViewFilesComponent implements OnInit {
       })
      
     }
-    // else this.notifySvr.notifyCode("SYS032")
-    else{
+    else
+    {
       var option = new DialogModel();
       option.IsFull = true;
       this.callfc.openForm(ViewFileDialogComponent,file.fileName,0,0,"",file,"",option);
     }
+  }
+  // get file media
+  getFileMedia(data:any[]):any[]{
+    let files = [];
+    if(Array.isArray(data))
+    {
+      files = data.filter(x => x.referType == this.FILE_REFERTYPE.IMAGE || x.referType == this.FILE_REFERTYPE.VIDEO);
+    }
+    return files;
   }
 }
 

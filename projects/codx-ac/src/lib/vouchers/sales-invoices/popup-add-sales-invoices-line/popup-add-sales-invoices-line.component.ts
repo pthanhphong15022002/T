@@ -34,6 +34,7 @@ export class PopupAddSalesInvoicesLineComponent
   gvs: any;
   formTitle: string;
   action: string;
+  hiddenFields: string[] = [];
 
   constructor(
     private injector: Injector,
@@ -48,6 +49,7 @@ export class PopupAddSalesInvoicesLineComponent
     this.index = dialogData.data.index;
     this.gvs = dialogData.data.gvs;
     this.action = dialogData.data.action;
+    this.hiddenFields = dialogData.data.hiddenFields;
   }
   //#endregion
 

@@ -49,6 +49,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    debugger;
     MenuComponent.createInstances('[data-kt-menu="true"]');
     //     var menuElement = document.querySelector("#kt_menu");
     // var menu = KTMenu.getInstance(menuElement);

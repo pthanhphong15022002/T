@@ -25,6 +25,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   isCheckContactType = false;
   recIDCm: any;
   objectType: any;
+  objectName: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -38,7 +39,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.type = dt?.data?.type;
     this.recIDCm = dt?.data?.recIDCm;
     this.objectType = dt?.data?.objectType;
-
+    this.objectName = dt?.data?.objectName;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     if(this.type == 'formAdd'){
       this.contactType = '1';
@@ -91,7 +92,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     if(this.type == 'formDetail'){
       this.data.contactType = this.contactType;
     }
-    if (this.action == 'add' || this.action == 'copy') {
+    if (this.action == 'add') {
       data = [
         null,
         this.data,
@@ -100,7 +101,9 @@ export class PopupQuickaddContactComponent implements OnInit {
         this.dialog.formModel.funcID,
         this.dialog.formModel.entityName,
         this.recIDCm,
-        this.objectType
+        this.objectType,
+        ,
+        this.objectName
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
@@ -112,7 +115,11 @@ export class PopupQuickaddContactComponent implements OnInit {
         }
       });
     } else {
-      this.dialog.close(this.data);
+      this.cmSv.updateContactByPopupListCt(this.data).subscribe(res => {
+        if(res){
+          this.dialog.close(res);
+        }
+      })
     }
   }
 
