@@ -696,42 +696,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         return;
       }
 
-      if (
-        tabNo != 0 &&
-        this.currentTab == 0 &&
-        (!this.process.instanceNoSetting ||
-          (this.process.instanceNoSetting &&
-            this.process.instanceNoSetting != this.instanceNoSetting))
-      ) {
-        this.notiService.alertCode('DP009').subscribe((e) => {
-          var input: any;
-          if (this.autoNumberSetting.nativeElement) {
-            var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-              'codx-input[type="text"]'
-            );
-            if (ele) {
-              let htmlE = ele[0] as HTMLElement;
-              input = htmlE.querySelector('input.codx-text') as HTMLElement;
-            }
-          }
-          if (e?.event?.status == 'Y') {
-            this.updateNodeStatus(oldNo, newNo);
-            this.currentTab = tabNo;
-            if (input) {
-              input.style.removeProperty('border-color', 'red', 'important');
-            }
-          } else {
-            if (input) {
-              input.focus();
-              input.style.setProperty('border-color', 'red', 'important');
-              return;
-            }
-          }
-        });
-      } else {
-        this.updateNodeStatus(oldNo, newNo);
+      // if (
+      //   tabNo != 0 &&
+      //   this.currentTab == 0 &&
+      //   (!this.process.instanceNoSetting ||
+      //     (this.process.instanceNoSetting &&
+      //       this.process.instanceNoSetting != this.instanceNoSetting))
+      // ) {
+      //   this.notiService.alertCode('DP009').subscribe((e) => {
+      //     var input: any;
+      //     if (this.autoNumberSetting.nativeElement) {
+      //       var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+      //         'codx-input[type="text"]'
+      //       );
+      //       if (ele) {
+      //         let htmlE = ele[0] as HTMLElement;
+      //         input = htmlE.querySelector('input.codx-text') as HTMLElement;
+      //       }
+      //     }
+      //     if (e?.event?.status == 'Y') {
+      //       this.updateNodeStatus(oldNo, newNo);
+      //       this.currentTab = tabNo;
+      //       if (input) {
+      //         input.style.removeProperty('border-color', 'red', 'important');
+      //       }
+      //     } else {
+      //       if (input) {
+      //         input.focus();
+      //         input.style.setProperty('border-color', 'red', 'important');
+      //         return;
+      //       }
+      //     }
+      //   });
+      // } else {
+      //   this.updateNodeStatus(oldNo, newNo);
+      //   this.currentTab = tabNo;
+      // }
+
+      this.updateNodeStatus(oldNo, newNo);
         this.currentTab = tabNo;
-      }
     }
   }
   //#region Open form
@@ -809,43 +812,46 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           return;
         }
 
-        if (
-          !this.process.instanceNoSetting ||
-          (this.process.instanceNoSetting &&
-            this.process.instanceNoSetting != this.instanceNoSetting)
-        ) {
-          this.notiService.alertCode('DP009').subscribe((e) => {
-            var input: any;
-            if (this.autoNumberSetting.nativeElement) {
-              var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-                'codx-input[type="text"]'
-              );
-              if (ele) {
-                let htmlE = ele[0] as HTMLElement;
-                input = htmlE.querySelector('input.codx-text') as HTMLElement;
-              }
-            }
-            if (e?.event?.status == 'Y') {
-              this.updateNodeStatus(oldNode, newNode);
-              this.currentTab++;
-              this.processTab == 0 && this.processTab++;
-              if (input) {
-                input.style.removeProperty('border-color', 'red', 'important');
-              }
-            } else {
-              if (input) {
-                input.focus();
-                input.style.setProperty('border-color', 'red', 'important');
-              }
-              return;
-            }
-          });
-        } else {
-          this.updateNodeStatus(oldNode, newNode);
-          this.currentTab++;
-          this.processTab == 0 && this.processTab++;
-        }
-
+        // if (
+        //   !this.process.instanceNoSetting ||
+        //   (this.process.instanceNoSetting &&
+        //     this.process.instanceNoSetting != this.instanceNoSetting)
+        // ) {
+        //   this.notiService.alertCode('DP009').subscribe((e) => {
+        //     var input: any;
+        //     if (this.autoNumberSetting.nativeElement) {
+        //       var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+        //         'codx-input[type="text"]'
+        //       );
+        //       if (ele) {
+        //         let htmlE = ele[0] as HTMLElement;
+        //         input = htmlE.querySelector('input.codx-text') as HTMLElement;
+        //       }
+        //     }
+        //     if (e?.event?.status == 'Y') {
+        //       this.updateNodeStatus(oldNode, newNode);
+        //       this.currentTab++;
+        //       this.processTab == 0 && this.processTab++;
+        //       if (input) {
+        //         input.style.removeProperty('border-color', 'red', 'important');
+        //       }
+        //     } else {
+        //       if (input) {
+        //         input.focus();
+        //         input.style.setProperty('border-color', 'red', 'important');
+        //       }
+        //       return;
+        //     }
+        //   });
+        // } else {
+        //   this.updateNodeStatus(oldNode, newNode);
+        //   this.currentTab++;
+        //   this.processTab == 0 && this.processTab++;
+        // }
+        
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 0 && this.processTab++;
         break;
       case 1:
         if (!this.checkValidStepReason()) {
@@ -1422,22 +1428,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Popup setiing autoNumber - Thao lam dung sua Please
-  openAutoNumPopup() {
-    if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
-      if (this.autoNumberSetting.nativeElement) {
-        var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-          'codx-input[type="text"]'
-        );
-        if (ele) {
-          let htmlE = ele[0] as HTMLElement;
-          var input = htmlE.querySelector('input.codx-text') as HTMLElement;
-          if (input) input.focus();
-        }
-      }
-      return;
+  async openAutoNumPopup() {
+    // if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
+    //   if (this.autoNumberSetting.nativeElement) {
+    //     var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+    //       'codx-input[type="text"]'
+    //     );
+    //     if (ele) {
+    //       let htmlE = ele[0] as HTMLElement;
+    //       var input = htmlE.querySelector('input.codx-text') as HTMLElement;
+    //       if (input) input.focus();
+    //     }
+    //   }
+    //   return;
+    // }
+
+    //view new 
+    if(!this.process?.processNo){
+      this.process.processNo = await firstValueFrom(this.dpService.genAutoNumber(this.funcID,this.entityName,'ProcessNo')); 
     }
+    this.instanceNoSetting = this.process.processNo ;
+
     var obj = {};
-    if (this.action != 'edit') {
+    if (!this.process?.instanceNoSetting) {
       //save new autoNumber
       obj = {
         autoNoCode: this.instanceNoSetting,
@@ -1473,19 +1486,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.isChange = true;
         this.process.instanceNoSetting = res?.event?.autoNoCode;
         this.setViewAutoNumber(res?.event);
-        let input: any;
-        if (this.autoNumberSetting.nativeElement) {
-          var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-            'codx-input[type="text"]'
-          );
-          if (ele) {
-            let htmlE = ele[0] as HTMLElement;
-            input = htmlE.querySelector('input.codx-text') as HTMLElement;
-          }
-          if (input) {
-            input.style.removeProperty('border-color', 'red', 'important');
-          }
-        }
+
+        //bo canh bao
+        // let input: any;
+        // if (this.autoNumberSetting.nativeElement) {
+        //   var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+        //     'codx-input[type="text"]'
+        //   );
+        //   if (ele) {
+        //     let htmlE = ele[0] as HTMLElement;
+        //     input = htmlE.querySelector('input.codx-text') as HTMLElement;
+        //   }
+        //   if (input) {
+        //     input.style.removeProperty('border-color', 'red', 'important');
+        //   }
+        // }
       }
     });
   }

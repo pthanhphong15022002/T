@@ -93,7 +93,7 @@ export class CM_Deals {
   expectedClosed: number;
   status: string;
   statusCodeID: string;
-  currentStep: string;
+  stepID: string;
   nextStep: string;
   lastUpdated: Date;
   closed: boolean;
