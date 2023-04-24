@@ -124,7 +124,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   }
   // expanse box chat
   expanseBoxChat(data:any){
-    this.signalRSV.sendData("ActiveGroupAsync",data);
+    this.signalRSV.sendData("OpenGroupAsync",data.groupID);
   }
 
 }

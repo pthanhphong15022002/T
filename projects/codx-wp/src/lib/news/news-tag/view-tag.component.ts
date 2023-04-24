@@ -20,7 +20,12 @@ export class NewsTagComponent extends UIComponent {
   views: Array<ViewModel> = [];
   tagName: string = "";
   userPermission:any = null;
+  NEWSTYPE = {
+    POST: "1",
+    VIDEO: "2"
+  }
 
+  moreFunction:any = null;
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -32,13 +37,20 @@ export class NewsTagComponent extends UIComponent {
     super(injector);
   }
   onInit() {
-    this.funcID = this.router.snapshot.params["funcID"];
     this.router.params.subscribe((param:any) => {
+      this.funcID = param["funcID"];
       this.tagName = param["tagName"];
       this.dataValues = this.tagName;
+      this.getUserPermission(this.funcID);
+      this.loadDataAsync();
     })
-    this.loadDataAsync();
-    this.getUserPermission(this.funcID);
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc)
+      {
+        this.moreFunction = mFuc;
+      }
+    });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -97,19 +109,19 @@ export class NewsTagComponent extends UIComponent {
         this.detectorRef.detectChanges();
       });
   }
-  clickViewDeital(data: any) {
-    this.api.execSv
-      (
-        "WP",
-        "ERM.Business.WP",
-        "NewsBusiness",
-        "UpdateViewNewsAsync",
-        data.recID).subscribe(
-          (res) => {
-            if (res) {
-              this.codxService.navigate("", `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
-            }
-          });
+  clickViewDetail(data: any) {
+    this.api.execSv(
+    "WP",
+    "ERM.Business.WP",
+    "NewsBusiness",
+    "UpdateViewNewsAsync",
+    [data.recID])
+    .subscribe(
+      (res) => {
+        if (res) {
+          this.codxService.navigate("", `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
+        }
+      });
   }
   clickTag(tag: any) {
     if (tag && tag.text) {
@@ -119,16 +131,19 @@ export class NewsTagComponent extends UIComponent {
     }
   }
 
-  NEWSTYPE = {
-    POST: "1",
-    VIDEO: "2"
-  }
-  clickShowPopupCreate(newsType: string) {
+  
+
+  clickShowPopupCreate(type: string) {
     let option = new DialogModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
+    let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+    let data = {
+      action: mfc.defaultName,
+      type:type
+    }
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
   }
 
   clickShowPopupSearch() {
