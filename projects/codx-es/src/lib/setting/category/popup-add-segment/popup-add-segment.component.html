@@ -46,6 +46,7 @@
               field="attributeName"
               [model]="model"
               [showButtons]="false"
+              [disabled]="diasbleAtt"
               (valueChange)="valueChange($event)">
 
             </codx-input>
@@ -58,11 +59,22 @@
             <codx-label name="lblDataFormat" default="Định dạng" formName="sys"></codx-label>
             <codx-input
               type="valuelist"
-              refValue="AD010"
+              [refValue]="'AD012'"
               field="dataFormat"
-              [crrValue]="data.dataFormat"
+              [crrValue]="data.dateFormat"
               [disabled]="disableDataFormatSelect"
-              (valueChange)="valueChange($event)">
+              (valueChange)="valueChange($event)"
+              *ngIf="vllDataFormat == 'AD012'">
+
+            </codx-input>
+            <codx-input
+              type="valuelist"
+              [refValue]="'AD010'"
+              field="dataFormat"
+              [crrValue]="data.dateFormat"
+              [disabled]="disableDataFormatSelect"
+              (valueChange)="valueChange($event)"
+              *ngIf="vllDataFormat == 'AD010'">
 
             </codx-input>
           </div>
@@ -71,10 +83,9 @@
           <div class="form-group">
             <codx-label name="lblCharsNum" default="Số ký tự" formName="sys"></codx-label>
             <codx-input
-              type="combobox"
-              refValue="FieldByAutoNumber"
+              type="number"
               field="charsNum"
-              [crrValue]="data.charsNum"
+              [crrValue]="data.charsNum || 0"
               [model]="model"
               [disabled]="disableCharNum"
               (valueChange)="valueChange($event)">

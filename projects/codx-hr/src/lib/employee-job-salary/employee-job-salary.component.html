@@ -16,7 +16,7 @@
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
     <div class="w-25">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
@@ -47,7 +47,7 @@
               <span class="text-danger">{{ data?.emp?.employeeID }}</span>
             </div>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-700 fs-7 mb-1">
             <span
               [innerHTML]="
                 data?.emp?.positionID
@@ -131,12 +131,17 @@
             >
               {{ data?.decisionNo }}
             </span>
-            <span class="p-dot mx-1"> ⚫ </span>
+            <span> - </span>
             <span
               [title]="eJobSalaryHeader ? eJobSalaryHeader['SignedDate'] : ''"
+              [innerHTML]="
+                data?.signedDate
+                  | formatvalue : view.formModel : 'signedDate'
+                  | async
+              "
             >
-              {{ data?.signedDate | fmDT }}</span
-            >
+              <!-- {{ data?.signedDate | fmDT }} -->
+            </span>
           </div>
         </div>
         <div class="d-flex flex-row">
@@ -162,6 +167,7 @@
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
+            ngClass="badge badge-sm"
           >
           </codx-vll>
         </div>
@@ -176,6 +182,7 @@
         [showText]="true"
         [showIcon]="false"
         [showBgColor]="true"
+        ngClass="badge badge-sm"
       >
       </codx-vll>
     </div>
