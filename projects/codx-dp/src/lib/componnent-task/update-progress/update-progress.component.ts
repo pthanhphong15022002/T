@@ -39,8 +39,8 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   isHaveFile = false;
   actualEndMax: Date;
   headerTextInsStep = {};
-  id = ''
-  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`
+  id = '';
+  HTMLProgress = '<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>'
   popupUpdateProgress: DialogRef;
 
   progressData = 0;
@@ -59,7 +59,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   ) {
     this.user = this.authStore.get();
     this.dialog = dialog;
-    this.id = "progress" + (Math.random() * 100000000).toString();
+    this.id = "progress" + Math.floor((Math.random() * 100000000)).toString();
   }
 
   async ngOnInit() {
@@ -243,7 +243,7 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
 
   handelDataOutput(isUpdate){
     let dataOutput  = new progressOutput();
-    dataOutput.stepID = this.step['recID'];
+    
     dataOutput.groupTaskID = this.dataSource['taskGroupID'];
     dataOutput.taskID = this.dataSource['recID'];
     dataOutput.isUpdate = isUpdate;
@@ -253,11 +253,17 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
     switch(this.type){
       case 'P':
         dataOutput.progressStep = this.progressData;
+        dataOutput.stepID = this.dataSource['recID'];
         break;
       case 'G':
         dataOutput.progressGroupTask = this.progressData;
+        dataOutput.groupTaskID = this.dataSource['recID'];
+        dataOutput.stepID = this.step['recID'];
         break
       case 'T':
+        dataOutput.groupTaskID = this.dataSource['taskGroupID'];
+        dataOutput.taskID = this.dataSource['recID'];
+        dataOutput.stepID = this.step['recID'];
         dataOutput.progressTask = this.progressData;
         if(isUpdate){
           this.progressGroupTask(dataOutput);

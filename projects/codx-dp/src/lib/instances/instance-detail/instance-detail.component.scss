@@ -1,6 +1,6 @@
 :root {
 	--primary-color: #23468c;
-  }
+}
 
 .progress {
 	background-color: #d8d8d8;
@@ -52,20 +52,20 @@
 .step-name{
 	text-align: left;
 }
-.arrow-steps .step:after,
-.arrow-steps .step:before {
-	content: " ";
-	position: absolute;
-	top: 0;
-	right: -17px;
-	width: 0;
-	height: 0;
-	border-top: 17px solid transparent;
-	border-bottom: 17px solid transparent;
-	border-left: 17px solid #d9e3f7;
-	z-index: 2;
-	transition: border-color 0.2s ease;
-}
+// .arrow-steps .step:after,
+// .arrow-steps .step:before {
+// 	content: " ";
+// 	position: absolute;
+// 	top: 0;
+// 	right: -17px;
+// 	width: 0;
+// 	height: 0;
+// 	border-top: 17px solid transparent;
+// 	border-bottom: 17px solid transparent;
+// 	border-left: 17px solid #d9e3f7;
+// 	z-index: 2;
+// 	transition: border-color 0.2s ease;
+// }
 
 .arrow-steps .step:last-child:after {
 	display: none;
@@ -88,12 +88,12 @@
 	transition: 0.2s;
 }
 
-.arrow-steps .step:hover::after,
-.arrow-steps .step:hover::before {
-	border-left-color: var(--primary-light);
-	border-right-color: var(--primary-light);
-	transition: 0.2s;
-}
+// .arrow-steps .step:hover::after,
+// .arrow-steps .step:hover::before {
+// 	border-left-color: var(--primary-light);
+// 	border-right-color: var(--primary-light);
+// 	transition: 0.2s;
+// }
 
 
 .arrow-steps .step:before {
@@ -133,20 +133,20 @@
 	background-color: #3699ff;
 }
 
-.arrow-steps .step.current:after {
-	border-left: 17px solid #3699ff;
-}
+// .arrow-steps .step.current:after {
+// 	border-left: 17px solid #3699ff;
+// }
 //nvthuan
-.arrow-steps .step.old {
-	color: #fff;
-	background-color: var(--primary-color);
-	// background-color: #23468c;
-}
+// .arrow-steps .step.old {
+// 	color: #fff;
+// 	background-color: var(--primary-color);
+// 	// background-color: #23468c;
+// }
 
-.arrow-steps .step.old:after {
-	border-left: 17px solid var(--primary-color);
-	// border-left: 17px solid #23468c;
-}
+// .arrow-steps .step.old:after {
+// 	border-left: 17px solid var(--primary-color);
+// 	// border-left: 17px solid #23468c;
+// }
 
 
 .font {

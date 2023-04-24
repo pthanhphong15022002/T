@@ -1,0 +1,174 @@
+<codx-form
+  #form
+  [headerText]="titleAction"
+  [subHeader]="subHeader"
+  [body]="body"
+  [openMore]="true"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  [footer]="footer"
+  [data]="deal"
+></codx-form>
+
+<ng-template #subHeader>
+  <codx-tag
+    field="tags"
+    [entityName]="formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    (valueChange)="valueChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #body>
+  <!-- <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="DealName"
+          [default]="'Tên cơ hội'"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="dealName"
+        [crrValue]="deal?.dealName"
+        (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="CampaignID"
+          [Group]="form.formGroup"
+          [default]="'Chiến dịch'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName=""
+          default="Tổ chức"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="SalespersonID"
+          [Group]="form.formGroup"
+          default="Nhân viên bán hàng"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="ContactID"
+          [default]="'Liên hệ'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          fiedName="ConsultantID"
+          [default]="'Nhân viên tư vấn'"
+        >
+        </codx-label>
+        <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        fiedName=""
+        [default]="'Loại cơ hội'"
+      >
+      </codx-label>
+      <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        fiedName=""
+        default="Doanh số dư kiến"
+      >
+      </codx-label>
+      <codx-input
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        fiedName=""
+        default="Nguồn cơ hội"
+      >
+      </codx-label>
+      <ejs-combobox (valueChange)="cbxChange($event)"></ejs-combobox>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <codx-label
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        fiedName="Probability"
+        default="Tỷ lệ thành công"
+      >
+      </codx-label>
+      <codx-input
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      fiedName="probability"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+    </div>
+  </div>
+</div> -->
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <div></div>
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveOpportunity()"
+    >
+      <codx-label default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

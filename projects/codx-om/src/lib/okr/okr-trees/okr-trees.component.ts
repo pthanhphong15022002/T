@@ -29,6 +29,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
   @Input() okrVll:any;
   @Input() orgUnitTree:any;
   @Input() okrGrv:any;
+  @Input() currentOrgID:any;
   dataTree: any;
   listDistribute: any;
   isAfterRender: boolean;
@@ -68,28 +69,8 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
 
   //_______________________Get Data Func_____________________//
   getOrgTreeOKR() {
-    if (this.curUser?.employee != null) {
-      let tempOrgID = '';
-      let okrLevel='';
-      switch (this.funcID) {
-        case OMCONST.FUNCID.COMP:
-          tempOrgID = this.curUser?.employee.companyID;
-          okrLevel =OMCONST.VLL.OKRLevel.COMP;
-          break;
-        case OMCONST.FUNCID.DEPT:
-          tempOrgID = this.curUser?.employee.departmentID;
-          okrLevel =OMCONST.VLL.OKRLevel.DEPT;
-          break;
-        case OMCONST.FUNCID.ORG:
-          tempOrgID = this.curUser?.employee.orgUnitID;
-          okrLevel =OMCONST.VLL.OKRLevel.ORG;
-          break;
-        case OMCONST.FUNCID.PERS:
-          tempOrgID = this.curUser?.employee.employeeID;          
-          okrLevel =OMCONST.VLL.OKRLevel.PERS;
-          break;
-      }
-      this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,tempOrgID).subscribe((listOrg: any) => {
+      
+      this.codxOmService.getOrgTreeOKR(this.dataOKRPlans?.recID,this.currentOrgID).subscribe((listOrg: any) => {
         if (listOrg) {          
 
             this.orgUnitTree=[listOrg];
@@ -97,7 +78,7 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
             this.isAfterRender=true;
         }
       });
-    }
+    
   }
 
   //-----------------------End-------------------------------//

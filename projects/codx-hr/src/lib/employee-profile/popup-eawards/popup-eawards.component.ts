@@ -41,6 +41,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
 
   fromListView: boolean = false; //check where to open the form
+  genderGrvSetup: any;
 
   constructor(
     private injector: Injector,
@@ -54,15 +55,20 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
- 
-    this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-      
     this.fromListView = data?.data?.fromListView;
-    this.empObj = data?.data?.empObj;
 
-
+    this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
+    if (this.awardObj?.employeeID) {
+      this.employId = this.awardObj?.employeeID;
+    } else {
+      this.employId = data?.data?.employeeId;
+    }
+    if (this.awardObj?.emp) {
+      this.empObj = this.awardObj?.emp;
+    } else {
+      this.empObj = data?.data?.empObj;
+    }
   }
 
   allowToViewEmp(): boolean {
@@ -96,7 +102,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
         this.empObj = emp[0][0];
-        //console.log('employee cua form', this.employeeObj);
         this.cr.detectChanges();
       }
     });
@@ -113,7 +118,8 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.awardObj = res?.data;
-            if(this.awardObj.awardDate.toString() == this.defaultAwardDate) this.awardObj.awardDate = null;
+            if (this.awardObj.awardDate.toString() == this.defaultAwardDate)
+              this.awardObj.awardDate = null;
             this.awardObj.employeeID = this.employId;
             this.formModel.currentData = this.awardObj;
             this.formGroup.patchValue(this.awardObj);
@@ -122,12 +128,15 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'copy' && this.awardObj.awardDate == this.defaultAwardDate) this.awardObj.awardDate = null;
-        this.formGroup.patchValue(this.awardObj);
-        this.formModel.currentData = this.awardObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      
+      if (
+        this.actionType === 'copy' &&
+        this.awardObj.awardDate == this.defaultAwardDate
+      )
+        this.awardObj.awardDate = null;
+      this.formGroup.patchValue(this.awardObj);
+      this.formModel.currentData = this.awardObj;
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 
@@ -145,14 +154,20 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           });
       }
     });
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
     if (this.employId != null) this.getEmployeeInfoById(this.employId);
   }
 
   onSaveForm() {
     //Check SignerID
-    if (this.awardObj.signerID && 
+    if (
+      this.awardObj.signerID &&
       this.awardObj.signer.replace(/\s/g, '') !=
-      this.employeeName.replace(/\s/g, '')
+        this.employeeName.replace(/\s/g, '')
     ) {
       this.awardObj.signerID = null;
       this.formGroup.patchValue({ signerID: this.awardObj.signerID });
@@ -162,27 +177,32 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
-    } 
-    if(this.actionType === 'copy') delete this.awardObj.recID;
+    }
+    if (this.actionType === 'copy') delete this.awardObj.recID;
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEmployeeAwardInfo(this.formModel.currentData).subscribe((p) => {
-        if (p != null) {
-          this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS023'); this.awardObj.isSuccess = true;
-      });
+      this.hrService
+        .AddEmployeeAwardInfo(this.formModel.currentData)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS006');
+            p[0].emp = this.empObj;
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS023');
+          this.awardObj.isSuccess = true;
+        });
     } else {
       this.hrService
         .UpdateEmployeeAwardInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
+            p[0].emp = this.empObj;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
-
 
   handleSelectAwardDate(event) {
     this.awardObj.inYear = new Date(event.data).getFullYear();
@@ -224,7 +244,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
             [event.field]: this.awardObj[event.field],
           });
 
-          let employee = event.data?.dataSelected[0]?.dataSelected[0];
+          // let employee = event.data?.dataSelected[0]?.dataSelected[0];
+          let employee = event.data?.dataSelected[0]?.dataSelected;
+
           if (employee) {
             this.awardObj.signer = employee.EmployeeName;
             this.employeeName = employee.EmployeeName;

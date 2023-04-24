@@ -75,9 +75,11 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   parentID: string;
   pageCount: any;
   columnGrids = [];
+  lockFields = [];
   keymodel: any;
   journal: IJournal;
   vllCashbook: any;
+  journalNo: string;
   voucherNoPlaceholderText$: Observable<string>;
   fmCashReceiptsLines: FormModel = {
     formName: 'CashReceiptsLines',
@@ -112,7 +114,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((res) => {
-      if (res && res?.recID) this.parentID = res.recID;
+      if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
@@ -146,7 +148,26 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
               this.loadTotal();
             }
           });
+        this.api
+          .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [
+            this.journalNo,
+          ])
+          .subscribe((res) => {
+            this.lockFields = res[1];
+          });
         //#endregion
+      }
+    }
+
+    if (this.formType == 'add') {
+      if (
+        this.cashreceipts &&
+        this.cashreceipts.unbounds &&
+        this.cashreceipts.unbounds.lockFields &&
+        this.cashreceipts.unbounds.lockFields.length
+      ) {
+        this.lockFields = this.cashreceipts.unbounds
+          .lockFields as Array<string>;
       }
     }
 
@@ -199,6 +220,8 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     this.form.formGroup.patchValue(this.cashreceipts);
     this.pageCount = '(' + this.cashreceiptslines.length + ')';
     this.loadTotal();
+    this.loadFuncid();
+    this.loadReason();
   }
 
   created(e: any, ele: TabComponent) {
@@ -256,54 +279,80 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     let field = e.field.toLowerCase();
-    if (
-      field == 'currencyid' &&
-      this.columnChange.toLowerCase() == 'cashbookid'
-    ) {
-      this.columnChange = '';
-      return;
-    }
-
     let sArray = [
       'currencyid',
       'voucherdate',
       'cashbookid',
       'journalno',
-      'transactiontext',
       'objectid',
     ];
-
-    if (e.data && sArray.includes(field)) {
-      if (field === 'objectid') {
-        let data = e.component.itemsSelected[0];
-        this.cashreceipts.objectType = data.ObjectType;
-        this.cashreceipts.objectName = data['ObjectName'];
-        this.setReason('payor', data['ObjectName'], 1);
-      }
-
-      this.api
-        .exec<any>('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
-          e.field,
-          this.cashreceipts,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.columnChange = res.updateColumns;
-            this.form.formGroup.patchValue(res);
+    if (e.data) {
+      switch (field) {
+        case 'currencyid':
+          if (this.columnChange.toLowerCase() == 'cashbookid') {
+            this.columnChange = '';
+            return;
           }
-        });
-    }
-
-    if (field === 'reasonid' || field === 'payor') {
-      let idx = 0;
-      let text = e?.component?.itemsSelected[0]?.ReasonName;
-
-      if (field === 'payor') {
-        idx = 1;
-        text = e.data;
+          break;
+        case 'exchangerate':
+          if (this.cashreceiptslines.length) {
+            this.api
+              .exec<any>(
+                'AC',
+                'CashPaymentsLinesBusiness',
+                'ChangeExchangeRateAsync',
+                [this.cashreceiptslines, this.cashreceiptslines]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.gridCashreceiptsLines!.dataSource = res;
+                  this.cashreceiptslines = res;
+                }
+              });
+          }
+          break;
+        case 'reasonid':
+          let text = e?.component?.itemsSelected[0]?.ReasonName;
+          this.setReason(field, text, 0);
+          break;
+        case 'objectid':
+          let data = e.component.itemsSelected[0];
+          this.cashreceipts.objectType = data['ObjectType'];
+          this.cashreceipts.objectName = data['ObjectName'];
+          this.setReason(field, data['ObjectName'], 1);
+          break;
       }
+      if (sArray.includes(field)) {
+        this.api
+          .exec<any>('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+            e.field,
+            this.cashreceipts,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.columnChange = res.updateColumns;
+              this.form.formGroup.patchValue(res);
+            }
+          });
+      }
+    }
+  }
 
-      this.setReason(field, text, idx);
+  valuechangePayor(e: any) {
+    let text;
+    if (e.crrValue) {
+      text = e.crrValue;
+      this.setReason('payname', text, 2);
+    } else {
+      let index = this.reason.findIndex((x) => x.field == 'payname');
+      if (index > -1) {
+        this.reason.splice(index, 1);
+      }
+      this.cashreceipts.memo = this.acService.setMemo(
+        this.cashreceipts,
+        this.reason
+      );
+      this.form.formGroup.patchValue(this.cashreceipts);
     }
   }
 
@@ -419,7 +468,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
             });
         }
         break;
-        case '2':
+      case '2':
         let idx = this.cashreceiptslines.length;
         let data = new CashReceiptsLines();
         this.api
@@ -454,6 +503,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           data: { ...data },
           type: 'edit',
           journal: this.journal,
+          lockFields: this.lockFields,
         };
         let opt = new DialogModel();
         let dataModel = new FormModel();
@@ -504,7 +554,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  
+
   deleteRow(data) {
     switch (this.modegrid) {
       case '1':
@@ -549,6 +599,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       data: data,
       type: 'add',
       journal: this.journal,
+      lockFields: this.lockFields,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -740,9 +791,12 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                       'AddAsync',
                       [this.cashreceiptslines]
                     )
-                    .subscribe(() => {});
-                  this.dialog.close();
-                  this.dt.detectChanges();
+                    .subscribe((res) => {
+                      if (res) {
+                        this.dialog.close();
+                        this.dt.detectChanges();
+                      }
+                    });
                 } else {
                 }
               });
@@ -758,14 +812,17 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                 return true;
               })
               .subscribe((res) => {
-                if (res != null) {
+                if (res.save) {
                   this.acService
                     .addData('AC', 'CashReceiptsLinesBusiness', 'UpdateAsync', [
                       this.cashreceiptslines,
                       this.cashreceiptslinesDelete,
                     ])
                     .subscribe();
-                  this.dialog.close();
+                  this.dialog.close({
+                    update: true,
+                    data: this.cashreceipts,
+                  });
                   this.dt.detectChanges();
                 } else {
                 }
@@ -859,13 +916,29 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         this.vllCashbook = res.datas[0];
         this.cashreceipts.category = this.vllCashbook.value;
         if (this.formType == 'add') {
-          (this.cashBook.ComponentCurrent as CodxComboboxComponent).dataService.data = [];
+          (
+            this.cashBook.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
           this.cashBook.crrValue = null;
           this.cashreceipts.cashBookID = null;
           this.form.formGroup.patchValue(this.cashreceipts);
         }
       }
     });
+  }
+
+  loadReason() {
+    this.api
+      .exec<any>('AC', 'CommonBusiness', 'LoadReason', [
+        '2',
+        this.reason,
+        this.cashreceipts,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.reason = res;
+        }
+      });
   }
   //#endregion
 }

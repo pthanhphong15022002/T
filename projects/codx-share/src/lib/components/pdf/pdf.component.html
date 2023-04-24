@@ -510,7 +510,8 @@
                       *ngIf="
                         !this.isApprover ||
                         (this.isApprover &&
-                          area.signer == this.curSignerID &&
+                          (area.signer == this.curSignerID ||
+                            area.signer == this.curSignerType) &&
                           area.stepNo == this.stepNo)
                       "
                       (click)="goToSelectedAnnotation(area)"

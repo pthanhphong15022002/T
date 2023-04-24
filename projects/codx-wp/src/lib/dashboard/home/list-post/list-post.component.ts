@@ -105,18 +105,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 20;
     this.getSetting();
-    this.refreshAvatar();
   }
 
-  refreshAvatar() {
-    //Nguyên thêm để refresh avatar khi change
-    this.codxShareSV.dataRefreshImage.subscribe((res) => {
-      if (res) {
-        this.user['modifiedOn'] = res?.modifiedOn;
-        this.dt.detectChanges();
-      }
-    });
-  }
+ 
 
   //get thiết lập
   getSetting() {
@@ -172,8 +163,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforDelete(option: RequestOption, data: any) {
-    if (!option || !data) return false;
+  beforDelete(option: RequestOption, data: string) {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'CommentsBusiness';
@@ -183,9 +173,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   // xóa bài viết
   deletePost(data: any) {
-    if (data) {
+    if (data?.recID) {
       (this.listview.dataService as CRUDService)
-        .delete([data],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
+        .delete([data],true,(op: any) => this.beforDelete(op, data.recID),'','WP022','','WP023')
         .subscribe();
     }
   }

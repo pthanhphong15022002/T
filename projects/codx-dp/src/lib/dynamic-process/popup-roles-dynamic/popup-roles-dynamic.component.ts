@@ -73,22 +73,28 @@ export class PopupRolesDynamicComponent implements OnInit {
           index = this.process.permissions.findIndex(
             (x) => x.roleType == 'O'
           );
-          this.currentPemission = index;
-          this.changePermission(index);
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
           break;
         case 'P':
           index = this.process.permissions.findIndex(
             (x) => x.roleType == 'P'
           );
-          this.currentPemission = index;
-          this.changePermission(index);
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
           break;
         case 'F':
           index = this.process.permissions.findIndex(
             (x) => x.roleType == 'F'
           );
-          this.currentPemission = index;
-          this.changePermission(index);
+          if(index != -1){
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
           break;
         case 'full':
           this.changePermission(0);

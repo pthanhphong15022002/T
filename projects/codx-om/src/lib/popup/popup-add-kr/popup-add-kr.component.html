@@ -195,15 +195,12 @@
         <div class="w-100 d-flex flex-wrap">
           <div class="d-flex justify-content-between align-items-center w-50 mb-4"
             *ngFor="let item of this.editTargets;let i=index">
-
-            <div class="w-125px text-dark fw-bold">
-              <codx-label [name]=" this.planVLL[i]?.text"></codx-label>
-            </div>
-            <div class="w-100">
-              <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="border-1 border "
+            <span class="col-3 text-dark fw-bold">{{this.planVLL[i]?.text}}</span>
+            <div class="col-7 ">
+              <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="w-100 border-1 border text-right"
                 (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>
             </div>
-            <div class="w-50px ms-2">
+            <div class="col-2 ps-2">
               <span *ngIf="item?.edited" class="icon-i-info-circle text-danger" ngbTooltip="Đã chỉnh sửa"></span>
 
             </div>
@@ -293,7 +290,7 @@
       <div class="modal-footer">
         <div class="w-100 d-flex justify-content-end">
 
-          <button class="btn btn-primary" (click)="onSaveCheckIn()">
+          <button class="btn btn-primary" (click)="onSaveCheckIn()" [disabled]="onSaving">
             <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
           </button>
         </div>

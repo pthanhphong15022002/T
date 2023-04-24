@@ -3558,6 +3558,7 @@ export class EmployeeDetailComponent extends UIComponent {
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDisciplineFuncID),
         employeeId: this.employeeID,
+        empObj: this.infoPersonal,
         funcID: this.eDisciplineFuncID,
         dataInput: data,
       },

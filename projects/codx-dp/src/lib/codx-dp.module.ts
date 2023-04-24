@@ -50,6 +50,8 @@ import { CarouselStageComponent } from './instances/instance-detail/carousel-sta
 
 import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.component';
 import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
+import { TestComponent } from './componnent-task/test/test.component';
+import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
 
 
 const routes: Routes = [
@@ -65,6 +67,11 @@ const routes: Routes = [
       {
         path: 'instances/:funcID/:processID',
         component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'test',
+        component: TestComponent,
         data: { noReuse: true },
       },
       {
@@ -127,7 +134,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ProgressComponent,
     CarouselStageComponent,  
     UpdateProgressComponent,
-    CodxTaskComponent
+    CodxTaskComponent,
+    TestComponent,
+    InputNumberDurationComponent
   ],
   imports: [
     RouterModule.forChild(routes),

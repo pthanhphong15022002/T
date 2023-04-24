@@ -1,4 +1,3 @@
-import { format } from 'path';
 import {
   Component,
   Injector,
@@ -96,7 +95,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   };
 
   // dataSource: any;
-  dataSource2: any = [{ Country: 'Canada', GDP: 3.05, WorldShare: 2.04 }];
 
   // // custom code end
   titleSettings: object = {
@@ -378,7 +376,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
-        console.log('MyDB', this.myDBData);
       });
 
     this.detectorRef.detectChanges();
@@ -394,7 +391,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [model])
       .subscribe((res) => {
         this.myDBData = res;
-        //console.log(this.myDBData);
       });
 
     this.detectorRef.detectChanges();
@@ -409,8 +405,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.api
       .exec('TM', 'TaskBusiness', 'GetDataAssignDashboardAsync', [model])
       .subscribe((res) => {
-        this.myDBData = res;
-        //console.log(this.myDBData);
+        this.assignDBData = res;
+        console.log('assignDBData', this.assignDBData);
       });
 
     this.detectorRef.detectChanges();
@@ -418,7 +414,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
   filterChange(e: any) {
     const { predicates, dataValues } = e[0];
-    const paramValue = e[1];
     this.predicates = predicates;
     this.dataValues = dataValues;
 

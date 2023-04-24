@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
-import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef, FormModel } from 'codx-core';
+import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel, DialogModel, DialogRef, FormModel, AuthService } from 'codx-core';
 import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
@@ -23,8 +23,7 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
-  @ViewChild('templateUpdateStatus', { static: true })
-  templateUpdateStatus: TemplateRef<any>;
+  @ViewChild('templateUpdateStatus', { static: true }) templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = []
   funcID: string;
   dataCategory;
@@ -41,7 +40,10 @@ export class EmployeeContractComponent extends UIComponent {
   cmtStatus: string = '';
   currentEmpObj: any = null;
   dialogEditStatus: any;
+  statusCbx = true;
   
+  genderGrvSetup: any
+
   //#region eContractFuncID
   actionAddNew = 'HRTPro01A01'
   actionSubmit = 'HRTPro01A03'
@@ -50,7 +52,6 @@ export class EmployeeContractComponent extends UIComponent {
   actionUpdateRejected = 'HRTPro01AU4'
   actionUpdateApproved = 'HRTPro01AU5'
   actionUpdateClosed = 'HRTPro01AU9'
-
   //#endregion
   
   // moreFuncs = [
@@ -72,6 +73,7 @@ export class EmployeeContractComponent extends UIComponent {
     private activedRouter: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
+    private auth: AuthService,
     ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -81,8 +83,10 @@ export class EmployeeContractComponent extends UIComponent {
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-
-  }
+    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+      this.genderGrvSetup = res?.Gender;
+    });
+  } 
 
 
 
@@ -148,16 +152,9 @@ export class EmployeeContractComponent extends UIComponent {
     // let option = new DialogModel();
     // option.zIndex = 999;
     // option.FormModel = this.view.formModel
-    console.log('data trc khi mo form', data);
 
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
-    console.log('data sau khi mo form', data);
-
-    console.log('form model trc khi mo form', this.view.formModel);
-    console.log('form group trc khi mo form', this.formGroup);
-    
-    
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
@@ -197,10 +194,10 @@ export class EmployeeContractComponent extends UIComponent {
           this.cmtStatus,
           this.view.formModel.entityName,
           'C1',
-          null
+          null,
+          'EContractsBusiness'
         ).subscribe((res) => {
           console.log('kq luu track log', res);
-          
         });
         this.dialogEditStatus && this.dialogEditStatus.close(res);
       }
@@ -209,7 +206,7 @@ export class EmployeeContractComponent extends UIComponent {
   changeDataMf(event, data){
     // console.log('data changedata MF', event);
     // console.log('data di voi mf', data.signStatus);
-    this.hrService.handleShowHideMF(event, data, this.view);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
   }
 
   clickEvent(event, data){
@@ -219,6 +216,8 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   clickMF(event, data){
+    this.itemDetail = data;
+    
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -363,7 +362,6 @@ export class EmployeeContractComponent extends UIComponent {
     let formName = 'HRParameters';
     this.hrService.getSettingValue(formName, category).subscribe((res) => {
       if (res) {
-        debugger;
         let parsedJSON = JSON.parse(res?.dataValue);
         let index = parsedJSON.findIndex(
           (p) => p.Category == this.view.formModel.entityName
@@ -399,6 +397,7 @@ export class EmployeeContractComponent extends UIComponent {
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
                 this.hrService
                   .editEContract(this.itemDetail)
                   .subscribe((res) => {

@@ -609,8 +609,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       if (this.popupClosed) {
         
         this.codxEpService.getBookingByRecID(evt?.recID).subscribe((booking) => {
-          if (booking) {
-            this.view.dataService.copy(booking).subscribe((res) => {
+          if (booking) {            
+            this.view.dataService.dataSelected=booking;
+            this.view.dataService.copy().subscribe((res) => {
               this.popupClosed = false;
               let option = new SidebarModel();
               option.Width = '800px';

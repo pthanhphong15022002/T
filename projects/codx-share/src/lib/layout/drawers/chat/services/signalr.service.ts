@@ -18,6 +18,8 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
   userConnect = new EventEmitter<any>();
+  disConnected = new EventEmitter<any>();
+
   activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
   chat = new EventEmitter<any>();
@@ -30,12 +32,10 @@ export class SignalRService {
 
   public createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(environment.apiUrl + '/serverHub', {
-        skipNegotiation: true,
+      .withUrl(environment.apiUrl + '/hubwp/chat', {
         accessTokenFactory: async () => {
           return this.authStore.get().token;
-        },
-        transport: signalR.HttpTransportType.WebSockets,
+        }
       })
       .build();
 
@@ -51,27 +51,38 @@ export class SignalRService {
       this.userConnect.emit(data);
     });
     this.hubConnection.on('ReceiveMessage', (res) => {
-      switch (res.action) {
-        case 'onConnected':
+      if(res){
+        let data = res.data;
+        switch (data.action) {
+          case 'onConnected':
+            break;
+          case 'onDisconnected':
+            debugger
+            this.disConnected.emit(data);
           break;
-        case 'activeNewGroup':
-          this.activeNewGroup.emit(res.data);
+          case 'activeNewGroup':
+            this.activeNewGroup.emit(data);
+            break;
+          case 'activeGroup':
+            this.activeGroup.emit(data);
+            break;
+          case 'sendMessage':
+            this.chat.emit(data);
+            break;
+          case 'deletedMessage':
+            this.chat.emit(data);
+            break;
+          case 'voteMessage':
+            this.voteChat.emit(data);
+            break;
+          case 'sendMessageSystem':
+            this.chat.emit(data);
+            this.activeGroup.emit(data);
           break;
-        case 'activeGroup':
-          this.activeGroup.emit(res.data);
-          break;
-        case 'sendMessage':
-        case 'deletedMessage':
-          this.chat.emit(res);
-          break;
-        case 'voteMessage':
-          this.voteChat.emit(res.data);
-          break;
-        case 'sendMessageSystem':
-          this.chat.emit(res);
-          this.activeGroup.emit(res);
-        break;
+          
+        }
       }
+      
     });
   }
   // send to server

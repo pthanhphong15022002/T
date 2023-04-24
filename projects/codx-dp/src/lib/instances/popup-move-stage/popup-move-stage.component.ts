@@ -1,4 +1,7 @@
-import { DP_Instances_Permissions } from './../../models/models';
+import {
+  DP_Instances_Permissions,
+  DP_Instances_Steps_Roles,
+} from './../../models/models';
 import {
   ChangeDetectorRef,
   Component,
@@ -14,6 +17,7 @@ import {
   NotificationsService,
   CallFuncService,
   CacheService,
+  AuthStore,
 } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
 import {
@@ -64,11 +68,8 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroup: any = [];
-  listTask: any = [];
   listTaskGroupDone: any = [];
   listTaskDone: any = [];
-  listTree: any = [];
   listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
@@ -80,6 +81,10 @@ export class PopupMoveStageComponent implements OnInit {
   actionCheck: string = '';
   isSaving: boolean = false;
   listStepProccess: any;
+  user:any;
+
+  tmpTasks: any[] = [];
+  tmpGroups:any[] = [];
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -92,9 +97,11 @@ export class PopupMoveStageComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private dpSv: CodxDpService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
     this.stepName = dt?.data.stepName;
@@ -277,16 +284,10 @@ export class PopupMoveStageComponent implements OnInit {
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
 
     !this.instancesStepOld.actualEnd && this.setToDay();
-    this.listTask = this.instancesStepOld.tasks.filter(
+    this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroup = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
-    // if (
-    //   (this.listTask.length > 0 && this.listTask) ||
-    //   (this.listTaskGroup.length > 0 && this.listTaskGroup)
-    // ) {
-    //   //      this.listTree = this.updateDateForTree(this.listTaskGroup, this.listTask);
-    // }
+    this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
   }
 
   onSave() {
@@ -344,6 +345,10 @@ export class PopupMoveStageComponent implements OnInit {
       }
     }
 
+    if(this.isCheckRequiredTask(this.listTaskDone))
+    {
+      return;
+    }
     this.beforeSave();
   }
   beforeSave() {
@@ -361,16 +366,18 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.stepID = this.stepIdClick;
     }
     if (
-      (!!this.listTask || !!this.listTaskGroup) &&
-      this.stepIdClick === this.stepIdOld
+      (!!this.listTaskGroupDone || !!this.listTaskDone) &&
+        this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
-    // this.listTaskDone && this.updateProgressIsDone(this.listTaskDone, this.listTask, this.viewTask);
-    //  this.listTaskGroupDone && this.updateProgressIsDone(this.listTaskGroupDone, this.listTaskGroup,this.viewTaskGroup);
-    this.updateProgressInstance();
-
-    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone,'T');
+    }
+    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
+      var listTmpGroup= this.convertTmpDataInTask(this.listTaskGroupDone,'G');
+    }
+    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld,listTmpTask,listTmpGroup];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];
@@ -383,23 +390,43 @@ export class PopupMoveStageComponent implements OnInit {
         this.stepIdClick = '';
         this.stepIdOld = '';
         this.dialog.close(obj);
-        //  this.notiService.notifyCode('SYS007');
-
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   setRoles() {
-    var index = this.instancesStepOld.roles.findIndex(x => x.roleType == 'S');
-    if (this.instancesStepOld.roles[index].objectID != this.owner) {
-      var tmp = this.lstParticipants.find(x => x.userID == this.owner)
-      this.instancesStepOld.roles[index].objectID = this.owner;
-      this.instancesStepOld.roles[index].objectName = tmp?.userName;
-      this.instancesStepOld.roles[index].objectType = 'U';
+    var tmp = this.lstParticipants.find((x) => x.userID == this.owner);
+    if (
+      this.instancesStepOld.roles != null &&
+      this.instancesStepOld.roles.length > 0
+    ) {
+      var index = this.instancesStepOld.roles.findIndex(
+        (x) => x.roleType == 'S'
+      );
+      if (index != -1) {
+        if (this.instancesStepOld.roles[index].objectID != this.owner) {
+          this.instancesStepOld.roles[index].objectID = this.owner;
+          this.instancesStepOld.roles[index].objectName = tmp?.userName;
+          this.instancesStepOld.roles[index].objectType = 'U';
+        }
+      } else {
+        var u = new DP_Instances_Steps_Roles();
+        u['objectID'] = this.owner;
+        u['objectName'] = tmp?.userName;
+        u['objectType'] = 'U';
+        u['roleType'] = 'S';
+        this.instancesStepOld.roles.push(u);
+      }
+    } else {
+      this.instancesStepOld.roles = [];
+      var u = new DP_Instances_Steps_Roles();
+      u['objectID'] = this.owner;
+      u['objectName'] = tmp?.userName;
+      u['objectType'] = 'U';
+      u['roleType'] = 'S';
+      this.instancesStepOld.roles.push(u);
     }
-
-
   }
 
   valueChange($event) {
@@ -438,123 +465,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   eventUser(e) {
     this.owner = e?.id;
-    // if (this.owner != null) this.getNameAndPosition(this.owner);
   }
-
-  // buildTree(parents, children) {
-  //   const tree = [];
-
-  //   const lookup = parents.reduce((acc, parent) => {
-  //     acc[parent.refID] = parent;
-  //     parent.children = [];
-  //     return acc;
-  //   }, {});
-
-  //   children.forEach((child) => {
-  //     const parentId = child.taskGroupID;
-  //     if (parentId in lookup) {
-  //       lookup[parentId].children.push(child);
-  //       this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
-  //         child,
-  //         this.totalRequireCompleted,
-  //         true
-  //       );
-  //     }
-  //   });
-
-  //   Object.keys(lookup).forEach((key) => {
-  //     const parent = lookup[key];
-  //     if (!parent.taskGroupID) {
-  //       tree.push(parent);
-  //     }
-  //   });
-  //   return tree;
-  // }
-
-  // updateDateForTree(parents, children) {
-  //   for (let item of children) {
-  //     if (
-  //       item?.taskGroupID === null ||
-  //       item?.taskGroupID === undefined ||
-  //       item?.taskGroupID === ''
-  //     ) {
-  //       parents.push(item);
-  //       this.totalRequireCompleted = this.UpdateRequireCompletedCheck(
-  //         item,
-  //         this.totalRequireCompleted,
-  //         true
-  //       );
-  //     }
-  //   }
-  //   return this.buildTree(parents, children);
-  // }
-  // myFunction($event, index) {
-  //   let children = document.getElementById('children' + index);
-  //   let parent = document.getElementById('parent' + index);
-  //   if (children.classList[2] === 'show') {
-  //     children.classList.remove('show');
-  //     children.classList.add('hidden');
-
-  //     parent.classList.remove('icon-remove');
-  //     parent.classList.add('icon-add');
-  //   } else {
-  //     children.classList.remove('hidden');
-  //     children.classList.add('show');
-  //     parent.classList.remove('icon-add');
-  //     parent.classList.add('icon-remove');
-  //   }
-  // }
-  // checkAllValue($event, data, view) {
-  //   if ($event && view == 'custom') {
-  //     if ($event.target.checked) {
-  //       this.isCheckAll = $event.target.checked;
-  //       this.listTaskGroupDone = JSON.parse(JSON.stringify(this.listTaskGroup));
-  //       this.listTaskDone = JSON.parse(JSON.stringify(this.listTask));
-  //       this.totalRequireCompletedChecked = this.totalRequireCompleted;
-  //       this.actionCheck = 'custom';
-  //     } else {
-  //       this.isCheckAll = $event.target.checked;
-  //       this.listTaskGroupDone = [];
-  //       this.listTaskDone = [];
-  //       this.totalRequireCompletedChecked = 0;
-  //       this.actionCheck = '';
-  //     }
-  //   } else if ($event && view == this.viewTaskGroup) {
-  //     $event.target.checked && this.addItem(this.listTaskGroupDone, data, this.viewTaskGroup);
-  //     !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
-  //   } else if ($event && view == this.viewTask) {
-  //     $event.target.checked && this.addItem(this.listTaskDone, data, this.viewTask);
-  //     !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
-  //   }
-  // }
-
-  // addItem(list: any, data, view) {
-
-
-  //   if (view == this.viewTaskGroup) {
-  //     let children = document.getElementById(`${data.recID}`);
-  //     list.push(data);
-  //   }
-
-  //   if(view == this.viewTask) {
-  //     if(this.ischeckClickedTaskParent(data)) {
-  //       list.push(data);
-  //     }
-
-  //   }
-  //   this.UpdateRequireCompletedCheck(data, this.totalRequireCompleted, true);
-
-  // }
-
-  // removeItem(list, id) {
-  //   let idx = list.findIndex((x) => x.recID === id);
-  //   if (idx >= 0) list.splice(idx, 1);
-  //   this.UpdateRequireCompletedCheck(
-  //     list[idx],
-  //     this.totalRequireCompleted,
-  //     false
-  //   );
-  // }
   removeItemSuccess(list) {
     let idx = list.findIndex((x) => x.isSuccessStep);
     if (idx >= 0) list.splice(idx, 1);
@@ -563,23 +474,6 @@ export class PopupMoveStageComponent implements OnInit {
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
-  // updateProgressIsDone(listDone, listNow, view) {
-  //   const map = new Map();
-  //   listDone.forEach((item) => {
-  //     map.set(item.recID, item.progress);
-  //   });
-  //   listNow.forEach((item) => {
-  //     if (map.has(item.recID)) {
-  //       item.progress = 100;
-  //       item.actualEnd = new Date();
-  //     }
-  //   });
-  //   if (view === 'task') {
-  //     this.instancesStepOld.tasks = listNow;
-  //   } else {
-  //     this.instancesStepOld.taskGroups = listNow;
-  //   }
-  // }
   getIconTask(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return color?.icon;
@@ -592,17 +486,6 @@ export class PopupMoveStageComponent implements OnInit {
   removeReasonInSteps(listStepCbx, stepReason) {
     !stepReason.isUseFail && this.removeItemFail(listStepCbx);
     !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
-  }
-
-  UpdateRequireCompletedCheck(item: any, checkValue, isCheck) {
-    if (!!item) {
-      if (isCheck && item.requireCompleted) {
-        checkValue++;
-      } else if (!isCheck && item.requireCompleted) {
-        checkValue--;
-      }
-    }
-    return checkValue ?? 0;
   }
   setToDay() {
     this.instancesStepOld.actualEnd = new Date();
@@ -691,52 +574,32 @@ export class PopupMoveStageComponent implements OnInit {
   updateProgressInstance() {
     if (
       this.listTaskDone?.length > 0 &&
-      this.listTask?.length > 0 &&
-      this.listTaskGroup?.length > 0 &&
       this.listTaskGroupDone?.length > 0
     ) {
       if (
-        this.listTaskDone.length == this.listTask.length &&
-        this.listTaskGroupDone.length == this.listTaskGroup.length
+        this.listTaskDone.length == this.listTaskDone.length &&
+        this.listTaskGroupDone.length == this.listTaskGroupDone.length
       ) {
         this.instancesStepOld.progress = 100;
       }
     }
   }
 
-  getColorTask(item, view): string {
-    var check = 'd-none';
-    if (item?.requireCompleted) {
-      check = 'text-danger';
-    }
-    else if (view == this.viewTask) {
-      for (let tasks of this.listTask) {
-        if (tasks.parentID?.includes(item.refID)) {
-          check = 'text-orange'
-          break;
-        }
-      }
-    }
-    return check;
-  }
-  // ischeckClickedTaskParent(data){
-  //   if(data.parentID) {
-  //     var parentIds = data?.parentID.split(';');
-  //     var filteredList = this.listTaskDone.filter(obj => parentIds.includes(obj.refID));
-  //     if(filteredList.length != parentIds.length) {
-  //       var checkbox =  document.getElementById(`${data.recID}`) as HTMLInputElement;
-  //       checkbox.checked = false;
-  //       var firstTaskNotExist =  parentIds.filter(id => !this.listTaskDone.some(obj => obj.refID === id))[0];
-  //       var taskRequired = this.listTask.find(x=> x.refID === firstTaskNotExist);
-
-  //       this.notiService.notifyCode('DP023', 0, '"' + taskRequired.taskName + '"');
-  //       return false;
+  // getColorTask(item, view): string {
+  //   var check = 'd-none';
+  //   if (item?.requireCompleted) {
+  //     check = 'text-danger';
+  //   }
+  //   else if (view == this.viewTask) {
+  //     for (let tasks of this.listTaskDone) {
+  //       if (tasks.parentID?.includes(item.refID)) {
+  //         check = 'text-orange'
+  //         break;
+  //       }
   //     }
   //   }
-  //   return true;
-
+  //   return check;
   // }
-
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
     if (lstRoles != null && lstRoles.length > 0) {
@@ -776,24 +639,77 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   changeProgress(event) {
-    console.log(event);
     if (event) {
-      if (event.type === 'T') {
-       var obj = this.listTask.find(x=>x.recID === event.recID);
+      if (event?.taskID) {
+       var task = this.listTaskDone.find(x=>x.recID === event?.taskID);
+       var taskNew = {
+        progress: event?.progressTask,
+        actualEnd: event?.actualEnd,
+        isUpdate: event?.isUpdate,
+        note: event?.note,
+       };
+      this.updateDataTask(task,taskNew);
       }
-      else if(event.type === 'G'){
-        var obj = this.listTaskGroup.find(x=>x.recID === event.recID);
+      if(event?.groupTaskID){
+        var group = this.listTaskGroupDone.find(x=>x.recID === event?.groupTaskID);
+        var groupNew = {
+          progress: event?.progressGroupTask,
+          isUpdate: event?.isUpdate,
+          actualEnd: event?.actualEnd,
+          note: event?.note,
+         };
+         this.updateDataGroup(group,groupNew);
       }
-      this.updateDataTask(obj,event);
     }
-
   }
   updateDataTask(taskNew:any, taskOld: any) {
-    taskNew.actualEnd = taskOld.actualEnd;
+    taskNew.actualEnd = taskOld?.actualEnd;
     taskNew.isUpdate = taskOld.isUpdate;
     taskNew.note = taskOld.note;
     taskNew.progress = taskOld.progress;
+    taskNew.modifiedOn = new Date();
+    taskNew.modifiedBy = this.user.userID;
+    taskNew.isUpdate = taskNew.isUpdate
+  }
+  updateDataGroup(groupNew:any, groupOld: any) {
+    groupNew.progress = groupOld?.progress;
+    groupNew.modifiedOn = new Date();
+    groupNew.modifiedBy = this.user.userID;
+    groupNew.isUpdate = groupOld.isUpdate
+  }
 
+  handleTmpInTask(data,type){
+    var tmpProgressUpdate = {
+      stepID: data.stepID,
+      recID: data.recID,
+      type:type,
+      progress:data.progress,
+      note: data.note,
+      actualEnd: data.actualEnd,
+      isUpdate: data.isUpdate
+    }
+    return tmpProgressUpdate;
+  }
 
+  convertTmpDataInTask(list,type){
+    var listTmp = [];
+    debugger
+    for(let item of list) {
+      var obj = this.handleTmpInTask(item,type);
+      listTmp.push(obj);
+    }
+    return listTmp;
+  }
+
+  isCheckRequiredTask(listTask){
+    if(listTask.length > 0 && listTask) {
+        for(let item of listTask){
+          if(item.requireCompleted && item.progress < this.oneHundredNumber) {
+            this.notiService.notifyCode('DP022');
+            return true;
+          }
+        }
+    }
+    return false;
   }
 }

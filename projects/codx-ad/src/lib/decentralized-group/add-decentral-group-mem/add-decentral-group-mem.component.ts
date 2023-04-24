@@ -11,7 +11,7 @@ import {
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 import { PopRolesComponent } from '../../users/pop-roles/pop-roles.component';
 import { CodxAdService } from '../../codx-ad.service';
-
+import { GroupMembers } from '../../models/UserGroups.model';
 @Component({
   selector: 'lib-add-decentral-group-mem',
   templateUrl: './add-decentral-group-mem.component.html',
@@ -22,22 +22,17 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
   ];
-  header = '';
-  title = '';
   groupData: any = {};
   dialog!: DialogRef;
   formModel: FormModel;
 
   lstAddedRoles: tmpformChooseRole[] = [];
-  lstCurRoles: tmpformChooseRole[] = [];
 
-  isTwoWays: boolean = true;
   popAddMemberState = false;
   width = 720;
   height = window.innerHeight;
-  memberIDs: string = '';
 
-  isSaveTemp: boolean = false;
+  isSaved = false;
 
   formType = 'add';
   @ViewChild('form') form: LayoutAddComponent;
@@ -51,19 +46,31 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.groupData = dialog.dataService!.dataSelected;
-    this.memberIDs = this.groupData.memberIDs;
+    console.log('constructor', this.groupData);
+
     this.formType = dt?.data?.formType;
-    this.title = dt?.data?.title;
+    switch (this.formType) {
+      case 'add':
+      case 'update':
+        this.isSaved = false;
+        break;
+      case 'edit':
+        this.isSaved = true;
+        break;
+      default:
+        break;
+    }
   }
 
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-      if (res) {
-        this.header = this.title;
-      }
-    });
+
+    // this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+    //   if (res) {
+    //     this.header = this.title;
+    //   }
+    // });
   }
 
   clickAddMemeber() {
@@ -72,16 +79,20 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   }
 
   openPopRoles() {
-    if (!this.isSaveTemp) {
-      console.log('group data', this.groupData);
-    }
     let option = new DialogModel();
+
+    let needValidate = this.groupData.memberIDs != '';
+    let lstUserIDs = [this.groupData.groupID];
+    if (needValidate) {
+      lstUserIDs.push(...(this.groupData.memberIDs?.split(';') ?? undefined));
+    }
+
     let obj = {
       formType: this.formType,
-      data: this.lstCurRoles,
-      userID: this.groupData.groupID,
-      quantity: 1,
-      isGroupUser: true,
+      data: this.groupData.groupRoles,
+      lstMemIDs: lstUserIDs,
+      needValidate: needValidate,
+      autoCreated: true,
     };
     let dialogRoles = this.callfc.openForm(
       PopRolesComponent,
@@ -94,13 +105,55 @@ export class AddDecentralGroupMemComponent extends UIComponent {
       option
     );
     dialogRoles.closed.subscribe((e) => {
-      this.lstCurRoles = e?.event[0] ?? [];
+      this.groupData.groupRoles = e?.event[0] ?? [];
     });
   }
 
   changeLstMembers(event) {
     this.popAddMemberState = !this.popAddMemberState;
-    console.log('change members', event);
+    if (event == null) return;
+
+    if (event?.id != '') {
+      let tmpAddNewIDs = '';
+      if (this.groupData.memberIDs != '') {
+        tmpAddNewIDs += ';';
+      }
+      tmpAddNewIDs += event?.id;
+
+      this.groupData.memberIDs += tmpAddNewIDs;
+      this.adServices
+        .addUserGroupMemberAsync(this.groupData)
+        .subscribe((result) => {
+          if (!result) {
+            this.groupData.memberIDs.replace(tmpAddNewIDs, '');
+          } else {
+            event?.dataSelected?.forEach((mem) => {
+              let tmpGroupMem: GroupMembers = {
+                memberID: mem.UserID,
+                memberName: mem.UserName,
+                memberType: 'U',
+                groupID: '',
+                roleType: '',
+                description: '',
+                positionName: mem.PositionName,
+                orgUnitName: mem.OrgUnitName,
+              };
+              this.groupData.members.push(tmpGroupMem);
+            });
+          }
+        });
+    }
+  }
+
+  removeMember(item) {
+    this.groupData.members = this.groupData.members.filter(
+      (mem) => mem.memberID != item.memberID
+    );
+    let tmpMemberIDs = [];
+    this.groupData.members.forEach((mem) => {
+      tmpMemberIDs.push(mem.memberID);
+    });
+    this.groupData.memberIDs = tmpMemberIDs.join(';');
   }
 
   beforeSave(opt: RequestOption) {
@@ -108,20 +161,45 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     opt.assemblyName = 'AD';
     opt.className = 'UserGroupsBusiness';
 
-    if (this.formType == 'add') opt.methodName = 'AddAsync';
-    else opt.methodName = 'UpdateAsync';
+    if (this.isSaved) {
+      opt.methodName = 'UpdateAsync';
+    } else {
+      opt.methodName = 'AddAsync';
+    }
     opt.data = [this.groupData];
     return true;
   }
 
-  onSave() {
-    this.dialog.dataService
-      .save((opt: RequestOption) => this.beforeSave(opt), 0)
-      .subscribe((res: any) => {
-        if (res && !res.error) {
-          this.groupData.groupID = this.dialog.dataService.dataSelected.groupID;
-          this.dialog.close(this.groupData);
-        }
-      });
+  onSave(closePopup: boolean) {
+    console.log('dirty', this.form.formGroup.dirty);
+    if (this.form?.formGroup?.dirty) {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0)
+        .subscribe((res: any) => {
+          if (res && !res.error) {
+            if (!this.isSaved) {
+              this.groupData.groupID =
+                this.dialog.dataService.dataSelected.groupID;
+              this.groupData.members?.forEach((mem) => {
+                mem.groupID = this.dialog.dataService.dataSelected.groupID;
+              });
+
+              this.isSaved = true;
+            }
+
+            if (closePopup) {
+              this.dialog.close(this.groupData);
+            } else {
+              this.openPopRoles();
+            }
+          }
+        });
+    } else {
+      if (closePopup) {
+        this.dialog.close(this.groupData);
+      } else {
+        this.openPopRoles();
+      }
+    }
   }
 }

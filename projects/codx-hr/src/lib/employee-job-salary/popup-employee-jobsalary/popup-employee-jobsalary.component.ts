@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { ChangeDetectorRef, Injector } from '@angular/core';
+import { ChangeDetectorRef, Injector, SimpleChanges } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
@@ -17,10 +17,12 @@ import {
 @Component({
   selector: 'lib-popup-employee-jobsalary',
   templateUrl: './popup-employee-jobsalary.component.html',
-  styleUrls: ['./popup-employee-jobsalary.component.css']
+  styleUrls: ['./popup-employee-jobsalary.component.css'],
 })
-
-export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnInit{
+export class PopupEmployeeJobsalaryComponent
+  extends UIComponent
+  implements OnInit
+{
   console = console;
   formModel: FormModel;
   formGroup: FormGroup;
@@ -34,6 +36,13 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
   isAfterRender = false;
   headerText: string;
   employeeObj: any;
+  genderGrvSetup: any;
+
+  //Employee object
+  employeeID: string;
+  employeeName: string;
+  OrgUnitID: string;
+  PositionID: string;
 
   //Render Signer Position follow Singer ID
   data: any;
@@ -54,13 +63,11 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.funcID = data?.data?.funcID;
-     this.employeeId = data?.data?.employeeId;
+    this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
-    this.currentEJobSalaries = JSON.parse(
-      JSON.stringify(data?.data?.dataObj)
-    );
+    this.currentEJobSalaries = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
   ngAfterViewInit() {}
@@ -81,7 +88,10 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
               .subscribe((res: any) => {
                 if (res) {
                   this.currentEJobSalaries = res?.data;
-                  if (this.currentEJobSalaries.effectedDate == '0001-01-01T00:00:00') {
+                  if (
+                    this.currentEJobSalaries.effectedDate ==
+                    '0001-01-01T00:00:00'
+                  ) {
                     this.currentEJobSalaries.effectedDate = null;
                   }
                   this.currentEJobSalaries.employeeID = this.employeeId;
@@ -123,20 +133,32 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
     } else {
       this.initForm();
     }
+
+    //Load data field gender from database
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
   }
 
-  handleSelectEmp(evt){
-    if(evt.data != null){
-      this.employeeId = evt.data
+  ngOnChanges(changes: SimpleChanges) {}
+
+  handleSelectEmp(evt) {
+    if (evt.data === '') {
+      this.employeeObj = "";
+      this.genderGrvSetup = ""
+    }
+    if (evt.data != null) {
+      this.employeeId = evt.data;
       let empRequest = new DataRequest();
       empRequest.entityName = 'HR_Employees';
       empRequest.dataValues = this.employeeId;
       empRequest.predicates = 'EmployeeID=@0';
       empRequest.pageLoading = false;
       this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.employeeObj = emp[0][0]
-          // console.log('employee cua form', this.employeeObj);
+        if (emp !== null && emp[1] > 0) {
+          this.employeeObj = emp[0][0];
           this.df.detectChanges();
         }
       });
@@ -144,7 +166,7 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
   }
 
   //Render Signer Position follow Signer ID
-  
+
   // setExpiredDate(month) {
   //   if (this.data.effectedDate) {
   //     let date = new Date(this.data.effectedDate);
@@ -171,7 +193,13 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
         //   break;
         // }
         case 'signerID': {
-          let employee = event?.component?.itemsSelected[0];
+          if (event.data.dataSelected.length === 0) {
+            this.currentEJobSalaries.signerPosition = "";
+            this.formGroup.patchValue({
+              signerPosition: "",
+            });
+          }
+          let employee = event.data?.dataSelected[0]?.dataSelected;
           if (employee) {
             if (employee.PositionID) {
               this.hrSevice
@@ -220,18 +248,17 @@ export class PopupEmployeeJobsalaryComponent extends UIComponent implements OnIn
         .AddEmployeeJobSalariesInfo(this.currentEJobSalaries)
         .subscribe((p) => {
           if (p != null) {
-            this.notify.notifyCode('SYS006'); 
+            this.notify.notifyCode('SYS006');
             this.dialog && this.dialog.close(p);
             p[0].emp = this.employeeObj;
-            
           } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrSevice
-        .UpdateEmployeeJobSalariesInfo(this.formModel.currentData)
+        .UpdateEmployeeJobSalariesInfo(this.currentEJobSalaries)
         .subscribe((p) => {
           if (p != null) {
-            this.notify.notifyCode('SYS007'); 
+            this.notify.notifyCode('SYS007');
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

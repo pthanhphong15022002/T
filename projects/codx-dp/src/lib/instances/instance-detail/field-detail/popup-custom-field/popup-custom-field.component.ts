@@ -90,7 +90,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
         if (!field.dataValue.toLowerCase().match(validPhone)) {
-          this.notiService.notifyCode('RS030');
+          // this.notiService.notifyCode('RS030');
           this.cache.message('RS030').subscribe((res) => {
             if (res) {
               let errorMessage = res.customName || res.defaultName;
@@ -121,9 +121,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isSaving = true;
     var data = [this.fiels[0]?.stepID, this.fiels];
     this.dpService.updateFiels(data).subscribe((res) => {
-      debugger;
-      if (res) this.dialog.close(this.fiels);
-      else this.dialog.close();
+      if (res) {
+        this.dialog.close(this.fiels);
+        this.notiService.alertCode('SYS007');
+      } else this.dialog.close();
     });
   }
 }

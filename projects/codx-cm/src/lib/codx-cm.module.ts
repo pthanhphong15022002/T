@@ -20,24 +20,25 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { TestComponetComponent } from './test-componet/test-componet.component';
 import { PopupTaskComponent } from './task/popup-task/popup-task.component';
-import { CrmCustomerComponent } from './crmcustomer/crmcustomer.component';
-import { CrmcustomerDetailComponent } from './crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
+import { CmCustomerComponent } from './cmcustomer/cmcustomer.component';
+import { CmcustomerDetailComponent } from './cmcustomer/cmcustomer-detail/cmcustomer-detail.component';
 import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CodxTaskComponent } from './task/codx-task/codx-task.component';
-import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
-import { PopupAddCrmcustomerComponent } from './crmcustomer/popup-add-crmcustomer/popup-add-crmcustomer.component';
-import { PopupAddressComponent } from './crmcustomer/popup-address/popup-address.component';
-import { ViewListCrmComponent } from './crmcustomer/view-list-crm/view-list-crm.component';
-import { PopupListContactsComponent } from './crmcustomer/popup-add-crmcustomer/popup-list-contacts/popup-list-contacts.component';
-import { PopupQuickaddContactComponent } from './crmcustomer/popup-add-crmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { InformationComponent } from './cmcustomer/cmcustomer-detail/information/information.component';
+import { PopupAddCmCustomerComponent } from './cmcustomer/popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { PopupAddressComponent } from './cmcustomer/popup-address/popup-address.component';
+import { ViewListCmComponent } from './cmcustomer/view-list-cm/view-list-cm.component';
+import { PopupListContactsComponent } from './cmcustomer/popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
+import { PopupQuickaddContactComponent } from './cmcustomer/popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxTableComponent } from './task/codx-table/codx-table.component';
-import { OpportunityComponent } from './opportunity/opportunity.component';
-import { OpportunityDetailComponent } from './opportunity/opportunity-detail/opportunity-detail.component';
-import { TabDetailCustomComponent } from './opportunity/opportunity-detail/tab-detail-custom/tab-detail-custom.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/popup-add-quotations.component';
-import { PopupAddOpportunityComponent } from './opportunity/popup-add-opportunity/popup-add-opportunity.component';
+import { CodxDpModule } from 'projects/codx-dp/src/lib/codx-dp.module';
+import { DealsComponent } from './deals/deals.component';
+import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
+import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
+import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 const routes: Routes = [
   {
     path: '',
@@ -49,12 +50,12 @@ const routes: Routes = [
       },
       {
         path: 'customers/:funcID',
-        component: CrmCustomerComponent,
+        component: CmCustomerComponent,
       },
       {
         // gán tạm để làm UI
-        path: 'sales/:funcID',
-        component: OpportunityComponent,
+        path: 'deals/:funcID',
+        component: DealsComponent,
       },
       {
         path: '**',
@@ -72,23 +73,23 @@ const T_Component: Type<any>[] = [LayoutComponent];
     LayoutComponent,
     TestComponetComponent,
     PopupTaskComponent,
-    CrmCustomerComponent,
-    CrmcustomerDetailComponent,
+    CmCustomerComponent,
+    CmcustomerDetailComponent,
     CodxShowTaskComponent,
     InformationComponent,
     CodxTaskComponent,
-    PopupAddCrmcustomerComponent,
+    PopupAddCmCustomerComponent,
     PopupAddressComponent,
-    ViewListCrmComponent,
+    ViewListCmComponent,
     PopupListContactsComponent,
     PopupQuickaddContactComponent,
     CodxTableComponent,
-    OpportunityComponent,
-    OpportunityDetailComponent,
-    TabDetailCustomComponent,
     QuotationsComponent,
     PopupAddQuotationsComponent,
-    PopupAddOpportunityComponent,
+    DealsComponent,
+    PopupAddDealComponent,
+    DealDetailComponent,
+    TabDetailCustomComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -104,6 +105,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     NgbModule,
     SliderModule,
     DragDropModule,
+    CodxDpModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -162,6 +162,11 @@ import { MessageSystemPipe } from './layout/drawers/chat/chat-box/mssgSystem.pip
 import { ScrollPipe } from './layout/drawers/chat/chat-box/scrollPipe.pipe';
 import { AddGroupChatComponent } from './layout/drawers/chat/popup/popup-add-group/popup-add-group.component';
 import { SearchPipe } from './pipe/search.pipe';
+import { PostShareComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/post-share/post-share.component';
+import { CodxStepTaskComponent } from './components/codx-step/codx-step-task/codx-step-task.component';
+import { UpdateProgressComponent } from './components/codx-step/codx-progress/codx-progress.component';
+import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
+import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -246,6 +251,8 @@ const T_Component: Type<any>[] = [
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
   ListPostComponent,
+  PostShareComponent,
+
 
   CodxHistoryComponent,
   CodxHistoryItemComponent,
@@ -281,6 +288,10 @@ const T_Component: Type<any>[] = [
   CodxChatListComponent,
   CodxChatBoxComponent,
   AddGroupChatComponent,
+  //step
+  CodxStepTaskComponent,
+  UpdateProgressComponent,
+  ProgressbarComponent
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -337,6 +348,7 @@ const T_Pipe: Type<any>[] = [
     SliderModule,
     LazyLoadImageModule,
     DragDropModule,
+    ProgressBarAllModule,
   ],
 })
 export class CodxShareModule {

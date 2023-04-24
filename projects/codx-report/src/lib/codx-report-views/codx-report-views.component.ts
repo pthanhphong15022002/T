@@ -36,7 +36,7 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
         reportView: true,
         reportType:'R',
         model: {
-          template:this.templateListCard
+          //template:this.templateListCard
         },
       },
       // {

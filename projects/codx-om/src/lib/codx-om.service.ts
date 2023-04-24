@@ -330,12 +330,21 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
 
   //Lấy Emp theo UserID
-  getListEmpByUserID(userID:any) {
+  getUser(userID:any) {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
+  getEmployee(userID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetListEmployeesByUserIDAsync',
+      'GetEmployeeInforAsync',
       [userID]
     );
   }
@@ -369,6 +378,16 @@ export class CodxOmService {
       OMCONST.BUSINESS.OKR,
       'BeforeUnReleaseOKRPlanAsync',
       [recID]
+    );
+  }
+  //Gửi mail khi phát hành
+  sendMailAfterRelease(planRecID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SendMailAfterReleasePlanAsync',
+      [planRecID]
     );
   }
   //Lấy model

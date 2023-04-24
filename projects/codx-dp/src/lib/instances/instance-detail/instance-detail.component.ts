@@ -26,6 +26,7 @@ import {
   FormModel,
   AuthStore,
   CodxDetailTmpComponent,
+  SidebarModel,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -51,7 +52,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
-  @Input() viewType = 'd';
+  // @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = []; //instanceStep
   @Input() tabInstances = [];
   @ViewChild('viewDetail') viewDetail: CodxDetailTmpComponent;
@@ -61,6 +62,10 @@ export class InstanceDetailComponent implements OnInit {
   @Input() stepStart: any;
   @Input() reasonStepsObject: any;
   @Output() clickStartInstances = new EventEmitter<any>();
+  @Output() saveDatasInstance = new EventEmitter<any>();
+  @Input() lstStepProcess = [];
+  @Input() colorFail: any;
+  @Input() colorSuccesss: any;
   id: any;
   totalInSteps: any;
   tmpTeps: DP_Instances_Steps;
@@ -124,6 +129,122 @@ export class InstanceDetailComponent implements OnInit {
   user: any;
   maxSize: number = 4;
   ownerInstance: string[] = [];
+  HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
+  //gan chart
+  vllViewGannt = 'DP042';
+  crrViewGant = 'D';
+  timelineSettings: any;
+  timelineSettingsHour: any = {
+    topTier: {
+      unit: 'Day',
+      formatter: (date: Date) => {
+        let day = date.getDay();
+        let text = '';
+        if (day == 0) {
+          text = 'Chủ nhật';
+        }
+        if (day == 1) {
+          text = 'Thứ Hai';
+        }
+        if (day == 2) {
+          text = 'Thứ Ba';
+        }
+        if (day == 3) {
+          text = 'Thứ Tư';
+        }
+        if (day == 4) {
+          text = 'Thứ Năm';
+        }
+        if (day == 5) {
+          text = 'Thứ Sáu';
+        }
+        if (day == 6) {
+          text = 'Thứ Bảy';
+        }
+        return `${text} ( ${date.toLocaleDateString()} )`; // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Hour',
+      //format: 'HH',
+      formatter: (h: Date) => {
+        return h.getHours();
+      },
+    },
+    timelineUnitSize: 25,
+  };
+  timelineSettingsDays = {
+    topTier: {
+      unit: 'Month',
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1) + '-' + date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Day',
+      count: 1,
+      formatter: (date: Date) => {
+        let day = date.getDay();
+        let text = '';
+        if (day == 0) {
+          text = 'Chủ nhật';
+        }
+        if (day == 1) {
+          text = 'Thứ Hai';
+        }
+        if (day == 2) {
+          text = 'Thứ Ba';
+        }
+        if (day == 3) {
+          text = 'Thứ Tư';
+        }
+        if (day == 4) {
+          text = 'Thứ Năm';
+        }
+        if (day == 5) {
+          text = 'Thứ Sáu';
+        }
+        if (day == 6) {
+          text = 'Thứ Bảy';
+        }
+        return `${text} ( ${date.toLocaleDateString()} )`;
+      },
+    },
+    timelineUnitSize: 150,
+  };
+  timelineSettingsWeek = {
+    topTier: {
+      unit: 'Month',
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1) + '-' + date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Week',
+      count: 1,
+      formatter: (date: Date) => {
+        return `${date.toLocaleDateString()}`;
+      },
+    },
+    timelineUnitSize: 100,
+  };
+  timelineSettingsMonth = {
+    topTier: {
+      unit: 'Year',
+      formatter: (date: Date) => {
+        return date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Month',
+      count: 1,
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1);
+      },
+    },
+    timelineUnitSize: 100,
+  };
+  //end gan
 
   constructor(
     private callfc: CallFuncService,
@@ -151,6 +272,7 @@ export class InstanceDetailComponent implements OnInit {
         console.log(this.frmModelInstancesTask);
       }
     });
+    this.timelineSettings = this.timelineSettingsDays;
   }
 
   async ngOnInit(): Promise<void> {
@@ -219,6 +341,31 @@ export class InstanceDetailComponent implements OnInit {
       //  this.getListStepsStatus();
     });
   }
+  saveDataStep(e) {
+    let stepInsIdx = this.listSteps.findIndex((x) => {
+      x.recID == e.recID;
+    });
+    if (stepInsIdx != -1) {
+      this.listSteps[stepInsIdx] = e;
+    }
+    this.loadingDatas();
+  }
+  loadingDatas() {
+    let listField = [];
+    this.listSteps.forEach((st) => {
+      listField = listField.concat(st.fields);
+    });
+    let datas = '';
+    if (listField?.length > 0) {
+      listField.forEach((obj) => {
+        datas += '"' + obj.fieldName + '":"' + obj.dataValue + '",';
+      });
+    }
+    datas = datas.substring(0, datas.length - 1);
+    datas = '[{' + datas + '}]';
+    this.dataSelect.datas = datas;
+    this.saveDatasInstance.emit(datas);
+  }
 
   getStageByStep(listSteps) {
     this.isStart =
@@ -233,7 +380,7 @@ export class InstanceDetailComponent implements OnInit {
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
         this.tmpTeps = data;
-        this.outStepInstance.emit({data: this.tmpTeps});
+        this.outStepInstance.emit({ data: this.tmpTeps });
         this.stepValue = {
           textColor: data.textColor,
           backgroundColor: data.backgroundColor,
@@ -343,7 +490,7 @@ export class InstanceDetailComponent implements OnInit {
       this.currentNameStep = indexNo;
       var indx = this.listSteps.findIndex((x) => x.stepID == stepId);
       this.tmpTeps = this.listSteps[indx];
-      this.outStepInstance.emit({data: this.tmpTeps});
+      this.outStepInstance.emit({ data: this.tmpTeps });
       this.lstInv = this.getInvolved(this.tmpTeps.roles);
       this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
     }
@@ -378,6 +525,48 @@ export class InstanceDetailComponent implements OnInit {
   getColor(recID) {
     var idx = this.ganttDs.findIndex((x) => x.recID == recID);
     return this.ganttDs[idx]?.color;
+  }
+  clickDetailGanchart(recID) {
+    let data = this.ganttDsClone?.find((item) => item.recID === recID);
+    if (data) {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      let listData = {
+        value: data,
+        listValue: this.ganttDsClone,
+        // step: this.step,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(ViewJobComponent, listData, option);
+      // this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
+      //   value: data,
+      //   listValue: this.ganttDsClone,
+      // });
+    }
+  }
+  changeViewTimeGant(e) {
+    this.crrViewGant = e.data;
+    switch (this.crrViewGant) {
+      case 'D':
+        this.timelineSettings = this.timelineSettingsDays;
+        break;
+      case 'H':
+        this.timelineSettings = this.timelineSettingsHour;
+        break;
+      case 'W':
+        this.timelineSettings = this.timelineSettingsWeek;
+        break;
+      case 'M':
+        this.timelineSettings = this.timelineSettingsMonth;
+        break;
+    }
+    this.changeDetec.detectChanges();
   }
   //end ganttchar
 
@@ -461,22 +650,12 @@ export class InstanceDetailComponent implements OnInit {
     return reasonStep?.stepName ?? '';
   }
 
-  clickDetailGanchart(recID) {
-    let data = this.ganttDsClone?.find((item) => item.recID === recID);
-    if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
-        value: data,
-        listValue: this.ganttDsClone,
-      });
-    }
-  }
-
   rollHeight() {
     this.maxSize = 6;
     this.isOnlyView = true;
     let classViewDetail: any;
     var heighOut = 25;
-    if (this.viewType == 'd') {
+    if (this.viewsCurrent == 'd-') {
       classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
     }
     if (!classViewDetail) return;
@@ -535,5 +714,15 @@ export class InstanceDetailComponent implements OnInit {
 
   startInstances() {
     this.clickStartInstances.emit(true);
+  }
+
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    } else {
+      return null;
+    }
   }
 }

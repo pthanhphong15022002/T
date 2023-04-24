@@ -3,12 +3,12 @@
 
 <ng-template #editWeightTmp>
   <div class="pt-5 h-100">
-    <div class="w-100 mw-1000px mx-auto h-100 bg-white rounded-3 p-7 d-flex flex-column">
+    <div class="w-100 mw-1100px mx-auto h-100 bg-white rounded-3 p-7 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-between pb-2 px-2 mb-4 border-bottom">
         <div class="fw-bold fs-4 text-dark">{{subTitle}}</div>
         <div class="fs-4 text-primary">{{dataOKR?.periodID}}</div>
       </div>
-
+<div class="w-100">
       <table class="w-100 table table-bordered gy-3 gx-5">
         <thead>
           <tr class="fw-bold text-dark bg-gray-100">
@@ -34,11 +34,11 @@
           <tr *ngFor="let child of okrChild;let i=index;">
             <td>
               <div class="d-flex align-items-center">
-                <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="me-3 w-20px h-20px"></span>
-                <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="me-3 w-20px h-20px"></span>
-                <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="me-3 w-20px h-20px"></span>
-                <span>
-                  <codx-inplace [type]="'text'" emptyText="" cssClass="pe-3 fw-bold" [disabled]="true"
+                <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="w-25px h-25px"></span>
+                <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="w-25px h-25px"></span>
+                <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="w-25px h-25px"></span>
+                <span class="okr-inplace ms-3">
+                  <codx-inplace [type]="'text'" emptyText="" cssClass="fw-bold" [disabled]="true"
                     [value]="child?.okrName">
       
                   </codx-inplace></span>
@@ -54,7 +54,7 @@
             <td class="text-center" >
               <codx-inplace (valueChange)="valueChange($event)" locale="en" format="00.00" [field]="i"
               [type]="'number'" emptyText="0" class="text-center w-100" cssClass=" text-center w-75"
-              [value]="child?.progress ">
+              [value]="child?.progress " [disabled]="true">
             </codx-inplace>
           </td>         
 
@@ -72,21 +72,21 @@
         </tr>
         <tr>
           <td  class="text-center">
-            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5"></codx-label>
+            <codx-label default="Tổng cộng" name="lblTotal" class="fs-5 fw-bold"></codx-label>
           </td>
           <td class="">
-            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+            <span class="fs-5 fw-bold text-center h-100 w-100 d-block"  [innerHTML]="totalWeight"></span>
           </td>
           <td class="text-center">
           </td>
           <td class="">
             <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" *ngIf="totalProgress!=0"
-              [innerHTML]="totalProgress | formatvalue : okrFM?.krFM : 'progress' | async"></span>
+              [innerHTML]="totalProgress"></span>
           </td>
         </tr>
       </tbody>
-    </table>
-
+      </table>
+    </div>
 
       <div class="d-flex justify-content-end w-100 my-5">
         <span type="button" (click)="onSaveForm()" class="btn btn-primary pe-5">

@@ -174,6 +174,7 @@ textarea:focus,
   border-color: #ced4da !important;
 }
 
+
 /***END Khong duoc xoa***/
 .user-mini-icon {
   width: 36px;
@@ -541,6 +542,7 @@ codx-view-list-detail .codx-detail-footer {
   color: var(--text-primary) !important;
 }
 
+
 /**** menu tab hor ****/
 .e-tab .e-tab-header div.e-toolbar-item {
   border: 0 !important;
@@ -856,6 +858,7 @@ codx-view-list-detail .codx-detail-footer.expand .tab_footer {
 codx-view-list-detail .codx-detail-footer.expand .tab_footer .btn.btn-light-primary.mb-4 {
   margin-bottom: 0 !important;
 }
+
 
 codx-dynamic-form codx-view-grid {
   background-color: var(--bg-body);
@@ -1367,8 +1370,8 @@ codx-vll {
   padding: 0.375rem calc(0.45rem + 1px) !important;
 }
 
-.popup-attachment .fw-bold.line-clamp.line-clamp-1 {
-  word-break: break-word;
+.line-clamp.line-clamp-1 {
+  word-break: break-all;
 }
 
 .tab-content > .tab-pane {
@@ -1397,7 +1400,7 @@ codx-vll {
   content: ":";
   position: absolute;
   right: 6px;
-  bottom: 0;
+  top: 0;
   height: 18px;
 }
 
@@ -1709,28 +1712,60 @@ codx-dropdown-calendar {
 //   padding-bottom: 0 !important;
 // }
 
-codx-view-list-detail .codx-detail-footer .badge.badge-sm {
-  margin-top: 4px;
-  margin-left: -5px;
-  padding-left: 1px !important;
-  padding-right: 1px !important;
-  font-size: 10px !important;
+
+/*** codx-tabs ***/
+codx-tabs{ 
+  .nav-link {
+    padding: 6px 10px;
+    color: #323232;
+  }
+
+  .nav-tabs .nav-link.active,
+  .nav-tabs .nav-item.show .nav-link {
+    color: var(--bs-active-primary);
+    border-color: transparent;
+    border-bottom: 2px var(--bs-active-primary) solid !important;
+  }
+
+  .nav-tabs .nav-link:hover,
+  .nav-tabs .nav-link:focus {
+    border-color: transparent;
+  }
+
+  .tab-action {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    z-index: 9999;
+  }
+
+  .tab-footer {
+    margin-top: 7px;
+  }
+  .badge.badge-sm {
+    margin-top: 4px;
+    margin-left: -5px;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    font-size: 10px !important;
+  }
+  .nav-tabs .nav-link.active,
+  .nav-tabs .nav-item.show .nav-link {
+    background-color: transparent;
+  }
+  .attach-group {
+    max-height: 185px;
+    overflow: auto;
+
+    .attach-files {
+      max-height: none !important;
+      margin-top: 0 !important;
+    }
+  }
+
 }
 
-codx-view-list-detail .codx-detail-footer .nav-tabs .nav-link.active,
-.nav-tabs .nav-item.show .nav-link {
-  background-color: transparent;
-}
 
-codx-view-list-detail .codx-detail-footer .attach-group {
-  max-height: 185px;
-  overflow: auto;
-}
-
-codx-view-list-detail .codx-detail-footer .attach-group .attach-files {
-  max-height: none !important;
-  margin-top: 0 !important;
-}
 
 .process-main .card-header.m-h-auto.p-0 {
   border: 0 !important;
@@ -2381,7 +2416,129 @@ codx-toolbar{
   text-align: right;
 }
 
+.table-sticky{
+  position: relative;
+  th{
+    position: sticky;
+    top: 0; 
+    background-color: inherit;
+    z-index: 99;
+  }
+}
+/*** ac-dialog ***/
 
+.ac-dialog{
+
+  .card-body.h-100{
+    padding-bottom: 50px;
+  }
+  .codx-detail-footer {
+    position: absolute;
+    z-index: 101;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    //height: 42px;
+    background-color: #fff;
+    padding: 0 0 10px 10px !important;
+    border-top: 1px #e5e5e7 solid;
+  }
+
+  .codx-detail-footer.expand .tab-content {
+    overflow: auto;
+    padding: 0 15px;
+    position: relative;
+    height: 360px;
+    padding-bottom: 0 !important;
+  }
+
+  .codx-detail-footer.expand .tab_footer {
+    bottom: 8px;
+    right: 15px;
+  }
+
+  .ac-dialog-footer{
+    position: relative;
+    border-top: 1px var(--gray-150) solid;
+    
+    .tab-action{
+      position: absolute;
+      top: 5px;
+      right: 15px;
+    }
+    .py-5.tab-content{
+      padding-top: 12px !important;
+      padding-bottom: 0 !important;
+      padding-left: 25px;
+      padding-right: 15px;
+    }
+    
+  }
+  .card-footer{
+    padding: 5px!important;
+    padding-bottom: 0!important;
+  }
+  .card-header{
+    margin-bottom: 10px;
+  }
+}
+
+
+/**** end ac-dialog ***/
+
+.e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {
+  font-family: 'icomoon';
+  content: "\ecb0";
+}
+
+.codx-detail-toolbar{
+  position: relative;
+  z-index: 99;
+}
+.text-gray-700.text-gray-500{
+  color: var(--gray-500)!important;
+}
+.text-gray-700.text-gray-600{
+  color: var(--gray-600)!important;
+}
+
+.okr-inplace{
+  .e-editable-value{
+    white-space: normal!important;
+    margin: 0!important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper{
+    padding: 0!important;
+  }
+}
+// .vll-inplace .rounded-pill{
+//   width: fit-content!important;
+//   padding: 3px 7px!important;
+//   margin: 0!important;
+//   border: 1px aqua solid!important;
+// }
+.e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+  text-transform: none!important;
+}
+.badge.me-0.me-2{
+  margin-right: 0!important;
+}
+.avatar-vllbadge{
+  position: relative;
+  .vll-badge{
+    position: absolute;
+    top: 50px;
+    width:60px;
+    left: 0;
+  }
+}
+
+
+
+
+
+
+///
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;

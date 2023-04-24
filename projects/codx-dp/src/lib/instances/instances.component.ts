@@ -45,6 +45,7 @@ import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-instances',
@@ -65,18 +66,16 @@ export class InstancesComponent
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
   @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
-  @Output() valueListID = new EventEmitter<any>();
-  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
 
-  views: Array<ViewModel> = [];
+  @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
 
+  views: Array<ViewModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -169,6 +168,9 @@ export class InstancesComponent
   addFieldsControl = '1';
   isLockButton = false;
   esCategory: any;
+  colorReasonSuccess: any;
+  colorReasonFail: any;
+  ownerStepProcess: any;
   //test temp
   dataTemplet = [
     {
@@ -184,11 +186,41 @@ export class InstancesComponent
       recID: '3',
     },
   ];
+  type = 'excel';
+  requestTemp = new DataRequest();
+  optionEx = new DataRequest();
+  optionWord = new DataRequest();
+  services = 'DP';
+  idFieldTemp = 'RecID';
+  serviceTemp: string = 'SYS';
+  assemblyNameTemp: string = 'AD';
+  classNameTemp: string = 'ExcelTemplatesBusiness';
+  methodTemp: string = 'GetByEntityAsync';
+  //submitted = false;
+  // moreFunction = [
+  //   {
+  //     id: 'edit',
+  //     icon: 'icon-edit',
+  //     text: 'Chỉnh sửa',
+  //     textColor: '#307CD2',
+  //   },
+  //   {
+  //     id: 'delete',
+  //     icon: 'icon-delete',
+  //     text: 'Xóa',
+  //     textColor: '#F54E60',
+  //   },
+  // ];
+  dataEx = [];
+  dataWord = [];
+
   dialogTemplate: DialogRef;
   isFormExport = true;
   stepInstanceDetailStage: any;
   listOwnerInMove = [];
   listStageManagerInMove = [];
+  idTemp = '';
+  nameTemp = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -206,7 +238,6 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-    //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -221,7 +252,7 @@ export class InstancesComponent
     });
     this.layout.setUrl('dp/dynamicprocess/DP0101');
     this.layout.setLogo(null);
-
+    this.getColorReason();
     this.cache
       .gridViewSetup('DPInstances', 'grvDPInstances')
       .subscribe((grv) => {
@@ -257,17 +288,7 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
-    // if (!this.haveDataService) {
-    //   let dataProcess = await firstValueFrom(
-    //     this.codxDpService.getProcessByProcessID(this.processID)
-    //   );
-    //   if (dataProcess && dataProcess.read) {
-    //     this.loadData(dataProcess);
-    //     // this.continueLoad = true ;
-    //   } else {
-    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-    //   }
-    // }
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -363,20 +384,6 @@ export class InstancesComponent
         break;
     }
   }
-  getPropertyColumn() {
-    let dataColumns =
-      this.kanban?.columns?.map((column) => {
-        return {
-          recID: column['dataColums']?.recID,
-          icon: column['dataColums']?.icon || null,
-          iconColor: column['dataColums']?.iconColor || null,
-          backgroundColor: column['dataColums']?.backgroundColor || null,
-          textColor: column['dataColums']?.textColor || null,
-        };
-      }) || [];
-
-    return dataColumns;
-  }
 
   getAdminRoleDP() {
     if (!this.user.administrator) {
@@ -392,6 +399,21 @@ export class InstancesComponent
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
+  }
+
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
   }
 
   //CRUD
@@ -627,61 +649,6 @@ export class InstancesComponent
       });
   }
 
-  //End
-
-  //Event
-  clickMF(e, data?) {
-    this.dataSelected = data;
-    this.titleAction = e.text;
-    this.moreFunc = e.functionID;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data, e.text);
-        break;
-      case 'SYS04':
-        this.copy(data, e.text);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'DP09':
-        // listStep by Id Instacess is null
-        this.moveStage(e.data, data, this.lstStepInstances);
-        break;
-      case 'DP02':
-        this.moveReason(e.data, data, !this.isMoveSuccess);
-        break;
-      case 'DP10':
-        this.moveReason(e.data, data, this.isMoveSuccess);
-        break;
-      //Đóng nhiệm vụ = true;
-      case 'DP14':
-        this.openOrClosed(data, true);
-        break;
-      //Mở nhiệm vụ = false;
-      case 'DP15':
-        this.openOrClosed(data, false);
-        break;
-      //export File
-      case 'DP16':
-        this.isFormExport = true;
-        this.showFormExport();
-        break;
-      //trinh kí File
-      case 'DP17':
-        this.isFormExport = false;
-        this.showFormSubmit();
-        break;
-      case 'DP21':
-        this.handelStartDay(data);
-        break;
-      //xuat khau du lieu
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
@@ -747,7 +714,7 @@ export class InstancesComponent
     return true;
   }
 
-  //#popup roles
+  //#Event
   changeDataMF(e, data) {
     if (e != null && data != null) {
       if (data.status != '1') {
@@ -773,21 +740,24 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (!data.permissionCloseInstances) {
-                if (!data.permissionMoveInstances) res.disabled = true;
+              if(this.checkMoreReason(data,null))
+              {
+                res.disabled = true;
               }
               break;
             //Copy
             case 'SYS104':
             case 'SYS04':
               let isCopy = this.isCreate ? true : false;
-              if (!isCopy || data.closed) res.disabled = true;
+              if (!isCopy || data.closed || data.status != '2')
+                res.disabled = true;
               break;
             //xóa
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed) res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2')
+                res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -801,29 +771,23 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (!data.permissionCloseInstances) {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseFail
-                )
-                  res.disabled = true;
+              if (this.checkMoreReason(data,!this.isUseFail)) {
+                res.disabled = true;
               }
               break;
             case 'DP10':
-              if (!data.permissionCloseInstances) {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseSuccess
-                ) {
+                if (this.checkMoreReason(data,!this.isUseSuccess)) {
                   res.disabled = true;
                 }
-              }
-
               break;
+           //an khi aprover rule
+            case 'DP17':
+              if (!this.process?.approvalRule) {
+                res.isblur = true;
+              }
+              break;
+            case 'SYS004':
+            case 'SYS002':
             case 'DP21':
               res.disabled = true;
               break;
@@ -839,6 +803,8 @@ export class InstancesComponent
               break;
             case 'DP09':
             case 'DP10':
+            case 'SYS004':
+            case 'SYS002':
             case 'DP02':
               mf.disabled = true;
               break;
@@ -849,7 +815,68 @@ export class InstancesComponent
       }
     }
   }
+
+  clickMF(e, data?) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data, e.text);
+        break;
+      case 'SYS04':
+        this.copy(data, e.text);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'DP09':
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, this.lstStepInstances);
+        break;
+      case 'DP02':
+        this.moveReason(e.data, data, !this.isMoveSuccess);
+        break;
+      case 'DP10':
+        this.moveReason(e.data, data, this.isMoveSuccess);
+        break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
+      //export File
+      case 'DP16':
+        this.isFormExport = true;
+        this.showFormExport();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.isFormExport = false;
+        this.showFormSubmit();
+        break;
+      case 'DP21':
+        this.handelStartDay(data);
+        break;
+      //xuat khau du lieu
+      case 'SYS002':
+        this.exportFile();
+        break;
+    }
+  }
   //End
+  checkMoreReason(data,isUseReason) {
+    if( data.status != '2' || isUseReason ) {
+      return true;
+    }
+    if( !data.permissionCloseInstances || !data.permissionMoveInstances || data.closed) {
+      return true;
+    }
+    return false;
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -877,6 +904,16 @@ export class InstancesComponent
     formModel.entityName = 'DP_Instances';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
+  }
+
+  checkOwnerRoleProcess(roles){
+    if(roles != null && roles.length > 0){
+      var checkOwner = roles.find(x => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    }else{
+      return null;
+    }
   }
 
   showInput(data) {}
@@ -932,10 +969,12 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notify(
-        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+      this.notificationsService.notify('DP037');
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    if (data.status != '1' && data.status != '2') {
+      this.notificationsService.notify('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1125,20 +1164,26 @@ export class InstancesComponent
   }
 
   autoMoveStage(dataInstance) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.handleMoveStage(dataInstance);
-      }
-    });
+    var checkTransferControl = this.process.steps.find(
+      (x) => x.recID === dataInstance.step.stepID
+    ).transferControl;
+
+    if (checkTransferControl == '1' || checkTransferControl == '2' ) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.handleMoveStage(dataInstance);
+        }
+      });
+    }
   }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;
     var strStepsId = [];
     var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
     if (autoMoveStage.ischeck) {
-      if (autoMoveStage.transferControl == 1) {
+      if (autoMoveStage.transferControl == '1' || autoMoveStage.transferControl == '2') {
         var completedAllTask = this.completedAllTasks(
           dataInstance.step.stepID,
           dataInstance.listStep
@@ -1184,7 +1229,6 @@ export class InstancesComponent
               this.detailViewInstance.dataSelect = this.dataSelected;
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
-
             this.detectorRef.detectChanges();
           }
         });
@@ -1349,30 +1393,6 @@ export class InstancesComponent
     );
   }
 
-  // getSumDurationDayOfSteps(listStepCbx: any) {
-  //   let totalDay = listStepCbx
-  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
-  //     .reduce(
-  //       (sum, f) =>
-  //         sum +
-  //         f?.durationDay +
-  //         f?.durationHour +
-  //         this.setTimeHoliday(f?.excludeDayoff),
-  //       0
-  //     );
-  //   return totalDay;
-  // }
-  // getSumDurationHourOfSteps(listStepCbx: any) {
-  //   let totalHour = listStepCbx
-  //     .filter((x) => !x.isSuccessStep && !x.isFailStep)
-  //     .reduce((sum, f) => sum + f?.durationHour, 0);
-  //   return totalHour;
-  // }
-  // setTimeHoliday(dayOffs: string): number {
-  //   let listDays = dayOffs.split(';');
-  //   return listDays.length;
-  // }
-
   getListStatusInstance(isSuccess: boolean, isFail: boolean) {
     if (!isSuccess && !isFail) {
       return '1;2';
@@ -1434,176 +1454,6 @@ export class InstancesComponent
 
   #endregion;
 
-  //Export file
-  exportFile() {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      null,
-      800,
-      '',
-      [gridModel, this.dataSelected.recID],
-      null
-    );
-  }
-
-  showFormExport() {
-    this.isLockButton = true;
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogTemplate = this.callfc.openForm(
-      this.popupTemplate,
-      '',
-      600,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
-  }
-
-  exportFileDynamic() {
-    //data test
-    // let datas = [
-    //   {
-    //     dai_dien: 'Trần Đoàn Tuyết Khanh',
-    //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-    //     dia_chi: '06 Lê Lợi, Huế',
-    //     ma_so_thue: '1111111111111',
-    //     hinh_thuc_thanh_toan: 'Chuyển khoản',
-    //     tai_khoan: 'VCB-012024554565',
-    //     san_pham: 'Sản phẩm quần què',
-    //     dien_tich: '0',
-    //     so_luong: 1,
-    //     don_gia: 100000,
-
-    //     // datas: [
-    //     //   {
-    //     //     dai_dien: 'Trần Đoàn Tuyết Khanh',
-    //     //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-    //     //     dia_chi: '06 Lê Lợi, Huế',
-    //     //     ma_so_thue: '1111111111111',
-    //     //     hinh_thuc_thanh_toan: 'Chuyển khoản',
-    //     //     tai_khoan: 'VCB-012024554565',
-    //     //     san_pham: 'Sản phẩm quần què',
-    //     //     dien_tich: '0',
-    //     //     so_luong: 1,
-    //     //     don_gia: 100000,
-    //     //   },
-    //     //   {
-    //     //     san_pham: 'Sản phẩm 1',
-    //     //     dien_tich: '0',
-    //     //     so_luong: 10,
-    //     //     don_gia: 5000,
-    //     //   },
-    //     // ],
-    //   },
-    // ];
-    // this.dataSelected.datas = JSON.stringify(datas);
-    if (!this.dataSelected.datas) return;
-    let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.Core',
-        'CMBusiness',
-        'ExportExcelDataAsync',
-        [this.dataSelected.datas, id]
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.downloadFile(res);
-        }
-      });
-  }
-
-  downloadFile(data: any) {
-    var sampleArr = this.base64ToArrayBuffer(data[0]);
-    this.saveByteArray(
-      'DP_Instances_' + this.dataSelected.title || 'excel',
-      sampleArr
-    );
-  }
-
-  base64ToArrayBuffer(base64) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-      var ascii = binaryString.charCodeAt(i);
-      bytes[i] = ascii;
-    }
-    return bytes;
-  }
-
-  saveByteArray(reportName, byte) {
-    var blob = new Blob([byte], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
-    link.click();
-  }
-  //end export
-
-  //load điều kiện
-  async loadData(ps) {
-    this.process = ps;
-    this.addFieldsControl = ps?.addFieldsControl;
-    // this.layoutInstance.viewNameProcess(ps);
-    this.layoutDP.viewNameProcess(ps);
-    this.stepsResource = this.process?.steps?.map((x) => {
-      let obj = {
-        icon: x?.icon,
-        color: x?.iconColor,
-        text: x.stepName,
-        value: x.recID,
-      };
-      return obj;
-    });
-    this.isCreate = this.process.create;
-    this.autoName = this.process?.autoName;
-    this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
-    this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
-    this.reasonStepsObject = {
-      stepReasonSuccess: this.stepSuccess.reasons,
-      stepReasonFail: this.stepFail.reasons,
-    };
-    this.isUseSuccess = this.stepSuccess?.isUsed;
-    this.isUseFail = this.stepFail?.isUsed;
-    this.showButtonAdd = this.isCreate;
-
-    this.viewMode = this.process?.viewMode ?? 6;
-    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-
-    if (
-      this.process?.permissions != null &&
-      this.process?.permissions.length > 0
-    ) {
-      this.lstParticipants = this.process?.permissions.filter(
-        (x) => x.roleType === 'P'
-      );
-      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.lstOrg = await this.codxDpService.getListUserByOrg(
-          this.lstParticipants
-        );
-      }
-    }
-  }
   //filter- tam
   valueChangeFilter(e) {
     this.dataSelected = null;
@@ -1697,20 +1547,236 @@ export class InstancesComponent
   clickStartInstances(e) {
     if (e) this.startInstance(this.dataSelected);
   }
-  //Xét duyệt
-  selectTemp(recID) {
-    if (recID) this.isLockButton = false;
-    else this.isLockButton = true;
+  //load DATA
+  async loadData(ps) {
+    this.process = ps;
+    this.loadEx();
+    this.loadWord();
+    this.addFieldsControl = ps?.addFieldsControl;
+    // this.layoutInstance.viewNameProcess(ps);
+    this.layoutDP.viewNameProcess(ps);
+    this.stepsResource = this.process?.steps?.map((x) => {
+      let obj = {
+        icon: x?.icon,
+        color: x?.iconColor,
+        text: x.stepName,
+        value: x.recID,
+      };
+      return obj;
+    });
+    this.isCreate = this.process.create;
+    this.autoName = this.process?.autoName;
+    this.stepSuccess = this.process?.steps?.filter((x) => x.isSuccessStep)[0];
+    this.stepFail = this.process?.steps?.filter((x) => x.isFailStep)[0];
+    this.reasonStepsObject = {
+      stepReasonSuccess: this.stepSuccess.reasons,
+      stepReasonFail: this.stepFail.reasons,
+    };
+    this.isUseSuccess = this.stepSuccess?.isUsed;
+    this.isUseFail = this.stepFail?.isUsed;
+    this.showButtonAdd = this.isCreate;
+
+    this.viewMode = this.process?.viewMode ?? 6;
+    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+
+    if (
+      this.process?.permissions != null &&
+      this.process?.permissions.length > 0
+    ) {
+      this.lstParticipants = this.process?.permissions.filter(
+        (x) => x.roleType === 'P'
+      );
+      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
+        this.lstOrg = await this.codxDpService.getListUserByOrg(
+          this.lstParticipants
+        );
+      }
+    }
   }
-  showFormSubmit() {
+  saveDatasInstance(e) {
+    this.dataSelected.datas = e;
+    this.view.dataService.update(this.dataSelected).subscribe();
+    if (this.kanban) {
+      this.kanban.updateCard(this.dataSelected);
+    }
+  }
+  //Export file
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+  }
+
+  showFormExport() {
+    this.isLockButton = true;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.dialogTemplate = this.callfc.openForm(
+      this.popupTemplate,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
+  exportFileDynamic() {
+    //data test
+    // let datas = [
+    //   {
+    //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     dia_chi: '06 Lê Lợi, Huế',
+    //     ma_so_thue: '1111111111111',
+    //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     tai_khoan: 'VCB-012024554565',
+    //     san_pham: 'Sản phẩm quần què',
+    //     dien_tich: '0',
+    //     so_luong: 1,
+    //     don_gia: 100000,
+
+    //     // datas: [
+    //     //   {
+    //     //     dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //     //     ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //     //     dia_chi: '06 Lê Lợi, Huế',
+    //     //     ma_so_thue: '1111111111111',
+    //     //     hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //     //     tai_khoan: 'VCB-012024554565',
+    //     //     san_pham: 'Sản phẩm quần què',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 1,
+    //     //     don_gia: 100000,
+    //     //   },
+    //     //   {
+    //     //     san_pham: 'Sản phẩm 1',
+    //     //     dien_tich: '0',
+    //     //     so_luong: 10,
+    //     //     don_gia: 5000,
+    //     //   },
+    //     // ],
+    //   },
+    // ];
+    // let id = 'c4ab1735-d460-11ed-94a4-00155d035517';
+    // this.dataSelected.datas = JSON.stringify(datas);
+    if (!this.dataSelected.datas) return;
+
     this.api
-      .execSv(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        this.process.processNo
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.Core',
+        'CMBusiness',
+        'ExportExcelDataAsync',
+        [this.dataSelected.datas, this.idTemp]
       )
+      .subscribe((res) => {
+        if (res) {
+          this.downloadFile(res);
+        }
+      });
+  }
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray(
+      'DP_Instances_' + this.dataSelected.title + '_' + this.nameTemp ||
+        'excel',
+      sampleArr
+    );
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var blob = new Blob([byte], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
+  }
+  loadEx() {
+    this.requestTemp.predicates = 'ReportID=@0';
+    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.entityName = 'AD_ExcelTemplates';
+    this.classNameTemp = 'ExcelTemplatesBusiness';
+    this.fetch().subscribe((item) => {
+      this.dataEx = item;
+    });
+  }
+  loadWord() {
+    this.requestTemp.predicates = 'ReportID=@0';
+    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.entityName = 'AD_WordTemplates';
+    this.classNameTemp = 'WordTemplatesBusiness';
+    this.fetch().subscribe((item) => {
+      this.dataWord = item;
+    });
+  }
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTemp,
+        this.assemblyNameTemp,
+        this.classNameTemp,
+        this.methodTemp,
+        this.requestTemp
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+  //end export
+
+  //Xét duyệt
+  selectTemp(recID, nameTemp) {
+    if (recID) {
+      this.isLockButton = false;
+      this.idTemp = recID;
+      this.nameTemp = nameTemp;
+    } else this.isLockButton = true;
+  }
+
+  showFormSubmit() {
+    this.codxDpService
+      .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
@@ -1754,7 +1820,7 @@ export class InstancesComponent
     //   )
     //   .subscribe((item: any) => {
     //     if (item) {
-         
+
     //       this.codxDpService
     //         .checkApprovalStep(item.recID)
     //         .subscribe((check) => {
@@ -1765,7 +1831,7 @@ export class InstancesComponent
     //         });
     //     } else {
     //     }
-     // });
+    // });
     // }
     //Chưa thiết lập bước duyệt
     // else {
@@ -1983,5 +2049,19 @@ export class InstancesComponent
     if (e) {
       this.stepInstanceDetailStage = e.e;
     }
+  }
+
+  getColorReason() {
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        for (let item of res.datas) {
+          if (item.value === 'S') {
+            this.colorReasonSuccess = item;
+          } else if (item.value === 'F') {
+            this.colorReasonFail = item;
+          }
+        }
+      }
+    });
   }
 }

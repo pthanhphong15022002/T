@@ -274,7 +274,8 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     console.log('data chuan bi luu', this.data);
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
-
+    this.data.status = '1'
+    this.data.approveStatus = '1'
     
     // if (this.formGroup.invalid) {
     //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);

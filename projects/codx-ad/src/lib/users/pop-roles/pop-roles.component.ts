@@ -54,11 +54,13 @@ export class PopRolesComponent extends UIComponent {
   checkRoleIDNull = false;
   userID: any;
   // lstChangeFunc: tmpTNMD[] = [];
+  runAfter = 3000;
 
   quantity = 0;
   // isUserGroup = false;
-  groupID = '';
   lstUserIDs: string[] = [];
+  needValidate = true;
+  autoCreated = false;
 
   user: UserModel;
   ermSysTenant = ['', 'default'];
@@ -76,8 +78,10 @@ export class PopRolesComponent extends UIComponent {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
-    this.quantity = dt?.data?.quantity ?? 1;
     this.lstUserIDs = dt?.data?.lstMemIDs;
+    this.needValidate = dt?.data?.needValidate;
+    this.autoCreated = dt.data?.autoCreated;
+
     this.user = authStore.get();
   }
   onInit(): void {
@@ -96,6 +100,7 @@ export class PopRolesComponent extends UIComponent {
         this.lstFunc = res[0];
         this.listRoles = res[1];
         this.lstEmp = res[2];
+
         this.getListLoadDataApp();
         this.getListLoadDataService();
         this.detectorRef.detectChanges();
@@ -145,14 +150,22 @@ export class PopRolesComponent extends UIComponent {
   }
 
   lstNeedAddRoles: tmpformChooseRole[] = [];
+  addRolesTimeOutID = '';
   addRoles(): Observable<boolean> {
     if (
       this.lstNeedAddRoles.length > 0 &&
       environment.saas == 1 &&
       !this.ermSysTenant.includes(this.user.tenant)
     ) {
+      console.log('lst uid', this.lstUserIDs);
+
       return this.adService
-        .addUpdateAD_UserRoles(this.lstNeedAddRoles, this.lstUserIDs)
+        .addUpdateAD_UserRoles(
+          this.lstNeedAddRoles,
+          this.lstUserIDs,
+          this.needValidate,
+          this.autoCreated
+        )
         .pipe(
           map((lstAddedRoles: tmpformChooseRole[]) => {
             if (lstAddedRoles) {
@@ -176,15 +189,25 @@ export class PopRolesComponent extends UIComponent {
   }
 
   lstNeedRemoveRoles: tmpformChooseRole[] = [];
+  removeRolesTimeOutID = '';
+
   removeRoles() {
     if (this.lstNeedRemoveRoles.length > 0) {
+      let lstRemoveModuleIDs = [];
+      let lstRemoveMDS = [];
+      this.lstNeedRemoveRoles.forEach((role) => {
+        lstRemoveModuleIDs.push(role.module);
+        if (!lstRemoveMDS.includes(role.moduleSales)) {
+          lstRemoveMDS.push(role.moduleSales);
+        }
+      });
       this.adService
-        .removeAD_UserRoles(this.lstNeedRemoveRoles, this.lstUserIDs)
-        .subscribe((lstRemovedRoles: tmpformChooseRole[]) => {
-          this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
-            return !lstRemovedRoles.includes(role);
-          });
-          console.log('after Remove', this.lstNeedRemoveRoles);
+        .removeAD_UserRoles(lstRemoveModuleIDs, lstRemoveMDS, this.lstUserIDs)
+        .subscribe((lstRemovedRoles: string[]) => {
+          // this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
+          //   return !lstRemovedRoles.includes(role);
+          // });
+          this.lstNeedRemoveRoles = [];
         });
     }
   }
@@ -281,19 +304,8 @@ export class PopRolesComponent extends UIComponent {
       item.roleName = curRole?.roleName;
       item.color = curRole?.color;
 
-      // let lstTemp = JSON.parse(JSON.stringify(this.listChooseRole));
-      // lstTemp.forEach((res) => {
-      //   if (res.functionID == dataTemp.functionID) {
-      //     res.roleID = item.roleID;
-      //     res.roleID = item.roleID;
-      //     res.roleName = item.roleName;
-      //     res.color = item.color;
-      //     res.userID = this.userID;
-      //   }
-      // });
-      // this.listChooseRole = lstTemp;
-
       this.lstNeedAddRoles.push(item);
+
       this.addRoles().subscribe((isAddSuccess: boolean) => {
         if (!isAddSuccess) {
           item.ischeck = false;
@@ -310,6 +322,13 @@ export class PopRolesComponent extends UIComponent {
 
           this.detectorRef.detectChanges();
         }
+        let curItemIdx = this.listChooseRole.findIndex(
+          (x) => x.module == item.module
+        );
+        if (curItemIdx > -1) {
+          this.listChooseRole[curItemIdx] = item;
+        }
+        // this.listChooseRole = this.listChooseRole.slice();
       });
     }
   }

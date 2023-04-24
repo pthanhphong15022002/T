@@ -10,31 +10,41 @@
 
 <ng-template #template>
   <div class="w-100 h-100">
-    <div [ngSwitch]="reportID">
-      <ng-container *ngSwitchCase="'TMD001'">
-        <codx-dashboard
-          [templates]="templates1"
-          [panels]="panels1"
-          [datas]="datas1"
-        ></codx-dashboard>
-      </ng-container>
-      <ng-container *ngSwitchCase="'TMD002'">
-        <codx-dashboard
-          [templates]="templates2"
-          [panels]="panels2"
-          [datas]="datas2"
-        ></codx-dashboard>
-      </ng-container>
-      <ng-container *ngSwitchCase="'TMD003'">
-        <codx-dashboard
-          [templates]="templates3"
-          [panels]="panels3"
-          [datas]="datas3"
-        ></codx-dashboard>
-      </ng-container>
+    <div *ngIf="reportID == 'TMD001'">
+      <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+    </div>
+    <div *ngIf="reportID == 'TMD002'">
+      <ng-container *ngTemplateOutlet="dashboard2"> </ng-container>
+    </div>
+    <div *ngIf="reportID == 'TMD003'">
+      <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
 </ng-template>
+
+<ng-template #dashboard1>
+  <codx-dashboard
+    [templates]="templates1"
+    [panels]="panels1"
+    [datas]="datas1"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboard2>
+  <codx-dashboard
+    [templates]="templates2"
+    [panels]="panels2"
+    [datas]="datas2"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboard3
+  ><codx-dashboard
+    [templates]="templates3"
+    [panels]="panels3"
+    [datas]="datas3"
+  ></codx-dashboard
+></ng-template>
 
 <!--#region my_dashboard  -->
 <ng-template #my_dashboard>
@@ -83,62 +93,45 @@
 
 <ng-template #my_dashboard>
   <div id="5" title="Tỷ lệ công việc được giao">
-    <div class="control-section">
-      <div align="center">
-        <ejs-chart
-          style="display: block"
-          [chartArea]="chartArea"
-          [width]="'100%'"
-          align="center"
-          [id]="newGuid()"
-          [primaryXAxis]="{
-            majorGridLines: { width: 0 },
-            minorGridLines: { width: 0 },
-            majorTickLines: { width: 0 },
-            minorTickLines: { width: 0 },
-            interval: 1,
-            lineStyle: { width: 0 },
-            labelIntersectAction: 'Rotate45',
-            valueType: 'Category'
-          }"
-          [primaryYAxis]="{
-            title: 'Vehicles Production (In Millions)',
-            lineStyle: { width: 0 },
-            majorTickLines: { width: 0 },
-            majorGridLines: { width: 1 },
-            minorGridLines: { width: 1 },
-            minorTickLines: { width: 0 },
-        }"
-          [title]="'Tỷ lệ công việc được giao'"
-          [tooltip]="{
-            enable: true
-          }"
+    <div class="tm-assignchart">
+      <div
+        class="text-center fw-bold fs-4"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
+        Tỷ lệ công việc được giao
+      </div>
+
+      <div class="assignchart-group mt-3">
+        <div
+          *ngFor="let tasks of myDBData?.tasksByCategory"
+          class="assignchart-item d-flex align-items-center justify-content-end"
+          [title]=""
         >
-          <e-series-collection>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="General"
-              name="General Motors"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
+          <div class="fw-bold me-2">{{ tasks.quantity }}</div>
+          <div
+            class="assignchart-task"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="
+              (tasks.quantity / myDBData?.tasksByCategory[0].quantity) * 100 +
+              '%'
+            "
+          >
+            <codx-vll
+              [name]="'L1456'"
+              [value]="tasks.category"
+              [showText]="true"
+              [showBgColor]="false"
+              style="width: '25px'; height: '25px'"
             >
-            </e-series>
-            <e-series
-              [dataSource]="stacked_data"
-              type="StackingBar"
-              xName="Year"
-              yName="Honda"
-              name="Honda"
-              width="2"
-              columnWidth="0.5"
-              [border]="{ color: '#ffffff', width: 1 }"
-            >
-            </e-series>
-          </e-series-collection>
-        </ejs-chart>
+            </codx-vll>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -148,7 +141,7 @@
   <div id="6" title="Theo nguồn công việc">
     <div class="w-100 h-100">
       <div
-        class="text-center"
+        class="text-center fw-bold fs-4"
         style="
           font-family: 'Segoe UI';
           font-style: normal;
@@ -164,7 +157,7 @@
           <ejs-treemap
             [id]="newGuid()"
             style="display: block"
-            [dataSource]="myDBData?.tasksByRef.tasksRef"
+            [dataSource]="myDBData?.tasksByRef?.tasksRef"
             weightValuePath="quantity"
             [leafItemSettings]=" {
             labelPath: 'refName',
@@ -180,6 +173,18 @@
 
 <ng-template #my_dashboard>
   <div id="7" title="Tỷ lệ hoàn thành công việc">
+    <div
+      class="text-center fw-bold fs-4"
+      style="
+        font-family: 'Segoe UI';
+        font-style: normal;
+        font-size: 15px;
+        font-weight: 500;
+        text-anchor: middle;
+      "
+    >
+      Tỷ lệ hoàn thành công việc
+    </div>
     <div class="control-section">
       <div align="center">
         <ejs-circulargauge
@@ -187,10 +192,10 @@
           style="display: block"
           [id]="newGuid()"
           #circulargauge=""
-          [title]="'Tỷ lệ hoàn thành công việc'"
         >
           <e-axes>
             <e-axis
+              [title]="'Tỷ lệ hoàn thành công việc'"
               minimum="1"
               radius="80%"
               maximum="100"
@@ -239,6 +244,7 @@
             >
             </e-axis>
             <e-axis
+              [title]="'Tỷ lệ hoàn thành đúng hạn'"
               minimum="1"
               radius="50%"
               maximum="100"
@@ -360,7 +366,9 @@
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="ms-2">
-            <div class="text-center">Tổng thời gian hoàn thành thực tế</div>
+            <div class="text-center fs-5">
+              Tổng thời gian hoàn thành thực tế
+            </div>
             <div class="d-flex justify-content-center align-items-center">
               <div class="fw-bold fs-1">116</div>
               <div class="ms-2">giờ</div>
@@ -378,7 +386,7 @@
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="ms-2">
-            <div class="text-center">Tổng thời gian làm việc</div>
+            <div class="text-center fs-5">Tổng thời gian làm việc</div>
             <div class="d-flex justify-content-center align-items-center">
               <div class="fw-bold fs-1">176</div>
               <div class="ms-2">giờ</div>
@@ -446,10 +454,9 @@
           <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
             <e-accumulation-series-collection>
               <e-accumulation-series
-                name="TasksByGroup1"
                 [dataSource]="myDBData?.tasksByGroup"
                 xName="taskGroupName"
-                yName="qty"
+                yName="quantity"
                 startAngle="0"
                 innerRadius="80%"
                 radius="70%"
@@ -465,11 +472,15 @@
             <div>
               <span>{{ data.taskGroupName }}</span>
               <span>&nbsp;(</span>
-              <span>{{ data.qty }}</span>
+              <span>{{ data.quantity }}</span>
               <span>)</span>
             </div>
             <div>
-              <span>{{ data.percentage.toFixed(1) }}</span
+              <span>{{
+                data.percentage % 1 === 0
+                  ? data.percentage
+                  : data.percentage.toFixed(1)
+              }}</span
               ><span>% </span>
             </div>
           </div>
@@ -599,7 +610,7 @@
               </div>
             </div>
             <div class="ms-2">
-              <div>
+              <div class="fw-bold fs-5">
                 Đúng hạn
                 <div class="fw-bold fs-3">1551</div>
               </div>
@@ -642,7 +653,7 @@
               </div>
             </div>
             <div class="ms-2">
-              <div>
+              <div class="fw-bold fs-5">
                 Quá hạn
                 <div class="fw-bold fs-3">1551</div>
               </div>
@@ -670,20 +681,20 @@
         Tỷ lệ công việc theo nhóm
       </div>
       <div class="control-section">
-        <!-- <ejs-accumulationchart [id]="newGuid()" #pie2 style="display: block">
+        <ejs-accumulationchart [id]="newGuid()" #pie2 style="display: block">
           <e-accumulation-series-collection>
             <e-accumulation-series
               name="TasksByGroup2"
               [dataSource]="myDBData?.tasksByGroup"
               xName="taskGroupName"
-              yName="qty"
+              yName="quantity"
               startAngle="0"
               innerRadius="80%"
               radius="70%"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
-        </ejs-accumulationchart> -->
+        </ejs-accumulationchart>
       </div>
     </div>
   </div>
@@ -864,26 +875,51 @@
 
 <ng-template #team_dashboard>
   <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
-    <div class="w-100 p-2">
-      <div class="fw-bold text-center">
+    <div class="tm-topchart">
+      <div
+        class="text-center"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
         Top nhân viên hoàn thành nhiều công việc nhất
       </div>
-      <div class="container">
-        <div class="bar-graph bar-graph-horizontal bar-graph-one">
-          <div class="bar-template" *ngFor="let emp of topEmp">
-            <div
-              class="bar"
-              [ngStyle]="{
-                width: (emp.tasks / 123) * 100 + '%',
-                'background-color': '#64b2d1'
-              }"
-              [title]="emp.name"
-            >
-              <div class="bar-task-quantity">{{ emp.tasks }}</div>
-              <div class="bar-username">
-                {{ (emp.tasks / 123) * 100 >= 50 ? emp.name : "" }}
-              </div>
-            </div>
+      <div class="topchart-group mt-3">
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">123</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; width: 87%; color: #fff"
+          >
+            <span>Lê Phạm Hoài Thương</span>
+          </div>
+        </div>
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">65</div>
+          <div
+            class="topchart-user"
+            style="background-color: #6e6efd; width: 50%; color: #fff"
+          >
+            <span>Nguyễn Ngọc Phú Sỹ</span>
+          </div>
+        </div>
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">12</div>
+          <div
+            class="topchart-user"
+            style="background-color: #f5a9ff; width: 22%; color: #000"
+          >
+            <span>Nguyễn Thị Bích Vân</span>
           </div>
         </div>
       </div>
@@ -1123,101 +1159,52 @@
         </div>
       </div>
       <div class="my-4">
-        <codx-chart
-          height="180"
-          [seriesSetting]="chartSettings2?.seriesSetting"
-          [service]="chartSettings2?.service"
-          [assemblyName]="chartSettings2?.assembly"
-          [className]="chartSettings2?.className"
-          [method]="chartSettings2?.method"
-        >
-        </codx-chart>
+        <div class="control-section">
+          <ejs-accumulationchart [id]="newGuid()" #pie1 style="display: block">
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="assignDB-tasksByRef"
+                [dataSource]="assignDBData?.tasksByRef?.tasksRef"
+                xName="refName"
+                yName="quantity"
+                startAngle="0"
+                innerRadius="80%"
+                radius="70%"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+        </div>
       </div>
       <div class="mt-4">
-        <div class="mx-2 my-5">
+        <div
+          *ngFor="let ref of assignDBData?.tasksByRef?.tasksRef"
+          class="mx-2 my-5"
+        >
           <div class="d-flex justify-content-between">
-            <div>Quản lý công việc (500)</div>
-            <div>52%</div>
+            <span>{{ ref.refName }} ({{ ref.quantity }})</span>
+            <span>
+              {{
+                ((ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100) %
+                  1 ===
+                0
+                  ? (ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100
+                  : (
+                      (ref.quantity / assignDBData?.tasksByRef.totalTasks) *
+                      100
+                    ).toFixed(1)
+              }}%
+            </span>
           </div>
           <div class="d-flex align-items-center min-w-200px">
             <div class="h-5px w-100 bg-gray-200 rounded-4">
               <div
                 class="bg-primary rounded-4 h-5px"
                 role="progressbar"
-                [style.width]="'52%'"
-                aria-valuenow="52"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Công văn (200)</div>
-            <div>20%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'20%'"
-                aria-valuenow="20"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Trình ký số (180)</div>
-            <div>18%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'18%'"
-                aria-valuenow="18"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Đặt phòng (50)</div>
-            <div>5%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'5%'"
-                aria-valuenow="5"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="m-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>Khác (10)</div>
-            <div>1%</div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="bg-primary rounded-4 h-5px"
-                role="progressbar"
-                [style.width]="'1%'"
-                aria-valuenow="1"
+                [style.width]="
+                  (ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100 +
+                  '%'
+                "
                 aria-valuemin="0"
                 aria-valuemax="100"
               ></div>
@@ -1243,74 +1230,53 @@
           text-anchor: middle;
         "
       >
-        Tỷ lệ công việc theo nguồn
+        Tỷ lệ công việc theo dự án
       </div>
       <div>
-        <div class="my-2">
-          <div>Triển khai nội bộ</div>
+        <div class="my-2" *ngFor="let task of assignDBData?.tasksByProject">
+          <div>{{ task?.project ?? "Khác" }}</div>
           <div
             class="d-flex flex-row justify-content-between align-items-center"
           >
             <div class="d-block w-100">
               <div class="progress">
-                <div class="progress-bar bg-success" style="width: 40%"></div>
-                <div class="progress-bar bg-warning" style="width: 10%"></div>
-                <div class="progress-bar bg-danger" style="width: 20%"></div>
+                <div
+                  class="progress-bar bg-danger"
+                  [style.width]="
+                    (task?.tasksStatus[2]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                  [title]="
+                    (task?.tasksStatus[2]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                ></div>
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="
+                    (task?.tasksStatus[3]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                  [title]="
+                    (task?.tasksStatus[3]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="
+                    (task?.tasksStatus[4]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                  [title]="
+                    (task?.tasksStatus[4]?.quantity / task?.totalTasks) * 100 +
+                    '%'
+                  "
+                ></div>
               </div>
             </div>
             <div class="ms-2">
-              <span>346</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div>Phát triển sản phẩm CoDX</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block w-100">
-              <div class="progress">
-                <div class="progress-bar bg-success" style="width: 40%"></div>
-                <div class="progress-bar bg-warning" style="width: 10%"></div>
-                <div class="progress-bar bg-danger" style="width: 20%"></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span>266</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div>Nhà sách Long An</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block w-100">
-              <div class="progress">
-                <div class="progress-bar bg-success" style="width: 40%"></div>
-                <div class="progress-bar bg-warning" style="width: 10%"></div>
-                <div class="progress-bar bg-danger" style="width: 20%"></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span>111</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div>Nhà máy sản xuất Đô Thành</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block w-100">
-              <div class="progress">
-                <div class="progress-bar bg-success" style="width: 40%"></div>
-                <div class="progress-bar bg-warning" style="width: 10%"></div>
-                <div class="progress-bar bg-danger" style="width: 20%"></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span>78</span>
+              <span>{{ task?.totalTasks }}</span>
             </div>
           </div>
         </div>
@@ -1321,26 +1287,54 @@
 
 <ng-template #assign_dashboard>
   <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
-    <h1>9</h1>
-    <div class="w-100 h-100">
-      <section class="bar-graph bar-graph-horizontal bar-graph-one">
-        <div class="bar-one">
-          <span class="year">2019</span>
-          <div class="bar" data-percentage="69.6%"></div>
+    <div class="tm-topchart">
+      <div
+        class="text-center"
+        style="
+          font-family: 'Segoe UI';
+          font-style: normal;
+          font-size: 15px;
+          font-weight: 500;
+          text-anchor: middle;
+        "
+      >
+        Tỷ lệ công việc được giao
+      </div>
+      <div class="topchart-group mt-3">
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">123</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; width: 87%; color: #fff"
+          >
+            <span>Lê Phạm Hoài Thương</span>
+          </div>
         </div>
-        <div class="bar-two">
-          <span class="year">2018</span>
-          <div class="bar" data-percentage="71%"></div>
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">65</div>
+          <div
+            class="topchart-user"
+            style="background-color: #6e6efd; width: 50%; color: #fff"
+          >
+            <span>Nguyễn Ngọc Phú Sỹ</span>
+          </div>
         </div>
-        <div class="bar-three">
-          <span class="year">2017</span>
-          <div class="bar" data-percentage="74.7%"></div>
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">12</div>
+          <div
+            class="topchart-user"
+            style="background-color: #f5a9ff; width: 22%; color: #000"
+          >
+            <span>Nguyễn Thị Bích Vân</span>
+          </div>
         </div>
-        <div class="bar-four">
-          <span class="year">2019</span>
-          <div class="bar" data-percentage="76.8%"></div>
-        </div>
-      </section>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -1353,7 +1347,6 @@
 
 <ng-template #assign_dashboard>
   <div id="11" title=" Tỷ lệ hoàn thành đúng hạn giao việc">
-    <h1>11</h1>
     <div class="w-100 h-100">
       <div
         class="text-center"

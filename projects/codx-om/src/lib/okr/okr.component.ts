@@ -19,6 +19,7 @@ import {
   FormModel,
   Util,
   NotificationsService,
+  AuthService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { ActivatedRoute } from '@angular/router';
@@ -120,7 +121,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     inject: Injector,
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private authService :AuthService,
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
@@ -128,6 +130,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService = inject.get(CodxOmService);
     
     this.curUser = this.auth.get();
+    //this.curUser= this.authService.userValue;
     this.createCOObject()
   }
 
@@ -138,16 +141,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   onInit(): void {    
     
     if(this.curUser.employee==null){
-      this.codxOmService.getListEmpByUserID([this.curUser?.userID]).subscribe((emp) => {
-        if (emp) {
-          this.curUser.employee=emp[0];          
-          this.getCacheData();
-          this.getOKRModel();
-          this.funcIDChanged();
-          this.formModelChanged();
-          this.createCOObject();
-          this.setTitle();
-          this.getOKRPlans(this.periodID, this.interval, this.year);
+      this.codxOmService.getUser([this.curUser?.userID]).subscribe((user) => {
+        if (user) {
+          this.codxOmService.getEmployeesByEmpID(user[0]?.employeeID).subscribe((emp)=>{
+            if(emp){
+              this.curUser.employee=emp;          
+              this.getCacheData();
+              this.getOKRModel();
+              this.funcIDChanged();
+              this.formModelChanged();
+              this.createCOObject();
+              this.setTitle();
+              this.getOKRPlans(this.periodID, this.interval, this.year);
+            }
+          })
         }
       });
     }   
@@ -291,7 +298,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
   getCurrentEmp(){
-      this.codxOmService.getListEmpByUserID([this.curUser?.userID]).subscribe((emp) => {
+      this.codxOmService.getUser([this.curUser?.userID]).subscribe((emp) => {
         if (emp) {
           this.curUser.employee=emp[0];
         }
@@ -456,6 +463,7 @@ getOrgTreeOKR() {
       case OMCONST.MFUNCID.ReleasePlanORG:
       case OMCONST.MFUNCID.ReleasePlanPER:
         this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
+        
         break;
       case OMCONST.MFUNCID.UnReleasePlanCOMP:
       case OMCONST.MFUNCID.UnReleasePlanDEPT:
@@ -479,27 +487,27 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      if(this.dataOKR!=null && this.dataOKR.length>0){
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-            func.disabled = false;
-          }
-        });
-      }
-      else{
-        //nếu ko có OKR thì ẩn MF phân bổ trọng số
-        evt.forEach((func) => {
-          if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-            func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-            func.disabled = true;
-          }
-        });
-      }
+      // if(this.dataOKR!=null && this.dataOKR.length>0){
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = false;
+      //     }
+      //   });
+      // }
+      // else{
+      //   //nếu ko có OKR thì ẩn MF phân bổ trọng số
+      //   evt.forEach((func) => {
+      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+      //       func.disabled = true;
+      //     }
+      //   });
+      // }
     }
   }
   //Hàm click
@@ -575,18 +583,26 @@ getOrgTreeOKR() {
             if (res) {
               this.dataOKRPlans.status = status;
               this.notificationsService.notifyCode('SYS034'); //thành công
+              
             }
           });
         }        
       }));      
     }
-    else{
+    else if(status==OMCONST.VLL.PlanStatus.Ontracking){
       this.codxOmService
       .changePlanStatus(this.dataOKRPlans.recID, status)
       .subscribe((res) => {
         if (res) {
           this.dataOKRPlans.status = status;
           this.notificationsService.notifyCode('SYS034'); //thành công
+          if(status=OMCONST.VLL.PlanStatus.Ontracking){
+            this.codxOmService.sendMailAfterRelease(this.dataOKRPlans?.recID).subscribe((res=>{
+              if(res){
+                let x= res;
+              }
+            }))
+          }
         }
       });
     }
@@ -712,10 +728,10 @@ getOrgTreeOKR() {
   }
   editPlanWeight(popupTitle: any) {
     //Ko có okr nên thông báo ko thể phân bổ trọng số
-    if(this.dataOKR!=null && this.dataOKR.length>0){
-      this.notificationsService.notify("Bộ mục tiêu chưa có mục tiêu để phân bổ trọng số",'3');
-      return;
-    }
+    // if(this.dataOKR!=null && this.dataOKR.length>0){
+    //   this.notificationsService.notify("Bộ mục tiêu chưa có mục tiêu để phân bổ trọng số",'3');
+    //   return;
+    // }
     let subTitle = this.curOrgName;
     let dModel = new DialogModel();
     dModel.IsFull = true;

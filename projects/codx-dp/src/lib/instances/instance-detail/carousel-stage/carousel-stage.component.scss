@@ -25,12 +25,15 @@
 }
 
 ::ng-deep .carousel-indicators  {
-  margin-bottom: -1.6rem;
+  margin-bottom: -1.5rem;
 }
 ::ng-deep .carousel-indicators button {
   background-color: var(--primary) !important;
 }
 
+::ng-deep .carousel-inner {
+  padding-bottom: 0.5rem;
+}
 
 .group-steps {
 	width: 100%;
@@ -140,12 +143,14 @@
 .arrow-steps .step.old {
 	color: #fff;
 	background-color: var(--primary-color);
-	// background-color: #23468c;
 }
 
 .arrow-steps .step.old:after {
 	border-left: 17px solid var(--primary-color);
-	// border-left: 17px solid #23468c;
 }
 
+.custom-horizontal-rule {
+  border-bottom:  3px solid ;
+  border-bottom-color: var(--primary-active) !important;
+}
 
