@@ -141,7 +141,7 @@
                 else defaulEmpt
               ">
               <ng-container *ngFor="let item of data?.listInformationRel">
-                <ng-container *ngIf="formModel?.funcID != 'ODT41' || (formModel?.funcID == 'ODT41' && item.relationType != '1')">
+                <ng-container *ngIf="formModel?.funcID != 'ODT41' || (formModel?.funcID == 'ODT41' && ((item.relationType != '1' && data?.listInformationRel.length >1) || (item.relationType == '1' && data?.listInformationRel.length ==1)))">
                   <div class="list-item has-action-menu-od mb-6">
                     <div class="d-flex align-items-start">
                       <div class="w-120px me-6">
@@ -152,7 +152,6 @@
                           {{(item.date ? item.date : item.createdOn) | date: "dd/MM/yyyy"}}
                         </div>
                       </div>
-                      <codx-imgs ></codx-imgs>
                       <div class="d-flex align-items-center">
                         <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'"  [title]="item?.employeeName"
                           [subTitle]="item?.positionName" [desc]="
