@@ -131,7 +131,10 @@
                     [Group]="form.formGroup"
                   ></codx-input>
                 </div>
-                <div class="col-3 form-group">
+                <div
+                  class="col-3 form-group"
+                  *ngIf="!hiddenFields.includes('ProjectID')"
+                >
                   <codx-label
                     fiedName="projectID"
                     [formModel]="form.formModel"
@@ -509,6 +512,7 @@
               [salesInvoicesLines]="salesInvoicesLines"
               [hasMF]="true"
               [gvs]="gvsSalesInvoicesLines"
+              [hiddenFields]="hiddenFields"
               (delete)="onDeleteRow($event)"
               (update)="onUpdateRow($event)"
               (copy)="onCopyRow($event)"

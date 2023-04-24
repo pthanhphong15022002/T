@@ -14,11 +14,9 @@ import moment from 'moment';
 export class PopupAddComponent implements OnInit {
   
   user: any = null;
-  objectID:string = '';
   dialogData: any;
   dialogRef: DialogRef = null;
   newsType: any;
-  shareControl: string = "";
   mssgCodeNoty:any = null;
   fileUpload: any[] = [];
   fileImage: any = null;
@@ -27,11 +25,13 @@ export class PopupAddComponent implements OnInit {
   permissions: Permission[] = [];
   messageImage: string = "";
   data:WP_News = null;  
+  function:any = null;
+
   grvSetup:any = {};
   arrFieldRequire:any[] = [];
   headerText:string = "";
   loading:boolean = false;
-
+  action:string = "";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -79,40 +79,40 @@ export class PopupAddComponent implements OnInit {
   ) 
   {
     this.dialogRef = dialogRef;
-    this.data = new WP_News();
-    this.newsType = dialogData.data;
+    this.action = dialogData.data.action;
+    this.newsType = dialogData.data.type;
     this.user = auth.userValue;
   }
   ngOnInit(): void {
     this.setDataDefault();
+    this.cache.functionList(this.dialogRef.formModel.funcID)
+    .subscribe((func:any) => {
+      if(func){
+        this.function = func;
+        this.headerText = `Thêm ${ this.function.defaultName}`;
+        this.cache.gridViewSetup(this.function.formName, this.function.gridViewName)
+        .subscribe((grv:any) => {
+          if(grv){
+            this.grvSetup = grv;
+            let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
+            if(Array.isArray(arrField)){
+              this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+            }
+          }
+        });
+      }
+    });
+    
   }
   ngAfterViewInit(): void {
   }
   // set data
   setDataDefault() {
+    this.data = new WP_News();
     this.data.newsType = this.newsType;
-    this.data.shareControl = "9";
     this.cache.message('WP017').subscribe((mssg: any) => {
       if(mssg?.defaultName){
         this.messageImage = mssg.defaultName;
-      }
-    });
-    this.cache.functionList(this.dialogRef.formModel.funcID)
-    .subscribe((func:any) => {
-      if(func){
-        this.headerText = `Thêm ${func.defaultName}`;
-        let formName = func.formName;
-        let grvName = func.gridViewName;
-        this.cache.gridViewSetup(formName, grvName)
-        .subscribe((grv:any) => {
-          if(grv){
-            this.grvSetup = grv;
-            let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
-            if(arrField){
-              this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
-            }
-          }
-        });
       }
     });
   }
@@ -126,16 +126,6 @@ export class PopupAddComponent implements OnInit {
     if(this.checkValidate()){
       return;
     }
-    // if(this.data.endDate)
-    // {
-    //   let startDate = new Date(this.data.startDate);
-    //   let endDate = new Date(this.data.endDate);
-    //   if(startDate > endDate) 
-    //   {
-    //     this.notifSV.notifyCode('WP012');
-    //     return;   
-    //   }  
-    // }
     this.loading = true;
     if(this.fileUpload.length > 0){
       this.codxATM.objectId = this.data.recID;

@@ -250,12 +250,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         //pass data
         actionType: actionType,
-        dataObj: data,
+        //dataObj: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
-        empObj: this.currentEmpObj,
+        //empObj: this.currentEmpObj,
         fromListView: true,
       },
       option
@@ -312,23 +312,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLogEBasicSalaries(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null
-            )
-            .subscribe((res) => {});
-          // this.hrService.addBGTrackLog(
-          //   res[0].recID,
-          //   this.cmtStatus,
-          //   this.view.formModel.entityName,
-          //   'C1',
-          //   null,
-          //   'EBasicSalariesBusiness'
-          // ).subscribe(res =>{});
+          this.hrService.addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EBasicSalariesBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });

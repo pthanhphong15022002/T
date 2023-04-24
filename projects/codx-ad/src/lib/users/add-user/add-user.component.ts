@@ -319,7 +319,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   beforeSave(opt: RequestOption) {
     this.isSaving = true;
     opt.methodName = 'AddUpdateUserAsync';
-    opt.data = [this.adUser, !this.isSaved];
+    opt.data = [this.adUser, !this.isSaved, this.formType];
     return true;
   }
 

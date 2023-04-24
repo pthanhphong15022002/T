@@ -15,9 +15,10 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   headerText:string = "Thêm mới yếu tố";
   colums:any=[];
   attributeType:string='';
-  disableCharNum:boolean = false;
+  disableCharNum:boolean = true;
   disableDataFormat:boolean = false;
-  disableDataFormatSelect:boolean = false;
+  disableDataFormatSelect:boolean = true;
+  diasbleAtt:boolean = false;
   vllDataFormat: string = 'AD010';
   autoNoSetting:any={};
   constructor(private cache: CacheService,
@@ -48,6 +49,8 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     this.disableDataFormatSelect = false;
     this.disableCharNum = false;
     this.disableDataFormat = false;
+    this.diasbleAtt = false;
+
     this.data[e.field] = e.data;
     if(e.field == 'attributeName'){
       if(this.colums.length){
@@ -57,28 +60,58 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         }
       }
     }
-    if(this.data.dataType != '0'){
-      this.disableDataFormat = true;
+    switch (this.data.dataType) {
+      case '0':
+        this.disableDataFormatSelect = true;
+        this.disableCharNum = true;
+        this.disableDataFormat = false;
+        this.diasbleAtt = true;
+        break;
+      case '1':
+        this.disableDataFormat = true;
+        this.disableCharNum = true;
+      break;
+      case '2':
+        this.disableDataFormat = true;
+        this.vllDataFormat = 'AD010';
+        this.disableCharNum = true;
+      break;
+      case '4':
+        this.disableDataFormat = true;
+        if( this.attributeType?.toLowerCase() =='datetime'){
+          this.disableCharNum = true;
+        }
+        if(this.attributeType?.toLowerCase() == 'string'){
+          this.vllDataFormat = 'AD012';
+          this.disableCharNum = false;
+        }
+      break;
+
     }
-    else this.disableDataFormat = false;
-    if(this.data.dataType == '2'){
-      this.disableCharNum = true
-    }
-    else if(this.data.dataType == '4' && this.attributeType?.toLowerCase() =='datetime'){
-      this.disableCharNum = true;
-    }
-    else if(this.data.dataType == '4' && this.attributeType?.toLowerCase() == 'string'){
-      this.vllDataFormat = 'AD011';
-      this.disableCharNum = false;
-    }
-    else{
-      this.disableDataFormatSelect = true;
-      this.disableCharNum = true;
-      this.disableDataFormat = false;
-    }
+    // if(this.data.dataType != '0'){
+    //   this.disableDataFormat = true;
+    // }
+    // else this.disableDataFormat = false;
+    // if(this.data.dataType == '2'){
+    //   this.disableCharNum = true
+    // }
+    // else if(this.data.dataType == '4' && this.attributeType?.toLowerCase() =='datetime'){
+
+    // }
+    // else if(this.data.dataType == '4' && this.attributeType?.toLowerCase() == 'string'){
+
+    // }
+    // else{
+
+    // }
   }
 
   onSaveForm(){
+    if(this.data.dataType && this.data.dataType !='0'){
+      if(this.data.dateFormat) this.data.dataFormat =this.data.dateFormat ;
+      if(this.data.charsNum) this.data.dataFormat = this.data.charsNum+this.data.dataFormat
+    }
+
     this.dialog.close(this.data);
   }
 
