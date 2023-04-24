@@ -515,6 +515,9 @@ ejs-calendar {
 .card {
   box-shadow: none;
 }
+.card-group {
+  align-content: flex-start;
+}
 
 a:link {
   cursor: pointer;

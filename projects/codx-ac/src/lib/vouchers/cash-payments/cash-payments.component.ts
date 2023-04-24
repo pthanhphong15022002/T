@@ -196,7 +196,6 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
-
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;

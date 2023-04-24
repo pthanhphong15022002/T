@@ -223,68 +223,65 @@
 </ng-template>
 
 <ng-template #bodyFormCopyName>
-  <div class="container">
-    <div class="row">
-      <div class="col-2">
-        <span class="icon-reorder"></span>
-      </div>
-      <div class="col-10">
-        <codx-label default="Chọn các thông tin muốn sao chép:"></codx-label>
-        <div class="form-group mt-3">
-          <div *ngFor="let item of listSelectCoppy; let i = index">
+  <div class="dynamic-copy">
+    <div class="d-flex align-items-center text-primary">
+      <span class="icon-reorder me-3"></span>
+      <codx-label class="fs-5 fw-bold" default="Chọn các thông tin muốn sao chép:"></codx-label>
+    </div>
+    <div class="mt-3">
+      <div *ngFor="let item of listSelectCoppy; let i = index">
 
-            <div *ngIf="i == 2;else other_content">
-              <div class="form-check py-3">
-              <input
-              class="form-check-input"
-              type="checkbox"
-              id="toggle" [(ngModel)]="isChecked"
-              (change)="checkValueCopy($event, item)"
-            />
-              <span for="toggle" class="form-check-label ">
-                {{ item?.text }}
-              </span>
-              <ng-container>
-                <div *ngIf="isChecked" id="menu" class="pt-2">
-                  <div  *ngFor="let cell of listSelectStepCoppy">
-                    <div class="form-check py-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        [checked]="isChecked"
-                        (change)="checkValueCopy($event, cell)"
-                      />
-                      <span class="form-check-label">
-                        {{ cell?.text }}
-                      </span>
-                    </div>
-                  </div>
+        <div *ngIf="i == 2;else other_content">
+          <div class="form-check py-2">
+          <input
+          class="form-check-input w-20px h-20px rounded-1"
+          type="checkbox"
+          id="toggle" [(ngModel)]="isChecked"
+          (change)="checkValueCopy($event, item)"
+        />
+          <span for="toggle" class="form-check-label ms-0">
+            {{ item?.text }}
+          </span>
+          <ng-container>
+            <div *ngIf="isChecked" id="menu" class="pt-3">
+              <div  *ngFor="let cell of listSelectStepCoppy">
+                <div class="form-check py-2 d-flex align-items-center">
+                  <input
+                    class="form-check-input w-20px h-20px rounded-1"
+                    type="checkbox"
+                    [checked]="isChecked"
+                    (change)="checkValueCopy($event, cell)"
+                  />
+                  <span class="form-check-label ms-3">
+                    {{ cell?.text }}
+                  </span>
                 </div>
-
-              </ng-container>
-
+              </div>
             </div>
-          </div>
 
-          <ng-template #other_content>
-            <div class="form-check py-3">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                (change)="checkValueCopy($event, item)"
-                [disabled]="i == 0 ? true : false"
-                [checked]="i == 0 ? true : false"
-              />
-              <span class="form-check-label">
-                {{ item?.text }}
-              </span>
-            </div>
-          </ng-template>
+          </ng-container>
 
-          </div>
         </div>
       </div>
+
+      <ng-template #other_content>
+        <div class="py-2 form-check d-flex align-items-center">
+          <input
+            class="form-check-input w-20px h-20px rounded-1"
+            type="checkbox"
+            (change)="checkValueCopy($event, item)"
+            [disabled]="i == 0 ? true : false"
+            [checked]="i == 0 ? true : false"
+          />
+          <span class="form-check-label ms-3">
+            {{ item?.text }}
+          </span>
+        </div>
+      </ng-template>
+
+      </div>
     </div>
+
   </div>
 </ng-template>
 
