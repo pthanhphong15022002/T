@@ -70,6 +70,11 @@ export class PopupListContactsComponent implements OnInit {
 
   onSave() {
     if(this.type == 'formDetail'){
+      this.contact.contactType = this.contactType;
+      this.contact.objectID = this.recIDCm;
+      this.contact.objectType = this.objectType;
+      this.contact.objectName = this.objectName;
+
       if(this.contact.contactType == null || this.contact.contactType.trim() == ''){
         this.notiService.notifyCode(
           'SYS009',
@@ -78,7 +83,8 @@ export class PopupListContactsComponent implements OnInit {
         );
         return;
       }
-      this.cmSv.updateContactByPopupListCt(this.contact.recID, this.recIDCm, this.contact.contactType, this.objectType, this.objectName).subscribe(res => {
+
+      this.cmSv.updateContactByPopupListCt(this.contact).subscribe(res => {
         if(res){
           this.dialog.close(res);
         }
@@ -137,6 +143,7 @@ export class PopupListContactsComponent implements OnInit {
             //gán tạm thời để xử lí liên hệ chính
             if (e.event?.recID) {
               this.contact = e.event;
+              this.contactType = this.contact.contactType;
               this.lstContacts.push(this.contact);
               this.lstSearch = this.lstContacts;
               var index = this.lstSearch.findIndex(

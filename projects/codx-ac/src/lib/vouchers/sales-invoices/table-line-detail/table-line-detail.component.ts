@@ -24,6 +24,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() maxHeight: string = '400px';
   @Input() hasMF: boolean = false;
   @Input() gvs: any;
+  @Input() hiddenFields: string[] = [];
   @Output() delete = new EventEmitter<ISalesInvoicesLine>();
   @Output() update = new EventEmitter<ISalesInvoicesLine>();
   @Output() copy = new EventEmitter<ISalesInvoicesLine[]>();
@@ -137,6 +138,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
           salesInvoicesLine: data,
           gvs: this.gvs,
           action: e.text,
+          hiddenFields: this.hiddenFields,
         },
         '',
         dialogModel

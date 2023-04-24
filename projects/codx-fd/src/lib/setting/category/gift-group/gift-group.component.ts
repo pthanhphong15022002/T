@@ -193,18 +193,53 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
       });
   }
 
+  copy(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        var obj = {
+          isModeAdd: true,
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        let popupCopy = this.callfc.openSide(
+          AddGiftGroupComponent,
+          obj,
+          option
+        );
+        popupCopy.closed.subscribe((e) => {
+          if (e?.event) {
+            this.view.dataService.add(e.event, 0).subscribe();
+            this.changedr.detectChanges();
+          } else {
+            this.viewbase.dataService.clear();
+          }
+        });
+      });
+  }
+
   delete(data) {
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (option: any) =>
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe();
+      .subscribe((res: any) => {
+          if(res)
+          {
+            this.view.dataService.onAction.next({ type: 'delete', data: data });
+            this.changedr.detectChanges();
+          }
+      });
   }
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteGiftGroupAsync';
-    op.data = data;
+    op.data = data?.giftID;
     return true;
   }
 
@@ -217,6 +252,9 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
           break;
         case 'SYS02':
           this.delete(data);
+          break;
+        case 'SYS04':
+          this.copy(data);
           break;
       }
     }

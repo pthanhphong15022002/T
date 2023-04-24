@@ -2907,7 +2907,7 @@
                 >
                 </codx-img>
               </div>
-              <div class="text-gray-600">{{ perm.objectName }}</div>
+              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               <ng-container>
                 <div class="action-menu-od" (click)="removeRole(perm.objectID)">
                   <i class="icon-close text-danger icon-16"></i>
@@ -3190,11 +3190,16 @@
                 </div>
               </div>
             </div>
-
             <!-- <codx-input-number-duration [textDay]="strDay" [textHour]="strHour"  field="durationDay">
 
             </codx-input-number-duration> -->
+
+
           </div>
+
+          <!-- <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
+          (eventInput)="valueChangeDuration($event)">
+          </codx-input-number-duration> -->
         </div>
         <hr />
         <div class="row">
