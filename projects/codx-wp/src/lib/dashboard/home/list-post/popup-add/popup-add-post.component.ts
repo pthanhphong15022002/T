@@ -133,9 +133,9 @@ export class PopupAddPostComponent implements OnInit {
         this.data.recID = Util.uid();
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
-        this.data.shareControl = this.SHARECONTROLS.OWNER;
-        this.data.contents = '';
-        if (this.status == 'share') {
+        this.data.shareControl = this.SHARECONTROLS.EVERYONE;
+        this.data.contents = "";
+        if(this.status == "share"){
           // bài share
           this.data.category = this.CATEGORY.SHARE;
           this.data.refType = this.dialogData.refType;

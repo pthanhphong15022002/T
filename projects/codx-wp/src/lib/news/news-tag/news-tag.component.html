@@ -38,7 +38,7 @@
               </div>
               <ng-container *ngFor="let item of listViews; index as i">
                   <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'"
-                      (click)="clickViewDeital(item)">
+                      (click)="clickViewDetail(item)">
                       <div class="row cursor-pointer">
                           <div class="col-3">
                               <codx-img 
@@ -82,7 +82,7 @@
     
 </ng-template>
 <ng-template #itemTemplate let-data>
-  <div class="row my-2" (click)="clickViewDeital(data)">
+  <div class="row my-2" (click)="clickViewDetail(data)">
     <div class="col-2">
       <codx-img
         [objectId]="data.recID"
