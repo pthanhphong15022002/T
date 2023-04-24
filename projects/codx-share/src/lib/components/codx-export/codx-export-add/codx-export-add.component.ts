@@ -123,6 +123,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     //Chỉnh sửa
     else if (this.action == "edit") {
       this.exportAddForm.value.recID = this.data.recID
+      this.exportAddForm.value.reportID = this.data.reportID
       this.api
         .execActionData<any>(
           'AD_ExcelTemplates',

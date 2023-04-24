@@ -389,13 +389,33 @@ export class CodxAdService {
     );
   }
 
-  addUserGroupMemberAsync(userGroupModel) {
+  addUserGroupMemberAsync(userGroupModel, isOverrideRoles: boolean) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UserGroupsBusiness',
       'AddGroupMembersAsync',
-      [userGroupModel]
+      [userGroupModel, isOverrideRoles]
+    );
+  }
+
+  validateGroupMemberRoles(sLstMemberIDs: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'ValidateMemberRolesAsync',
+      [sLstMemberIDs]
+    );
+  }
+
+  removeGroupMember(lstMDID: string[], lstMDSales: string[], groupMember) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'RemoveGroupMembersAsync',
+      [lstMDID, lstMDSales, groupMember]
     );
   }
   //#endregion

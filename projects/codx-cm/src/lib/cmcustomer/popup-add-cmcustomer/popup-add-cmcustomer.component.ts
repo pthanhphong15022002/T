@@ -104,6 +104,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.customerID = null;
       this.data.contactID = null;
       this.data.competitorID = null;
+      this.data.partnerID = null;
     }
   }
 
@@ -166,7 +167,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.funcID,
       this.dialog.formModel.entityName,
       this.contactsPerson?.recID,
-      null,
+      this.funcID == 'CM0101' ? '1' : this.funcID == 'CM0103' ? '3' : null,
       this.listAddress,
       this.listAddressDelete,
     ];
