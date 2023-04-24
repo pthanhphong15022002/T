@@ -855,16 +855,23 @@
           </div>
           <div class="col-6 row">
             <div #autoNumberSetting class="position-relative col-6">
-              <codx-input
+              <!-- <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
                 (valueChange)="valueChangeAutoNoCode($event)"
                 field="instanceNoSetting"
               >
-              </codx-input>
+              </codx-input> -->
+              <codx-input
+              type="text"
+              [crrValue]="instanceNoEx"
+              [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+              [disabled]="true"
+            >
+            </codx-input>
               <div
-                class="position-absolute cursor-pointer"
+                class="position-absolute cursor-pointer text-primary"
                 style="top: 7px; right: 13px"
               >
                 <i
@@ -873,7 +880,7 @@
                 ></i>
               </div>
             </div>
-            <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
+            <!-- <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
               <codx-label
                 class=""
                 name="lblPreview"
@@ -881,7 +888,7 @@
                 default="Xem trước: "
               ></codx-label>
               <span class="text-gray-600">{{ instanceNoEx }}</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

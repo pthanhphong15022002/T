@@ -161,7 +161,7 @@ export class InstanceDetailComponent implements OnInit {
         if (day == 6) {
           text = 'Thứ Bảy';
         }
-        return `${text} ( ${date.toLocaleDateString()} )`;
+        return `${text} ( ${date.toLocaleDateString()} )`; // format ngôn ngữ hỏi thương
       },
     },
     bottomTier: {
@@ -228,6 +228,23 @@ export class InstanceDetailComponent implements OnInit {
     },
     timelineUnitSize: 100,
   };
+  timelineSettingsMonth = {
+    topTier: {
+      unit: 'Year',
+      formatter: (date: Date) => {
+        return date.getFullYear(); // format ngôn ngữ hỏi thương
+      },
+    },
+    bottomTier: {
+      unit: 'Month',
+      count: 1,
+      formatter: (date: Date) => {
+        return 'Tháng ' + (date.getMonth() + 1);
+      },
+    },
+    timelineUnitSize: 100,
+  };
+  //end gan
 
   constructor(
     private callfc: CallFuncService,
@@ -541,6 +558,12 @@ export class InstanceDetailComponent implements OnInit {
         break;
       case 'H':
         this.timelineSettings = this.timelineSettingsHour;
+        break;
+      case 'W':
+        this.timelineSettings = this.timelineSettingsWeek;
+        break;
+      case 'M':
+        this.timelineSettings = this.timelineSettingsMonth;
         break;
     }
     this.changeDetec.detectChanges();
