@@ -515,6 +515,9 @@ ejs-calendar {
 .card {
   box-shadow: none;
 }
+.card-group {
+  align-content: flex-start;
+}
 
 a:link {
   cursor: pointer;
@@ -2533,7 +2536,9 @@ codx-toolbar{
   }
 }
 
-
+// .form-control {
+//   border-color: var(--gray-150);
+// }
 
 
 

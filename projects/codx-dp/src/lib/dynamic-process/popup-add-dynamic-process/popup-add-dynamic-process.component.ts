@@ -344,7 +344,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (this.newIdProccess = dt.data.newIdProccess),
         (this.listValueCopy = dt.data.listValueCopy);
       var valueListStr = this.listValueCopy.join(';');
-
+      this.getAvatar(this.process);
       this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
         this.getListStepByProcessIDCopy(
           this.oldIdProccess,
@@ -1710,7 +1710,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             900,
             700,
             null,
-            { action: val, type: this.type, reportID: this.process.recID },
+            { action: val, type: this.type, refID: this.process.recID, refType : 'DP_Processes' },
             '',
             option
           )
@@ -1772,8 +1772,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   loadEx() {
-    this.request.predicates = 'ReportID=@0';
-    this.request.dataValues = this.process.recID;
+    this.request.predicates = 'RefID=@0 && RefType=@1';
+    this.request.dataValues = this.process.recID +";DP_Processes";
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1781,8 +1781,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   loadWord() {
-    this.request.predicates = 'ReportID=@0';
-    this.request.dataValues = this.process.recID;
+    this.request.predicates = 'RefID=@0 && RefType=@1';
+    this.request.dataValues = this.process.recID +";DP_Processes";
     this.request.entityName = 'AD_WordTemplates';
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {

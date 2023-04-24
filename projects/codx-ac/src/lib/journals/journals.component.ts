@@ -27,6 +27,7 @@ export class JournalsComponent extends UIComponent {
   functionName: string;
   vll86 = [];
   vll85 = [];
+  func = [];
   constructor(
     inject: Injector,
     private route: Router,
@@ -39,6 +40,10 @@ export class JournalsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.cache.valueList('AC077').subscribe((func) => {
+      if (func) this.func = func.datas;
+    });
+
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
         this.vll86 = res.datas;
@@ -86,8 +91,9 @@ export class JournalsComponent extends UIComponent {
   }
 
   dbClick(e, data) {
-    console.log('data: ', data);
-    this.cache.functionList(data.functionID).subscribe((func) => {
+    let f = this.func.find(x=>x.value === data.journalType);
+    if(!f) return;
+    this.cache.functionList(f?.default).subscribe((func) => {
       if (func) {
         let urlRedirect = '/' + UrlUtil.getTenant();
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
