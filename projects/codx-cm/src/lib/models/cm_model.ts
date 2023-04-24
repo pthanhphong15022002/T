@@ -93,7 +93,7 @@ export class CM_Deals {
   expectedClosed: number;
   status: string;
   statusCodeID: string;
-  currentStep: string;
+  stepID: string;
   nextStep: string;
   lastUpdated: Date;
   closed: boolean;
@@ -189,7 +189,7 @@ export class CM_Customers {
   customerFrom: Date;
   customerResource: string;
   bankAccount: string;
-  bankName: string;
+  bankID: string;
   memo: string;
   owner: string;
   bUID: string;
@@ -223,7 +223,7 @@ export class CM_Contacts {
   jobTitle: string;
   department: string;
   income: number;
-  bankAcctNo: string;
+  bankAccount: string;
   bankID: string;
   birthAddress: string;
   address: string;
@@ -245,7 +245,7 @@ export class CM_Contacts {
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
-  note: string;
+  memo: string;
   stop: boolean;
   userID: string;
   allowCall: boolean;

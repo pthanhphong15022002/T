@@ -272,6 +272,7 @@ export class ShareComponent implements OnInit {
       return;
     }
     
+    debugger
     if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.toPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
@@ -284,21 +285,21 @@ export class ShareComponent implements OnInit {
       // this.fileEditing.toPermission[i].read = true;
       // this.fileEditing.toPermission[i].share = this.share;
       // this.fileEditing.toPermission[i].download = this.download;
-      this.fileEditing.toPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
-      this.fileEditing.toPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
+      this.fileEditing.byPermission[i].startDate = this.startDate ? new Date(this.startDate).toLocaleString() : "";
+      this.fileEditing.byPermission[i].endDate =   this.endDate ? new Date(this.endDate).toLocaleString() : "";
       if (!this.isShare) {
         if (this.shareGroup.value.per == 'modified') {
-          this.fileEditing.toPermission[i].create = true;
-          this.fileEditing.toPermission[i].update = true;
-          this.fileEditing.toPermission[i].share = true;
-          this.fileEditing.toPermission[i].download = true;
-          this.fileEditing.toPermission[i].upload = true;
-          this.fileEditing.toPermission[i].read = true;
+          this.fileEditing.byPermission[i].create = true;
+          this.fileEditing.byPermission[i].update = true;
+          this.fileEditing.byPermission[i].share = true;
+          this.fileEditing.byPermission[i].download = true;
+          this.fileEditing.byPermission[i].upload = true;
+          this.fileEditing.byPermission[i].read = true;
         }
         else {
           //modified: xem, sua, xoa, download
           //readonly: xem
-          this.fileEditing.toPermission[i].read = true;
+          this.fileEditing.byPermission[i].read = true;
         }
       }
       else {

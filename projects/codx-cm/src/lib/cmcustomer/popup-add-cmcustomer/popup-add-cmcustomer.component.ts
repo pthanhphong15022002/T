@@ -104,6 +104,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.customerID = null;
       this.data.contactID = null;
       this.data.competitorID = null;
+      this.data.partnerID = null;
     }
   }
 
@@ -166,7 +167,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.funcID,
       this.dialog.formModel.entityName,
       this.contactsPerson?.recID,
-      null,
+      this.funcID == 'CM0101' ? '1' : this.funcID == 'CM0103' ? '3' : null,
       this.listAddress,
       this.listAddressDelete,
     ];
@@ -224,7 +225,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
     if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
       if (this.contactsPerson == null) {
-        this.notiService.notifyCode('Liên hệ chính không được trống'); //Chưa có msssg
+        this.notiService.notifyCode('CM002'); //Chưa có msssg
         return;
       }
     }
@@ -393,7 +394,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
                   }
                   this.listAddress.push(address);
                 } else {
-                  this.notiService.notifyCode('Đã trùng địa chỉ'); //Chưa có mssg
+                  this.notiService.notifyCode('CM003',
+                  0,
+                  '"' + this.gridViewSetup['Address'].headerText + '"'); //Chưa có mssg
                 }
               }
             }

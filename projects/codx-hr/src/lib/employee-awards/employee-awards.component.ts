@@ -87,6 +87,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   dialogAddEdit: DialogRef;
 
   itemDetail;
+
   onInit(): void {
     this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
       if (res) {
@@ -225,10 +226,10 @@ export class EmployeeAwardsComponent extends UIComponent {
         actionType: actionType,
         dataInput: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        //empObj: actionType == 'add' ? null : this.currentEmpObj,
       },
       option
     );
@@ -301,23 +302,14 @@ export class EmployeeAwardsComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLogEAwards(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null
-            )
-            .subscribe((res) => {});
-          // this.hrService.addBGTrackLog(
-          //   res[0].recID,
-          //   this.cmtStatus,
-          //   this.view.formModel.entityName,
-          //   'C1',
-          //   null,
-          //   'EAwardBusiness'
-          // ).subscribe(res =>{});
+          this.hrService.addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EAwardBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });

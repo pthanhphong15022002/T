@@ -65,7 +65,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private codxShareSV: CodxShareService,
     private change: ChangeDetectorRef,
     private element: ElementRef,
-    private signalRSV:SignalRService,
+    private signalRSV: SignalRService,
     private callSV: CallFuncService,
     private fileSv: FilesService
   ) {
@@ -103,12 +103,13 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     MenuComponent.reinitialization();
+    MenuComponent.createInstances('[data-kt-menu="true"]');
   }
 
-  logout() {
-    
+  logout() {    
     let ele = document.getElementsByTagName("codx-chat-container");
     ele[0].remove();
+    this.signalRSV.sendData("LogOutAsync",this.user.tenant,this.user.userID);
     this.auth.logout('');
     // document.location.reload();
   }

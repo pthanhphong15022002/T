@@ -462,7 +462,7 @@
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="cashpayment?.status == '0'" class="ms-2">
-          <button type="button" class="btn btn-sm btn-secondary" (click)="onDiscard()">
+          <button [disabled]="!hasSaved" type="button" class="btn btn-sm btn-secondary" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-18"></i>
               <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
@@ -480,7 +480,7 @@
           </button>
         </div>
         <div class="ms-2 me-2">
-          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="onSave()">
+          <button type="button" class="btn btn-sm btn-primary" style="min-width: 60px" (click)="saveCash()">
             <div class="d-flex align-items-center">
               <i class="icon-save icon-18"></i>
               <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"

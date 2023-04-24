@@ -220,11 +220,24 @@
   <div class="row">
     <div class="col-6">
       <div class="d-flex flex-column">
-        <div class="form-group row" *ngIf="dataSelected?.customerID">
+        <div
+          class="form-group row"
+          *ngIf="
+            dataSelected?.customerID ||
+            dataSelected?.partnerID ||
+            dataSelected?.competitorID
+          "
+        >
           <div class="col-6">
             <codx-label
               class="label-colon text-gray-300"
-              fiedName="CustomerID"
+              [fiedName]="
+                funcID == 'CM0101'
+                  ? 'CustomerID'
+                  : funcID == 'CM0103'
+                  ? 'PartnerID'
+                  : 'CompetitorID'
+              "
               [formModel]="formModel"
             >
             </codx-label>
@@ -232,9 +245,19 @@
           <div
             class="col-6"
             [innerHTML]="
-              dataSelected?.customerID
-                | formatvalue : formModel : 'CustomerID'
-                | async
+              funcID == 'CM0101'
+                ? dataSelected?.customerID
+                : funcID == 'CM0103'
+                ? dataSelected?.partnerID
+                : (dataSelected?.competitorID
+                  | formatvalue
+                    : formModel
+                    : (funcID == 'CM0101'
+                        ? 'CustomerID'
+                        : funcID == 'CM0103'
+                        ? 'PartnerID'
+                        : 'CompetitorID')
+                  | async)
             "
           >
             <!-- {{ dataSelected?.customerID }} -->
@@ -314,11 +337,14 @@
             <!-- {{ dataSelected?.email }} -->
           </div>
         </div>
-        <div class="form-group row" *ngIf="dataSelected?.webPage">
+        <div
+          class="form-group row"
+          *ngIf="dataSelected?.webPage || dataSelected?.website"
+        >
           <div class="col-6">
             <codx-label
               class="label-colon text-gray-300"
-              fiedName="WebPage"
+              [fiedName]="funcID != 'CM0103' ? 'WebPage' : 'Website'"
               [formModel]="formModel"
             >
             </codx-label>
@@ -326,9 +352,13 @@
           <div
             class="col-6"
             [innerHTML]="
-              dataSelected?.webPage
-                | formatvalue : formModel : 'WebPage'
-                | async
+              funcID != 'CM0103'
+                ? dataSelected?.webPage
+                : (dataSelected?.website
+                  | formatvalue
+                    : formModel
+                    : (funcID != 'CM0103' ? 'WebPage' : 'Website')
+                  | async)
             "
           >
             <!-- {{ dataSelected?.webPage }} -->
@@ -426,7 +456,7 @@
       <div class="d-flex flex-column">
         <div
           class="form-group row"
-          *ngIf="funcID == 'CM0101' && dataSelected?.taxCode"
+          *ngIf="dataSelected?.taxCode"
         >
           <div class="col-6">
             <codx-label
@@ -449,7 +479,28 @@
         </div>
         <div
           class="form-group row"
-          *ngIf="funcID == 'CM0101' && dataSelected?.establishDate"
+          *ngIf="dataSelected?.ceo"
+        >
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="CEO"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.ceo
+                | formatvalue : formModel : 'ceo'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="form-group row"
+          *ngIf="dataSelected?.establishDate"
         >
           <div class="col-6">
             <codx-label
@@ -470,12 +521,12 @@
         </div>
         <div
           class="form-group row"
-          *ngIf="funcID == 'CM0101' && dataSelected?.sizing"
+          *ngIf="dataSelected?.headcounts"
         >
           <div class="col-6">
             <codx-label
-              class="text-gray-300"
-              fiedName="Sizing"
+              class="label-colon text-gray-300"
+              fiedName="Headcounts"
               [formModel]="formModel"
             >
             </codx-label>
@@ -483,15 +534,34 @@
           <div
             class="col-6"
             [innerHTML]="
-              dataSelected?.sizing | formatvalue : formModel : 'Sizing' | async
+              dataSelected?.headcounts | formatvalue : formModel : 'Headcounts' | async
             "
           >
             <!-- {{ dataSelected?.sizing }} -->
           </div>
         </div>
+        <div class="form-group row" *ngIf="dataSelected?.capital">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Capital"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.capital
+                | formatvalue : formModel : 'Capital'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.segmentID }} -->
+          </div>
+        </div>
         <div
           class="form-group row"
-          *ngIf="funcID == 'CM0101' && dataSelected?.annualRevenue"
+          *ngIf="dataSelected?.annualRevenue"
         >
           <div class="col-6">
             <codx-label
@@ -512,6 +582,7 @@
             <!-- {{ dataSelected?.annualRevenue }} -->
           </div>
         </div>
+
         <div class="form-group row" *ngIf="dataSelected?.segmentID">
           <div class="col-6">
             <codx-label

@@ -6,17 +6,19 @@
 
 <!-- header -->
 <ng-template #headerTemplate let-data>
-    <div class="w-25 text-primary p-3 fs-5 fw-500">
-        <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
-    </div>
-    <div class="w-25 text-primary p-3 fs-5 fw-500">
-        <codx-label name="lblAwardID" [default]="'Loại | Hình thức khen thưởng'"></codx-label>
-    </div>
-    <div class="w-25 text-primary p-3 fs-5 fw-500">
-        <codx-label name="lblAwardDate" [default]="'Ngày khen thưởng'"></codx-label>
-    </div>
-    <div class="w-25 text-primary p-3 fs-5 fw-500">
-        <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+    <div class="d-flex w-100 ps-2 pe-4">
+        <div class="w-25 text-dark p-3 fw-500">
+            <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+        </div>
+        <div class="w-25 text-primary p-3 fw-500">
+            <codx-label name="lblAwardID" [default]="'Loại | Hình thức khen thưởng'"></codx-label>
+        </div>
+        <div class="w-25 text-primary p-3 fw-500">
+            <codx-label name="lblAwardDate" [default]="'Ngày khen thưởng'"></codx-label>
+        </div>
+        <div class="w-25 text-primary p-3 fw-500">
+            <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
+        </div>
     </div>
 </ng-template>
 <!-- end header -->
@@ -27,23 +29,21 @@
         <!-- emp info -->
         <div class="w-25 p-3">
             <div class="d-flex align-items-start">
-                <div class="d-flex flex-column me-2">
+                <div class="d-flex flex-column flex-center me-2 w-50px">
                     <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
                         [objectName]="data?.emp?.employeeName" [objectType]="'HR_Employees'">
                     </codx-img>
-                    <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
-                        [showText]="true" [showIcon]="false" [showBgColor]="false">
+                    <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
+                        [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
                     </codx-vll>
                 </div>
                 <div class="d-flex flex-column">
-                    <div>
-                        <div class="fw-bold">
-                            <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
-                            <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                            <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-                        </div>
+                    <div class="d-flex align-items-center">
+                        <span class="me-2 text-dark fw-bold text-nowrap">{{ data?.emp?.employeeName }}</span>
+                        <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                        <span class="text-danger">{{ data?.emp?.employeeID }}</span>
                     </div>
-                    <div class="text-gray-700">
+                    <div class="text-gray-500 fs-7 mb-1">
                         <span
                             [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'positionID'| async"></span>
                     </div>
@@ -97,36 +97,32 @@
         <!-- award date -->
         <div class="w-25 p-3">
             <div class="d-flex flex-column">
-                <div class="text-gray-700 d-flex flex-row">
-                    <span class="icon-event_notes icon-15 me-1"></span>
-                    <div class="align-self-center fw-bold align-items-center">
-                        <span>
-                            {{ data?.awardDate | fmDT }}
-                        </span>
+                <div class="text-gray-700 d-flex flex-row mb-1">
+                    <span class="icon-event_notes icon-16 me-1"></span>
+                    <div class="align-self-center">
+                        <span [innerHTML]="data?.awardDate | formatvalue : view.formModel : 'awardDate'| async"></span>
                     </div>
                 </div>
-                <div class="text-gray-700 d-flex flex-row">
-                    <span class="icon-event_notes icon-15 me-1"></span>
-                    <div class="align-self-center fw-bold align-items-center">
-                        <span>
-                            {{ data?.inYear }}
-                        </span>
+                <div class="text-gray-700 d-flex flex-row mb-1">
+                    <span class="icon-event_notes icon-16 me-1"></span>
+                    <div class="align-self-center">
+                        <!-- <span [innerHTML]="data?.inYear | formatvalue : view.formModel : 'inYear'| async"></span> -->
+                        <span>{{data?.inYear}}</span>
                     </div>
                 </div>
                 <div class="d-flex flex-row">
                     <div>
-                        <div class="d-flex flex-row me-10" *ngIf="data?.attachments > 0">
+                        <div class="d-flex flex-row me-2" *ngIf="data?.attachments > 0">
                             <!-- <i class="icon-attach_file text-primary icon-15"></i>
                             <div class="align-self-center badge badge-sm badge-circle badge-primary me-10">
                                 {{ data?.attachments }}
                             </div> -->
-                            <codx-attachment-temp [objectID]="data.recID"
-                                [formModel]="view.formModel"></codx-attachment-temp>
-
+                            <codx-attachment-temp [objectID]="data.recID" [formModel]="view.formModel">
+                            </codx-attachment-temp>
                         </div>
                     </div>
                     <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-                        [showIcon]="false" [showBgColor]="true">
+                        [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
                     </codx-vll>
                 </div>
             </div>
@@ -141,7 +137,7 @@
         <!-- approve status -->
         <div class="w-25 p-3">
             <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus"
-                [showText]="true" [showIcon]="false" [showBgColor]="true">
+                [showText]="true" [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
             </codx-vll>
         </div>
         <!-- end approve status -->
@@ -161,76 +157,80 @@
 
 <!-- list & detail view -->
 <ng-template #templateListDetail let-data>
-    <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (clickMF)="clickMF($event, data)"
-        [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel"
-        [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
-        <!-- info view -->
-        <ng-template #titleTmp let-data>
-            <div class="w-100">
-                <!-- emp info -->
-                <div class="justify-content-between text-dark fw-bold">
-                    <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="data?.emp?.gender"
-                        [showText]="true" [showIcon]="false" [showBgColor]="false">
-                    </codx-vll>
-                    <span class="fs-5 me-1">{{ data?.emp?.employeeName }}</span>
-                    <span>
-                        <i class="icon-qr_code_scanner icon-14 me-1"></i>
-                        <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-                    </span>
-                </div>
-                <div class="justify-content-between text-gray-700">
-                    <span
-                        [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
-                </div>
-                <!-- end emp info -->
-
-                <!-- award -->
-                <div class="justify-content-between text-gray-700">
-                    <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardID?.headerText">
-                        <span class="align-self-center fw-bold"
-                            [innerHTML]=" data?.awardID | formatvalue : view.formModel : 'awardID' | async">
-                        </span>
-                    </div>
-                </div>
-                <div class="justify-content-between text-gray-700">
-                    <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
-                        <span class="align-self-center text-highlight"
-                            [innerHTML]=" data?.awardFormCategory | formatvalue : view.formModel : 'awardFormCategory' | async">
-                        </span>
-                    </div>
-                </div>
-                <!-- end award -->
-                <!-- awardDate & year -->
-                <div class="justify-content-between fs-5 fw-bold">
-                    <div [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'"
-                        class="d-flex flex-row align-self-center fw-bold gap-1">
-                        <span class="icon-calendar_today align-self-center icon-15"></span>
-                        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.AwardDate?.headerText"
-                            [innerHTML]=" data?.awardDate | formatvalue : view.formModel : 'awardDate' | async">
-                        </span>
-                        <span> - </span>
-                        <span class="icon-event_notes icon-15 align-self-center fw-bold"></span>
-                        <span class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.InYear?.headerText">
-                            {{data?.inYear}}
-                        </span>
-                    </div>
-
-                </div>
-                <!-- end awardDate & year -->
-                <!-- status & owner -->
-                <div class="d-flex justify-content-between text-dark">
-                    <span class="mt-2">
-                        <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true"
-                            [showBgColor]="true">
-                        </codx-vll>
-                    </span>
-                </div>
-                <!-- end status & owner -->
-            </div>
-        </ng-template>
-        <!-- end -->
-    </codx-temp-full>
+    <div class="border-bottom position-relative avatar-vllbadge">
+        <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)"
+            [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40"
+            [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
+            [typeMF]="'hover'">
+        </codx-temp-full>
+        <div class="d-flex flex-center vll-badge">
+            <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
+                [value]="data?.emp?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
+            </codx-vll>
+        </div>
+    </div>
 </ng-template>
+<!-- info view -->
+<ng-template #titleTmp let-data>
+    <div class="w-100">
+        <!-- emp info -->
+        <div class="d-flex align-items-center mb-1">
+            <span class="fw-bold fs-6 text-dark me-2">{{ data?.emp?.employeeName }}</span>
+            <i class="icon-qr_code_scanner icon-14 me-1"></i>
+            <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+        </div>
+        <div class="fs-7 text-gray-600">
+            <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
+        </div>
+        <!-- end emp info -->
+
+        <!-- award -->
+        <div class="justify-content-between text-gray-700">
+            <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardID?.headerText">
+                <span class="align-self-center fw-bold"
+                    [innerHTML]=" data?.awardID | formatvalue : view.formModel : 'awardID' | async">
+                </span>
+            </div>
+        </div>
+        <div class="justify-content-between text-gray-700">
+            <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
+                <span class="align-self-center text-highlight"
+                    [innerHTML]=" data?.awardFormCategory | formatvalue : view.formModel : 'awardFormCategory' | async">
+                </span>
+            </div>
+        </div>
+        <!-- end award -->
+        <!-- awardDate & year -->
+        <div class="justify-content-between">
+            <div class="d-flex align-self-center">
+                <span class="icon-calendar_today align-self-center icon-14 me-1"></span>
+                <span class="align-self-center" [ngbTooltip]="grvSetup?.AwardDate?.headerText"
+                    [innerHTML]=" data?.awardDate | formatvalue : view.formModel : 'awardDate' | async">
+                </span>
+                <span class="mx-1"> - </span>
+                <span class="icon-event_notes icon-14 align-self-center me-1"></span>
+                <!-- <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText"
+                    [innerHTML]=" data?.inYear | formatvalue : view.formModel : 'inYear' | async">
+                </span> -->
+                <span class="align-self-center" [ngbTooltip]="grvSetup?.InYear?.headerText">
+                    {{data?.inYear}}
+                </span>
+            </div>
+
+        </div>
+        <!-- end awardDate & year -->
+        <!-- status & owner -->
+        <div class="d-flex justify-content-between text-dark">
+            <span class="mt-2">
+                <codx-vll class="badge fw-bold" [name]="'HRS102'" [value]="data?.status" [showText]="true"
+                    [showBgColor]="true">
+                </codx-vll>
+            </span>
+        </div>
+        <!-- end status & owner -->
+    </div>
+</ng-template>
+<!-- end -->
 
 <ng-template #templateItemDetailRight let-data>
     <lib-view-award-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
