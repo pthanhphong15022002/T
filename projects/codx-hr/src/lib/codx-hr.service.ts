@@ -2119,9 +2119,8 @@ export class CodxHrService {
     } else if (data.status == '5') {
       for (let i = 0; i < evt.length; i++) {
         let funcIDStr = evt[i].functionID;
-        if (funcIDStr === this.actionEdit || funcIDStr === this.actionDelete){
+        if (funcIDStr == this.actionEdit || funcIDStr == this.actionDelete){
           evt[i].disabled = true;
-          break;
         } 
         switch (funcIDStr.substr(funcIDStr.length - 3)) {
           case this.actionUpdateCanceled:
