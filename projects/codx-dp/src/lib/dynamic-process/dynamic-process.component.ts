@@ -353,10 +353,10 @@ export class DynamicProcessComponent
               lstGroup: this.lstGroup,
             };
 
-         //   let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
-            // this.codxDpService.copyAvatarById(data).subscribe(res => {
-            //   if(res){
-            //     debugger;
+           let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
+            this.codxDpService.copyAvatarById(data).subscribe(res => {
+              if(res){
+                debugger;
                 var dialog = this.callfc.openForm(
                   PopupAddDynamicProcessComponent,
                   '',
@@ -374,8 +374,8 @@ export class DynamicProcessComponent
                     this.changeDetectorRef.detectChanges();
                   }
                 });
-            //   }
-            // });
+              }
+             });
           });
       });
     }

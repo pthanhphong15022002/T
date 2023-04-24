@@ -344,7 +344,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (this.newIdProccess = dt.data.newIdProccess),
         (this.listValueCopy = dt.data.listValueCopy);
       var valueListStr = this.listValueCopy.join(';');
-
+      this.getAvatar(this.process);
       this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
         this.getListStepByProcessIDCopy(
           this.oldIdProccess,
