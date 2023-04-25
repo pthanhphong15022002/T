@@ -328,6 +328,16 @@ export class CodxAdService {
     );
   }
 
+  getLstAD_UserRolesByModuleIDs(lstMDSales: string[]) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserRoleByModulesAsync',
+      [lstMDSales]
+    );
+  }
+
   getTenantDefaultSetting() {
     return this.api.execSv<any>(
       'SYS',

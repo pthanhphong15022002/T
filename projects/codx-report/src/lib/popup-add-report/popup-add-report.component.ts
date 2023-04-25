@@ -111,8 +111,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   getReport(){
     this.api
     .execSv(
-      'SYS',
-      'ERM.Business.SYS',
+      'rptsys',
+      'Codx.RptBusiniess.SYS',
       'ReportListBusiness',
       'GetByReportIDAsync',
       this.reportID
@@ -220,18 +220,18 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if(evt && evt.recID){
       this.notiService.alertCode("Xóa tham số?").subscribe((res:any)=>{
         if(res.event.status == 'Y'){
-          this.api.execSv(
-            'SYS',
-            'ERM.Business.SYS',
-            'ReportParametersBusiness',
-            'DeleteReportParamAsync',
-            evt.recID
-          )
-          .subscribe((res: any) => {
-            if (res) {
-              this.getReportParams();
-            }
-          });
+          // this.api.execSv(
+          //   'SYS',
+          //   'ERM.Business.SYS',
+          //   'ReportParametersBusiness',
+          //   'DeleteReportParamAsync',
+          //   evt.recID
+          // )
+          // .subscribe((res: any) => {
+          //   if (res) {
+          //     this.getReportParams();
+          //   }
+          // });
         }
       })
     }
@@ -243,24 +243,24 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  cellSave(evt: any){
-    if(evt.action == 'edit'){
-      if(JSON.stringify(this.oldParamData) == JSON.stringify(evt.data)) return;
-      this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'ReportParametersBusiness',
-        'UpdateReportParamAsync',
-        evt.data
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.getReportParams();
-        }
-      });
-    }
-  }
+  // cellSave(evt: any){
+  //   if(evt.action == 'edit'){
+  //     if(JSON.stringify(this.oldParamData) == JSON.stringify(evt.data)) return;
+  //     this.api
+  //     .execSv(
+  //       'SYS',
+  //       'ERM.Business.SYS',
+  //       'ReportParametersBusiness',
+  //       'UpdateReportParamAsync',
+  //       evt.data
+  //     )
+  //     .subscribe((res: any) => {
+  //       if (res) {
+  //         this.getReportParams();
+  //       }
+  //     });
+  //   }
+  // }
   setTitle(evt: any) {}
 
   buttonClick(evt: any) {}
@@ -321,8 +321,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     this.api
       .execSv(
-        'SYS',
-        'ERM.Business.SYS',
+        'rptsys',
+        'Codx.RptBusiniess.SYS',
         'ReportListBusiness',
         'AddUpdateAsync',
         [this.data, this.fuctionItem]
