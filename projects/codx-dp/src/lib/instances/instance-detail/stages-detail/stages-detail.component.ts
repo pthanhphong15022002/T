@@ -581,6 +581,7 @@ export class StagesDetailComponent implements OnInit {
         type: item?.taskType,
       };
     });
+    
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
@@ -594,6 +595,8 @@ export class StagesDetailComponent implements OnInit {
         value: value,
         listValue: listTaskConvert,
         step: this.dataStep,
+        isRoleAll: this.isRoleAll,
+        isUpdate: this.isUpdate,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -998,7 +1001,7 @@ export class StagesDetailComponent implements OnInit {
             this.calculateProgressStep();
             this.saveAssign.emit(true);
             // chuyển tiếp công việc cuối cùng
-            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
+            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100 && this.dataStep?.transferControl == '2'){
               this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);
               this.isContinueTaskEnd = true;
             }else{
@@ -1122,6 +1125,9 @@ export class StagesDetailComponent implements OnInit {
               isShowForm: this.isShowFromTaskEnd
             };
             this.serviceInstance.autoMoveStage(dataInstance);
+            setTimeout(() => {
+              this.isShowFromTaskEnd = false;
+            },2000);
           }
         }
       });
