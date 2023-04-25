@@ -228,6 +228,16 @@
           ></codx-label>
         </span>
       </div>
+
+      <div class="menu-item" *ngIf="user && user.tenant == 'default'">
+        <span (click)="clearTenant()" class="menu-link px-5">
+          <codx-label
+            fiedName="lblClearTenant"
+            [formModel]="formModel"
+            default="Xóa Tenant"
+          ></codx-label>
+        </span>
+      </div>
       <!-- <div class="menu-item" *ngIf="user && user.tenant == 'default'">
         <span (click)="testFormatString()" class="menu-link px-5">
           <codx-label
