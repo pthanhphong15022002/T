@@ -34,7 +34,7 @@ export class InputCustomFieldComponent implements OnInit {
   showErrMess = false;
   //data tesst
   typeControl = 'text';
-  currentRate = 1;
+  currentRate = 0;
   hovered = 0;
 
   min = 0;
