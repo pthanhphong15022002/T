@@ -5,7 +5,7 @@
 </codx-views>
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-25 text-primary p-3 fw-bold fw-500">
+    <div class="w-50 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-25 text-dark p-3 fw-bold fw-500">
@@ -14,9 +14,9 @@
     <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 
@@ -24,7 +24,7 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
     <!-- emp info -->
-    <div class="w-25 p-3">
+    <div class="w-50 p-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column flex-center me-2 w-50px">
           <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
@@ -130,11 +130,11 @@
     <!-- end decision -->
 
     <!-- approve status -->
-    <div class="w-25 p-3">
+    <!-- <div class="w-25 p-3">
       <codx-vll [formModel]="view.formModel" [field]="'ApproveStatus'" [value]="data?.approveStatus" [showText]="true"
         [showIcon]="false" [showBgColor]="true" ngClass="badge badge-sm">
       </codx-vll>
-    </div>
+    </div> -->
     <!-- end approve status -->
 
     <!-- moreMF -->
