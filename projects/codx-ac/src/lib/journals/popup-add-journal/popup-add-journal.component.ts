@@ -399,8 +399,8 @@ export class PopupAddJournalComponent
         .openForm(
           SingleSelectPopupComponent,
           'This param is not working',
-          400,
           500,
+          400,
           '',
           {
             selectedOption:

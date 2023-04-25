@@ -2495,6 +2495,10 @@ codx-toolbar{
   font-family: 'icomoon';
   content: "\ecb0";
 }
+codx-input .e-icons.e-check:before {
+  content: "\e774"!important;
+  font-size: 14px!important;
+}
 
 .codx-detail-toolbar{
   position: relative;
