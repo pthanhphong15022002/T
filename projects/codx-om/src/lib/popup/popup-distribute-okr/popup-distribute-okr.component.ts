@@ -175,7 +175,7 @@ export class PopupDistributeOKRComponent
               if (listOrg) {
                 this.orgUnitTree = listOrg;
                 this.codxOmService
-                  .getOKRDistributed(this.okrRecID)
+                  .getOKRHavedLinks(this.okrRecID)
                   .subscribe((links: any) => {
                     //Tạo sơ đồ tổ chức có okr đã phân bổ
                     if (links && links.length > 0) {
@@ -186,21 +186,19 @@ export class PopupDistributeOKRComponent
                           let oldLink = oldLinks.filter((itemLink) => {
                             return itemLink?.orgUnitID == item.orgUnitID;
                           });
-                          if (oldLink != null && oldLink.length>0) {
-                            oldLink= oldLink.pop();
-                            temp.okrName = oldLink.okrName;
-                            temp.orgUnitID = oldLink.orgUnitID;
-                            temp.orgUnitName = oldLink.orgUnitName;
-                            temp.umid = oldLink.umid;
-                            temp.isActive = true;
-                            temp.distributePct = oldLink.distributePct;
-                            temp.distributeValue = oldLink.distributePct;
-                            this.listDistribute.push(temp);
+                          if (oldLink != null && oldLink.length>0) {                            
+                            oldLink= oldLink.pop();                            
+                            this.listDistribute.push(oldLink);
                           } else {
-                            temp.okrName = this.dataOKR.okrName;
-                            temp.orgUnitID = item.orgUnitID;
-                            temp.orgUnitName = item.orgUnitName;
-                            temp.umid = this.dataOKR.umid;
+                            temp.okrName = this.dataOKR?.okrName;
+                            temp.orgUnitID = item?.orgUnitID;
+                            temp.orgUnitName = item?.orgUnitName;
+                            temp.umid = this.dataOKR?.umid;
+                            temp.refType='1';//Phân bổ
+                            temp.objectID=item?.orgUnitID;
+                            temp.objectType=this.orgTypeToObjectType(item?.orgUnitType);
+                            temp.okrID=this.dataOKR?.recID;
+                            temp.okrType = this.dataOKR?.okrType;
                             temp.isActive = false;
                             temp.distributePct = 0;
                             temp.distributeValue = 0;
@@ -216,13 +214,18 @@ export class PopupDistributeOKRComponent
                         (item: any) => {
                           let temp = new DistributeOKR();
                           temp.okrName = this.dataOKR.okrName;
-                          temp.orgUnitID = item.orgUnitID;
-                          temp.orgUnitName = item.orgUnitName;
-                          temp.umid = this.dataOKR.umid;
-                          temp.isActive = false;
-                          temp.distributePct = 0;
-                          temp.distributeValue = 0;
-                          this.listDistribute.push(temp);
+                            temp.orgUnitID = item.orgUnitID;
+                            temp.orgUnitName = item.orgUnitName;
+                            temp.umid = this.dataOKR.umid;
+                            temp.refType='1';//Phân bổ
+                            temp.objectID=item?.orgUnitID;
+                            temp.objectType=this.orgTypeToObjectType(item?.orgUnitType);
+                            temp.okrID=this.dataOKR?.recID;
+                            temp.okrType = this.dataOKR?.okrType;
+                            temp.isActive = false;
+                            temp.distributePct = 0;
+                            temp.distributeValue = 0;
+                            this.listDistribute.push(temp);
                         }
                       );
                       this.isAdd = true;
@@ -251,9 +254,7 @@ export class PopupDistributeOKRComponent
     this.codxOmService
       .distributeOKR(
         this.dataOKR.recID,
-        this.distributeToType,
         lastListDistribute,
-        this.isAdd
       )
       .subscribe((res) => {
         if (res) {
@@ -269,7 +270,14 @@ export class PopupDistributeOKRComponent
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-
+  orgTypeToObjectType(orgUnitType:string){
+    switch(orgUnitType){
+      case '1': return OMCONST.OBJECT_TYPE.COMP; 
+      case '4': return OMCONST.OBJECT_TYPE.DEPT;
+      case '6': return OMCONST.OBJECT_TYPE.ORG;
+      default : return null;
+    }
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
