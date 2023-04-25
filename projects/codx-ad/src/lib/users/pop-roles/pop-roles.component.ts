@@ -153,9 +153,9 @@ export class PopRolesComponent extends UIComponent {
   addRolesTimeOutID = '';
   addRoles(): Observable<boolean> {
     if (
-      this.lstNeedAddRoles.length > 0 &&
-      environment.saas == 1 &&
-      !this.ermSysTenant.includes(this.user.tenant)
+      this.lstNeedAddRoles.length > 0
+      // && environment.saas == 1 &&
+      // !this.ermSysTenant.includes(this.user.tenant)
     ) {
       console.log('lst uid', this.lstUserIDs);
 

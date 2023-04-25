@@ -6,56 +6,55 @@
 </ng-template>
 <ng-template #body>
   <div class="title-step mt-3">
-    <div class="fs-5 text-primary">{{ stepName }}</div>
+    <div class="fs-5 fw-bold text-primary">{{ stepName }}</div>
   </div>
   <div class="content-step mt-2">
-    <ng-container [ngTemplateOutlet]="test"></ng-container>
-    <div class="form-group">
-      <div>
-        <codx-label fiedName="owner" [formModel]="form.formModel" default="Phân bổ lại cho">
-        </codx-label>
+    <div class="row">
+      <div class="col-6">
+        <ng-container [ngTemplateOutlet]="test"></ng-container>
       </div>
-      <div *ngIf="stepCurrent != null">
-        <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
-          (eventUser)="eventUser($event)" [owner]="owner"></codx-popup-participants>
+      <div class="col-3">
+        <div class="form-group">
+          <codx-label fiedName="owner" [formModel]="form.formModel" default="Phân bổ lại cho">
+          </codx-label>
+          <div *ngIf="stepCurrent != null">
+            <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
+              (eventUser)="eventUser($event)" [owner]="owner"></codx-popup-participants>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <div>
-        <codx-label fiedName="ActualEnd" [formModel]="form.formModel" [Group]="form.formGroup"
+      <div class="col-3">
+        <div class="form-group">
+          <codx-label fiedName="ActualEnd" [formModel]="form.formModel" [Group]="form.formGroup"
           default="Ngày hoàn thành thực tế">
         </codx-label>
+        <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="actualEnd"
+            format="d"
+            [crrValue]="instancesStepOld.actualEnd"
+            (valueChange)="changeTime($event)"
+          >
+          </codx-input>
+        </div>
       </div>
-    <codx-input
-    type="datetime"
-    class="test-datetime"
-    field="actualEnd"
-    format="d"
-    [crrValue]="instancesStepOld.actualEnd"
-    (valueChange)="changeTime($event)"
-  >
-  </codx-input>
     </div>
-
     <div class="form-group">
-      <div>
-        <codx-label fiedName="Note" [formModel]="form.formModel" [Group]="form.formGroup" default="Ghi chú">
-        </codx-label>
-      </div>
+      <codx-label fiedName="Note" [formModel]="form.formModel" [Group]="form.formGroup" default="Ghi chú">
+      </codx-label>
       <codx-input type="textarea" field="note" [crrValue]="instancesStepOld?.note"
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <div class="form-group">
+    <div class="form-group mb-0" *ngIf="checkListDoneIsNull(listTaskDone,listTaskGroupDone)">
       <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="w-100">
-            <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+        <div class="w-100 fs-6 text-primary fw-bold">
+          <codx-label fiedName="TaskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
             default="Công việc chưa hoàn tất">
           </codx-label>
-          </div>
         </div>
-        <div class="pt-5 ms-6">
+        <div class="pt-2 ms-5">
           <div class="accordion" id="accordion1">
             <codx-step-task
               [dataSources]="instancesStepOld"
@@ -73,15 +72,14 @@
 
     <div class="form-group" *ngIf="fieldsNull?.length > 0">
       <div>
-        <div class="d-flex justify-content-end">
-          <div class="me-auto">
-            <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
-            default="Trường tùy chỉnh">
-          </codx-label>
-          </div>
+        <div class="w-100 fs-6 text-primary fw-bold">
+          <codx-label fiedName="Fields" [formModel]="form.formModel" [Group]="form.formGroup"
+          default="Trường tùy chỉnh">
+        </codx-label>
         </div>
-        <div class="pt-5">
+        <div class="pt-3 row">
             <ng-container *ngFor="let item of fieldsNull">
+              <div class="col-6">
                 <codx-input-custom-field
                   [customField]="item"
                   [checkValid]="true"
@@ -91,6 +89,7 @@
                   (valueChangeCustom)="valueChangeCustom($event)"
                 >
                 </codx-input-custom-field>
+              </div>
             </ng-container>
         </div>
       </div>

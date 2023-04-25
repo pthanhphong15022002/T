@@ -12,3 +12,10 @@ export class AD_UserRoles {
   modifiedOn: string;
   modifiedBy: string;
 }
+
+export class tmpUserRoleInfo {
+  userID: string;
+  email: string;
+  fullName: string;
+  endDate: string;
+}

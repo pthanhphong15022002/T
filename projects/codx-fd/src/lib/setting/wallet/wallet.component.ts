@@ -393,10 +393,11 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.changedr.detectChanges();
   }
 
-  redirectPage(page) {
-    // this.router.navigate(['/' + this.tenant + '/fed/setting'], {
-    //   queryParams: { funcID: 'FED204', page: page },
-    // });
+  redirectPage(page, number) {
+    this.codxService.navigate('', 'fd/settings/FDS', {
+      redirectPage: page,
+      index: number,
+    });
   }
 
   openFormChangeCoin(content, typeContent) {

@@ -85,6 +85,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
   dialogAddEdit: DialogRef;
+  dataCategory: any;
 
   itemDetail;
 
@@ -159,6 +160,9 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   clickMF(event, data) {
     switch (event.functionID) {
+      case this.actionSubmit:
+        this.beforeRelease();
+        break;
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
       case this.actionUpdateRejected:
@@ -321,4 +325,62 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.clickMF(event?.event, event?.data);
   }
   getDetailEAward(event, data) {}
+
+  //#region gui duyet
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eBasicSalaryObj = parsedJSON[index];
+          if (eBasicSalaryObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+            //đợi BA mô tả
+          }
+        }
+      }
+    });
+  }
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.dataCategory = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.dataCategory.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> ' + this.view.function.description +' - ' 
+                + this.itemDetail.decisionNo + '</div>'
+            )
+            .subscribe((result) => {
+              // console.log('ok', result);
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .UpdateEmployeeAwardInfo((res) => {
+                    if (res) {
+                      // console.log('after release', res);
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
+        }
+      });
+  }
+  //#endregion
 }
