@@ -4,19 +4,26 @@ import {
   Component,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
+  CodxGridviewV2Component,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
-import { log } from 'console';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddSegmentComponent } from '../popup-add-segment/popup-add-segment.component';
 
 @Component({
   selector: 'lib-popup-add-auto-number',
@@ -24,6 +31,8 @@ import { CodxEsService } from '../../../codx-es.service';
   styleUrls: ['./popup-add-auto-number.component.scss'],
 })
 export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('grid') grid!:CodxGridviewV2Component;
   dialogAutoNum: FormGroup;
   dialog: DialogRef;
   isAfterRender = false;
@@ -47,18 +56,41 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   invalidValue = false;
 
   data: any = {};
-  autoDefaultData: any;
-
+  autoDefaultData: any = {};
+  autoNoSetting:any ={
+    lastNumber: 1,
+  };
   isAdd: boolean = true;
 
+  basicCollapsed: boolean = false;
+  advanceCollapsed:boolean = true;
+  basicOnly:boolean=false;
   headerText = 'Thiết lập số tự động';
   subHeaderText = '';
+  columns: any=[];
+   grvSegments:string = 'grvAutoNumberSegments';
+   formNameSegments:string = 'AutoNumberSegments';
+   entitySegments:string = 'AD_AutoNumberSegments'
+   editSettings: EditSettingsModel = {
+    allowEditing: true,
+    allowAdding: true,
+    allowDeleting: true,
+    mode: 'Dialog',
+  };
+
+  autoAssignRule:string='2';
+  autoNoSegments:any=[];
+  addedSegments:any=[];
+  autoNumberSettingPreview:string ='';
+  funcItem!:any;
   constructor(
     private cache: CacheService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
-    private auth: AuthStore,
+    private api: ApiHttpService,
     private notify: NotificationsService,
+    private callfunc: CallFuncService,
+    private auth : AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -70,7 +102,14 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
     // Thiết lập số tự động mặc định của function
     this.functionID = data?.data?.functionID;
-
+    if(this.functionID){
+      this.autoDefaultData.functionID = this.functionID;
+      this.autoNoSetting.numberSettingID = this.functionID;
+      this.autoNoSetting.numberType='1'
+    }
+    if(data?.data?.basicOnly){
+      this.basicOnly = true;
+    }
     //tao moi autoNumber theo autoNumber mẫu
     this.newAutoNoCode = data?.data?.newAutoNoCode;
     this.isSaveNew = data?.data?.isSaveNew ?? '0';
@@ -96,7 +135,24 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.formModel.gridViewName = 'grvAutoNumbers';
     this.dialog.formModel = this.formModel;
 
+    this.cache.gridViewSetup(this.formNameSegments,this.grvSegments).subscribe((res:any)=>{
+      this.columns = Object.values(res) as any[];
+      console.log(this.columns);
+
+    })
     if (this.functionID) {
+      this.cache.functionList(this.functionID).subscribe((res:any)=>{
+        if(res){
+          this.funcItem = res;
+          this.autoNoSetting.entityName = this.funcItem.entityName;
+        }
+
+      })
+      this.api.execSv("SYS",'ERM.Business.AD','AutoNumberSegmentsBusiness','GetListSegmentsAsync',[this.functionID]).subscribe((res:any)=>{
+        if(res){
+          this.autoNoSegments = res;
+        }
+      })
       this.fmANumberDefault = new FormModel();
       this.fmANumberDefault.entityName = 'AD_AutoNumberDefaults';
       this.fmANumberDefault.formName = 'AutoNumberDefaults';
@@ -114,10 +170,27 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               .getAutoNumberDefaults(this.functionID)
               .subscribe((model) => {
                 if (model) {
-                  model.autoNumber = this.autoNoCode;
+                  if(this.autoNoCode){
+                    model.autoNumber = this.autoNoCode;
+                  } else this.autoNoCode = model.autoNumber;
+                  //model.autoNumber = this.autoNoCode;
                   this.fmANumberDefault.currentData = model;
                   this.autoDefaultData = model;
                   this.fgANumberDefault.patchValue(this.autoDefaultData);
+                  if(this.autoDefaultData.autoNoType == '1'){
+                    this.basicCollapsed = false;
+                    this.advanceCollapsed = true;
+                  }
+                  else if(this.autoDefaultData.autoNoType == '2'){
+                    this.basicCollapsed = true;
+                    this.advanceCollapsed = false;
+                    this.api.execSv("SYS",'ERM.Business.AD','AutoNumberSettingsBusiness','GetAsync',this.functionID).subscribe((res:any)=>{
+                      if(res){
+                        this.autoNoSetting = res;
+                      }
+
+                    })
+                  }
                   this.cr.detectChanges();
                   this.afterFgANumberDefault = true;
                 }
@@ -126,6 +199,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         });
 
       this.esService.getAutoNumber;
+
+
     }
 
     this.esService.setCacheFormModel(this.formModel);
@@ -205,6 +280,16 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     }
   }
 
+  valueDefaultChange(event:any,field:string=''){
+    if(!field) field = event.field;
+    this.autoDefaultData[field] = event.data;
+  }
+
+  valueSettingChange(event:any,field:string =''){
+    if(!field) field = event.field;
+    this.autoNoSetting[field] = event.data;
+    this.setAutoSetingPreview();
+  }
   onSaveForm() {
     if (this.dialogAutoNum.invalid == true) {
       this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
@@ -253,6 +338,17 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.autoDefaultData = res;
+            if(this.autoDefaultData.autoNoType == '2'){
+              this.api.execAction('AD_AutoNumberSettings',[this.autoNoSetting],this.autoNoSetting.recID ?'UpdateAsync' :"SaveAsync").subscribe((rs:any)=>{
+                if(this.addedSegments.length){
+                 this.api.execAction('AD_AutoNumberSegments',this.addedSegments,"SaveAsync").subscribe((res:any)=>{
+                  if(res){
+                    debugger
+                  }
+                 })
+                }
+              })
+            }
           }
         });
     }
@@ -458,5 +554,80 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         this.notify.notifyCode('AD018');
       }
     }, 500);setTimeout
+  }
+
+  collapse(name:string){
+    if(name == 'basic'){
+
+      if(!this.basicOnly){
+        this.basicCollapsed = !this.basicCollapsed;
+        this.advanceCollapsed = !this.basicCollapsed;
+      }
+      else{
+        this.basicCollapsed=false;
+        this.advanceCollapsed = true;
+      }
+
+    }
+    if(name == 'advance'){
+      if(!this.basicOnly){
+        this.advanceCollapsed = !this.advanceCollapsed;
+        this.basicCollapsed = !this.advanceCollapsed;
+      }
+    }
+  }
+
+  addSegment(){
+    let option = new DialogModel;
+    let dialog = this.callfunc.openForm(PopupAddSegmentComponent,'',400,600,'',{autoNoSetting:this.autoNoSetting,columns:this.columns,segment:null},'',option);
+    dialog.closed.subscribe((res:any)=>{
+      if(res.event){
+        let newSegment = res.event;
+        newSegment.createdBy = this.auth.get().userID;
+        newSegment.createdOn = new Date;
+        if(!newSegment.recID) newSegment.recID = Util.uid();
+        this.addedSegments.push(newSegment);
+        this.autoNoSegments.push(newSegment);
+        this.autoNoSegments = this.autoNoSegments.slice();
+        this.setAutoSetingPreview();
+      }
+    })
+  }
+
+  setAutoSetingPreview(){
+    if(this.autoNoSegments.length){
+      let strFormat ='';
+      let arr = this.autoNoSegments.map((x:any)=> x.dataFormat);
+      // if(this.autoNoSetting.maxLength){
+      //   strFormat = this.truncateString(arr.join(''),this.autoNoSetting.maxLength);
+      // }
+      // else{
+      //   strFormat = arr.join('');
+      // }
+      strFormat = arr.join('');
+      if(this.autoNoSetting.lastNumber){
+        let str = this.autoNoSetting.lastNumber+'';
+        if(this.autoNoSetting.maxLength){
+          if(arr.length < this.autoNoSetting.maxLength - str.split('').length){
+            let stringFormat = strFormat+ '#'.repeat(this.autoNoSetting.maxLength- arr.length - str.split('').length || 0)+str;
+            strFormat = stringFormat;
+          }
+          else{
+            strFormat = this.truncateString(strFormat,this.autoNoSetting.maxLength - str.split('').length -1)
+            let stringFormat = strFormat+ '#'.repeat(this.autoNoSetting.maxLength- arr.length - str.split('').length || 0)+str;
+            strFormat = stringFormat;
+          }
+        }
+      }
+      this.autoNumberSettingPreview = strFormat;
+    }
+  }
+
+
+  private  truncateString(str:string, num:number,format:string ='') {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + format
   }
 }

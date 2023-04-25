@@ -60,6 +60,7 @@ export class PopRolesComponent extends UIComponent {
   // isUserGroup = false;
   lstUserIDs: string[] = [];
   needValidate = true;
+  autoCreated = false;
 
   user: UserModel;
   ermSysTenant = ['', 'default'];
@@ -79,7 +80,7 @@ export class PopRolesComponent extends UIComponent {
     this.formType = dt?.data.formType;
     this.lstUserIDs = dt?.data?.lstMemIDs;
     this.needValidate = dt?.data?.needValidate;
-    console.log('lst uid', this.lstUserIDs);
+    this.autoCreated = dt.data?.autoCreated;
 
     this.user = authStore.get();
   }
@@ -162,7 +163,8 @@ export class PopRolesComponent extends UIComponent {
         .addUpdateAD_UserRoles(
           this.lstNeedAddRoles,
           this.lstUserIDs,
-          this.needValidate
+          this.needValidate,
+          this.autoCreated
         )
         .pipe(
           map((lstAddedRoles: tmpformChooseRole[]) => {
@@ -191,13 +193,21 @@ export class PopRolesComponent extends UIComponent {
 
   removeRoles() {
     if (this.lstNeedRemoveRoles.length > 0) {
+      let lstRemoveModuleIDs = [];
+      let lstRemoveMDS = [];
+      this.lstNeedRemoveRoles.forEach((role) => {
+        lstRemoveModuleIDs.push(role.module);
+        if (!lstRemoveMDS.includes(role.moduleSales)) {
+          lstRemoveMDS.push(role.moduleSales);
+        }
+      });
       this.adService
-        .removeAD_UserRoles(this.lstNeedRemoveRoles, this.lstUserIDs)
-        .subscribe((lstRemovedRoles: tmpformChooseRole[]) => {
-          this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
-            return !lstRemovedRoles.includes(role);
-          });
-          console.log('after Remove', this.lstNeedRemoveRoles);
+        .removeAD_UserRoles(lstRemoveModuleIDs, lstRemoveMDS, this.lstUserIDs)
+        .subscribe((lstRemovedRoles: string[]) => {
+          // this.lstNeedRemoveRoles = lstRemovedRoles.filter((role) => {
+          //   return !lstRemovedRoles.includes(role);
+          // });
+          this.lstNeedRemoveRoles = [];
         });
     }
   }

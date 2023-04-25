@@ -15,29 +15,8 @@
 >
 </codx-views>
 
-<ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblJobSalaries"
-      [default]="'Lương chức danh | Hiệu lực'"
-    ></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblApproveStatus"
-      [default]="'Tình trạng duyệt'"
-    ></codx-label>
-  </div>
-</ng-template>
-
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
     <div class="w-25">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
@@ -68,7 +47,7 @@
               <span class="text-danger">{{ data?.emp?.employeeID }}</span>
             </div>
           </div>
-          <div class="text-gray-700">
+          <div class="text-gray-700 fs-7 mb-1">
             <span
               [innerHTML]="
                 data?.emp?.positionID
@@ -152,12 +131,17 @@
             >
               {{ data?.decisionNo }}
             </span>
-            <span class="p-dot mx-1"> ⚫ </span>
+            <span> - </span>
             <span
               [title]="eJobSalaryHeader ? eJobSalaryHeader['SignedDate'] : ''"
+              [innerHTML]="
+                data?.signedDate
+                  | formatvalue : view.formModel : 'signedDate'
+                  | async
+              "
             >
-              {{ data?.signedDate | fmDT }}</span
-            >
+              <!-- {{ data?.signedDate | fmDT }} -->
+            </span>
           </div>
         </div>
         <div class="d-flex flex-row">
@@ -165,6 +149,7 @@
             <codx-attachment-temp
               [objectID]="data?.recID"
               [formModel]="view.formModel"
+              [count]="data.attachments"
             >
             </codx-attachment-temp>
 
@@ -182,10 +167,11 @@
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
+            ngClass="badge badge-sm"
           >
           </codx-vll>
         </div>
-      </div> 
+      </div>
     </div>
 
     <div class="w-25">
@@ -196,6 +182,7 @@
         [showText]="true"
         [showIcon]="false"
         [showBgColor]="true"
+        ngClass="badge badge-sm"
       >
       </codx-vll>
     </div>
@@ -212,6 +199,27 @@
         </codx-mfunc>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate let-data>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblJobSalaries"
+      [default]="'Lương chức danh | Hiệu lực'"
+    ></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+  </div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">
+    <codx-label
+      name="lblApproveStatus"
+      [default]="'Tình trạng duyệt'"
+    ></codx-label>
   </div>
 </ng-template>
 
@@ -292,8 +300,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="clickMF($event, data)"
-    cardCss="card codx_cardcenter p-3"
-    [imageId]="data?.emp?.employeeID"
+    [imageId]="data?.employeeID"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="40"
     [formModel]="view.formModel"
@@ -304,19 +311,11 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
-  <codx-vll
-    class="badge badge-sm p-gender"
-    [name]="genderGrvSetup?.referedValue"
-    [value]="data?.emp?.gender"
-    [showText]="true"
-    [showIcon]="false"
-    [showBgColor]="false"
-  >
-  </codx-vll>
+
   <ng-template #titleTmp let-data>
     <div class="w-100">
       <div class="justify-content-between">
-        <!-- <codx-vll
+        <codx-vll
           class="badge badge-sm"
           [name]="genderGrvSetup?.referedValue"
           [value]="data?.emp?.gender"
@@ -324,7 +323,7 @@
           [showIcon]="false"
           [showBgColor]="false"
         >
-        </codx-vll> -->
+        </codx-vll>
         <span>
           {{ data?.emp?.employeeName }}
         </span>

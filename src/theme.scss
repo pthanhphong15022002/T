@@ -241,6 +241,10 @@
     color: var(--text-body);
     --title-color: var(--primary);
 
+    .fs-5 {
+      font-size: 1.1rem !important;
+    }
+
     background-color: var(--bg-body);
   }
 

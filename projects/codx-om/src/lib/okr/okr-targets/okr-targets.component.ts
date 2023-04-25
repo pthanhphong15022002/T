@@ -59,7 +59,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() okrGrv:any;  
   @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
   @Input() isCollapsed = false;
-  @Input() listUM=[] ;
+  @Input() listUM=[] ;  
+  @Input() currentUser ;
   @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =new EventEmitter();
   dtStatus = [];
   krTitle = '';
@@ -813,7 +814,8 @@ export class OkrTargetsComponent implements OnInit {
       [kr, popupTitle, { ...this.groupModel?.checkInsModel },this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res?.event && res?.event.length !=null) {        
+      if (res?.event && res?.event.length !=null) {      
+        this.isCollapsed==false;  
         this.getOKRPlanForComponent.emit(this.dataOKRPlans);
         if(res?.event.length>0){
 
@@ -1007,7 +1009,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
+      [okr.okrName, okr.recID, okr.okrType, this.funcID, title,this.currentUser],
       '',
       dModel
     );
@@ -1033,6 +1035,7 @@ export class OkrTargetsComponent implements OnInit {
     );
     dialogAssgOKR.closed.subscribe((res) => {
       if (res?.event) {
+        this.isCollapsed==false; 
         this.getOKRPlanForComponent.emit(res?.event);
       }
     });
@@ -1047,14 +1050,6 @@ export class OkrTargetsComponent implements OnInit {
     if(evt !=null && data!=null){
       this.selectOKR=data;
       let dialogShowTask = this.callfunc.openForm(this.showTask, '', 1280, 720, null);
-    }
-  }
-  showComments(evt:any,data:any){    
-    evt.stopPropagation();
-    evt.preventDefault();
-    if(evt !=null && data!=null){
-      this.selectOKR=data;
-      let dialogShowComment = this.callfunc.openForm(this.showCommnent, '', 500, 720, null);
     }
   }
 }

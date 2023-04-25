@@ -5,8 +5,8 @@
   entityName="SM_SalesInvoices"
   predicates="JournalNo=@0"
   [dataValues]="journalNo"
-  (buttonClick)="handleClickAdd($event)"
-  (selectedChange)="handleChange($event)"
+  (buttonClick)="onClickAdd($event)"
+  (selectedChange)="onChange($event)"
 >
 </codx-views>
 
@@ -14,7 +14,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="view.formModel"
-    (clickMF)="handleClickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
@@ -34,7 +34,7 @@
     [hideMF]="false"
     typeMF="hover"
     moreFuncCss="me-15"
-    (clickMF)="handleClickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
   >
   </codx-temp-full>
 </ng-template>
@@ -101,7 +101,7 @@
     [formModel]="view.formModel"
     [dataItem]="selectedData"
     [footer]="contentFooter"
-    (clickMF)="handleClickMF($event, selectedData)"
+    (clickMF)="onClickMF($event, selectedData)"
   >
   </codx-detail-tmp>
 </ng-template>
@@ -306,59 +306,9 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col" *ngFor="let th of ths">
-                    <codx-label
-                      [fiedName]="th.field"
-                      [default]="th.label"
-                      [formModel]="fmSalesInvoicesLines"
-                    ></codx-label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let line of salesInvoicesLines">
-                  <th scope="row">{{ line.refLineNo }}</th>
-                  <td>
-                    <div class="fw-bold">{{ line.itemName }}</div>
-                    <div>
-                      <span>Quy cách: test</span>&nbsp;|&nbsp;<span
-                        >Quy cách: test</span
-                      >
-                    </div>
-                    <codx-vll
-                      [formModel]="fmSalesInvoicesLines"
-                      field="LineType"
-                      [value]="line.lineType"
-                      [showText]="true"
-                      [showBgColor]="true"
-                      class="badge badge-light badge-md fs-4 me-3"
-                    >
-                    </codx-vll>
-                  </td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
-                  <td>@mdo</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th></th>
-                  <th>Tổng cộng</th>
-                  <th>40</th>
-                  <th>261</th>
-                  <th>261</th>
-                  <th></th>
-                  <th>261</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+          <lib-table-line-detail
+            [salesInvoicesLines]="salesInvoicesLines"
+          ></lib-table-line-detail>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

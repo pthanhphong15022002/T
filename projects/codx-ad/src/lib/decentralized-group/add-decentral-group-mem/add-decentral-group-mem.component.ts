@@ -5,6 +5,7 @@ import {
   DialogRef,
   FormModel,
   LayoutAddComponent,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
@@ -40,6 +41,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private adServices: CodxAdService,
+    private notify: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -80,10 +82,11 @@ export class AddDecentralGroupMemComponent extends UIComponent {
 
   openPopRoles() {
     let option = new DialogModel();
-    let needValidate = this.groupData.memberIDs?.split(';')?.length > 0;
+
+    let needValidate = this.groupData.memberIDs != '';
     let lstUserIDs = [this.groupData.groupID];
     if (needValidate) {
-      lstUserIDs.push(this.groupData.memberIDs?.split(';'));
+      lstUserIDs.push(...(this.groupData.memberIDs?.split(';') ?? undefined));
     }
 
     let obj = {
@@ -91,6 +94,7 @@ export class AddDecentralGroupMemComponent extends UIComponent {
       data: this.groupData.groupRoles,
       lstMemIDs: lstUserIDs,
       needValidate: needValidate,
+      autoCreated: true,
     };
     let dialogRoles = this.callfc.openForm(
       PopRolesComponent,
@@ -110,33 +114,94 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   changeLstMembers(event) {
     this.popAddMemberState = !this.popAddMemberState;
     if (event == null) return;
-    this.groupData.members = [];
 
-    event?.dataSelected?.forEach((mem) => {
-      let tmpGroupMem: GroupMembers = {
-        memberID: mem.UserID,
-        memberName: mem.UserName,
-        memberType: 'U',
-        groupID: '',
-        roleType: '',
-        description: '',
-        positionName: mem.PositionName,
-        orgUnitName: mem.OrgUnitName,
-      };
-      this.groupData.members.push(tmpGroupMem);
-    });
-    this.groupData.memberIDs = event?.id;
+    if (event?.id != '') {
+      this.adServices
+        .validateGroupMemberRoles(event?.id)
+        .subscribe((lstInvalidMemberIDs: string[]) => {
+          if (lstInvalidMemberIDs?.length > 0) {
+            let lstInvalidMemberNames = [];
+            event?.dataSelected?.forEach((x) => {
+              if (lstInvalidMemberIDs.includes(x.UserID)) {
+                lstInvalidMemberNames.push(x.UserName);
+              }
+            });
+            //canh bao muon ghi de quyen khong
+            this.notify
+              .alertCode(
+                `Tài khoản ${lstInvalidMemberNames.join(
+                  ', '
+                )}, bạn có muốn ghi đè quyền`
+              )
+              .subscribe((e) => {
+                let isOverrideRoles = false;
+                if (e?.event?.status == 'Y') {
+                  isOverrideRoles = true;
+                }
+
+                this.addMember(event, isOverrideRoles);
+              });
+          } else {
+            this.addMember(event, false);
+          }
+        });
+    }
   }
 
-  removeMember(item) {
-    this.groupData.members = this.groupData.members.filter(
-      (mem) => mem.memberID != item.memberID
-    );
-    let tmpMemberIDs = [];
-    this.groupData.members.forEach((mem) => {
-      tmpMemberIDs.push(mem.memberID);
+  addMember(event: any, isOverrideRoles: boolean) {
+    let lstMemberIDs = this.groupData.memberIDs;
+    this.groupData.memberIDs = event?.id;
+
+    this.adServices
+      .addUserGroupMemberAsync(this.groupData, isOverrideRoles)
+      .subscribe((result) => {
+        this.groupData.memberIDs = lstMemberIDs;
+        if (result) {
+          event?.dataSelected?.forEach((mem) => {
+            let tmpGroupMem: GroupMembers = {
+              memberID: mem.UserID,
+              memberName: mem.UserName,
+              memberType: 'U',
+              groupID: '',
+              roleType: '',
+              description: '',
+              positionName: mem.PositionName,
+              orgUnitName: mem.OrgUnitName,
+            };
+            this.groupData.members.push(tmpGroupMem);
+          });
+          if (this.groupData.memberIDs != '') {
+            this.groupData.memberID += ';';
+          }
+          this.groupData.memberID += event?.id;
+        }
+      });
+  }
+
+  removeMember(member) {
+    let lstMDID = [];
+    let lstMDS = [];
+
+    this.groupData.groupRoles.forEach((role) => {
+      lstMDID.push(role.module);
+      if (!lstMDS.includes(role.moduleSales)) {
+        lstMDS.push(role.moduleSales);
+      }
     });
-    this.groupData.memberIDs = tmpMemberIDs.join(';');
+    this.adServices
+      .removeGroupMember(lstMDID, lstMDS, member)
+      .subscribe((result) => {
+        if (result) {
+          this.groupData.members = this.groupData.members.filter(
+            (mem) => mem.memberID != member.memberID
+          );
+          let tmpMemberIDs = [];
+          this.groupData.members.forEach((mem) => {
+            tmpMemberIDs.push(mem.memberID);
+          });
+          this.groupData.memberIDs = tmpMemberIDs.join(';');
+        }
+      });
   }
 
   beforeSave(opt: RequestOption) {
@@ -154,26 +219,35 @@ export class AddDecentralGroupMemComponent extends UIComponent {
   }
 
   onSave(closePopup: boolean) {
-    this.dialog.dataService
-      .save((opt: RequestOption) => this.beforeSave(opt), 0)
-      .subscribe((res: any) => {
-        if (res && !res.error) {
-          if (!this.isSaved) {
-            this.groupData.groupID =
-              this.dialog.dataService.dataSelected.groupID;
-            this.groupData.members?.forEach((mem) => {
-              mem.groupID = this.dialog.dataService.dataSelected.groupID;
-            });
+    console.log('dirty', this.form.formGroup.dirty);
+    if (this.form?.formGroup?.dirty) {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0)
+        .subscribe((res: any) => {
+          if (res && !res.error) {
+            if (!this.isSaved) {
+              this.groupData.groupID =
+                this.dialog.dataService.dataSelected.groupID;
+              this.groupData.members?.forEach((mem) => {
+                mem.groupID = this.dialog.dataService.dataSelected.groupID;
+              });
 
-            this.isSaved = true;
-          }
+              this.isSaved = true;
+            }
 
-          if (closePopup) {
-            this.dialog.close(this.groupData);
-          } else {
-            this.openPopRoles();
+            if (closePopup) {
+              this.dialog.close(this.groupData);
+            } else {
+              this.openPopRoles();
+            }
           }
-        }
-      });
+        });
+    } else {
+      if (closePopup) {
+        this.dialog.close(this.groupData);
+      } else {
+        this.openPopRoles();
+      }
+    }
   }
 }

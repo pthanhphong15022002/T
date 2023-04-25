@@ -515,6 +515,9 @@ ejs-calendar {
 .card {
   box-shadow: none;
 }
+.card-group {
+  align-content: flex-start;
+}
 
 a:link {
   cursor: pointer;
@@ -1370,8 +1373,8 @@ codx-vll {
   padding: 0.375rem calc(0.45rem + 1px) !important;
 }
 
-.popup-attachment .fw-bold.line-clamp.line-clamp-1 {
-  word-break: break-word;
+.line-clamp.line-clamp-1 {
+  word-break: break-all;
 }
 
 .tab-content > .tab-pane {
@@ -1400,7 +1403,7 @@ codx-vll {
   content: ":";
   position: absolute;
   right: 6px;
-  bottom: 0;
+  top: 0;
   height: 18px;
 }
 
@@ -2482,7 +2485,65 @@ codx-toolbar{
     margin-bottom: 10px;
   }
 }
+
+
 /**** end ac-dialog ***/
+
+.e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {
+  font-family: 'icomoon';
+  content: "\ecb0";
+}
+
+.codx-detail-toolbar{
+  position: relative;
+  z-index: 99;
+}
+.text-gray-700.text-gray-500{
+  color: var(--gray-500)!important;
+}
+.text-gray-700.text-gray-600{
+  color: var(--gray-600)!important;
+}
+
+.okr-inplace{
+  .e-editable-value{
+    white-space: normal!important;
+    margin: 0!important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper{
+    padding: 0!important;
+  }
+}
+// .vll-inplace .rounded-pill{
+//   width: fit-content!important;
+//   padding: 3px 7px!important;
+//   margin: 0!important;
+//   border: 1px aqua solid!important;
+// }
+.e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+  text-transform: none!important;
+}
+.badge.me-0.me-2{
+  margin-right: 0!important;
+}
+.avatar-vllbadge{
+  position: relative;
+  .vll-badge{
+    position: absolute;
+    top: 50px;
+    width:60px;
+    left: 0;
+  }
+}
+
+// .form-control {
+//   border-color: var(--gray-150);
+// }
+
+
+
+
+///
 
 // codx-view-list .e-listview .e-list-item{
 //   border-bottom: 1px var(--gray-150) solid !important;

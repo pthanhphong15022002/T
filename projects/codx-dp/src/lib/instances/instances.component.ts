@@ -66,18 +66,16 @@ export class InstancesComponent
   @ViewChild('detailViewInstance') detailViewInstance: InstanceDetailComponent;
   @ViewChild('detailViewPopup') detailViewPopup: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
-  @Output() valueListID = new EventEmitter<any>();
-  @Output() listReasonBySteps = new EventEmitter<any>();
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
 
-  views: Array<ViewModel> = [];
+  @Output() valueListID = new EventEmitter<any>();
+  @Output() listReasonBySteps = new EventEmitter<any>();
 
+  views: Array<ViewModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -172,7 +170,7 @@ export class InstancesComponent
   esCategory: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-
+  ownerStepProcess: any;
   //test temp
   dataTemplet = [
     {
@@ -240,7 +238,6 @@ export class InstancesComponent
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-    //thao tesst
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.processID = param['processID'];
@@ -291,17 +288,6 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
-    // if (!this.haveDataService) {
-    //   let dataProcess = await firstValueFrom(
-    //     this.codxDpService.getProcessByProcessID(this.processID)
-    //   );
-    //   if (dataProcess && dataProcess.read) {
-    //     this.loadData(dataProcess);
-    //     // this.continueLoad = true ;
-    //   } else {
-    //     this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
-    //   }
-    // }
     this.views = [
       {
         type: ViewType.listdetail,
@@ -397,20 +383,6 @@ export class InstancesComponent
         break;
     }
   }
-  getPropertyColumn() {
-    let dataColumns =
-      this.kanban?.columns?.map((column) => {
-        return {
-          recID: column['dataColums']?.recID,
-          icon: column['dataColums']?.icon || null,
-          iconColor: column['dataColums']?.iconColor || null,
-          backgroundColor: column['dataColums']?.backgroundColor || null,
-          textColor: column['dataColums']?.textColor || null,
-        };
-      }) || [];
-
-    return dataColumns;
-  }
 
   getAdminRoleDP() {
     if (!this.user.administrator) {
@@ -426,6 +398,21 @@ export class InstancesComponent
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';
+  }
+
+  getPropertyColumn() {
+    let dataColumns =
+      this.kanban?.columns?.map((column) => {
+        return {
+          recID: column['dataColums']?.recID,
+          icon: column['dataColums']?.icon || null,
+          iconColor: column['dataColums']?.iconColor || null,
+          backgroundColor: column['dataColums']?.backgroundColor || null,
+          textColor: column['dataColums']?.textColor || null,
+        };
+      }) || [];
+
+    return dataColumns;
   }
 
   //CRUD
@@ -661,61 +648,6 @@ export class InstancesComponent
       });
   }
 
-  //End
-
-  //Event
-  clickMF(e, data?) {
-    this.dataSelected = data;
-    this.titleAction = e.text;
-    this.moreFunc = e.functionID;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data, e.text);
-        break;
-      case 'SYS04':
-        this.copy(data, e.text);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'DP09':
-        // listStep by Id Instacess is null
-        this.moveStage(e.data, data, this.lstStepInstances);
-        break;
-      case 'DP02':
-        this.moveReason(e.data, data, !this.isMoveSuccess);
-        break;
-      case 'DP10':
-        this.moveReason(e.data, data, this.isMoveSuccess);
-        break;
-      //Đóng nhiệm vụ = true;
-      case 'DP14':
-        this.openOrClosed(data, true);
-        break;
-      //Mở nhiệm vụ = false;
-      case 'DP15':
-        this.openOrClosed(data, false);
-        break;
-      //export File
-      case 'DP16':
-        this.isFormExport = true;
-        this.showFormExport();
-        break;
-      //trinh kí File
-      case 'DP17':
-        this.isFormExport = false;
-        this.showFormSubmit();
-        break;
-      case 'DP21':
-        this.handelStartDay(data);
-        break;
-      //xuat khau du lieu
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
-
   handelStartDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.title + '"' || ''])
@@ -781,7 +713,7 @@ export class InstancesComponent
     return true;
   }
 
-  //#popup roles
+  //#Event
   changeDataMF(e, data) {
     if (e != null && data != null) {
       if (data.status != '1') {
@@ -807,13 +739,8 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (!data.permissionCloseInstances || data.status != '2') {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed
-                )
-                  res.disabled = true;
+              if (this.checkMoreReason(data, null)) {
+                res.disabled = true;
               }
               break;
             //Copy
@@ -827,7 +754,8 @@ export class InstancesComponent
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed) res.disabled = true;
+              if (!isDelete || data.closed || data.status != '2')
+                res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
@@ -841,31 +769,20 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (!data.permissionCloseInstances || data.status != '2') {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseFail
-                )
-                  res.disabled = true;
+              if (this.checkMoreReason(data, !this.isUseFail)) {
+                res.disabled = true;
               }
               break;
             case 'DP10':
-              if (
-                !data.permissionCloseInstances ||
-                (data.permissionCloseInstances && data.status != '2')
-              ) {
-                if (
-                  !data.permissionMoveInstances ||
-                  data.status != '2' ||
-                  data.closed ||
-                  !this.isUseSuccess
-                ) {
-                  res.disabled = true;
-                }
+              if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                res.disabled = true;
               }
-
+              break;
+            //an khi aprover rule
+            case 'DP17':
+              if (!this.process?.approvalRule) {
+                res.isblur = true;
+              }
               break;
             case 'SYS004':
             case 'SYS002':
@@ -896,7 +813,72 @@ export class InstancesComponent
       }
     }
   }
+
+  clickMF(e, data?) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data, e.text);
+        break;
+      case 'SYS04':
+        this.copy(data, e.text);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'DP09':
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, this.lstStepInstances);
+        break;
+      case 'DP02':
+        this.moveReason(e.data, data, !this.isMoveSuccess);
+        break;
+      case 'DP10':
+        this.moveReason(e.data, data, this.isMoveSuccess);
+        break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
+      //export File
+      case 'DP16':
+        this.isFormExport = true;
+        this.showFormExport();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.isFormExport = false;
+        this.showFormSubmit();
+        break;
+      case 'DP21':
+        this.handelStartDay(data);
+        break;
+      //xuat khau du lieu
+      case 'SYS002':
+        this.exportFile();
+        break;
+    }
+  }
   //End
+  checkMoreReason(data, isUseReason) {
+    if (data.status != '2' || isUseReason) {
+      return true;
+    }
+    if (
+      !data.permissionCloseInstances ||
+      !data.permissionMoveInstances ||
+      data.closed
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -924,6 +906,16 @@ export class InstancesComponent
     formModel.entityName = 'DP_Instances';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
+  }
+
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
+
+      return checkOwner != null ? checkOwner.objectID : null;
+    } else {
+      return null;
+    }
   }
 
   showInput(data) {}
@@ -979,18 +971,12 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notify(
-        'Không thể chuyển tiếp giai đoạn khi chưa bắt đầu ! - Khanh thêm mess gấp để thay thế!',
-        '2'
-      );
+      this.notificationsService.notify('DP037');
       this.changeDetectorRef.detectChanges();
       return;
     }
     if (data.status != '1' && data.status != '2') {
-      this.notificationsService.notify(
-        'Chị khanh ơi thêm giúp em message thành công rồi ko cho kéo thả với',
-        '2'
-      );
+      this.notificationsService.notify('DP038');
       this.changeDetectorRef.detectChanges();
       return;
     }
@@ -1184,14 +1170,25 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (checkTransferControl == '1') {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.handleMoveStage(dataInstance);
+    if (checkTransferControl == '1' || checkTransferControl == '2' ) {
+
+      if(dataInstance.isShowForm) {
+
+        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+        if (idx != -1) {
+          this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
         }
-      });
+      }
+      else {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.handleMoveStage(dataInstance);
+          }
+        });
+      }
+
     }
   }
   handleMoveStage(dataInstance) {
@@ -1199,7 +1196,10 @@ export class InstancesComponent
     var strStepsId = [];
     var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
     if (autoMoveStage.ischeck) {
-      if (autoMoveStage.transferControl == 1) {
+      if (
+        autoMoveStage.transferControl == '1' ||
+        autoMoveStage.transferControl == '2'
+      ) {
         var completedAllTask = this.completedAllTasks(
           dataInstance.step.stepID,
           dataInstance.listStep
@@ -1245,7 +1245,6 @@ export class InstancesComponent
               this.detailViewInstance.dataSelect = this.dataSelected;
               this.detailViewInstance.listSteps = this.listStepInstances;
             }
-
             this.detectorRef.detectChanges();
           }
         });
@@ -1279,8 +1278,6 @@ export class InstancesComponent
     };
     return result;
   }
-
-  completedLastTasks() {}
 
   checkFieldsIEmpty(fields) {
     return fields.includes((x) => !x.dataValue && x.isRequired);
@@ -1609,11 +1606,14 @@ export class InstancesComponent
         );
       }
     }
+    this.codxDpService
+      .updateHistoryViewProcessesAsync(this.process.recID)
+      .subscribe();
   }
   saveDatasInstance(e) {
     this.dataSelected.datas = e;
     this.view.dataService.update(this.dataSelected).subscribe();
-    if(this.kanban){
+    if (this.kanban) {
       this.kanban.updateCard(this.dataSelected);
     }
   }
@@ -1744,8 +1744,8 @@ export class InstancesComponent
     link.click();
   }
   loadEx() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1753,8 +1753,8 @@ export class InstancesComponent
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {

@@ -131,6 +131,7 @@ export class DynamicProcessComponent
   isChecked: boolean = false;
   totalInstance: number = 0;
   lstGroup: any = [];
+  isSaveName: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -351,23 +352,30 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-            var dialog = this.callfc.openForm(
-              PopupAddDynamicProcessComponent,
-              '',
-              this.widthWin,
-              this.heightWin,
-              '',
-              obj,
-              '',
-              dialogModel
-            );
-            dialog.closed.subscribe((e) => {
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.totalInstance = this.totalInstance;
-                this.changeDetectorRef.detectChanges();
+
+           let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
+            this.codxDpService.copyAvatarById(data).subscribe(res => {
+              if(res){
+                debugger;
+                var dialog = this.callfc.openForm(
+                  PopupAddDynamicProcessComponent,
+                  '',
+                  this.widthWin,
+                  this.heightWin,
+                  '',
+                  obj,
+                  '',
+                  dialogModel
+                );
+                dialog.closed.subscribe((e) => {
+                  if (!e?.event) this.view.dataService.clear();
+                  if (e && e.event != null) {
+                    e.event.totalInstance = this.totalInstance;
+                    this.changeDetectorRef.detectChanges();
+                  }
+                });
               }
-            });
+             });
           });
       });
     }
@@ -386,28 +394,49 @@ export class DynamicProcessComponent
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',
-      500,
+      550,
       500
     );
   }
   checkValueCopy($event, data) {
-    if ($event && $event.currentTarget.checked) {
-      this.listClickedCoppy.push(data);
-      if (data.id === '3') {
-        this.listClickedCoppy = this.listClickedCoppy.concat(
-          this.listSelectStepCoppy
-        );
-      }
-    } else {
+    // if ($event && $event.currentTarget.checked) {
+    //   this.listClickedCoppy.push(data);
+    //   if (data.id === '3') {
+    //     this.listClickedCoppy = this.listClickedCoppy.concat(
+    //       this.listSelectStepCoppy
+    //     );
+    //   }
+    // } else {
+    //   if (data.id === '3') {
+    //     this.listClickedCoppy = this.listClickedCoppy.filter((item2) => {
+    //       return !this.listSelectStepCoppy.some(
+    //         (item1) => item1.id === item2.id
+    //       );
+    //     });
+    //   }
+    //   let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
+    //   if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
+    // }
+    const index = this.listClickedCoppy.indexOf(data);
+    if (index >= 0) {
       if (data.id === '3') {
         this.listClickedCoppy = this.listClickedCoppy.filter((item2) => {
           return !this.listSelectStepCoppy.some(
             (item1) => item1.id === item2.id
           );
         });
+
+        this.isChecked = false;
       }
-      let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
-      if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
+      this.listClickedCoppy.splice(index, 1);
+    } else {
+      if (data.id === '3') {
+        this.listClickedCoppy = this.listClickedCoppy.concat(
+          this.listSelectStepCoppy
+        );
+        this.isChecked = true;
+      }
+      this.listClickedCoppy.push(data);
     }
   }
   getValueFormCopy() {
@@ -565,8 +594,11 @@ export class DynamicProcessComponent
           case 'DP02022':
           case 'DP02032':
           case 'SYS03':
-            let isEdit = data.write;
-            if (!isEdit || this.funcID == 'DP0203' || this.funcID === 'DP04') {
+            if (
+              !data.write ||
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
+            ) {
               if (res.functionID == 'SYS03') res.disabled = true;
               else res.isblur = true;
             }
@@ -576,8 +608,7 @@ export class DynamicProcessComponent
           case 'DP02014':
           case 'DP02024':
           case 'DP02034':
-            let isAssign = data.assign;
-            if (!isAssign) res.isblur = true;
+            if (!data.assign) res.isblur = true;
             break;
           //Phát hành
           // case 'DP01015':
@@ -588,15 +619,17 @@ export class DynamicProcessComponent
 
           //   break;
           case 'SYS02': // xoa
-            let isDelete = data.delete;
             if (
-              !isDelete ||
+              !data.delete ||
               data.deleted ||
               this.funcID == 'DP0203' ||
               this.funcID === 'DP04'
             ) {
               res.disabled = true;
             }
+            break;
+          case 'DP01015':
+            if (!data.approveRule) res.isblur = true;
             break;
         }
       });
@@ -786,6 +819,12 @@ export class DynamicProcessComponent
   }
 
   async editName() {
+    if (!this.isSaveName) return;
+    this.isSaveName = false;
+    setTimeout(() => {
+      this.isSaveName = true;
+    }, 3000);
+
     if (!this.processName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',

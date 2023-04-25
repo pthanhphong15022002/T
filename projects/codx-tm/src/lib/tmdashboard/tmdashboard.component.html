@@ -10,31 +10,41 @@
 
 <ng-template #template>
   <div class="w-100 h-100">
-    <div [ngSwitch]="reportID">
-      <ng-container *ngSwitchCase="'TMD001'">
-        <codx-dashboard
-          [templates]="templates1"
-          [panels]="panels1"
-          [datas]="datas1"
-        ></codx-dashboard>
-      </ng-container>
-      <ng-container *ngSwitchCase="'TMD002'">
-        <codx-dashboard
-          [templates]="templates2"
-          [panels]="panels2"
-          [datas]="datas2"
-        ></codx-dashboard>
-      </ng-container>
-      <ng-container *ngSwitchCase="'TMD003'">
-        <codx-dashboard
-          [templates]="templates3"
-          [panels]="panels3"
-          [datas]="datas3"
-        ></codx-dashboard>
-      </ng-container>
+    <div *ngIf="reportID == 'TMD001'">
+      <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+    </div>
+    <div *ngIf="reportID == 'TMD002'">
+      <ng-container *ngTemplateOutlet="dashboard2"> </ng-container>
+    </div>
+    <div *ngIf="reportID == 'TMD003'">
+      <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
 </ng-template>
+
+<ng-template #dashboard1>
+  <codx-dashboard
+    [templates]="templates1"
+    [panels]="panels1"
+    [datas]="datas1"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboard2>
+  <codx-dashboard
+    [templates]="templates2"
+    [panels]="panels2"
+    [datas]="datas2"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboard3
+  ><codx-dashboard
+    [templates]="templates3"
+    [panels]="panels3"
+    [datas]="datas3"
+  ></codx-dashboard
+></ng-template>
 
 <!--#region my_dashboard  -->
 <ng-template #my_dashboard>
@@ -85,7 +95,7 @@
   <div id="5" title="Tỷ lệ công việc được giao">
     <div class="tm-assignchart">
       <div
-        class="text-center"
+        class="text-center fw-bold fs-4"
         style="
           font-family: 'Segoe UI';
           font-style: normal;
@@ -99,7 +109,7 @@
 
       <div class="assignchart-group mt-3">
         <div
-          *ngFor="let tasks of myDBData?.tasksByCaterory"
+          *ngFor="let tasks of myDBData?.tasksByCategory"
           class="assignchart-item d-flex align-items-center justify-content-end"
           [title]=""
         >
@@ -108,13 +118,13 @@
             class="assignchart-task"
             style="background-color: #1d1dcc; color: #fff"
             [style.width]="
-              (tasks.quantity / myDBData?.tasksByCaterory[0].quantity) * 100 +
+              (tasks.quantity / myDBData?.tasksByCategory[0].quantity) * 100 +
               '%'
             "
           >
             <codx-vll
               [name]="'L1456'"
-              [value]="'1'"
+              [value]="tasks.category"
               [showText]="true"
               [showBgColor]="false"
               style="width: '25px'; height: '25px'"
@@ -131,7 +141,7 @@
   <div id="6" title="Theo nguồn công việc">
     <div class="w-100 h-100">
       <div
-        class="text-center"
+        class="text-center fw-bold fs-4"
         style="
           font-family: 'Segoe UI';
           font-style: normal;
@@ -163,6 +173,18 @@
 
 <ng-template #my_dashboard>
   <div id="7" title="Tỷ lệ hoàn thành công việc">
+    <div
+      class="text-center fw-bold fs-4"
+      style="
+        font-family: 'Segoe UI';
+        font-style: normal;
+        font-size: 15px;
+        font-weight: 500;
+        text-anchor: middle;
+      "
+    >
+      Tỷ lệ hoàn thành công việc
+    </div>
     <div class="control-section">
       <div align="center">
         <ejs-circulargauge
@@ -170,10 +192,10 @@
           style="display: block"
           [id]="newGuid()"
           #circulargauge=""
-          [title]="'Tỷ lệ hoàn thành công việc'"
         >
           <e-axes>
             <e-axis
+              [title]="'Tỷ lệ hoàn thành công việc'"
               minimum="1"
               radius="80%"
               maximum="100"
@@ -222,6 +244,7 @@
             >
             </e-axis>
             <e-axis
+              [title]="'Tỷ lệ hoàn thành đúng hạn'"
               minimum="1"
               radius="50%"
               maximum="100"
@@ -343,7 +366,9 @@
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="ms-2">
-            <div class="text-center">Tổng thời gian hoàn thành thực tế</div>
+            <div class="text-center fs-5">
+              Tổng thời gian hoàn thành thực tế
+            </div>
             <div class="d-flex justify-content-center align-items-center">
               <div class="fw-bold fs-1">116</div>
               <div class="ms-2">giờ</div>
@@ -361,7 +386,7 @@
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="ms-2">
-            <div class="text-center">Tổng thời gian làm việc</div>
+            <div class="text-center fs-5">Tổng thời gian làm việc</div>
             <div class="d-flex justify-content-center align-items-center">
               <div class="fw-bold fs-1">176</div>
               <div class="ms-2">giờ</div>
@@ -585,7 +610,7 @@
               </div>
             </div>
             <div class="ms-2">
-              <div>
+              <div class="fw-bold fs-5">
                 Đúng hạn
                 <div class="fw-bold fs-3">1551</div>
               </div>
@@ -628,7 +653,7 @@
               </div>
             </div>
             <div class="ms-2">
-              <div>
+              <div class="fw-bold fs-5">
                 Quá hạn
                 <div class="fw-bold fs-3">1551</div>
               </div>

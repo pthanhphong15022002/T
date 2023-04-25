@@ -61,6 +61,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
     await this.getStepById(this.stepId);
     if(this.isLockSuccess){
       await this.removeSuccess();
@@ -211,31 +212,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return check;
   }
 
-  getObjectIdRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'P')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    } else {
-      let objectId =
-        task?.roles.find((role) => role?.roleType == 'O')['objectID'] ||
-        task?.roles[0]?.objectID;
-      return objectId;
-    }
-  }
-  getObjectNameRole(task, group) {
-    if (task?.taskType != 'M' && group) {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'P')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    } else {
-      let objectName =
-        task?.roles.find((role) => role?.roleType == 'O')['objectName'] ||
-        task?.roles[0]?.objectName;
-      return objectName;
-    }
+  getRole(task, type) {
+    let role = task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
+    return type == "ID" ? role?.objectID : role?.objectName;
   }
 
   changeProgress(event) {
@@ -259,7 +238,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     } else {//task
       this.taskGroupList?.forEach(group => {
-        if (group.recID == event.groupTaskID) {
+        if (group.refID == event.groupTaskID) {
           group?.task?.forEach(task => {
             if (task.recID == event.taskID) {
               task['progress'] = event.progressTask;

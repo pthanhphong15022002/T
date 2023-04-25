@@ -18,6 +18,8 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-add-cmcustomer/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CM_Contacts } from '../../models/cm_model';
+import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-contacts/popup-list-contacts.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -33,7 +35,6 @@ export class CmcustomerDetailComponent implements OnInit {
   moreFuncAdd = '';
   moreFuncEdit = '';
   vllContactType = '';
-  contactPerson: any;
   listContacts = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   tabControl = [
@@ -54,6 +55,8 @@ export class CmcustomerDetailComponent implements OnInit {
   tabDetail = [];
   formModelContact: FormModel;
   gridViewSetup: any;
+  listAddress = [];
+  contactPerson = new CM_Contacts();
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -78,8 +81,9 @@ export class CmcustomerDetailComponent implements OnInit {
     if (this.dataSelected.recID) {
       if (this.dataSelected.recID == this.id) return;
       this.id = this.dataSelected.recID;
-      this.getContactByObjectID(this.id);
       this.getListContactByObjectID(this.id);
+      this.getListAddress(this.entityName, this.dataSelected?.recID);
+
       this.listTab(this.funcID);
       console.log(this.formModel);
     }
@@ -103,19 +107,20 @@ export class CmcustomerDetailComponent implements OnInit {
     });
   }
 
-  getContactByObjectID(objectID) {
-    this.cmSv.getContactByObjectID(objectID).subscribe((res) => {
-      if (res) {
-        this.contactPerson = res;
-      }
-    });
-  }
-
   getListContactByObjectID(objectID) {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
+        this.contactPerson = this.listContacts.find((x) =>
+          x.contactType.split(';').some((x) => x == '1')
+        );
       }
+    });
+  }
+
+  getListAddress(entityName, recID) {
+    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
+      this.listAddress = res;
     });
   }
 
@@ -132,12 +137,6 @@ export class CmcustomerDetailComponent implements OnInit {
           name: 'Contact',
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
-          isActive: false,
-        },
-        {
-          name: 'Task',
-          textDefault: 'Công việc',
-          icon: 'icon-format_list_numbered',
           isActive: false,
         },
         {
@@ -175,13 +174,8 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
           isActive: false,
-        },
-        {
-          name: 'Offered',
-          textDefault: 'Sản phẩm cung cấp',
-          icon: 'icon-shopping_cart',
-          isActive: false,
-        },
+        }
+
       ];
     } else {
       this.tabDetail = [
@@ -192,8 +186,8 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: true,
         },
         {
-          name: 'Offered',
-          textDefault: 'Sản phẩm cung cấp',
+          name: 'Opportunity',
+          textDefault: 'Cơ hội liên quan',
           icon: 'icon-shopping_cart',
           isActive: false,
         },
@@ -234,8 +228,13 @@ export class CmcustomerDetailComponent implements OnInit {
           dataContact: data,
           type: 'formDetail',
           recIDCm: this.dataSelected?.recID,
-          objectType: '1',
-          gridViewSetup: res
+          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          objectName:
+            this.funcID == 'CM0101'
+              ? this.dataSelected.customerName
+              : this.dataSelected.partnerName,
+          gridViewSetup: res,
+          listContacts: this.listContacts
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
@@ -250,8 +249,47 @@ export class CmcustomerDetailComponent implements OnInit {
         dialog.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.getListContactByObjectID(this.dataSelected?.recID);
-            this.getContactByObjectID(this.dataSelected?.recID);
             this.changeDetectorRef.detectChanges();
+          }
+        });
+      });
+  }
+
+  //Open list contacts
+  clickPopupContacts() {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMContacts';
+    dataModel.gridViewName = 'grvCMContacts';
+    dataModel.entityName = 'CM_Contacts';
+    dataModel.funcID = 'CM0102';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup(dataModel.formName, dataModel.gridViewName)
+      .subscribe((res) => {
+        var obj = {
+          type: 'formDetail',
+          recIDCm: this.dataSelected?.recID,
+          objectName:
+            this.funcID == 'CM0101'
+              ? this.dataSelected.customerName
+              : this.dataSelected.partnerName,
+          objectType: this.funcID == 'CM0101' ? '1' : '3',
+          gridViewSetup: res,
+        };
+        var dialog = this.callFc.openForm(
+          PopupListContactsComponent,
+          '',
+          500,
+          550,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.getListContactByObjectID(this.dataSelected?.recID);
           }
         });
       });
@@ -262,27 +300,30 @@ export class CmcustomerDetailComponent implements OnInit {
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        var check = this.dataSelected.contacts.some(
-          (x) => x.recID == data.recID && x.contactType == '1'
-        );
-        if (!check) {
+        if (
+          !(data.recID == this.contactPerson.recID)
+        ) {
           this.cmSv
-            .updateContactCrm(data, this.funcID, this.dataSelected?.recID, true)
+            .updateContactCrm(data.recID)
             .subscribe((res) => {
-              if (res && res.length > 0) {
-                this.dataSelected.contacts = res;
+              if (res) {
+                this.getListContactByObjectID(this.dataSelected?.recID);
+                this.notiService.notifyCode(
+                  'SYS008'
+                );
                 this.changeDetectorRef.detectChanges();
               }
             });
         } else {
           this.notiService.notifyCode(
-            'Liên hệ này đang là liên hệ chính! Không xóa được'
+            'CM004'
           );
           return;
         }
       }
     });
   }
+
   //#endregion
   getNameCrm(data) {
     if (this.funcID == 'CM0101') {
@@ -308,6 +349,21 @@ export class CmcustomerDetailComponent implements OnInit {
       case 'SYS04':
         // this.copy(data);
         break;
+    }
+  }
+
+  changeDataMFContact(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS002':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
     }
   }
 }

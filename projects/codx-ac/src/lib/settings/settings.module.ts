@@ -9,6 +9,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NosubAsideComponent } from '../_noSubAside/nosub-aside.component';
+import { NameByIdPipe } from '../pipes/nameById.pipe';
 import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
@@ -30,11 +31,12 @@ import { PopAddDimensionSetupComponent } from './dimension-groups/pop-add-dimens
 import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accounts.component';
 import { PopupAddFAPostingAccountComponent } from './faposting-accounts/popup-add-faposting-account/popup-add-faposting-account.component';
 import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
+import { PopupAddFixedAssetComponent } from './fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
 import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
 import { PopAddItemComponent } from './item-posting-accounts/pop-add-item/pop-add-item.component';
-import { ItemsComponent, NameByIdPipe } from './items/items.component';
+import { ItemsComponent } from './items/items.component';
 import { PopupAddItemColorComponent } from './items/popup-add-item-color/popup-add-item-color.component';
 import { PopupAddItemConversionComponent } from './items/popup-add-item-conversion/popup-add-item-conversion.component';
 import { PopupAddItemSizeComponent } from './items/popup-add-item-size/popup-add-item-size.component';
@@ -47,7 +49,6 @@ import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendor
 import { VendorsComponent } from './vendors/vendors.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
-import { PopupAddFixedAssetComponent } from './fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
 
 var routes: Routes = [
   {
@@ -155,7 +156,6 @@ var routes: Routes = [
     FAPostingAccountsComponent,
     PopupAddFAPostingAccountComponent,
     FixedAssetsComponent,
-    NameByIdPipe,
     PopupAddFixedAssetComponent,
   ],
   imports: [
@@ -168,6 +168,7 @@ var routes: Routes = [
     NgbModule,
     CodxReportModule,
     FormsModule,
+    NameByIdPipe,
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

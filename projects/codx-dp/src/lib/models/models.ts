@@ -104,7 +104,7 @@ export class DP_Steps {
   durationDay: number = 0;
   durationHour: number = 0;
   numbererval: string;
-  excludeDayoff: string;
+  excludeDayoff: string = '7;8';
   owner: string;
   note: string;
   assignControl: string = '1';
@@ -169,8 +169,8 @@ export class DP_Steps_TaskGroups {
   stepID: string;
   indexNo: number;
   taskGroupName: String;
-  durationDay: number;
-  durationHour: number;
+  durationDay: number = 0;
+  durationHour: number = 0;
   numbererval: string;
   roles: DP_Steps_TaskGroups_Roles[] = []; // objects
   statusCodeID: string;
@@ -204,8 +204,8 @@ export class DP_Steps_Tasks {
   parentID: string;
   reference: string;
   statusCodeID: string;
-  durationDay: number;
-  durationHour: number;
+  durationDay: number = 0;
+  durationHour: number = 0;
   numbererval: string;
   reminders: string; // Json;
   reminderBy: string;

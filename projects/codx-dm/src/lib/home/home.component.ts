@@ -22,6 +22,7 @@ import {
   Filters,
   DataRequest,
 } from 'codx-core';
+import { from, map, mergeMap, Observable, Observer, of , isObservable} from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { FolderInfo } from '@shared/models/folder.model';
 import {
@@ -160,6 +161,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       ]
     },
   ]
+
+  vllDM003:any;
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -463,6 +466,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
       }
     })
+
+
+    
   }
 
   disableMark()
@@ -588,7 +594,26 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
-        if(this.funcID != "DMT00") this.getDataByFuncID(this.funcID);
+        if(this.funcID != "DMT00" && this.funcID != "DMT06" && this.funcID != "DMT07") this.getDataByFuncID(this.funcID);
+        else if(this.funcID == "DMT06" || this.funcID == "DMT07") 
+        {
+          
+          var vll = this.dmSV.loadValuelist("DM003") as any;
+          if(isObservable(vll))
+          {
+           
+            vll.subscribe((item:any)=>{
+              this.vllDM003 = item?.datas;
+              this.getDataByFuncID(this.funcID)
+            })
+            
+          }
+          else
+          {
+            this.vllDM003 = vll?.datas;
+            this.getDataByFuncID(this.funcID)
+          }
+        }
         else this.getDataByFuncID00();
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
@@ -606,6 +631,20 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
         else this.view.viewChange(this.viewActive);
 
+        if(this.funcID == 'DMT08')
+        {
+          this.titleCreatedBy = 'Người xóa thư mục / tệp tin';
+          this.titleCreatedOn = 'Ngày xóa thư mục / tệp tin';
+          var innerDiv = document.getElementById('tabel-div');
+          innerDiv.style.height = "calc(100% - 260px)";
+        }
+        else
+        {
+          this.titleCreatedBy = 'Người tạo thư mục / tệp tin';
+          this.titleCreatedOn = 'Ngày tạo thư mục / tệp tin';
+          var innerDiv = document.getElementById('tabel-div');
+          innerDiv.style.height = "100%";
+        }
         //if(this.funcID == "DMT00") 
       }
     });
@@ -635,7 +674,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //Set chiều cao view list
   setHeight()
   {
-    this.maxHeightScroll = this.divHome.nativeElement.offsetHeight - 60;
+    this.maxHeightScroll = window.innerHeight - 250;
   }
   //Refesh lại data
   refeshData()
@@ -1521,17 +1560,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   {
     if(clss)
     {
-      if(status == 3 || status == 1) return "badge-light-primary"
-      else if(status == 4 || status == 7) return "badge-light-danger";
-      else if(status == 5 || status == 6) return "badge-light-success"
+      var color = this.vllDM003.filter(x=>x.value == status)[0]?.textColor;
+      if(color) return color;
       return ""
     }
     else
     {
-      if(status == 3 || status == 1)return "Chờ xét duyệt";
-      else if(status == 4 || status == 7) return "Đã từ chối";
-      else if(status == 5 || status == 6) return "Đã xét duyệt";
-      return "Không xác định"
+      var text = this.vllDM003.filter(x=>x.value == status)[0]?.text;
+      if(text) return text;
+      return ""
+    
     }
   }
+
 }

@@ -78,7 +78,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     private notify: NotificationsService
   ) {
     super(inject);
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
   }
 
   onInit(): void {
@@ -98,9 +98,9 @@ export class EmployeeJobSalaryComponent extends UIComponent {
         this.genderGrvSetup = res?.Gender;
       });
 
-    // if (!this.funcID) {
-    //   this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    // }
+    if (!this.funcID) {
+      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -140,20 +140,19 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupEmployeeJobsalaryComponent,
       {
-        actionType: actionType,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
-        headerText: actionHeaderText,
-        employeeId: data?.employeeID,
         funcID: this.view.funcID,
+        employeeId: data?.employeeID,
+        headerText: actionHeaderText,
+        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        actionType: actionType,
         dataObj: data,
-        fromListView: true,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          console.log('moi add hop dong xong', res.event[0]);
+          console.log('Run addd');
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
@@ -213,12 +212,13 @@ export class EmployeeJobSalaryComponent extends UIComponent {
           res[0].emp = this.currentEmpObj;
           this.view.formModel.entityName;
           this.hrService
-            .AddEJSlariesTrackLog(
+            .addBGTrackLog(
               res[0].recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
-              null
+              null,
+              'EJobSalariesBusiness'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);
@@ -326,6 +326,10 @@ export class EmployeeJobSalaryComponent extends UIComponent {
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEJobSalaryStatus(event.functionID, oUpdate);
         break;
+      //Propose increase salaries
+      case this.actionAddNew:
+        this.HandleEJobSalary(event.text, 'add', data);
+        break;
       //Delete
       case 'SYS02':
         if (data) {
@@ -358,9 +362,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   }
 
   copyValue(actionHeaderText, data) {
-    console.log('copy data', data);
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.HandleEJobSalary(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',

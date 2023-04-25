@@ -138,7 +138,7 @@
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="tabel-div">
+    <div id="tabel-div" class="tabel-div">
       <table class="table tb-dm">
         <thead >
           <tr>
@@ -193,7 +193,9 @@
         <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
           <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
             <td class="w-50px">
-              <codx-mfunc  *ngIf="!hideMF" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+              <codx-mfunc  *ngIf="!hideMF && item?.approvalStatus != '5' && item?.approvalStatus != '6' && item?.approvalStatus != '4' && item?.approvalStatus != '7'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                type="hover" [formModel]="view.formModel"></codx-mfunc>
+                <codx-mfunc  *ngIf="item?.approvalStatus == '5' || item?.approvalStatus == '6' ||  item?.approvalStatus == '8'" (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
             <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">
@@ -227,7 +229,7 @@
             </td>
             <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
               <td class="w-200px text-center">
-                <span class="badge badge-square" [ngClass]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
               </td>
               <td class="w-200px">
                 <codx-temp-full [imageId]="item.approverID" imageObjType="AD_Users" imgCss="me-3 cursor-pointer" [imageWidth]="25" [subTitle]="item.approverName">
@@ -254,7 +256,7 @@
             </ng-container>
             <ng-container *ngIf="funcID == 'DMT07'">
               <td class="w-200px text-center">
-                <span class="badge badge-square" [ngClass]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
+                <span class="badge badge-square" [style.background]="convertStatus(item.approvalStatus,'class')">{{convertStatus(item.approvalStatus)}}</span>
               </td>
             </ng-container>
             <td class="w-200px">

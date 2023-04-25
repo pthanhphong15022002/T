@@ -15,7 +15,7 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 })
 
 
-export class NewsComponent extends UIComponent implements AfterContentInit {
+export class NewsComponent extends UIComponent {
 
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
@@ -35,6 +35,8 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
   showNavigation:boolean = false;
   page:number = 0;
   pageIndex:number = 0;
+  moreFunction:any = null;
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -58,21 +60,14 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
   { 
     super(injector)
   }
-  ngAfterContentInit(): void {
-    
-  }
+
   onInit(): void {
     this.router.params.subscribe((param) => {
-      if (param["category"] !== "home")
-        this.category = param["category"];
-      else
-        this.category = "";
+      this.category = param["category"] !== "home" ? param["category"] : "";
       this.loadDataAsync(this.category);
-      if(param["funcID"]){
+      if(param["funcID"] && !this.userPermission){
         this.funcID = param["funcID"];
-        if(!this.userPermission){
-          this.getUserPermission(this.funcID);
-        }
+        this.getUserPermission(this.funcID);
       }
     });
     this.getMessageDefault();
@@ -121,6 +116,13 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
     this.cache.message("WP027").subscribe((mssg: any) => {
       if (mssg && mssg?.defaultName) {
         this.mssgWP027 = mssg.defaultName;
+      }
+    });
+    this.cache.moreFunction("CoDXSystem","")
+    .subscribe((mFuc:any) => {
+      if(mFuc)
+      {
+        this.moreFunction = mFuc;
       }
     });
   }
@@ -210,9 +212,6 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
           }
         });
   }
-
-  //
-
   // slideChange
   slideChange(slideEvent:NgbSlideEvent){
     if(slideEvent.source === NgbSlideEventSource.ARROW_RIGHT && this.pageIndex < this.page){
@@ -235,35 +234,42 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
     }
   }
   // open popup create
-  openPopupAdd(newsType: string) {
-    if(newsType){
+  openPopupAdd(type: string) {
+    if(type){
+      debugger
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
-      modal.closed.subscribe((res: any) => {
+      let mfc = Array.from<any>(this.moreFunction).find((x:any) => x.functionID === "SYS01");
+      let data = {
+        action: mfc.defaultName,
+        type:type
+      }
+      let popup = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
+      popup.closed.subscribe((res: any) => {
         debugger
         if (res?.event) {
           let data = res.event;
           //post
-          if(data.newsType == this.NEWSTYPE.POST){
+          if(data.newsType == this.NEWSTYPE.POST)
+          {
             this.posts.unshift(data);
             if(this.posts.length > 4){
-              this.posts.splice(-1);
+              this.posts.pop();
             }
           }
           //video
-          else if(data.newsType == this.NEWSTYPE.VIDEO)
+          else
           {
             if(this.videos.length > 0){
               this.videos.unshift(data);
             }
-            let slide = 0;
-            for (let index = 0; index < this.videos.length; index += 3) {
-              this.slides[slide] = [];
-              this.slides[slide] = this.videos.slice(index,index+3);
-              slide ++;
+            let slideIndex = 0;
+            for (let idx = 0; idx < this.videos.length; idx += 3) {
+              this.slides[slideIndex] = [];
+              this.slides[slideIndex] = this.videos.slice(idx,idx+3);
+              slideIndex++;
             }
             let ins = setInterval(()=>{
               if(this.carousel){

@@ -60,7 +60,7 @@ export class CodxClearCacheComponent implements OnInit {
 
   Clear() {
     this.auth
-      .clearCache(this.cacheName)
+      .clearCache(this.cacheName, this.clearAllTeant)
       .pipe()
       .subscribe((data) => {
         if (data) {

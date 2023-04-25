@@ -106,7 +106,6 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['refID'] = Util.uid();
       this.stepsTasks['isTaskDefault'] = false;
     } else {
-      this.showLabelAttachment = true;
       this.stepsTasks = dt?.data['stepTaskData'] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
@@ -267,9 +266,15 @@ export class PopupAddStaskComponent implements OnInit {
       const startDate = new Date(this.stepsTasks['startDate']);
       if(endDate >= startDate){
         const duration = endDate.getTime() - startDate.getTime();
-        const time = Math.floor(duration / 60 / 1000/ 60);
-        const hours = time % 24;
-        const days = Math.floor(time / 24);
+        const time = Number((duration / 60 / 1000/ 60).toFixed(1));
+        let days = 0;
+        let hours = 0;
+        if(time < 1){
+           hours = time;
+        }else{
+          hours = time % 24;
+          days = Math.floor(time / 24);
+        }   
         this.stepsTasks['durationHour'] = hours;
         this.stepsTasks['durationDay'] = days;
       }

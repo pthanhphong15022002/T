@@ -1,3 +1,4 @@
+import { EventHandler } from '@syncfusion/ej2-base';
 import { FuncID } from './../../../../codx-ep/src/lib/models/enum/enum';
 import { change } from '@syncfusion/ej2-grids';
 import {
@@ -162,8 +163,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
-
     switch (event.functionID) {
+      //case this.actionSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
       case this.actionUpdateRejected:
@@ -171,6 +172,17 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEBasicSalaryStatus(event.functionID, oUpdate);
+        break;      
+      case this.actionAddNew:
+        let newData = {
+          emp: data?.emp,
+          employeeID: data?.employeeID
+        }
+        this.handlerEBasicSalaries(
+          event.text + ' ' + this.view.function.description,
+          'add',
+          newData
+        );
         break;
       //Delete
       case 'SYS02':
@@ -238,12 +250,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       {
         //pass data
         actionType: actionType,
-        dataObj: data,
+        //dataObj: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         salaryObj: data,
-        empObj: actionType == 'add' ? null: this.currentEmpObj,
+        //empObj: this.currentEmpObj,
         fromListView: true,
       },
       option
@@ -300,15 +312,14 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLogEBasicSalaries(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null
-            )
-            .subscribe((res) => {});
+          this.hrService.addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EBasicSalariesBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });

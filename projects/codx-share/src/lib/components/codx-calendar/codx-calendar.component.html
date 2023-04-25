@@ -1,12 +1,4 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="'WP'"
-  [entityName]="functionList?.entityName"
-  [views]="views"
-  [toolbarDisplay]="false"
-  [autoLoad]="false"
->
+<codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
   <div class="bg-body p-5 rounded-3">
@@ -19,8 +11,9 @@
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
-          title="Lịch các nhân"
+          title="Lịch cá nhân"
           (navigated)="changeNewMonth($event)"
+          (renderDayCell)="onLoad($event)"
           [value]="dateChange"
         >
         </ejs-calendar>
@@ -227,7 +220,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="w-100"><ng-template #calendar_setting></ng-template>></div>
+      <div class="w-100"><ng-template #calendar_setting></ng-template></div>
     </div>
   </div>
 </ng-template>

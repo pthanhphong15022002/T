@@ -18,6 +18,7 @@ import {
   CacheService,
   CRUDService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -29,6 +30,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { BookingItems } from '../../../models/bookingItems.model';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 export class Device {
   id;
@@ -1605,6 +1607,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
         window.open(url, '_blank');
       });
+  }
+
+  openAuto(){
+    let op = new DialogModel();
+    op.IsFull = true;
+    this.callfc.openForm(PopupAddAutoNumberComponent,'',0,0,this.funcID,{functionID:this.funcID},'',op);
   }
   // connectMeetingNow() {
   //   this.codxEpService

@@ -41,6 +41,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
 
   fromListView: boolean = false; //check where to open the form
+  genderGrvSetup: any;
 
   constructor(
     private injector: Injector,
@@ -54,13 +55,20 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.fromListView = data?.data?.fromListView;
 
     this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-
-    this.fromListView = data?.data?.fromListView;
-    this.empObj = data?.data?.empObj;
+    if (this.awardObj?.employeeID) {
+      this.employId = this.awardObj?.employeeID;
+    } else {
+      this.employId = data?.data?.employeeId;
+    }
+    if (this.awardObj?.emp) {
+      this.empObj = this.awardObj?.emp;
+    } else {
+      this.empObj = data?.data?.empObj;
+    }
   }
 
   allowToViewEmp(): boolean {
@@ -146,6 +154,11 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           });
       }
     });
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
     if (this.employId != null) this.getEmployeeInfoById(this.employId);
   }
 

@@ -61,7 +61,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   className = 'EAwardsBusiness';
   method = 'GetListAwardByDataRequestAsync';
 
-  actionAddNew = 'HRTPro06A01'; // mới tạo
+  actionAddNew = 'HRTPro06A01'; //tạo mới
   actionSubmit = 'HRTPro06A03'; //gửi duyệt
   actionUpdateCanceled = 'HRTPro06AU0'; //hủy
   actionUpdateInProgress = 'HRTPro06AU3'; //đang duyệt
@@ -87,6 +87,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   dialogAddEdit: DialogRef;
 
   itemDetail;
+
   onInit(): void {
     this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
       if (res) {
@@ -157,7 +158,6 @@ export class EmployeeAwardsComponent extends UIComponent {
   }
 
   clickMF(event, data) {
-    console.log(event, data)
     switch (event.functionID) {
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
@@ -166,6 +166,18 @@ export class EmployeeAwardsComponent extends UIComponent {
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEAwardStatus(event.functionID, oUpdate);
+        break;
+      case this.actionAddNew:
+        let newData = {
+          //new data just with emp info (id??)
+          emp: data?.emp,
+          employeeID: data?.employeeID,
+        };
+        this.handlerEAwards(
+          event.text + ' ' + this.view.function.description,
+          'add',
+          newData
+        );
         break;
       //Delete
       case 'SYS02':
@@ -214,10 +226,10 @@ export class EmployeeAwardsComponent extends UIComponent {
         actionType: actionType,
         dataInput: data,
         headerText: actionHeaderText,
-        employeeId: data?.employeeID,
+        //employeeId: data?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
-        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        //empObj: actionType == 'add' ? null : this.currentEmpObj,
       },
       option
     );
@@ -249,7 +261,6 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.handlerEAwards(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
@@ -291,15 +302,14 @@ export class EmployeeAwardsComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLogEAwards(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null
-            )
-            .subscribe((res) => {});
+          this.hrService.addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EAwardBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -310,5 +320,5 @@ export class EmployeeAwardsComponent extends UIComponent {
   clickEvent(event, data) {
     this.clickMF(event?.event, event?.data);
   }
-getDetailEAward(event, data){}
+  getDetailEAward(event, data) {}
 }

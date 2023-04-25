@@ -29,16 +29,15 @@
   <div class="card-form">
     <!-- Link group -->
     <div class="form-group">
-      <div class="text-primary mb-1">
+      <div class="mb-1 line-clamp line-clamp-1">
         <codx-label
+          class="text-primary"
           fiedName="StepName"
           [formModel]="form?.formModel"
-          default="Thuộc giai đoạn"
+          default="Thuộc giai đoạn: "
         >
         </codx-label>
-      </div>
-      <div>
-        <codx-label [default]="stepName"> </codx-label>
+        <span style="font-weight: 500;"> {{stepName}} </span>
       </div>
     </div>
     <!--End Link group -->
@@ -60,7 +59,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID"
+            [readonly]="taskGroupID || taskGroupList.length === 0"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -205,6 +204,7 @@
                 field="durationDay"
                 [crrValue]="stepsTasks?.durationDay"
                 [min]="0"
+                [max]="100"
                 type="number"
                 (valueChange)="valueChangeText($event)"
                 [showSpinButton]="false"
@@ -326,10 +326,10 @@
         [default]="
           taskType == 'M' ? 'Người tham gia' : 'Vai trò/bộ phận thực hiện'
         "
-        [dataSource]="participant"
+        [dataSource]="taskType == 'M' ? participant : owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, participant, 'P')"
+        (valueList)="changeRoler($event)"
         [vllShare]="'DP0331'"
         [multiple]="taskType == 'M' ? true : false"
         [listCombobox]="listCombobox"
@@ -416,16 +416,16 @@
 
   <ng-container>
     <div
-      class="d-flex align-items-center justify-content-between mt-4"
+      class="d-flex align-items-center nav-item w-100 mb-1"
       *ngIf="showLabelAttachment"
-      style="float: left"
     >
       <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
           <codx-label
-            fiedName="lblAttachments"
-            [formModel]="form?.formModel"
-            default="Tài liệu"
+            name="lblAttachments"
+            [formModel]="form.formModel"
+            default="Tài liệu đính kèm"
           >
           </codx-label>
         </div>
@@ -434,24 +434,21 @@
     <div>
       <codx-attachment
         #attachment
+        [objectType]="dialog.formModel.entityName"
         [objectId]="stepsTasks?.recID"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
         hideUploadBtn="1"
+        [showMessage]="0"
         hideDes="1"
         type="inline"
         allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
-        (viewFile)="getfileDelete($event)"
-        (fileDelete)="fileAdded($event)"
         displayThumb="full"
-        showMessage="0"
-        [fdID]="folderID"
-        [fdName]="stepsTasks?.stepID"
-        [parentID]="folderID"
-        [dataSelected]="stepsTasks"
       >
       </codx-attachment>
     </div>
@@ -485,9 +482,9 @@
     <div>
       <div
         class="e-float-input e-input-group cursor-pointer m-0"
-        (click)="showCombobox()"
+        (click)="data?.length > 0 ? showCombobox() : ''"
       >
-        <input type="text" [value]="valueInput" class="cursor-pointer" />
+        <input type="text" [value]="valueInput" [disabled]="data?.length == 0" class="cursor-pointer" />
         <span class="e-float-line"></span>
         <span class="e-input-group-icon e-spin-down"></span>
       </div>

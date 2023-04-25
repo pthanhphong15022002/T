@@ -715,4 +715,13 @@ export class CodxDpService {
         .subscribe();
     }
   }
+
+  copyAvatarById(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'CopyAvatarByIdProcessAsync',
+      data
+    );
+  }
 }

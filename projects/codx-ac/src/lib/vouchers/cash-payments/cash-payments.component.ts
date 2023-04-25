@@ -48,11 +48,10 @@ export class CashPaymentsComponent extends UIComponent {
   objectname: any;
   oData: any;
   cashbook: any;
-  page: any = 1;
-  pageSize = 6;
   userID: any;
   dataCategory: any;
   journal: IJournal;
+  approval:any;
   cashpaymentline: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -105,6 +104,7 @@ export class CashPaymentsComponent extends UIComponent {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
+      this.approval = res[0].approval;
     });
   }
 
@@ -196,7 +196,6 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
-
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -309,7 +308,6 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data: any) {
-    this.itemSelected = this.view.dataService.dataSelected;
     //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
@@ -319,15 +317,11 @@ export class CashPaymentsComponent extends UIComponent {
     );
     // check có hay ko duyệt trước khi ghi sổ
     if (data?.status == '1') {
-      if (
-        this.journal?.approval == 0 &&
-        this.journal?.postControl == 2 &&
-        this.journal.poster == this.userID
-      ) {
-        bm[0].disabled = true;
-        bm[2].disabled = true;
-      }
-      if (this.journal.approval == 1) {
+      if (this.approval == '0') {
+        bm.forEach(element => {
+          element.disabled = true;
+        });
+      }else{
         bm[1].disabled = true;
         bm[2].disabled = true;
       }
@@ -367,35 +361,36 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   release(data: any) {
-    this.acService
-      .getCategoryByEntityName(this.view.formModel.entityName)
-      .subscribe((res) => {
-        this.dataCategory = res;
-        this.acService
-          .release(
-            data.recID,
-            this.dataCategory.processID,
-            this.view.formModel.entityName,
-            this.view.formModel.funcID,
-            ''
-          )
-          .subscribe((result) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              this.notification.notifyCode('ES007');
-              data.status = '3';
-              this.dialog.dataService
-                .save((opt: RequestOption) => {
-                  opt.methodName = 'UpdateAsync';
-                  opt.className = 'CashPaymentsBusiness';
-                  opt.assemblyName = 'AC';
-                  opt.service = 'AC';
-                  opt.data = [data];
-                  return true;
-                })
-                .subscribe((res) => {});
-            } else this.notification.notifyCode(result?.msgCodeError);
-          });
-      });
+    // this.acService
+    //   .getCategoryByEntityName(this.view.formModel.entityName)
+    //   .subscribe((res) => {
+    //     this.dataCategory = res;
+    //     this.acService
+    //       .release(
+    //         data.recID,
+    //         this.dataCategory.processID,
+    //         this.view.formModel.entityName,
+    //         this.view.formModel.funcID,
+    //         ''
+    //       )
+    //       .subscribe((result) => {
+    //         if (result?.msgCodeError == null && result?.rowCount) {
+    //           this.notification.notifyCode('ES007');
+    //           data.status = '3';
+    //           this.dialog.dataService
+    //             .save((opt: RequestOption) => {
+    //               opt.methodName = 'UpdateAsync';
+    //               opt.className = 'CashPaymentsBusiness';
+    //               opt.assemblyName = 'AC';
+    //               opt.service = 'AC';
+    //               opt.data = [data];
+    //               return true;
+    //             })
+    //             .subscribe((res) => {});
+    //         } else this.notification.notifyCode(result?.msgCodeError);
+    //       });
+    //   });
+    
   }
   //#endregion
 }
