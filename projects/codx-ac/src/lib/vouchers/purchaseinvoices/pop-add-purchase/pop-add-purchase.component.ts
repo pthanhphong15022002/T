@@ -391,7 +391,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           var dialogs = this.callfc.openForm(
             PopAddLineComponent,
             '',
-            800,
+            900,
             850,
             '',
             obj,
