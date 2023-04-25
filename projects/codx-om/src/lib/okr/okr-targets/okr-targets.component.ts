@@ -424,15 +424,25 @@ export class OkrTargetsComponent implements OnInit {
 
       }
       //Ẩn phân bổ MF
-      evt.forEach((func) => {
-        if (
-          (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
-            func.functionID == OMCONST.MFUNCID.SKRDistribute) 
-        ) {
-          func.disabled = true;
-        }
-      });
+      // evt.forEach((func) => {
+      //   if (
+      //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
+      //       func.functionID == OMCONST.MFUNCID.SKRDistribute) 
+      //   ) {
+      //     func.disabled = true;
+      //   }
+      // });
 
+      if(kr?.items==null || kr?.items.length==0){
+        
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.KREditSKRWeight 
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
 
       evt.forEach((func) => {
         if (
@@ -450,13 +460,27 @@ export class OkrTargetsComponent implements OnInit {
     if(evt!=null && ob!=null){
       
       //Ẩn phân bổ MF
-      evt.forEach((func) => {
-        if (
-          func.functionID == OMCONST.MFUNCID.OBDistribute 
-        ) {
-          func.disabled = true;
-        }
-      });
+      // evt.forEach((func) => {
+      //   if (
+      //     func.functionID == OMCONST.MFUNCID.OBDistribute 
+      //   ) {
+      //     func.disabled = true;
+      //   }
+      // });
+
+      //Ẩn phân bổ trọng số nếu ko có kr
+      
+      if(ob?.items==null || ob?.items.length==0){
+        
+        evt.forEach((func) => {
+          if (
+            func.functionID == OMCONST.MFUNCID.OBEditKRWeight 
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      
     }
     
   }
@@ -829,9 +853,11 @@ export class OkrTargetsComponent implements OnInit {
       this.codxOmService
         .calculatorProgressOfPlan(listPlanRecID)
         .subscribe((listPlan: any) => {
+
           if (listPlan != null) {            
             this.caculatorPlanInBackground(listPlan);
           }
+
         });
     }
   }

@@ -42,10 +42,10 @@ export class InputNumberDurationComponent
   // type boolean
   isView: boolean = false;
 
-  readonly maxHourDefault: number = 24;
+  readonly maxHourDefault: number = 23;
   readonly minHourDefault: number = 0;
 
-  readonly maxDayDefault: number = 100;
+  readonly maxDayDefault: number = 1000;
   readonly secondMaxDayDefault: number = this.maxDayDefault - 1;
   readonly minDayDefault: number = 0;
 
@@ -80,7 +80,7 @@ export class InputNumberDurationComponent
   }
   onInit() {}
   checkInputDayValue($event: any) {
-    var value = parseInt($event.target.value) ?? this.minDayDefault;
+    var value = parseInt($event.target.value ? $event.target.value: this.minDayDefault);
     if (( value ||value == 0) && this.dayMax) {
       if (value >= this.maxDayDefault) {
         value = this.maxDayDefault;
@@ -104,7 +104,7 @@ export class InputNumberDurationComponent
   }
 
   checkInputHourValue($event: any) {
-    var value = parseInt($event.target.value) ?? this.minHourDefault;
+    var value = parseInt( $event.target.value ? $event.target.value: this.minHourDefault) ;
     if ((value || value == 0) && this.dayMax) {
       if (value >= this.maxHourDefault) {
         value = this.maxHourDefault;
@@ -146,13 +146,9 @@ export class InputNumberDurationComponent
       else {
         this.isView = false;
       }
-    } else if (type === this.typeHour) {
-      if (value >= this.maxHourDefault) {
-        this.dayValue =  this.dayValue + 1;
-        value = 0;
-        if(this.dataValue == this.maxDayDefault) {
-          this.isView = true;
-        }
+  } else if (type === this.typeHour) {
+    if (value >= this.maxHourDefault) {
+      value = this.maxHourDefault;
       }
       else if (
         this.dayValue == this.secondMaxDayDefault &&
@@ -165,7 +161,7 @@ export class InputNumberDurationComponent
        else {
         this.isView = false;
       }
-    } else {
+  } else {
       this.isView = false;
     }
     return value;
