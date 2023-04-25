@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
+  ApiHttpService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -42,9 +43,11 @@ export class PopupAddQuotationsComponent implements OnInit {
   };
   productsLine: Array<CM_Products> = []; //mang san pham
   lockFields = [];
+  dataParent : any
 
   constructor(
     public sanitizer: DomSanitizer,
+    private api : ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,6 +77,7 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   clickMF(e, data) {}
 
+  // region Product
   addRow() {
     let idx = this.gridProductsLine.dataSource?.length;
     let data = this.gridProductsLine.formGroup.value; //ddooi tuong
@@ -88,30 +92,22 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   productsLineChanged(e) {
     const field = [
-      'accountid',
-      'offsetacctid',
-      'objecttype',
-      'objectid',
-      'dr',
-      'cr',
-      'dr2',
-      'cr2',
-      'transactiontext',
-      'referenceno',
+      'quotationname',
+      
     ];
-    // if (field.includes(e.field.toLowerCase())) {
-    //   this.api
-    //     .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
-    //       this.cashpayment,
-    //       e.data,
-    //       e.field,
-    //       e.data?.isAddNew,
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res && res.line)
-    //         this.setDataGrid(res.line.updateColumns, res.line);
-    //     });
-    // }
+    if (field.includes(e.field.toLowerCase())) {
+      this.api
+        .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
+          this.dataParent,
+          e.data,
+          e.field,
+          e.data?.isAddNew,
+        ])
+        .subscribe((res: any) => {
+          if (res && res.line)
+            this.setDataGrid(res.line.updateColumns, res.line);
+        });
+    }
 
     // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
     //   if (e.value === '3') {
@@ -132,4 +128,25 @@ export class PopupAddQuotationsComponent implements OnInit {
     //   }
     //}
   }
+
+  setDataGrid(updateColumn, data) {
+    if (updateColumn) {
+      var arrColumn = [];
+      arrColumn = updateColumn.split(';');
+      if (arrColumn && arrColumn.length) {
+        arrColumn.forEach((e) => {
+          if (e) {
+            let field = Util.camelize(e);
+            this.gridProductsLine.rowDataSelected[field] = data[field];
+            this.gridProductsLine.rowDataSelected = {
+              ...data,
+            };
+            this.gridProductsLine.rowDataSelected.updateColumns = '';
+          }
+        });
+      }
+    }
+  }
+
+  //#endregion
 }
