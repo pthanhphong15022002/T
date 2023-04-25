@@ -1,4 +1,4 @@
-<div id="step-task" class="main p-3" [ngClass]="'show-main'">
+<div id="step-task" class="main" [ngClass]="'show-main'">
   <!-- drap drop công việc ngoài-->
   <div class="main-body" *ngIf="taskGroupList?.length > 0">
     <div
@@ -18,7 +18,7 @@
             <div class="card-job stages-task">
               <div
                 *ngIf="groupTask?.recID"
-                class="d-flex align-items-center justify-content-between card-job-expand pb-3"
+                class="d-flex align-items-center justify-content-between card-job-expand"
               >
                 <ng-container
                   [ngTemplateOutlet]="groupTemplate"
@@ -47,7 +47,7 @@
                 (cdkDropListDropped)="drop($event, groupTask)"
                 [id]="'group' + groupTask?.recID"
                 class="task"
-                [ngStyle]="groupTask?.recID? { 'margin-left': '50px' }: { 'margin-left': '10px' }"
+                [ngStyle]="groupTask?.recID? { 'margin-left': '35px' }: { 'margin-left': '0px' }"
               >
                 <ng-container *ngFor="let task of groupTask?.task">
                   <div
@@ -101,7 +101,7 @@
 
 <ng-template #groupTemplate let-groupTask="groupTask">
   <div
-    class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
+    class="d-flex justify-content-start align-items-center has-action-menu"
     style="flex-grow: 1"
   >
     <!-- show hiden group task -->
@@ -247,7 +247,16 @@
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
-    <div class="disabled-inline">
+    <span>
+      <codx-img
+        [width]="25"
+        class="mx-2"
+        [objectId]="getRole(data?.value, 'ID')"
+        objectType="AD_Users"
+        [objectName]="getRole(data?.value, 'name')"
+      ></codx-img>
+    </span>
+    <div class="disabled-inline ">
       <codx-progress
         [progress]="data?.value?.progress"
         [dataSource]="data?.value"
@@ -258,21 +267,14 @@
         (valueChange)="changeProgress($event)"
       ></codx-progress>
     </div>
-    <span>
-      <codx-img
-        [width]="25"
-        class="me-2"
-        [objectId]="getRole(data?.value, 'ID')"
-        objectType="AD_Users"
-        [objectName]="getRole(data?.value, 'name')"
-      ></codx-img>
-    </span>
-    <div class="notify" style="min-width: 40px;">
+    <div class="notify" style="min-width: 40px;" *ngIf="isShowFile">
         <codx-attachment-temp
           [objectID]="data?.value.refID"
+          [hideMoreF]="0"
+          [hideDelete]="1"
         ></codx-attachment-temp>
     </div>
-    <div class="notify" style="min-width: 40px;">
+    <div class="notify" style="min-width: 40px;" *ngIf="isShowComment">
         <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
     </div>
   </div>
