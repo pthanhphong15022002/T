@@ -1,30 +1,14 @@
-import {
-  Component,
-  Injector,
-  Input,
-  OnInit,
-  Optional,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, Input, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  CallFuncService,
-  DialogModel,
-  DialogRef,
-  FormModel,
-  UIComponent,
-  ViewModel,
-  ViewType,
-} from 'codx-core';
-import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
+import { CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 
 @Component({
-  selector: 'lib-quotations',
-  templateUrl: './quotations.component.html',
-  styleUrls: ['./quotations.component.css'],
+  selector: 'codx-quotations',
+  templateUrl: './codx-quotations.component.html',
+  styleUrls: ['./codx-quotations.component.css']
 })
-export class QuotationsComponent extends UIComponent {
+export class CodxQuotationsComponent  extends UIComponent {
   @Input() funcID: string;
   @Input() customerID: string = '';
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
@@ -95,4 +79,7 @@ export class QuotationsComponent extends UIComponent {
     //   });
     // });
   }
+}
+{
+
 }

@@ -3,7 +3,7 @@
         <div class="aside-detail flex-row-auto w-250px me-6">
             <div class="aside-menu me-6 mt-5">
                 <ul class="menu-nav">
-                    <li class="menu-item" (click)="redirectPage('notificationFedback')">
+                    <li class="menu-item" (click)="redirectPage('notificationFedback', 1)">
                         <a class="menu-link d-flex align-items-center fw-bold text-dark">
                             <i class="icon-near_me icon-20 me-2"></i>
                             <codx-label fiedName="FeedbackMessage" [formName]="functionList?.formName"
@@ -11,7 +11,7 @@
                             </codx-label>
                         </a>
                     </li>
-                    <li class="menu-item" (click)="redirectPage('itemCategory')">
+                    <li class="menu-item" (click)="redirectPage('itemCategory', 2)">
                         <a class="menu-link d-flex align-items-center fw-bold text-dark">
                             <i class="icon-format_list_bulleted icon-20 me-2"></i>
                             <codx-label fiedName="Category" [formName]="functionList?.formName"
@@ -19,7 +19,7 @@
                             </codx-label>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item" (click)="redirectPage('itemRankDedication', 3)">
                         <a class="menu-link d-flex align-items-center fw-bold text-dark">
                             <i class="icon-account_balance_wallet icon-20 me-2"></i>
                             <codx-label name="lblWallet" [formName]="functionList?.formName"
@@ -27,7 +27,7 @@
                             </codx-label>
                         </a>
                     </li>
-                    <li class="menu-item" (click)="redirectPage('itemRankDedication')">
+                    <li class="menu-item" (click)="redirectPage('itemRankDedication', 4)">
                         <a class="menu-link d-flex align-items-center fw-bold text-dark">
                             <i class="icon-credit_card icon-20 me-2"></i>
                             <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
@@ -35,7 +35,7 @@
                             </codx-label>
                         </a>
                     </li>
-                    <li class="menu-item" (click)="redirectPage('itemStatiscal')">
+                    <li class="menu-item" (click)="redirectPage('itemStatiscal', 5)">
                         <a class="menu-link d-flex align-items-center fw-bold text-dark">
                             <i class="icon-bar_chart icon-20 me-2"></i>
                             <codx-label name="lblStatistical" [formName]="functionList?.formName"
