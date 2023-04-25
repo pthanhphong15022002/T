@@ -13,6 +13,7 @@ import {
   CallFuncService,
   LayoutService,
   NotificationsService,
+  FormModel,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
@@ -139,12 +140,13 @@ export class DynamicFormComponent extends UIComponent {
         let option = new SidebarModel();
         option.Width = '550px';
         option.DataService = this.viewBase?.dataService;
-        option.FormModel = this.viewBase?.formModel;
+        option.FormModel = new FormModel()
         option.FormModel.entityName = "ES_Categories";
-        option.FormModel.entityPer = "ES_ODCategoriesApproval";
-        option.FormModel.formName = "ODCategoriesApproval";
-        option.FormModel.funcID= "ODS24";
+        option.FormModel.entityPer  = "ES_ODCategoriesApproval";
+        option.FormModel.formName   = "ODCategoriesApproval";
+        option.FormModel.funcID     = "ODS24";
         option.FormModel.gridViewName = "grvODCategoriesApproval";
+        option.FormModel.userPermission = this.viewBase?.formModel?.userPermission;
         let popupEdit = this.callfunc.openSide(
           PopupAddCategoryComponent,
           {
