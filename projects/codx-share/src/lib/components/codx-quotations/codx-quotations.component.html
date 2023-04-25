@@ -1,1 +1,41 @@
-<p>codx-quotations works!</p>
+<ng-container >
+    <div
+    class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2"
+  >
+    <div>
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
+        (click)="add()"
+      >
+        <i class="icon-add_box icon-18 text-primary"></i>
+      </button>
+    </div>
+  </div>
+</ng-container>
+<codx-views
+  #view
+  idField="recID"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
+  [views]="views"
+  predicates="CustomerID=@0"
+  [dataValues]="customerID"
+  [toolbarDisplay]="false"
+  (selectedChange)="changeItemDetail($event)"
+>
+</codx-views>
+<ng-template #templateMore let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>
+

@@ -20,7 +20,7 @@ import {
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
 
 @Component({
-  selector: 'codx-quotations',
+  selector: 'lib-quotations',
   templateUrl: './quotations.component.html',
   styleUrls: ['./quotations.component.css'],
 })

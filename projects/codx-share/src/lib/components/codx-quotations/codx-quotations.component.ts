@@ -4,7 +4,7 @@ import { CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewTy
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 
 @Component({
-  selector: 'lib-codx-quotations',
+  selector: 'codx-quotations',
   templateUrl: './codx-quotations.component.html',
   styleUrls: ['./codx-quotations.component.css']
 })
