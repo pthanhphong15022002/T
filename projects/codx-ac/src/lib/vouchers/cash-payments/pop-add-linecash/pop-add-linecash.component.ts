@@ -71,16 +71,16 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
     this.form.formGroup.patchValue(this.cashpaymentline);
     this.dt.detectChanges();
 
-    this.journalService.setAccountCbxDataSourceByJournal(
-      this.dialogData.data.journal,
-      this.cbxAccountID,
-      this.cbxOffsetAcctID
-    );
+    // this.journalService.setAccountCbxDataSourceByJournal(
+    //   this.dialogData.data.journal,
+    //   this.cbxAccountID,
+    //   this.cbxOffsetAcctID
+    // );
 
-    this.form.formGroup.patchValue({
-      accountID: this.cbxAccountID.crrValue,
-      offsetAcctID: this.cbxOffsetAcctID.crrValue,
-    });
+    // this.form.formGroup.patchValue({
+    //   accountID: this.cbxAccountID.crrValue,
+    //   offsetAcctID: this.cbxOffsetAcctID.crrValue,
+    // });
   }
   //#endregion
 
@@ -88,53 +88,6 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
   valueChange(e: any) {
     this.cashpaymentline[e.field] = e.data;
   }
-  // valueChange(e: any) {
-  //   const field = [
-  //     'accountid',
-  //     'offsetacctid',
-  //     'objecttype',
-  //     'objectid',
-  //     'dr',
-  //     'cr',
-  //     'dr2',
-  //     'cr2',
-  //     'reasonid',
-  //     'referenceno',
-  //   ];
-  //   if (field.includes(e.field.toLowerCase())) {
-  //     this.api
-  //       .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
-  //         this.cashpayment,
-  //         this.cashpaymentline,
-  //         e.field,
-  //         e.data?.isAddNew,
-  //       ])
-  //       .subscribe((res: any) => {
-  //         if (res && res.line){}
-  //           // this.cashpaymentline = res.line;
-  //           // this.form.formGroup.patchValue(this.cashpaymentline);
-  //       });
-  //   }
-
-  //   if (e.field.toLowerCase() == 'sublgtype' && e.value) {
-  //     if (e.value === '3') {
-  //       //Set lock field
-  //     } else {
-  //       this.api
-  //         .exec<any>(
-  //           'AC',
-  //           'AC',
-  //           'CashPaymentsLinesBusiness',
-  //           'SetLockFieldAsync'
-  //         )
-  //         .subscribe((res) => {
-  //           if (res) {
-  //             //Set lock field
-  //           }
-  //         });
-  //     }
-  //   }
-  // }
   //#endregion
 
   //#region Function
@@ -197,8 +150,18 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.objectcashpaymentline.push({ ...this.cashpaymentline });
-      this.clearCashpayment();
+      this.api
+        .execAction<any>(
+          'AC_CashPaymentsLines',
+          [this.cashpaymentline],
+          'SaveAsync'
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.objectcashpaymentline.push({ ...this.cashpaymentline });
+            this.clearCashpayment();
+          }
+        });
     }
   }
   onSave() {
@@ -207,11 +170,42 @@ export class PopAddLinecashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      window.localStorage.setItem(
-        'dataline',
-        JSON.stringify(this.cashpaymentline)
-      );
-      this.dialog.close();
+      switch (this.type) {
+        case 'add':
+          this.api
+            .execAction<any>(
+              'AC_CashPaymentsLines',
+              [this.cashpaymentline],
+              'SaveAsync'
+            )
+            .subscribe((res) => {
+              if (res) {
+                window.localStorage.setItem(
+                  'dataline',
+                  JSON.stringify(this.cashpaymentline)
+                );
+                this.dialog.close();
+              }
+            });
+          break;
+        case 'edit':
+          this.api
+            .execAction<any>(
+              'AC_CashPaymentsLines',
+              [this.cashpaymentline],
+              'UpdateAsync'
+            )
+            .subscribe((res) => {
+              if (res) {
+                window.localStorage.setItem(
+                  'dataline',
+                  JSON.stringify(this.cashpaymentline)
+                );
+                this.dialog.close();
+              }
+            });
+          break;
+      }
     }
   }
   //#endregion
