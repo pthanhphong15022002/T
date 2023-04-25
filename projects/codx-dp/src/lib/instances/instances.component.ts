@@ -780,7 +780,7 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approvalRule) {
+              if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
