@@ -6,8 +6,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { AddApproversComponent } from '../approvers/add/add.component';
 import { AddDecentralGroupMemComponent } from './add-decentral-group-mem/add-decentral-group-mem.component';
+import { CodxAdService } from '../codx-ad.service';
 
 @Component({
   selector: 'lib-decentralized-group',
@@ -23,7 +23,7 @@ export class DecentralizedGroupComponent extends UIComponent {
   groupType = '3';
   moreFuncName: string = '';
   func: any;
-  constructor(private inject: Injector) {
+  constructor(private inject: Injector, private adService: CodxAdService) {
     super(inject);
   }
   onInit() {}
@@ -53,7 +53,7 @@ export class DecentralizedGroupComponent extends UIComponent {
   moreFunction(e: any, data) {
     switch (e.functionID) {
       case 'SYS02':
-        // this.delete(data);
+        this.deleteGroup(data);
         break;
       case 'SYS03':
         this.edit(data, e.text);
@@ -106,6 +106,15 @@ export class DecentralizedGroupComponent extends UIComponent {
       side.closed.subscribe((x) => {
         if (x.event == null) this.view.dataService.clear;
       });
+    });
+  }
+
+  deleteGroup(data) {
+    this.view.dataService.dataSelected = data;
+    this.adService.removeGroupAsync(data.groupID).subscribe((res) => {
+      if (res) {
+        this.view.dataService.delete(data);
+      }
     });
   }
 }

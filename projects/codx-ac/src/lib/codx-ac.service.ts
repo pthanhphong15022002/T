@@ -118,11 +118,11 @@ export class CodxAcService {
     return isValid;
   }
 
-  /** Use irregularDataPropName (optional) in case unable to transform some gvs prop names to data prop names respectively. */
+  /** Use irregularDataPropNames (optional) in case unable to transform some gvs prop names to data prop names respectively. */
   validateFormDataUsingGvs(
     gridViewSetup: any,
     data: any,
-    irregularDataPropName: string[] = [],
+    irregularDataPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
@@ -135,7 +135,7 @@ export class CodxAcService {
         }
 
         const dataPropName =
-          irregularDataPropName.find(
+          irregularDataPropNames.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
           ) ?? this.toCamelCase(propName);
 

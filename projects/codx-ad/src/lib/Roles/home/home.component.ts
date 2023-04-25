@@ -54,7 +54,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     private injector: Injector,
     private tenantStore: TenantStore,
     private tempService: TempService,
-    private changedt: ChangeDetectorRef,
+    // private changedt: ChangeDetectorRef,
     private route: ActivatedRoute
   ) {
     super(injector);
@@ -87,7 +87,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         },
       },
     ];
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   ngOnChanges() {
     if (!this.isLoad) return;
@@ -168,17 +168,17 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
       option.Width = '550px';
       // option.Type = 'Slide';
       // option.isFull = true;
-      var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
-      dialog.closed.subscribe((e) => {
-        debugger;
-      });
-      // this.dialog.closed.subscribe((e) => {
-      //   if (!e?.event) this.view.dataService.clear();
-      //   if (e?.event) {
-      //     this.view.dataService.update(e.event).subscribe();
-      //     this.changedt.detectChanges();
-      //   }
+      let dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      // dialog.closed.subscribe((e) => {
+      //   debugger;
       // });
+      dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e?.event) {
+          this.view.dataService.add(e.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
 
@@ -213,12 +213,12 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
 
         dialog.closed.subscribe((x) => {
-          // if (!x?.event) this.view.dataService.clear();
-          // if (x.event) {
-          //   x.event.modifiedOn = new Date();
-          //   this.view.dataService.update(x.event).subscribe();
-          //   this.changeDetectorRef.detectChanges();
-          // }
+          if (!x?.event) this.view.dataService.clear();
+          if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
         });
       });
   }

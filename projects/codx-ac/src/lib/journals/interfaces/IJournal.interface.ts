@@ -51,7 +51,7 @@ export interface IJournal {
   approvalControl: string;
   approver: any;
   autoPost: any;
-  unPostControl: boolean;
+  unpostControl: boolean;
   unPostDays: number | null;
   exported: boolean;
   attachments: number | null;
