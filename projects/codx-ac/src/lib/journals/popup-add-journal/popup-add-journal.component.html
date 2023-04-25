@@ -11,7 +11,7 @@
 </codx-layout-add>
 
 <ng-template #footer>
-  <button type="button" class="btn btn-primary" (click)="handleClickSave()">
+  <button type="button" class="btn btn-primary" (click)="onClickSave()">
     <codx-label
       fiedName="lblSave"
       [formModel]="dialogRef.formModel"
@@ -63,11 +63,11 @@
         *ngIf="journal.journalType == '0803' || journal.journalType == '0805'"
       >
         <codx-label
-          fiedName="cashPaymentType"
+          fiedName="subType"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
-          field="cashPaymentType"
+          field="subType"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         ></codx-input>
@@ -76,17 +76,17 @@
         *ngIf="journal.journalType == '0802' || journal.journalType == '0804'"
       >
         <codx-label
-          fiedName="reasonID"
+          fiedName="subType"
           [formModel]="form.formModel"
           default="Loại thu mặc định"
         ></codx-label>
         <codx-input
           type="combobox"
-          field="reasonID"
+          field="subType"
           refType="2"
           refValue="AC065"
-          [crrValue]="journal.reasonID"
-          (valueChange)="handleInputChange($event)"
+          [crrValue]="journal.subType"
+          (valueChange)="onInputChange($event)"
         ></codx-input>
       </ng-container>
     </div>
@@ -114,8 +114,8 @@
         ></codx-label>
         <ejs-combobox
           [dataSource]="fiscalYears"
-          [allowCustom]="false"
-          (change)="handleChange($event)"
+          [value]="journal.fiscalYear"
+          (select)="onSelect($event)"
         >
         </ejs-combobox>
       </div>
@@ -214,12 +214,13 @@
           </div>
         </div>
         <div class="w-30px ms-3">
-          <button type="button"
+          <button
+            type="button"
             class="btn btn-icon btn-light-primary"
             role="button"
             (click)="openInvoiceForm()"
           >
-            <span class="icon-edit-one icon-20 text-primary"></span>
+            <span class="icon-edit-one icon-18"></span>
           </button>
         </div>
       </div>
@@ -765,7 +766,7 @@
             field="creater"
             refValue="AC068"
             [showInput]="false"
-            (valueChange)="handleInputChange($event)"
+            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -804,7 +805,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="journal.approvalControl === '1'">
       <codx-label fiedName="approver" [formModel]="form.formModel"></codx-label>
 
       <div class="d-flex justify-content-between align-items-center">
@@ -823,8 +824,7 @@
             field="approver"
             refValue="AC068"
             [showInput]="false"
-            [disabled]="!journal.approvalControl"
-            (valueChange)="handleInputChange($event)"
+            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -844,13 +844,13 @@
         [Group]="form.formGroup"
       ></codx-input>
       <codx-label
-        *ngIf="journal.approvalControl"
+        *ngIf="['1', '2'].includes(journal.approvalControl)"
         fiedName="autoPost"
         [formModel]="form.formModel"
         [default]="gvs.PostControl.description.split(';')[0]"
       ></codx-label>
       <codx-label
-        *ngIf="!journal.approvalControl"
+        *ngIf="journal.approvalControl === '0'"
         fiedName="autoPost"
         [formModel]="form.formModel"
         [default]="gvs.PostControl.description.split(';')[1]"
@@ -883,7 +883,7 @@
             field="poster"
             refValue="AC068"
             [showInput]="false"
-            (valueChange)="handleInputChange($event)"
+            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -921,7 +921,7 @@
             field="unposter"
             refValue="AC068"
             [showInput]="false"
-            (valueChange)="handleInputChange($event)"
+            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -986,7 +986,7 @@
             field="sharer"
             refValue="AC068"
             [showInput]="false"
-            (valueChange)="handleInputChange($event)"
+            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>

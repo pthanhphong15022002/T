@@ -1048,7 +1048,9 @@ codx-layout-add .card-header {
   width: 1.2rem;
   height: 1.2rem;
 }
-
+.badge.badge-sm {
+  font-size: 11px;
+}
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
   overflow-x: auto;
@@ -2492,6 +2494,10 @@ codx-toolbar{
 .e-ddl.e-input-group.e-control-wrapper .e-ddl-icon::before {
   font-family: 'icomoon';
   content: "\ecb0";
+}
+codx-input .e-icons.e-check:before {
+  content: "\e774"!important;
+  font-size: 14px!important;
 }
 
 .codx-detail-toolbar{
