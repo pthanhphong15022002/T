@@ -1,5 +1,6 @@
 import {
   Component,
+  Input,
   OnChanges,
   OnInit,
   Optional,
@@ -92,6 +93,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     },
   ];
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @Input() refType : any;
+  @Input() refID : any; 
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -203,13 +206,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
             900,
             700,
             null,
-            { action: val, type: this.type },
+            { action: val, type: this.type , refType: this.refType , refID: this.refID},
             '',
             option
           )
           .closed.subscribe((item) => {
             if (item.event && item.event.length > 0) {
-              debugger
               var typeR = item.event[1];
               if (typeR == 'excel') {
                 if (val == 'add') this.loadEx();

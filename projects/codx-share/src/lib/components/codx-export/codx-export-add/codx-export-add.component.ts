@@ -104,7 +104,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       this.exportAddForm.value.refID = this.refID;// Thảo thêm để thêm biến lưu cho temEx
       this.exportAddForm.value.refType = this.refType;// Thảo thêm để thêm biến lưu cho temEx
       if (this.fileCount > 0) {
-        debugger
         this.api
           .execSv(
             "SYS",

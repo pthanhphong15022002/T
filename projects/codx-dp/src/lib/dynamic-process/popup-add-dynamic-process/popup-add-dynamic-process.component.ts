@@ -3430,29 +3430,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuration($event) {
     if ($event && $event != null) {
-      // var isBlock = true;
-      // if($event.field == 'durationDay') {
-      //     if($event.data < this.dayStep) {
-      //       this.notiService.notifyCode('DP012');
-      //       return;
-      //     }
-      // }
-      // else if($event.field == 'durationHour')  {
-      //     if($event.data < this.hourStep) {
-      //       $event.data = this.step[$event.field];
-      //       this.notiService.notifyCode('DP012');
-      //       return;
-      //     }
-      // }
-
-      // if(isBlock) {
-      //   this.step[$event.field] = $event.data;
-      //   if (!$event.data || $event.data == '0') {
-      //     this.step[$event.field] = 0;
-      //   }
-      // }
-
-      // ko xóa
         this.step.durationDay = $event?.valueDay;
         this.step.durationHour = $event?.valueHour;
         this.updateStepChange(this.step?.recID);
