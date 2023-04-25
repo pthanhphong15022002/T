@@ -27,7 +27,7 @@
 </ng-template>
 <ng-template #body>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-2">
+    <div class="row mt-5">
       <div class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="ItemID"></codx-label>
@@ -43,6 +43,10 @@
           </codx-input>
         </div>
       </div>
+    </div>
+    <hr />
+
+    <div class="row">
       <div *ngIf="loadControl('IDIM0')" class="col-4">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="IDIM0"></codx-label>
@@ -121,62 +125,69 @@
           field="idiM9">
         </codx-input>
       </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="umid">
-          </codx-input>
+    </div>
+    <div class="p-5 bg-gray-100 border rounded-3">
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="umid">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="Quantity"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (controlBlur)="calculateAtm($event)"
+              field="quantity">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="UnitPrice"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (controlBlur)="calculateAtm($event)"
+              field="unitPrice">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="NetAmt"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="netAmt">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="VATID"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="vatid">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="VATAmt"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="vatAmt">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="DiscAmt"></codx-label>
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+              field="discAmt">
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col-2">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Quantity"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (controlBlur)="calculateAtm($event)"
-            field="quantity">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="UnitPrice"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (controlBlur)="calculateAtm($event)"
-            field="unitPrice">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="NetAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="netAmt">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="VATID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="vatid">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="VATAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="vatAmt">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="DiscAmt"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
-            field="discAmt">
-          </codx-input>
-        </div>
-      </div>
+    </div>
+    <div class="row">
+     
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="OffsetAcctID"></codx-label>

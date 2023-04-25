@@ -340,7 +340,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    if (event?.data.result) {
+    if (event?.data.data) {
       return;
     } else {
       if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {

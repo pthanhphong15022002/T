@@ -1,0 +1,70 @@
+<ng-container>
+  <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+    <div>
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
+        (click)="add()"
+      >
+        <i class="icon-add_box icon-18 text-primary"></i>
+      </button>
+    </div>
+  </div>
+  <!-- <ng-container [ngTemplateOutlet]="itemViewList"></ng-container> -->
+</ng-container>
+<codx-views
+  #view
+  idField="recID"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodLoadData"
+  [views]="views"
+  predicates="CustomerID=@0"
+  [dataValues]="customerID"
+  [toolbarDisplay]="false"
+  (selectedChange)="changeItemDetail($event)"
+>
+</codx-views>
+<ng-template #templateMore let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>
+<ng-template #itemViewList let-data>
+  <div class="w-100 has-action-menu">
+    <div
+      class="d-flex justify-content-between align-items-top p-3 border-bottom w-100"
+    >
+      <div class="w-100 ps-3" style="width: 25%">
+        <div class="a">Báo giá công ty QTC</div>
+      </div>
+      <!-- <div class="d-flex align-items-start"> -->
+      <div class="" style="width: 25%">
+        <div class="d-flex align-items-center">12321</div>
+      </div>
+      <div class="w-120px min-w-120px" style="width: 25%">222222222222222</div>
+      <div class="w-125px min-w-125px btn-noborder" style="width: 25%">
+        3333333333333333
+      </div>
+
+      <!-- </div>-->
+    </div>
+    
+     <codx-mfunc
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      [isBookMark]="true"
+      [dataItem]="moreDefaut"
+      type="hover"
+    >
+    </codx-mfunc> 
+  </div>
+</ng-template>

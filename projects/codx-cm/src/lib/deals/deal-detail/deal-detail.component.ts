@@ -28,7 +28,7 @@ export class DealDetailComponent  implements OnInit {
     { name: 'Task', textDefault: 'Công việc', isActive: false },
     { name: 'Approve', textDefault: 'Ký duyệt', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
-    { name: 'Quote', textDefault: 'Báo giá', isActive: false },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false },
     { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
 

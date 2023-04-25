@@ -127,6 +127,12 @@
         </codx-view-approval-step>
       </ng-container>
     </ng-container>
+    <ng-container *ngSwitchCase="'quotations'">
+      <ng-container>
+        <codx-quotations [funcID]="funcIDQuotations" [customerID]="customerID">
+        </codx-quotations>
+      </ng-container>
+    </ng-container>
     <ng-container *ngSwitchDefault>
       <ng-container *ngIf="tab.template">
         <ng-container
