@@ -248,8 +248,6 @@ export class PopupAddStaskComponent implements OnInit {
     }else{
       this.isSaveTimeGroup = true;
     }
-    console.log(new Date(startDate.toLocaleString()).getTime());
-    console.log(new Date(this.startDateParent.toLocaleString()).getTime());
     
     if (new Date(startDate.toLocaleString()).getTime() < new Date(this.startDateParent.toLocaleString()).getTime()) {
       this.isSaveTimeGroup = false;
@@ -272,7 +270,7 @@ export class PopupAddStaskComponent implements OnInit {
         if(time < 1){
            hours = time;
         }else{
-          hours = time % 24;
+          hours = Number((time % 24).toFixed(1));
           days = Math.floor(time / 24);
         }   
         this.stepsTasks['durationHour'] = hours;

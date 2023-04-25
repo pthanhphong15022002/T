@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ButtonModel,
   CacheService,
   FormModel,
@@ -22,6 +23,7 @@ import {
 } from 'codx-core';
 import { CmcustomerDetailComponent } from './cmcustomer-detail/cmcustomer-detail.component';
 import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cmcustomer.component';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -83,7 +85,8 @@ export class CmCustomerComponent
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private cmSv: CodxCmService
   ) {
     super(inject);
     if (!this.funcID)
@@ -405,6 +408,16 @@ export class CmCustomerComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'CM0101_1':
+        this.setIsBlackList(data, true);
+        break;
+      case 'CM0101_3':
+        this.setIsBlackList(data, false);
+        break;
+      case 'CM0102_3':
+      case 'CM0102_2':
+        this.deleteContactToCM(data);
+        break;
     }
   }
 
@@ -412,8 +425,46 @@ export class CmCustomerComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF(e) {
+  changeMoreMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+
+  changeDataMF(e, data) {
     console.log(e);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS002':
+          case 'CM0102_1':
+            res.disabled = true;
+            break;
+          case 'CM0101_1':
+            if (data.isBlackList) res.isblur = true;
+            break;
+          case 'CM0101_3':
+            if (!data.isBlackList) res.isblur = true;
+            break;
+          case 'CM0102_2':
+            if (
+              data.objectType == null ||
+              data.objectType.trim() == '' ||
+              data.objectType != '1'
+            )
+              res.isblur = true;
+            break;
+          case 'CM0102_3':
+            if (
+              data.objectType == null ||
+              data.objectType.trim() == '' ||
+              data.objectType != '3'
+            )
+              res.isblur = true;
+            break;
+        }
+      });
+    }
   }
 
   //#region Search
@@ -521,7 +572,9 @@ export class CmCustomerComponent
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.dataSelected = JSON.parse(JSON.stringify(this.view.dataService.data[0]));
+            this.dataSelected = JSON.parse(
+              JSON.stringify(this.view.dataService.data[0])
+            );
             this.customerDetail.getListContactByObjectID(
               this.dataSelected?.recID
             );
@@ -539,23 +592,26 @@ export class CmCustomerComponent
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     var checkContact = false;
-    if(this.funcID == 'CM0102'){
-      checkContact = (data?.contactType?.split(';').some((x) => x == '1') && data.objectID != null && data.objectID.trim() != '') ? true : false;
+    if (this.funcID == 'CM0102') {
+      checkContact =
+        data?.contactType?.split(';').some((x) => x == '1') &&
+        data.objectID != null &&
+        data.objectID.trim() != ''
+          ? true
+          : false;
     }
-    if(!checkContact){
+    if (!checkContact) {
       this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({ type: 'delete', data: data });
-        }
-      });
-    }else{
-      this.notiService.notifyCode(
-        'Liên hệ này đang là liên hệ chính! Không xóa được'
-      );
+        .delete([this.view.dataService.dataSelected], true, (opt) =>
+          this.beforeDel(opt)
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.onAction.next({ type: 'delete', data: data });
+          }
+        });
+    } else {
+      this.notiService.notifyCode('CM004');
       return;
     }
 
@@ -567,6 +623,54 @@ export class CmCustomerComponent
     opt.data = [itemSelected.recID, this.funcID, this.entityName];
     return true;
   }
+
+  setIsBlackList(data, isBlacklist) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
+          if (res) {
+            this.dataSelected.isBlackList = isBlacklist;
+            this.dataSelected = JSON.parse(
+              JSON.stringify(this.dataSelected)
+            );
+            this.view.dataService.update(this.dataSelected).subscribe();
+            this.notiService.notifyCode('SYS007');
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
+  deleteContactToCM(data) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        if (data.objectID != null && data.objectType != null) {
+          if (!data?.contactType.split(';').some((x) => x == '1')) {
+            this.cmSv.updateContactCrm(data.recID).subscribe((res) => {
+              if (res) {
+                this.dataSelected.objectID = null;
+                this.dataSelected.contactType = null;
+                this.dataSelected.objectType = null;
+                this.dataSelected.objectName = null;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                this.notiService.notifyCode('SYS008');
+                this.detectorRef.detectChanges();
+              }
+            });
+          } else {
+            this.notiService.notifyCode('CM004');
+            return;
+          }
+        }
+      }
+    });
+  }
+
   //#endregion
 
   //#region event

@@ -16,6 +16,7 @@ import {
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { TN_OrderModule } from '../../models/tmpModule.model';
+import { tmpUserRoleInfo } from '../../models/AD_UserRoles.models';
 
 @Component({
   selector: 'lib-popup-module-detail',
@@ -52,6 +53,8 @@ export class PopupModuleDetailComponent extends UIComponent {
   vllL1449;
   tenantID;
 
+  lstADUserRoles: tmpUserRoleInfo[] = [];
+
   //userRole
   fmUserRole: FormModel = {
     formName: 'TNUserRoles',
@@ -69,24 +72,29 @@ export class PopupModuleDetailComponent extends UIComponent {
     console.log('child md', this.childMD);
     this.predicate = 'TenantID=@0 and Module=@1';
     this.dataValue = this.module?.boughtModule?.moduleID + ';' + this.tenantID;
+    this.adService
+      .getLstAD_UserRolesByModuleIDs([
+        this.module?.boughtModule?.moduleID,
+        this.childMD?.boughtModule?.moduleID,
+      ])
+      .subscribe((lstReturn: tmpUserRoleInfo[]) => {
+        this.lstADUserRoles = lstReturn;
+      });
 
     this.clmnGrid = [
       {
-        field: 'userID',
         headerText: 'Nhân viên',
         width: 30,
         template: this.tmplUserInfo,
         textAlign: 'center',
       },
       {
-        field: 'EndDate',
         headerText: 'Nghiệp vụ',
         width: 30,
         template: this.tmplUserInfo,
         textAlign: 'center',
       },
       {
-        field: 'EndDate',
         headerText: 'Thường',
         width: 30,
         template: this.tmplUserInfo,
@@ -94,14 +102,14 @@ export class PopupModuleDetailComponent extends UIComponent {
       },
     ];
 
-    this.api
-      .execSv('Tenant', 'Tenant', 'UserRolesBusiness', 'GetListUserRoleAsync', [
-        this.module?.boughtModule?.moduleID,
-        this.childMD?.boughtModule?.moduleID,
-      ])
-      .subscribe((res: any) => {
-        console.log('res', res);
-      });
+    // this.api
+    //   .execSv('Tenant', 'Tenant', 'UserRolesBusiness', 'GetListUserRoleAsync', [
+    //     this.module?.boughtModule?.moduleID,
+    //     this.childMD?.boughtModule?.moduleID,
+    //   ])
+    //   .subscribe((res: any) => {
+    //     console.log('res', res);
+    //   });
   }
   getInterval(interval) {
     return this.vllL1449?.find((x) => x.value == interval)?.text;
