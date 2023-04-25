@@ -672,14 +672,21 @@ export class StagesDetailComponent implements OnInit {
     if (countGroup > 0) {
       for (let i = countGroup - 1; i >= 0; i--) {
         let countTask = 0;
+
         try {
           countTask = this.taskGroupList[i]['task']?.length;
         } catch (error) {
           countTask = 0;
         }
+
         if (countTask > 0) {
-          this.idTaskEnd = this.taskGroupList[i]['task'][countTask - 1].recID;
-          return;
+          for(let j=countTask - 1 ; j >= 0; j--) {
+            let task = this.taskGroupList[i]['task'][j];
+            if(task?.isTaskDefault){
+              this.idTaskEnd = this.taskGroupList[i]['task'][countTask - 1].recID;
+              return;
+            }
+          }
         }
       }
     }

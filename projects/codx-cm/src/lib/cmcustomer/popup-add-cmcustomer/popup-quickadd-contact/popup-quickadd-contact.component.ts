@@ -46,14 +46,12 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.listContacts = dt?.data?.listContacts;
     if (this.type == 'formAdd') {
       this.contactType = '1';
-    } else {
+    } else if(this.type == 'formList'){
       this.contactType = dt?.data?.contactType;
     }
-    if (this.action == 'edit') {
+    if (this.action == 'edit' || this.action == 'editType') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
       this.contactType = this.data?.contactType;
-      if (this.contactType.split(';').some((x) => x == '1'))
-        this.isCheckContactType = true;
     }
   }
   ngOnInit(): void {}
@@ -96,22 +94,21 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
     if (this.action == 'add') {
       data = [
-        null,
         this.data,
-        null,
-        null,
+        this.dialog.formModel.formName,
         this.dialog.formModel.funcID,
         this.dialog.formModel.entityName,
         this.recIDCm,
         this.objectType,
-        ,
         this.objectName,
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
         if (res) {
           this.data = res;
+          this.data.contactType = this.contactType;
           this.dialog.close(this.data);
+          this.notiService.notifyCode('SYS007');
         } else {
           this.dialog.close();
         }
@@ -120,6 +117,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
         if (res) {
           this.dialog.close(res);
+          this.notiService.notifyCode('SYS007');
         }
       });
     }
@@ -155,22 +153,36 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
 
     if (this.type == 'formDetail') {
-      if (
-        this.contactType.split(';').some((x) => x == '1') &&
-        this.listContacts.some((x) =>
-          x.contactType.split(';').some((x) => x == '1')
-        )
-      ) {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        this.notiService.alertCode('CM001').subscribe((x) => {
-          if (x.event.status == 'Y') {
+      if(this.listContacts != null){
+        if (
+          this.listContacts.some(
+            (x) =>
+              x.contactType.split(';').some((x) => x == '1') &&
+              x.recID != this.data.recID
+          )
+        ) {
+          if (this.contactType.split(';').some((x) => x == '1')) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notiService.alertCode('CM001').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.onAdd();
+              }
+            });
+          }else{
             this.onAdd();
           }
-        });
-      } else {
+        } else {
+          if (!this.contactType.split(';').some((x) => x == '1')) {
+            this.notiService.notifyCode('CM002');
+          } else {
+            this.onAdd();
+          }
+        }
+      }else{
         this.onAdd();
       }
+
     } else {
       this.onAdd();
     }
