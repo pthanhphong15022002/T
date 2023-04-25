@@ -9,7 +9,7 @@ export abstract class AppConfig {
   layoutCZ: string;
   themeMode: string;
   hideFavCount: boolean;  
-  singleExec:boolean,
+  singleExec:boolean;
   sureMeet: any;
   firebase: any;
   captchaKey: string;
