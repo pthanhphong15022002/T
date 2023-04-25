@@ -262,7 +262,7 @@ export class CompanySettingComponent
           let image = this.sanitizer.bypassSecurityTrustUrl(url);
           this.imageLogo = image;
         }
-        if (this.data.storage < 0) {
+        if ((this.data.storage as number) < 0) {
           this.maxStorage = Number(this.data.memory);
           this.cache.message('AD016').subscribe((res) => {
             this.inner = res.customName;
