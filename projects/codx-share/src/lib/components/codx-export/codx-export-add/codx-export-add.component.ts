@@ -31,7 +31,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   headerText: any;
   exportAddForm: FormGroup;
   submitted = false;
-  reportID = '';//anh Thảo thêm để thêm biến lưu cho temEx
+  refID :any;// Thảo thêm để thêm biến lưu cho temEx
+  refType :any // Thảo thêm để thêm biến lưu cho temEx
   fileCount = 0;
   module: any;
   @ViewChild('attachment') attachment: AttachmentComponent
@@ -47,7 +48,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   ) {
     this.action = dt.data?.action;
     this.type = dt.data?.type;
-    this.reportID = dt.data?.reportID
+    this.refID = dt.data?.refID// Thảo thêm để thêm biến lưu cho temEx
+    this.refType = dt.data?.refType// Thảo thêm để thêm biến lưu cho temEx
+
     if (this.action == "add") {
       this.headerText = "Thêm " + this.type + " Template";
     }
@@ -98,9 +101,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.exportAddForm.value.buid = "a";
     //Thêm mới
     if (this.action == "add") {
-      this.exportAddForm.value.reportID = this.reportID;
+      this.exportAddForm.value.refID = this.refID;// Thảo thêm để thêm biến lưu cho temEx
+      this.exportAddForm.value.refType = this.refType;// Thảo thêm để thêm biến lưu cho temEx
       if (this.fileCount > 0) {
-        debugger
         this.api
           .execSv(
             "SYS",
@@ -123,7 +126,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     //Chỉnh sửa
     else if (this.action == "edit") {
       this.exportAddForm.value.recID = this.data.recID
-      this.exportAddForm.value.reportID = this.data.reportID
+      this.exportAddForm.value.refID = this.data.refID; // Thảo thêm để thêm biến lưu cho temEx
+      this.exportAddForm.value.refType = this.data.refType;// Thảo thêm để thêm biến lưu cho temEx
       this.api
         .execActionData<any>(
           'AD_ExcelTemplates',

@@ -288,7 +288,6 @@ export class InstancesComponent
     });
   }
   ngAfterViewInit() {
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -740,8 +739,7 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if(this.checkMoreReason(data,null))
-              {
+              if (this.checkMoreReason(data, null)) {
                 res.disabled = true;
               }
               break;
@@ -771,18 +769,18 @@ export class InstancesComponent
               }
               break;
             case 'DP02':
-              if (this.checkMoreReason(data,!this.isUseFail)) {
+              if (this.checkMoreReason(data, !this.isUseFail)) {
                 res.disabled = true;
               }
               break;
             case 'DP10':
-                if (this.checkMoreReason(data,!this.isUseSuccess)) {
-                  res.disabled = true;
-                }
+              if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                res.disabled = true;
+              }
               break;
-           //an khi aprover rule
+            //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approvalRule) {
+              if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
@@ -868,11 +866,15 @@ export class InstancesComponent
     }
   }
   //End
-  checkMoreReason(data,isUseReason) {
-    if( data.status != '2' || isUseReason ) {
+  checkMoreReason(data, isUseReason) {
+    if (data.status != '2' || isUseReason) {
       return true;
     }
-    if( !data.permissionCloseInstances || !data.permissionMoveInstances || data.closed) {
+    if (
+      !data.permissionCloseInstances ||
+      !data.permissionMoveInstances ||
+      data.closed
+    ) {
       return true;
     }
     return false;
@@ -906,12 +908,12 @@ export class InstancesComponent
     this.detectorRef.detectChanges();
   }
 
-  checkOwnerRoleProcess(roles){
-    if(roles != null && roles.length > 0){
-      var checkOwner = roles.find(x => x.roleType == 'S');
+  checkOwnerRoleProcess(roles) {
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
 
       return checkOwner != null ? checkOwner.objectID : null;
-    }else{
+    } else {
       return null;
     }
   }
@@ -1169,13 +1171,24 @@ export class InstancesComponent
     ).transferControl;
 
     if (checkTransferControl == '1' || checkTransferControl == '2' ) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.handleMoveStage(dataInstance);
+
+      if(dataInstance.isShowForm) {
+
+        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+        if (idx != -1) {
+          this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
         }
-      });
+      }
+      else {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.handleMoveStage(dataInstance);
+          }
+        });
+      }
+
     }
   }
   handleMoveStage(dataInstance) {
@@ -1183,7 +1196,10 @@ export class InstancesComponent
     var strStepsId = [];
     var autoMoveStage = this.checkTransferControl(dataInstance.step.stepID);
     if (autoMoveStage.ischeck) {
-      if (autoMoveStage.transferControl == '1' || autoMoveStage.transferControl == '2') {
+      if (
+        autoMoveStage.transferControl == '1' ||
+        autoMoveStage.transferControl == '2'
+      ) {
         var completedAllTask = this.completedAllTasks(
           dataInstance.step.stepID,
           dataInstance.listStep
@@ -1262,8 +1278,6 @@ export class InstancesComponent
     };
     return result;
   }
-
-  completedLastTasks() {}
 
   checkFieldsIEmpty(fields) {
     return fields.includes((x) => !x.dataValue && x.isRequired);
@@ -1592,6 +1606,9 @@ export class InstancesComponent
         );
       }
     }
+    this.codxDpService
+      .updateHistoryViewProcessesAsync(this.process.recID)
+      .subscribe();
   }
   saveDatasInstance(e) {
     this.dataSelected.datas = e;
@@ -1727,8 +1744,8 @@ export class InstancesComponent
     link.click();
   }
   loadEx() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1736,8 +1753,8 @@ export class InstancesComponent
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID +";DP_Processes";
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {

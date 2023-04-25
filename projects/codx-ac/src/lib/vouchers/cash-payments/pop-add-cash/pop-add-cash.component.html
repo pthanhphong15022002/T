@@ -461,7 +461,7 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <div *ngIf="cashpayment?.status == '0'" class="ms-2">
+        <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
           <button type="button" class="btn btn-sm btn-secondary" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-18"></i>

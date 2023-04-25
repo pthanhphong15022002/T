@@ -214,7 +214,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 115 - a + 'px';
+      )[0].style.height = main - header - 65 - a + 'px';
     }
   }
 
@@ -898,7 +898,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
                     var index = this.data.listInformationRel.findIndex(
-                      (x) => x.userID == item.data[1]
+                      (x) => x.recID == item.data[1]
                     );
                     this.data.listInformationRel[index].reCall = true;
                     this.ref.detectChanges();
@@ -1406,7 +1406,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    if ((relationType == '1' && this.formModel.funcID != "ODT41") || (this.formModel.funcID == "ODT41" && relationType == '2')) {
+    
+    if ((relationType == '1') || (this.formModel.funcID == "ODT41" && relationType == '2')) {
       if (this.formModel.funcID == 'ODT31') 
       {
         var text = this.ms020?.customName;

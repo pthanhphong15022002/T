@@ -9,6 +9,7 @@
   "layoutCZ": "",
   "themeMode": "body",
   "hideFavCount":false,
+  "singleExec":false,
   "captchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
   "captchaEnable": 0,
   "externalLogin": {
