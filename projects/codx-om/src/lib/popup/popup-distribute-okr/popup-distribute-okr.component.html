@@ -106,7 +106,7 @@
                       </div>
                       <div class="col-1" [ngClass]="item?.isActive ? '' : 'disabledCss'" >
                         <div class="w-100 px-1">
-                          <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i"
+                          <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i" [refValue]="'UnitsOfMearsure'" type="combobox"
                             cssClass="w-100 border-bottom rounded-0" [value]="item?.umid">
                           </codx-inplace>
                         </div>

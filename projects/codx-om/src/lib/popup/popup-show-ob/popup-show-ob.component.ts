@@ -40,7 +40,6 @@ import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.co
 export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('checkin') checkin: TemplateRef<any>;
-  @ViewChild('alignKR') alignKR: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   dialogRef: DialogRef;
@@ -166,18 +165,18 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          panelRightRef: this.alignKR,
-          contextMenu: '',
-        },
-      },
-    ];
+    // this.views = [
+    //   {
+    //     id: '1',
+    //     type: ViewType.content,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       panelRightRef: this.alignKR,
+    //       contextMenu: '',
+    //     },
+    //   },
+    // ];
   }
 
   onInit(): void {
@@ -380,6 +379,10 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     this.isHiddenChart = evt;
     this.detectorRef.detectChanges();
   }
+  closeDialog(){
+    this.dialogRef && this.dialogRef.close();
+  }
+
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
