@@ -45,7 +45,7 @@ import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, map, filter } from 'rxjs';
 
 @Component({
   selector: 'codx-instances',
@@ -171,6 +171,8 @@ export class InstancesComponent
   colorReasonSuccess: any;
   colorReasonFail: any;
   ownerStepProcess: any;
+
+  isHaveFile: boolean = false;
   //test temp
   dataTemplet = [
     {
@@ -543,29 +545,64 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
     };
-    var dialogCustomField = this.callfc.openSide(
-      PopupAddInstanceComponent,
-      obj,
-      option
-    );
-    dialogCustomField.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        var data = e.event;
-        if (this.kanban) {
-         // this.kanban.updateCard(data); // bỏ vì theo core mới lôi 
-          if (this.kanban?.dataSource?.length == 1) {
-            this.kanban.refresh();
-          }
-        }
-        this.dataSelected = data;
-        if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
-        }
 
-        this.detectorRef.detectChanges();
-      }
-    });
+    if(action === 'copy'  ) {
+     let data = [this.oldIdInstance,this.process.recID];
+      this.codxDpService.getInstanceStepsCopy(data).subscribe(res => {
+        if(res){
+          obj.listSteps = JSON.parse(JSON.stringify(res));
+          var dialogCustomField = this.callfc.openSide(
+            PopupAddInstanceComponent,
+            obj,
+            option
+          );
+          dialogCustomField.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              var data = e.event;
+              if (this.kanban) {
+               // this.kanban.updateCard(data);  //core mới lỗi chô này
+                if (this.kanban?.dataSource?.length == 1) {
+                  this.kanban.refresh();
+                }
+              }
+              this.dataSelected = data;
+              if (this.detailViewInstance) {
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.listSteps = this.listStepInstances;
+              }
+
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      })
+    }
+    else {
+      var dialogCustomField = this.callfc.openSide(
+        PopupAddInstanceComponent,
+        obj,
+        option
+      );
+      dialogCustomField.closed.subscribe((e) => {
+        if (e && e.event != null) {
+          var data = e.event;
+          if (this.kanban) {
+          // this.kanban.updateCard(data);  //core mới lỗi chô này
+            if (this.kanban?.dataSource?.length == 1) {
+              this.kanban.refresh();
+            }
+          }
+          this.dataSelected = data;
+          if (this.detailViewInstance) {
+            this.detailViewInstance.dataSelect = this.dataSelected;
+            this.detailViewInstance.listSteps = this.listStepInstances;
+          }
+
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+
   }
 
   edit(data, titleAction) {
@@ -1171,23 +1208,22 @@ export class InstancesComponent
     ).transferControl;
 
     if (checkTransferControl == '1' || checkTransferControl == '2' ) {
-
       if(dataInstance.isShowForm) {
+        this.openFormForAutoMove(dataInstance);
+      }
+      else
+      {
+        this.handleMoveStage(dataInstance);
+      }
+      // else {
+      //   var config = new AlertConfirmInputConfig();
+      //   config.type = 'YesNo';
+      //   this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+      //     if (x.event.status == 'Y') {
 
-        var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
-        if (idx != -1) {
-          this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
-        }
-      }
-      else {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-          if (x.event.status == 'Y') {
-            this.handleMoveStage(dataInstance);
-          }
-        });
-      }
+      //     }
+      //   });
+      // }
 
     }
   }
@@ -1208,46 +1244,54 @@ export class InstancesComponent
         strStepsId = completedAllTask?.idxSteps;
       }
       if (isStopAuto) {
-        return;
-      } else {
-        var instanceStepId = dataInstance.listStep.filter((x) =>
-          strStepsId.some((y) => y == x.stepID)
-        );
-        for (let item of instanceStepId) {
-          if (item.stepStatus == '0') {
-            item.stepStatus = '1';
-            item.actualStart = new Date();
-          } else if (item.stepStatus == '1') {
-            item.stepStatus = '3';
-          }
-        }
-        dataInstance.instance.stepID = instanceStepId.find(
-          (item) => item.stepStatus == '1'
-        ).stepID;
-        var processId = dataInstance.instance.processID;
-        var data = [instanceStepId, processId];
-        this.codxDpService.autoMoveStage(data).subscribe((res) => {
-          if (res) {
-            var stepsUpdate = dataInstance.listStep.map((item1) => {
-              var item2 = instanceStepId.find(
-                (item2) => item1.stepID === item2.stepID
-              );
-              if (item2) {
-                return { ...item1, status: item2.status };
+        this.openFormForAutoMove(dataInstance);
+      }
+      else {
+
+        var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+            if (x.event.status == 'Y') {
+              var instanceStepId = dataInstance.listStep.filter((x) =>
+              strStepsId.some((y) => y == x.stepID)
+            );
+            for (let item of instanceStepId) {
+              if (item.stepStatus == '0') {
+                item.stepStatus = '1';
+                item.actualStart = new Date();
+              } else if (item.stepStatus == '1') {
+                item.stepStatus = '3';
+              }
+            }
+            dataInstance.instance.stepID = instanceStepId.find(
+              (item) => item.stepStatus == '1'
+            ).stepID;
+            var processId = dataInstance.instance.processID;
+            var data = [instanceStepId, processId];
+            this.codxDpService.autoMoveStage(data).subscribe((res) => {
+              if (res) {
+                var stepsUpdate = dataInstance.listStep.map((item1) => {
+                  var item2 = instanceStepId.find(
+                    (item2) => item1.stepID === item2.stepID
+                  );
+                  if (item2) {
+                    return { ...item1, status: item2.status };
+                  }
+                });
+                this.listStepInstances = stepsUpdate;
+                this.dataSelected = dataInstance.instance;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+                if (this.detailViewInstance) {
+                  this.detailViewInstance.dataSelect = this.dataSelected;
+                  this.detailViewInstance.listSteps = this.listStepInstances;
+                }
+                this.detectorRef.detectChanges();
               }
             });
-            this.listStepInstances = stepsUpdate;
-            this.dataSelected = dataInstance.instance;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-
-            if (this.detailViewInstance) {
-              this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.listSteps = this.listStepInstances;
             }
-            this.detectorRef.detectChanges();
-          }
-        });
+          });
       }
     }
   }
@@ -1277,6 +1321,13 @@ export class InstancesComponent
       idxSteps: idxSteps,
     };
     return result;
+  }
+
+  openFormForAutoMove(dataInstance){
+    var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+    if (idx != -1) {
+      this.moveStage(this.moreFuncInstance[idx], dataInstance.instance, dataInstance.listStep);
+    }
   }
 
   checkFieldsIEmpty(fields) {

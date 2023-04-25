@@ -212,26 +212,26 @@
   [data]="EBasicSalaryObj" *ngIf="isAfterRender">
   <ng-template #body>
     <div *ngIf="allowToViewEmp()" class="form-group row d-flex flex-row">
-      <div class="col-6 d-flex align-items-start">
-        <div class="d-flex flex-column me-3">
-          <codx-img [width]="50" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
-            [objectName]="employeeObj?.employeeName" [objectType]="'HR_Employees'">
-          </codx-img>
-          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="employeeObj?.gender"
-            [showText]="true" [showIcon]="false" [showBgColor]="false">
-          </codx-vll>
-        </div>
-        <div *ngIf="employeeObj != null" class="d-flex flex-column">
-          <div class="fw-bold">
-            <span class="text-dark me-2">{{ employeeObj?.employeeName }}</span>
-            <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-            <span class="text-danger">{{ employeeObj?.employeeID }}</span> -->
+      <div class="col-6">
+        <div *ngIf="employeeId" class="d-flex align-items-start">
+          <div class="d-flex flex-column me-2">
+            <codx-img [width]="35" [objectId]="employeeObj?.employeeID" [referType]="'avt'"
+              [objectName]="employeeObj?.employeeName" [objectType]="'HR_Employees'">
+            </codx-img>
+            <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
+              [value]="employeeObj?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
+            </codx-vll>
           </div>
-          <div class="text-gray-700">
-            <span [innerHTML]="employeeObj?.positionID| formatvalue : formModel : 'positionID'| async"></span>
-          </div>
-          <div class="text-gray-700">
-            <span [innerHTML]="employeeObj?.orgUnitID  | formatvalue : formModel : 'orgUnitID'| async"></span>
+          <div class="d-flex flex-column">
+            <div class="me-2 text-dark fw-bold text-nowrap">
+              <span>{{ employeeObj?.employeeName }}</span>
+            </div>
+            <div class="text-gray-500 fs-7">
+              <span [innerHTML]="employeeObj?.positionID"></span>
+            </div>
+            <div class="text-gray-700">
+              <span [innerHTML]="employeeObj?.orgUnitID"></span>
+            </div>
           </div>
         </div>
       </div>
