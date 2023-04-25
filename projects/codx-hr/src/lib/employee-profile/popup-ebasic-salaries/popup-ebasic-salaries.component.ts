@@ -44,7 +44,6 @@ export class PopupEBasicSalariesComponent
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
   genderGrvSetup: any;
-
   //end
   constructor(
     injector: Injector,
@@ -120,9 +119,31 @@ export class PopupEBasicSalariesComponent
 
   //change employee
   handleSelectEmp(evt) {
-    if (evt.data != null) {
-      this.employeeId = evt.data;
-      this.getEmployeeInfoById(this.employeeId, evt?.field);
+    switch (evt?.field){
+      case 'employeeID': //check if employee changed
+        if(evt?.data && evt?.data.length > 0){
+          this.employeeId = evt?.data;
+          this.getEmployeeInfoById(this.employeeId, evt?.field);
+        }
+        else {
+          delete this.employeeId;
+          delete this.employeeObj;
+          this.formGroup.patchValue({
+            employeeID: this.EBasicSalaryObj.employeeID,
+          });
+        }
+        break;
+      case 'signerID': // check if signer changed
+        if(evt?.data && evt?.data.length > 0){
+          this.getEmployeeInfoById(evt?.data, evt?.field);
+        }
+        else {
+          this.formGroup.patchValue({
+            signerID: null,
+            signerPosition: null,
+          });
+        }
+        break;
     }
   }
   //
@@ -135,7 +156,7 @@ export class PopupEBasicSalariesComponent
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
-        if (fieldName === 'signerID') {
+        else if (fieldName === 'signerID') {
           if (emp[0][0]?.positionID) {
             this.hrService
               .getPositionByID(emp[0][0]?.positionID)
@@ -199,10 +220,10 @@ export class PopupEBasicSalariesComponent
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.EBasicSalaryObj.expiredDate < this.EBasicSalaryObj.effectedDate) {
       this.hrService.notifyInvalidFromTo(
@@ -212,8 +233,6 @@ export class PopupEBasicSalariesComponent
       );
       return;
     }
-    this.EBasicSalaryObj.employeeID = this.employeeId;
-
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)

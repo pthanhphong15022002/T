@@ -111,40 +111,57 @@ export class AddDecentralGroupMemComponent extends UIComponent {
     });
   }
 
+  addGroupMembers(event) {
+    if (event?.id != '') {
+      if (this.groupData?.groupRoles?.length > 0) {
+        this.adServices
+          .validateGroupMemberRoles(event?.id)
+          .subscribe((lstInvalidMemberIDs: string[]) => {
+            if (lstInvalidMemberIDs?.length > 0) {
+              let lstInvalidMemberNames = [];
+              event?.dataSelected?.forEach((x) => {
+                if (lstInvalidMemberIDs.includes(x.UserID)) {
+                  lstInvalidMemberNames.push(x.UserName);
+                }
+              });
+              //canh bao muon ghi de quyen khong
+              this.notify
+                .alertCode(
+                  `Tài khoản ${lstInvalidMemberNames.join(
+                    ', '
+                  )}, bạn có muốn ghi đè quyền`
+                )
+                .subscribe((e) => {
+                  let isOverrideRoles = false;
+                  if (e?.event?.status == 'Y') {
+                    isOverrideRoles = true;
+                  }
+
+                  this.addMember(event, isOverrideRoles);
+                });
+            } else {
+              this.addMember(event, false);
+            }
+          });
+      } else {
+        this.addMember(event, false);
+      }
+    }
+  }
+
   changeLstMembers(event) {
     this.popAddMemberState = !this.popAddMemberState;
     if (event == null) return;
-
-    if (event?.id != '') {
+    if (!this.isSaved) {
       this.adServices
-        .validateGroupMemberRoles(event?.id)
-        .subscribe((lstInvalidMemberIDs: string[]) => {
-          if (lstInvalidMemberIDs?.length > 0) {
-            let lstInvalidMemberNames = [];
-            event?.dataSelected?.forEach((x) => {
-              if (lstInvalidMemberIDs.includes(x.UserID)) {
-                lstInvalidMemberNames.push(x.UserName);
-              }
-            });
-            //canh bao muon ghi de quyen khong
-            this.notify
-              .alertCode(
-                `Tài khoản ${lstInvalidMemberNames.join(
-                  ', '
-                )}, bạn có muốn ghi đè quyền`
-              )
-              .subscribe((e) => {
-                let isOverrideRoles = false;
-                if (e?.event?.status == 'Y') {
-                  isOverrideRoles = true;
-                }
-
-                this.addMember(event, isOverrideRoles);
-              });
-          } else {
-            this.addMember(event, false);
-          }
+        .addUserGroupAsync(this.groupData)
+        .subscribe((res: any) => {
+          this.groupData.groupID = res.groupID;
+          this.isSaved = true;
+          this.addGroupMembers(event);
         });
+    } else {
+      this.addGroupMembers(event);
     }
   }
 
@@ -189,7 +206,9 @@ export class AddDecentralGroupMemComponent extends UIComponent {
       }
     });
     this.adServices
-      .removeGroupMember(lstMDID, lstMDS, member)
+      .removeGroupMember(lstMDID, lstMDS, this.groupData.groupID, [
+        member.memberID,
+      ])
       .subscribe((result) => {
         if (result) {
           this.groupData.members = this.groupData.members.filter(
