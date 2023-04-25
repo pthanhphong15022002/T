@@ -30,6 +30,8 @@ export class CodxAttachmentTempComponent implements OnInit {
   @Input() count = 0;   
   @Input() zIndex: number = 0; // Thảo truyền z index
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
+  @Input() hideDelete = 0 ; //Thuan tắt delete file
+  @Input() hideMoreF = 1 ; //Thuan tắt delete file
   services: string = 'DM';
   assamplyName: string = 'ERM.Business.DM';
   className: string = 'FileBussiness';

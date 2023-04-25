@@ -17,6 +17,7 @@ export const environment = {
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout
   hideFavCount: false,
+  singleExec:false,
   externalLogin: {
     amazonId: '',
     facebookId: '',

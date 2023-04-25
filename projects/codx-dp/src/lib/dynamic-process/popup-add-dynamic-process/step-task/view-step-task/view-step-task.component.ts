@@ -2,6 +2,7 @@ import { Component, OnInit, Optional } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -41,20 +42,33 @@ export class ViewJobComponent implements OnInit {
     { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
   ];
   hideExtend = true;
+  isRoleAll = false;
+  isShowUpdate = false;
+  user: any;
+  isUpdate = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     public sanitizer: DomSanitizer,
     private callfc: CallFuncService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.type = dt?.data?.value?.type;
     this.dataInput = dt?.data?.value;
     this.listDataInput = dt?.data?.listValue;
     this.step = dt?.data?.step;
+    this.isRoleAll = dt?.data?.isRoleAll;
+    this.isUpdate = dt?.data?.isUpdate;
     this.getModeFunction();
+    console.log(this.dataInput);
+    console.log(this.listDataInput);
+    //TODO: check quyền cập nhật tiến độ 
+    //TODO: role và công việc liên kết
+    this.isShowUpdate = this.isRoleAll && this.isUpdate;
   }
 
   ngOnInit(): void {
@@ -116,6 +130,15 @@ export class ViewJobComponent implements OnInit {
     this.viewModelDetail = e;
   }
 
+  checRoleTask(data, type) {
+    return (
+      data.roles?.some(
+        (element) =>
+          element?.objectID == this.user.userID && element.roleType == type
+      ) || false
+    );
+  }
+  
   openUpdateProgress(data?: any) {
     console.log('======');
     

@@ -1,3 +1,6 @@
+declare global {
+  interface Window { ng: any; }
+}
 import {
   Component,
   ChangeDetectionStrategy,
@@ -37,9 +40,9 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
     private layoutService: LayoutService,
     private titleService: Title,
     private authSV : AuthService
-  ) 
+  )
   {
-    
+
   }
 
   ngOnInit() {
@@ -55,9 +58,9 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
         .setAttribute('href', './assets/logos/favicon.ico');
     }
     this.unsubscribe.push(this.tenant.init(this.router));
-    
 
-    
+
+
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
     //     environment.FCMToken = token;
@@ -101,7 +104,7 @@ export class AppComponent implements OnInit,AfterViewInit ,OnDestroy {
   //           e.classList.remove("active");
   //         }
   //       });
-        
+
   //     }
   // }
 

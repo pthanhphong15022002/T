@@ -49,6 +49,11 @@ export class CodxTabsComponent implements OnInit {
   @Input() transID: string;
   @Input() approveStatus: string;
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  
+  //Quotations - CM
+  @Input() customerID : string ;
+  @Input() funcIDQuotations : string ='CM0202' ;
+
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
