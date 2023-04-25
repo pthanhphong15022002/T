@@ -49,7 +49,6 @@ export class PopupListContactsComponent implements OnInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.objectType = dt?.data?.objectType;
     this.objectName = dt?.data?.objectName;
-
   }
 
   ngOnInit(): void {
@@ -123,9 +122,9 @@ export class PopupListContactsComponent implements OnInit {
           moreFuncName: this.moreFuncAdd,
           action: 'add',
           dataContact: null,
-          type: this.type,
+          type: 'formList',
           gridViewSetup: res,
-          contactType: this.contactType
+          contactType: this.contactType,
 
         };
         var dialog = this.callFc.openForm(
