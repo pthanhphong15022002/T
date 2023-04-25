@@ -54,7 +54,7 @@ const routes: Routes = [
       },
       {
         // gán tạm để làm UI
-        path: 'deals/:funcID',
+        path: 'sales/:funcID',
         component: DealsComponent,
       },
       {
