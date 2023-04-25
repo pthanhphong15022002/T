@@ -40,6 +40,8 @@ export class CodxHrService {
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   //#region moreFuncAction
+  actionEdit = 'S03';
+  actionDelete = 'S02';
   actionAddNew = 'A01';
   actionSubmit = 'A03';
   actionUpdateCanceled = 'AU0';
@@ -486,6 +488,16 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
+      data
+    );
+  }
+
+  loadDataEDisciplines(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDisciplinesBusiness',
+      'LoadEDisciplineWithEmpInfoAsync',
       data
     );
   }
@@ -1126,16 +1138,6 @@ export class CodxHrService {
     );
   }
 
-  AddEJSlariesTrackLog(objectID, comment, objectType, actionType, createdBy) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EJobSalariesBusiness',
-      'ReceiveToAddEJSalariesTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
-    );
-  }
-
   GetOldSalaries(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1622,6 +1624,8 @@ export class CodxHrService {
     );
   }
 
+
+
   addEContract(data: any) {
     return this.api.execSv<any>(
       'HR',
@@ -1724,16 +1728,6 @@ export class CodxHrService {
       'EBenefitsBusiness',
       'EditEmployeeBenefitMoreFunc',
       data
-    );
-  }
-
-  AddEBenefitTrackLog(objectID, comment, objectType, actionType, createdBy) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EBenefitsBusiness',
-      'ReceiveToAddEJSalariesTrackLog',
-      [objectID, comment, objectType, actionType, createdBy]
     );
   }
   //#endregion

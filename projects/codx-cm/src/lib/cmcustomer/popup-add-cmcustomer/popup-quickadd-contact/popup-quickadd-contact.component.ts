@@ -5,6 +5,7 @@ import {
   DialogRef,
   NotificationsService,
   CacheService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { CM_Contacts } from '../../../models/cm_model';
 import { tmpCrm } from '../../../models/tmpCrm.model';
@@ -26,6 +27,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   recIDCm: any;
   objectType: any;
   objectName: any;
+  listContacts = [];
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -41,20 +43,20 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.objectType = dt?.data?.objectType;
     this.objectName = dt?.data?.objectName;
     this.gridViewSetup = dt?.data?.gridViewSetup;
-    if(this.type == 'formAdd'){
+    this.listContacts = dt?.data?.listContacts;
+    if (this.type == 'formAdd') {
       this.contactType = '1';
-    }else{
-      this.contactType = dt?.data?.contactType
+    } else {
+      this.contactType = dt?.data?.contactType;
     }
     if (this.action == 'edit') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
       this.contactType = this.data?.contactType;
-      if(this.contactType.split(';').some(x=> x == "1")) this.isCheckContactType = true;
+      if (this.contactType.split(';').some((x) => x == '1'))
+        this.isCheckContactType = true;
     }
   }
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   // getLastAndFirstName(contactName) {
   //   if (contactName != null) {
@@ -89,7 +91,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       this.data.contactName = '';
     }
-    if(this.type == 'formDetail'){
+    if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
     }
     if (this.action == 'add') {
@@ -103,7 +105,7 @@ export class PopupQuickaddContactComponent implements OnInit {
         this.recIDCm,
         this.objectType,
         ,
-        this.objectName
+        this.objectName,
       ];
 
       this.cmSv.quickAddContacts(data).subscribe((res) => {
@@ -115,11 +117,11 @@ export class PopupQuickaddContactComponent implements OnInit {
         }
       });
     } else {
-      this.cmSv.updateContactByPopupListCt(this.data).subscribe(res => {
-        if(res){
+      this.cmSv.updateContactByPopupListCt(this.data).subscribe((res) => {
+        if (res) {
           this.dialog.close(res);
         }
-      })
+      });
     }
   }
 
@@ -133,7 +135,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       return;
     }
 
-    if(this.contactType == null || this.contactType.trim() == ''){
+    if (this.contactType == null || this.contactType.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -142,15 +144,36 @@ export class PopupQuickaddContactComponent implements OnInit {
       return;
     }
 
-
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
     }
-    if (this.data.personalEmail != null && this.data.personalEmail.trim() != '') {
+    if (
+      this.data.personalEmail != null &&
+      this.data.personalEmail.trim() != ''
+    ) {
       if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
     }
 
-    this.onAdd();
+    if (this.type == 'formDetail') {
+      if (
+        this.contactType.split(';').some((x) => x == '1') &&
+        this.listContacts.some((x) =>
+          x.contactType.split(';').some((x) => x == '1')
+        )
+      ) {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notiService.alertCode('CM001').subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.onAdd();
+          }
+        });
+      } else {
+        this.onAdd();
+      }
+    } else {
+      this.onAdd();
+    }
   }
 
   valueChange(e) {

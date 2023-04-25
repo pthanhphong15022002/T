@@ -72,7 +72,59 @@
         </ng-container>
       </div>
       <div class="col-6 hot-right">
-        <div *ngIf="loaded && posts[1];else tmpEmptyNews2" class="row mb-5 post" (click)="clickViewDetail(posts[1])">
+        <ng-container *ngFor="let item of posts; let i = index">
+          <div *ngIf="i > 0">
+            <div *ngIf="item;else tmpEmptyNews2" class="row mb-5 post" (click)="clickViewDetail(item)">
+              <div class="col-4">
+                <div class="w-100 position-relative cursor-pointer">
+                  <codx-img 
+                    imageType="square" 
+                    [isDefaulImg]="true" 
+                    [width]="180" 
+                    [cssClass]="'image w-100'" 
+                    [objectId]="item.recID"
+                    [objectType]="'WP_News'" 
+                    [referType]="'image'">
+                  </codx-img>
+                  <ng-container *ngIf="item.category">
+                    <div class="position-absolute bottom-0 end-0">
+                      <codx-vll 
+                          [name]="'WP002'" 
+                          [classList]="'badge badge-danger p-2 px-4 text-center'"
+                          [value]="item.category" 
+                          [showText]="true">
+                      </codx-vll>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="fs-5 fw-bold news-title cursor-pointer">
+                  <span>{{ item.subject | maxlenght:100}}</span>
+                </div>
+                <div class="text-gray-700 news-des line-clamp line-clamp-3">
+                  <span>{{item.subContent | maxlenght:300}}</span>
+                </div>
+                <div class="d-flex justify-content-between fs-7 mt-3">
+                  <ng-container *ngIf="item.approveStatus == '1'">
+                    <span>
+                      <codx-vll 
+                          [name]="'CO003'" 
+                          [classList]="'rounded-pill p-2 px-4 text-center'"
+                          [value]="item.approveStatus" 
+                          [showText]="true" 
+                          [showBgColor]="true">
+                      </codx-vll>
+                    </span>
+                  </ng-container>
+                  <span class="text-gray-400" [innerHTML]="item.createdOn | formatvalue:view.formModel:'CreatedOn' | async">
+                  </span>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- <div *ngIf="loaded && posts[1];else tmpEmptyNews2" class="row mb-5 post" (click)="clickViewDetail(posts[1])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
               <codx-img 
@@ -202,7 +254,7 @@
               </span>  
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="row my-8" style="height: 300px;">

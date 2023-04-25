@@ -23,6 +23,7 @@ export class ViewJobComponent implements OnInit {
   owner = [];
   person = [];
   participant = [];
+  connection = '';
   listDataInput = [];
   listTypeTask = [];
   listDataLink = [];
@@ -79,13 +80,10 @@ export class ViewJobComponent implements OnInit {
       }
     });
 
-    this.owner =
-      this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
-    this.participant =
-      this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
-    this.person =
-      this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
-    console.log(this.owner);
+    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
+    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
+    this.connection = this.dataInput['roles']?.filter((role) => role.roleType === 'R')?.map(item => {return item.objectID}).join(';') || [];
   }
 
   getModeFunction() {

@@ -174,13 +174,8 @@ export class CmcustomerDetailComponent implements OnInit {
           textDefault: 'Liên hệ',
           icon: 'icon-contact_phone',
           isActive: false,
-        },
-        {
-          name: 'Offered',
-          textDefault: 'Sản phẩm cung cấp',
-          icon: 'icon-shopping_cart',
-          isActive: false,
-        },
+        }
+
       ];
     } else {
       this.tabDetail = [
@@ -191,8 +186,8 @@ export class CmcustomerDetailComponent implements OnInit {
           isActive: true,
         },
         {
-          name: 'Offered',
-          textDefault: 'Sản phẩm cung cấp',
+          name: 'Opportunity',
+          textDefault: 'Cơ hội liên quan',
           icon: 'icon-shopping_cart',
           isActive: false,
         },
@@ -239,6 +234,7 @@ export class CmcustomerDetailComponent implements OnInit {
               ? this.dataSelected.customerName
               : this.dataSelected.partnerName,
           gridViewSetup: res,
+          listContacts: this.listContacts
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
@@ -320,7 +316,7 @@ export class CmcustomerDetailComponent implements OnInit {
             });
         } else {
           this.notiService.notifyCode(
-            'Liên hệ này đang là liên hệ chính! Không xóa được'
+            'CM004'
           );
           return;
         }

@@ -1,8 +1,20 @@
 ::ng-deep .input-group-text {
   line-height: 0.5;
   font-size: 1rem;
+  border-left-color: transparent;
+  background-color: transparent;
 }
 
 ::ng-deep .form-control {
   border-left-color:hidden;
+  border-right-color: transparent;
+}
+
+
+
+::ng-deep .form-control:focus-within {
+
+  outline: none !important;
+  border: 1px solid #c2c8ca !important;
+  border-right-color:  transparent !important;
 }

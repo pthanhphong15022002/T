@@ -167,6 +167,8 @@ import { CodxStepTaskComponent } from './components/codx-step/codx-step-task/cod
 import { UpdateProgressComponent } from './components/codx-step/codx-progress/codx-progress.component';
 import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
+import { FillterReferType } from './components/codx-view-files/filterReferPipe.pipe';
+import { CodxQuotationsComponent } from './components/codx-quotations/codx-quotations.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -303,6 +305,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   MessageSystemPipe,
   SearchPipe,
+  FillterReferType
 ];
 
 @NgModule({
@@ -317,6 +320,7 @@ const T_Pipe: Type<any>[] = [
     PopupAddApproverComponent,
     CodxClearCacheComponent,
     CalendarCenterComponent,
+    CodxQuotationsComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

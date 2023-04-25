@@ -18,6 +18,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from '../codx-tabs/model/tabControl.model';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -118,9 +119,53 @@ export class DynamicFormComponent extends UIComponent {
       case 'SYS002':
         this.export(data);
         break;
+      //Quy trình chi tiết của OD
+      case 'ODS2101':
+        this.openFormEditCategory(data,evt)
+        break;
       default:
         break;
     }
+  }
+
+
+  //Form chỉnh sửa quy trình duyệt OD
+  openFormEditCategory(data:any , e:any)
+  {
+    this.api.execSv("ES","ES","CategoriesBusiness","GetByCategoryIDAsync",data?.categoryID).subscribe(item=>{
+      if(item)
+      {
+        this.viewBase.dataService.dataSelected = item;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.viewBase?.dataService;
+        option.FormModel = this.viewBase?.formModel;
+        option.FormModel.entityName = "ES_Categories";
+        option.FormModel.entityPer = "ES_ODCategoriesApproval";
+        option.FormModel.formName = "ODCategoriesApproval";
+        option.FormModel.funcID= "ODS24";
+        option.FormModel.gridViewName = "grvODCategoriesApproval";
+        let popupEdit = this.callfunc.openSide(
+          PopupAddCategoryComponent,
+          {
+            disableCategoryID: '1',
+            data: item,
+            isAdd: false,
+            headerText: e?.data?.customName,
+          },
+          option
+        );
+        popupEdit.closed.subscribe((res) => {
+          if (res?.event == null) {
+            //this.viewBase.dataService.dataSelected = evt.data;
+            //this.viewBase.dataService.clear();
+          } else {
+            //this.viewBase.dataService.update(res.event).subscribe();
+          }
+        });
+      }
+    })
+   
   }
 
   click(evt: ButtonModel) {

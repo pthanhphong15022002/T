@@ -89,6 +89,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
+    debugger
     this.dialog = dialog;
     this.dataType = data?.data?.dataType;
     if (this.dataType != 'auto') {
@@ -429,7 +430,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID ?? this.data.recID,
           isSaveNew: '1',
-        }
+        },'', {isFull:true} as any
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
@@ -755,4 +756,5 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     });
   }
+
 }
