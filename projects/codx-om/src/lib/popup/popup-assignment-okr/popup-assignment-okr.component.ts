@@ -78,13 +78,6 @@ export class PopupAssignmentOKRComponent
     this.okrPlanRecID = dialogData?.data[5];
     this.curUser = authStore.get();
     this.assignmentOKR = new DistributeOKR();
-    // if (this.distributeToType == this.typeKR) {
-    //   this.radioKRCheck = true;
-    //   this.radioOBCheck = false;
-    // } else {
-    //   this.radioKRCheck = false;
-    //   this.radioOBCheck = true;
-    // }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -132,7 +125,7 @@ export class PopupAssignmentOKRComponent
     this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
       if (res) {  
         this.dataOKR = res;
-        this.codxOmService.getOKRDistributed(this.okrRecID).subscribe((links: any) => {
+        this.codxOmService.getOKRHavedLinks(this.okrRecID).subscribe((links: any) => {
           if (links && links.length > 0) {
             this.assignmentOKR = links[0];
             this.detectorRef.detectChanges();
@@ -147,6 +140,7 @@ export class PopupAssignmentOKRComponent
             this.assignmentOKR.isActive = false;
             this.assignmentOKR.distributePct = 100;
             this.assignmentOKR.distributeValue = this.dataOKR?.target;
+            this.assignmentOKR.refType='2';//Phân công
             this.isAdd = true;
             this.detectorRef.detectChanges();
             this.isAfterRender = true;

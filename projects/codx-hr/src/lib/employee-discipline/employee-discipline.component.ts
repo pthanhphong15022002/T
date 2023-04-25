@@ -130,7 +130,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   onSaveUpdateForm(){
     this.hrService.UpdateEmployeeDisciplineInfo(this.editStatusObj).subscribe((res) => {
       if(res != null){
-        debugger
         this.notify.notifyCode('SYS007');
         res.emp = this.currentEmpObj;
         this.view.formModel.entityName
@@ -305,6 +304,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
+    debugger
     this.itemDetail = event?.data;
   }
 

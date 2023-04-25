@@ -9,7 +9,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group row mt-5"> 
+    <div class="form-group row mt-5">
       <div class="col-6">
         <div class="d-flex">
           <div class="d-flex flex-column">
@@ -26,15 +26,17 @@
               [objectType]="'HR_Employees'"
             >
             </codx-img>
-            <codx-vll
-              class="badge badge-sm"
-              [name]="genderGrvSetup?.referedValue"
-              [value]="employeeObj?.emp?.gender ?? employeeObj?.gender"
-              [showText]="true"
-              [showIcon]="false"
-              [showBgColor]="false"
-            >
-            </codx-vll>
+            <div *ngIf="employeeObj">
+              <codx-vll
+                class="badge badge-sm"
+                [name]="genderGrvSetup?.referedValue"
+                [value]="employeeObj?.emp?.gender ?? employeeObj?.gender"
+                [showText]="true"
+                [showIcon]="false"
+                [showBgColor]="false"
+              >
+              </codx-vll>
+            </div>
           </div>
           <div class="d-flex flex-column">
             <div>
@@ -71,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="actionType != 'edit'"> 
+      <div class="col-6" *ngIf="actionType != 'edit'">
         <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
         <codx-input
           field="employeeID"
@@ -80,7 +82,7 @@
           (valueChange)="handleSelectEmp($event)"
         >
         </codx-input>
-      </div> 
+      </div>
     </div>
     <div class="form-group row">
       <div class="col-6">
@@ -160,6 +162,7 @@
       <codx-input
         field="signerID"
         [formModel]="formModel"
+        [Group]="formGroup"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>

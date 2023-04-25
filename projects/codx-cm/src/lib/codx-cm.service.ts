@@ -11,8 +11,8 @@ export class CodxCmService {
   quickAddContacts(data) {
     return this.api.exec<any>(
       'CM',
-      'CustomersBusiness',
-      'AddCrmAsync',
+      'ContactsBusiness',
+      'AddQuickContactAsync',
       data
     );
   }
@@ -40,6 +40,15 @@ export class CodxCmService {
       'CustomersBusiness',
       'GetOneAsync',
       [recID, funcID]
+    );
+  }
+
+  setIsBlackList(recID, isBlacklist){
+    return this.api.exec<any>(
+      'CM',
+      'CustomersBusiness',
+      'SetIsBlackListCustomerAsync',
+      [recID, isBlacklist]
     );
   }
 

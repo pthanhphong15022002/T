@@ -59,8 +59,10 @@ export class EmployeeBenefitComponent extends UIComponent {
   cmtStatus: string = '';
   genderGrvSetup: any;
   eBenefitHeader;
+  processID;
 
   //#region Update modal Status
+  actionSubmit = 'HRTPro05A03';
   actionAddNew = 'HRTPro05A01';
   actionUpdateCanceled = 'HRTPro05AU0';
   actionUpdateInProgress = 'HRTPro05AU3';
@@ -185,8 +187,70 @@ export class EmployeeBenefitComponent extends UIComponent {
     });
   }
 
+    //More function send approved
+    release() {
+      this.hrService
+        .getCategoryByEntityName(this.view.formModel.entityName)
+        .subscribe((res) => {
+          if (res) {
+            this.processID = res;
+            this.hrService
+              .release(
+                this.itemDetail.recID,
+                this.processID.processID,
+                this.view.formModel.entityName,
+                this.view.formModel.funcID,
+                '<div> Phụ cấp - ' + this.itemDetail.decisionNo + '</div>'
+              )
+              .subscribe((result) => {
+                if (result?.msgCodeError == null && result?.rowCount) {
+                  this.notify.notifyCode('ES007');
+                  this.itemDetail.status = '3';
+                  this.itemDetail.approveStatus = '3';
+                  this.hrService
+                    .EditEmployeeBenefitMoreFunc(this.itemDetail)
+                    .subscribe((res) => {
+                      console.log('Result after send edit' + res)
+                      if (res) {
+                        this.view?.dataService
+                          ?.update(this.itemDetail)
+                          .subscribe();
+                      }
+                    });
+                } else this.notify.notifyCode(result?.msgCodeError);
+              });
+          }
+        });
+    }
+  
+    beforeRelease() {
+      let category = '4';
+      let formName = 'HRParameters';
+      this.hrService.getSettingValue(formName, category).subscribe((res) => {
+        if (res) {
+          let parsedJSON = JSON.parse(res?.dataValue);
+          let index = parsedJSON.findIndex(
+            (p) => p.Category == this.view.formModel.entityName
+          );
+          if (index > -1) {
+            let eJobSalaryObj = parsedJSON[index];
+            if (eJobSalaryObj['ApprovalRule'] == '1') {
+              this.release();
+            } else {
+            }
+          }
+        }
+      });
+    }
+  
+    //#endregion
+
   clickMF(event, data): void {
+    this.itemDetail = data;
     switch (event.functionID) {
+      case this.actionSubmit:
+        this.beforeRelease();
+        break;
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
       case this.actionUpdateRejected:
