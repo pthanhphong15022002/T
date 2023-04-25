@@ -19,8 +19,8 @@
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
-    <div class="w-25">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
+    <div class="w-100 px-2">
       <div class="d-flex align-items-start">
         <!-- highlight row -->
         <!-- <span class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-250px min-w-250px px-2">
       <div class="d-flex flex-column">
         <div>
           <span
@@ -121,15 +121,15 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-200px min-w-200px px-2">
       <div class="d-flex flex-column">
-        <div class="align-self-center fw-bold">
+        <div class="fw-bold">
           <span
           >
             {{ data?.disciplineDate | fmDT }}</span
           >
         </div>
-        <div class="align-self-center fw-bold">
+        <div class="fw-bold">
           <span
           >
             {{ data?.fromDate | fmDT }}</span
@@ -174,7 +174,7 @@
       </codx-attachment> -->
     </div>
 
-    <div class="w-25">
+    <!-- <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -184,7 +184,7 @@
         [showBgColor]="true"
       >
       </codx-vll>
-    </div>
+    </div> -->
 
     <!-- <div class="w-25" [innerHTML]=" data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async" >
       </div> -->
@@ -205,27 +205,31 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="d-flex w-100 ps-2 pe-4">
+
+
+  <div class="w-100 p-3 fw-bold text-dark">
     <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-250px min-w-250px p-3 fw-bold text-dark">
     <codx-label
       name="lblContractType"
       [default]="'Loại | Hình thức kỷ luật'"
     ></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-200px min-w-200px p-3 fw-bold text-dark">
     <codx-label
       name="lblContractNum"
       [default]="'Ngày vi phạm | Ngày xử lý'"
     ></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
     ></codx-label>
-  </div>
+  </div> -->
+</div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>
