@@ -11,7 +11,7 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { CM_Products, CM_Quotations } from '../../models/cm_model';
+import { CM_Products, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -29,10 +29,16 @@ export class PopupAddQuotationsComponent implements OnInit {
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
+  // fmProcductsLines: FormModel = {
+  //   formName: 'CMProducts',
+  //   gridViewName: 'grvCMProducts',
+  //   entityName: 'CM_Products',
+  // };
+  //test
   fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
+    formName: 'CMQuotation',
+    gridViewName: 'grvCMQuotation',
+    entityName: 'CM_QuotationsLines',
   };
   gridHeight: number;
   editSettings: EditSettingsModel = {
@@ -42,7 +48,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
 
-  productsLine: Array<CM_Products> = []; //mang san pham
+ // productsLine: Array<CM_Products> = []; //mang san pham
+  productsLine: Array<CM_QuotationsLines> = [];
   lockFields = [];
   dataParent : any
 
@@ -93,7 +100,6 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   productsLineChanged(e) {
-    debugger
     // const field = [
     //   'quotationname',
       

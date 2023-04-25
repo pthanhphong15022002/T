@@ -81,6 +81,57 @@ export class CM_Quotations {
   modifiedBy: string;
 }
 
+export class CM_QuotationsLines {
+  recID: string;
+  transID: string;
+  rowNo: number;
+  lineType: string;
+  lineStatus: string;
+  barcode: string;
+  itemID: string;
+  itemNote: string;
+  iDIM0: string;
+  iDIM1: string;
+  iDIM2: string;
+  iDIM3: string;
+  iDIM4: string;
+  quantity: number;
+  uMID: string;
+  conversion: number;
+  cWUM: string;
+  cWConversion: number;
+  cWQty: number;
+  cWOnhand: number;
+  onhand: number;
+  costPrice: number;
+  costAmt: number;
+  stdPrice: number;
+  salesPrice: number;
+  salesAmt: number;
+  discPct: number;
+  discAmt: number;
+  netAmt: number;
+  commissionPct: number;
+  commissionAmt: number;
+  salesTaxPct: number;
+  salesTaxAmt: number;
+  exciseTaxPct: number;
+  exciseTaxAmt: number;
+  vATID: string;
+  vATBase: number;
+  vATAmt: number;
+  refType: string;
+  refNo: string;
+  refID: string;
+  refLineID: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  
+}
+
 export class CM_Deals {
   recID: string;
   dealID: string;

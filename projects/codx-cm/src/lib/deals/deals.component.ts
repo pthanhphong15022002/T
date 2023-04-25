@@ -192,7 +192,6 @@ export class DealsComponent
     this.crrFuncID = this.funcID;
     let formModel = this.view?.formModel;
     this.columnGrids = [];
-    debugger;
     if (this.funcID == 'CM0201') {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -401,7 +400,6 @@ export class DealsComponent
   getPropertiesHeader(data, type) {
     if (this.listHeader?.length == 0) {
       this.listHeader = this.getPropertyColumn();
-      debugger
     }
     let find = this.listHeader?.find((item) => item.recID === data.keyField);
     return find ? find[type] : '';

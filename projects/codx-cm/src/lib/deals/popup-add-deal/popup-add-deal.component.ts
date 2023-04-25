@@ -28,7 +28,6 @@ export class PopupAddDealComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = dialog.formModel;
     this.titleAction = dt?.data?.titleAction;
-    debugger;
   }
 
   ngOnInit(): void {}
