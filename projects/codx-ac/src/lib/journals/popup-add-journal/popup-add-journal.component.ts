@@ -3,8 +3,6 @@ import {
   Component,
   Injector,
   Optional,
-  Pipe,
-  PipeTransform,
   ViewChild,
 } from '@angular/core';
 import {
@@ -19,13 +17,13 @@ import {
   UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { CustomizedMultiSelectPopupComponent } from '../customized-multi-select-popup/customized-multi-select-popup.component';
 import { IJournal } from '../interfaces/IJournal.interface';
 import { JournalService } from '../journals.service';
 import { PopupSetupInvoiceComponent } from '../popup-setup-invoice/popup-setup-invoice.component';
 import { SingleSelectPopupComponent } from '../single-select-popup/single-select-popup.component';
-import { map, tap } from 'rxjs/operators';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -57,7 +55,7 @@ export class PopupAddJournalComponent
 
   journal: IJournal = {
     mixedPayment: false,
-    unPostControl: false,
+    unpostControl: false,
     autoPost: false,
   } as IJournal;
   oldJournal: IJournal;
@@ -227,7 +225,7 @@ export class PopupAddJournalComponent
   //#endregion
 
   //#region Event
-  handleInputChange(e): void {
+  onInputChange(e): void {
     console.log(e);
 
     const irFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
@@ -241,8 +239,9 @@ export class PopupAddJournalComponent
     }
   }
 
-  handleChange(e): void {
+  onSelect(e): void {
     console.log(e);
+    this.journal.fiscalYear = e.itemData.value;
 
     this.form.formGroup.controls.periodID.reset();
     (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
@@ -251,7 +250,7 @@ export class PopupAddJournalComponent
     );
   }
 
-  handleClickSave(): void {
+  onClickSave(): void {
     console.log(this.journal);
 
     if (
@@ -291,10 +290,12 @@ export class PopupAddJournalComponent
 
     let tempJournal: IJournal = { ...this.journal };
     tempJournal.autoPost = this.journal.approvalControl;
-    if (this.journal.approvalControl) {
-      tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
-    } else {
+
+    // ghi so tu dong khi luu
+    if (this.journal.approvalControl === '0') {
       tempJournal.autoPost = this.journal.autoPost ? '2' : '0';
+    } else {
+      tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
     }
     tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
     tempJournal.creater = this.journal.creater
@@ -319,12 +320,13 @@ export class PopupAddJournalComponent
     }
     tempJournal.dataValue = JSON.stringify(dataValueObj);
 
-    // don't allow editting some fields if this journal has any vouchers.
+    // don't allow editing some fields if this journal has any vouchers.
     if (this.isEdit && this.hasVouchers) {
       const changedProps: string[] = this.findChangedProps(
         this.oldJournal,
         tempJournal
       ).map((f) => f.toLowerCase());
+
       const changedFields: string[] = this.notAllowEditingFields
         .filter((d) => changedProps.includes(d.toLowerCase()))
         .map((d) => this.gvs?.[d]?.headerText);
@@ -461,7 +463,7 @@ export class PopupAddJournalComponent
       .openForm(
         PopupAddAutoNumberComponent,
         '',
-        550,
+        1000,
         (screen.width * 40) / 100,
         '',
         {

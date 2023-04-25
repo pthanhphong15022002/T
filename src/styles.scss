@@ -1048,7 +1048,9 @@ codx-layout-add .card-header {
   width: 1.2rem;
   height: 1.2rem;
 }
-
+.badge.badge-sm {
+  font-size: 11px;
+}
 /*** list view srcoll ngang ***/
 .e-listview .e-content {
   overflow-x: auto;
