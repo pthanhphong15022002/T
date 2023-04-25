@@ -173,7 +173,7 @@ export class CM_Customers {
   email: string;
   webPage: string;
   establishDate: Date;
-  headcounts: number;
+  headcounts: string;
   annualRevenue: number;
   workingDays: string;
   officialHour: boolean;

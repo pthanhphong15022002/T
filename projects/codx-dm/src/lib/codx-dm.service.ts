@@ -988,16 +988,8 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
-      if (data?.viewThumb) return environment.urlUpload + '/' + data.thumbnail;
+      if (data?.viewThumb && this.checkView(data?.read) == true) return environment.urlUpload + '/' + data.thumbnail;
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // if (data.hasThumbnail == null || data.hasThumbnail == false) {
-      //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // } else if (data.thumbnail.indexOf('../../../') > -1)
-      //   return data.thumbnail;
-      // else {
-      //   return environment.urlUpload + "/" + data.thumbnail;
-      //   //return this.checkUrl(url, data);
-      // }
     }
   }
 

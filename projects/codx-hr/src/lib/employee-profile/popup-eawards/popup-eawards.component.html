@@ -218,24 +218,26 @@
   [data]="awardObj" *ngIf="isAfterRender">
   <ng-template #body>
     <div *ngIf="allowToViewEmp()" class="form-group row d-flex flex-row">
-      <div class="col-6 d-flex align-items-start">
-        <div class="d-flex flex-column me-2">
-          <codx-img [width]="50" [objectId]="empObj?.employeeID" [referType]="'avt'"
-            [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
-          </codx-img>
-          <codx-vll class="badge badge-sm" [name]="genderGrvSetup?.referedValue" [value]="empObj?.gender"
-          [showText]="true" [showIcon]="false" [showBgColor]="false">
-        </codx-vll>
-        </div>
-        <div *ngIf="empObj != null" class="d-flex flex-column">
-          <div class="fw-bold">
-            <span class="text-dark me-2">{{ empObj?.employeeName }}</span>
+      <div class="col-6">
+        <div *ngIf="employId" class="d-flex align-items-start">
+          <div class="d-flex flex-column me-2">
+            <codx-img [width]="35" [objectId]="empObj?.employeeID" [referType]="'avt'"
+              [objectName]="empObj?.employeeName" [objectType]="'HR_Employees'">
+            </codx-img>
+            <codx-vll class="badge badge-sm badge-light me-0" [name]="genderGrvSetup?.referedValue"
+              [value]="empObj?.gender" [showText]="true" [showIcon]="false" [showBgColor]="false">
+            </codx-vll>
           </div>
-          <div class="text-gray-700">
-            <span [innerHTML]="empObj?.positionID"></span>
-          </div>
-          <div class="text-gray-700">
-            <span [innerHTML]="empObj?.orgUnitID"></span>
+          <div class="d-flex flex-column">
+            <div class="me-2 text-dark fw-bold text-nowrap">
+              <span>{{ empObj?.employeeName }}</span>
+            </div>
+            <div class="text-gray-500 fs-7">
+              <span [innerHTML]="empObj?.positionID"></span>
+            </div>
+            <div class="text-gray-700">
+              <span [innerHTML]="empObj?.orgUnitID"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -304,18 +306,19 @@
     <div class="form-group row">
       <div class="d-flex flex-stack">
         <codx-label fiedName="Signer" [formModel]="formModel"></codx-label>
-        <codx-input field="signerID" [formModel]="formModel" 
-        [showInput]="false" [multiple]="false"
-          (valueChange)="valueChange($event)">
+        <codx-input field="signerID" [Group]="formGroup" [formModel]="formModel" [showInput]="true" 
+          [multiple]="false" (valueChange)="handleSelectEmp($event)">
         </codx-input>
       </div>
 
-      <codx-input field="signer" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      <codx-input field="signer" [formModel]="formModel" [Group]="formGroup"
+        [disabled]="awardObj?.signerID? true: false"></codx-input>
     </div>
 
     <div class="form-group row">
       <codx-label fiedName="SignerPosition" [formModel]="formModel"></codx-label>
-      <codx-input field="signerPosition" [formModel]="formModel" [Group]="formGroup"></codx-input>
+      <codx-input field="signerPosition" [formModel]="formModel" [Group]="formGroup"
+        [disabled]="awardObj?.signerID? true: false"></codx-input>
     </div>
 
     <div class="form-group row">

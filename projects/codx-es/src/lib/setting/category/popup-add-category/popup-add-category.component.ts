@@ -89,6 +89,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
+    debugger
     this.dialog = dialog;
     this.dataType = data?.data?.dataType;
     if (this.dataType != 'auto') {

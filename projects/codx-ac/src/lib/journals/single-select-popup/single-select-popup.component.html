@@ -9,6 +9,7 @@
 </codx-form>
 
 <ng-template #body>
+  <div class="mt-5">
   <div *ngFor="let a of parentAccounts" class="mb-3">
     <ejs-radiobutton
       [label]="a.AccountID + ' - ' + a.AccountName"
@@ -16,7 +17,7 @@
       name="account"
       [(ngModel)]="selectedOption"
     ></ejs-radiobutton>
-  </div>
+  </div></div>
 </ng-template>
 
 <ng-template #footer>
