@@ -461,7 +461,7 @@ export class PopupAddJournalComponent
       .openForm(
         PopupAddAutoNumberComponent,
         '',
-        550,
+        1000,
         (screen.width * 40) / 100,
         '',
         {
