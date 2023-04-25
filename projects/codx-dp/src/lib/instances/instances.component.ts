@@ -552,7 +552,7 @@ export class InstancesComponent
       if (e && e.event != null) {
         var data = e.event;
         if (this.kanban) {
-          this.kanban.updateCard(data);
+         // this.kanban.updateCard(data); // bỏ vì theo core mới lôi 
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
