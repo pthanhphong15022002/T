@@ -92,6 +92,18 @@ export class DynamicFormComponent extends UIComponent {
       .subscribe(() => {});
   }
 
+  changeDataMF(e: any, data) {
+    console.log('event', e);
+    console.log('data', data);
+    if (data.isSystem) {
+      let delMF = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS02'
+      );
+      if (delMF) {
+        delMF[0].disabled = true;
+      }
+    }
+  }
   clickMF(evt?: any, data?: any) {
     this.function = evt;
     switch (evt.functionID) {
