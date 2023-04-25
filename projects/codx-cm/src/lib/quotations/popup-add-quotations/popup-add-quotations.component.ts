@@ -41,6 +41,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
+
   productsLine: Array<CM_Products> = []; //mang san pham
   lockFields = [];
   dataParent : any
@@ -55,6 +56,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action
+    this.productsLine=[]
   }
 
   ngOnInit(): void {}
@@ -72,7 +74,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
-    grid.disableField(this.lockFields);
+   // grid.disableField(this.lockFields);
   }
 
   clickMF(e, data) {}
@@ -91,23 +93,24 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   productsLineChanged(e) {
-    const field = [
-      'quotationname',
+    debugger
+    // const field = [
+    //   'quotationname',
       
-    ];
-    if (field.includes(e.field.toLowerCase())) {
-      this.api
-        .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
-          this.dataParent,
-          e.data,
-          e.field,
-          e.data?.isAddNew,
-        ])
-        .subscribe((res: any) => {
-          if (res && res.line)
-            this.setDataGrid(res.line.updateColumns, res.line);
-        });
-    }
+    // ];
+    // if (field.includes(e.field.toLowerCase())) {
+    //   this.api
+    //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
+    //       this.dataParent,
+    //       e.data,
+    //       e.field,
+    //       e.data?.isAddNew,
+    //     ])
+    //     .subscribe((res: any) => {
+    //       if (res && res.line)
+    //         this.setDataGrid(res.line.updateColumns, res.line);
+    //     });
+    // }
 
     // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
     //   if (e.value === '3') {

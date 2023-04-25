@@ -20,6 +20,11 @@ export class CM_Products {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  write: boolean = true ;
+  download: boolean = true ;
+  delete: boolean = true ;
+  share: boolean = true ;
+  read: boolean = true ;
 }
 export class CM_BusinessLines {
   recID: string;
