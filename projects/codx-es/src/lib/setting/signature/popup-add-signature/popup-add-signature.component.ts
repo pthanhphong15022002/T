@@ -77,7 +77,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
-
+    console.log('data1', this.data.recID);
     //set gia trị data oTP != otp
     // this.data.oTPControl = this.data?.otpControl;
     // this.data.oTPPin = this.data?.otpPin;
@@ -91,13 +91,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = this.router.snapshot.params['funcID'];
-    console.log(this.funcID);
   }
 
   ngAfterViewInit(): void {
     console.log('formGroup', this.form?.formGroup);
-    console.log('data', this.data);
-    
+    console.log('data2', this.data.recID);
+
     if (this.dialog) {
       if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
@@ -189,7 +188,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    debugger
+    debugger;
     if (this.form?.formGroup?.invalid == true) {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
@@ -298,12 +297,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
     switch (type) {
       case 'S1': {
-        if(event?.status)
-        {
+        if (event?.status) {
           this.notification.notify(event?.message);
-        }
-        else
-        {
+        } else {
           if (event && this.data.signature1 == null) {
             this.data.signature1 = (event[0] as any).recID;
           }
@@ -312,12 +308,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         break;
       }
       case 'S2': {
-        if(event?.status)
-        {
+        if (event?.status) {
           this.notification.notify(event?.message);
-        }
-        else
-        {
+        } else {
           if (event && this.data.signature2 == null) {
             this.data.signature2 = (event[0] as any).recID;
           }
@@ -327,12 +320,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         break;
       }
       case 'S3': {
-        if(event?.status)
-        {
+        if (event?.status) {
           this.notification.notify(event?.message);
-        }
-        else
-        {
+        } else {
           if (event && this.data.stamp == null) {
             this.data.stamp = (event[0] as any).recID;
           }

@@ -88,12 +88,38 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     return true;
   }
   handleSelectEmp(evt) {
-    if (evt.data != null) {
-      this.employId = evt.data;
-      this.getEmployeeInfoById(this.employId);
+    switch (evt?.field){
+      case 'employeeID': //check if employee changed
+        if(evt?.data && evt?.data.length > 0){
+          this.employId = evt?.data;
+          this.getEmployeeInfoById(this.employId,evt?.field);
+        }
+        else {
+          delete this.employId;
+          delete this.empObj;
+          this.formGroup.patchValue({
+            employeeID: this.awardObj.employeeID,
+          });
+        }
+        break;
+      case 'signerID': // check if signer changed
+        if(evt?.data && evt?.data.length > 0){
+          this.getEmployeeInfoById(evt?.data, evt?.field);
+        }
+        else {
+          delete this.awardObj?.signerID;
+          // delete this.awardObj.signer;
+          // delete this.awardObj?.signerPosition;
+          this.formGroup.patchValue({
+            signerID: null,
+            // signer: null,
+            // signerPosition: null,
+          });
+        }
+        break;
     }
   }
-  getEmployeeInfoById(empId: string) {
+  getEmployeeInfoById(empId: string, fieldName: string) {
     let empRequest = new DataRequest();
     empRequest.entityName = 'HR_Employees';
     empRequest.dataValues = empId;
@@ -101,9 +127,34 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     empRequest.pageLoading = false;
     this.hrService.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
-        this.empObj = emp[0][0];
-        this.cr.detectChanges();
+        if (fieldName === 'employeeID') 
+          this.empObj = emp[0][0];
+        else if (fieldName === 'signerID') 
+        {
+          this.awardObj.signer = emp[0][0]?.employeeName;
+          if (emp[0][0]?.positionID) {
+            this.hrService
+              .getPositionByID(emp[0][0]?.positionID)
+              .subscribe((res) => {
+                if (res) {
+                  this.awardObj.signerPosition = res.positionName;
+                  this.formGroup.patchValue({
+                    signer: this.awardObj.signer,
+                    signerPosition: this.awardObj.signerPosition,
+                  });
+                  this.cr.detectChanges();
+                }
+              });
+          } else {
+            this.awardObj.signerPosition = null;
+            this.formGroup.patchValue({
+              signer: this.awardObj.signer,
+              signerPosition: this.awardObj.signerPosition,
+            });
+          }
+        }
       }
+      this.cr.detectChanges();
     });
   }
 
@@ -159,19 +210,20 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
-    if (this.employId != null) this.getEmployeeInfoById(this.employId);
+    if (this.employId != null) this.getEmployeeInfoById(this.employId,'employeeID');
   }
 
   onSaveForm() {
     //Check SignerID
-    if (
-      this.awardObj.signerID &&
-      this.awardObj.signer.replace(/\s/g, '') !=
-        this.employeeName.replace(/\s/g, '')
-    ) {
-      this.awardObj.signerID = null;
-      this.formGroup.patchValue({ signerID: this.awardObj.signerID });
-    }
+
+    // if (
+    //   this.awardObj.signerID &&
+    //   this.awardObj.signer.replace(/\s/g, '') !=
+    //     this.empObj?.employeeName.replace(/\s/g, '')
+    // ) {
+    //   this.awardObj.signerID = null;
+    //   this.formGroup.patchValue({ signerID: this.awardObj.signerID });
+    // }
 
     //Check valid
     if (this.formGroup.invalid) {
@@ -238,41 +290,41 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           }
           break;
         }
-        case 'signerID': {
-          this.awardObj[event.field] = event.data?.value[0];
-          this.formGroup.patchValue({
-            [event.field]: this.awardObj[event.field],
-          });
+        // case 'signerID': {
+        //   this.awardObj[event.field] = event.data?.value[0];
+        //   this.formGroup.patchValue({
+        //     [event.field]: this.awardObj[event.field],
+        //   });
 
-          // let employee = event.data?.dataSelected[0]?.dataSelected[0];
-          let employee = event.data?.dataSelected[0]?.dataSelected;
+        //   // let employee = event.data?.dataSelected[0]?.dataSelected[0];
+        //   let employee = event.data?.dataSelected[0]?.dataSelected;
 
-          if (employee) {
-            this.awardObj.signer = employee.EmployeeName;
-            this.employeeName = employee.EmployeeName;
+        //   if (employee) {
+        //     this.awardObj.signer = employee.EmployeeName;
+        //     this.employeeName = employee.EmployeeName;
 
-            this.formGroup.patchValue({ signer: this.awardObj.signer });
-            if (employee.PositionID) {
-              this.hrService
-                .getPositionByID(employee.PositionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.awardObj.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.awardObj.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.awardObj.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.awardObj.signerPosition,
-              });
-            }
-          }
-          break;
-        }
+        //     this.formGroup.patchValue({ signer: this.awardObj.signer });
+        //     if (employee.PositionID) {
+        //       this.hrService
+        //         .getPositionByID(employee.PositionID)
+        //         .subscribe((res) => {
+        //           if (res) {
+        //             this.awardObj.signerPosition = res.positionName;
+        //             this.formGroup.patchValue({
+        //               signerPosition: this.awardObj.signerPosition,
+        //             });
+        //             this.cr.detectChanges();
+        //           }
+        //         });
+        //     } else {
+        //       this.awardObj.signerPosition = null;
+        //       this.formGroup.patchValue({
+        //         signerPosition: this.awardObj.signerPosition,
+        //       });
+        //     }
+        //   }
+        //   break;
+        // }
       }
       this.cr.detectChanges();
     }

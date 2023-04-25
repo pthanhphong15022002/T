@@ -1,33 +1,17 @@
-import {
-  Component,
-  Injector,
-  Input,
-  OnInit,
-  Optional,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, Input, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  CallFuncService,
-  DialogModel,
-  DialogRef,
-  FormModel,
-  UIComponent,
-  ViewModel,
-  ViewType,
-} from 'codx-core';
-import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
+import { CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 
 @Component({
-  selector: 'lib-quotations',
-  templateUrl: './quotations.component.html',
-  styleUrls: ['./quotations.component.css'],
+  selector: 'codx-quotations',
+  templateUrl: './codx-quotations.component.html',
+  styleUrls: ['./codx-quotations.component.css']
 })
-export class QuotationsComponent extends UIComponent {
+export class CodxQuotationsComponent  extends UIComponent {
   @Input() funcID: string;
   @Input() customerID: string = '';
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   readonly service = 'CM';
@@ -35,6 +19,15 @@ export class QuotationsComponent extends UIComponent {
   readonly entityName = 'CM_Quotations';
   readonly className = 'QuotationsBusiness';
   readonly methodLoadData = 'GetListQuotationsAsync';
+  //test
+  formModel : FormModel;
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
 
   constructor(
     private inject: Injector,
@@ -49,17 +42,25 @@ export class QuotationsComponent extends UIComponent {
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
-        sameData: true,
+        sameData: false, //true, fasle để test
         model: {
-          template2: this.templateMore,
-          frozenColumns: 1,
+          template: this.itemViewList,
         },
       },
+      // {
+      //   type: ViewType.grid,
+      //   active: true,
+      //   sameData: true,
+      //   model: {
+      //     template2: this.templateMore,
+      //     frozenColumns: 1,
+      //   },
+      // },
     ];
   }
-
+  changeDataMF(e,data){}
   clickMF(e, data) {}
 
   changeItemDetail(e) {}
@@ -95,4 +96,7 @@ export class QuotationsComponent extends UIComponent {
     //   });
     // });
   }
+}
+{
+
 }

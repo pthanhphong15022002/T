@@ -898,7 +898,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
                     var index = this.data.listInformationRel.findIndex(
-                      (x) => x.userID == item.data[1]
+                      (x) => x.recID == item.data[1]
                     );
                     this.data.listInformationRel[index].reCall = true;
                     this.ref.detectChanges();

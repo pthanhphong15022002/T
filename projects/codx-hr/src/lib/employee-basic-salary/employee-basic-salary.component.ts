@@ -286,7 +286,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.handlerEBasicSalaries(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',

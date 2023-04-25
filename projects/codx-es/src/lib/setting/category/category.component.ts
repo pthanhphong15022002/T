@@ -313,7 +313,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   edit(evt?) {
     if (evt?.data) {
       this.viewBase.dataService.dataSelected = evt?.data;
-
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
@@ -359,6 +358,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
+    debugger
     event.data = data;
     switch (event?.functionID) {
       //edit
