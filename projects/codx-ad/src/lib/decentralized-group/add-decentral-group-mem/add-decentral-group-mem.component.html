@@ -95,6 +95,7 @@
           type="button"
           class="cursor-pointer btn btn-icon btn-sm btn-light"
           (click)="clickAddMemeber()"
+          [disabled]="!form?.formGroup?.valid"
         >
           <span class="icon-group_add icon-16"></span>
         </button>
