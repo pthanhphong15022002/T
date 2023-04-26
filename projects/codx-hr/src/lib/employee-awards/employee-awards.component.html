@@ -27,7 +27,7 @@
 <ng-template #templateList let-data>
     <div class="d-flex align-items-center min-h-100px">
         <!-- emp info -->
-        <div class="w-50 p-3">
+        <div class="w-40 p-2">
             <div class="d-flex align-items-start">
                 <div class="d-flex flex-column flex-center me-2 w-50px">
                     <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
@@ -57,18 +57,18 @@
         <!-- end emp info -->
 
         <!-- award -->
-        <div class="w-25 p-3">
+        <div class="w-30 p-2">
             <div class="d-flex flex-column text-gray-700">
-                <div class="d-flex flex-row mb-2 fs-5">
-                    <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.AwardID?.headerText">
-                        <span class="align-self-center fw-bold fs-5"
+                <div class="d-flex flex-row">
+                    <div [ngbTooltip]="grvSetup?.AwardID?.headerText">
+                        <span class="text-dark"
                             [innerHTML]=" data?.awardID | formatvalue : view.formModel : 'awardID' | async">
                         </span>
                     </div>
                 </div>
-                <div class="d-flex flex-row mb-2 fs-5">
-                    <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
-                        <span class="align-self-center text-highlight fw-bold"
+                <div class="d-flex flex-row">
+                    <div [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
+                        <span class="text-primary fw-bold"
                             [innerHTML]=" data?.awardFormCategory | formatvalue : view.formModel : 'awardFormCategory' | async">
                         </span>
                     </div>
@@ -78,7 +78,7 @@
                         <!-- <span class="align-self-center fw-bold"
                             [innerHTML]=" data?.reason | formatvalue : view.formModel : 'reason' | async">
                         </span> -->
-                        <span [ngbTooltip]="reasonTooltip" class="prevent-overflow-text"
+                        <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-1 text-gray-500"
                             #titleContent>{{data?.reason}}</span>
                     </div>
                     <ng-template #reasonTooltip>
@@ -95,7 +95,7 @@
         <!-- end award -->
 
         <!-- award date -->
-        <div class="w-25 p-3">
+        <div class="w-30 p-2">
             <div class="d-flex flex-column">
                 <div class="text-gray-700 d-flex flex-row mb-1">
                     <span class="icon-event_notes icon-16 me-1"></span>
@@ -194,7 +194,7 @@
         </div>
         <div class="justify-content-between text-gray-700">
             <div class="align-self-center" [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
-                <span class="align-self-center text-highlight"
+                <span class="align-self-center text-primary"
                     [innerHTML]=" data?.awardFormCategory | formatvalue : view.formModel : 'awardFormCategory' | async">
                 </span>
             </div>
