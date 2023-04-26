@@ -22,21 +22,20 @@
     [dataItem]="dataSelected"
     [hideMF]="true"
     [footer]="tabs"
-    
   >
     <ng-template #header let-data>
-      <codx-temp-full title="Tên Sẽ view ở đây có thêm dùng tmpTile" [baseHeaderRightTmp]="aaa"></codx-temp-full>
-      <ng-template #aaa> 
+      <div class="d-flex justify-content-between">
+        <div>aaa</div>
         <codx-mfunc
-        [hideMF]="false"
-        [dataItem]="data"
-        [formModel]="formModel"
-        (changeDataMF)="changeDataMF($event, data)"
-        (clickMF)="clickMF($event, data)"
-        [isBookMark]="true"
-        type="view"
-      ></codx-mfunc>
-      </ng-template>
+          [hideMF]="false"
+          [dataItem]="dataSelected"
+          [formModel]="formModel"
+          (changeDataMF)="changeDataMF($event, dataSelected)"
+          (clickMF)="clickMF($event, dataSelected)"
+          [isBookMark]="true"
+          type="view"
+        ></codx-mfunc>
+      </div>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
           <div class="me-3">
