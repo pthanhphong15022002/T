@@ -82,6 +82,7 @@ export class PopupAddJournalComponent
   tempIDIMControls: any[] = [];
   notAllowEditingFields: string[] = [];
   dataValueProps: string[] = [];
+  autoPostLabelText: string;
 
   vllDateFormat: any;
   vllStringFormat: any;
@@ -228,8 +229,8 @@ export class PopupAddJournalComponent
   onInputChange(e): void {
     console.log(e);
 
-    const irFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
-    if (irFields.includes(e.field)) {
+    const irrFields = ['creater', 'approver', 'poster', 'unposter', 'sharer'];
+    if (irrFields.includes(e.field)) {
       this.journal[e.field] = e.data.map((d) => {
         const { dataSelected, ...rest } = d;
         return rest;
@@ -237,6 +238,12 @@ export class PopupAddJournalComponent
     } else {
       this.journal[e.field] = e.data;
     }
+  }
+
+  onApprovalControlChange(e): void {
+    console.log('onApprovalControlChange');
+
+    // this.autoPostLabelText = e.itemData?.text;
   }
 
   onSelect(e): void {
@@ -254,11 +261,12 @@ export class PopupAddJournalComponent
     console.log(this.journal);
 
     if (
-      !this.acService.validateFormData(this.form.formGroup, this.gvs, [
-        'DIM1Control',
-        'DIM2Control',
-        'DIM3Control',
-      ])
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gvs,
+        ['DIM1Control', 'DIM2Control', 'DIM3Control'],
+        !this.journal.multiCurrency ? ['CurrencyID'] : []
+      )
     ) {
       return;
     }
@@ -399,8 +407,8 @@ export class PopupAddJournalComponent
         .openForm(
           SingleSelectPopupComponent,
           'This param is not working',
-          400,
           500,
+          400,
           '',
           {
             selectedOption:

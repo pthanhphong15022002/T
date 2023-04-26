@@ -22,9 +22,9 @@
           [dataSource]="stepList"
           [fields]="fieldsResource"
           [value]="field.stepID"
-          [allowFiltering]='true'
+          [allowFiltering]="true"
           [placeholder]="grvSetup['StepID'].description"
-          (valueChange)="cbxChange($event)" 
+          (valueChange)="cbxChange($event)"
         ></ejs-combobox>
       </div>
       <div class="form-group row">
@@ -204,14 +204,14 @@
           </codx-label>
           <div class="mt-1">
             <codx-input
-              field="rankIcon"
-              type="vllicon"
-              [name]="'L1470'"
-              [iconOnly]="true"
-              [crrValue]="field?.rankIcon"
-              (valueChange)="valueChangeIcon($event)"
-            >
-            </codx-input>
+            type="vllicon"
+            field="rankIcon"
+            [refValue]="'L1470'"
+            [iconOnly]="true"
+            [crrValue]="field?.rankIcon"
+            (valueChange)="valueChangeIcon($event)"
+          >
+          </codx-input>
           </div>
         </div>
         <div class="form-group col-8">

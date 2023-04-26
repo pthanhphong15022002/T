@@ -1,6 +1,8 @@
+declare var window: any;
 import { addClass } from '@syncfusion/ej2-base';
 import {
   Component,
+  ComponentRef,
   Injector,
   Optional,
   TemplateRef,
@@ -10,6 +12,7 @@ import {
 } from '@angular/core';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
+  CodxScheduleComponent,
   DataRequest,
   DialogRef,
   ResourceModel,
@@ -68,11 +71,7 @@ export class CodxCalendarComponent extends UIComponent {
   typeNavigate = 'Month';
   isCollapsed = false;
 
-  constructor(
-    injector: Injector,
-    private codxShareSV: CodxShareService,
-    @Optional() dialogRef: DialogRef
-  ) {
+  constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
   }
 
@@ -215,6 +214,16 @@ export class CodxCalendarComponent extends UIComponent {
 
   changeNewMonth(args) {
     this.FDdate = args.date;
+    // let ele = document.getElementsByTagName('codx-schedule')[0];
+    // if (ele) {
+    //   let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+    //   cmp.selectedDate = new Date(args.date);
+    //   cmp.isNavigateInside = true;
+    //   let myInterVal = setInterval(() => {
+    //     clearInterval(myInterVal);
+    //     this.loadData();
+    //   }, 100);
+    // }
   }
 
   valueChangeSetting(e) {

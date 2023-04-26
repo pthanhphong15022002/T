@@ -7,6 +7,7 @@
     [hideMF]="false"
     [footer]="tabs"
     (clickMF)="clickMF($event, dataSelected)"
+    (changeDataMF)="changeDataMF($event, dataSelected)"
   >
     <ng-template #header let-data>
       <div class="container_detail mt-3">
@@ -78,28 +79,29 @@
                   <span class="text-gray-900">{{ dataSelected.address }}</span>
                 </div>
               </div>
-              <div
-                class="d-flex flex-column align-items-start"
-                *ngIf="dataSelected?.industries"
-              >
-                <codx-tag
-                  [entityName]="entityName"
-                  [disabled]="true"
-                  [isEdit]="false"
-                  [value]="dataSelected?.industries"
+              <div class="d-flex flex-column align-items-start">
+                <div *ngIf="viewTag && viewTag != ''">
+                  <codx-tag
+                    [entityName]="entityName"
+                    [disabled]="true"
+                    [isEdit]="false"
+                    [value]="viewTag"
+                  >
+                  </codx-tag>
+                </div>
+                <div
+                  class="d-flex justify-content-end w-100"
+                  *ngIf="dataSelected.isBlackList"
                 >
-                </codx-tag>
+                  <span class="icon-do_disturb_alt icon-20"></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div
           *ngIf="funcID != 'CM0104' && contactPerson != null"
-          [ngClass]="
-            funcID == 'CM0101'
-              ? 'd-flex align-items-start'
-              : ''
-          "
+          [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''"
         >
           <div class="d-flex" *ngIf="funcID == 'CM0101'">
             <div class="me-3" style="white-space: nowrap">
@@ -313,7 +315,7 @@
         </div>
       </div>
     </div>
-    <div class="col-4 d-flex flex-column justify-content-center">
+    <div class="col-4 d-flex flex-column">
       <div class="mb-1" *ngIf="data?.mobile">
         <span
           [ngClass]="
@@ -368,7 +370,7 @@
           [dataItem]="data"
           [type]="'hover'"
           (clickMF)="clickMFContact($event, data)"
-          (changeDataMF)="changeDataMFContact($event)"
+          (changeDataMF)="changeDataMFContact($event, data)"
         >
         </codx-mfunc>
       </div>

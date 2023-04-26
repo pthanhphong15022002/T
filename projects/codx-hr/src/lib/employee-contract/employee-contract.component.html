@@ -180,7 +180,7 @@
       </codx-attachment>
     </div>
 
-    <div class="w-150px min-w-150px px-2">
+    <!-- <div class="w-150px min-w-150px px-2">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -191,9 +191,6 @@
         ngClass="badge badge-sm"
       >
       </codx-vll>
-    </div>
-
-    <!-- <div class="w-25" [innerHTML]=" data?.signStatus | formatvalue : view.formModel : 'SignStatus' | async" >
     </div> -->
 
     <div class="align-self-center">
@@ -222,9 +219,9 @@
     <div class="w-200px min-w-200px p-3 fw-bold text-dark">
       <codx-label name="lblContractNum" [default]="'Số hợp đồng | Ngày ký'"></codx-label>
     </div>
-    <div class="w-150px min-w-150px p-3 fw-bold text-dark">
+    <!-- <div class="w-150px min-w-150px p-3 fw-bold text-dark">
       <codx-label name="lblApproveStatus" [default]="'Tình trạng duyệt'"></codx-label>
-      </div>
+      </div> -->
   </div>
 </ng-template>
 
@@ -422,7 +419,6 @@
           [formModel]="view.formModel"
           (valueChange)="ValueChangeComment($event)"
           >
-
           </codx-input>
           <!-- <codx-input
             field="note"
