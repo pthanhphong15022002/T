@@ -23,7 +23,7 @@
     <span
       *ngIf="customField.dataType == 'A'"
       class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
-      (click)="addFile()"
+      (click)="!disable ?addFile():''"
     ></span>
     <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
       <button

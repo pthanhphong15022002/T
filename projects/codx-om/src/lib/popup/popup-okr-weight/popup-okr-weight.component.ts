@@ -1,5 +1,3 @@
-import { waitForAsync } from '@angular/core/testing';
-import { OKRs } from '../../model/okr.model';
 import {
   AfterViewInit,
   Component,
@@ -19,7 +17,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
 import { OMCONST } from '../../codx-om.constant';
@@ -67,10 +64,12 @@ export class PopupOKRWeightComponent
     this.popupTitle = dialogData.data[2];
     this.subTitle = dialogData.data[3];
     this.okrVll = dialogData.data[4];
-    this.okrFM= dialogData.data[5];
+    this.okrFM = dialogData.data[5];
   }
 
-  //-----------------------Base Func-------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -87,142 +86,147 @@ export class PopupOKRWeightComponent
   }
 
   onInit(): void {
-    if (this.editWeight == OMCONST.VLL.OKRType.KResult ||this.editWeight == OMCONST.VLL.OKRType.SKResult) {
+    if (
+      this.editWeight == OMCONST.VLL.OKRType.KResult ||
+      this.editWeight == OMCONST.VLL.OKRType.SKResult
+    ) {
       this.getObjectData();
     }
     if (this.editWeight == OMCONST.VLL.OKRType.Obj) {
       this.getdataOKRData();
     }
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+  getObjectData() {
+    this.codxOmService
+      .getObjectAndKRChild(this.oldData?.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.dataOKR = res;
+          this.okrChild = res.items;
+          this.totalProgress = 0;
+          this.totalWeight = 0;
+          Array.from(this.okrChild).forEach((kr: any) => {
+            this.totalProgress += kr?.weight * kr?.progress;
+            this.totalWeight += kr?.weight;
+          });
 
-  //-----------------------Base Event------------------------//
+          this.totalWeight = +this.totalWeight.toFixed(0);
+          this.totalProgress = +this.totalProgress.toFixed(2);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  getdataOKRData() {
+    this.codxOmService
+      .getOKRPlanAndOChild(this.oldData?.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.dataOKR = res;
+          this.okrChild = res.items;
+          this.totalProgress = this.dataOKR.progress;
+          this.totalProgress = 0;
+          this.totalWeight = 0;
+          Array.from(this.okrChild).forEach((ob: any) => {
+            this.totalProgress += ob?.weight * ob?.progress;
+            this.totalWeight += ob?.weight;
+          });
+
+          this.totalWeight = +this.totalWeight.toFixed(0);
+          this.totalProgress = +this.totalProgress.toFixed(2);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
   click(event: any) {
     switch (event) {
     }
   }
   valueChange(evt: any) {
-    if (evt.data != null && evt.field != null) {      
+    if (evt.data != null && evt.field != null) {
       this.okrChild[evt.field].weight = parseFloat(evt.data);
-      this.okrChild[evt.field].edited=true;
-      this.totalProgress=0;
-      this.totalWeight=0;
-      let weightNotChanged=[];
-      let totalWeightEdited=0;
-      for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.edited!=true){
+      this.okrChild[evt.field].edited = true;
+      this.totalProgress = 0;
+      this.totalWeight = 0;
+      let weightNotChanged = [];
+      let totalWeightEdited = 0;
+      for (let i = 0; i < this.okrChild.length; i++) {
+        if (this.okrChild[i]?.edited != true) {
           weightNotChanged.push(i);
-        }
-        else{
-          totalWeightEdited+=this.okrChild[i]?.weight;
+        } else {
+          totalWeightEdited += this.okrChild[i]?.weight;
         }
       }
-      let avgWeight=(1-totalWeightEdited)/weightNotChanged.length;
-      for(let i=0;i<this.okrChild.length;i++){        
-        if(this.okrChild[i]?.edited!=true){
-          this.okrChild[i].weight=avgWeight;
+      let avgWeight = (1 - totalWeightEdited) / weightNotChanged.length;
+      for (let i = 0; i < this.okrChild.length; i++) {
+        if (this.okrChild[i]?.edited != true) {
+          this.okrChild[i].weight = avgWeight;
         }
-      }      
-      for(let i=0;i<this.okrChild.length;i++){        
-        
+      }
+      for (let i = 0; i < this.okrChild.length; i++) {
         this.totalWeight += this.okrChild[i].weight;
-        this.totalProgress += this.okrChild[i].weight*this.okrChild[i].progress;
-      }  
-      this.totalWeight=  +this.totalWeight.toFixed(0);
-      this.totalProgress= +this.totalProgress.toFixed(2);
+        this.totalProgress +=
+          this.okrChild[i].weight * this.okrChild[i].progress;
+      }
+      this.totalWeight = +this.totalWeight.toFixed(0);
+      this.totalProgress = +this.totalProgress.toFixed(2);
       this.detectorRef.detectChanges();
     }
   }
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  getObjectData(){
-    this.codxOmService
-        .getObjectAndKRChild(this.oldData?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataOKR = res;
-            this.okrChild = res.items;
-            this.totalProgress = 0;
-            this.totalWeight=0;
-            Array.from(this.okrChild).forEach((kr: any) => {
-              this.totalProgress += kr?.weight*kr?.progress;
-              this.totalWeight += kr?.weight;
-            });
-            
-            this.totalWeight=  +this.totalWeight.toFixed(0);
-            this.totalProgress= +this.totalProgress.toFixed(2);
-            this.detectorRef.detectChanges();
-          }
-        });
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
+  cancel() {
+    this.dialogRef.close();
   }
-  getdataOKRData(){
-    this.codxOmService
-        .getOKRPlanAndOChild(this.oldData?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataOKR = res;
-            this.okrChild = res.items;
-            this.totalProgress = this.dataOKR.progress;
-            this.totalProgress = 0;
-            this.totalWeight=0;
-            Array.from(this.okrChild).forEach((ob: any) => {
-              this.totalProgress += ob?.weight * ob?.progress;
-              this.totalWeight += ob?.weight;
-            });
-            
-            this.totalWeight=  +this.totalWeight.toFixed(0);
-            this.totalProgress= +this.totalProgress.toFixed(2);
-            this.detectorRef.detectChanges();
-          }
-        });
-  }
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
 
   onSaveForm() {
-    if(this.okrChild){
+    if (this.okrChild) {
       this.totalWeight = 0;
-      this.okrChild.forEach((okr)=>{
-        if(okr.weight!=null){
-          this.totalWeight = this.totalWeight+ okr.weight;
+      this.okrChild.forEach((okr) => {
+        if (okr.weight != null) {
+          this.totalWeight = this.totalWeight + okr.weight;
           this.detectorRef.detectChanges();
         }
       });
-      if(this.totalWeight!=1){
-        this.notificationsService.notify("Tổng trọng số phải bằng 1","2");//OM_WAIT đợi messageCode
+      if (this.totalWeight != 1) {
+        this.notificationsService.notify('Tổng trọng số phải bằng 1', '2'); //OM_WAIT đợi messageCode
         return;
       }
       this.codxOmService
-      .editOKRWeight(this.dataOKR?.recID, this.editWeight, this.okrChild)
-      .subscribe((res: any) => {
-        if (res) {
-          let x = res;          
-          this.notificationsService.notifyCode('SYS034'); 
-          this.dialogRef && this.dialogRef.close();
-        }
-      });
+        .editOKRWeight(this.dataOKR?.recID, this.editWeight, this.okrChild)
+        .subscribe((res: any) => {
+          if (res) {
+            let x = res;
+            this.notificationsService.notifyCode('SYS034');
+            this.dialogRef && this.dialogRef.close();
+          }
+        });
     }
-    
   }
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-  cancel(){
-    this.dialogRef.close();
-  }
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 
   //-----------------------Popup-----------------------------//
 

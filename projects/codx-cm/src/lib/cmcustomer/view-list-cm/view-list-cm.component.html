@@ -52,7 +52,7 @@
               [entityName]="entityName"
               [disabled]="true"
               [isEdit]="false"
-              [value]="data?.industries"
+              [value]="data?.tags"
             >
             </codx-tag>
           </div>
@@ -89,12 +89,9 @@
         >
       </div>
     </div>
-    <div
-      *ngIf="funcID != 'CM0102'"
-      class="col-4 d-flex justify-content-between align-items-center"
-    >
+    <div *ngIf="funcID != 'CM0102'" class="col-6 d-flex align-items-center row">
       <div
-        class="d-flex"
+        class="d-flex justify-content-start col-5"
         *ngIf="
           (funcID == 'CM0101' || funcID == 'CM0103') && contactPerson != null
         "
@@ -150,6 +147,29 @@
           </div>
         </div>
       </div>
+      <div class="col-7">
+        <div class="d-flex ms-3">
+          <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
+          <div>
+            <div
+              *ngFor="let item of data?.industries.split(';'); index as i"
+              class="d-inline"
+            >
+              <span
+                [innerHTML]="
+                  item | formatvalue : formModel : 'Industries' | async
+                "
+              ></span
+              ><span
+                class="me-1"
+                *ngIf="i < data?.industries.split(';').length - 1"
+                >,</span
+              >
+              <!-- {{ dataSelected?.segmentID }} -->
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div *ngIf="funcID == 'CM0102'" class="col-4 d-flex align-items-center">
       <div class="d-flex flex-column">
@@ -186,9 +206,12 @@
     </div>
     <div
       *ngIf="funcID != 'CM0102'"
-      class="col-4 d-flex justify-content-end align-items-center"
+      class="col-2 d-flex justify-content-end align-items-center"
     >
-      <span *ngIf="funcID == 'CM0103'" class="icon-date_range icon-18 text-gray-700 me-1"></span>
+      <span
+        *ngIf="funcID == 'CM0103'"
+        class="icon-date_range icon-18 text-gray-700 me-1"
+      ></span>
       <span
         *ngIf="funcID == 'CM0103'"
         class="me-5"
@@ -202,9 +225,12 @@
       <span
         *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
         class="icon-contact_phone icon-18 text-gray-700 me-1"
-        ></span
+      ></span>
+      <span
+        *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+        class="icon-18 text-gray-700"
+        >{{ listContacts.length }}</span
       >
-      <span  *ngIf="funcID == 'CM0101' || funcID == 'CM0103'" class="icon-18 text-gray-700">{{ listContacts.length }}</span>
       <span
         *ngIf="funcID == 'CM0101'"
         class="icon-add_shopping_cart icon-18 text-gray-700 me-2"

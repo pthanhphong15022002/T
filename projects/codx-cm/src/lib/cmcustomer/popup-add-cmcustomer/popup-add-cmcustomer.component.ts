@@ -139,7 +139,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   // }
 
   valueTagChange(e) {
-    this.data.industries = e.data;
+    this.data.tags = e.data;
   }
 
   valueChangeContact(e) {
@@ -154,6 +154,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
 
     if (this.data.objectID && e.field == 'objectID') {
+      this.data.objectName = e?.component?.itemsSelected != null &&
+      e?.component?.itemsSelected.length > 0
+        ? e?.component?.itemsSelected[0]?.PartnerName ? e?.component?.itemsSelected[0]?.PartnerName : e?.component?.itemsSelected[0]?.CustomerName
+        : null;
       this.getListContactByObjectID(this.data.objectID);
     }
   }
@@ -365,7 +369,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;
