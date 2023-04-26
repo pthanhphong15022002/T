@@ -64,17 +64,11 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Base Event------------------------//
   click(event: any) {
     switch (event) {
     }
   }
 
-  //-----------------------End-------------------------------//
-  
-  //-----------------------Get Data Func---------------------//
   
   collapeKR(collapsed: boolean) {
     
