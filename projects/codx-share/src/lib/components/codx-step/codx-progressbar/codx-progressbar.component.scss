@@ -2,6 +2,7 @@
   --size: 40px;
   --color: #005DC7;
   --size-span: 35px
+  --font-size: 12px
 }
 
 *{
@@ -13,8 +14,8 @@
 
 .circular-progress{
   position: relative;
-  height: 40px;
-  width: 40px;
+  height: var(--size);
+  width: var(--size);
   border-radius: 50%;
   background: conic-gradient(var(--color) 3.6deg, #ededed 0deg);
   display: flex;
@@ -24,14 +25,14 @@
 .circular-progress::before{
   content: "";
   position: absolute;
-  height: 30px;
-  width: 30px;
+  height: var(--size-span);
+  width: var(--size-span);
   border-radius: 50%;
   background-color: #fff;
 }
 .progress-value{
   position: relative;
-  font-size: 12px;
+  font-size: var(--font-size);
   font-weight: 700;
   color: var(--color);
 }
