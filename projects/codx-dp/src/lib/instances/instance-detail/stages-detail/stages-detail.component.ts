@@ -1073,7 +1073,7 @@ export class StagesDetailComponent implements OnInit {
             }
           }else{
             if (task?.recID != taskID) {
-              if(!(task?.requireCompleted && task?.progress == 100)){
+              if(task?.requireCompleted && task?.progress != 100){
                 return false;
               }else{
                 continue;

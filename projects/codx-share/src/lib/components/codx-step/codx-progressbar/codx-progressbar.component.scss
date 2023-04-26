@@ -1,8 +1,8 @@
-// :root {
-//   --size: 40px;
-//   --color: #005DC7;
-//   --size-span: 35px
-// }
+:root {
+  --size: 40px;
+  --color: #005DC7;
+  --size-span: 35px
+}
 
 *{
   margin: 0;
@@ -16,7 +16,7 @@
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  background: conic-gradient(#005DC7 3.6deg, #ededed 0deg);
+  background: conic-gradient(var(--color) 3.6deg, #ededed 0deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,5 +33,5 @@
   position: relative;
   font-size: 12px;
   font-weight: 700;
-  color:  #005DC7;
+  color: var(--color);
 }
