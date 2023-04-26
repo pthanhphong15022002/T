@@ -32,28 +32,30 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   }
 
   getbackgroundColor() {
-    return `--color: ${this.color}; --size: ${this.sizeCustom}; --size-span: ${this.sizespan}`;
+    return `--color: ${this.color}; --size: ${this.sizeCustom}; --size-span: ${this.sizespan}; --font-size: ${this.fontSizeCustom}`;
   }
 
   load(percent) {
-    let circularProgress = document.querySelector('.circular-progress') as HTMLElement;
+    let circularProgress = document.querySelector(
+      '.circular-progress'
+    ) as HTMLElement;
     let progressValue = document.querySelector('.progress-value');
-    if(circularProgress && progressValue){
+    if (circularProgress && progressValue && percent) {
       let progressStartValue = 0;
-    let progressEndValue = percent;
+      let progressEndValue = percent;
 
-    let progress = setInterval(() => {
-      progressStartValue++;
+      let progress = setInterval(() => {
+        progressStartValue++;
 
-      progressValue.textContent = `${progressStartValue}%`;
-      circularProgress.style.background = `conic-gradient(${this.color} ${
-        progressStartValue * 3.6
-      }deg, #ededed 0deg)`;
+        progressValue.textContent = `${progressStartValue}%`;
+        circularProgress.style.background = `conic-gradient(${this.color} ${
+          progressStartValue * 3.6
+        }deg, #ededed 0deg)`;
 
-      if (progressStartValue >= progressEndValue) {
-        clearInterval(progress);
-      }
-    }, 20);
+        if (progressStartValue >= progressEndValue) {
+          clearInterval(progress);
+        }
+      }, 20);
     }
   }
 }
