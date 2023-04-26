@@ -274,8 +274,8 @@ export class StagesDetailComponent implements OnInit {
         this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
-        this.checkRole();
-        this.step = changes['dataStep'].currentValue;
+        this.checkRole(changes['dataStep'].currentValue?.roles || []);
+        this.step = changes['dataStep'].currentValue;      
         this.progress = this.step?.progress.toString();
       } else {
         this.dataStep = null;
@@ -1096,6 +1096,17 @@ export class StagesDetailComponent implements OnInit {
         }
       }
     }
+    // const taskList = isAllTask
+    //   ? [].concat(...this.taskGroupList.map((group) => group['task']))
+    //   : this.taskGroupList.flatMap((group) => group['task']);
+
+    // for (const task of taskList) {
+    //   if (!isAllTask && task.recID !== taskID) continue;
+    //   if (taskEnd && task.recID !== taskEnd) continue;
+    //   if (task.progress !== 100) return false;
+    //   if (!isAllTask && task.requireCompleted) return false;
+    //   if (isAllTask && taskEnd && !task.requireCompleted) return true;
+    // }
     return true;
   }
 
@@ -1358,10 +1369,11 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
 
-  checkRole() {
+  checkRole(listRoleStep) {
     if (
       this.user?.systemAdmin ||
-      this.listUserIdRole?.some((id) => id == this.user.userID)
+      this.listUserIdRole?.some((id) => id == this.user.userID)||
+      listRoleStep?.some((role) => role.objectID == this.user.userID && role.roleType == "S")
     ) {
       this.isRoleAll = true;
     } else if (this.dataStep?.roles?.length > 0) {
@@ -1372,8 +1384,7 @@ export class StagesDetailComponent implements OnInit {
         ) || false;
     }
     this.leadtimeControl = this.dataStep?.leadtimeControl || false; //sửa thời hạn công việc mặc định
-    this.progressTaskGroupControl =
-      this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+    this.progressTaskGroupControl = this.dataStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
     this.progressStepControl = this.dataStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
 
