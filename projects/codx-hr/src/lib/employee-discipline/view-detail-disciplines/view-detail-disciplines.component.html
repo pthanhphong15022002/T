@@ -7,9 +7,9 @@
     class="h-100 dt-es-view"
     (clickMF)="clickMF($event, itemDetail)"
     (changeDataMF)="changeDataMF($event, itemDetail)"
+    [footer]="!hideFooter ? footer : null"
     >
     <!-- [body]="body" -->
-    <!-- [footer]="!hideFooter ? footer : null" -->
 
     <ng-template #header>
         <div class="mb-2">
@@ -304,7 +304,7 @@
         </div>
       </ng-template> -->
     
-      <!-- <ng-template #footer>
+      <ng-template #footer>
         <codx-tabs
           [TabControl]="tabControl"
           [entityName]="formModel.entityName"
@@ -314,7 +314,7 @@
           [approveStatus]="itemDetail?.signStatus"
         >
         </codx-tabs>
-      </ng-template> -->
+      </ng-template>
 </codx-detail-tmp>
 
 <ng-template #titleTmp>
