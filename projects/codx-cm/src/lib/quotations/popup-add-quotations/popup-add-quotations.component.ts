@@ -11,7 +11,7 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { CM_Products, CM_Quotations } from '../../models/cm_model';
+import { CM_Products, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -29,10 +29,16 @@ export class PopupAddQuotationsComponent implements OnInit {
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
+  // fmProcductsLines: FormModel = {
+  //   formName: 'CMProducts',
+  //   gridViewName: 'grvCMProducts',
+  //   entityName: 'CM_Products',
+  // };
+  //test
   fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
+    formName: 'CMQuotation',
+    gridViewName: 'grvCMQuotation',
+    entityName: 'CM_QuotationsLines',
   };
   gridHeight: number = 300;
   editSettings: EditSettingsModel = {
@@ -41,7 +47,9 @@ export class PopupAddQuotationsComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  productsLine: Array<CM_Products> = []; //mang san pham
+
+ // productsLine: Array<CM_Products> = []; //mang san pham
+  productsLine: Array<CM_QuotationsLines> = [];
   lockFields = [];
   dataParent : any
 
@@ -55,6 +63,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action
+    this.productsLine=[]
   }
 
   ngOnInit(): void {}
@@ -91,23 +100,23 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   productsLineChanged(e) {
-    const field = [
-      'quotationname',
+    // const field = [
+    //   'quotationname',
 
-    ];
-    if (field.includes(e.field.toLowerCase())) {
-      this.api
-        .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
-          this.dataParent,
-          e.data,
-          e.field,
-          e.data?.isAddNew,
-        ])
-        .subscribe((res: any) => {
-          if (res && res.line)
-            this.setDataGrid(res.line.updateColumns, res.line);
-        });
-    }
+    // ];
+    // if (field.includes(e.field.toLowerCase())) {
+    //   this.api
+    //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
+    //       this.dataParent,
+    //       e.data,
+    //       e.field,
+    //       e.data?.isAddNew,
+    //     ])
+    //     .subscribe((res: any) => {
+    //       if (res && res.line)
+    //         this.setDataGrid(res.line.updateColumns, res.line);
+    //     });
+    // }
 
     // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
     //   if (e.value === '3') {
