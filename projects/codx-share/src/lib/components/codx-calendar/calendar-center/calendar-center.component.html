@@ -60,6 +60,28 @@
         ></span>
       </div>
     </div>
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today icon-16 me-2"></i>
+        <span class="text-gray-600">
+          {{ data?.startDate | fmDT }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-access_time me-1"></i>
+        <span class="text-gray-600">
+          {{ showHour(data?.startDate) }}
+        </span>
+        <span
+          *ngIf="data?.startDate && data?.endDate"
+          class="text-gray-600 ms-1 me-1"
+          >{{ "-" }}</span
+        >
+        <span class="text-gray-600">
+          {{ showHour(data?.endDate) }}
+        </span>
+      </div>
+    </div>
     <hr />
     <div class="mb-2 text-dark me-6">
       <span>
