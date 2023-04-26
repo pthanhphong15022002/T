@@ -9,9 +9,7 @@ import {
 } from '@angular/core';
 
 import {
-  AuthService,
   AuthStore,
-  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
