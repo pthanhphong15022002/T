@@ -656,7 +656,7 @@ export class PopupMoveStageComponent implements OnInit {
       }
       if (event?.groupTaskID) {
         var group = this.listTaskGroupDone.find(
-          (x) => x.recID === event?.groupTaskID
+          (x) => x.refID === event?.groupTaskID
         );
         var groupNew = {
           progress: event?.progressGroupTask,
