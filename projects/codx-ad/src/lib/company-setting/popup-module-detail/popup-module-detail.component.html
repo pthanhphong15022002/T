@@ -61,7 +61,15 @@
       "
     ></codx-label>
   </div>
-  <ng-template #tmplUserInfo let-data> </ng-template>
+  <ng-template #tmplUserInfo let-data>
+    <codx-temp-full
+      [imageObjType]="'AD_Users'"
+      [imageId]="data.userID"
+      [title]="data.fullName"
+      [subTitle]="data.email"
+    >
+    </codx-temp-full>
+  </ng-template>
   <codx-gridview-v2
     #grid
     [formName]="fmUserRole?.formName"
@@ -71,7 +79,7 @@
     [allowFiltering]="true"
     [allowSorting]="true"
     [allowPaging]="true"
-    [dataSource]="lstUserRole"
+    [dataSource]="lstADUserRoles"
     [predicates]="predicate"
     [dataValues]="dataValue"
     [autoLoad]="false"

@@ -17,6 +17,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isSaveProgress = true;
   @Input() isShowMore = true;
   @Input() isShowButton = true;
+  @Input() isShowFile = true;
+  @Input() isShowComment = true;
   @Input() typeProgress = 1;
   @Output() valueChangeProgress = new EventEmitter<any>();
 

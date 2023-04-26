@@ -40,6 +40,8 @@ export class CodxHrService {
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   //#region moreFuncAction
+  actionEdit = 'S03';
+  actionDelete = 'S02';
   actionAddNew = 'A01';
   actionSubmit = 'A03';
   actionUpdateCanceled = 'AU0';
@@ -486,6 +488,16 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
+      data
+    );
+  }
+
+  loadDataEDisciplines(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDisciplinesBusiness',
+      'LoadEDisciplineWithEmpInfoAsync',
       data
     );
   }
@@ -1612,6 +1624,8 @@ export class CodxHrService {
     );
   }
 
+
+
   addEContract(data: any) {
     return this.api.execSv<any>(
       'HR',
@@ -2050,53 +2064,64 @@ export class CodxHrService {
     if (formModel.entityName == 'HR_EContracts') {
       //Xu li rieng cho HDLD
     }
-    if (
-      data.status == '0' ||
-      data.status == '2' ||
-      data.status == '4' ||
-      data.status == '5' ||
-      data.status == '9'
-    ) {
-      for (let i = 0; i < evt.length; i++) {
-        let funcIDStr = evt[i].functionID;
-        switch (funcIDStr.substr(funcIDStr.length - 3)) {
-          case this.actionSubmit:
-          case this.actionUpdateCanceled:
-          case this.actionUpdateInProgress:
-          case this.actionUpdateRejected:
-          case this.actionUpdateApproved:
-          case this.actionUpdateClosed:
-            evt[i].disabled = true;
-            break;
-        }
-      }
-    } else if (data.status == '3') {
-      let found = evt.find(
-        (val) =>
-          val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
-      );
-      found.disabled = true;
 
-      let found2 = evt.find(
-        (val) =>
-          val.functionID.substr(val.functionID.length - 3) ==
-          this.actionUpdateInProgress
-      );
-      found2.disabled = true;
-    } else if (data.status == '6') {
-      for (let i = 0; i < evt.length; i++) {
-        let funcIDStr = evt[i].functionID;
-        switch (funcIDStr.substr(funcIDStr.length - 3)) {
-          case this.actionUpdateCanceled:
-          case this.actionUpdateInProgress:
-          case this.actionUpdateRejected:
-          case this.actionUpdateApproved:
-          case this.actionUpdateClosed:
-            evt[i].disabled = true;
-            break;
+    //#region code cũ
+      if (
+        data.status == '0' ||
+        data.status == '2' ||
+        data.status == '4' ||
+        data.status == '5' ||
+        data.status == '6' ||
+        data.status == '9'
+      ) {
+        for (let i = 0; i < evt.length; i++) {
+          let funcIDStr = evt[i].functionID;
+          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
+          switch (IDCompare) {
+            case this.actionSubmit:
+            case this.actionUpdateCanceled:
+            case this.actionUpdateInProgress:
+            case this.actionUpdateRejected:
+            case this.actionUpdateApproved:
+            case this.actionUpdateClosed:
+            case this.actionEdit:
+            case this.actionDelete:
+              evt[i].disabled = true;
+              break;
+          }
+          if(IDCompare == this.actionDelete && (data.status == '0' || data.status == '4')){
+              evt[i].disabled = false;
+          }
+          else if(IDCompare == this.actionSubmit && data.status == '6'){
+            evt[i].disabled = false;
+          }
         }
-      }
-    }
+      } else if (data.status == '3') {
+        for (let i = 0; i < evt.length; i++) {
+          let funcIDStr = evt[i].functionID;
+          let IDCompare = funcIDStr.substr(funcIDStr.length - 3)
+          switch (IDCompare) {
+            case this.actionSubmit:
+            case this.actionUpdateInProgress:
+            case this.actionEdit:
+            case this.actionDelete:
+              evt[i].disabled = true;
+              break;
+          }
+          // let found = evt.find(
+          //   (val) =>
+          //     val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
+          // );
+          // found.disabled = true;
+  
+          // let found2 = evt.find(
+          //   (val) =>
+          //     val.functionID.substr(val.functionID.length - 3) ==
+          //     this.actionUpdateInProgress
+          // );
+          // found2.disabled = true;
+        }
+      } 
   }
 
   handleUpdateRecordStatus(functionID, data) {

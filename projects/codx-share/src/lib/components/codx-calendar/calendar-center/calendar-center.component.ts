@@ -1,17 +1,13 @@
 import {
   Component,
-  OnInit,
   Injector,
   AfterViewInit,
   ViewChild,
   TemplateRef,
-  ChangeDetectorRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import moment from 'moment';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
-import { CodxCalendarService } from '../codx-calendar.service';
 
 @Component({
   selector: 'lib-calendar-center',
@@ -20,8 +16,14 @@ import { CodxCalendarService } from '../codx-calendar.service';
 })
 export class CalendarCenterComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements AfterViewInit
 {
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
+  @Input() resources!: any;
+  @Input() resourceModel!: any;
+
   views: Array<ViewModel> | any = [];
   fields = {
     id: 'transID',
@@ -30,39 +32,15 @@ export class CalendarCenterComponent
     endTime: { name: 'endDate' },
     status: 'transType',
   };
-  resourceID: any;
-  tempCarName = '';
-  driverName = '';
-  selectBookingAttendeesCar = '';
-  selectBookingAttendeesRoom = '';
-  tempDriverName = '';
-  selectBookingItems = [];
-  tempRoomName = '';
   startTime: any;
   month: any;
   day: any;
-  daysOff = [];
-  calendarID: string;
-  vllPriority = 'TM005';
-  dayWeek = [];
   btnAdd = {
     id: 'btnAdd',
   };
+  vllPriority = 'TM005';
 
-  @Input() resources!: any;
-  @Input() resourceModel!: any;
-
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-  @ViewChild('view') viewOrg!: ViewsComponent;
-
-  constructor(
-    private injector: Injector,
-    private shareService: CodxShareService,
-    private codxCalendarSV: CodxCalendarService
-  ) {
+  constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
   }
 
@@ -76,12 +54,11 @@ export class CalendarCenterComponent
         sameData: false,
         model: {
           eventModel: this.fields,
-          template3: this.cellTemplate,
-          template: this.cardTemplate,
           resources: this.resources,
           resourceModel: this.resourceModel,
-          template8: this.contentTmp,
+          template: this.eventTemplate,
           template6: this.headerTemp,
+          template8: this.contentTmp,
         },
       },
     ];
@@ -107,20 +84,6 @@ export class CalendarCenterComponent
     }
   }
 
-  getParams(formName: string, fieldName: string) {
-    this.codxCalendarSV.getParams(formName, fieldName).subscribe((res) => {
-      if (res) {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.CalendarID == '') {
-          this.calendarID = 'STD';
-        } else {
-          this.calendarID = json.CalendarID;
-        }
-      }
-    });
-  }
-
   //region EP
   showHour(date: any) {
     let temp = new Date(date);
@@ -131,18 +94,15 @@ export class CalendarCenterComponent
     return time;
   }
 
-  sameDayCheck(sDate: any, eDate: any) {
-    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
-  }
   //endRegion EP
 
   //region CO
   getDate(data) {
     if (data.startDate) {
-      var date = new Date(data.startDate);
+      let date = new Date(data.startDate);
       this.month = this.addZero(date.getMonth() + 1);
       this.day = this.addZero(date.getDate());
-      var endDate = new Date(data.endDate);
+      let endDate = new Date(data.endDate);
       let start =
         this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
       let end =
@@ -162,20 +122,9 @@ export class CalendarCenterComponent
   }
 
   getResourceID(data) {
-    var resources = [];
-    this.resourceID = '';
-    resources = data.resources;
-    var id = '';
-    if (resources != null) {
-      resources.forEach((e) => {
-        id += e.resourceID + ';';
-      });
-    }
-
-    if (id != '') {
-      this.resourceID = id.substring(0, id.length - 1);
-    }
-    return this.resourceID;
+    const resources = data.resources;
+    const resourceIDs = resources ? resources.map((r) => r.resourceID) : [];
+    return resourceIDs.join(';');
   }
   //endRegion CO
 }

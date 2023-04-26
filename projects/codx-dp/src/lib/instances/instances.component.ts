@@ -45,7 +45,7 @@ import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, map, filter } from 'rxjs';
 
 @Component({
   selector: 'codx-instances',
@@ -171,6 +171,8 @@ export class InstancesComponent
   colorReasonSuccess: any;
   colorReasonFail: any;
   ownerStepProcess: any;
+
+  isHaveFile: boolean = false;
   //test temp
   dataTemplet = [
     {
@@ -451,7 +453,13 @@ export class InstancesComponent
                 .subscribe((res) => {
                   if (res) {
                     this.view.dataService.dataSelected.instanceNo = res;
-                    this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    this.openPopUpAdd(
+                      applyFor,
+                      formMD,
+                      option,
+                      'add',
+                      this.listSteps
+                    );
                   }
                 });
             } else
@@ -462,7 +470,13 @@ export class InstancesComponent
                 .subscribe((isNo) => {
                   if (isNo) {
                     this.view.dataService.dataSelected.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    this.openPopUpAdd(
+                      applyFor,
+                      formMD,
+                      option,
+                      'add',
+                      this.listSteps
+                    );
                   }
                 });
           });
@@ -503,37 +517,61 @@ export class InstancesComponent
               formMD.gridViewName = fun.gridViewName;
               option.Width = this.addFieldsControl == '1' ? '800px' : '550px';
               option.zIndex = 1001;
-              if (!this.process.instanceNoSetting) {
-                this.codxDpService
-                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
-                  .subscribe((res) => {
-                    if (res) {
-                      this.view.dataService.dataSelected.instanceNo = res;
-                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
+              let data = [this.oldIdInstance, this.process.recID];
+              this.codxDpService
+                .getInstanceStepsCopy(data)
+                .subscribe((instanceSteps) => {
+                  if (instanceSteps) {
+                    if (!this.process.instanceNoSetting) {
+                      this.codxDpService
+                        .genAutoNumber(
+                          this.funcID,
+                          'DP_Instances',
+                          'InstanceNo'
+                        )
+                        .subscribe((res) => {
+                          if (res) {
+                            this.view.dataService.dataSelected.instanceNo = res;
+                            this.openPopUpAdd(
+                              applyFor,
+                              formMD,
+                              option,
+                              'copy',
+                              instanceSteps
+                            );
+                          }
+                        });
+                    } else {
+                      this.codxDpService
+                        .getAutoNumberByInstanceNoSetting(
+                          this.process.instanceNoSetting
+                        )
+                        .subscribe((isNo) => {
+                          if (isNo) {
+                            this.view.dataService.dataSelected.instanceNo =
+                              isNo;
+                            this.openPopUpAdd(
+                              applyFor,
+                              formMD,
+                              option,
+                              'copy',
+                              instanceSteps
+                            );
+                          }
+                        });
                     }
-                  });
-              } else {
-                this.codxDpService
-                  .getAutoNumberByInstanceNoSetting(
-                    this.process.instanceNoSetting
-                  )
-                  .subscribe((isNo) => {
-                    if (isNo) {
-                      this.view.dataService.dataSelected.instanceNo = isNo;
-                      this.openPopUpAdd(applyFor, formMD, option, 'copy');
-                    }
-                  });
-              }
+                  }
+                });
             }
           });
       });
     });
   }
-  openPopUpAdd(applyFor, formMD, option, action) {
+  openPopUpAdd(applyFor, formMD, option, action, listSteps) {
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       applyFor: applyFor,
-      listSteps: JSON.parse(JSON.stringify(this.listSteps)),
+      listSteps: JSON.parse(JSON.stringify(listSteps)),
       titleAction: this.titleAction,
       formMD: formMD,
       endDate: this.HandleEndDate(this.listStepsCbx, action, null),
@@ -552,7 +590,7 @@ export class InstancesComponent
       if (e && e.event != null) {
         var data = e.event;
         if (this.kanban) {
-          this.kanban.updateCard(data);
+          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
@@ -609,7 +647,6 @@ export class InstancesComponent
                     formMD.entityName = fun.entityName;
                     formMD.formName = fun.formName;
                     formMD.gridViewName = fun.gridViewName;
-
                     option.Width =
                       this.addFieldsControl == '1' ? '800px' : '550px';
                     option.zIndex = 1001;
@@ -780,7 +817,7 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approvalRule) {
+              if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
@@ -966,6 +1003,18 @@ export class InstancesComponent
 
   dropInstance(data) {
     data.stepID = this.crrStepID;
+    if (!data.edit) {
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
+    if (data.closed) {
+      this.notificationsService.notify(
+        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+        '2'
+      );
+      return;
+    }
+
     if (this.moreFuncInstance?.length == 0) {
       this.changeDetectorRef.detectChanges();
       return;
@@ -987,6 +1036,7 @@ export class InstancesComponent
       this.dataColums.length == 0
     )
       this.dataColums = this.kanban.columns;
+
     if (this.dataColums.length > 0) {
       var idx = this.dataColums.findIndex(
         (x) => x.dataColums.recID == this.stepIdClick
@@ -994,37 +1044,35 @@ export class InstancesComponent
       if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
         if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
-          if (data.closed || !data.edit) {
-            this.notificationsService.notify(
-              'Không thể chuyển tiếp giai đoạn ! - Khanh thêm mess gấp để thay thế!',
-              '2'
-            );
-            return;
-          }
           idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
           if (idx != -1) {
+            if (this.checkMoreReason(data, null)) {
+              this.notificationsService.notifyCode('SYS032');
+              return;
+            }
             this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
           }
         } else {
-          if (data.closed || !data.edit) {
-            this.notificationsService.notify(
-              'Không thể đánh dấu thành công / thất bại  ! - Khanh thêm mess gấp để thay thế!',
-              '2'
-            );
-            return;
-          }
           if (stepCrr?.isSuccessStep) {
             idx = this.moreFuncInstance.findIndex(
               (x) => x.functionID == 'DP10'
             );
             if (idx != -1)
-              this.moveReason(this.moreFuncInstance[idx], data, true);
+              if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                this.notificationsService.notifyCode('SYS032');
+                return;
+              }
+            this.moveReason(this.moreFuncInstance[idx], data, true);
           } else {
             idx = this.moreFuncInstance.findIndex(
               (x) => x.functionID == 'DP02'
             );
             if (idx != -1)
-              this.moveReason(this.moreFuncInstance[idx], data, false);
+              if (this.checkMoreReason(data, !this.isUseFail)) {
+                this.notificationsService.notifyCode('SYS032');
+                return;
+              }
+            this.moveReason(this.moreFuncInstance[idx], data, false);
           }
         }
       }
@@ -1171,13 +1219,20 @@ export class InstancesComponent
     ).transferControl;
 
     if (checkTransferControl == '1' || checkTransferControl == '2') {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.handleMoveStage(dataInstance);
-        }
-      });
+      if (dataInstance.isShowForm) {
+        this.openFormForAutoMove(dataInstance);
+      } else {
+        this.handleMoveStage(dataInstance);
+      }
+      // else {
+      //   var config = new AlertConfirmInputConfig();
+      //   config.type = 'YesNo';
+      //   this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+      //     if (x.event.status == 'Y') {
+
+      //     }
+      //   });
+      // }
     }
   }
   handleMoveStage(dataInstance) {
@@ -1197,44 +1252,50 @@ export class InstancesComponent
         strStepsId = completedAllTask?.idxSteps;
       }
       if (isStopAuto) {
-        return;
+        this.openFormForAutoMove(dataInstance);
       } else {
-        var instanceStepId = dataInstance.listStep.filter((x) =>
-          strStepsId.some((y) => y == x.stepID)
-        );
-        for (let item of instanceStepId) {
-          if (item.stepStatus == '0') {
-            item.stepStatus = '1';
-            item.actualStart = new Date();
-          } else if (item.stepStatus == '1') {
-            item.stepStatus = '3';
-          }
-        }
-        dataInstance.instance.stepID = instanceStepId.find(
-          (item) => item.stepStatus == '1'
-        ).stepID;
-        var processId = dataInstance.instance.processID;
-        var data = [instanceStepId, processId];
-        this.codxDpService.autoMoveStage(data).subscribe((res) => {
-          if (res) {
-            var stepsUpdate = dataInstance.listStep.map((item1) => {
-              var item2 = instanceStepId.find(
-                (item2) => item1.stepID === item2.stepID
-              );
-              if (item2) {
-                return { ...item1, status: item2.status };
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            var instanceStepId = dataInstance.listStep.filter((x) =>
+              strStepsId.some((y) => y == x.stepID)
+            );
+            for (let item of instanceStepId) {
+              if (item.stepStatus == '0') {
+                item.stepStatus = '1';
+                item.actualStart = new Date();
+              } else if (item.stepStatus == '1') {
+                item.stepStatus = '3';
+              }
+            }
+            dataInstance.instance.stepID = instanceStepId.find(
+              (item) => item.stepStatus == '1'
+            ).stepID;
+            var processId = dataInstance.instance.processID;
+            var data = [instanceStepId, processId];
+            this.codxDpService.autoMoveStage(data).subscribe((res) => {
+              if (res) {
+                var stepsUpdate = dataInstance.listStep.map((item1) => {
+                  var item2 = instanceStepId.find(
+                    (item2) => item1.stepID === item2.stepID
+                  );
+                  if (item2) {
+                    return { ...item1, status: item2.status };
+                  }
+                });
+                this.listStepInstances = stepsUpdate;
+                this.dataSelected = dataInstance.instance;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+                if (this.detailViewInstance) {
+                  this.detailViewInstance.dataSelect = this.dataSelected;
+                  this.detailViewInstance.listSteps = this.listStepInstances;
+                }
+                this.detectorRef.detectChanges();
               }
             });
-            this.listStepInstances = stepsUpdate;
-            this.dataSelected = dataInstance.instance;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-
-            if (this.detailViewInstance) {
-              this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.listSteps = this.listStepInstances;
-            }
-            this.detectorRef.detectChanges();
           }
         });
       }
@@ -1268,7 +1329,16 @@ export class InstancesComponent
     return result;
   }
 
-  completedLastTasks() {}
+  openFormForAutoMove(dataInstance) {
+    var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+    if (idx != -1) {
+      this.moveStage(
+        this.moreFuncInstance[idx],
+        dataInstance.instance,
+        dataInstance.listStep
+      );
+    }
+  }
 
   checkFieldsIEmpty(fields) {
     return fields.includes((x) => !x.dataValue && x.isRequired);
@@ -1735,8 +1805,8 @@ export class InstancesComponent
     link.click();
   }
   loadEx() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID + ';DP_Processes';
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1744,8 +1814,8 @@ export class InstancesComponent
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'ReportID=@0';
-    this.requestTemp.dataValues = this.process.recID;
+    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValues = this.process.recID + ';DP_Processes';
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {

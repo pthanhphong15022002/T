@@ -7,7 +7,6 @@
         <ejs-calendar
           #calendar_mini
           [firstDayOfWeek]="1"
-          locale="vi"
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
@@ -17,7 +16,6 @@
           [value]="dateChange"
         >
         </ejs-calendar>
-        <ng-container #listParam> </ng-container>
         <ng-container #listParam>
           <div class="d-flex align-items-center mt-3 title-calendar">
             <div class="w-100">

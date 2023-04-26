@@ -75,15 +75,15 @@
 
 <!--List view-->
 
-<ng-template #itemViewList let-data>
-  <codx-view-list-cm [dataSelected]="data" [formModel]="view.formModel" [entityName]="entityName"
-    [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)"></codx-view-list-cm>
+<ng-template #itemViewList let-dataList>
+  <codx-view-list-cm [dataSelected]="dataList" [formModel]="view.formModel" [entityName]="entityName"
+    [vllPriority]="vllPriority" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" (changeMoreMF)="changeMoreMF($event)"></codx-view-list-cm>
 </ng-template>
 <!--List view-->
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" [moreFuncCss]="'me-15'"
-    [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imgOn]="data?.modifiedOn" (changeDataMF)="changeDataMF($event)"
+    [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="getNameCrm(data)" [imgOn]="data?.modifiedOn" (changeDataMF)="changeDataMF($event, data)"
     [imageReferType]="'avt'" [imageWidth]="35" imgCss="me-3" [imageObjType]="entityName" [title]="getNameCrm(data)"
     [titleCss]="'fs-6'" [descTmp]="descTmp" (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-15'" [typeMF]="'hover'"
     [formModel]="view.formModel" [footer]="footer" [dataItem]="data">
@@ -124,6 +124,6 @@
 <!--Detail-->
 <ng-template #templateDetail>
   <codx-cmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
-    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName">
+    [recID]="dataSelected.recID" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName" (changeMoreMF)="changeMoreMF($event)">
   </codx-cmcustomer-detail>
 </ng-template>

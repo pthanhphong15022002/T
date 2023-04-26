@@ -1,285 +1,281 @@
-<codx-form [headerText]="'Xem chi tiết mục tiêu'" [dialog]="dialogRef" [bodyCss]="'bg-gray-100 h-100 me-0 p-5 pe-3 pb-0'" [body]="alignKR">
-</codx-form>
-
-<ng-template #alignKR>
-  <div class="w-100 h-100 bg-white d-flex flex-column rounded-2 p-6">
-    <div class="d-flex align-items-center justify-content-end">
-      <div class="d-flex align-items-center">
-        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
-          <span class="symbol-label bg-om-gray">
-            <i class="icon-create"></i>
-          </span>
-        </div> -->
-
-        <div  class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)" [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
-          <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
-            <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
-          </span>
+<div class="h-100 w-100">
+  <div class="h-100 w-100 px-5 py-5 bgEDEDED">
+    <div class="w-100 h-100 bg-white d-flex flex-column rounded-2 p-6 ">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="col-1">
+          <span class="icon-arrow_back hover-primary cursor-pointer" (click)="closeDialog()"></span>
         </div>
-        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-4 " (click)="editWeight()" ngbTooltip="Thay đổi trọng số">
-          <span class="symbol-label bg-om-gray hover-bg-color ">
-            <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
-          </span>
-        </div> -->
-        <!-- <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
-          <span class="symbol-label bg-om-gray">
-            <i class="icon-vertical_align_center text-dark"></i>
-          </span>
-        </div> -->
-        <!-- <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4">
-        </codx-dropdown-calendar> -->
-      <div class="symbol symbol-30px symbol-circle cursor-pointer me-2" ngbTooltip="Kì hiện hành">
-          <span class="mx-2" >
-            {{dataOKR?.periodID}}
-          </span>
-        </div> 
-        <div class="symbol symbol-30px symbol-circle cursor-pointer">
-          <span class="symbol-label bg-om-gray">
-            <i class="fas fa-ellipsis-h"></i>
-          </span>
+        <div class=" text-center">
+          <span class="fw-bold fs-3" [innerHTML]="dataOKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
+        </div>
+        <div class="d-flex align-items-center justify-content-end col-1">
+          <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)"
+            [ngbTooltip]="isHiddenChart? 'Hiện biểu đồ' :'Ẩn biểu đồ'">
+            <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
+              <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
+            </span>
+          </div>
+          <div class="symbol symbol-30px symbol-circle cursor-pointer me-2" ngbTooltip="Kì hiện hành">
+            <span class="mx-2">
+              {{dataOKR?.periodID}}
+            </span>
+          </div>
+          <div class="symbol symbol-30px symbol-circle cursor-pointer">
+            <span class="symbol-label bg-om-gray">
+              <i class="fas fa-ellipsis-h"></i>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="pb-3 text-center">      
-      <span class="fw-bold fs-3" [innerHTML]="dataOKR?.okrName | formatvalue : okrFM?.obFM : 'okrName' | async"></span>
-    </div>
-    <div class="flex-grow-1 overflow-auto">
-      <ejs-tab id="om-tab" class="h-100">
-        <e-tabitems>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center position-sticky">
-                <i class="fa-solid fa-bullseye me-2"></i>
-                <codx-label default="Tổng quan" fiedName="lblSummary" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="d-flex flex-column container justify-content-center mt-5">
-                <ng-container class="container-ob">
-                  <div class="d-flex flex-row justify-content-start mb-4">
-                    <div class="d-flex flex-row align-items-center">
-                      <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
-                        style="height: 25px; width: 25px">
-                        <i class="icon-history justify-content-center align-items-center text-light"></i>
-                      </div>
-                      <codx-label name="lbl" default="Hiện trạng" class="ps-4 fs-5 fw-bold"></codx-label>
-                    </div>
-
-                  </div>
-                  <div class="d-flex flex-column align-items-center" *ngIf="!isHiddenChart">
-                    <!-- Content Dasboard -->
-                    <div class="d-flex justify-content-center align-items-center flex-column w-100 aqua">
-                      <div class="d-flex align-items-center kr-process w-250px min-w-250px ms-3">
-                        <div class="h-15px w-100 bg-gray-100 rounded-4">
-                          <div class="bg-color rounded-4 h-15px" role="progressbar"
-                            [style.width]="dataOKR?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                        </div>
-                        <div class="h-15px process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
-                          {{ dataOKR?.progress }}%
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="">
-                          <codx-chart [title]="chartSettings?.title" [legendSettings]="{ visible: false }"
-                            [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
-                            [seriesSetting]="chartSettings?.seriesSetting" [service]="chartSettings?.service"
-                            [assemblyName]="chartSettings?.assembly" [className]="chartSettings?.className"
-                            [method]="chartSettings?.method"></codx-chart>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="d-flex flex-row justify-content-start mb-4">
-                    <div class="d-flex flex-row align-items-center">
-                      <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
-                        style="height: 25px; width: 25px">
-                        <i class="icon-history justify-content-center align-items-center text-light"></i>
-                      </div>
-                      <codx-label name="lbl" default="Kết quả chính" class="ps-4 fs-5 fw-bold"></codx-label>
-                    </div>
-                  </div>
-                  <div class="d-flex  align-items-center flex-column">
-                    <div class="pb-2 cursor-pointer has-action-menu col-10" *ngFor="let item of okrChild">
-                      <div class="d-flex align-items-center justify-content-between my-2">
-                        <div class="d-flex align-items-center w-100">
-                          <span class="me-4">
-                            <codx-img [width]="35" [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
-                          </span>
-                          <div class="fs-6 fw-bold">
-                            {{ item?.okrName }}
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-icon btn-light">
-                          <i class="icon-link icon-20"></i>
-                        </button>
-                      </div>
-                      <div class="d-flex align-items-center kr-process w-100">
-                        <div class="col-9 d-flex align-item-center">
-                          <div class="ms-15 h-15px w-100 bg-gray-200 rounded-4">
-                            <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
-                              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <div class="text-light process-per position-absolute top-0 fs-8 om-pt-1" [style.left]="
-                            (item?.progress / 2 > 0 ? item?.progress / 2 : 1) + '%'
-                          ">
-                            
-                          <span [innerHTML]="(item?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <span class="ms-5">{{ item?.target }}</span>
-                            <span class="ms-1" [innerHTML]="item?.umid | formatvalue : formModel : 'umid' | async "></span>
-                          </div>
-                        </div>
-                        <div class="col-3 pe-0 d-flex align-items-center justify-content-end">
-                          <div class="d-flex align-items-center">
-                            <i class="icon-attach_file text-primary me-1"></i>
-                            <span class="me-5">{{ item?.attachments }}</span>
-                            <i class="icon-chat_bubble_outline text-primary me-1"></i>
-                            <span >{{ item?.comments }}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </ng-container>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-solid fa-folder-tree me-2"></i>
-                <codx-label default="Liên kết" fiedName="lbltreetaget" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="d-flex justify-content-center">
-                <div class="col-10">
-                  <!--Filter-->
-                  <div class="d-flex align-items-center justify-content-end" #titleOKR>
-                    <div class="d-flex align-items-center">
-                      <div class="ms-2 me-2" ngbDropdown [container]="'body'">
-                        <div role="button"
-                          class="d-flex align-items-center border rounded align-items-center p-2 w-90px "
-                          (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==true">
-                          <i class="icon-i-arrows-collapse me-2"></i>
-                          <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
-                        </div>
-                        <div role="button"
-                          class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
-                          (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==false">
-                          <i class="icon-i-arrows-expand me-2"></i>
-                          <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!--Content-->
-                  <div class="d-flex align-item-center mb-4">
-                    <span class="icon-groupby text-primary"></span>
-                    <codx-label default="Liên kết" class="ps-4 fs-5 fw-bold" name="lblLink"></codx-label>
-                  </div>
-                  <div *ngIf="listAlign && listAlign.length>0" class="pb-5">
-                    <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll" [okrGrv]="okrGrv"></view-okr>
-                  </div>
-                  <!--Content-->
-                  
-                  <div class="d-flex align-item-center mb-4">
-                    <span class="icon-account_tree text-primary"></span>
-                    <codx-label default="Phụ thuộc" class="ps-4 fs-5 fw-bold" name="lblLink" ></codx-label>
-                  </div>
-                  <div *ngIf="listAssign && listAssign.length>0" class="pb-5">
-                    <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM"  [okrVll]="okrVll" [okrGrv]="okrGrv"></view-okr>
-                  </div>
-                    
-                  
-                  <!--Content-->
+      
+      <div class="flex-grow-1 overflow-auto">
+        <ejs-tab id="om-tab" class="h-100">
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center position-sticky">
+                  <i class="fa-solid fa-bullseye me-2"></i>
+                  <codx-label default="Tổng quan" fiedName="lblSummary" class="fw-bold"></codx-label>
                 </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-solid fa-list me-2"></i>
-                <codx-label default="Công việc" fiedName="lbljob" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="mw-1000px mx-auto">
-                <div class="overflow-auto" >
-                  <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="oldOB?.recID"
-                    [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
+              </ng-template>
+              <ng-template #content>
+                <div class="d-flex flex-column container justify-content-center mt-5">
+                  <ng-container class="container-ob">
+                    <!-- <div class="d-flex flex-row justify-content-start mb-4">
+                      <div class="d-flex flex-row align-items-center">
+                        <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
+                          style="height: 25px; width: 25px">
+                          <i class="icon-history justify-content-center align-items-center text-light"></i>
+                        </div>
+                        <codx-label name="lbl" default="Hiện trạng" class="ps-4 fs-5 fw-bold"></codx-label>
+                      </div>
+  
+                    </div> -->
+                    <div class="d-flex flex-column align-items-center" *ngIf="!isHiddenChart">
+                      <!-- Content Dasboard -->
+                      <div class="d-flex justify-content-center align-items-center flex-column w-100 aqua">
+                        <div class="d-flex align-items-center kr-process w-250px min-w-250px ms-3">
+                          <div class="h-15px w-100 bg-gray-100 rounded-4">
+                            <div class="bg-color rounded-4 h-15px" role="progressbar"
+                              [style.width]="dataOKR?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                              aria-valuemax="100"></div>
+                          </div>
+                          <div class="h-15px process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
+                            {{ dataOKR?.progress }}%
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="">
+                            <codx-chart [title]="chartSettings?.title" [legendSettings]="{ visible: false }"
+                              [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
+                              [seriesSetting]="chartSettings?.seriesSetting" [service]="chartSettings?.service"
+                              [assemblyName]="chartSettings?.assembly" [className]="chartSettings?.className"
+                              [method]="chartSettings?.method"></codx-chart>
+                          </div>
+                        </div>
+  
+                      </div>
+                    </div>
+  
+                    <div class="d-flex flex-row justify-content-start mb-4">
+                      <div class="d-flex flex-row align-items-center">
+                        <div class="bg-danger d-flex rounded-circle justify-content-center align-items-center"
+                          style="height: 25px; width: 25px">
+                          <i class="icon-history justify-content-center align-items-center text-light"></i>
+                        </div>
+                        <codx-label name="lbl" default="Kết quả chính" class="ps-4 fs-5 fw-bold"></codx-label>
+                      </div>
+                    </div>
+                    <div class="d-flex  align-items-center flex-column">
+                      <div *ngIf="okrChild && okrChild.length>0" class="pb-5 w-100 ">
+                        <view-okr [dataOKR]="okrChild" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll"
+                          [okrGrv]="okrGrv"></view-okr>
+                      </div>
+                      <!-- <div class="pb-2 cursor-pointer has-action-menu col-10" *ngFor="let item of okrChild">
+                        <div class="d-flex align-items-center justify-content-between my-2">
+                          <div class="d-flex align-items-center w-100">
+                            <span class="me-4">
+                              <codx-img [width]="35" [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
+                            </span>
+                            <div class="fs-6 fw-bold">
+                              {{ item?.okrName }}
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-icon btn-light">
+                            <i class="icon-link icon-20"></i>
+                          </button>
+                        </div>
+                        <div class="d-flex align-items-center kr-process w-100">
+                          <div class="col-9 d-flex align-item-center">
+                            <div class="ms-15 h-15px w-100 bg-gray-200 rounded-4">
+                              <div class="bg-color rounded-4 h-15px" role="progressbar"
+                                [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                            </div>
+                            <div class="text-light process-per position-absolute top-0 fs-8 om-pt-1" [style.left]="
+                              (item?.progress / 2 > 0 ? item?.progress / 2 : 1) + '%'
+                            ">
+  
+                              <span
+                                [innerHTML]="(item?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <span class="ms-5">{{ item?.target }}</span>
+                              <span class="ms-1"
+                                [innerHTML]="item?.umid | formatvalue : formModel : 'umid' | async "></span>
+                            </div>
+                          </div>
+                          <div class="col-3 pe-0 d-flex align-items-center justify-content-end">
+                            <div class="d-flex align-items-center">
+                              <i class="icon-attach_file text-primary me-1"></i>
+                              <span class="me-5">{{ item?.attachments }}</span>
+                              <i class="icon-chat_bubble_outline text-primary me-1"></i>
+                              <span>{{ item?.comments }}</span>
+                            </div>
+                          </div>
+                        </div>
+  
+                      </div> -->
+                    </div>
+  
+                  </ng-container>
                 </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <!-- <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular icon-i-chat me-2"></i>
-                <codx-label default="Chia sẻ" fiedName="lblShare" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="d-flex justify-content-center">
-                Chia sẻ
-              </div>
-            </ng-template>
-          </e-tabitem> -->
-          <!-- <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular fa-calendar me-2"></i>
-                <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
-            </ng-template>
-          </e-tabitem> -->
-
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular icon-i-chat me-2"></i>
-                <codx-label default="Ghi chú" fiedName="lblNote" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="d-flex justify-content-center">
-                <div class="col-10 mt-5">
-                  <codx-tree-comment [objectID]="dataOKR.recID" [objectType]="formModel?.entityName" [actionType]="'C'"
-                    [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="formModel?.funcID">
-                  </codx-tree-comment>
+              </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-folder-tree me-2"></i>
+                  <codx-label default="Liên kết" fiedName="lbltreetaget" class="fw-bold"></codx-label>
                 </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-solid fa-clock-rotate-left me-2"></i>
-                <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <div class="h-100">
-                <div class="mw-1000px mx-auto mt-5">
-                  <codx-history [objectID]="dataOKR?.recID" [formModel]="formModel"
-                    [funcID]="formModel?.funcID"></codx-history>
+              </ng-template>
+              <ng-template #content>
+                <div class="d-flex justify-content-center">
+                  <div class="col-10">
+                    <!--Filter-->
+                    <div class="d-flex align-items-center justify-content-end" #titleOKR>
+                      <div class="d-flex align-items-center">
+                        <div class="ms-2 me-2" ngbDropdown [container]="'body'">
+                          <div role="button"
+                            class="d-flex align-items-center border rounded align-items-center p-2 w-90px "
+                            (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==true">
+                            <i class="icon-i-arrows-collapse me-2"></i>
+                            <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
+                          </div>
+                          <div role="button"
+                            class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+                            (click)="collapeKR(!isCollapsed)" *ngIf="isCollapsed==false">
+                            <i class="icon-i-arrows-expand me-2"></i>
+                            <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!--Content-->
+                    <div class="d-flex align-item-center mb-4">
+                      <span class="icon-groupby text-primary"></span>
+                      <codx-label default="Liên kết" class="ps-4 fs-5 fw-bold" name="lblLink"></codx-label>
+                    </div>
+                    <div *ngIf="listAlign && listAlign.length>0" class="pb-5">
+                      <view-okr [dataOKR]="listAlign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll"
+                        [okrGrv]="okrGrv"></view-okr>
+                    </div>
+                    <!--Content-->
+  
+                    <div class="d-flex align-item-center mb-4">
+                      <span class="icon-account_tree text-primary"></span>
+                      <codx-label default="Phụ thuộc" class="ps-4 fs-5 fw-bold" name="lblLink"></codx-label>
+                    </div>
+                    <div *ngIf="listAssign && listAssign.length>0" class="pb-5">
+                      <view-okr [dataOKR]="listAssign" [isCollapsedAll]="isCollapsed" [okrFM]="okrFM" [okrVll]="okrVll"
+                        [okrGrv]="okrGrv"></view-okr>
+                    </div>
+  
+  
+                    <!--Content-->
+                  </div>
                 </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
+              </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-list me-2"></i>
+                  <codx-label default="Công việc" fiedName="lbljob" class="fw-bold"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <div class="mw-1000px mx-auto">
+                  <div class="overflow-auto">
+                    <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="oldOB?.recID"
+                      [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
+                  </div>
+                </div>
+              </ng-template>
+            </e-tabitem>
+            <!-- <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-regular icon-i-chat me-2"></i>
+                  <codx-label default="Chia sẻ" fiedName="lblShare" class="fw-bold"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <div class="d-flex justify-content-center">
+                  Chia sẻ
+                </div>
+              </ng-template>
+            </e-tabitem> -->
+            <!-- <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-regular fa-calendar me-2"></i>
+                  <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+              </ng-template>
+            </e-tabitem> -->
+  
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-regular icon-i-chat me-2"></i>
+                  <codx-label default="Ghi chú" fiedName="lblNote" class="fw-bold"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <div class="d-flex justify-content-center">
+                  <div class="col-10 mt-5">
+                    <codx-tree-comment [objectID]="dataOKR.recID" [objectType]="formModel?.entityName" [actionType]="'C'"
+                      [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="formModel?.funcID">
+                    </codx-tree-comment>
+                  </div>
+                </div>
+              </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-clock-rotate-left me-2"></i>
+                  <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <div class="h-100">
+                  <div class="mw-1000px mx-auto mt-5">
+                    <codx-history [objectID]="dataOKR?.recID" [formModel]="formModel"
+                      [funcID]="formModel?.funcID"></codx-history>
+                  </div>
+                </div>
+              </ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
     </div>
   </div>
-</ng-template>
+  
+</div>

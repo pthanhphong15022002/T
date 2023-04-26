@@ -184,7 +184,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
       this.cashBookName2 = e.component.itemsSelected[0].CashBookName;
     }
 
-    const fields: string[] = ['currencyid', 'cashbookid', 'payamount2'];
+    const fields: string[] = ['currencyid', 'cashbookid'];
 
     if (fields.includes(field)) {
       this.api
@@ -200,7 +200,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
             });
 
             this.cashTransfer.multi = res.multi;
-            this.cashTransfer.payAmount2 = res.payAmount2;
+            this.cashTransfer.exchangeAmt2 = res.exchangeAmt2;
           }
         });
     }
@@ -211,7 +211,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
 
     this.api
       .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
-        e.field,
+        e.field.toLowerCase(),
         this.cashTransfer,
       ])
       .subscribe((res: ICashTransfer) => {
@@ -221,7 +221,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
           });
 
           this.cashTransfer.multi = res.multi;
-          this.cashTransfer.payAmount2 = res.payAmount2;
+          this.cashTransfer.exchangeAmt2 = res.exchangeAmt2;
         }
       });
   }
@@ -258,9 +258,9 @@ export class PopupAddCashTransferComponent extends UIComponent {
     }
 
     this.cashTransfer.feeControl = +this.cashTransfer.feeControl;
-    this.cashTransfer.totalAmount =
-      (this.cashTransfer?.payAmount || 0) +
-      (this.cashTransfer?.paymentFees || 0) +
+    this.cashTransfer.totalAmt =
+      (this.cashTransfer?.exchangeAmt || 0) +
+      (this.cashTransfer?.fees || 0) +
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
     this.cashTransfer.voucherNo = this.cashTransfer.voucherNo ?? '';
 

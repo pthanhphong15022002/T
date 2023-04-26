@@ -50,7 +50,7 @@
       </div>
       <div class="d-flex align-self-center">
         <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-md">
+          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </div>
     </div>
@@ -176,60 +176,60 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="purchaseInvoicesLines">
     <div class="table-responsive mt-2">
-      <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
+      <table class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
-            <th style="width: 40%;">
+            <th class="w-50 min-w-350px">
               <div class="d-flex">
-                <i class="icon-i-box icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="ItemID"
+                <!-- <i class="icon-i-box icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="ItemID"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th class="min-w-100px">
               <div class="d-flex">
-                <i class="icon-i-bar-chart icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="Quantity"
+                <!-- <i class="icon-i-bar-chart icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="Quantity"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th class="min-w-125px">
               <div class="d-flex">
-                <i class="icon-payments icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="UnitPrice"
+                <!-- <i class="icon-payments icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="UnitPrice"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th class="min-w-125px">
               <div class="d-flex">
-                <i class="icon-i-cash-stack icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="NetAmt"
+                <!-- <i class="icon-i-cash-stack icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="NetAmt"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th class="min-w-150px">
               <div class="d-flex">
-                <i class="icon-analytics icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="VATID"
+                <!-- <i class="icon-analytics icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="VATID"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th class="min-w-125px">
               <div class="d-flex">
-                <i class="icon-i-cash icon-16 me-2"></i>
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="VATAmt"
+                <!-- <i class="icon-i-cash icon-16 me-2"></i> -->
+                <codx-label class="fw-bold line-clamp line-clamp-1 text-dark" fiedName="VATAmt"
                   [formModel]="fmPurchaseInvoicesLines">
                 </codx-label>
               </div>
             </th>
           </tr>
         </thead>
-        <tbody class="border-bottom" *ngFor="let item of purchaseInvoicesLines">
+        <tbody *ngFor="let item of purchaseInvoicesLines">
           <tr>
             <td>
               <div class="d-flex align-items-center me-5 mb-1">
@@ -296,7 +296,7 @@
               </div>
               <div class="d-flex flex-wrap text-nowrap">
                 <div class="d-flex flex-column mb-1">
-                  <span *ngIf="item.lineType != null && item.lineType != ''" class="badge badge-light-primary badge-sm me-2">
+                  <span *ngIf="item.lineType != null && item.lineType != ''" class="badge badge-light-primary badge-sm me-3">
                     <span>{{item.lineType | vll : 'AC089' : 'text' | async}}</span>
                   </span>
                 </div>
@@ -353,18 +353,18 @@
             </td>
             <td>
               <span *ngIf="item.quantity != null && item.quantity != ''"
-                class="fw-bold text-nowrap">{{item.quantity}}</span>
+                class="text-nowrap">{{item.quantity}}</span>
             </td>
             <td>
-              <span *ngIf="item.unitPrice != null && item.unitPrice != ''" class="fw-bold text-nowrap">{{
+              <span *ngIf="item.unitPrice != null && item.unitPrice != ''" class="text-nowrap">{{
                 item.unitPrice.toLocaleString("it-IT") }}</span>
             </td>
             <td>
-              <span *ngIf="item.netAmt != null && item.netAmt != ''" class="fw-bold text-nowrap">{{
+              <span *ngIf="item.netAmt != null && item.netAmt != ''" class="text-nowrap">{{
                 item.netAmt.toLocaleString("it-IT") }}</span>
             </td>
             <td>
-              <span *ngIf="item?.vatid != null && item?.vatid != ''" #vatid class="fw-bold" [innerHTML]="
+              <span *ngIf="item?.vatid != null && item?.vatid != ''" #vatid class="text-gray-600 text-italic" [innerHTML]="
                       item?.vatid
                         | formatvalue
                           : fmPurchaseInvoicesLines
@@ -374,7 +374,7 @@
                     "></span>
             </td>
             <td>
-              <span *ngIf="item.vatAmt != null && item.vatAmt != ''" class="fw-bold text-nowrap">{{
+              <span *ngIf="item.vatAmt != null && item.vatAmt != ''" class="text-nowrap">{{
                 item.vatAmt.toLocaleString("it-IT") }}</span>
             </td>
           </tr>

@@ -13,6 +13,7 @@ import { PopupEDisciplinesComponent } from '../employee-profile/popup-edisciplin
 export class EmployeeDisciplineComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
+  @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus') templateUpdateStatus: TemplateRef<any>;
@@ -33,6 +34,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   currentEmpObj: any = null;
   dialogEditStatus: any;
   genderGrvSetup: any
+  econtractGrvSetup: any;
 
     //#region eDisciplineFuncID
     actionAddNew = 'HRTPro07A01'
@@ -65,6 +67,12 @@ export class EmployeeDisciplineComponent extends UIComponent {
     });
   }
 
+  clickEvent(event, data){
+    console.log('clickEvent', event);
+    // this.popupUpdateEContractStatus(event?.event?.functionID , event?.data);
+    this.clickMF(event?.event, event?.data);
+  }
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -75,14 +83,22 @@ export class EmployeeDisciplineComponent extends UIComponent {
           template: this.itemTemplate,
           headerTemplate: this.headerTemplate
         }
-      }
+      },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
     ]
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) =>{
       this.eDisciplineHeaderText = res;
       console.log('hed do` text ne',this.eDisciplineHeaderText);
     })
     console.log('view cua e discipline', this.view);
-    
   }
 
   ngAfterViewChecked(){
@@ -92,6 +108,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
         this.formGroup = res;
       });
     }
+    this.cache.gridViewSetup(this.view?.formModel?.formName, this.view?.formModel?.gridViewName).subscribe((res) => {
+      this.econtractGrvSetup = res?.Status
+    });
   }
 
   changeDataMf(event, data){
@@ -111,7 +130,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   onSaveUpdateForm(){
     this.hrService.UpdateEmployeeDisciplineInfo(this.editStatusObj).subscribe((res) => {
       if(res != null){
-        debugger
         this.notify.notifyCode('SYS007');
         res.emp = this.currentEmpObj;
         this.view.formModel.entityName
@@ -284,6 +302,12 @@ export class EmployeeDisciplineComponent extends UIComponent {
       }
     });
   }
+
+  changeItemDetail(event) {
+    debugger
+    this.itemDetail = event?.data;
+  }
+
   
   release() {
     this.hrService
@@ -304,6 +328,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
                 this.hrService
                   .UpdateEmployeeDisciplineInfo(this.itemDetail)
                   .subscribe((res) => {

@@ -91,7 +91,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   editStatusObj: any;
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
-
+  dataCategory;
   itemDetail;
 
   onInit(): void {
@@ -132,6 +132,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         },
       },
     ];
+    this.hrService.getHeaderText(this.view?.formModel?.funcID).then(response => {
+      this.eBasicSalariesHeaderText = response;
+    })
   }
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
@@ -164,7 +167,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   clickMF(event, data) {
     this.itemDetail = data;
     switch (event.functionID) {
-      //case this.actionSubmit:
+      case this.actionSubmit:
+        this.beforeRelease();
+        break;
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
       case this.actionUpdateRejected:
@@ -172,12 +177,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEBasicSalaryStatus(event.functionID, oUpdate);
-        break;      
+        break;
       case this.actionAddNew:
         let newData = {
           emp: data?.emp,
-          employeeID: data?.employeeID
-        }
+          employeeID: data?.employeeID,
+        };
         this.handlerEBasicSalaries(
           event.text + ' ' + this.view.function.description,
           'add',
@@ -286,7 +291,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      console.log('result', res);
       this.handlerEBasicSalaries(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
@@ -312,14 +316,16 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService.addBGTrackLog(
-            res[0].recID,
-            this.cmtStatus,
-            this.view.formModel.entityName,
-            'C1',
-            null,
-            'EBasicSalariesBusiness'
-          ).subscribe(res =>{});
+          this.hrService
+            .addBGTrackLog(
+              res[0].recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null,
+              'EBasicSalariesBusiness'
+            )
+            .subscribe((res) => {});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -338,4 +344,61 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   clickEvent(event, data) {
     this.clickMF(event?.event, event?.data);
   }
+
+  //#region gửi duyệt
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eBasicSalaryObj = parsedJSON[index];
+          if (eBasicSalaryObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+            //đợi BA mô tả
+          }
+        }
+      }
+    });
+  }
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.dataCategory = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.dataCategory.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> '+ this.view.function.description + ' - ' + this.itemDetail.decisionNo + '</div>'
+            )
+            .subscribe((result) => {
+              // console.log('ok', result);
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .UpdateEmployeeBasicSalariesInfo((res) => {
+                    if (res) {
+                      // console.log('after release', res);
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
+        }
+      });
+  }
+  //#endregion
 }

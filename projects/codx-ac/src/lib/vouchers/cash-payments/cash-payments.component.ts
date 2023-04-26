@@ -194,15 +194,20 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
+      this.dialog.closed.subscribe((res) => {
+          if (res.event['update']) {
+            this.itemSelected = res.event['data'];
+            this.loadDatadetail(this.itemSelected);
+          }
+        });
       });
   }
-
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = {...data};
     }
     this.view.dataService
-      .edit({...this.view.dataService.dataSelected})
+      .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
@@ -256,21 +261,8 @@ export class CashPaymentsComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data)
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          this.api
-            .exec(
-              'ERM.Business.AC',
-              'CashPaymentsLinesBusiness',
-              'DeleteAsync',
-              [data.recID]
-            )
-            .subscribe((res: any) => {});
-        }
-      });
+      .delete([data], true)
+      .subscribe((res: any) => {});
   }
   //#endregion
 
@@ -333,7 +325,7 @@ export class CashPaymentsComponent extends UIComponent {
       bm[0].disabled = true;
     }
     //hủy duyệt
-    if (data?.approveStatus == '4') {
+    if (data?.approveStatus == '4' || data?.status == '0') {
       for (var i = 0; i < bm.length; i++) {
         bm[i].disabled = true;
       }
@@ -341,7 +333,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    if (event?.data.result) {
+    if (event?.data.data) {
       return;
     } else {
       if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {

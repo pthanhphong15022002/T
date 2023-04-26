@@ -29,16 +29,15 @@
   <div class="card-form">
     <!-- Link group -->
     <div class="form-group">
-      <div class="text-primary mb-1">
+      <div class="mb-1 line-clamp line-clamp-1">
         <codx-label
+          class="text-primary"
           fiedName="StepName"
           [formModel]="form?.formModel"
-          default="Thuộc giai đoạn"
+          default="Thuộc giai đoạn: "
         >
         </codx-label>
-      </div>
-      <div>
-        <codx-label [default]="stepName"> </codx-label>
+        <span style="font-weight: 500;"> {{stepName}} </span>
       </div>
     </div>
     <!--End Link group -->
@@ -60,7 +59,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID"
+            [readonly]="taskGroupID || taskGroupList.length === 0"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -483,9 +482,9 @@
     <div>
       <div
         class="e-float-input e-input-group cursor-pointer m-0"
-        (click)="showCombobox()"
+        (click)="data?.length > 0 ? showCombobox() : ''"
       >
-        <input type="text" [value]="valueInput" class="cursor-pointer" />
+        <input type="text" [value]="valueInput" [disabled]="data?.length == 0" class="cursor-pointer" />
         <span class="e-float-line"></span>
         <span class="e-input-group-icon e-spin-down"></span>
       </div>

@@ -328,6 +328,16 @@ export class CodxAdService {
     );
   }
 
+  getLstAD_UserRolesByModuleIDs(lstMDSales: string[]) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserRoleByModulesAsync',
+      [lstMDSales]
+    );
+  }
+
   getTenantDefaultSetting() {
     return this.api.execSv<any>(
       'SYS',
@@ -409,13 +419,28 @@ export class CodxAdService {
     );
   }
 
-  removeGroupMember(lstMDID: string[], lstMDSales: string[], groupMember) {
+  removeGroupMember(
+    lstMDID: string[],
+    lstMDSales: string[],
+    groupID: string,
+    lstMemberIDs: string[]
+  ) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UserGroupsBusiness',
       'RemoveGroupMembersAsync',
-      [lstMDID, lstMDSales, groupMember]
+      [lstMDID, lstMDSales, groupID, lstMemberIDs]
+    );
+  }
+
+  removeGroupAsync(groupID: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserGroupsBusiness',
+      'RemoveGroupAsync',
+      [groupID]
     );
   }
   //#endregion

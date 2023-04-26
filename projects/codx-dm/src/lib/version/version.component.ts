@@ -69,10 +69,10 @@ export class VersionComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
+      debugger
       this.dialog = dialog;
       this.formModel = data.data[0];
       this.fileEditing = data.data[1];
-      debugger
       this.nameFile =  this.fileEditing?.fileName
       this.comment = '';
   }

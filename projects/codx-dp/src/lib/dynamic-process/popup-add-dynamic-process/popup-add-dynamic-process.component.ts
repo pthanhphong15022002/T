@@ -335,22 +335,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action === 'copy') {
       this.listPermissions = [];
       this.listPermissions = JSON.parse(
-        JSON.stringify(this.process.permissions)
-      );
-      this.process.permissions = [];
+        JSON.stringify(this.process.permissions));
+        this.process.permissions = [];
       this.instanceNoSetting = this.process.instanceNoSetting;
       this.listClickedCoppy = dt.data.conditionCopy;
-      (this.oldIdProccess = dt.data.oldIdProccess),
-        (this.newIdProccess = dt.data.newIdProccess),
-        (this.listValueCopy = dt.data.listValueCopy);
+      this.oldIdProccess = dt.data.oldIdProccess;
+      this.newIdProccess = dt.data.newIdProccess;
+      this.listValueCopy = dt.data.listValueCopy;
       var valueListStr = this.listValueCopy.join(';');
-
-      this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
-        this.getListStepByProcessIDCopy(
-          this.oldIdProccess,
-          this.newIdProccess,
-          valueListStr
-        );
+      this.getAvatar(this.process);
+      if(this.listValueCopy.includes('2') && !this.listValueCopy.includes('3')){
+        this.process.permissions = this.listPermissions;
+        this.permissions = this.process.permissions;
+        this.setDefaultOwner();
+      }
+      if(this.listValueCopy.includes('3')) {
+        this.getListStepByProcessIDCopy(this.oldIdProccess,  this.newIdProccess, valueListStr);
+      }
     }
     if (this.action == 'edit') {
       this.loadEx();
@@ -1710,7 +1711,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             900,
             700,
             null,
-            { action: val, type: this.type, reportID: this.process.recID },
+            { action: val, type: this.type, refID: this.process.recID, refType : 'DP_Processes' },
             '',
             option
           )
@@ -1772,8 +1773,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   loadEx() {
-    this.request.predicates = 'ReportID=@0';
-    this.request.dataValues = this.process.recID;
+    this.request.predicates = 'RefID=@0 && RefType=@1';
+    this.request.dataValues = this.process.recID +";DP_Processes";
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1781,8 +1782,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   loadWord() {
-    this.request.predicates = 'ReportID=@0';
-    this.request.dataValues = this.process.recID;
+    this.request.predicates = 'RefID=@0 && RefType=@1';
+    this.request.dataValues = this.process.recID +";DP_Processes";
     this.request.entityName = 'AD_WordTemplates';
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -3430,29 +3431,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuration($event) {
     if ($event && $event != null) {
-      // var isBlock = true;
-      // if($event.field == 'durationDay') {
-      //     if($event.data < this.dayStep) {
-      //       this.notiService.notifyCode('DP012');
-      //       return;
-      //     }
-      // }
-      // else if($event.field == 'durationHour')  {
-      //     if($event.data < this.hourStep) {
-      //       $event.data = this.step[$event.field];
-      //       this.notiService.notifyCode('DP012');
-      //       return;
-      //     }
-      // }
-
-      // if(isBlock) {
-      //   this.step[$event.field] = $event.data;
-      //   if (!$event.data || $event.data == '0') {
-      //     this.step[$event.field] = 0;
-      //   }
-      // }
-
-      // ko xóa
         this.step.durationDay = $event?.valueDay;
         this.step.durationHour = $event?.valueHour;
         this.updateStepChange(this.step?.recID);
@@ -3799,10 +3777,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.stepList.push(step);
           }
         });
-        this.listPermissions =
-          this.listValueCopy.includes('2') || this.listValueCopy.includes('4')
-            ? this.listPermissions
-            : [];
+
+        // let checkRoleProccess =  this.listValueCopy.includes('2');
+        // let checkRoleStep =  this.listValueCopy.includes('4');
+        // if(checkRoleProccess && checkRoleStep)
+        // {
+        //   this.listPermissions = this.listPermissions;
+        // }
+
+       // this.listPermissions =  && this.listValueCopy.includes('4') ? this.listPermissions : [];
+        // this.listPermissions =
+        //   this.listValueCopy.includes('2') || this.listValueCopy.includes('4')
+        //     ? this.listPermissions
+        //     : [];
+        // if (!this.listValueCopy.includes('4')) {
+        //   this.listPermissions = this.listPermissions.filter((element) =>
+        //   (element.roleType === 'P'
+        //   && !listObjectId.includes(element.objectID))
+        //    ||element.roleType !== 'P'
+        //   );
+        // }
+        if(!this.listValueCopy.includes('2') && !this.listValueCopy.includes('4') ) {
+          this.listPermissions = [];
+        }
         if (!this.listValueCopy.includes('2')) {
           this.listPermissions = this.listPermissions.filter(
             (element) =>
@@ -3810,14 +3807,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 listObjectId.includes(element.objectID)) ||
               (element.roleType !== 'P' && element.roleType !== 'F')
           );
-        }
-        if (!this.listValueCopy.includes('4')) {
-          this.listPermissions = this.listPermissions.filter(
-            (element) =>
-              (element.roleType === 'P' &&
-                !listObjectId.includes(element.objectID)) ||
-              element.roleType !== 'P'
-          );
+
+          this.listPermissions = this.listPermissions.filter(x=>x.roleType != 'O')
         }
         this.process.permissions = this.listPermissions;
         this.permissions = this.process.permissions;

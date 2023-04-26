@@ -52,7 +52,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabDetaildProduct"></ng-container>
+            <ng-container *ngTemplateOutlet="tabDetaildQuotationLines"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -82,20 +82,25 @@
         </div>
         <div class="form-group col-2">
           <codx-label
-          fiedName="VersionNo"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          field="versionNo"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-          <!-- <codx-label default="Phiên bản"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"></codx-input> -->
+            fiedName="VersionNo"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="versionNo"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
         <div class="form-group col-3">
-          <codx-label default="Ngày hết hạn"></codx-label>
-          <codx-input type="text" placeholder="test thôi dung la"></codx-input>
+          <codx-label
+            fiedName="Deadline"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="deadline"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
       </div>
       <div class="col-6 row">
@@ -174,25 +179,25 @@
 <!--  End:thêm sản phẩm -->
 
 <!-- Start: Chi tiết sản phẩm -->
-<ng-template #tabDetaildProduct>
+<ng-template #tabDetaildQuotationLines>
   <div class="h-100">
     <codx-gridview-v2
-      #gridProductsLine
-      [formName]="fmProcductsLines.formName"
-      [gridViewName]="fmProcductsLines.gridViewName"
-      [entityName]="fmProcductsLines.entityName"
+      #gridQuationsLines
+      [formName]="fmQuotationLines.formName"
+      [gridViewName]="fmQuotationLines.gridViewName"
+      [entityName]="fmQuotationLines.entityName"
       [templateMore]="morefunction"
       [editSettings]="editSettings"
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataValues]="form.data.recID"
-      [dataSource]="productsLine"
+      [dataSource]="quotationLines"
       service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
-      (cellChanged)="productsLineChanged($event)"
-      (created)="gridCreated($event,gridProductsLine)"
+      (cellChanged)="quotionsLineChanged($event)"
+      (created)="gridCreated($event, gridQuationsLines)"
     ></codx-gridview-v2>
   </div>
   <!-- predicates="TransID=@0"  cai nay truyền loc-->

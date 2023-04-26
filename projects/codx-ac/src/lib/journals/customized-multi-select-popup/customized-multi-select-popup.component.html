@@ -9,6 +9,7 @@
 </codx-form>
 
 <ng-template #body>
+  <div class="mt-5">
   <div *ngFor="let d of dimControls$ | async" class="mb-3">
     <codx-input
       type="checkbox"
@@ -20,6 +21,7 @@
       (valueChange)="handleChange($event, d)"
     ></codx-input>
   </div>
+</div>
 </ng-template>
 
 <ng-template #footer>
