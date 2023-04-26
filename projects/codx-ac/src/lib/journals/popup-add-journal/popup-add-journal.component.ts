@@ -254,11 +254,12 @@ export class PopupAddJournalComponent
     console.log(this.journal);
 
     if (
-      !this.acService.validateFormData(this.form.formGroup, this.gvs, [
-        'DIM1Control',
-        'DIM2Control',
-        'DIM3Control',
-      ])
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gvs,
+        ['DIM1Control', 'DIM2Control', 'DIM3Control'],
+        !this.journal.multiCurrency ? ['CurrencyID'] : []
+      )
     ) {
       return;
     }
