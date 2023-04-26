@@ -110,7 +110,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field.isRequired = e.data;
   }
   valueChangeIcon(e) {
-    if (e) this.field.rankIcon = e;
+    if (e && e?.data) this.field.rankIcon = e.data;
   }
 
   sliderChange(e) {

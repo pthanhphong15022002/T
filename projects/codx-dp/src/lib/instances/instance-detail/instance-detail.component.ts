@@ -134,6 +134,7 @@ export class InstanceDetailComponent implements OnInit {
   vllViewGannt = 'DP042';
   crrViewGant = 'D';
   timelineSettings: any;
+  tags = '';
   timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
@@ -325,10 +326,12 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync() {
+    this.tags = '';
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
+        this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.getStageByStep(this.listSteps);

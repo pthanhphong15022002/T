@@ -583,7 +583,6 @@ export class StagesDetailComponent implements OnInit {
         type: item?.taskType,
       };
     });
-    
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
@@ -1042,25 +1041,26 @@ export class StagesDetailComponent implements OnInit {
 
       this.isContinueTaskEnd = this.dataProgress?.recID == this.idTaskEnd;
       this.isContinueTaskAll = this.isShowFromTaskAll;
+      var isAuto = {
+      isShowFromTaskAll: this.isShowFromTaskAll,
+      isShowFromTaskEnd: this.isShowFromTaskEnd,
+      isContinueTaskEnd: this.isContinueTaskEnd,
+      isContinueTaskAll: this.isContinueTaskAll,
+      };
 
-      if(this.isContinueTaskAll || this.isContinueTaskEnd){
-        let dataInstance = {
-          instance: this.instance,
-          listStep: this.listStep,
-          step: this.step,
-          isShowFromTaskAll: this.isShowFromTaskAll, 
-          isShowFromTaskEnd: this.isShowFromTaskEnd,
-          isContinueTaskEnd: this.isContinueTaskEnd,
-          isContinueTaskAll: this.isContinueTaskAll,
-        };
-        this.serviceInstance.autoMoveStage(dataInstance);       
-      }
+      let dataInstance = {
+        instance: this.instance,
+        listStep: this.listStep,
+        step: this.step,
+        isAuto:isAuto,
+      };
+      this.serviceInstance.autoMoveStage(dataInstance);
     }else{
       this.isShowFromTaskAll = false;
       this.isShowFromTaskEnd = false;
       this.isContinueTaskEnd = false;
       this.isContinueTaskAll = false;
-    }     
+    }
   }
 
   checkSuccessTaskRequired(taskID?: string, isAllTask = false){
@@ -1073,14 +1073,13 @@ export class StagesDetailComponent implements OnInit {
             }
           }else{
             if (task?.recID != taskID) {
-              if(!(task?.requireCompleted && task?.progress == 100)){
+              if(task?.requireCompleted && task?.progress != 100){
                 return false;
               }else{
                 continue;
               }
             }
           }
-         
         }
       }
     }
