@@ -224,7 +224,7 @@ export class InstanceDetailComponent implements OnInit {
       unit: 'Week',
       count: 1,
       formatter: (date: Date) => {
-        return `${date.toLocaleDateString()}`;
+        return date.toLocaleDateString();
       },
     },
     timelineUnitSize: 100,
@@ -273,7 +273,7 @@ export class InstanceDetailComponent implements OnInit {
         console.log(this.frmModelInstancesTask);
       }
     });
-    this.timelineSettings = this.timelineSettingsDays;
+    this.timelineSettings = this.timelineSettingsWeek;
   }
 
   async ngOnInit(): Promise<void> {

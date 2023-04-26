@@ -139,7 +139,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   // }
 
   valueTagChange(e) {
-    this.data.industries = e.data;
+    this.data.tags = e.data;
   }
 
   valueChangeContact(e) {
@@ -154,6 +154,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
 
     if (this.data.objectID && e.field == 'objectID') {
+      this.data.objectName = e?.component?.itemsSelected != null &&
+      e?.component?.itemsSelected.length > 0
+        ? e?.component?.itemsSelected[0]?.PartnerName ? e?.component?.itemsSelected[0]?.PartnerName : e?.component?.itemsSelected[0]?.CustomerName
+        : null;
       this.getListContactByObjectID(this.data.objectID);
     }
   }
