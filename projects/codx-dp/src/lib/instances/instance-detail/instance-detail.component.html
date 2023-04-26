@@ -58,12 +58,12 @@
         </div>
 
         <div class="d-flex flex-column">
-          <div class="mt-2">
+          <div class="mt-2" *ngIf="tags != null && tags.trim() != ''">
             <codx-tag
               [entityName]="formModel.entityName"
               [disabled]="true"
               [isEdit]="false"
-              [value]="dataSelect?.tags"
+              [value]="tags"
             >
             </codx-tag>
           </div>
