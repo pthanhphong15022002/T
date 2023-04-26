@@ -89,7 +89,7 @@ codx-view-list-detail {
 }
 .fs-6 {
   //font-size: var(--fs-6) !important;
-  font-size: 1.065rem !important;
+  font-size: 1.045rem !important;
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -537,8 +537,8 @@ a:link {
 .aqua {
   border: 1px aqua solid;
 }
-.border-test {
-  border: 1px yellowgreen solid;
+.yellow {
+  border: 1px yellow solid;
 }
 .color-test {
   color: yellowgreen;
@@ -1852,7 +1852,7 @@ a.nav-link {
   font-size: var(--fs-6);
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-  margin-right: 10px;
+  margin-right: 15px;
 }
 .codx-nav {
   border-bottom: 1px var(--gray-150) solid;
@@ -2554,6 +2554,9 @@ codx-input .e-icons.e-check:before {
     width:60px;
     left: 0;
   }
+}
+.e-grid .e-table {
+  table-layout: auto;
 }
 
 // .form-control {
