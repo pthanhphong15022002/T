@@ -94,7 +94,7 @@ export class CmcustomerDetailComponent implements OnInit {
     this.cmSv.getOneCustomer(this.id, this.funcID).subscribe(res =>{
       if(res){
         this.dataSelected = res;
-        this.viewTag = this.dataSelected?.industries;
+        this.viewTag = this.dataSelected?.tags;
         this.getListContactByObjectID(this.id);
         this.getListAddress(this.entityName, this.dataSelected?.recID);
         this.listTab(this.funcID);
