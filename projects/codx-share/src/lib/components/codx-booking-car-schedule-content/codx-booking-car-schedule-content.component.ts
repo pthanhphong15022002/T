@@ -1,27 +1,14 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
-  EventEmitter,
   Injector,
   Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
   CallFuncService,
-  DataRequest,
-  DialogRef,
-  SidebarModel,
   UIComponent,
-  ViewsComponent,
 } from 'codx-core';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Permission } from '@shared/models/file.model';
 import { CodxShareService } from '../../codx-share.service';
 import moment from 'moment';
 @Component({

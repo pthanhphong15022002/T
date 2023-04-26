@@ -3777,26 +3777,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.stepList.push(step);
           }
         });
-
-        // let checkRoleProccess =  this.listValueCopy.includes('2');
-        // let checkRoleStep =  this.listValueCopy.includes('4');
-        // if(checkRoleProccess && checkRoleStep)
-        // {
-        //   this.listPermissions = this.listPermissions;
-        // }
-
-       // this.listPermissions =  && this.listValueCopy.includes('4') ? this.listPermissions : [];
-        // this.listPermissions =
-        //   this.listValueCopy.includes('2') || this.listValueCopy.includes('4')
-        //     ? this.listPermissions
-        //     : [];
-        // if (!this.listValueCopy.includes('4')) {
-        //   this.listPermissions = this.listPermissions.filter((element) =>
-        //   (element.roleType === 'P'
-        //   && !listObjectId.includes(element.objectID))
-        //    ||element.roleType !== 'P'
-        //   );
-        // }
         if(!this.listValueCopy.includes('2') && !this.listValueCopy.includes('4') ) {
           this.listPermissions = [];
         }

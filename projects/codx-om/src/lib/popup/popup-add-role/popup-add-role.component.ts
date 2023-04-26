@@ -116,24 +116,29 @@ export class PopupAddRoleComponent extends UIComponent {
         }
       });
   }
-  getRoleShare() {}
   onSaveRightChanged($event, ctrl, index) {
     let value = $event.data;
     switch (ctrl) {
       case 'full':
         this.okrPlan.permissions[index].full = value;
         this.okrPlan.permissions[index].create = value;
-      this.okrPlan.permissions[index].read = value;
-      this.okrPlan.permissions[index].edit = value;
-      this.okrPlan.permissions[index].publish = value;
-      this.okrPlan.permissions[index].assign = value;
-      this.okrPlan.permissions[index].delete = value;
-      this.okrPlan.permissions[index].share = value;
-      this.okrPlan.permissions[index].upload = value;
-        break;      
-      case 'assign':
+        this.okrPlan.permissions[index].read = value;
+        this.okrPlan.permissions[index].edit = value;
+        this.okrPlan.permissions[index].publish = value;
+        this.okrPlan.permissions[index].assign = value;
+        this.okrPlan.permissions[index].delete = value;
+        this.okrPlan.permissions[index].share = value;
+        this.okrPlan.permissions[index].upload = value;
+        this.full = value;
+        this.create = value;
+        this.read = value;
+        this.edit = value;
+        this.publish = value;
         this.assign = value;
-        break;
+        this.delete = value;
+        this.share = value;
+        this.upload = value;
+        break;   
       case 'fromdate':
         if (value != null) this.okrPlan.permissions[index].startDate = value.fromDate;
         break;
@@ -152,10 +157,12 @@ export class PopupAddRoleComponent extends UIComponent {
       this.okrPlan.permissions[index].assign &&
       this.okrPlan.permissions[index].delete &&
       this.okrPlan.permissions[index].share &&
-      this.okrPlan.permissions[index].upload )
-      this.okrPlan.permissions[index].full = true;
+      this.okrPlan.permissions[index].upload ){
+        this.okrPlan.permissions[index].full = true;
+
+      }
     else {
-      this.okrPlan.permissions[index].full = true;
+      this.okrPlan.permissions[index].full = false;
     }
     this.detectorRef.detectChanges();
   }

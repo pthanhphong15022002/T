@@ -228,7 +228,6 @@ export class OkrTargetsComponent implements OnInit {
 
     this.cache.valueList('OM021').subscribe((item) => {
       if (item?.datas) this.vllRangeDate = item?.datas;
-      console.log(this.vllRangeDate);
     });
     
     this.cache.valueList('OM002').subscribe((item) => {
@@ -1077,5 +1076,16 @@ export class OkrTargetsComponent implements OnInit {
       this.selectOKR=data;
       let dialogShowTask = this.callfunc.openForm(this.showTask, '', 1280, 720, null);
     }
+  }
+
+  newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

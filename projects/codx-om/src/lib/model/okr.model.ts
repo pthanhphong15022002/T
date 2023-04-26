@@ -123,3 +123,10 @@ export class OKRs {
     pbyw:number;
     progress:number;
   }
+
+  export class OM_TabModel {
+    name: string;
+    textDefault: string;
+    isActive: boolean;
+    icon:string;
+  }
