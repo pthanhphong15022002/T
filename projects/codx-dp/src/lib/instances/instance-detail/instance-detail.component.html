@@ -11,13 +11,153 @@
     [footer]="tabs"
   >
     <ng-template #header>
-      <div class="container_detail mt-2">
-        <div class="d-flex justify-content-between">
-          <h3 class="mb-0">
-            {{ dataSelect?.title }}
-          </h3>
-          <div
-            class="d-flex flex-column align-items-end justify-content-end ms-9"
+      <div class="d-flex justify-content-between align-items-end">
+        <div class="container_detail mt-2">
+          <div class="d-flex justify-content-between">
+            <h3 class="mb-0">
+              {{ dataSelect?.title }}
+            </h3>
+          </div>
+  
+          <div class="d-flex flex-column">
+            <div class="mt-2" *ngIf="tags != null && tags.trim() != ''">
+              <codx-tag
+                [entityName]="formModel.entityName"
+                [disabled]="true"
+                [isEdit]="false"
+                [value]="tags"
+              >
+              </codx-tag>
+            </div>
+  
+            <div class="d-flex mt-2">
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedBy"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div>
+                  <codx-imgs
+                    [isToolTip]="true"
+                    [width]="25"
+                    [objectId]="dataSelect.createdBy"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+                </div>
+              </div>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    [setRequire]="false"
+                    fiedName="CreatedOn"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    dataSelect.createdOn
+                      | formatvalue : formModel : 'CreatedOn'
+                      | async
+                  "
+                ></div>
+              </div>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    fiedName="StartDate"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    dataSelect.startDate
+                      | formatvalue : formModel : 'StartDate'
+                      | async
+                  "
+                ></div>
+              </div>
+              <div class="d-flex me-5">
+                <div class="me-2">
+                  <codx-label
+                    class="text-gray-500 label-colon text-nowrap"
+                    fiedName="EndDate"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                </div>
+                <div
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    (dataSelect.status != '1' ? dataSelect.endDate : null)
+                      | formatvalue : formModel : 'EndDate'
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+            <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  fiedName="Memo"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+              </div>
+              <div
+                class="text-dark"
+                *ngIf="dataSelect?.memo"
+                [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
+              ></div>
+            </div>
+            <!-- <div class="mb-6">
+                <div class="d-flex align-items-center mb-1">
+                  <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
+                  <span class="text-primary fw-bold fs-6">Tập đoàn PHÚC TÚ</span>
+                </div>
+                <div class="d-flex mb-3">
+                  <span class="me-2 text-gray-600">Liên hệ:</span>
+                  <ng-container>
+                    <div class="d-flex align-items-top">
+                      <span class="me-3">
+                        <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="35">
+                        </codx-img>
+                      </span>
+                      <div class="d-flex flex-column">
+                        <span class="text-primary fw-bold fs-6 mb-1">Trần Đoàn Tuyết Khanh</span>
+                        <div class="d-flex align-items-center fs-7">
+                          <div class="d-flex align-items-center me-6">
+                            <span class="icon-phone_iphone me-2 text-gray-600"></span>
+                            <span class="text-primary me-12">012344556</span>
+                          </div>
+                          <div class="d-flex align-items-center me-6">
+                            <span class="icon-email text-gray-600"></span>
+                            <span class="text-primary">lacviet@lacviet.com</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div> -->
+          </div>
+        </div>
+        <div
+            class="d-flex flex-column align-items-end justify-content-center me-3"
           >
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
@@ -53,171 +193,7 @@
                 </codx-imgs>
               </div>
             </div>
-            <div style="margin-right: -11px; margin-top: -5px">
-              <!-- <codx-progress-layout
-              [progress]="progress"
-            ></codx-progress-layout> -->
-              <!-- <ejs-progressbar
-              [id]="id"
-              type="Circular"
-              height="55"
-              width="55"
-              trackThickness="4"
-              progressThickness="4"
-              [value]="progress"
-              [progressColor]="'#005DC7'"
-              trackColor="#d8d8d8"
-              progressValueColor="red"
-              [labelStyle]="{ color: '#005DC7' }"
-              [showProgressValue]="false"
-              [animation]="{ enable: true, duration: 1000, delay: 0 }"
-            >
-              <e-progressbar-annotations>
-                <e-progressbar-annotation
-                  [content]='HTMLProgress'
-                >
-                </e-progressbar-annotation>
-              </e-progressbar-annotations>
-            </ejs-progressbar> -->
-            </div>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column">
-          <div class="mt-2" *ngIf="tags != null && tags.trim() != ''">
-            <codx-tag
-              [entityName]="formModel.entityName"
-              [disabled]="true"
-              [isEdit]="false"
-              [value]="tags"
-            >
-            </codx-tag>
-          </div>
-
-          <div class="d-flex mt-2">
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  [setRequire]="false"
-                  fiedName="CreatedBy"
-                  [formModel]="formModel"
-                >
-                </codx-label>
-              </div>
-              <div>
-                <codx-imgs
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="dataSelect.createdBy"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                >
-                </codx-imgs>
-              </div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  [setRequire]="false"
-                  fiedName="CreatedOn"
-                  [formModel]="formModel"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  dataSelect.createdOn
-                    | formatvalue : formModel : 'CreatedOn'
-                    | async
-                "
-              ></div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  fiedName="StartDate"
-                  [formModel]="formModel"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  dataSelect.startDate
-                    | formatvalue : formModel : 'StartDate'
-                    | async
-                "
-              ></div>
-            </div>
-            <div class="d-flex me-5">
-              <div class="me-2">
-                <codx-label
-                  class="text-gray-500 label-colon text-nowrap"
-                  fiedName="EndDate"
-                  [setRequire]="false"
-                  [formModel]="formModel"
-                >
-                </codx-label>
-              </div>
-              <div
-                class="text-dark fw-bold"
-                [innerHTML]="
-                  (dataSelect.status != '1' ? dataSelect.endDate : null)
-                    | formatvalue : formModel : 'EndDate'
-                    | async
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
-            <div class="me-2">
-              <codx-label
-                class="text-gray-500 label-colon text-nowrap"
-                fiedName="Memo"
-                [formModel]="formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="text-dark"
-              *ngIf="dataSelect?.memo"
-              [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
-            ></div>
-          </div>
-          <!-- <div class="mb-6">
-              <div class="d-flex align-items-center mb-1">
-                <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
-                <span class="text-primary fw-bold fs-6">Tập đoàn PHÚC TÚ</span>
-              </div>
-              <div class="d-flex mb-3">
-                <span class="me-2 text-gray-600">Liên hệ:</span>
-                <ng-container>
-                  <div class="d-flex align-items-top">
-                    <span class="me-3">
-                      <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="35">
-                      </codx-img>
-                    </span>
-                    <div class="d-flex flex-column">
-                      <span class="text-primary fw-bold fs-6 mb-1">Trần Đoàn Tuyết Khanh</span>
-                      <div class="d-flex align-items-center fs-7">
-                        <div class="d-flex align-items-center me-6">
-                          <span class="icon-phone_iphone me-2 text-gray-600"></span>
-                          <span class="text-primary me-12">012344556</span>
-                        </div>
-                        <div class="d-flex align-items-center me-6">
-                          <span class="icon-email text-gray-600"></span>
-                          <span class="text-primary">lacviet@lacviet.com</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-            </div> -->
+            <codx-progressbar [progress]="progress"></codx-progressbar>
         </div>
       </div>
     </ng-template>
