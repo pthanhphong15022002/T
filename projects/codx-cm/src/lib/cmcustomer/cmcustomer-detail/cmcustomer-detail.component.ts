@@ -27,7 +27,7 @@ import { PopupListContactsComponent } from '../popup-add-cmcustomer/popup-list-c
   styleUrls: ['./cmcustomer-detail.component.css'],
 })
 export class CmcustomerDetailComponent implements OnInit {
-  @Input() dataSelected: any;
+  @Input() recID: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() funcID = 'CM0101';
@@ -51,7 +51,7 @@ export class CmcustomerDetailComponent implements OnInit {
     { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
   ];
   treeTask = [];
-
+  dataSelected: any;
   name = 'Information';
   id = '';
   tabDetail = [];
@@ -81,14 +81,25 @@ export class CmcustomerDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.dataSelected.recID) {
-      if (this.dataSelected.recID == this.id) return;
-      this.id = this.dataSelected.recID;
-      this.getListContactByObjectID(this.id);
-      this.getListAddress(this.entityName, this.dataSelected?.recID);
-      this.listTab(this.funcID);
-      console.log(this.formModel);
+    if (this.recID) {
+      if (this.recID == this.id) return;
+      this.id = this.recID;
+      this.getOneCustomerDetail();
     }
+  }
+
+
+  getOneCustomerDetail(){
+    this.viewTag = '';
+    this.cmSv.getOneCustomer(this.id, this.funcID).subscribe(res =>{
+      if(res){
+        this.dataSelected = res;
+        this.viewTag = this.dataSelected?.industries;
+        this.getListContactByObjectID(this.id);
+        this.getListAddress(this.entityName, this.dataSelected?.recID);
+        this.listTab(this.funcID);
+      }
+    })
   }
 
   getGridviewSetup() {
@@ -121,10 +132,8 @@ export class CmcustomerDetailComponent implements OnInit {
   }
 
   getListAddress(entityName, recID) {
-    this.viewTag = '';
     this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
       this.listAddress = res;
-      this.viewTag = this.dataSelected?.industries;
     });
   }
 

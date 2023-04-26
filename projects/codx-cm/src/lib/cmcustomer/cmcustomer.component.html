@@ -124,6 +124,6 @@
 <!--Detail-->
 <ng-template #templateDetail>
   <codx-cmcustomer-detail #customerDetail [dataService]="view.dataService" [formModel]="view.formModel"
-    [dataSelected]="dataSelected" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName" (changeMoreMF)="changeMoreMF($event)">
+    [recID]="dataSelected.recID" [funcID]="funcID" (clickMoreFunc)="clickMoreFunc($event)" [entityName]="entityName" (changeMoreMF)="changeMoreMF($event)">
   </codx-cmcustomer-detail>
 </ng-template>
