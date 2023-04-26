@@ -73,7 +73,7 @@ export class CodxQuotationsComponent  extends UIComponent {
       //   formModel.funcID = 'CM0202';
       //   formModel.formName = f.formName;
       //   formModel.gridViewName = f.gridViewName;
-
+      res.status ="1"
       var obj = {
         data : res,
         action: 'add',

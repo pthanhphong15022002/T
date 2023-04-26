@@ -88,6 +88,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.data?.objectID){
+      this.getListContactByObjectID(this.data?.objectID);
+    }
     this.getFormModelAddress();
     this.cache
       .gridViewSetup(
@@ -136,7 +139,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   // }
 
   valueTagChange(e) {
-    this.data.industries = e.data;
+    this.data.tags = e.data;
   }
 
   valueChangeContact(e) {
@@ -151,6 +154,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
 
     if (this.data.objectID && e.field == 'objectID') {
+      this.data.objectName = e?.component?.itemsSelected != null &&
+      e?.component?.itemsSelected.length > 0
+        ? e?.component?.itemsSelected[0]?.PartnerName ? e?.component?.itemsSelected[0]?.PartnerName : e?.component?.itemsSelected[0]?.CustomerName
+        : null;
       this.getListContactByObjectID(this.data.objectID);
     }
   }
@@ -278,66 +285,52 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSaveHanle() {
-    // if (this.funcID == 'CM0102') {
-    //   if (this.data.objectID) {
-    //     if (this.lstContact != null && this.lstContact.length > 0) {
-    //       if (
-    //         this.lstContact.some(
-    //           (x) =>
-    //             x.contactType.split(';').some((x) => x == '1') &&
-    //             x.recID != this.data.recID
-    //         )
-    //       ) {
-    //         if (this.data.contactType.split(';').some((x) => x == '1')) {
-    //           var config = new AlertConfirmInputConfig();
-    //           config.type = 'YesNo';
-    //           this.notiService.alertCode('CM001').subscribe(async (x) => {
-    //             if (x.event.status == 'Y') {
-    //               if (this.imageAvatar?.fileUploadList?.length > 0) {
-    //                 (await this.imageAvatar.saveFilesObservable()).subscribe(
-    //                   (res) => {
-    //                     // save file
-    //                     if (res) {
-    //                       this.hanleSave();
-    //                     }
-    //                   }
-    //                 );
-    //               } else {
-    //                 this.hanleSave();
-    //               }
-    //             }
-    //           });
-    //         }
-    //       } else {
-    //         if (!this.data.contactType.split(';').some((x) => x == '1')) {
-    //           this.notiService.notifyCode('CM002');
-    //         } else {
-    //           if (this.imageAvatar?.fileUploadList?.length > 0) {
-    //             (await this.imageAvatar.saveFilesObservable()).subscribe(
-    //               (res) => {
-    //                 // save file
-    //                 if (res) {
-    //                   this.hanleSave();
-    //                 }
-    //               }
-    //             );
-    //           } else {
-    //             this.hanleSave();
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // } else {
-    if (this.imageAvatar?.fileUploadList?.length > 0) {
-      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        // save file
-        if (res) {
-          this.hanleSave();
+    if (this.funcID == 'CM0102') {
+      if (this.lstContact != null && this.lstContact.length > 0) {
+        var checkMainLst = this.lstContact.some(
+          (x) =>
+            x.contactType.split(';').some((x) => x == '1') &&
+            x.recID != this.data.recID
+        );
+        if (checkMainLst) {
+          if (this.data?.contactType.split(';').some((x) => x == '1')) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notiService.alertCode('CM001').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.saveFileAndSaveCM();
+              }
+            });
+          } else {
+            this.saveFileAndSaveCM();
+          }
+        } else {
+          if (!this.data.contactType.split(';').some((x) => x == '1')) {
+            this.notiService.notifyCode('CM002');
+          } else {
+            this.saveFileAndSaveCM();
+          }
         }
-      });
+      } else {
+        this.saveFileAndSaveCM();
+      }
     } else {
-      this.hanleSave();
+      this.saveFileAndSaveCM();
+    }
+  }
+
+  async saveFileAndSaveCM() {
+    {
+      if (this.imageAvatar?.fileUploadList?.length > 0) {
+        (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+          // save file
+          if (res) {
+            this.hanleSave();
+          }
+        });
+      } else {
+        this.hanleSave();
+      }
     }
   }
 
@@ -376,7 +369,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;

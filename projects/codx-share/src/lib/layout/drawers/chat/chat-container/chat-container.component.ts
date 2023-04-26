@@ -110,6 +110,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   }
   // collapse box chat
   collapseBoxChat(group:any){
+    debugger
     let ele = document.getElementById(group.groupID);
     if(ele){
       let codxBoxChat =  window.ng.getComponent(ele);

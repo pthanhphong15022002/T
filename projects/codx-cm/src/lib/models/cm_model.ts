@@ -58,7 +58,7 @@ export class CM_Quotations {
   pmtTermID: string;
   pmtMethodID: string;
   currencyID: string;
-  status: string;
+  status: string ="1";
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -247,6 +247,7 @@ export class CM_Customers {
   bankAccount: string;
   bankID: string;
   memo: string;
+  tags: string ;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -306,6 +307,7 @@ export class CM_Contacts {
   userID: string;
   allowCall: boolean;
   allowEmail: boolean;
+  tags: string ;
   owner: string;
   bUID: string;
   createdOn: Date;

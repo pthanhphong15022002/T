@@ -33,11 +33,11 @@
 </ng-template>
 <ng-template #subHeader>
   <codx-tag
-    field="industries"
+    field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    [value]="data?.industries"
+    [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
 </ng-template>
@@ -319,12 +319,12 @@
         </div>
 
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="funcID != 'CM0103' ? 'WebPage' : 'Website'">
+          <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            [field]="funcID != 'CM0103' ? 'webPage' : 'website'"
+            [field]="'webPage'"
           >
           </codx-input>
         </div>
@@ -613,6 +613,19 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="segmentID"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="Industries">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [crrValue]="data?.industries"
+            [type]="'combobox'"
+            [refValue]="gridViewSetup?.Industries?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+            field="industries"
           >
           </codx-input>
         </div>
