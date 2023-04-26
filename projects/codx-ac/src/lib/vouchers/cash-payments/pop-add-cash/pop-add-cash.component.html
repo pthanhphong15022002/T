@@ -7,10 +7,10 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="w-100 d-flex justify-content-between">
       <div class="mt-2 ms-10 input-circle input-border-0 w-225px">
-        <codx-input *ngIf="formType == 'add'" [disabled]="formType == 'edit' ? true : false" [disabled]="formType === 'edit'"
-          [Group]="form.formGroup" field="subType" [formModel]="form.formModel" (valueChange)="changeType($event)">
+        <codx-input *ngIf="formType == 'add'" [Group]="form.formGroup" field="subType" [formModel]="form.formModel"
+          (valueChange)="changeType($event)">
         </codx-input>
-        <span *ngIf="formType == 'edit'" class="me-2">
+        <span *ngIf="formType == 'edit' && cashpayment?.status" class="me-2">
           <codx-vll [name]="'AC057'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.status"
             [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
           </codx-vll>
@@ -230,7 +230,7 @@
   </div>
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
-    <div class="table-responsive mt-3">
+    <div class="table-responsive mt-3 h-400px">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead>
           <tr>
@@ -367,12 +367,13 @@
         <div class="container w-90 h-90">
           <div style="background: none" class="list-empty card card-flush h-100">
             <div class="d-flex flex-column flex-center justify-content-center mt-2">
-              <button type="button" class="btn btn-circle btn-light-primary" (click)="addRow()">
-                <div class="d-flex align-items-center">
-                  <i class="icon-add icon-16 me-1"></i>
-                  <span>Thêm dòng</span>
-                </div>
-              </button>
+              <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;" class="btn btn-icon btn-bg btn-light-primary btn-circle me-4"
+              (click)="addRow()">
+                <i class="icon-i-file-earmark-plus icon-18"></i>
+              </div>
+              <ng-template #popContent >
+                <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -383,8 +384,18 @@
       (cashpayment.subType === '1' || cashpayment.subType === '3') &&
       modegrid == 2
     " class="d-flex align-items-center justify-content-start me-10 mt-3">
-    <span class="fs-6 fw-bold">Tổng tiền: {{ total }}</span>
+    <codx-label class="fs-6 fw-bold" fiedName="TotalAmt" [formModel]="form.formModel">
+    </codx-label>
+    <span class="fs-6 fw-bold">: {{ total }}</span>
   </div>
+<ng-container *ngIf="form.formGroup">
+  <div class="d-flex align-items-center justify-content-start me-10 mt-3">
+    <codx-label class="fs-6 fw-bold me-2" fiedName="RefDocs" [formModel]="form.formModel">
+    </codx-label>
+    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="refDocs" [min]="0"
+      (controlBlur)="controlBlur($event)"></codx-input>
+  </div>
+</ng-container>
 </ng-template>
 <!-- End: CashPaymentLine -->
 

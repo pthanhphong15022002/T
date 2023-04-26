@@ -262,7 +262,7 @@
                 </button>
             </div>
             <div class="d-flex justify-content-center">
-                <h2 class="fw-bold mt-3">{{title}}</h2>
+                <h2 class="fw-bold mt-3" [style.color]="patternSelected.headerColor">{{title}}</h2>
             </div>
             <div class="p-3">
                 <div class="d-flex align-items-center justify-content-center mb-4 mt-6">
@@ -277,7 +277,7 @@
                     </codx-img>
                 </div>
                 <div class="d-flex justify-content-center p-6">
-                    <div [innerHTML]="form.controls['situation'].value"></div>
+                    <div [style.color]="patternSelected.textColor" [innerHTML]="form.controls['situation'].value"></div>
                 </div>
                 <div class="d-flex align-items-center justify-content-center my-4">
                     <ng-cintainer *ngIf="rating">
