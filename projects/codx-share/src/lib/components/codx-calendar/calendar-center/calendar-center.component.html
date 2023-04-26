@@ -218,7 +218,7 @@
         <span class="ms-1 fw-bold">
           <span
             #startDate
-            class="text-gray-700"
+            class="text-gray-600"
             [innerHTML]="
               data?.data?.startDate
                 | formatvalue
@@ -232,7 +232,7 @@
           ></span>
           <span
             *ngIf="data?.data?.startDate"
-            class="fw-bold p-2"
+            class="text-gray-600 p-2"
             [innerHtml]="'( ' + getDate(data?.data) + ')'"
           ></span>
         </span>
@@ -388,11 +388,17 @@
   <ng-container
     *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'CO_Meetings'"
   >
-    <span
-      class="fw-bold"
-      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >{{ data.title }}</span
-    >
+    <div class="d-flex flex-column w-100">
+      <span
+        >{{ showHour(data.data.startDate) }} -
+        {{ showHour(data.data.endDate) }}</span
+      >
+      <span
+        class="fw-bold"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >{{ data.title }}</span
+      >
+    </div>
   </ng-container>
   <ng-container *ngIf="data.transType == 'WP_Notes'">
     <span
