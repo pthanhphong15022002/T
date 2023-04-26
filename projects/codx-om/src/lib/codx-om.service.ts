@@ -71,7 +71,6 @@ export class CodxOmService {
   //     .gridViewSetup(formName, gridView)
   //     .subscribe((gv: any) => {
   //       if (gv) {
-  //         debugger;
   //         var gridview = Util.camelizekeyObj(gv);
   //         var arrgv = Object.values(gridview) as any[];
 
@@ -79,7 +78,6 @@ export class CodxOmService {
   //         for (const key in gridview) {
   //           const element = gridview[key];
   //           var keytmp = Util.camelize(gridview[element].fieldName);
-  //           console.log(gridview[element].fieldName,":", keytmp);
   //           var value = null;
   //           var type = element.dataType.toLowerCase();
   //           if (type === 'bool') value = false;
