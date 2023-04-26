@@ -109,7 +109,7 @@
                 ></div>
               </div>
             </div>
-            <div class="d-flex align-items-start mt-2" *ngIf="dataSelect.memo">
+            <div class="d-flex align-items-start mt-2 " *ngIf="dataSelect.memo">
               <div class="me-2">
                 <codx-label
                   class="text-gray-500 label-colon text-nowrap"
@@ -119,7 +119,7 @@
                 </codx-label>
               </div>
               <div
-                class="text-dark"
+                class="text-dark line-clamp line-clamp-2" 
                 *ngIf="dataSelect?.memo"
                 [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
               ></div>
@@ -157,7 +157,7 @@
           </div>
         </div>
         <div
-            class="d-flex flex-column align-items-end justify-content-center ms-9"
+            class="d-flex flex-column align-items-end justify-content-center mx-3"
           >
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
