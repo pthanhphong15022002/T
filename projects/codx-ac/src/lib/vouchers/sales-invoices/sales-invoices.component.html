@@ -40,28 +40,28 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <span
-    class="text-gray-600"
+  <div
+    class="fs-6 fw-bold mt-1"
     [innerHTML]="
       data?.objectID | formatvalue : view.formModel : 'objectID' | async
     "
   >
-  </span>
+  </div>
 </ng-template>
 
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-600">{{ data?.memo }}</span>
+  <span class="text-gray-500">{{ data?.memo }}</span>
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <span class="fs-5 fw-bold text-uppercase">{{ data.voucherNo }}</span>
-  <span class="fs-5 fw-bold text-uppercase">{{
+  <span class="fs-6 fw-bold">{{ data.voucherNo }}</span>
+  <span class="fs-6 fw-bold">{{
     data.totalAmt | currency : "VND" : "code"
   }}</span>
 </ng-template>
 
 <ng-template #siderFooter let-data>
-  <div class="d-flex align-items-center justify-content-between pt-2">
+  <div class="d-flex align-items-center justify-content-between mt-1">
     <div class="d-flex align-items-center">
       <codx-vll
         [formModel]="view.formModel"
@@ -69,18 +69,20 @@
         [value]="data?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-light badge-md me-3"
+        class="badge badge-light badge-sm me-3"
       >
       </codx-vll>
-
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          data?.voucherDate
-            | formatvalue : view.formModel : 'voucherDate'
-            | async
-        "
-      ></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            data?.voucherDate
+              | formatvalue : view.formModel : 'voucherDate'
+              | async
+          "
+        ></span>
+      </div>
     </div>
 
     <codx-img
