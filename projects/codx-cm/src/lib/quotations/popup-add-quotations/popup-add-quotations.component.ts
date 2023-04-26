@@ -34,7 +34,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     gridViewName: 'grvCMProducts',
     entityName: 'CM_Products',
   };
-  gridHeight: number;
+  gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -72,7 +72,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
-    grid.disableField(this.lockFields);
+    //grid.disableField(this.lockFields);
   }
 
   clickMF(e, data) {}
@@ -81,7 +81,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   addRow() {
     let idx = this.gridProductsLine.dataSource?.length;
     let data = this.gridProductsLine.formGroup.value; //ddooi tuong
-    data.recID = Util.uid();
+    //data.recID = Util.uid();
     data.write = true;
     data.delete = true;
     data.read = true;
@@ -93,7 +93,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   productsLineChanged(e) {
     const field = [
       'quotationname',
-      
+
     ];
     if (field.includes(e.field.toLowerCase())) {
       this.api
