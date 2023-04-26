@@ -319,12 +319,12 @@
         </div>
 
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="funcID != 'CM0103' ? 'WebPage' : 'Website'">
+          <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            [field]="funcID != 'CM0103' ? 'webPage' : 'website'"
+            [field]="'webPage'"
           >
           </codx-input>
         </div>
@@ -621,7 +621,10 @@
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [crrValue]="data?.industries"
+            [type]="'combobox'"
+            [refValue]="gridViewSetup?.Industries?.referedValue"
+            (valueChange)="valueChangeContact($event)"
             field="industries"
           >
           </codx-input>

@@ -60,6 +60,7 @@ export class CmcustomerDetailComponent implements OnInit {
   listAddress = [];
   contactPerson = new CM_Contacts();
   viewTag = '';
+  nameCbxCM = '';
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -81,25 +82,26 @@ export class CmcustomerDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.recID) {
-      if (this.recID == this.id) return;
-      this.id = this.recID;
-      this.getOneCustomerDetail();
+    if (changes['recID']) {
+      if (changes['recID'].currentValue) {
+        if (this.recID == this.id) return;
+        this.id = this.recID;
+        this.getOneCustomerDetail(this.id, this.funcID);
+      }
     }
   }
 
-
-  getOneCustomerDetail(){
+  getOneCustomerDetail(id, funcID) {
     this.viewTag = '';
-    this.cmSv.getOneCustomer(this.id, this.funcID).subscribe(res =>{
-      if(res){
+    this.cmSv.getOneCustomer(id, funcID).subscribe((res) => {
+      if (res) {
         this.dataSelected = res;
         this.viewTag = this.dataSelected?.tags;
-        this.getListContactByObjectID(this.id);
+        this.getListContactByObjectID(this.dataSelected?.recID);
         this.getListAddress(this.entityName, this.dataSelected?.recID);
         this.listTab(this.funcID);
       }
-    })
+    });
   }
 
   getGridviewSetup() {
@@ -134,6 +136,12 @@ export class CmcustomerDetailComponent implements OnInit {
   getListAddress(entityName, recID) {
     this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
       this.listAddress = res;
+    });
+  }
+
+  getNameCbx(recID, objectID) {
+    this.cmSv.getNameCbx(recID, objectID).subscribe((res) => {
+      this.nameCbxCM = res;
     });
   }
 
@@ -292,6 +300,7 @@ export class CmcustomerDetailComponent implements OnInit {
               : this.dataSelected.partnerName,
           objectType: this.funcID == 'CM0101' ? '1' : '3',
           gridViewSetup: res,
+          lstContactCm: this.listContacts,
         };
         var dialog = this.callFc.openForm(
           PopupListContactsComponent,
