@@ -140,7 +140,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    if (this.hasSaved || this.formType == 'edit') {
+    if (this.hasSaved) {
       this.dialog.close({
         update: true,
         data: this.cashpayment,
@@ -1017,7 +1017,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
         break;
       case 'edit':
-        if (this.cashpayment?.subType == '1') {
+        if (this.cashpayment?.subType == '1' || this.cashpayment?.subType == '3') {
           //#region  load cashpaymentline
           this.acService
             .loadData(

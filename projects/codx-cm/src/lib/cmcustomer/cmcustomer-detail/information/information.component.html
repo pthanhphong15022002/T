@@ -602,6 +602,25 @@
             <!-- {{ dataSelected?.segmentID }} -->
           </div>
         </div>
+        <div class="form-group row" *ngIf="dataSelected?.industries">
+          <div class="col-6">
+            <codx-label
+              class="label-colon text-gray-300"
+              fiedName="Industries"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <div
+            class="col-6"
+            [innerHTML]="
+              dataSelected?.industries
+                | formatvalue : formModel : 'Industries'
+                | async
+            "
+          >
+            <!-- {{ dataSelected?.segmentID }} -->
+          </div>
+        </div>
         <div class="form-group row" *ngIf="dataSelected?.workingDays">
           <div class="col-6">
             <codx-label
