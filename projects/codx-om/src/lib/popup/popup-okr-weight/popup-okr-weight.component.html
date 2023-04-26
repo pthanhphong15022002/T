@@ -25,7 +25,7 @@
             <th scope="col" class="w-150px text-center">
               <codx-label default="Tiến độ" name="lblProgress"></codx-label>
             </th>
-            <th scope="col" class="w-200px text-center">
+            <th scope="col" class="w-150px text-center">
               <codx-label default="Tiến độ theo trọng số" name="lblProgressByWeight"></codx-label>
             </th>
           </tr>
@@ -33,15 +33,15 @@
         <tbody>
           <tr *ngFor="let child of okrChild;let i=index;">
             <td>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center w-100">
                 <span *ngIf="child?.okrType==krType" [inlineSVG]="okrVll?.kr?.icon" class="w-25px h-25px"></span>
                 <span *ngIf="child?.okrType==skrType" [inlineSVG]="okrVll?.skr?.icon" class="w-25px h-25px"></span>
                 <span *ngIf="child?.okrType==obType" [inlineSVG]="okrVll?.ob?.icon" class="w-25px h-25px"></span>
-                <span class="okr-inplace ms-3">
+                <div class="ms-3 d-flex w-100 align-items-center ">
                   <codx-inplace [type]="'text'" emptyText="" cssClass="fw-bold" [disabled]="true"
                     [value]="child?.okrName">
       
-                  </codx-inplace></span>
+                  </codx-inplace></div>
               </div>
             </td>
               
@@ -80,7 +80,7 @@
           <td class="text-center">
           </td>
           <td class="">
-            <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" *ngIf="totalProgress!=0"
+            <span class="w-100 d-block fs-5 fw-bold text-center text-primary h-100" 
               [innerHTML]="totalProgress"></span>
           </td>
         </tr>

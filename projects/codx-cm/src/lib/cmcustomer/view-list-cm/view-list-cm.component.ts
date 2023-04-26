@@ -13,7 +13,10 @@ export class ViewListCmComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeMoreMF = new EventEmitter<any>();
+
   listContacts = [];
+  contactPerson: any;
   constructor(
     private cmSv: CodxCmService,
   ) { }
@@ -28,11 +31,17 @@ export class ViewListCmComponent implements OnInit {
     this.clickMoreFunc.emit({e: e, data: data});
   }
 
+  changeDataMF(e, data){
+    this.changeMoreMF.emit({e: e, data: data});
+  }
+
   getListContactByObjectID(objectID) {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.listContacts = res;
-
+        this.contactPerson = this.listContacts.find((x) =>
+          x.contactType.split(';').some((x) => x == '1')
+        );
       }
     });
   }

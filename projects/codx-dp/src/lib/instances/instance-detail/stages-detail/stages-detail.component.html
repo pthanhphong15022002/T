@@ -216,7 +216,8 @@
     dataStep.stepStatus === 0
   "
 >
-  <codx-field-detail
+  <ng-container *ngIf="dataStep?.fields?.length>0">
+    <codx-field-detail
     [dataStep]="dataStep"
     [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
@@ -226,6 +227,7 @@
     (saveDataStep)="saveDataStep($event)"
   >
   </codx-field-detail>
+  </ng-container>
   <!-- nvthuan -->
   <ng-container [ngTemplateOutlet]="task"> </ng-container>
 </div>

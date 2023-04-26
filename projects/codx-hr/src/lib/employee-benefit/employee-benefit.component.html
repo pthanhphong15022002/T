@@ -16,7 +16,7 @@
 </codx-views>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <div class="w-50 text-primary p-3 fs-5 fw-500">
     <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
   </div>
   <div class="w-25 text-primary p-3 fs-5 fw-500">
@@ -28,17 +28,17 @@
   <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
     ></codx-label>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
-    <div class="w-25">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
+    <div class="w-50">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -187,6 +187,7 @@
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
+            ngClass="badge badge-sm"
           >
           </codx-vll>
         </div>
@@ -208,7 +209,7 @@
       >
       </codx-attachment> -->
     </div>
-    <div class="w-25">
+    <!-- <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -218,7 +219,7 @@
         [showBgColor]="true"
       >
       </codx-vll>
-    </div>
+    </div> -->
 
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">

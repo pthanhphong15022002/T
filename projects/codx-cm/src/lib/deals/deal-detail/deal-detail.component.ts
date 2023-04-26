@@ -77,5 +77,10 @@ export class DealDetailComponent  implements OnInit {
   clickMF(e, data){
     this.clickMoreFunc.emit({e: e, data: data});
   }
+
+  changeFooter(e){
+    console.log(e);
+    
+  }
 }
 
