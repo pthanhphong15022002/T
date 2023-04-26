@@ -26,7 +26,7 @@
             </ejs-progressbar>
           </div>
         </div>
-        <span [ngClass]="allowShowDetail ?'ob-kr' :''" class=" fs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+        <span [ngClass]="allowShowDetail ?'ob-kr' :''" class=" fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
         <div class="d-flex flex-column">
           <div class="d-flex flex-stack">
             <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'" [ngbTooltip]="okrGrv.krGrv?.category?.headerText"

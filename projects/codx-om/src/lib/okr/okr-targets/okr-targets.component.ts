@@ -526,6 +526,20 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
+  clickTreeNode(evt:any, ){
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+  newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
   //Lấy UMName
   getUMName(umid:string){
     let tmpUM = this.listUM.filter((obj) => {
@@ -1065,10 +1079,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
-  clickTreeNode(evt:any, ){
-    evt.stopPropagation();
-    evt.preventDefault();
-  }
+  
   showTasks(evt:any,data:any){    
     evt.stopPropagation();
     evt.preventDefault();
@@ -1077,15 +1088,5 @@ export class OkrTargetsComponent implements OnInit {
       let dialogShowTask = this.callfunc.openForm(this.showTask, '', 1280, 720, null);
     }
   }
-
-  newGuid(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
+  
 }

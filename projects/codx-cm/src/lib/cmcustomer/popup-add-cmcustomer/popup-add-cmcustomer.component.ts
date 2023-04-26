@@ -32,6 +32,8 @@ import { BS_AddressBook } from '../../models/cm_model';
 })
 export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
+  @ViewChild('vllCbx') vllCbx;
+
   data: any;
   dialog: any;
   title = '';
@@ -46,11 +48,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
   refValue = '';
   recID: any;
   refValueCbx = '';
+  refContactType = '';
+
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
   disableObjectID = true;
   lstContact = [];
+  contactType: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -88,7 +93,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.data?.objectID){
+    if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
     this.getFormModelAddress();
@@ -139,22 +144,33 @@ export class PopupAddCmCustomerComponent implements OnInit {
   // }
 
   valueTagChange(e) {
-    this.data.industries = e.data;
+    this.data.tags = e.data;
   }
 
   valueChangeContact(e) {
-    this.data[e.field] = e?.data;
-    if (this.data.objectType && e.field == 'objectType') {
-      this.disableObjectID = false;
-      if (this.data.objectType == '1') {
-        this.refValueCbx = 'CMCustomers';
-      } else {
-        this.refValueCbx = 'CMPartners';
+    if (e?.data != null && e?.data.trim() != '') {
+      this.data[e.field] = e?.data;
+      if (this.data.objectType && e.field == 'objectType') {
+        this.data.objectID = null;
+        this.data.objectName = null;
+        this.disableObjectID = false;
+        if (this.data.objectType == '1') {
+          this.refValueCbx = 'CMCustomers';
+        } else {
+          this.refValueCbx = 'CMPartners';
+        }
       }
-    }
 
-    if (this.data.objectID && e.field == 'objectID') {
-      this.getListContactByObjectID(this.data.objectID);
+      if (this.data.objectID && e.field == 'objectID') {
+        this.data.objectName =
+          e?.component?.itemsSelected != null &&
+          e?.component?.itemsSelected.length > 0
+            ? e?.component?.itemsSelected[0]?.PartnerName
+              ? e?.component?.itemsSelected[0]?.PartnerName
+              : e?.component?.itemsSelected[0]?.CustomerName
+            : null;
+        this.getListContactByObjectID(this.data.objectID);
+      }
     }
   }
 
