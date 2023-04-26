@@ -470,6 +470,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           break;
         case 'edit':
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
           this.dialog.dataService
             .save(null, 0, '', '', false)
             .subscribe((res) => {
@@ -520,6 +524,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .execAction<any>('AC_CashPaymentsLines', [data], 'DeleteAsync')
               .subscribe((res) => {
                 if (res) {
+                  this.hasSaved = true;
                   this.api.exec('AC', 'CashPaymentsLinesBusiness', 'UpdateAfterDelete', [
                     this.cashpaymentline,
                   ]).subscribe((res) => {})

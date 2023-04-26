@@ -87,6 +87,9 @@ codx-view-list-detail {
 .fs-5 {
   font-size: 1.275rem !important;
 }
+.fs-5-sm {
+  font-size: 1.175rem !important;
+}
 .fs-6 {
   //font-size: var(--fs-6) !important;
   font-size: 1.035rem !important;
@@ -2582,7 +2585,9 @@ codx-input .e-icons.e-check:before {
   position: relative;
   top: 0!important;
 }
-
+.okr-treeview li.menu-item{
+  margin-bottom: 10px!important;
+}
 
 
 // .form-control {
