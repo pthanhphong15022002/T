@@ -1,4 +1,4 @@
-<header>
+<!-- <header>
   <div class="mb-5 w-100 d-flex justify-content-between">
     <div class="d-flex align-items-center">
       <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
@@ -13,13 +13,14 @@
       <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
     </div>
   </div>
-</header>
+</header> -->
 
 <main>
   <article>
-    <div class="d-flex align-items-center text-primary">
+    <div class="d-flex align-items-center text-primary mb-3">
       <span class="icon-format_list_numbered icon-20 me-2"></span>
       <codx-label
+        class="fs-5 font-weight-bold"
         [name]="'lblAddGroup'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
@@ -34,9 +35,10 @@
   </article>
 
   <article>
-    <div class="d-flex align-items-center text-primary">
+    <div class="d-flex align-items-center text-primary mb-3">
       <span class="icon-email icon-20"></span>
       <codx-label
+        class="fs-5 font-weight-bold"
         [name]="'lblAddGroup'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
@@ -51,9 +53,10 @@
   </article>
 
   <article>
-    <div class="d-flex align-items-center text-primary">
+    <div class="d-flex align-items-center text-primary mb-3">
       <span class="icon-format_list_numbered icon-20 me-2"></span>
       <codx-label
+        class="fs-5 font-weight-bold"
         [name]="'lblAddGroup'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
@@ -68,9 +71,10 @@
   </article>
 
   <article>
-    <div class="d-flex align-items-center text-primary">
+    <div class="d-flex align-items-center text-primary mb-3">
       <span class="icon-format_list_numbered icon-20 me-2"></span>
       <codx-label
+        class="fs-5 font-weight-bold"
         [name]="'lblAddGroup'"
         [formName]="'DPStepsFields'"
         [gridViewName]="'grvDPStepsFields'"
@@ -87,8 +91,8 @@
 
 <!-- thông tin chung -->
 <ng-template #generalTemplate let-data="value">
-  <div class="row">
-    <div class="left col-6">
+  <div class="d-flex justify-content-between">
+    <div class="left" style="width: 50%;">
       <div class="row form-group">
         <div class="col-6">
           <div>
@@ -183,9 +187,7 @@
       </div>
     </div>
 
-    <div class="center col-1"></div>
-
-    <div class="rigth col-5">
+    <div class="rigth" style="width: 40%;">
       <div class="row form-group">
         <div class="col-6">
           <div>
@@ -268,8 +270,8 @@
 
 <!-- thông tin đại diện -->
 <ng-template #representativeTemplate let-data="value">
-  <div class="row">
-    <div class="left col-5">
+  <div class="d-flex justify-content-between">
+    <div class="left" style="width: 45%;">
       <div class="row form-group">
         <div class="col-8">
           <div>
@@ -358,9 +360,7 @@
       </div>
     </div>
 
-    <div class="center col-2"></div>
-
-    <div class="rigth col-5">
+    <div class="rigth" style="width: 45%;">
       <div class="row form-group">
         <div class="col-8">
           <div>

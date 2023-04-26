@@ -19,7 +19,7 @@ import { CM_Products, CM_Quotations, CM_QuotationsLines } from '../../models/cm_
 })
 export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('gridProductsLine') gridProductsLine: CodxGridviewV2Component;
+  @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
@@ -35,9 +35,9 @@ export class PopupAddQuotationsComponent implements OnInit {
   //   entityName: 'CM_Products',
   // };
   //test
-  fmProcductsLines: FormModel = {
-    formName: 'CMQuotation',
-    gridViewName: 'grvCMQuotation',
+  fmQuotationLines: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
     entityName: 'CM_QuotationsLines',
   };
   gridHeight: number = 300;
@@ -49,7 +49,7 @@ export class PopupAddQuotationsComponent implements OnInit {
   };
 
  // productsLine: Array<CM_Products> = []; //mang san pham
-  productsLine: Array<CM_QuotationsLines> = [];
+  quotationLines: Array<CM_QuotationsLines> = [];
   lockFields = [];
   dataParent : any
 
@@ -63,7 +63,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action
-    this.productsLine=[]
+    this.quotationLines=[]
   }
 
   ngOnInit(): void {}
@@ -88,18 +88,18 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   // region Product
   addRow() {
-    let idx = this.gridProductsLine.dataSource?.length;
-    let data = this.gridProductsLine.formGroup.value; //ddooi tuong
+    let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
     //data.recID = Util.uid();
     data.write = true;
     data.delete = true;
     data.read = true;
     // data.rowNo = idx + 1;
     // data.transID = this.quotations?.recID;
-    this.gridProductsLine.addRow(data, idx);
+    this.gridQuationsLines.addRow(data, idx);
   }
 
-  productsLineChanged(e) {
+  quotionsLineChanged(e) {
     // const field = [
     //   'quotationname',
 
@@ -146,11 +146,11 @@ export class PopupAddQuotationsComponent implements OnInit {
         arrColumn.forEach((e) => {
           if (e) {
             let field = Util.camelize(e);
-            this.gridProductsLine.rowDataSelected[field] = data[field];
-            this.gridProductsLine.rowDataSelected = {
+            this.gridQuationsLines.rowDataSelected[field] = data[field];
+            this.gridQuationsLines.rowDataSelected = {
               ...data,
             };
-            this.gridProductsLine.rowDataSelected.updateColumns = '';
+            this.gridQuationsLines.rowDataSelected.updateColumns = '';
           }
         });
       }

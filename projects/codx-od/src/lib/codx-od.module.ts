@@ -33,7 +33,9 @@ import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
 import { ODApprovelComponent } from './incomming/approvel/approvel.component';
 import { CompletedComponent } from './incomming/completed/completed.component';
-import { RefuseComponent } from './incomming/refuse/refuse.component';
+import { RefuseComponent } from './incomming/refuse/refuse.component'
+import { UpdateVersionComponent } from './incomming/updateversion/updateversion.component';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 
 const routes: Routes = [
   {
@@ -102,7 +104,8 @@ const routes: Routes = [
     TabsComponent,
     ODApprovelComponent,
     CompletedComponent,
-    RefuseComponent
+    RefuseComponent,
+    UpdateVersionComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -114,6 +117,7 @@ const routes: Routes = [
     AccumulationChartAllModule,
     SharedModule,
     CodxShareModule,
+    UploaderModule
     // NgbModule
   ],
   exports: [RouterModule],

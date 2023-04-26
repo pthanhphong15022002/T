@@ -1,29 +1,19 @@
-import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
-import { FolderInfo } from '@shared/models/folder.model';
-import { FolderService } from '@shared/services/folder.service';
-import { FileService } from '@shared/services/file.service';
-import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output, ViewChild } from '@angular/core';
 import { FileUpload, ItemInterval } from '@shared/models/file.model';
-import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
-import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
-import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
+import { AuthStore, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { FileInfo, SelectedEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
+import { FileService } from '@shared/services/file.service';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { lvFileClientAPI } from '@shared/services/lv.component';
+import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { environment } from 'src/environments/environment';
-
 @Component({
-  selector: 'version',
-  templateUrl: './version.component.html',
-  styleUrls: ['./version.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'lib-updateversion',
+  templateUrl: './updateversion.component.html',
+  styleUrls: ['./updateversion.component.css']
 })
-export class VersionComponent implements OnInit {  
-  @Input() formModel: any; 
+export class UpdateVersionComponent {
+  @Input() formModel:any
   idBrowse = "browse";
   user: any;   
   setting: any;    
@@ -37,10 +27,11 @@ export class VersionComponent implements OnInit {
   comment: string;
   path: any;
   historyID: string;
-  nameFile: string;
   fileEditing: FileUpload;
   fileUploadList: FileUpload[];
   interval: ItemInterval[];
+  listFile:any;
+  selectedItem = 0;
   @ViewChild('view') view!: ViewsComponent;   
   @Output() eventShow = new EventEmitter<boolean>();
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
@@ -52,31 +43,23 @@ export class VersionComponent implements OnInit {
   public filesDetails: FileInfo[] = [];
   public filesList: HTMLElement[] = [];
   public dropElement: HTMLElement = document.getElementsByClassName('control-fluid')[0] as HTMLElement;
-  
+
   constructor(  
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
-    private folderService: FolderService,
     private fileService: FileService,
-    private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
-      debugger
       this.dialog = dialog;
       this.formModel = data.data[0];
-      this.fileEditing = data.data[1];
-      this.nameFile =  this.fileEditing?.fileName
+      this.listFile = data.data[1];
+      if(this.listFile) this.fileEditing = this.listFile[0];
       this.comment = '';
   }
-
   ngOnInit(): void {   
     this.user = this.auth.get();     
     
@@ -537,6 +520,17 @@ export class VersionComponent implements OnInit {
     else {
       this.notificationsService.notify(this.titleUploadFile);
     }
-  } 
- 
+  }
+  close()
+  {
+    this.dialog?.close();
+  }
+  onSave()
+  {}
+
+  toggleClass(i:any)
+  {
+    this.selectedItem = i
+    this.fileEditing = this.listFile[i];
+  }
 }
