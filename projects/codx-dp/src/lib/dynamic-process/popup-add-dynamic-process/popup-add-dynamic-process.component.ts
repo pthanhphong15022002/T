@@ -3284,9 +3284,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  changeIcon(event, field, data) {
+  changeIcon(event, data) {
     if (event) {
-      data[field] = event;
+      data[event.field] = event.data;
     }
   }
   getRole(task, type) {

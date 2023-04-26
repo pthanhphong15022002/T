@@ -581,29 +581,29 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
     };
-    var dialogCustomField = this.callfc.openSide(
-      PopupAddInstanceComponent,
-      obj,
-      option
-    );
-    dialogCustomField.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        var data = e.event;
-        if (this.kanban) {
+      var dialogCustomField = this.callfc.openSide(
+        PopupAddInstanceComponent,
+        obj,
+        option
+      );
+      dialogCustomField.closed.subscribe((e) => {
+        if (e && e.event != null) {
+          var data = e.event;
+          if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
-          if (this.kanban?.dataSource?.length == 1) {
-            this.kanban.refresh();
+            if (this.kanban?.dataSource?.length == 1) {
+              this.kanban.refresh();
+            }
           }
-        }
-        this.dataSelected = data;
-        if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
-        }
+          this.dataSelected = data;
+          if (this.detailViewInstance) {
+            this.detailViewInstance.dataSelect = this.dataSelected;
+            this.detailViewInstance.listSteps = this.listStepInstances;
+          }
 
-        this.detectorRef.detectChanges();
-      }
-    });
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   edit(data, titleAction) {
@@ -999,6 +999,18 @@ export class InstancesComponent
 
   dropInstance(data) {
     data.stepID = this.crrStepID;
+    if (!data.edit) {
+      this.notificationsService.notifyCode('SYS032');
+      return;
+    }
+    if (data.closed) {
+      this.notificationsService.notify(
+        'Nhiệm vụ đã đóng, không thể chuyển tiếp! - Khanh thêm mess gấp để thay thế!',
+        '2'
+      );
+      return;
+    }
+
     if (this.moreFuncInstance?.length == 0) {
       this.changeDetectorRef.detectChanges();
       return;
@@ -1020,6 +1032,7 @@ export class InstancesComponent
       this.dataColums.length == 0
     )
       this.dataColums = this.kanban.columns;
+
     if (this.dataColums.length > 0) {
       var idx = this.dataColums.findIndex(
         (x) => x.dataColums.recID == this.stepIdClick
@@ -1027,37 +1040,35 @@ export class InstancesComponent
       if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
         if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
-          if (data.closed || !data.edit) {
-            this.notificationsService.notify(
-              'Không thể chuyển tiếp giai đoạn ! - Khanh thêm mess gấp để thay thế!',
-              '2'
-            );
-            return;
-          }
           idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
           if (idx != -1) {
+            if (this.checkMoreReason(data, null)) {
+              this.notificationsService.notifyCode('SYS032');
+              return;
+            }
             this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
           }
         } else {
-          if (data.closed || !data.edit) {
-            this.notificationsService.notify(
-              'Không thể đánh dấu thành công / thất bại  ! - Khanh thêm mess gấp để thay thế!',
-              '2'
-            );
-            return;
-          }
           if (stepCrr?.isSuccessStep) {
             idx = this.moreFuncInstance.findIndex(
               (x) => x.functionID == 'DP10'
             );
             if (idx != -1)
-              this.moveReason(this.moreFuncInstance[idx], data, true);
+              if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                this.notificationsService.notifyCode('SYS032');
+                return;
+              }
+            this.moveReason(this.moreFuncInstance[idx], data, true);
           } else {
             idx = this.moreFuncInstance.findIndex(
               (x) => x.functionID == 'DP02'
             );
             if (idx != -1)
-              this.moveReason(this.moreFuncInstance[idx], data, false);
+              if (this.checkMoreReason(data, !this.isUseFail)) {
+                this.notificationsService.notifyCode('SYS032');
+                return;
+              }
+            this.moveReason(this.moreFuncInstance[idx], data, false);
           }
         }
       }
@@ -1314,6 +1325,11 @@ export class InstancesComponent
   openFormForAutoMove(dataInstance) {
     var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
     if (idx != -1) {
+      this.moveStage(
+        this.moreFuncInstance[idx],
+        dataInstance.instance,
+        dataInstance.listStep
+      );
       this.moveStage(
         this.moreFuncInstance[idx],
         dataInstance.instance,

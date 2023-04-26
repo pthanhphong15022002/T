@@ -60,14 +60,36 @@
         ></span>
       </div>
     </div>
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today icon-16 me-2"></i>
+        <span class="text-gray-600">
+          {{ data?.startDate | fmDT }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-access_time me-1"></i>
+        <span class="text-gray-600">
+          {{ showHour(data?.startDate) }}
+        </span>
+        <span
+          *ngIf="data?.startDate && data?.endDate"
+          class="text-gray-600 ms-1 me-1"
+          >{{ "-" }}</span
+        >
+        <span class="text-gray-600">
+          {{ showHour(data?.endDate) }}
+        </span>
+      </div>
+    </div>
     <hr />
     <div class="mb-2 text-dark me-6">
       <span>
         <codx-label
-          default="Nội dung công việc :"
+          default="Nội dung công việc:"
           name="lblMemo"
           [formModel]="view.formModel"
-          class="text-gray-600"
+          class="fw-bold text-nowrap"
         >
         </codx-label>
       </span>
@@ -84,7 +106,7 @@
           formName="Tasks"
           gridViewName="grvTasks"
           default="Người thực hiện"
-          class="text-gray-600 me-4"
+          class="fw-bold text-nowrap"
         >
         </codx-label>
         <div class="d-flex justify-content-end">
@@ -196,7 +218,7 @@
         <span class="ms-1 fw-bold">
           <span
             #startDate
-            class="text-gray-700"
+            class="text-gray-600"
             [innerHTML]="
               data?.data?.startDate
                 | formatvalue
@@ -210,7 +232,7 @@
           ></span>
           <span
             *ngIf="data?.data?.startDate"
-            class="fw-bold p-2"
+            class="text-gray-600 p-2"
             [innerHtml]="'( ' + getDate(data?.data) + ')'"
           ></span>
         </span>
@@ -221,10 +243,10 @@
     <div class="mb-2 text-dark me-6">
       <span>
         <codx-label
-          default="Nội dung cuộc họp :"
+          default="Nội dung cuộc họp:"
           name="lblMemo"
           [formModel]="view.formModel"
-          class="text-gray-600"
+          class="fw-bold text-nowrap"
         >
         </codx-label>
       </span>
@@ -262,7 +284,7 @@
         <codx-label
           name="lblResources"
           default="Người tham gia : "
-          class="text-gray-600 me-4"
+          class="fw-bold text-nowrap"
         >
         </codx-label>
         <div class="d-flex justify-content-end">
@@ -366,11 +388,17 @@
   <ng-container
     *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'CO_Meetings'"
   >
-    <span
-      class="fw-bold"
-      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >{{ data.title }}</span
-    >
+    <div class="d-flex flex-column w-100">
+      <span
+        >{{ showHour(data.data.startDate) }} -
+        {{ showHour(data.data.endDate) }}</span
+      >
+      <span
+        class="fw-bold"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >{{ data.title }}</span
+      >
+    </div>
   </ng-container>
   <ng-container *ngIf="data.transType == 'WP_Notes'">
     <span
