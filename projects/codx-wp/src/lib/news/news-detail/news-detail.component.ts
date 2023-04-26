@@ -44,7 +44,7 @@ export class NewsDetailComponent extends UIComponent {
       this.recID = param["recID"];
       this.category = param["category"];
       this.funcID = param["funcID"];
-      this.loadData(this.recID);
+      this.loadData(this.recID,this.category);
       this.getUserPermission(this.funcID);
       this.getDataTagAsync("WP_News");
     });
@@ -70,17 +70,40 @@ export class NewsDetailComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
-  //load data by recID
-  loadData(recID: string) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetPostInforAsync", [recID])
-    .subscribe((res) => {
-      if (res) {
-        this.data = res[0];
-        this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-        this.listViews = res[1];
-        this.listNews = res[2];
-      }
-    });
+  //load data 
+  loadData(recID: string, category: string) {
+    this.getData(recID);
+    this.getSubData(category);
+  }
+  getData(recID:string){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostByIDAsync",
+      [recID])
+      .subscribe((res) => {
+        if(res) {
+          this.data = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //get data order view + created
+  getSubData(category:string){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetSubDataAsync",
+      [category])
+      .subscribe((res:any) => {
+        if(res){
+          this.listViews = res[0];
+          this.listNews = res[1];
+          this.detectorRef.detectChanges();
+        }
+      });
   }
   // get permisison 
   getUserPermission(funcID:string){
@@ -115,7 +138,7 @@ export class NewsDetailComponent extends UIComponent {
       (res) => {
         if (res) {
           this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
-          this.loadData(data.recID);
+          this.loadData(data.recID,this.category);
         }
       });
   }

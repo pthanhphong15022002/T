@@ -9,6 +9,7 @@ import { SignalRService } from '../services/signalr.service';
 import { MessageSystemPipe } from './mssgSystem.pipe';
 import { WP_Messages, tmpMessage } from '../models/WP_Messages.model';
 import moment from 'moment';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
@@ -32,7 +33,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   function:any = null;
   user:any = {};
   arrMessages:any[] = [];
-  data:WP_Messages = null;
+  data:any = null;
   page:number = 0;
   pageIndex:number = 0;
   group:any = null;
@@ -82,12 +83,22 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
     this.formModel = new FormModel();
   }
 
+
+  permissions:any[] = [];
   ngOnInit(): void 
   {
+    this.data = new tmpMessage(this.groupID);
     this.getGroupInfo();
     this.getMessage();
     this.getSetting();
-    this.data = new tmpMessage(this.groupID);
+    let permisison = new Permission();
+    permisison.objectType = "9";
+    permisison.objectName = "Everyone";
+    permisison.read = true;
+    permisison.share = true;
+    permisison.download = true;
+    permisison.isActive = true
+    this.permissions.push(permisison);
   }
 
   getSetting(){
@@ -127,33 +138,31 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
   ngAfterViewInit(): void {
     //receiver message
     this.signalR.chat.subscribe((res:any) => {
-      if(res)
+      if(res && res.groupID == this.groupID)
       {
         let mssg = res.mssg;
         let action = res.action;
         if(mssg && action)
         {
-          if(mssg.groupID == this.groupID){
-            if(action == "deletedMessage"){
-              let index = this.arrMessages.findIndex(x => x.recID == mssg.recID);
-              if(index != -1){
-                this.arrMessages[index].messageType = "5";
-                this.dt.detectChanges();
-              }
-            }
-            else
-            {
-              this.group.lastMssgID = mssg.recID;
-              this.group.messageType = mssg.messageType;
-              if(res.messageType !== "3"){
-                this.group.message = mssg.message;
-              }
-              this.arrMessages.push(mssg); 
-              setTimeout(()=>{
-                this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
-              },100)
+          if(action === "deletedMessage"){
+            let index = this.arrMessages.findIndex(x => x.recID == mssg);
+            if(index != -1){
+              this.arrMessages[index].messageType = "5";
             }
           }
+          else
+          {
+            this.group.lastMssgID = mssg.recID;
+            this.group.messageType = mssg.messageType;
+            if(res.messageType !== "3"){
+              this.group.message = mssg.message;
+            }
+            this.arrMessages.push(mssg); 
+            setTimeout(()=>{
+              this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+            },100)
+          }
+          this.dt.detectChanges();
         }
       }
     });
@@ -412,6 +421,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit{
         }
       });
       this.codxATM.objectId = message.recID;
+      
       this.codxATM.saveFilesMulObservable()
       .subscribe((res:any)=>{
         if(res){

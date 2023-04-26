@@ -67,7 +67,8 @@ export class CodxViewFilesComponent implements OnInit {
 
   // get files by objectID
   getFileByObjectID(objectID:string){
-    if(objectID){
+    if(objectID)
+    {
       this.api
       .execSv(
       'DM',
@@ -77,24 +78,25 @@ export class CodxViewFilesComponent implements OnInit {
       [this.objectID])
       .subscribe((res:any[]) => {
         if(Array.isArray(res)){
-          // this.fileMedias = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
-          // this.fileDocuments = res.filter(f => f.referType === this.FILE_REFERTYPE.APPLICATION);
+          this.medias = res.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
+          this.documents = res.length - this.medias;
           // mode grid view file ở dạng khung chat
           if(this.format == "grid")
           {
             res.forEach((x:any) => {
               if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                x["source"] = this.codxShareSV.getThumbByUrl(x.url,200);
+                x["source"] = this.codxShareSV.getThumbByUrl(x.url,300);
               else if(x.referType === this.FILE_REFERTYPE.VIDEO)
                 x["source"] = `${environment.urlUpload}/${x.url}`; 
             });
           }
           // view file portal
-          else{
-            this.medias = res.reduce((count,ele) => (ele.referType == this.FILE_REFERTYPE.IMAGE || ele.referType == this.FILE_REFERTYPE.VIDEO) ? count = count + 1 : count, 0);
-            this.documents = res.length - this.medias;
-            if(this.medias > 0){
-              switch(this.medias){
+          else
+          {
+            if(this.medias > 0)
+            {
+              switch(this.medias)
+              {
                 case 1:
                   res.forEach((x:any) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
@@ -110,13 +112,6 @@ export class CodxViewFilesComponent implements OnInit {
                   });
                   break;
                 case 2:
-                  // this.fileMedias.forEach((x:any) => {
-                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                  //     x.source = this.codxShareSV.getThumbByUrl(x.url,450);
-                  //   else
-                  //     x.source = `${environment.urlUpload}/${x.url}`;
-                  // });
-
                   res.forEach((x:any) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
                       x.source = this.codxShareSV.getThumbByUrl(x.url,450);
@@ -125,17 +120,6 @@ export class CodxViewFilesComponent implements OnInit {
                   });
                   break;
                 case 3:
-                  // this.fileMedias.forEach((x :any,index) => {
-                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                  //   {
-                  //     if(index == 0)
-                  //       x.source = this.codxShareSV.getThumbByUrl(x.url,900);
-                  //     else
-                  //       x.source = this.codxShareSV.getThumbByUrl(x.url,450);
-                  //   }
-                  //   else
-                  //     x.source = `${environment.urlUpload}/${x.url}`;
-                  // });
                   res.forEach((x :any,index:number) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
                       x.source = this.codxShareSV.getThumbByUrl(x.url,index == 0 ? 900 : 450);
@@ -144,13 +128,6 @@ export class CodxViewFilesComponent implements OnInit {
                   });
                   break;
                 default:
-                  // this.fileMedias.forEach((x:any) => {
-                  //   if(x.referType === this.FILE_REFERTYPE.IMAGE)
-                  //     x.source = this.codxShareSV.getThumbByUrl(x.url,450);
-                  //   else
-                  //     x.source = `${environment.urlUpload}/${x.url}`;
-                  // });   
-
                   res.forEach((x:any) => {
                     if(x.referType === this.FILE_REFERTYPE.IMAGE)
                       x.source = this.codxShareSV.getThumbByUrl(x.url,450);
@@ -161,7 +138,7 @@ export class CodxViewFilesComponent implements OnInit {
               }
             }
           }
-          this.files = JSON.parse(JSON.stringify(res));
+          this.files = res;
         }
       });
     }
