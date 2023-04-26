@@ -48,6 +48,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   lstSubContract: any;
   headerText: string;
   openFrom: string;
+  genderGrvSetup: any
   employeeObj: any;
 
     //#region EBenefitInfo Declaration
@@ -131,6 +132,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+      this.genderGrvSetup = res?.Gender;
+    });
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;

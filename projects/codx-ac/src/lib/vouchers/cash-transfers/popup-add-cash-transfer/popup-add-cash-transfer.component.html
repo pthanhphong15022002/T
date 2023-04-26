@@ -56,11 +56,11 @@
                   </div>
                   <div class="col-4 form-group">
                     <codx-label
-                      fiedName="transactionText"
+                      fiedName="reasonID"
                       [formModel]="form.formModel"
                     ></codx-label>
                     <codx-input
-                      field="transactionText"
+                      field="reasonID"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                     ></codx-input>
@@ -99,11 +99,11 @@
                 <div class="row">
                   <div class="col-12 form-group">
                     <codx-label
-                      fiedName="note"
+                      fiedName="memo"
                       [formModel]="form.formModel"
                     ></codx-label>
                     <codx-input
-                      field="note"
+                      field="memo"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                     ></codx-input>
@@ -137,11 +137,11 @@
                   </div>
                   <div class="col-2 form-group">
                     <codx-label
-                      fiedName="payAmount"
+                      fiedName="exchangeAmt"
                       [formModel]="form.formModel"
                     ></codx-label>
                     <codx-input
-                      field="payAmount"
+                      field="exchangeAmt"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                       (controlBlur)="payAmountChanged($event)"
@@ -149,11 +149,11 @@
                   </div>
                   <div class="col-2 form-group">
                     <codx-label
-                      fiedName="paymentFees"
+                      fiedName="fees"
                       [formModel]="form.formModel"
                     ></codx-label>
                     <codx-input
-                      field="paymentFees"
+                      field="fees"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
                     ></codx-input>
@@ -470,8 +470,8 @@
               ></codx-label>
               <span class="fw-bold fs-3 text-primary">
                 {{
-                  (cashTransfer?.payAmount || 0) +
-                    (cashTransfer?.paymentFees || 0) +
+                  (cashTransfer?.exchangeAmt || 0) +
+                    (cashTransfer?.fees || 0) +
                     (hasInvoice ? vatInvoice?.taxAmt || 0 : 0)
                 }}
               </span>

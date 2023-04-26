@@ -33,6 +33,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   funcID;
   openFrom: string
   idField = 'RecID';
+  genderGrvSetup: any
   employId;
   isAfterRender = false;
   headerText: '';
@@ -128,6 +129,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+      this.genderGrvSetup = res?.Gender;
+    });
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
