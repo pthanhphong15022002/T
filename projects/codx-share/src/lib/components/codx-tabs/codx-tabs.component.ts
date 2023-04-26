@@ -52,7 +52,7 @@ export class CodxTabsComponent implements OnInit {
   
   //Quotations - CM
   @Input() customerID : string ;
-  @Input() funcIDQuotations : string ='CM0202' ;
+  @Input() funcIDQuotations ='CM0202' ;
 
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
