@@ -1047,15 +1047,14 @@ export class StagesDetailComponent implements OnInit {
       isContinueTaskEnd: this.isContinueTaskEnd,
       isContinueTaskAll: this.isContinueTaskAll,
       };
-      if(this.isContinueTaskAll || this.isContinueTaskEnd){
-        let dataInstance = {
-          instance: this.instance,
-          listStep: this.listStep,
-          step: this.step,
-          isAuto:isAuto,
-        };
-        this.serviceInstance.autoMoveStage(dataInstance);
-      }
+
+      let dataInstance = {
+        instance: this.instance,
+        listStep: this.listStep,
+        step: this.step,
+        isAuto:isAuto,
+      };
+      this.serviceInstance.autoMoveStage(dataInstance);
     }else{
       this.isShowFromTaskAll = false;
       this.isShowFromTaskEnd = false;

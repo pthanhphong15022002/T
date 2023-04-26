@@ -10,12 +10,13 @@
 </codx-form>
 
 <ng-template #body>
+  <div class="card-add mt-5 popup-sales">
   <ejs-tab>
     <e-tabitems>
       <e-tabitem>
         <ng-template #headerText>
           <div class="d-flex align-items-center">
-            <i class="icon-info icon-18 me-2"></i>
+            <span class="icon-info icon-18 me-2"></span>
             <codx-label
               fiedName="lblGeneralInfoTab"
               default="Thông tin chứng từ"
@@ -554,6 +555,7 @@
       >:&nbsp;{{ salesInvoice.orderNo }}
     </div>
   </div>
+</div>
 </ng-template>
 
 <ng-template #footer>
@@ -567,16 +569,16 @@
 </ng-template>
 
 <ng-template #customToolbar>
-  <div class="d-flex justify-content-between pt-2 w-100">
+  <div class="d-flex justify-content-between pt-3 w-100">
     <div class="d-flex align-items-center">
-      <div class="btn btn-icon btn-lg btn-primary btn-circle me-4 bg">
+      <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
         <i
           class="icon-16"
           [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
         ></i>
       </div>
       <div
-        class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase"
+        class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1"
       >
         {{ formTitle }}
       </div>
@@ -590,11 +592,11 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center me-3">
       <ng-container *ngIf="!isEdit">
         <button
           type="button"
-          class="btn btn-light-primary"
+          class="btn btn-sm btn-light-primary ms-2"
           (click)="onClickSave(false)"
         >
           <codx-label
@@ -608,7 +610,8 @@
 
       <button
         type="button"
-        class="btn btn-primary ms-3"
+        style="min-width: 60px"
+        class="btn btn-sm btn-primary ms-2 me-2"
         (click)="onClickSave(true)"
       >
         <codx-label
@@ -620,10 +623,10 @@
       </button>
 
       <div
-        class="ms-4 btn btn-icon btn-sm btn-light-primary btn-circle bg"
+        class="btn btn-icon btn-light-primary btn-circle bg ms-2"
         (click)="onClickClose()"
       >
-        <i class="icon-close icon-16"></i>
+        <i class="icon-close icon-18"></i>
       </div>
     </div>
   </div>

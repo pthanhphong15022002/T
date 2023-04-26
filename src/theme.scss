@@ -1,7 +1,7 @@
 :root {
   --bs-body-line-height: 1.4;
   --fs-7: 12px;
-  --fs-6: 13.425px;
+  --fs-6: 13.475px;
   --white: #ffffff;
   --black: #0f0f0f;
   --text-dark: #1d1f1f;
@@ -241,9 +241,6 @@
     color: var(--text-body);
     --title-color: var(--primary);
 
-    .fs-5 {
-      font-size: 1.1rem !important;
-    }
 
     background-color: var(--bg-body);
   }
