@@ -46,9 +46,9 @@
       </div>
       <div
         [ngStyle]="{ display: hideExtend ? 'none' : 'block' }"
-        style="height: 91vh; border-left: 1px solid #d1d1d1; width:300px"
+        style="height: 91vh; border-left: 1px solid #d1d1d1; width: 300px"
       >
-      <ng-container [ngTemplateOutlet]="right"></ng-container>
+        <ng-container [ngTemplateOutlet]="right"></ng-container>
       </div>
     </div>
   </div>
@@ -61,26 +61,39 @@
         <li class="nav-item">
           <a
             (click)="clickMenu(item.type)"
-            [class]="'tab-item text-dark fw-bold d-flex align-item-center' +' ' +(item.type == viewModelDetail ? 'tab-active' : '')"
+            [class]="
+              'tab-item text-dark fw-bold d-flex align-item-center' +
+              ' ' +
+              (item.type == viewModelDetail ? 'tab-active' : '')
+            "
           >
-              <codx-label
-                [name]="'lbl' + item.type"
-                [formName]="'SYS'"
-                [default]="item.title"
-              >
-              </codx-label>
+            <codx-label
+              [name]="'lbl' + item.type"
+              [formName]="'SYS'"
+              [default]="item.title"
+            >
+            </codx-label>
           </a>
         </li>
       </ng-container>
     </ul>
   </div>
-  <div class="mt-5">   
-    <ng-container *ngIf="viewModelDetail == 'history'" [ngTemplateOutlet]="history">
+  <div class="mt-5">
+    <ng-container
+      *ngIf="viewModelDetail == 'history'"
+      [ngTemplateOutlet]="history"
+    >
     </ng-container>
-    <ng-container *ngIf="viewModelDetail == 'comment'" [ngTemplateOutlet]="comment">
-    </ng-container>       
-    <ng-container *ngIf="viewModelDetail == 'attachments'" [ngTemplateOutlet]="attachments">
-    </ng-container>       
+    <ng-container
+      *ngIf="viewModelDetail == 'comment'"
+      [ngTemplateOutlet]="comment"
+    >
+    </ng-container>
+    <ng-container
+      *ngIf="viewModelDetail == 'attachments'"
+      [ngTemplateOutlet]="attachments"
+    >
+    </ng-container>
   </div>
 </ng-template>
 
@@ -88,7 +101,10 @@
   <div class="d-flex justify-content-between align-items-center py-1">
     <div class="d-flex align-items-center">
       <div class="icon-container" [ngStyle]="getColor(dataInput)">
-        <span class="icon-22 font-weight-bold" [ngClass]="getIconTask(dataInput)"></span>
+        <span
+          class="icon-22 font-weight-bold"
+          [ngClass]="getIconTask(dataInput)"
+        ></span>
       </div>
       <div class="ms-2">
         <span class="fs-4 fw-bold text-dark">{{ dataInput["name"] }}</span>
@@ -96,17 +112,18 @@
       </div>
     </div>
     <codx-update-progress
-    [progress]="dataInput['progress']"
-    [dataSource]="dataInput"
-    [type]="dataInput?.type"
-    [typeProgress]="2"
-    [step]="step"
-  ></codx-update-progress>
+      [progress]="dataInput['progress']"
+      [dataSource]="dataInput"
+      [type]="dataInput?.type"
+      [typeProgress]="2"
+      [step]="step"
+      [isUpdate]="isShowUpdate"
+    ></codx-update-progress>
   </div>
 </ng-template>
 
 <ng-template #main>
-  <hr/>
+  <hr />
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
   <div *ngIf="type == 'P'">
@@ -118,40 +135,72 @@
       style="font-weight: 500"
     >
     </codx-label>
-    <ul *ngIf="dataInput['fieldName']?.length > 0">
-      <li *ngFor="let feil of dataInput['fieldName']" class="fs-5">
-        {{ feil }}
+    <ul *ngIf="dataInput['fields']?.length > 0">
+      <li *ngFor="let feild of dataInput['fields']" class="fs-6">
+        {{ feild?.fieldName }}: {{ feild?.dataValue }}
       </li>
     </ul>
   </div>
 
+  <hr *ngIf="type == 'P'" />
+  <div *ngIf="type == 'P'">
+    <div>
+      <codx-label
+        class="fs-5"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Công việc:"
+        style="font-weight: 500"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <codx-step-task
+        [stepId]="dataInput['recID']"
+        [isSaveProgress]="false"
+        [isLockSuccess]="false"
+        [typeProgress]="2"
+        [isShowButton]="false"
+        [isShowMore]="false"
+        [isShowFile]="false"
+        [isShowComment]="false"
+      ></codx-step-task>
+    </div>
+  </div>
+
   <div
-    class="d-flex justify-content-start align-items-center"
+    class="d-flex justify-content-start"
     *ngIf="type !== 'G' && type !== 'P'"
   >
-    <codx-label
-      class="fs-5 me-3"
-      fiedName="memo"
-      [formModel]="frmModel"
-      default="Tài liệu:"
-      style="font-weight: 500"
-    >
-    </codx-label>
+    <div class="mt-4">
+      <codx-label
+        class="fs-5 me-3"
+        fiedName="memo"
+        [formModel]="frmModel"
+        default="Tài liệu:"
+        style="font-weight: 500"
+      >
+      </codx-label>
+    </div>
+
     <div>
       <codx-attachment
         #attachment
+        [objectType]="dialog.formModel.entityName"
         [objectId]="dataInput['recID']"
         hideFolder="1"
         hideImageUpload="0"
         hideImageThumb="0"
         hideUploadBtn="1"
-        hideDelete="1"
+        [showMessage]="0"
         hideDes="1"
         type="inline"
         allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
         displayThumb="full"
-        showMessage="0"
-        [dataSelected]="dataInput"
+        [hideDelete]="1"
+        [hideMoreF]="0"
       >
       </codx-attachment>
     </div>
@@ -164,7 +213,7 @@
       fiedName="memo"
       [formModel]="frmModel"
       default="Ghi chú: "
-      style="font-weight: 500;"
+      style="font-weight: 500"
     >
     </codx-label>
     <p [innerHTML]="dataInput['memo']"></p>
@@ -219,7 +268,7 @@
       fiedName="roles"
       [formModel]="frmModel"
       [default]="'Người phụ trách/chủ trì:'"
-      style="font-weight: 500;"
+      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -237,7 +286,7 @@
       fiedName="roles"
       [formModel]="frmModel"
       default="Người phụ trách:"
-      style="font-weight: 500;"
+      style="font-weight: 500"
     >
     </codx-label>
     <div>
@@ -247,7 +296,7 @@
       ></ng-container>
     </div>
   </div>
-   
+
   <!-- Người tham gia -->
   <div class="d-flex mt-4" *ngIf="type == 'M'">
     <codx-label
@@ -255,7 +304,7 @@
       fiedName="roles"
       [formModel]="frmModel"
       default="Người tham gia:"
-      style="min-width: 160px; font-weight: 500;"
+      style="min-width: 160px; font-weight: 500"
     >
     </codx-label>
     <div>
@@ -266,15 +315,32 @@
       ></ng-container>
     </div>
   </div>
-
+  <!-- Người liên quan -->
+  <div class="d-flex mt-4" *ngIf="type == 'P'">
+    <codx-label
+      class="fs-5 font-weight-normal me-4"
+      fiedName="roles"
+      [formModel]="frmModel"
+      default="Người liên quan:"
+      style="font-weight: 500"
+    >
+    </codx-label>
+    <div *ngIf="connection.length > 0">
+      <codx-imgs
+        [objectId]="connection"
+        [isToolTip]="true"
+        [width]="30"
+        objectType="AD_Users"
+        [numberImages]="10"
+      >
+      </codx-imgs>
+    </div>
+  </div>
 </ng-template>
 <!-- Phần ngày giờ và thông báo dưới tên -->
 <ng-template #describe>
   <div class="d-flex">
-    <div
-      class="d-flex align-items-center me-2"
-      *ngIf="dataInput['reminders']"
-    >
+    <div class="d-flex align-items-center me-2" *ngIf="dataInput['reminders']">
       <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
       <span>
         {{ dataInput["reminders"] }}
@@ -283,21 +349,14 @@
 
     <div class="d-flex align-items-center me-2">
       <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
-      <span
-        class="date"
-        *ngIf="dataInput['startDate'] && dataInput['endDate']"
-      >
+      <span class="date" *ngIf="dataInput['startDate'] && dataInput['endDate']">
         {{ dataInput["startDate"] | date : dateFomat }} -
         {{ dataInput["endDate"] | date : dateFomat }}
       </span>
       <span>(</span>
-      <span class="mx-1 text-primary-500">{{
-        dataInput["durationDay"]
-      }}</span>
+      <span class="mx-1 text-primary-500">{{ dataInput["durationDay"] }}</span>
       <codx-label name="durationDay" default="ngày"></codx-label>
-      <span class="mx-1 text-primary-500">{{
-        dataInput["durationHour"]
-      }}</span>
+      <span class="mx-1 text-primary-500">{{ dataInput["durationHour"] }}</span>
       <codx-label name="durationHour" default="giờ"></codx-label>
       <span>)</span>
     </div>
@@ -343,26 +402,46 @@
     [addNew]="true"
   >
   </codx-tree-comment>
-  <div>
-    <codx-comment-temp [objectID]="dataInput['recID']" [viewType]="'3'" [openViewPopup]="false"></codx-comment-temp>
-  </div>
 </ng-template>
 <ng-template #attachments>
-  <codx-attachment
-    #attachment
-    [objectId]="dataInput['recID']"
-    hideFolder="1"
-    hideImageUpload="0"
-    hideImageThumb="0"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="block"
-    allowMultiFile="1"
-    displayThumb="full"
-    showMessage="0"
-    [dataSelected]="dataInput['recID']"
-  >
-  </codx-attachment>
+  <div class="ms-4">
+    <codx-attachment
+      #attachment
+      [objectType]="'DP_Steps_Tasks'"
+      [objectId]="dataInput['refID']"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="block"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      displayThumb="full"
+      [hideDelete]="1"
+      [hideMoreF]="0"
+    >
+    </codx-attachment>
+    <!-- <codx-attachment
+      #attachment
+      [objectType]="dialog.formModel.entityName"
+      [objectId]="dataInput['recID']"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="block"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      displayThumb="full"
+    >
+    </codx-attachment> -->
+  </div>
 </ng-template>
 
 <!-- End Form Group -->

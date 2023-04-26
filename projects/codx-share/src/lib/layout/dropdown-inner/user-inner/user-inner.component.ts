@@ -106,10 +106,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     MenuComponent.createInstances('[data-kt-menu="true"]');
   }
 
-  logout() {    
-    let ele = document.getElementsByTagName("codx-chat-container");
+  logout() {
+    let ele = document.getElementsByTagName('codx-chat-container');
     ele[0].remove();
-    this.signalRSV.sendData("LogOutAsync",this.user.tenant,this.user.userID);
+    this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
     this.auth.logout('');
     // document.location.reload();
   }
@@ -250,6 +250,30 @@ export class UserInnerComponent implements OnInit, OnDestroy {
             });
         }
       });
+  }
+
+  clearTenant() {
+    // var config = new AlertConfirmInputConfig();
+    // config.type = 'text';
+    // config.label = 'predicate';
+    // this.notifyService
+    //   .alert(
+    //     'Cánh báo',
+    //     '<span style="color: red">CHỨC NĂNG NÀY SẼ XÓA CÁC TENANT HIỆN TẠI THEO ĐIỀU KIỆN!!!! VUI LÒNG BACKUP DATA TRƯỚC KHI THỰC HIỆN!!! XIN CẢM ƠN!!!</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>',
+    //     config
+    //   )
+    //   .closed.subscribe((x) => {
+    //     debugger;
+    //     if (x.event && x.event.status == 'Y' && x.event.data) {
+    //       this.api
+    //         .execSv('Tenant', 'Tenant', 'TenantsBusiness', 'DropTenantAsync', [
+    //           x.event.data,
+    //         ])
+    //         .subscribe((res) => {
+    //           if (res) console.log(res);
+    //         });
+    //     }
+    //   });
   }
 
   testFormatString() {

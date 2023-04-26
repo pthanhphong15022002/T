@@ -31,6 +31,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   @Input() okrFM:any;
   @Input() okrVll:any;
   @Input() okrGrv:any;
+  @Input() allowShowDetail=false;
 
   @ViewChild('showTask') showTask: any;
   dialogRef: DialogRef;
@@ -119,6 +120,9 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
   //Xem chi tiết OB
   showOB(obj: any, popupTitle: any) {
+    if(!this.allowShowDetail){
+      return;
+    }
     let dModel = new DialogModel();
     dModel.IsFull = true;
     dModel.FormModel = this.okrFM?.obFM;
@@ -135,6 +139,9 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
+    if(!this.allowShowDetail){
+      return;
+    }
     let dModel = new DialogModel();
     popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
@@ -149,5 +156,9 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
       '',
       dModel
     );
+  }
+  clickTreeNode(evt:any, ){
+    evt.stopPropagation();
+    evt.preventDefault();
   }
 }

@@ -712,4 +712,12 @@ export class PopupMoveStageComponent implements OnInit {
     }
     return false;
   }
+
+  checkListDoneIsNull(tasks:any,groups:any){
+    if((tasks.length > 0 && tasks != null)|| (groups.length > 0 && groups != null) )
+    {
+      return true;
+    }
+    return false;
+  }
 }

@@ -45,9 +45,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
   contactsPerson: any;
   refValue = '';
   recID: any;
+  refValueCbx = '';
   listAddress: BS_AddressBook[] = [];
   formModelAddress: FormModel;
   listAddressDelete: BS_AddressBook[] = [];
+  disableObjectID = true;
+  lstContact = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -69,6 +72,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
     this.recID = dt?.data[2];
     if (this.action == 'edit') {
+      if (this.data?.objectType == '1') {
+        this.refValueCbx = 'CMCustomers';
+      } else {
+        this.refValueCbx = 'CMPartners';
+      }
       this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res) => {
         if (res) {
           this.contactsPerson = res;
@@ -80,6 +88,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.data?.objectID){
+      this.getListContactByObjectID(this.data?.objectID);
+    }
     this.getFormModelAddress();
     this.cache
       .gridViewSetup(
@@ -128,12 +139,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
   // }
 
   valueTagChange(e) {
-    this.data.field = e.data;
+    this.data.industries = e.data;
   }
 
   valueChangeContact(e) {
     this.data[e.field] = e?.data;
-    if (this.data.objectType) {
+    if (this.data.objectType && e.field == 'objectType') {
+      this.disableObjectID = false;
+      if (this.data.objectType == '1') {
+        this.refValueCbx = 'CMCustomers';
+      } else {
+        this.refValueCbx = 'CMPartners';
+      }
+    }
+
+    if (this.data.objectID && e.field == 'objectID') {
+      this.getListContactByObjectID(this.data.objectID);
     }
   }
 
@@ -204,6 +225,27 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   async onSave() {
     if (this.funcID == 'CM0102') {
+      if (this.data.objectType) {
+        if (
+          this.data.contactType == null ||
+          this.data.contactType.trim() == ''
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['ContactType'].headerText + '"'
+          );
+          return;
+        }
+        if (this.data.objectID == null || this.data.objectID.trim() == '') {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.gridViewSetup['ObjectID'].headerText + '"'
+          );
+          return;
+        }
+      }
       if (this.data.firstName == null || this.data.firstName.trim() == '') {
         this.notiService.notifyCode(
           'SYS009',
@@ -235,15 +277,56 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.data.email != null && this.data.email.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
     }
-    if (this.imageAvatar?.fileUploadList?.length > 0) {
-      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        // save file
-        if (res) {
-          this.hanleSave();
+    this.onSaveHanle();
+  }
+
+  async onSaveHanle() {
+    if (this.funcID == 'CM0102') {
+      if (this.lstContact != null && this.lstContact.length > 0) {
+        var checkMainLst = this.lstContact.some(
+          (x) =>
+            x.contactType.split(';').some((x) => x == '1') &&
+            x.recID != this.data.recID
+        );
+        if (checkMainLst) {
+          if (this.data?.contactType.split(';').some((x) => x == '1')) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notiService.alertCode('CM001').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.saveFileAndSaveCM();
+              }
+            });
+          } else {
+            this.saveFileAndSaveCM();
+          }
+        } else {
+          if (!this.data.contactType.split(';').some((x) => x == '1')) {
+            this.notiService.notifyCode('CM002');
+          } else {
+            this.saveFileAndSaveCM();
+          }
         }
-      });
+      } else {
+        this.saveFileAndSaveCM();
+      }
     } else {
-      this.hanleSave();
+      this.saveFileAndSaveCM();
+    }
+  }
+
+  async saveFileAndSaveCM() {
+    {
+      if (this.imageAvatar?.fileUploadList?.length > 0) {
+        (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+          // save file
+          if (res) {
+            this.hanleSave();
+          }
+        });
+      } else {
+        this.hanleSave();
+      }
     }
   }
 
@@ -252,6 +335,24 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.onAdd();
     } else {
       this.onUpdate();
+    }
+  }
+
+  checkContactMain() {
+    if (
+      this.lstContact.some(
+        (x) =>
+          x.contactType.split(';').some((x) => x == '1') &&
+          x.recID != this.data.recID
+      )
+    ) {
+      return true;
+    } else {
+      if (this.data.split(';').some((x) => x == '1')) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
@@ -264,13 +365,21 @@ export class PopupAddCmCustomerComponent implements OnInit {
       }
     }
     if (type == 'P') {
-      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(02+([0-9]{9})))\b)/;
       if (!field.toLowerCase().match(validPhone)) {
         this.notiService.notifyCode('RS030');
         return false;
       }
     }
     return true;
+  }
+
+  getListContactByObjectID(objectID) {
+    this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstContact = res;
+      }
+    });
   }
 
   addAvatar() {
@@ -394,9 +503,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
                   }
                   this.listAddress.push(address);
                 } else {
-                  this.notiService.notifyCode('CM003',
-                  0,
-                  '"' + this.gridViewSetup['Address'].headerText + '"'); //Chưa có mssg
+                  this.notiService.notifyCode(
+                    'CM003',
+                    0,
+                    '"' + this.gridViewSetup['Address'].headerText + '"'
+                  );
                 }
               }
             }

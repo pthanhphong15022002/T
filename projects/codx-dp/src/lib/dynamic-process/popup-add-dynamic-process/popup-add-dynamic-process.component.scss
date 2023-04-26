@@ -402,7 +402,7 @@ codx-attachment{
     position: absolute;
     top: 20px;
     left: 15px;
-    bottom: 0;
+    bottom: 23px;
   }
   .cdk-drop-list.task .cdk-drag.drap-drop{
     position: relative;
@@ -430,12 +430,16 @@ codx-attachment{
   }
 }
 
+
 .roles-step:hover{
   background: #f4f7ff;
   border-radius: 39px;
   padding-right: 10px;
+  box-shadow: 0px 0px 10px 5px #e7e7e7;
 }
-
+.roles-step:hover > span{
+  display: block !important;
+}
 
 #pane_4 .example-list.stage-body-left-main{
   height: calc(100vh - 194px)!important;

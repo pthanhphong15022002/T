@@ -57,6 +57,7 @@ import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
 import { Permission } from '@shared/models/file.model';
+import { UpdateVersionComponent } from '../updateversion/updateversion.component';
 
 @Component({
   selector: 'app-view-detail',
@@ -539,6 +540,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   openFormFuncID(val: any, datas: any = null, isData = false) {
+    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -821,8 +823,20 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT3007':
       case 'ODT5107':
       case 'ODT5208': {
-        // if (this.checkOpenForm(funcID)) {
-        // }
+        this.api.execSv("DM","DM","FileBussiness","GetFilesForOutsideAsync",["",datas?.recID,this.formModel.entityName,"source"]).subscribe((item:any)=>{
+          
+          if(item && item.length > 0)
+          {
+            this.dialog = this.callfunc.openForm(UpdateVersionComponent, '', 800, 600,"",[this.formModel,item]);
+            this.dialog.closed.subscribe((x) => {
+              if (x.event != null) {
+                this.data = x.event[0];
+                this.data.lstUserID = getListImg(x.event[0].relations);
+                this.data.listInformationRel = x.event[1];
+              }
+            });
+          }
+        })
         break;
       }
       //Chuyển vào thư mục
@@ -898,7 +912,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
                     var index = this.data.listInformationRel.findIndex(
-                      (x) => x.userID == item.data[1]
+                      (x) => x.recID == item.data[1]
                     );
                     this.data.listInformationRel[index].reCall = true;
                     this.ref.detectChanges();

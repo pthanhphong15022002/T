@@ -27,7 +27,7 @@ export class NotifyBodyComponent implements OnInit {
   status:any = null;
   notiFilter = {
     mode:"",
-    type:"",
+    type:[],
     status:""
   }
   constructor(
@@ -131,9 +131,16 @@ export class NotifyBodyComponent implements OnInit {
 
   // filter selected change
   typeChange(event:any){
-    this.type = event;
-    this.notiFilter.type = event.value;
-    this.getNotiAsync();
+    if(event.value !== this.type.value)
+    {
+      this.notiFilter.type = [];
+      this.type = event;
+      debugger
+      if(this.type.value){
+        this.notiFilter.type.push(this.type.value);
+      }
+      this.getNotiAsync();
+    }
   }
   //filter entityName change
   statusChange(event:any){

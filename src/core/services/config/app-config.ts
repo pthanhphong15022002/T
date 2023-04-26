@@ -8,7 +8,8 @@ export abstract class AppConfig {
   saas: number;
   layoutCZ: string;
   themeMode: string;
-  hideFavCount: boolean;
+  hideFavCount: boolean;  
+  singleExec:boolean;
   sureMeet: any;
   firebase: any;
   captchaKey: string;

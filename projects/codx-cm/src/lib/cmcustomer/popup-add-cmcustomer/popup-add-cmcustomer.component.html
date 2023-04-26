@@ -33,11 +33,11 @@
 </ng-template>
 <ng-template #subHeader>
   <codx-tag
-    field="industries"
+    field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    [value]="data?.field"
+    [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
 </ng-template>
@@ -58,7 +58,6 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
           </codx-label>
           <codx-input
-            [disabled]="action == 'edit' && data.objectType"
             [field]="'objectType'"
             [crrValue]="data.objectType"
             [type]="'valuelist'"
@@ -68,11 +67,10 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="form-group" *ngIf="data.objectType">
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
           </codx-label>
           <codx-input
-            [disabled]="action == 'edit' && data.contactType"
             [field]="'contactType'"
             [crrValue]="data?.contactType"
             [type]="'valuelist'"
@@ -82,17 +80,16 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="data.objectType">
       <codx-label
         [formModel]="form.formModel"
         [fiedName]="'ObjectID'"
       ></codx-label>
       <codx-input
-        [disabled]="action == 'edit' && data.objectID"
         [field]="'objectID'"
         [crrValue]="data?.objectID"
         type="combobox"
-        [refValue]="'CM_Customers'"
+        [refValue]="refValueCbx"
         (valueChange)="valueChangeContact($event)"
       ></codx-input>
     </div>
@@ -616,6 +613,16 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="segmentID"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="Industries">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="industries"
           >
           </codx-input>
         </div>

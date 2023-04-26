@@ -556,16 +556,14 @@ export class CodxOmService {
 
   distributeOKR(
     recID: string,
-    distributeToType: string,
     listDistribute: any,
-    isAdd: boolean
   ) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'DistributeOKRAsync',
-      [recID, distributeToType, listDistribute, isAdd]
+      [recID, listDistribute]
     );
   }
   assignmentOKR( recID: string, distributeToType: string, okrAssign: any, isUpdateAll: boolean,funcID:string ) {
@@ -689,12 +687,12 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRDistributed(recID: string) {    
+  getOKRHavedLinks(recID: string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetOKRDistributedAsync',
+      'GetOKRHavedLinksAsync',
       [recID]
     );
   }

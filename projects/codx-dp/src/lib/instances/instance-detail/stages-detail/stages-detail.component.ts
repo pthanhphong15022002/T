@@ -142,8 +142,10 @@ export class StagesDetailComponent implements OnInit {
   stepNameFail: string = '';
   stepNameReason: string = '';
   idTaskEnd: string = '';
-  isContinueTaskEnd: boolean = false;
-  isShowFromTaskEnd: boolean = false;
+  isContinueTaskEnd = false;
+  isContinueTaskAll = false;
+  isShowFromTaskEnd = false;
+  isShowFromTaskAll = false;
   isRoleAll = false;
   leadtimeControl = false; //sửa thời hạn công việc mặc định
   progressTaskGroupControl = false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
@@ -594,6 +596,8 @@ export class StagesDetailComponent implements OnInit {
         value: value,
         listValue: listTaskConvert,
         step: this.dataStep,
+        isRoleAll: this.isRoleAll,
+        isUpdate: this.isUpdate,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -667,14 +671,21 @@ export class StagesDetailComponent implements OnInit {
     if (countGroup > 0) {
       for (let i = countGroup - 1; i >= 0; i--) {
         let countTask = 0;
+
         try {
           countTask = this.taskGroupList[i]['task']?.length;
         } catch (error) {
           countTask = 0;
         }
+
         if (countTask > 0) {
-          this.idTaskEnd = this.taskGroupList[i]['task'][countTask - 1].recID;
-          return;
+          for(let j=countTask - 1 ; j >= 0; j--) {
+            let task = this.taskGroupList[i]['task'][j];
+            if(task?.isTaskDefault){
+              this.idTaskEnd = this.taskGroupList[i]['task'][countTask - 1].recID;
+              return;
+            }
+          }
         }
       }
     }
@@ -997,15 +1008,7 @@ export class StagesDetailComponent implements OnInit {
             this.popupUpdateProgress.close();
             this.calculateProgressStep();
             this.saveAssign.emit(true);
-            // chuyển tiếp công việc cuối cùng
-            if(this.dataProgress?.recID == this.idTaskEnd && this.dataProgress['progress'] == 100){
-              this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);            
-              this.isContinueTaskEnd = true;            
-            }else{
-              this.isContinueTaskEnd = false;
-              this.isShowFromTaskEnd = false; 
-            }
-
+            this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();
           }
@@ -1022,6 +1025,7 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS007');
             this.popupUpdateProgress.close();
             this.saveAssign.emit(true);
+            this.checkContinueStep();
           } else {
             this.popupUpdateProgress.close();
           }
@@ -1030,15 +1034,51 @@ export class StagesDetailComponent implements OnInit {
     });
   }
 
-  checkSuccessTaskRequired(taskID){
+  checkContinueStep(){
+    if(this.dataProgress['progress'] == 100){
+      this.isShowFromTaskAll = this.checkSuccessTaskRequired('',true);
+      this.isShowFromTaskEnd = this.checkSuccessTaskRequired(this.dataProgress?.recID);
+
+      this.isContinueTaskEnd = this.dataProgress?.recID == this.idTaskEnd;
+      this.isContinueTaskAll = this.isShowFromTaskAll;
+      var isAuto = {
+      isShowFromTaskAll: this.isShowFromTaskAll,
+      isShowFromTaskEnd: this.isShowFromTaskEnd,
+      isContinueTaskEnd: this.isContinueTaskEnd,
+      isContinueTaskAll: this.isContinueTaskAll,
+      };
+      if(this.isContinueTaskAll || this.isContinueTaskEnd){
+        let dataInstance = {
+          instance: this.instance,
+          listStep: this.listStep,
+          step: this.step,
+          isAuto:isAuto,
+        };
+        this.serviceInstance.autoMoveStage(dataInstance);
+      }
+    }else{
+      this.isShowFromTaskAll = false;
+      this.isShowFromTaskEnd = false;
+      this.isContinueTaskEnd = false;
+      this.isContinueTaskAll = false;
+    }
+  }
+
+  checkSuccessTaskRequired(taskID?: string, isAllTask = false){
     for (let group of this.taskGroupList) {
       if (group['task']?.length > 0) {
         for (let task of group['task']) {
-          if (task?.recID != taskID) {
-            if(!(task?.requireCompleted && task?.progress == 100)){
+          if(isAllTask){
+            if(task?.progress != 100){
               return false;
-            }else{
-              continue;
+            }
+          }else{
+            if (task?.recID != taskID) {
+              if(task?.requireCompleted && task?.progress != 100){
+                return false;
+              }else{
+                continue;
+              }
             }
           }
         }
@@ -1114,16 +1154,6 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.step.progress = Number(medium);
           this.progress = medium;
-          // a thuận gán isCheck để autoMove
-          if (this.isContinueTaskEnd) {
-            let dataInstance = {
-              instance: this.instance,
-              listStep: this.listStep,
-              step: this.step,
-              isShowForm: this.isShowFromTaskEnd
-            };
-            this.serviceInstance.autoMoveStage(dataInstance);
-          }
         }
       });
   }

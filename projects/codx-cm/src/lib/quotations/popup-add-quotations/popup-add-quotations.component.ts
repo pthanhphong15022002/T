@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
+  ApiHttpService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -10,7 +11,7 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { CM_Products, CM_Quotations } from '../../models/cm_model';
+import { CM_Products, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -18,7 +19,7 @@ import { CM_Products, CM_Quotations } from '../../models/cm_model';
 })
 export class PopupAddQuotationsComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('gridProductsLine') gridProductsLine: CodxGridviewV2Component;
+  @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
   @ViewChild('cardbodyGeneral') cardbodyGeneral: ElementRef;
   @ViewChild('quotationGeneral') quotationGeneral: ElementRef;
   @ViewChild('noteRef') noteRef: ElementRef;
@@ -28,23 +29,33 @@ export class PopupAddQuotationsComponent implements OnInit {
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
-  fmProcductsLines: FormModel = {
-    formName: 'CMProducts',
-    gridViewName: 'grvCMProducts',
-    entityName: 'CM_Products',
+  // fmProcductsLines: FormModel = {
+  //   formName: 'CMProducts',
+  //   gridViewName: 'grvCMProducts',
+  //   entityName: 'CM_Products',
+  // };
+  //test
+  fmQuotationLines: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    entityName: 'CM_QuotationsLines',
   };
-  gridHeight: number;
+  gridHeight: number = 300;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
     mode: 'Normal',
   };
-  productsLine: Array<CM_Products> = []; //mang san pham
+
+ // productsLine: Array<CM_Products> = []; //mang san pham
+  quotationLines: Array<CM_QuotationsLines> = [];
   lockFields = [];
+  dataParent : any
 
   constructor(
     public sanitizer: DomSanitizer,
+    private api : ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -52,6 +63,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action
+    this.quotationLines=[]
   }
 
   ngOnInit(): void {}
@@ -69,40 +81,33 @@ export class PopupAddQuotationsComponent implements OnInit {
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
-    grid.disableField(this.lockFields);
+    //grid.disableField(this.lockFields);
   }
 
   clickMF(e, data) {}
 
+  // region Product
   addRow() {
-    let idx = this.gridProductsLine.dataSource?.length;
-    let data = this.gridProductsLine.formGroup.value; //ddooi tuong
-    data.recID = Util.uid();
+    let idx = this.gridQuationsLines.dataSource?.length;
+    let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
+    //data.recID = Util.uid();
     data.write = true;
     data.delete = true;
     data.read = true;
     // data.rowNo = idx + 1;
     // data.transID = this.quotations?.recID;
-    this.gridProductsLine.addRow(data, idx);
+    this.gridQuationsLines.addRow(data, idx);
   }
 
-  productsLineChanged(e) {
-    const field = [
-      'accountid',
-      'offsetacctid',
-      'objecttype',
-      'objectid',
-      'dr',
-      'cr',
-      'dr2',
-      'cr2',
-      'transactiontext',
-      'referenceno',
-    ];
+  quotionsLineChanged(e) {
+    // const field = [
+    //   'quotationname',
+
+    // ];
     // if (field.includes(e.field.toLowerCase())) {
     //   this.api
-    //     .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
-    //       this.cashpayment,
+    //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
+    //       this.dataParent,
     //       e.data,
     //       e.field,
     //       e.data?.isAddNew,
@@ -132,4 +137,25 @@ export class PopupAddQuotationsComponent implements OnInit {
     //   }
     //}
   }
+
+  setDataGrid(updateColumn, data) {
+    if (updateColumn) {
+      var arrColumn = [];
+      arrColumn = updateColumn.split(';');
+      if (arrColumn && arrColumn.length) {
+        arrColumn.forEach((e) => {
+          if (e) {
+            let field = Util.camelize(e);
+            this.gridQuationsLines.rowDataSelected[field] = data[field];
+            this.gridQuationsLines.rowDataSelected = {
+              ...data,
+            };
+            this.gridQuationsLines.rowDataSelected.updateColumns = '';
+          }
+        });
+      }
+    }
+  }
+
+  //#endregion
 }

@@ -311,9 +311,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  changeValueDate(evt: any) {}
-
-  valueChange(evt: any, a?: any, type?: any) {}
 
   showHour(date: any) {
     let temp = new Date(date);
@@ -449,7 +446,20 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {
       if (event?.data.approveStatus == '1') {
-        this.edit(event.data);
+        if (
+          !this.codxEpService.checkRole(
+            this.authService.userValue,
+            event?.data?.createdBy,
+            this.isAdmin
+          )
+        ) {
+          this.notificationsService.notifyCode('TM052');
+          return;
+        }
+        else{
+
+          this.edit(event.data);
+        }
       }
     }
   }
@@ -780,6 +790,4 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         }
       });
   }
-
-  closeAddForm(event) {}
 }
