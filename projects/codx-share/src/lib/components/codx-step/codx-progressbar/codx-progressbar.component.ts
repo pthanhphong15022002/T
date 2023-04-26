@@ -46,7 +46,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
       progressStartValue++;
 
       progressValue.textContent = `${progressStartValue}%`;
-      circularProgress.style.background = `conic-gradient(#005DC7 ${
+      circularProgress.style.background = `conic-gradient(${this.color} ${
         progressStartValue * 3.6
       }deg, #ededed 0deg)`;
 
