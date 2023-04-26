@@ -49,6 +49,16 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   progressHistory = [];
   krCheckIn = [];
   listAlign=[];
+  
+  offset: string;
+  activeTab='CheckIns' ;
+  tabControl = [
+    { name: 'CheckIns', textDefault: 'Check-In', isActive: true, icon:'icon-i-bullseye' },
+    { name: 'Links', textDefault: 'Liên kết', isActive: false, icon:'icon-account_tree'  },
+    { name: 'Tasks', textDefault: 'Công việc', isActive: false, icon:'icon-format_list_numbered'  },
+    { name: 'Comments', textDefault: 'Ghi chú', isActive: false, icon:'icon-i-chat'  },
+    { name: 'History', textDefault: 'Cập nhật', isActive: false, icon:'icon-history'  },
+  ];
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -176,7 +186,8 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     
     this.getKRData();    
     this.getListAlign();
-    this.getListAssign()
+    this.getListAssign();
+    this.loadTabView();
   }
 
   //-----------------------End-------------------------------//
@@ -190,6 +201,15 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
+  loadTabView() {    
+    this.activeTab='CheckIns';
+    if (
+      this.activeTab == 'Tasks'
+    )
+      this.offset = '65px';
+    else this.offset = '0px';
+    this.detectorRef.detectChanges();
+  }
   getKRData(){
     this.codxOmService
         .getOKRByID(this.oldKR.recID)
@@ -461,6 +481,16 @@ hiddenChartClick(evt: any) {
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
-  
+  clickMenu(item) {
+    this.activeTab = item.name;
+    for(let i=0;i<this.tabControl.length;i++){
+      if (this.tabControl[i].isActive == true) {
+        this.tabControl[i].isActive = false;        
+      }
+      
+    }   
+    item.isActive = true;
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 }

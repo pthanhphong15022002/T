@@ -487,7 +487,6 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      debugger
       if(this.isAfterRender){
         if(this.dataOKR!=null && this.dataOKR.length>0){
           evt.forEach((func) => {
