@@ -52,7 +52,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabDetaildProduct"></ng-container>
+            <ng-container *ngTemplateOutlet="tabDetaildQuotationLines"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -179,25 +179,25 @@
 <!--  End:thêm sản phẩm -->
 
 <!-- Start: Chi tiết sản phẩm -->
-<ng-template #tabDetaildProduct>
+<ng-template #tabDetaildQuotationLines>
   <div class="h-100">
     <codx-gridview-v2
-      #gridProductsLine
-      [formName]="fmProcductsLines.formName"
-      [gridViewName]="fmProcductsLines.gridViewName"
-      [entityName]="fmProcductsLines.entityName"
+      #gridQuationsLines
+      [formName]="fmQuotationLines.formName"
+      [gridViewName]="fmQuotationLines.gridViewName"
+      [entityName]="fmQuotationLines.entityName"
       [templateMore]="morefunction"
       [editSettings]="editSettings"
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataValues]="form.data.recID"
-      [dataSource]="productsLine"
+      [dataSource]="quotationLines"
       service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
-      (cellChanged)="productsLineChanged($event)"
-      (created)="gridCreated($event, gridProductsLine)"
+      (cellChanged)="quotionsLineChanged($event)"
+      (created)="gridCreated($event, gridQuationsLines)"
     ></codx-gridview-v2>
   </div>
   <!-- predicates="TransID=@0"  cai nay truyền loc-->
