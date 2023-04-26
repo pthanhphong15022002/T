@@ -31,9 +31,8 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-20 me-2"></i>
-              <div class="fw-bold fs-5 text-uppercase">
-                <codx-label fiedName="lblVoucherInfo" [formModel]="formModel" default="Thông tin chứng từ"></codx-label>
-              </div>
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              </span>
             </div>
           </ng-template>
           <ng-template #content>
@@ -49,8 +48,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
-              <span class="fw-bold fs-5 text-uppercase"><codx-label fiedName="lblDetail" [formModel]="formModel"
-                  default="Chi tiết"></codx-label>
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5 text-uppercase">
               </span>
             </div>
           </ng-template>
