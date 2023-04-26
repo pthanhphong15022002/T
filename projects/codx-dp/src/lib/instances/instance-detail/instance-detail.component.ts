@@ -132,7 +132,7 @@ export class InstanceDetailComponent implements OnInit {
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
   //gan chart
   vllViewGannt = 'DP042';
-  crrViewGant = 'D';
+  crrViewGant = 'W';
   timelineSettings: any;
   tags = '';
   timelineSettingsHour: any = {
