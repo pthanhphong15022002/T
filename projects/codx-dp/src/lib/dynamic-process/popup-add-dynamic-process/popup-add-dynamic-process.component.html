@@ -2331,15 +2331,16 @@
       >
       </codx-label>
       <div class="d-flex">
-        <codx-valuelist
+        <codx-input
           class="me-4"
           field="icon"
-          [name]="'Sys008'"
+          type="vllicon"
+          [refValue]="'L1470'"
           [iconOnly]="true"
           [crrValue]="stepNew?.icon"
-          (valueChange)="changeIcon($event, 'icon', stepNew)"
+          (valueChange)="changeIcon($event, stepNew)"
         >
-        </codx-valuelist>
+        </codx-input>
         <codx-input
           field="iconColor"
           class="ms-4"
