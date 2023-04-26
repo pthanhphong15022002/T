@@ -465,6 +465,7 @@ import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/vi
 import { TestComponent } from './test/test.component';
 import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
 import { ViewDetailDisciplinesComponent } from './employee-discipline/view-detail-disciplines/view-detail-disciplines.component';
+import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel/employee-business-travel.component';
 export const routes: Routes = [
       {
         path: '',
@@ -567,6 +568,10 @@ export const routes: Routes = [
           {            
             path: 'ebenefits/:funcID',
             component: EmployeeBenefitComponent,
+          },
+          {            
+            path: 'ebusinesstravels/:funcID',
+            component: EmployeeBusinessTravelComponent,
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -731,6 +736,7 @@ const T_Component: Type<any>[] = [
   TestComponent,
   ApprovalHRContractComponent,
   ViewDetailDisciplinesComponent,
+  EmployeeBusinessTravelComponent,
 ];
 @NgModule({
   imports: [

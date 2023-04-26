@@ -674,7 +674,21 @@ export class InstancesComponent
                     );
                     dialogEditInstance.closed.subscribe((e) => {
                       if (e && e.event != null) {
-                        //xu ly data đổ về
+                        this.view.dataService.update(e.event).subscribe();
+
+                        if (this.kanban) {
+                        // this.kanban.updateCard(data);  //core mới lỗi chô này
+                          if (this.kanban?.dataSource?.length == 1) {
+                            this.kanban.refresh();
+                          }
+                        }
+                        this.dataSelected = e.event;
+                        if (this.detailViewInstance) {
+
+
+                          this.detailViewInstance.dataSelect = this.dataSelected;
+                          this.detailViewInstance.listSteps = this.listStepInstances;
+                        }
                         this.detectorRef.detectChanges();
                       }
                     });

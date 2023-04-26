@@ -58,7 +58,7 @@ export class CM_Quotations {
   pmtTermID: string;
   pmtMethodID: string;
   currencyID: string;
-  status: string;
+  status: string ="1";
   deadline: Date;
   memo: string;
   totalAmt: number;

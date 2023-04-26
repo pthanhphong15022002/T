@@ -36,8 +36,8 @@ export class PopupAddQuotationsComponent implements OnInit {
   // };
   //test
   fmQuotationLines: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
+    formName: 'CMQuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
     entityName: 'CM_QuotationsLines',
   };
   gridHeight: number = 300;

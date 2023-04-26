@@ -82,24 +82,6 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="AssetType" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
       <div *ngIf="loadControl('DIM2')" class="col-6">
         <div class="form-group">
           <codx-label fiedName="DIM2" [formModel]="form.formModel">
@@ -114,6 +96,24 @@
           <codx-label fiedName="ProjectID" [formModel]="form.formModel">
           </codx-label>
           <codx-input [Group]="form.formGroup" field="projectID" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="AssetType" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="assetType" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="AssetGroupID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" field="assetGroupID" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -138,12 +138,9 @@
     </div>
     <div class="ms-2">
       <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-        <codx-label *ngIf="type =='add'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Thêm"></codx-label>
-        <codx-label *ngIf="type =='edit'" class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Cập nhật"></codx-label>
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
       </button>
-
     </div>
   </div>
 </ng-template>
