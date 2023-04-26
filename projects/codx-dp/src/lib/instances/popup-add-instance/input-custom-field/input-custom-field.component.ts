@@ -144,7 +144,7 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
-      this.arrIdUser = this.listIdUser ? this.listIdUser.split(';') : [];
+      this.arrIdUser = Array.from(new Set(this.listIdUser ? this.listIdUser.split(';') : []));
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }

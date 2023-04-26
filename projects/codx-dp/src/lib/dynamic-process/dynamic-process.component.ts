@@ -352,17 +352,20 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-           let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
-            this.codxDpService.copyAvatarById(data).subscribe(res => {
-                this.openFormCopyProccess(obj,dialogModel);
-             });
+            let data = [
+              this.oldIdProccess,
+              this.view.dataService.dataSelected.recID,
+            ];
+            this.codxDpService.copyAvatarById(data).subscribe((res) => {
+              this.openFormCopyProccess(obj, dialogModel);
+            });
           });
       });
     }
     return;
   }
 
-  openFormCopyProccess(obj,dialogModel){
+  openFormCopyProccess(obj, dialogModel) {
     var dialog = this.callfc.openForm(
       PopupAddDynamicProcessComponent,
       '',
@@ -629,7 +632,11 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01015':
-            if (!data.approveRule) res.isblur = true;
+            if (!data.write) {
+              res.disabled = true;
+            } else if (!data.approveRule) {
+              res.isblur = true;
+            }
             break;
         }
       });

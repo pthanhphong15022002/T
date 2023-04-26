@@ -72,7 +72,7 @@
 
     <ng-template #templateTreeView let-item>
       <!--OB node-->
-      <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
+      <div class="d-flex align-items-center flex-column justify-content-between "  (click)="clickTreeNode($event)"  *ngIf="item?.okrType==obType">
         <div class="w-100 ob-background d-flex justify-content-between ">
 
           <div class="d-flex align-items-center  okr-treegroup col-6">
@@ -85,14 +85,14 @@
                     <span class="fs-10">%</span>
                   </span>
                 </span>
-                <ejs-progressbar #annotation1 [id]="'label-container'+item?.recID" [type]="'Circular'" [maximum]="100" 
-                  [minimum]="0" [value]="item?.progress" [width]="'60'" [height]="'60'" [trackThickness]="5"
+                <ejs-progressbar [id]="newGuid()" [type]="'Circular'" [maximum]="100" 
+                  [minimum]="0" [value]="item?.progress !=null ? item?.progress:0" [width]="'60'" [height]="'60'" [trackThickness]="5"
                   [progressThickness]="3" [progressColor]="'#FF0000'">
                   <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
                 </ejs-progressbar>
               </div>
             </div>
-            <span class="ob-kr ob-name fs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+            <span class="ob-krfs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <div class="d-flex flex-column">
               <div class="d-flex flex-stack">
                 <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'" [ngbTooltip]="okrGrv.krGrv?.category?.headerText"
@@ -138,7 +138,7 @@
       </div>
 
       <!--KR node-->
-      <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"
+      <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"  (click)="clickTreeNode($event)" 
         *ngIf="item?.okrType==krType || item?.okrType==skrType">
         <div class="d-flex align-items-center col-6">
           <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
@@ -147,7 +147,7 @@
           <span class="icon-brightness_1 fs-12px d-flex align-items-center "
             [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
-            <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
+            <span class="ob-kr text-dark fw-bold" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
             <div class="d-flex flex-wrap">
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>

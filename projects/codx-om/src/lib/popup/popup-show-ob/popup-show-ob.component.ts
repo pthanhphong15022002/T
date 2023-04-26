@@ -31,6 +31,8 @@ import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.component';
+import { TabModelSprints } from 'projects/codx-tm/src/lib/models/TM_Sprints.model';
+import { OM_TabModel } from '../../model/okr.model';
 
 @Component({
   selector: 'popup-show-ob',
@@ -56,6 +58,15 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   obType=OMCONST.VLL.OKRType.Obj;
   krType=OMCONST.VLL.OKRType.KResult;
   skrType=OMCONST.VLL.OKRType.SKResult;
+  
+  activeTab='Overview' ;
+  tabControl = [
+    { name: 'Overview', textDefault: 'Tổng quan', isActive: true, icon:'icon-i-bullseye' },
+    { name: 'Links', textDefault: 'Liên kết', isActive: false, icon:'icon-account_tree'  },
+    { name: 'Tasks', textDefault: 'Công việc', isActive: false, icon:'icon-format_list_numbered'  },
+    { name: 'Comments', textDefault: 'Ghi chú', isActive: false, icon:'icon-i-chat'  },
+    { name: 'History', textDefault: 'Cập nhật', isActive: false, icon:'icon-history'  },
+  ];
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -131,6 +142,8 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   okrVll: any;
   isHiddenChart=true;
   okrGrv: any;
+  offset: string;
+  active: any;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -183,7 +196,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     this.getObjectData();    
     this.getListAlign();
     this.getListAssign();
-    //this.getChartData();
+    this.loadTabView();
     
   }
 
@@ -198,16 +211,16 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
-  getItemOKRAlign(i: any, recID: any) {
-    this.openAccordionAlign[i] = !this.openAccordionAlign[i];
-    // if(this.dataOKR[i].items && this.dataOKR[i].items.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].items = item
-    //   });
+  loadTabView() {    
+    this.activeTab='Overview';
+    if (
+      this.activeTab == 'Tasks'
+    )
+      this.offset = '65px';
+    else this.offset = '0px';
+    this.detectorRef.detectChanges();
   }
-  getItemOKRAssign(i: any, recID: any) {
-    this.openAccordionAssign[i] = !this.openAccordionAssign[i];
-  }
+  
   getObjectData(){
     this.codxOmService
         .getObjectAndKRChild(this.oldOB?.recID)
@@ -239,8 +252,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   collapeKR(collapsed: boolean) {
     this.collapedData(this.listAlign,collapsed);
-    this.collapedData(this.listAssign,collapsed);
-    
+    this.collapedData(this.listAssign,collapsed);    
     this.isCollapsed = collapsed;
   }
   collapedData(data:any,collapsed:any){
@@ -394,6 +406,22 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
+  clickMenu(item) {
+    this.activeTab = item.name;
+    for(let i=0;i<this.tabControl.length;i++){
+      if (this.tabControl[i].isActive == true) {
+        this.tabControl[i].isActive = false;        
+      }
+
+    }  
+    if (
+      this.activeTab == 'Tasks'
+    )
+      this.offset = '65px';
+    else this.offset = '0px'; 
+    item.isActive = true;
+    this.detectorRef.detectChanges();
+  }
 
   //-----------------------End-------------------------------//
 }
