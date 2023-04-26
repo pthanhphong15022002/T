@@ -9,4 +9,5 @@ export interface ItemsProduction {
   scrapIssue: string;
   yield: number | null;
   autoIssue: boolean | null;
+  calcExpiryDate: string;
 }

@@ -10,7 +10,6 @@ import {
 import {
   AlertConfirmInputConfig,
   AuthStore,
-  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -55,13 +54,13 @@ export class PopupAddRoleComponent extends UIComponent {
   titlemessage = 'Thông báo';
   copymessage = 'Bạn có muốn lưu lên không ?';
   renamemessage = 'Bạn có muốn lưu với tên {0} không ?';
-  
-  titleDialog='Phân quyền bộ mục tiêu';
+
+  titleDialog = 'Phân quyền bộ mục tiêu';
   ////
   okrPlan: any;
   userID: any;
   permissonActiveId: any;
-  user: import("codx-core").UserModel;
+  user: import('codx-core').UserModel;
   currentPemission: any;
   objectType: any;
   constructor(
@@ -84,27 +83,13 @@ export class PopupAddRoleComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  // ngAfterViewInit(): void {
-
-  // }
-
-  // onInit(): void {
 
   onInit(): void {
     this.getData();
-    //this.getRoleShare();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
-  // getCacheData(){
-
-  // }
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Get Data Func---------------------------------//
-  //---------------------------------------------------------------------------------//
-
   getData() {
     this.codxOmService
       .getOKRPlansByID(this.oldPlan?.recID)
@@ -116,46 +101,58 @@ export class PopupAddRoleComponent extends UIComponent {
         }
       });
   }
-  getRoleShare() {}
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
   onSaveRightChanged($event, ctrl, index) {
     let value = $event.data;
     switch (ctrl) {
       case 'full':
         this.okrPlan.permissions[index].full = value;
         this.okrPlan.permissions[index].create = value;
-      this.okrPlan.permissions[index].read = value;
-      this.okrPlan.permissions[index].edit = value;
-      this.okrPlan.permissions[index].publish = value;
-      this.okrPlan.permissions[index].assign = value;
-      this.okrPlan.permissions[index].delete = value;
-      this.okrPlan.permissions[index].share = value;
-      this.okrPlan.permissions[index].upload = value;
-        break;      
-      case 'assign':
+        this.okrPlan.permissions[index].read = value;
+        this.okrPlan.permissions[index].edit = value;
+        this.okrPlan.permissions[index].publish = value;
+        this.okrPlan.permissions[index].assign = value;
+        this.okrPlan.permissions[index].delete = value;
+        this.okrPlan.permissions[index].share = value;
+        this.okrPlan.permissions[index].upload = value;
+        this.full = value;
+        this.create = value;
+        this.read = value;
+        this.edit = value;
+        this.publish = value;
         this.assign = value;
+        this.delete = value;
+        this.share = value;
+        this.upload = value;
         break;
       case 'fromdate':
-        if (value != null) this.okrPlan.permissions[index].startDate = value.fromDate;
+        if (value != null)
+          this.okrPlan.permissions[index].startDate = value.fromDate;
         break;
       case 'todate':
-        if (value != null) this.okrPlan.permissions[index].endDate = value.fromDate;
+        if (value != null)
+          this.okrPlan.permissions[index].endDate = value.fromDate;
         break;
       default:
         this.okrPlan.permissions[index][ctrl] = value;
         break;
     }
 
-    if ( this.okrPlan.permissions[index].create &&
+    if (
+      this.okrPlan.permissions[index].create &&
       this.okrPlan.permissions[index].read &&
       this.okrPlan.permissions[index].edit &&
       this.okrPlan.permissions[index].publish &&
       this.okrPlan.permissions[index].assign &&
       this.okrPlan.permissions[index].delete &&
       this.okrPlan.permissions[index].share &&
-      this.okrPlan.permissions[index].upload )
+      this.okrPlan.permissions[index].upload
+    ) {
       this.okrPlan.permissions[index].full = true;
-    else {
-      this.okrPlan.permissions[index].full = true;
+    } else {
+      this.okrPlan.permissions[index].full = false;
     }
     this.detectorRef.detectChanges();
   }
@@ -208,7 +205,6 @@ export class PopupAddRoleComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-
   removeUserRight(index, list: Permission[] = null) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
@@ -217,12 +213,18 @@ export class PopupAddRoleComponent extends UIComponent {
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           this.detectorRef.detectChanges();
-          this.okrPlan.permissions.splice(index,1);          
+          this.okrPlan.permissions.splice(index, 1);
           this.detectorRef.detectChanges();
         }
       });
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   onSaveRole(evt: any) {
     if (evt?.data) {
       var data = evt?.data.filter(
@@ -271,4 +273,7 @@ export class PopupAddRoleComponent extends UIComponent {
       return;
     }
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 }

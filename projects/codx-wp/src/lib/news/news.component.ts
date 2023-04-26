@@ -63,7 +63,7 @@ export class NewsComponent extends UIComponent {
 
   onInit(): void {
     this.router.params.subscribe((param) => {
-      this.category = param["category"] !== "home" ? param["category"] : "";
+      this.category = param["category"];
       this.loadDataAsync(this.category);
       if(param["funcID"] && !this.userPermission){
         this.funcID = param["funcID"];
@@ -148,10 +148,11 @@ export class NewsComponent extends UIComponent {
         [category]).subscribe((res:any) => {
           if(res)
           {
-            this.posts = res;
-            this.detectorRef.detectChanges();
+            this.posts = JSON.parse(JSON.stringify(res));
           }
           this.loaded = true;
+          this.detectorRef.detectChanges();
+
         });
   }
   

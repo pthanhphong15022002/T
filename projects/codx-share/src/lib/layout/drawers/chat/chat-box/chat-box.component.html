@@ -58,32 +58,34 @@
                     <div class="message"  [attr.scroll]="i == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null">
                         <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
                             <div class="message-send">
-                                <div class="message-function">
-                                    <span ngbDropdown ngbDropdownToggle 
-                                        class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                <ng-container *ngIf="item.messageType != '5'">
+                                    <div class="message-function">
                                         <ng-container *ngIf="item.createdBy == user.userID">
-                                            <ul ngbDropdownMenu>
-                                                <li ngbDropdownItem *ngIf="item.messageType != '5'">
-                                                    <a (click)="deleteMessage(item)"  href="javascript:void(0)">
-                                                        <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                                                        <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                            <span ngbDropdown ngbDropdownToggle 
+                                                class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                                <ul ngbDropdownMenu>
+                                                    <li ngbDropdownItem *ngIf="item.messageType != '5'">
+                                                        <a (click)="deleteMessage(item)"  href="javascript:void(0)">
+                                                            <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                            <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </span>
                                         </ng-container>
-                                    </span>
-                                    <ng-container *ngIf="item.refType != 'm'">
-                                        <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
-                                    </ng-container>
-                                    <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
-                                        (click)="openTooltipEmoji(tooltip1,item)"
-                                        #tooltip1="ngbTooltip"
-                                        triggers="manual"
-                                        placement="top"
-                                        [autoClose]="true"
-                                        [ngbTooltip]="tooltipEmojiMssg">
-                                    </span>
-                                </div>
+                                        <ng-container *ngIf="item.refType != 'm'">
+                                            <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
+                                        </ng-container>
+                                        <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
+                                            (click)="openTooltipEmoji(tooltip1,item)"
+                                            #tooltip1="ngbTooltip"
+                                            triggers="manual"
+                                            placement="top"
+                                            [autoClose]="true"
+                                            [ngbTooltip]="tooltipEmojiMssg">
+                                        </span>
+                                    </div>
+                                </ng-container>
                                 <ng-container *ngIf="item.messageType != '2'">
                                     <div class="message-send-message">
                                         <ng-container *ngIf="item.messageType == '5';else messageContent">
@@ -156,8 +158,8 @@
                                 </ng-container>
                             </div>
                         </ng-container>
+                         <!-- reciver message -->
                         <ng-template #reciverMssg>
-                            <!-- reciver message -->
                             <div class="message-reciver">
                                 <div class="message-reciver-avatar">
                                     <codx-img 
@@ -240,31 +242,33 @@
                                     </div>
                                 </ng-container>
                             </div>
-                            <div class="message-function">
-                                <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
-                                    (click)="openTooltipEmoji(tooltip2,item)"
-                                    #tooltip2="ngbTooltip"
-                                    triggers="manual"
-                                    [autoClose]="true"
-                                    [ngbTooltip]="tooltipEmojiMssg">
-                                </span>
-                                <ng-container *ngIf="item.refType != 'm'">
-                                    <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
-                                </ng-container>
-                                <span ngbDropdown ngbDropdownToggle 
-                                    class="icon-more_vert me-2 cursor-pointer text-gray-600">
-                                    <ng-container *ngIf="item.createdBy == user.userID" >
-                                        <ul ngbDropdownMenu>
-                                            <li ngbDropdownItem *ngIf="item.messageType !='5'">
-                                                <a (click)="deleteMessage(item)"  href="javascript:void(0)">
-                                                    <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                                                    <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
-                                                </a>
-                                            </li>
-                                        </ul>
+                            <ng-container *ngIf="item.messageType != '5'">
+                                <div class="message-function">
+                                    <span class="icon-tag_faces me-2 cursor-pointer text-gray-600"
+                                        (click)="openTooltipEmoji(tooltip2,item)"
+                                        #tooltip2="ngbTooltip"
+                                        triggers="manual"
+                                        [autoClose]="true"
+                                        [ngbTooltip]="tooltipEmojiMssg">
+                                    </span>
+                                    <ng-container *ngIf="item.refType != 'm'">
+                                        <span class="icon-undo me-2 cursor-pointer text-gray-600" (click)="clickReplyMssg(item)"></span>
                                     </ng-container>
-                                </span>
-                            </div>
+                                    <ng-container *ngIf="item.createdBy == user.userID" >
+                                        <span ngbDropdown ngbDropdownToggle 
+                                            class="icon-more_vert me-2 cursor-pointer text-gray-600">
+                                            <ul ngbDropdownMenu>
+                                                <li ngbDropdownItem *ngIf="item.messageType !='5'">
+                                                    <a (click)="deleteMessage(item)"  href="javascript:void(0)">
+                                                        <span class="icon-close icon-16 me-2 icon-removePost"></span>
+                                                        <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </span>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
                         </ng-template>  
                     </div>
                 </ng-template>  
@@ -302,7 +306,8 @@
                         [hideUploadBtn]="'1'" 
                         [hideBtnSave]="'1'" 
                         [hideImageThumb]="'1'"
-                        [hideUploadBtn]="'1'" 
+                        [hideUploadBtn]="'1'"
+                        [addPermissions]="permissions" 
                         (fileAdded)="addFileImages($event)">
                     </codx-attachment>
                 </div>

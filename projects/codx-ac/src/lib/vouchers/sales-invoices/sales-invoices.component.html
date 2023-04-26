@@ -40,28 +40,28 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <span
-    class="text-gray-600"
+  <div
+    class="fs-6 fw-bold mt-1"
     [innerHTML]="
       data?.objectID | formatvalue : view.formModel : 'objectID' | async
     "
   >
-  </span>
+  </div>
 </ng-template>
 
 <ng-template #desc2Tmp let-data>
-  <span class="text-gray-600">{{ data?.memo }}</span>
+  <span class="text-gray-500">{{ data?.memo }}</span>
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <span class="fs-5 fw-bold text-uppercase">{{ data.voucherNo }}</span>
-  <span class="fs-5 fw-bold text-uppercase">{{
+  <span class="fw-bold">{{ data.voucherNo }}</span>
+  <span class="fw-bold">{{
     data.totalAmt | currency : "VND" : "code"
   }}</span>
 </ng-template>
 
 <ng-template #siderFooter let-data>
-  <div class="d-flex align-items-center justify-content-between pt-2">
+  <div class="d-flex align-items-center justify-content-between mt-1">
     <div class="d-flex align-items-center">
       <codx-vll
         [formModel]="view.formModel"
@@ -69,18 +69,20 @@
         [value]="data?.status"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-light badge-md fs-4 me-3"
+        class="badge badge-light badge-sm me-3"
       >
       </codx-vll>
-
-      <span
-        class="fs-6 text-gray-600"
-        [innerHTML]="
-          data?.voucherDate
-            | formatvalue : view.formModel : 'voucherDate'
-            | async
-        "
-      ></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            data?.voucherDate
+              | formatvalue : view.formModel : 'voucherDate'
+              | async
+          "
+        ></span>
+      </div>
     </div>
 
     <codx-img
@@ -107,11 +109,17 @@
 </ng-template>
 
 <ng-template #header>
-  <div class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase pt-2">
-    {{ selectedData?.voucherNo }}
+  <div class="d-flex align-items-center ac-cashID mt-n8">
+    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
+      <i class="icon-i-file-earmark-text text-white icon-16"></i>
+    </div>
+    <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
+      {{ selectedData?.voucherNo }}
+    </span>
   </div>
 
-  <div class="d-flex align-items-center justify-content-between pt-2">
+
+  <div class="d-flex align-items-center justify-content-between mt-3 mb-2">
     <span
       class="fw-bold line-clamp line-clamp-1 fs-4 text-uppercase"
       [innerHTML]="
@@ -128,25 +136,25 @@
       [value]="selectedData?.status"
       [showText]="true"
       [showBgColor]="true"
-      class="badge badge-light badge-md fs-4 me-2 mb-2"
+      class="badge badge-light badge-sm border-0 me-3"
     >
     </codx-vll>
   </div>
 </ng-template>
 
 <ng-template #body>
-  <div class="d-flex align-items-center justify-content-between pt-2 mb-2">
-    <div class="d-flex gap-10">
-      <div>
-        <i class="bi bi-calendar2-event icon-16 me-2 text-primary"></i>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-top me-5 mb-1">
+        <span class="icon-customize icon-16 me-2"></span>
         <codx-label
           fiedName="voucherDate"
           [formModel]="view.formModel"
-          class="fw-bold fs-5"
+          class="fw-bold label-colon"
         ></codx-label
-        >:&nbsp;
+        >
         <span
-          class="text-gray-600 fs-5"
+          class="text-gray-600"
           [innerHTML]="
             selectedData?.voucherDate
               | formatvalue : view.formModel : 'voucherDate'
@@ -154,43 +162,43 @@
           "
         ></span>
       </div>
-      <div>
-        <i class="bi bi-credit-card-2-front-fill icon-16 me-2 text-primary"></i>
+      <div class="d-flex align-items-top me-5 mb-1">
+        <span class="icon-i-credit-card icon-16 me-2"></span>
         <codx-label
           fiedName="pmtMethodID"
           [formModel]="view.formModel"
-          class="fw-bold fs-5"
+          class="fw-bold label-colon"
         ></codx-label
-        >:&nbsp;
+        >
         <span
           [innerHTML]="
             selectedData.pmtMethodID
               | formatvalue : view.formModel : 'pmtMethodID'
               | async
           "
-          class="text-gray-600 fs-5"
+          class="text-gray-600"
         ></span>
       </div>
     </div>
 
-    <span class="badge badge-pill badge-primary me-2">
-      <span class="fs-5">{{
+    <span class="badge badge-pill badge-primary me-3">
+      <span class="fw-bold fs-6">{{
         selectedData.totalAmt | currency : "VND" : "code"
       }}</span>
     </span>
   </div>
 
-  <div class="d-flex gap-10 mb-2">
-    <div>
-      <i class="bi bi-credit-card-2-front-fill icon-16 me-2 text-primary"></i>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-top me-5 mb-1">
+      <span class="icon-edit-one icon-16 me-2"></span>
       <codx-label
         fiedName="pmtTermID"
         [formModel]="view.formModel"
-        class="fw-bold fs-5"
+        class="fw-bold label-colon"
       ></codx-label
-      >:&nbsp;
+      >
       <span
-        class="text-gray-600 fs-5"
+        class="text-gray-600"
         [innerHTML]="
           selectedData?.pmtTermID
             | formatvalue : view.formModel : 'pmtTermID'
@@ -198,36 +206,36 @@
         "
       ></span>
     </div>
-    <div>
-      <i class="bi bi-person-circle icon-16 me-2 text-primary"></i>
+    <div class="d-flex align-items-top me-5 mb-1">
+      <span class="icon-customize icon-16 me-2"></span>
       <codx-label
         fiedName="invoiceDueDate"
         [formModel]="view.formModel"
-        class="fw-bold fs-5"
+        class="fw-bold label-colon"
       ></codx-label
-      >:&nbsp;
+      >
       <span
         [innerHTML]="
           selectedData.invoiceDueDate
             | formatvalue : view.formModel : 'invoiceDueDate'
             | async
         "
-        class="text-gray-600 fs-5"
+        class="text-gray-600"
       ></span>
     </div>
   </div>
 
-  <div class="d-flex gap-10 mb-2">
-    <div>
-      <i class="bi bi-credit-card-2-front-fill icon-16 me-2 text-primary"></i>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-top me-5 mb-1">
+      <span class="icon-assignment icon-16 me-2"></span>
       <codx-label
         fiedName="contractNo"
         [formModel]="view.formModel"
-        class="fw-bold fs-5"
+        class="fw-bold label-colon"
       ></codx-label
-      >:&nbsp;
+      >
       <span
-        class="text-gray-600 fs-5"
+        class="text-gray-600"
         [innerHTML]="
           selectedData?.contractNo
             | formatvalue : view.formModel : 'contractNo'
@@ -236,59 +244,57 @@
       ></span>
     </div>
 
-    <div>
-      <i class="bi bi-person-circle icon-16 me-2 text-primary"></i>
+    <div class="d-flex align-items-top me-5 mb-1">
+      <span class="icon-i-person-fill icon-16 me-2"></span>
       <codx-label
         fiedName="salespersonID"
         [formModel]="view.formModel"
-        class="fw-bold fs-5"
+        class="fw-bold label-colon"
       ></codx-label
-      >:&nbsp;
+      >
       <span
         [innerHTML]="
           selectedData?.salespersonID
             | formatvalue : view.formModel : 'salespersonID'
             | async
         "
-        class="text-gray-600 fs-5"
+        class="text-gray-600"
       ></span>
     </div>
 
-    <div>
-      <i class="bi bi-person-circle icon-16 me-2 text-primary"></i>
+    <div class="d-flex align-items-top me-5 mb-1">
+      <span class="icon-i-box icon-16 me-2"></span>
       <codx-label
         fiedName="warehouse"
         [formModel]="view.formModel"
-        class="fw-bold fs-5"
+        class="fw-bold label-colon"
       ></codx-label
-      >:&nbsp;
+      >
       <span
         [innerHTML]="
           selectedData.warehouse
             | formatvalue : view.formModel : 'warehouse'
             | async
         "
-        class="text-gray-600 fs-5"
+        class="text-gray-600"
       ></span>
     </div>
   </div>
 
-  <div class="d-flex gap-10 mb-2">
-    <div>
-      <i class="bi bi-brush icon-16 me-2 text-primary"></i>
-      <codx-label
-        fiedName="memo"
-        [formModel]="view.formModel"
-        class="fw-bold fs-5"
-      ></codx-label
-      >:&nbsp;
-      <span
-        [innerHTML]="
-          selectedData?.memo | formatvalue : view.formModel : 'memo' | async
-        "
-        class="text-gray-600 fs-5"
-      ></span>
-    </div>
+  <div class="d-flex align-items-top me-5 mb-1">
+    <span class="icon-brush icon-16 me-2"></span>
+    <codx-label
+      fiedName="memo"
+      [formModel]="view.formModel"
+      class="fw-bold label-colon"
+    ></codx-label
+    >
+    <span
+      [innerHTML]="
+        selectedData?.memo | formatvalue : view.formModel : 'memo' | async
+      "
+      class="text-gray-600"
+    ></span>
   </div>
 
   <ejs-tab class="mt-5">
@@ -296,9 +302,9 @@
       <e-tabitem>
         <ng-template #headerText>
           <div class="d-flex me-2">
-            <i class="icon-format_list_numbered icon-18 me-2"></i>
+            <span class="icon-format_list_numbered icon-18 me-2"></span>
             <codx-label
-              class="fw-bold fs-6"
+              class="fw-bold"
               fiedName="lblDetail"
               [formModel]="view.formModel"
               default="Thông tin chi tiết"

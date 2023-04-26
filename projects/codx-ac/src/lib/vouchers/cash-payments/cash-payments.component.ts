@@ -51,7 +51,7 @@ export class CashPaymentsComponent extends UIComponent {
   userID: any;
   dataCategory: any;
   journal: IJournal;
-  approval:any;
+  approval: any;
   cashpaymentline: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
@@ -194,17 +194,19 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      this.dialog.closed.subscribe((res) => {
-          if (res.event['update']) {
-            this.itemSelected = res.event['data'];
-            this.loadDatadetail(this.itemSelected);
+        this.dialog.closed.subscribe((res) => {
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
           }
         });
       });
   }
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = {...data};
+      this.view.dataService.dataSelected = { ...data };
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -224,9 +226,11 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event['update']) {
-            this.itemSelected = res.event['data'];
-            this.loadDatadetail(this.itemSelected);
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
           }
         });
       });
@@ -260,9 +264,7 @@ export class CashPaymentsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true)
-      .subscribe((res: any) => {});
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
   //#endregion
 
@@ -311,10 +313,10 @@ export class CashPaymentsComponent extends UIComponent {
     // check có hay ko duyệt trước khi ghi sổ
     if (data?.status == '1') {
       if (this.approval == '0') {
-        bm.forEach(element => {
+        bm.forEach((element) => {
           element.disabled = true;
         });
-      }else{
+      } else {
         bm[1].disabled = true;
         bm[2].disabled = true;
       }
@@ -383,7 +385,6 @@ export class CashPaymentsComponent extends UIComponent {
     //         } else this.notification.notifyCode(result?.msgCodeError);
     //       });
     //   });
-    
   }
   //#endregion
 }

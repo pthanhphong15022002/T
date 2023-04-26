@@ -58,7 +58,7 @@ export class CM_Quotations {
   pmtTermID: string;
   pmtMethodID: string;
   currencyID: string;
-  status: string;
+  status: string ="1";
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -79,6 +79,57 @@ export class CM_Quotations {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class CM_QuotationsLines {
+  recID: string;
+  transID: string;
+  rowNo: number;
+  lineType: string;
+  lineStatus: string;
+  barcode: string;
+  itemID: string;
+  itemNote: string;
+  iDIM0: string;
+  iDIM1: string;
+  iDIM2: string;
+  iDIM3: string;
+  iDIM4: string;
+  quantity: number;
+  uMID: string;
+  conversion: number;
+  cWUM: string;
+  cWConversion: number;
+  cWQty: number;
+  cWOnhand: number;
+  onhand: number;
+  costPrice: number;
+  costAmt: number;
+  stdPrice: number;
+  salesPrice: number;
+  salesAmt: number;
+  discPct: number;
+  discAmt: number;
+  netAmt: number;
+  commissionPct: number;
+  commissionAmt: number;
+  salesTaxPct: number;
+  salesTaxAmt: number;
+  exciseTaxPct: number;
+  exciseTaxAmt: number;
+  vATID: string;
+  vATBase: number;
+  vATAmt: number;
+  refType: string;
+  refNo: string;
+  refID: string;
+  refLineID: string;
+  note: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  
 }
 
 export class CM_Deals {
@@ -196,6 +247,7 @@ export class CM_Customers {
   bankAccount: string;
   bankID: string;
   memo: string;
+  tags: string ;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -255,6 +307,7 @@ export class CM_Contacts {
   userID: string;
   allowCall: boolean;
   allowEmail: boolean;
+  tags: string ;
   owner: string;
   bUID: string;
   createdOn: Date;

@@ -15,18 +15,18 @@
 <codx-views
   #view
   idField="recID"
-  [funcID]="funcID"
+  [funcID]="'CM0202'"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
   [method]="methodLoadData"
   [views]="views"
-  predicates="CustomerID=@0"
-  [dataValues]="customerID"
   [toolbarDisplay]="false"
   (selectedChange)="changeItemDetail($event)"
 >
+<!-- predicates="CustomerID=@0"
+[dataValues]="customerID" -->
 </codx-views>
 <ng-template #templateMore let-data>
   <codx-mfunc

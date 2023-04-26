@@ -352,34 +352,37 @@ export class DynamicProcessComponent
               gridViewSetup: this.gridViewSetup,
               lstGroup: this.lstGroup,
             };
-
-           let data = [ this.oldIdProccess,this.view.dataService.dataSelected.recID  ];
-            this.codxDpService.copyAvatarById(data).subscribe(res => {
-              if(res){
-                debugger;
-                var dialog = this.callfc.openForm(
-                  PopupAddDynamicProcessComponent,
-                  '',
-                  this.widthWin,
-                  this.heightWin,
-                  '',
-                  obj,
-                  '',
-                  dialogModel
-                );
-                dialog.closed.subscribe((e) => {
-                  if (!e?.event) this.view.dataService.clear();
-                  if (e && e.event != null) {
-                    e.event.totalInstance = this.totalInstance;
-                    this.changeDetectorRef.detectChanges();
-                  }
-                });
-              }
-             });
+            let data = [
+              this.oldIdProccess,
+              this.view.dataService.dataSelected.recID,
+            ];
+            this.codxDpService.copyAvatarById(data).subscribe((res) => {
+              this.openFormCopyProccess(obj, dialogModel);
+            });
           });
       });
     }
     return;
+  }
+
+  openFormCopyProccess(obj, dialogModel) {
+    var dialog = this.callfc.openForm(
+      PopupAddDynamicProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      if (e && e.event != null) {
+        e.event.totalInstance = this.totalInstance;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
   saveCopy() {
     this.isCopy = true;
@@ -629,7 +632,11 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01015':
-            if (!data.approveRule) res.isblur = true;
+            if (!data.write) {
+              res.disabled = true;
+            } else if (!data.approveRule) {
+              res.isblur = true;
+            }
             break;
         }
       });

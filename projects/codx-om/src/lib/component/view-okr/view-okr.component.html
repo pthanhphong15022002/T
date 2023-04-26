@@ -19,14 +19,14 @@
                 <span class="fs-10">%</span>
               </span>
             </span>
-            <ejs-progressbar [id]="'label-container'+item?.recID" [type]="'Circular'" [maximum]="100"
-              [minimum]="0" [value]="item?.progress" [width]="'60'" [height]="'60'" [trackThickness]="5"
+            <ejs-progressbar [id]=" newGuid()" [type]="'Circular'" [maximum]="100"
+              [minimum]="0" [value]="item?.progress !=null ? item?.progress:0" [width]="'60'" [height]="'60'" [trackThickness]="5"
               [progressThickness]="3" [progressColor]="'#FF0000'">
               <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
             </ejs-progressbar>
           </div>
         </div>
-        <span class="ob-kr ob-name fs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+        <span [ngClass]="allowShowDetail ?'ob-kr' :''" class=" fs-6 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
         <div class="d-flex flex-column">
           <div class="d-flex flex-stack">
             <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'" [ngbTooltip]="okrGrv.krGrv?.category?.headerText"
@@ -78,7 +78,7 @@
       <span class="icon-brightness_1 fs-12px d-flex align-items-center "
         [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
       <span class="ps-5 d-flex flex-column">
-        <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
+        <span  [ngClass]="allowShowDetail ?'ob-kr' :''" class="text-dark fw-bold" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
         <div class="d-flex flex-wrap">
           <div class="d-flex align-items-center">
             <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>

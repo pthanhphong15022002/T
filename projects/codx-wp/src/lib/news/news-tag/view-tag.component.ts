@@ -86,7 +86,7 @@ export class NewsTagComponent extends UIComponent {
   }
   //
   loadDataViews() {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewOderByViewAsync")
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetPostOderByViewAsync")
       .subscribe((res: any) => {
         if (res) {
           this.listViews = res;

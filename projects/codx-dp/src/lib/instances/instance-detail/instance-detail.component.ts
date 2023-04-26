@@ -132,8 +132,9 @@ export class InstanceDetailComponent implements OnInit {
   HTMLProgress = `<div style="font-size:12px;font-weight:bold;color:#005DC7;fill:#005DC7;margin-top: 2px;"><span></span></div>`;
   //gan chart
   vllViewGannt = 'DP042';
-  crrViewGant = 'D';
+  crrViewGant = 'W';
   timelineSettings: any;
+  tags = '';
   timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
@@ -223,7 +224,7 @@ export class InstanceDetailComponent implements OnInit {
       unit: 'Week',
       count: 1,
       formatter: (date: Date) => {
-        return `${date.toLocaleDateString()}`;
+        return date.toLocaleDateString();
       },
     },
     timelineUnitSize: 100,
@@ -272,7 +273,7 @@ export class InstanceDetailComponent implements OnInit {
         console.log(this.frmModelInstancesTask);
       }
     });
-    this.timelineSettings = this.timelineSettingsDays;
+    this.timelineSettings = this.timelineSettingsWeek;
   }
 
   async ngOnInit(): Promise<void> {
@@ -325,10 +326,12 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync() {
+    this.tags = '';
     var data = [this.id, this.dataSelect.processID, this.instanceStatus];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
+        this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.getStageByStep(this.listSteps);

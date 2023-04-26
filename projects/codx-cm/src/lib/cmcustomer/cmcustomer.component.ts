@@ -528,16 +528,14 @@ export class CmCustomerComponent
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.view.dataService.update(e.event).subscribe();
               console.log(this.entityName);
               this.dataSelected = JSON.parse(JSON.stringify(e.event));
-              this.customerDetail.getListContactByObjectID(
-                this.dataSelected?.recID
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.customerDetail.getOneCustomerDetail(
+                this.dataSelected.recID,
+                this.funcID
               );
-              this.customerDetail.getListAddress(
-                this.entityName,
-                this.dataSelected?.recID
-              );
+
               // this.customerDetail.listTab(this.funcID);
               this.detectorRef.detectChanges();
             }
@@ -632,9 +630,7 @@ export class CmCustomerComponent
         this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
           if (res) {
             this.dataSelected.isBlackList = isBlacklist;
-            this.dataSelected = JSON.parse(
-              JSON.stringify(this.dataSelected)
-            );
+            this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
             this.view.dataService.update(this.dataSelected).subscribe();
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
