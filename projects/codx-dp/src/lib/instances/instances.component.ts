@@ -1214,7 +1214,7 @@ export class InstancesComponent
     ).transferControl;
 
     if (!this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)) {
-      this.openFormForAutoMove(dataInstance);
+      return;
     } else {
       this.handleMoveStage(dataInstance);
     }
@@ -1249,50 +1249,52 @@ export class InstancesComponent
     if (isStopAuto) {
       this.openFormForAutoMove(dataInstance);
     }
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-      if (x.event?.status == 'Y') {
-        var instanceStepId = dataInstance.listStep.filter((x) =>
-          strStepsId.some((y) => y == x.stepID)
-        );
-        for (let item of instanceStepId) {
-          if (item.stepStatus == '0') {
-            item.stepStatus = '1';
-            item.actualStart = new Date();
-          } else if (item.stepStatus == '1') {
-            item.stepStatus = '3';
-          }
-        }
-        dataInstance.instance.stepID = instanceStepId.find(
-          (item) => item.stepStatus == '1'
-        ).stepID;
-        var processId = dataInstance.instance.processID;
-        var data = [instanceStepId, processId];
-        this.codxDpService.autoMoveStage(data).subscribe((res) => {
-          if (res) {
-            var stepsUpdate = dataInstance.listStep.map((item1) => {
-              var item2 = instanceStepId.find(
-                (item2) => item1.stepID === item2.stepID
-              );
-              if (item2) {
-                return { ...item1, status: item2.status };
-              }
-            });
-            this.listStepInstances = stepsUpdate;
-            this.dataSelected = dataInstance.instance;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-
-            if (this.detailViewInstance) {
-              this.detailViewInstance.dataSelect = this.dataSelected;
-              this.detailViewInstance.listSteps = this.listStepInstances;
+    else {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          var instanceStepId = dataInstance.listStep.filter((x) =>
+            strStepsId.some((y) => y == x.stepID)
+          );
+          for (let item of instanceStepId) {
+            if (item.stepStatus == '0') {
+              item.stepStatus = '1';
+              item.actualStart = new Date();
+            } else if (item.stepStatus == '1') {
+              item.stepStatus = '3';
             }
-            this.detectorRef.detectChanges();
           }
-        });
-      }
-    });
+          dataInstance.instance.stepID = instanceStepId.find(
+            (item) => item.stepStatus == '1'
+          ).stepID;
+          var processId = dataInstance.instance.processID;
+          var data = [instanceStepId, processId];
+          this.codxDpService.autoMoveStage(data).subscribe((res) => {
+            if (res) {
+              var stepsUpdate = dataInstance.listStep.map((item1) => {
+                var item2 = instanceStepId.find(
+                  (item2) => item1.stepID === item2.stepID
+                );
+                if (item2) {
+                  return { ...item1, status: item2.status };
+                }
+              });
+              this.listStepInstances = stepsUpdate;
+              this.dataSelected = dataInstance.instance;
+              this.view.dataService.update(this.dataSelected).subscribe();
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+              if (this.detailViewInstance) {
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.listSteps = this.listStepInstances;
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+    }
   }
 
   completedAllTasks(stepID, listStep) {
