@@ -271,7 +271,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.notificationsService.notifyCode(
         'DP032',
         0,
-        '"' + this.dateMessage + '"'
+        '"' + this.gridViewSetup['EndDate']?.headerText + '"', '"' + this.dateMessage + '"'
       );
       return;
     }

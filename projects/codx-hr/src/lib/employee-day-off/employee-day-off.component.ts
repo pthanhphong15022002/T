@@ -1,13 +1,15 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { data } from './../../../../codx-cm/src/lib/task/codx-table/data';
+import { copy } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   ChangeDetectorRef,
   Component,
   Injector,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
@@ -16,19 +18,19 @@ import {
   RequestOption,
   SidebarModel,
   UIComponent,
-  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
-import { PopupEAwardsComponent } from '../employee-profile/popup-eawards/popup-eawards.component';
+import { FormGroup } from '@angular/forms';
+import moment from 'moment';
+import { PopupEdayoffsComponent } from '../employee-profile/popup-edayoffs/popup-edayoffs.component';
 
 @Component({
-  selector: 'lib-employee-awards',
-  templateUrl: './employee-awards.component.html',
-  styleUrls: ['./employee-awards.component.css'],
+  selector: 'lib-employee-day-off',
+  templateUrl: './employee-day-off.component.html',
+  styleUrls: ['./employee-day-off.component.css'],
 })
-export class EmployeeAwardsComponent extends UIComponent {
+export class EmployeeDayOffComponent extends UIComponent {
   //#region view
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
@@ -39,8 +41,6 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
-
-  @ViewChild('reasonAward') reasonAward: TemplateRef<any>;
 
   //#endregion
 
@@ -57,17 +57,22 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
-  entityName = 'HR_EAwards';
-  className = 'EAwardsBusiness';
-  method = 'GetListAwardByDataRequestAsync';
+  entityName = 'HR_EDayOffs';
+  className = 'EDayOffsBusiness';
+  method = 'GetListDayOffByDataRequestAsync';
 
-  actionAddNew = 'HRTPro06A01'; //tạo mới
-  actionSubmit = 'HRTPro06A03'; //gửi duyệt
-  actionUpdateCanceled = 'HRTPro06AU0'; //hủy
-  actionUpdateInProgress = 'HRTPro06AU3'; //đang duyệt
-  actionUpdateRejected = 'HRTPro06AU4'; //từ chối
-  actionUpdateApproved = 'HRTPro06AU5';
-  actionUpdateClosed = 'HRTPro06AU9'; // đóng
+  //add = 'SYS03';
+  copy = 'SYS04';
+  edit = 'SYS03';
+  delete = 'SYS02';
+
+  actionAddNew = 'HRTPro09A01'; //tạo mới
+  actionSubmit = 'HRTPro09A03'; //gửi duyệt
+  actionUpdateCanceled = 'HRTPro09AU0'; //hủy
+  actionUpdateInProgress = 'HRTPro09AU3'; //đang duyệt
+  actionUpdateRejected = 'HRTPro09AU4'; //từ chối
+  actionUpdateApproved = 'HRTPro09AU5';
+  actionUpdateClosed = 'HRTPro09AU9'; // đóng
 
   funcID: string;
   grvSetup: any;
@@ -77,20 +82,21 @@ export class EmployeeAwardsComponent extends UIComponent {
     id: 'btnAdd',
     text: 'Thêm',
   };
-  eAwardsHeaderText;
+  eDayOffsHeaderText;
   formGroup: FormGroup;
-  currentEmpObj: any;
-  eAwardObj: any;
+  eDayOffObj: any;
   editStatusObj: any;
   dialogEditStatus: DialogRef;
   cmtStatus: string = '';
   dialogAddEdit: DialogRef;
   dataCategory: any;
-
   itemDetail;
+  currentEmpObj: any;
+  eDayOff: any;
 
-  onInit(): void {
-    this.cache.gridViewSetup('EAwards', 'grvEAwards').subscribe((res) => {
+  //Initviews
+  onInit() {
+    this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
       if (res) {
         this.grvSetup = res;
       }
@@ -126,9 +132,8 @@ export class EmployeeAwardsComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodDelete = 'DeleteEmployeeAwardInfoAsync';
+    this.view.dataService.methodDelete = 'DeleteEmployeeDayOffInfoAsync';
   }
-
   ngAfterViewChecked() {
     if (!this.formGroup?.value) {
       this.hrService
@@ -142,22 +147,13 @@ export class EmployeeAwardsComponent extends UIComponent {
     }
   }
 
-  addAward(event) {
-    if (event.id == 'btnAdd') {
-      this.handlerEAwards(
-        event.text + ' ' + this.view.function.description,
-        'add',
-        null
-      );
-    }
-  }
-
   handleAction(event) {}
   onMoreMulti(event) {}
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
+  //More function
   clickMF(event, data) {
     this.itemDetail = data;
     switch (event.functionID) {
@@ -178,15 +174,12 @@ export class EmployeeAwardsComponent extends UIComponent {
           emp: data?.emp,
           employeeID: data?.employeeID,
         };
-        this.handlerEAwards(
-          event.text + ' ' + this.view.function.description,
-          'add',
-          newData
-        );
+        this.handlerEDayOffs(event.text + ' ' + this.view.function.description,
+          'add', newData);
         break;
       //Delete
-      case 'SYS02':
-        if (data) {this.view.dataService.dataSelected = data;}
+      case this.delete:
+        if (data) {this.view.dataService.dataSelected = data; }
         this.view.dataService
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
@@ -194,18 +187,18 @@ export class EmployeeAwardsComponent extends UIComponent {
           .subscribe(() => {});
         break;
       //Edit
-      case 'SYS03':
-        this.handlerEAwards(
+      case this.edit:
+        //  let input = JSON.parse(JSON.stringify(data));//????
+        this.handlerEDayOffs(
           event.text + ' ' + this.view.function.description,
           'edit',
-          this.itemDetail
+          data
         );
         this.df.detectChanges();
         break;
       //Copy
-      case 'SYS04':
-        this.eAwardObj = data;
-        this.copyValue(event.text, this.eAwardObj);
+      case this.copy:
+        this.copyValue(event.text, this.itemDetail);
         this.df.detectChanges();
         break;
     }
@@ -214,7 +207,19 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.hrService.handleShowHideMF(event, data, this.view);
   }
 
-  handlerEAwards(actionHeaderText: string, actionType: string, data: any) {
+  dateCompare(beginDate, endDate) {
+    if (beginDate && endDate) {
+      let date1 = moment(beginDate).format('dd-MM-yyyy');
+      let date2 = moment(endDate).format('dd-MM-yyyy');
+
+      //return beginDate.getDate() < endDate.getDate();
+      return date1 < date2;
+    }
+    return false;
+  }
+
+  //add/edit/copy/delete
+  handlerEDayOffs(actionHeaderText: string, actionType: string, data: any){
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.view.formModel;
@@ -222,11 +227,11 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.currentEmpObj = data?.emp;
     //open form
     let dialogAdd = this.callfc.openSide(
-      PopupEAwardsComponent,
+      PopupEdayoffsComponent,
       {
         //pass data
         actionType: actionType,
-        dataInput: data,
+        dayoffObj: data,
         headerText: actionHeaderText,
         //employeeId: data?.employeeID,
         funcID: this.view.funcID,
@@ -238,39 +243,47 @@ export class EmployeeAwardsComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event[0]).subscribe((res) => {});
+          this.view.dataService.update(res.event).subscribe((res) => {});
           this.df.detectChanges();
         }
       }
       if (res?.event) this.view.dataService.clear();
     });
   }
-
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteEmployeeAwardInfoAsync';
-    opt.className = 'EAwardsBusiness';
-    opt.assemblyName = 'HR';
-    opt.service = 'HR';
-    opt.data = data;
-    return true;
+  addDayOff(event) {
+    if (event.id == 'btnAdd') {
+      this.handlerEDayOffs(
+        event.text + ' ' + this.view.function.description,
+        'add',
+        null
+      );
+    }
   }
-
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      this.handlerEAwards(
+      this.handlerEDayOffs(
         actionHeaderText + ' ' + this.view.function.description,
         'copy',
         res
       );
     });
   }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteEmployeeDayOffInfoAsync';
+    opt.className = 'EDayOffsBusiness';
+    opt.assemblyName = 'HR';
+    opt.service = 'HR';
+    opt.data = data;
+    return true;
+  }
 
+  //change status
   popupUpdateEAwardStatus(funcID, data) {
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
@@ -286,45 +299,36 @@ export class EmployeeAwardsComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event[0]).subscribe((res) => {});
+        this.view.dataService.update(res.event).subscribe((res) => {});
       }
       this.df.detectChanges();
     });
   }
-
-  getIdUser(string1, tring2) {}
-
+  closeUpdateStatusForm(dialog: DialogRef) {
+    dialog.close();
+  }
   valueChangeComment(event) {
     this.cmtStatus = event.data;
   }
   onSaveUpdateForm() {
     this.hrService
-      .UpdateEmployeeAwardInfo(this.editStatusObj)
+      .UpdateEmployeeDayOffInfo(this.editStatusObj)
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
-          this.hrService
-            .addBGTrackLog(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null,
-              'EAwardBusiness'
-            )
-            .subscribe((res) => {});
+          res.emp = this.currentEmpObj;
+          this.hrService.addBGTrackLog(
+            res.recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EDayOffsBusiness'
+          ).subscribe(res =>{});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
   }
-  closeUpdateStatusForm(dialog: DialogRef) {
-    dialog.close();
-  }
-  clickEvent(event, data) {
-    this.clickMF(event?.event, event?.data);
-  }
-  getDetailEAward(event, data) {}
 
   //#region gui duyet
   beforeRelease() {
@@ -359,11 +363,8 @@ export class EmployeeAwardsComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' +
-                this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo +
-                '</div>'
+              '<div> ' + this.view.function.description +' - ' 
+                + this.itemDetail.decisionNo + '</div>'
             )
             .subscribe((result) => {
               // console.log('ok', result);
@@ -372,7 +373,7 @@ export class EmployeeAwardsComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .UpdateEmployeeAwardInfo((res) => {
+                  .UpdateEmployeeDayOffInfo((res) => {
                     if (res) {
                       // console.log('after release', res);
                       this.view?.dataService

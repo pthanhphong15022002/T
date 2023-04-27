@@ -1227,30 +1227,46 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (!this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)) {
-      return;
-    } else {
+    if(this.isCheckTaskEnd(checkTransferControl, dataInstance.isAuto)){
+      this.openFormForAutoMove(dataInstance);
+    }
+    else if(this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)){
       this.handleMoveStage(dataInstance);
     }
+    else {
+      return;
+    }
+
   }
   isCheckAutoMoveStage(checkTransferControl: any, isAuto) {
     if (
       checkTransferControl == '1' &&
-      isAuto.isShowFromTaskAll &&
+      !isAuto.isShowFromTaskAll &&
       isAuto.isContinueTaskAll
     ) {
       return true;
-    } else if (
+    }
+    else if (
       checkTransferControl == '2' &&
       isAuto.isContinueTaskEnd &&
-      isAuto.isShowFromTaskEnd
+      !isAuto.isShowFromTaskEnd
     ) {
       return true;
-    } else {
+    }
+     else {
       return false;
     }
   }
-
+  isCheckTaskEnd(checkTransferControl: any, isAuto){
+    if (
+      checkTransferControl == '2' &&
+      !isAuto.isContinueTaskEnd &&
+      isAuto.isShowFromTaskEnd
+    ) {
+      return true;
+    }
+    return false;
+  }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;
     var strStepsId = [];
@@ -1341,11 +1357,6 @@ export class InstancesComponent
   openFormForAutoMove(dataInstance) {
     var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
     if (idx != -1) {
-      this.moveStage(
-        this.moreFuncInstance[idx],
-        dataInstance.instance,
-        dataInstance.listStep
-      );
       this.moveStage(
         this.moreFuncInstance[idx],
         dataInstance.instance,
