@@ -1,6 +1,6 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, DialogModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { AuthStore, DialogModel, LayoutService, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 
 @Component({
@@ -31,9 +31,14 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    debugger
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
   }
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -63,11 +68,16 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       //   // },
       // },
     ];
+    debugger
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
     this.changeDetectorRef.detectChanges();
   }
   viewChanged(e:any){
     this.funcID = this.router.snapshot.params['funcID'];
     this.viewBase.moreFuncs = this.moreFc;
+
+
   }
 
   onActions(e:any){
