@@ -11,15 +11,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import {
-  ChartAllModule,
-  AccumulationChartAllModule,
-} from '@syncfusion/ej2-angular-charts';
-import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';

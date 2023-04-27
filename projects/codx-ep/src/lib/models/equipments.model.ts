@@ -4,4 +4,11 @@ export class Equipments {
     createdOn: Date;
     isPicked:boolean;
   }
-  
+  export class Device {
+    id;
+    text = '';
+    isSelected = false;
+    icon = '';
+    createdBy = null;
+    createdOn = null;
+  }
