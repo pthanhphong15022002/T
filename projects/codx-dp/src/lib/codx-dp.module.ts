@@ -52,6 +52,8 @@ import { CodxTaskComponent } from './componnent-task/codx-task/codx-task.compone
 import { UpdateProgressComponent } from './componnent-task/update-progress/update-progress.component';
 import { TestComponent } from './componnent-task/test/test.component';
 import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
+import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 
 
 const routes: Routes = [
@@ -67,6 +69,15 @@ const routes: Routes = [
       {
         path: 'instances/:funcID/:processID',
         component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      //dp/approvals/DPT0501
+      {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
+            (m) => m.ApprovelModule
+          ),
         data: { noReuse: true },
       },
       {
@@ -136,7 +147,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     UpdateProgressComponent,
     CodxTaskComponent,
     TestComponent,
-    InputNumberDurationComponent
+    InputNumberDurationComponent,
+    ApprovalsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

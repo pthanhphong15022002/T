@@ -16,14 +16,15 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
-import { Device } from '../../booking/popup-add-booking-room/popup-add-booking-room.component';
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
+import { Device } from '../../../models/equipments.model';
 
 @Component({
   selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
+
 export class RoomsComponent extends UIComponent {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
 
@@ -39,6 +40,7 @@ export class RoomsComponent extends UIComponent {
   viewType = ViewType;
   buttons: ButtonModel;
   //moreFuncs: Array<ButtonModel> = [];
+  
   devices: any;
   dataSelected: any;
   columnGrids: any;

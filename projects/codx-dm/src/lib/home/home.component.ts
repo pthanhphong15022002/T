@@ -369,7 +369,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
             tree.removeNodeTree(res);
           }
           catch(e){}
-          debugger
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -723,8 +722,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.dmSV.folderID = res[0][0].recID;
           this.dmSV.folderId.next(res[0][0].recID);
         }
-       
-      
+        else this.unableMark();
         // var treeView = this.codxview?.currentView?.currentComponent?.treeView;
         // if(treeView)
         // {
@@ -1483,7 +1481,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   dbView(data: any) {
-    debugger
     if (data.recID && data.fileName != null) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');

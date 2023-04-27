@@ -20,21 +20,36 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="true"
+    [hideMF]="funcID == 'CM0101' ? true : false"
     [footer]="tabs"
+    (changeDataMF)="changeDataMF($event, dataSelected)"
+    (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
-        <div>aaa</div>
-        <codx-mfunc
-          [hideMF]="false"
-          [dataItem]="dataSelected"
-          [formModel]="formModel"
-          (changeDataMF)="changeDataMF($event, dataSelected)"
-          (clickMF)="clickMF($event, dataSelected)"
-          [isBookMark]="true"
-          type="view"
-        ></codx-mfunc>
+        <div *ngIf="funcID == 'CM0101'">
+          <div class="mb-1">
+            <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
+            <span class="text-dark fw-bold h3"
+              [innerHTML]="
+                dataSelected?.custGroupID
+                  | formatvalue : formModel : 'CustGroupID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end"  *ngIf="funcID == 'CM0101'">
+          <codx-mfunc
+            [hideMF]="false"
+            [dataItem]="dataSelected"
+            [formModel]="formModel"
+            (changeDataMF)="changeDataMF($event, dataSelected)"
+            (clickMF)="clickMF($event, dataSelected)"
+            [isBookMark]="true"
+            type="view"
+          ></codx-mfunc>
+        </div>
       </div>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
