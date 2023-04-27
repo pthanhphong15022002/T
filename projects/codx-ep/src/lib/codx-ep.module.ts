@@ -25,6 +25,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { EPReportComponent } from './report/report.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,10 @@ export const routes: Routes = [
       {
         path: 'report/:funcID',
         component: EPReportComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       {
         path: '**',
@@ -53,11 +58,6 @@ export const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes),
     CodxShareModule,
-    ChartAllModule,
-    AccumulationChartAllModule,
-    ProgressBarModule,
-    CircularGaugeModule,
-    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
