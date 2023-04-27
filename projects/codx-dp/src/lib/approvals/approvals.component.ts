@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CacheService } from 'codx-core';
+import { AuthStore, CacheService } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,11 +23,18 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   ms021: any;
   active = 1;
   referType = 'source';
+  userID: any;
+  transID=''
+  approveStatus='0'
+  
   constructor(
     private cache: CacheService,
     private codxDP: CodxDpService,
-    private router: ActivatedRoute
-  ) {}
+    private router: ActivatedRoute,
+    private authStore : AuthStore
+  ) {
+    this.userID = this.authStore.get().userID;
+  }
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
@@ -52,4 +59,13 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getData(id) {}
+
+  handleViewFile(e: any) {
+    if (e == true) {
+      var index = this.data.listInformationRel.findIndex(
+        (x) => x.userID == this.userID && x.relationType != '1'
+      );
+      if (index >= 0) this.data.listInformationRel[index].view = '3';
+    }
+  }
 }
