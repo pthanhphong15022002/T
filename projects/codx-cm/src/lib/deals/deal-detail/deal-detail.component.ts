@@ -18,20 +18,20 @@ export class DealDetailComponent  implements OnInit {
   tabDetailView: TemplateRef<any>;
   @Input() tmpDataSelect: any;
   @ViewChild('tabDetailViewDetail') tabDetailViewDetail: TabDetailCustomComponent;
-
-
+  @ViewChild('contract')contract: TemplateRef<any>;
 
   tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Task', textDefault: 'Công việc', isActive: false },
-    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false },
-    { name: 'References', textDefault: 'Liên kết', isActive: false },
-    { name: 'Quotations', textDefault: 'Báo giá', isActive: false },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false },
-    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
+    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false, template: null },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false, template: null },
+    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false, template: null },
+    { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
+    { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
+    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
+
   ];
+
   treeTask = [];
 
   nameDetail = 'Information';
@@ -40,11 +40,13 @@ export class DealDetailComponent  implements OnInit {
   ]
   constructor(
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
-    console.log(this.dataSelected.steps);
-
+  }
+  ngAfterViewInit(): void {
+    this.tabControl.push({ name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
