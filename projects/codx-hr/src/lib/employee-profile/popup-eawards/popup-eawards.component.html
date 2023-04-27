@@ -217,7 +217,7 @@
 <codx-form #form [headerText]="headerText" [body]="body" [formModel]="formModel" [footer]="footer" [dialog]="dialog"
   [data]="awardObj" *ngIf="isAfterRender">
   <ng-template #body>
-    <div *ngIf="allowToViewEmp()" class="form-group row d-flex flex-row">
+    <div *ngIf="fromListView" class="form-group row d-flex flex-row">
       <div class="col-6">
         <div *ngIf="employId" class="d-flex align-items-start">
           <div class="d-flex flex-column me-2">
