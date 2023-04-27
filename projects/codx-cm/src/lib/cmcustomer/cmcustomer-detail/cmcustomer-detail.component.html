@@ -1,7 +1,4 @@
-<div
-  class="empty-data"
-  *ngIf="!dataSelected?.recID"
->
+<div class="empty-data" *ngIf="!dataSelected?.recID">
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
@@ -23,12 +20,37 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="false"
+    [hideMF]="funcID == 'CM0101' ? true : false"
     [footer]="tabs"
-    (clickMF)="clickMF($event, dataSelected)"
     (changeDataMF)="changeDataMF($event, dataSelected)"
+    (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
+      <div class="d-flex justify-content-between">
+        <div *ngIf="funcID == 'CM0101'">
+          <div class="mb-1">
+            <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
+            <span class="text-dark fw-bold h3"
+              [innerHTML]="
+                dataSelected?.custGroupID
+                  | formatvalue : formModel : 'CustGroupID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end"  *ngIf="funcID == 'CM0101'">
+          <codx-mfunc
+            [hideMF]="false"
+            [dataItem]="dataSelected"
+            [formModel]="formModel"
+            (changeDataMF)="changeDataMF($event, dataSelected)"
+            (clickMF)="clickMF($event, dataSelected)"
+            [isBookMark]="true"
+            type="view"
+          ></codx-mfunc>
+        </div>
+      </div>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
           <div class="me-3">
@@ -99,17 +121,8 @@
                 </div>
               </div>
               <div class="d-flex flex-column align-items-start">
-                <div *ngIf="viewTag && viewTag != ''">
-                  <codx-tag
-                    [entityName]="entityName"
-                    [disabled]="true"
-                    [isEdit]="false"
-                    [value]="viewTag"
-                  >
-                  </codx-tag>
-                </div>
                 <div
-                  class="d-flex justify-content-end w-100"
+                  class="d-flex justify-content-end w-100 mb-5"
                   *ngIf="dataSelected.isBlackList"
                 >
                   <span class="icon-do_disturb_alt icon-20"></span>
@@ -118,17 +131,17 @@
             </div>
           </div>
         </div>
-        <div
-          *ngIf="funcID != 'CM0104' && contactPerson != null"
-          [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''"
-        >
-          <div class="d-flex" *ngIf="funcID == 'CM0101'">
+        <div [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''">
+          <div
+            class="d-flex col-6"
+            *ngIf="funcID == 'CM0101' && contactPerson != null"
+          >
             <div class="me-3" style="white-space: nowrap">
               <codx-label
                 class="text-dark"
                 name="lblContact"
                 [formModel]="formModel"
-                default="Liên hệ: "
+                default="Liên hệ chính: "
               ></codx-label>
             </div>
             <div class="d-flex flex-grow-1 mb-4">
@@ -191,6 +204,46 @@
               </div>
             </div>
           </div>
+          <div class="d-flex mt-1" *ngIf="dataSelected.industries">
+            <span> </span>
+            <codx-label
+              style="white-space: nowrap"
+              class="label-colon text-dark"
+              fiedName="Industries"
+              [formModel]="formModel"
+            ></codx-label>
+            <div>
+              <div
+                *ngFor="
+                  let item of dataSelected?.industries.split(';');
+                  index as i
+                "
+                class="d-inline"
+              >
+                <span
+                  class="text-dark fw-bold"
+                  [innerHTML]="
+                    item | formatvalue : formModel : 'Industries' | async
+                  "
+                ></span
+                ><span
+                  class="me-1"
+                  *ngIf="i < dataSelected?.industries.split(';').length - 1"
+                  >,</span
+                >
+                <!-- {{ dataSelected?.segmentID }} -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-start" *ngIf="viewTag && viewTag != ''">
+          <codx-tag
+            [entityName]="entityName"
+            [disabled]="true"
+            [isEdit]="false"
+            [value]="viewTag"
+          >
+          </codx-tag>
         </div>
       </div>
     </ng-template>
@@ -240,6 +293,7 @@
               [gridViewSetup]="gridViewSetup"
               [entityName]="entityName"
               [listAddress]="listAddress"
+              [nameCbxCM]="nameCbxCM"
             >
             </codx-information>
           </ng-container>
@@ -301,7 +355,7 @@
         [formModel]="formModel"
         [TabControl]="tabControl"
         [objectID]="dataSelected.recID"
-        [funcID]="formModel.funcID"
+        [funcID]="funcID"
         [dataTree]="treeTask"
       ></codx-tabs>
     </ng-template>
@@ -467,4 +521,3 @@
 <ng-template #product let-data="value">
   <codx-table></codx-table>
 </ng-template>
-

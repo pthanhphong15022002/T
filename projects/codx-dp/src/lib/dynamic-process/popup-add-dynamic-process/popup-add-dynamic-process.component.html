@@ -2116,8 +2116,8 @@
                             </div>
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
-                                <span>{{ task?.taskName }}</span>
-                                <span *ngIf="task?.requireCompleted" class="text-danger font-weight-bold">*</span>
+                                <span>{{ task?.taskName?.trim() }}</span>
+                                <span *ngIf="task?.requireCompleted" class="text-danger fw-bold">*</span>
                               </div>
                               <div class="d-flex align-items-center fs-7">
                                 <span class="text-gray-600 me-1">
@@ -2159,7 +2159,7 @@
                         <div class="task-att">
                           <codx-attachment
                             #attachment
-                            [objectType]="dialog.formModel.entityName"
+                            [objectType]="'DP_Steps_Tasks'"
                             [objectId]="task?.recID"
                             hideFolder="1"
                             hideImageUpload="0"
@@ -2338,7 +2338,7 @@
           [refValue]="'L1470'"
           [iconOnly]="true"
           [crrValue]="stepNew?.icon"
-          (valueChange)="changeIcon($event, 'icon', stepNew)"
+          (valueChange)="changeIcon($event, stepNew)"
         >
         </codx-input>
         <codx-input

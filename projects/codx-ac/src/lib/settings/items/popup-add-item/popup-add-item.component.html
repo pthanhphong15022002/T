@@ -1112,6 +1112,19 @@
           (valueChange)="handleInputChange($event, 'itemsProduction')"
         ></codx-input>
       </div>
+
+      <div class="col-8 form-group">
+        <codx-label
+          fiedName="calcExpiryDate"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+        <codx-input
+          field="calcExpiryDate"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.leadtime"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+      </div>
     </div>
 
     <codx-label

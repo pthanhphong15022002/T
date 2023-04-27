@@ -15,6 +15,7 @@ export class InformationComponent implements OnInit {
   @Input() gridViewSetup: any;
   @Input() entityName = '';
   @Input() listAddress = [];
+  @Input() nameCbxCM = '';
   formModelAddress: FormModel;
   constructor(
     private cmSv: CodxCmService,

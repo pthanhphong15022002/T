@@ -6,6 +6,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -41,32 +42,12 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   format: string = 'MM/yyyy';
   pregnancyFromVal;
   @ViewChild('form') form: CodxFormComponent;
+  empObj: any;
+  genderGrvSetup: any;
+  allowToViewEmSelector: boolean = false;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
-  onInit(): void {
-    this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((fg) => {
-        if (fg) {
-          this.formGroup = fg;
-          this.initForm();
-        }
-      });
-
-    // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-    //   if (formModel) {
-    //     this.formModel = formModel;
-    //     this.hrSevice
-    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //       .then((fg) => {
-    //         if (fg) {
-    //           this.formGroup = fg;
-    //           this.initForm();
-    //         }
-    //       });
-    //   }
-    // });
-  }
+  fromListView: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -85,28 +66,67 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
-    this.dayoffObj = data?.data?.dayoffObj;
-    
-    if(this.dayoffObj){
+    this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
+    this.fromListView = data?.data?.fromListView;
+    if (this.dayoffObj?.employeeID && this.fromListView) {
+      this.employId = this.dayoffObj?.employeeID;
+    } else this.employId = data?.data?.employeeID;
+    if (this.dayoffObj?.emp && this.fromListView) {
+      this.empObj = this.dayoffObj?.emp;
+    } else this.empObj = data?.data?.empObj;
+
+    if (this.dayoffObj) {
       this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
-      if(this.dayoffObj.beginDate == '0001-01-01T00:00:00'){
+      if (this.dayoffObj.beginDate == '0001-01-01T00:00:00') {
         this.dayoffObj.beginDate = null;
       }
-      if(this.dayoffObj.endDate == '0001-01-01T00:00:00'){
+      if (this.dayoffObj.endDate == '0001-01-01T00:00:00') {
         this.dayoffObj.endDate = null;
       }
     }
     this.formModel = dialog.formModel;
     //this.lstDayoffs = data?.data?.lstDayOffs
-    
+
     this.actionType = data?.data?.actionType;
     // if (this.actionType === 'edit' || this.actionType === 'copy') {
     //   this.dayoffObj = JSON.parse(
     //     JSON.stringify(this.lstDayoffs[this.indexSelected])
     //   );
     // }
+  }
+
+  onInit(): void {
+    this.hrSevice
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.initForm();
+        }
+      });
+
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
+    if (this.employId)
+      this.getEmployeeInfoById(this.employId, 'employeeID');
+
+    // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrSevice
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -130,20 +150,21 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           .valueList(p.NewChildBirthType.referedValue)
           .subscribe((p) => {
             this.lstPregnantType = p.datas;
-            console.log('pregnanttype', this.lstPregnantType);
-            if(this.dayoffObj){
-              console.log('chay vao kiem tra day off obj');
-              
-              if(this.dayoffObj.newChildBirthType == this.lstPregnantType[0].value){
+            if (this.dayoffObj) {
+              if (
+                this.dayoffObj.newChildBirthType ==
+                this.lstPregnantType[0].value
+              ) {
                 this.isnormalPregnant = true;
-              }
-              else if(this.dayoffObj.newChildBirthType == this.lstPregnantType[1].value){
+              } else if (
+                this.dayoffObj.newChildBirthType ==
+                this.lstPregnantType[1].value
+              ) {
                 this.isNotNormalPregnant = true;
               }
             }
           });
       });
-
 
     if (this.actionType == 'add') {
       this.hrSevice
@@ -181,15 +202,14 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if(this.isnormalPregnant == true && this.isNotNormalPregnant == false ){
+    if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {
       this.dayoffObj.newChildBirthType = this.lstPregnantType[0].value;
-    }
-    else if(this.isNotNormalPregnant == true && this.isnormalPregnant == false){
+    } else if (
+      this.isNotNormalPregnant == true &&
+      this.isnormalPregnant == false
+    ) {
       this.dayoffObj.newChildBirthType = this.lstPregnantType[1].value;
     }
-    console.log('kieu du lieu ', typeof this.dayoffObj);
-      
-    console.log('du lieu khi luu xuong db ', this.dayoffObj.newChildBirthType);
     this.dayoffObj.pregnancyFrom = this.pregnancyFromVal;
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.dayoffObj.recID;
@@ -206,13 +226,16 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         return;
       }
 
-      
       this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
         if (p != null) {
           this.dayoffObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
+          // if(p[0]){
+          //   p[0].emp = this.empObj;
+          // }else p.emp = this.empObj;
+          p.emp = this.empObj;
           this.successFlag = true;
-          this.dialog && this.dialog.close(this.dayoffObj);
+          this.dialog && this.dialog.close(p);
 
           // this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
           // if(this.listView){
@@ -227,7 +250,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.successFlag = true;
             this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(this.dayoffObj);
+            p.emp = this.empObj
+            this.dialog && this.dialog.close(p);
             // this.lstDayoffs[this.indexSelected] = p;
             // if(this.listView){
             //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
@@ -253,8 +277,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   // }
 
   HandlePregnantTypeChange(e, pregnantType) {
-    console.log('e e ', e);
-    console.log('type', pregnantType);
 
     if (e.component.checked == true) {
       if (pregnantType.value == '1') {
@@ -271,24 +293,18 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.isNotNormalPregnant = false;
       }
     }
-    console.log('sinh thuong', this.isnormalPregnant);
-    console.log('sinh mo', this.isNotNormalPregnant);
   }
 
   HandleTotalDaysVal() {
     if (this.dayoffObj.periodType == '2' || this.dayoffObj.periodType == '3') {
       this.dayoffObj.totalDays = 0.5;
-      console.log('obj ne', this.dayoffObj);
     } else {
       let beginDate = new Date(this.dayoffObj.beginDate);
       let endDate = new Date(this.dayoffObj.endDate);
-      console.log('ngay bat dau', beginDate);
-      console.log('ngay bat dau', endDate);
 
       let dif = endDate.getTime() - beginDate.getTime();
       this.dayoffObj.totalDays = dif / (1000 * 60 * 60 * 24) + 1;
     }
-    console.log('tong ngay nghi la: ', this.dayoffObj.totalDays);
 
     this.formGroup.patchValue({ totalDays: this.dayoffObj.totalDays });
   }
@@ -318,14 +334,92 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   HandleInputPeriodType(evt) {
-    console.log(evt);
     this.dayoffObj.periodType = evt.data;
-    console.log('gia tri period type', this.dayoffObj.periodType);
 
     if (evt.data == '2' || evt.data == '3') {
       this.dayoffObj.endDate = this.dayoffObj.beginDate;
       this.formGroup.patchValue({ endDate: this.dayoffObj.endDate });
     }
     this.HandleTotalDaysVal();
+  }
+
+  allowToViewEmp() {
+    //check if show emp info or not
+    switch (this.actionType) {
+      case 'edit':
+        // if (this.fromListView) return true;
+        // else return false;
+        break;
+      case 'add':
+        break;
+      case 'copy':
+        break;
+    }
+  }
+  getEmployeeInfoById(empId: string, fieldName: string) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+      if (emp[1] > 0) {
+        if (fieldName === 'employeeID') this.empObj = emp[0][0];
+        else if (fieldName === 'signerID') {
+          this.dayoffObj.signer = emp[0][0]?.employeeName;
+          if (emp[0][0]?.positionID) {
+            this.hrSevice
+              .getPositionByID(emp[0][0]?.positionID)
+              .subscribe((res) => {
+                if (res) {
+                  this.dayoffObj.signerPosition = res.positionName;
+                  this.formGroup.patchValue({
+                    //signer: this.dayoffObj.signer,
+                    signerPosition: this.dayoffObj.signerPosition,
+                  });
+                  this.cr.detectChanges();
+                }
+              });
+          } else {
+            this.dayoffObj.signerPosition = null;
+            this.formGroup.patchValue({
+              //signer: this.dayoffObj.signer,
+              signerPosition: this.dayoffObj.signerPosition,
+            });
+          }
+        }
+      }
+      this.cr.detectChanges();
+    });
+  }
+  handleSelectEmp(evt) {
+    switch (evt?.field) {
+      case 'employeeID': //check if employee changed
+        if (evt?.data && evt?.data.length > 0) {
+          this.employId = evt?.data;
+          this.getEmployeeInfoById(this.employId, evt?.field);
+        } else {
+          delete this.employId;
+          delete this.empObj;
+          this.formGroup.patchValue({
+            employeeID: this.dayoffObj.employeeID,
+          });
+        }
+        break;
+      case 'signerID': // check if signer changed
+        if (evt?.data && evt?.data.length > 0) {
+          this.getEmployeeInfoById(evt?.data, evt?.field);
+        } else {
+          delete this.dayoffObj?.signerID;
+          // delete this.awardObj.signer;
+          // delete this.awardObj?.signerPosition;
+          this.formGroup.patchValue({
+            signerID: null,
+            // signer: null,
+            // signerPosition: null,
+          });
+        }
+        break;
+    }
   }
 }

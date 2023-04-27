@@ -23,7 +23,7 @@
     <span
       *ngIf="customField.dataType == 'A'"
       class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
-      (click)="addFile()"
+      (click)="!disable ?addFile():''"
     ></span>
     <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
       <button
@@ -145,7 +145,7 @@
       objectType="AD_Users"
       [numberImages]="5"
     ></codx-imgs> -->
-    <div class="d-flex" *ngIf="arrIdUser && arrIdUser?.length > 0">
+    <div class="d-flex flex-wrap"  *ngIf="arrIdUser && arrIdUser?.length > 0">
       <ng-container *ngFor="let id of arrIdUser">
         <div style="position: relative">
           <codx-img class="" [objectId]="id" objectType="AD_Users"> </codx-img>

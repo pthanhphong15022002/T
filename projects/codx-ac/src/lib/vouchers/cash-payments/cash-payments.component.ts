@@ -26,6 +26,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
+import { SettledInvoices } from '../../models/SettledInvoices.model';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -51,12 +52,18 @@ export class CashPaymentsComponent extends UIComponent {
   userID: any;
   dataCategory: any;
   journal: IJournal;
-  approval:any;
+  approval: any;
   cashpaymentline: Array<CashPaymentLine> = [];
+  settledInvoices: Array<SettledInvoices> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
+  };
+  fmSettledInvoices: FormModel = {
+    formName: 'SettledInvoices',
+    gridViewName: 'grvSettledInvoices',
+    entityName: 'AC_SettledInvoices',
   };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
@@ -194,17 +201,19 @@ export class CashPaymentsComponent extends UIComponent {
           option,
           this.view.funcID
         );
-      this.dialog.closed.subscribe((res) => {
-          if (res.event['update']) {
-            this.itemSelected = res.event['data'];
-            this.loadDatadetail(this.itemSelected);
+        this.dialog.closed.subscribe((res) => {
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
           }
         });
       });
   }
   edit(e, data) {
     if (data) {
-      this.view.dataService.dataSelected = {...data};
+      this.view.dataService.dataSelected = { ...data };
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -224,9 +233,11 @@ export class CashPaymentsComponent extends UIComponent {
           this.view.funcID
         );
         this.dialog.closed.subscribe((res) => {
-          if (res.event['update']) {
-            this.itemSelected = res.event['data'];
-            this.loadDatadetail(this.itemSelected);
+          if (res.event != null) {
+            if (res.event['update']) {
+              this.itemSelected = res.event['data'];
+              this.loadDatadetail(this.itemSelected);
+            }
           }
         });
       });
@@ -260,9 +271,7 @@ export class CashPaymentsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .delete([data], true)
-      .subscribe((res: any) => {});
+    this.view.dataService.delete([data], true).subscribe((res: any) => {});
   }
   //#endregion
 
@@ -311,10 +320,10 @@ export class CashPaymentsComponent extends UIComponent {
     // check có hay ko duyệt trước khi ghi sổ
     if (data?.status == '1') {
       if (this.approval == '0') {
-        bm.forEach(element => {
+        bm.forEach((element) => {
           element.disabled = true;
         });
-      }else{
+      } else {
         bm[1].disabled = true;
         bm[2].disabled = true;
       }
@@ -333,7 +342,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    if (event?.data.data) {
+    if (event?.data.data || event?.data.error) {
       return;
     } else {
       if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
@@ -346,11 +355,26 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadDatadetail(data) {
-    this.api
-      .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.cashpaymentline = res;
-      });
+    switch (data.subType) {
+      case '1':
+        this.api
+          .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.cashpaymentline = res;
+          });
+        break;
+      case '2':
+        this.api
+          .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.settledInvoices = res;
+          });
+        break;
+    }
   }
 
   release(data: any) {
@@ -383,7 +407,6 @@ export class CashPaymentsComponent extends UIComponent {
     //         } else this.notification.notifyCode(result?.msgCodeError);
     //       });
     //   });
-    
   }
   //#endregion
 }

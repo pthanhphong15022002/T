@@ -57,7 +57,7 @@ export class UpdateVersionComponent {
       this.dialog = dialog;
       this.formModel = data.data[0];
       this.listFile = data.data[1];
-      if(this.listFile) this.fileEditing = this.listFile[0];
+      if(this.listFile) this.fileEditing = JSON.parse(JSON.stringify(this.listFile[0]));
       this.comment = '';
   }
   ngOnInit(): void {   
@@ -531,6 +531,6 @@ export class UpdateVersionComponent {
   toggleClass(i:any)
   {
     this.selectedItem = i
-    this.fileEditing = this.listFile[i];
+    this.fileEditing = JSON.parse(JSON.stringify(this.listFile[i]));
   }
 }

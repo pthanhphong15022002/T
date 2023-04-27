@@ -33,11 +33,11 @@
 </ng-template>
 <ng-template #subHeader>
   <codx-tag
-    field="industries"
+    field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    [value]="data?.industries"
+    [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
 </ng-template>
@@ -71,7 +71,9 @@
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
           </codx-label>
           <codx-input
+            #vllCbx
             [field]="'contactType'"
+            id="vllCbx"
             [crrValue]="data?.contactType"
             [type]="'valuelist'"
             [refValue]="gridViewSetup?.ContactType?.referedValue"
@@ -212,7 +214,10 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+        >
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
               <codx-label
@@ -278,7 +283,8 @@
           </codx-input>
         </div>
         <div class="form-group" *ngIf="funcID != 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="FaxNo">
+          </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -319,16 +325,19 @@
         </div>
 
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="funcID != 'CM0103' ? 'WebPage' : 'Website'">
+          <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            [field]="funcID != 'CM0103' ? 'webPage' : 'website'"
+            [field]="'webPage'"
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+        >
           <codx-label
             [formModel]="form.formModel"
             [fiedName]="funcID == 'CM0101' ? 'CustomerFrom' : 'PartnerFrom'"
@@ -402,10 +411,7 @@
           </codx-input>
         </div>
         <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            [fiedName]="'Memo'"
-          >
+          <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
           </codx-label>
 
           <codx-input
@@ -435,9 +441,11 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0104' || funcID == 'CM0103'">
-          <codx-label [formModel]="form.formModel" fiedName="CEO">
-          </codx-label>
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
+        >
+          <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -568,7 +576,8 @@
           </div>
         </div>
         <div class="form-group" *ngIf="funcID == 'CM0102'">
-          <codx-label [formModel]="form.formModel" fiedName="Email"> </codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="Email">
+          </codx-label>
           <codx-input
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -586,7 +595,10 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0104' || funcID == 'CM0103'">
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0104' || funcID == 'CM0103'"
+        >
           <codx-label [formModel]="form.formModel" fiedName="Capital">
           </codx-label>
           <codx-input
@@ -616,6 +628,19 @@
           >
           </codx-input>
         </div>
+        <div class="form-group" *ngIf="funcID != 'CM0102'">
+          <codx-label [formModel]="form.formModel" fiedName="Industries">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [crrValue]="data?.industries"
+            [type]="'combobox'"
+            [refValue]="gridViewSetup?.Industries?.referedValue"
+            (valueChange)="valueChangeContact($event)"
+            field="industries"
+          >
+          </codx-input>
+        </div>
         <div class="form-group" *ngIf="funcID == 'CM0101'">
           <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
           </codx-label>
@@ -642,11 +667,11 @@
             </div>
           </div>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-          <codx-label
-            [formModel]="form.formModel"
-            [fiedName]="'BankAccount'"
-          >
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+        >
+          <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
@@ -655,11 +680,11 @@
           >
           </codx-input>
         </div>
-        <div class="form-group" *ngIf="funcID == 'CM0101' || funcID == 'CM0102'">
-          <codx-label
-            [formModel]="form.formModel"
-            [fiedName]="'BankID'"
-          >
+        <div
+          class="form-group"
+          *ngIf="funcID == 'CM0101' || funcID == 'CM0102'"
+        >
+          <codx-label [formModel]="form.formModel" [fiedName]="'BankID'">
           </codx-label>
           <codx-input
             [formModel]="form.formModel"
