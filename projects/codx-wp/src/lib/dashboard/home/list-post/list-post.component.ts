@@ -196,7 +196,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       PopupAddPostComponent,
       '',
       700,
-      550,
+      650,
       '',
       obj,
       '',

@@ -22,8 +22,7 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
-import { Device } from '../../../booking/popup-add-booking-room/popup-add-booking-room.component';
-import { Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
+import { Device, Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
 
 @Component({
   selector: 'popup-add-rooms',
