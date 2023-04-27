@@ -625,7 +625,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   valueChange(e) {
     if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
-    this.process[e.field] = e.data;
+    let value = e.data;
+    if(typeof value == 'string'){
+      value = value.trim();
+    }
+    this.process[e.field] = value;
     if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
         this.loadCbxProccess();

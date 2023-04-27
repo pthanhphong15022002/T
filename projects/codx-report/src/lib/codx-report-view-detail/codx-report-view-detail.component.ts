@@ -1,5 +1,5 @@
 
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { AuthStore, DialogModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 
@@ -14,12 +14,12 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   onInit(): void {
   }
 
-  views: ViewModel[];
+   views: ViewModel[];
   viewType = ViewType;
-  funcID:any;
-  predicate:any = "";
-  dataValue:any="";
-  print:any="false";
+  @Input() funcID:any;
+  @Input() predicate:any = "";
+  @Input() dataValue:any="";
+  @Input() print:any="false";
   _paramString:any="";
   moreFc: any = [
     {
