@@ -26,7 +26,7 @@
           [disabled]="
             !isStart ||
             isClosed ||
-            !isUpdate ||
+            !isOnlyView ||
             !isRoleAll ||
             !progressStepControl
               ? true
@@ -454,21 +454,7 @@
                                   >
                                 </div>
                               </div>
-                            </div>
-                            <!-- <div class="ms-5">
-                              <codx-attachment
-                                hideFolder="1"
-                                hideImageUpload="0"
-                                hideImageThumb="0"
-                                hideUploadBtn="1"
-                                hideDes="1"
-                                type="inline"
-                                allowMultiFile="1"
-                                displayThumb="full"
-                                showMessage="1"
-                              >
-                              </codx-attachment>
-                            </div> -->
+                            </div>                      
                             <codx-mfunc
                               *ngIf="isStart && !isClosed"
                               [type]="'hover'"
@@ -577,7 +563,7 @@
       class="disabled-inline"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
       (click)="
-        checkEventProgress(data?.value, data?.group) && !isClosed && isUpdate
+        checkEventProgress(data?.value, data?.group) && !isClosed && isOnlyView
           ? openUpdateProgress(data?.value)
           : ''
       "
@@ -811,7 +797,7 @@
       <div class="fw-bold fs-4 text-dark">{{ dataStep?.stepName }}</div>
       <div class="d-flex justify-content-start py-2">
         <div>
-          <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>:
+          <codx-label default="Ngày đánh dấu"></codx-label>:
         </div>
         <span class="ps-1 text-dark fw-bold">{{
           dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy"
