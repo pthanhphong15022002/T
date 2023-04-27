@@ -580,6 +580,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          debugger
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
             this.listStepApproveDelete
@@ -1654,7 +1655,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event) {
         if (!this.isChange) this.isChange = true;
         this.listStepApprover = res?.event?.listStepApprover;
-        this.listStepApproveDelete = res?.event?.listStepApproveDelete;
+        this.listStepApproveDelete = res?.event?.listStepApproverDelete;
         this.listStepApproverView = this.listStepApprover;
         this.getUserByApproverStep(res?.event?.listStepApprover);
         this.recIDCategory = transID;
