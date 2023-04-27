@@ -146,6 +146,7 @@ export class CodxViewFilesComponent implements OnInit {
 
   // click filed
   clickViewDetail(file: any) {
+    debugger
     this.selectFile.emit(file);
   }
   
@@ -192,13 +193,16 @@ export class CodxViewFilesComponent implements OnInit {
     }
   }
   // remove files
-  removeFiles(data: any) {
+  removeFiles(event:any,data: any) {
     debugger
+    event.preventDefault();
+    event.stopPropagation();
     if(this.files.length > 0){
       let idx = this.files.findIndex(x => x.recID === data.recID);
       if(idx != -1 )
       {
         this.files.splice(idx,1);
+        this.files = Array.from<any>(this.files)
         if(!data.isNew)
         {
           this.lstFileRemove.push(data);
@@ -208,6 +212,7 @@ export class CodxViewFilesComponent implements OnInit {
         this.dt.detectChanges();
       }
     }
+    
   }
   // save
   save():Observable<boolean>{
