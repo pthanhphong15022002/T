@@ -31,7 +31,6 @@ export class DealDetailComponent  implements OnInit {
     { name: 'Quotations', textDefault: 'Báo giá', isActive: false },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false },
     { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
-
   ];
   treeTask = [];
 

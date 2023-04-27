@@ -99,6 +99,7 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
       if (res) {
         this.grvSetup = res;
+        console.log(this.grvSetup)
       }
     });
     this.cache
@@ -205,6 +206,9 @@ export class EmployeeDayOffComponent extends UIComponent {
   }
   changeDataMF(event, data) {
     this.hrService.handleShowHideMF(event, data, this.view);
+  }
+  clickEvent(event, data) {
+    this.clickMF(event?.event, event?.data);
   }
 
   dateCompare(beginDate, endDate) {

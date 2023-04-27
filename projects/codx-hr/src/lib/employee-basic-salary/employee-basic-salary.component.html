@@ -155,7 +155,7 @@
   <div class="border-bottom position-relative avatar-vllbadge">
     <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" [imageId]="data?.emp?.employeeID"
       [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp"
-      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
+      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
     </codx-temp-full>
     <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
