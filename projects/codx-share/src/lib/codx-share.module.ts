@@ -141,8 +141,6 @@ import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.co
 import { CodxHistoryTempComponent } from './components/codx-history-temp/codx-history-temp.component';
 import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notify-drawer-popup/notify-drawer-popup.component';
 import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
-import { CodxBookingCarScheduleContentComponent } from './components/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
-import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 import { CountChartComponent } from './components/codx-dashboard/template-chart/count-chart/count-chart.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TopChartComponent } from './components/codx-dashboard/template-chart/top-chart/top-chart.component';
@@ -169,6 +167,10 @@ import { ProgressbarComponent } from './components/codx-step/codx-progressbar/co
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { FillterReferType } from './components/codx-view-files/filterReferPipe.pipe';
 import { CodxQuotationsComponent } from './components/codx-quotations/codx-quotations.component';
+import { CodxBookingComponent } from './components/codx-booking/codx-booking.component';
+import { CodxBookingCarScheduleContentComponent } from './components/codx-booking/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
+import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
+import { CodxBookingViewDetailComponent } from './components/codx-booking/codx-booking-view-detail/codx-booking-view-detail.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -270,8 +272,10 @@ const T_Component: Type<any>[] = [
   NotifyDrawerPopupComponent,
   NotifyBodyComponent,
   //booking
+  CodxBookingComponent,
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
+  CodxBookingViewDetailComponent,
   CountChartComponent,
   TopChartComponent,
   //meetings

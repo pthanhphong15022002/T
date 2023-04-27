@@ -92,7 +92,7 @@
                 </ejs-progressbar>
               </div>
             </div>
-            <span class="ob-krfs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+            <span class="ob-kr fs-5-sm fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <div class="d-flex flex-column">
               <div class="d-flex flex-stack">
                 <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'" [ngbTooltip]="okrGrv.krGrv?.category?.headerText"
@@ -115,7 +115,7 @@
                 <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
               </span>
             </div>
-            <div class="d-flex ps-5 align-items-end" >
+            <div class="d-flex ps-9 align-items-end" >
               <div class="d-flex flex-column align-items-center kr-process w-150px me-7  pb-2"  >
                 
               </div>
@@ -148,7 +148,7 @@
             [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
             <span class="ob-kr text-dark fw-bold" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap fs-7">
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.target "></span>
@@ -186,8 +186,8 @@
             <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
           </span>
           </div>
-          <div class="d-flex ps-5 align-items-end" >
-            <div class="d-flex flex-column align-items-center kr-process w-150px me-7  pb-2"  [ngbTooltip]="'Tiến độ'">
+          <div class="d-flex ps-9 align-items-end" >
+            <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'">
               <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
               <span class="mb-1" *ngIf="item?.progress!=0"
                 [innerHTML]="(item?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>

@@ -822,7 +822,11 @@ export class DynamicProcessComponent
   }
 
   changeValueInput(event) {
-    this.processName = event?.data;
+    let value = event?.data;
+    if(typeof event?.data === 'string') {
+      value = value.trim();
+    }
+    this.processName = value;
   }
 
   async editName() {

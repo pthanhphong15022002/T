@@ -77,6 +77,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'ep',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ep/src/lib/codx-ep.module').then(
+        (m) => m.CodxEPModule
+      ),
+  },
+  {
     path: 'ep4',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -192,7 +200,6 @@ var childAuthRoutes: Routes = [
         path: 'settingcalendar/:funcID',
         component: SettingCalendarComponent,
       },
-
     ],
   },
   {
@@ -244,7 +251,7 @@ var childPublicRoutes: Routes = [
     redirectTo: 'wp',
     pathMatch: 'full',
   },
-  { path: '**', redirectTo: 'error/404' }
+  { path: '**', redirectTo: 'error/404' },
 ];
 
 export const routes: Routes = [
@@ -272,7 +279,7 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
     // RouterModule.forRoot(routes, {
     //   preloadingStrategy: HoverPreloadStrategy,
     // }),

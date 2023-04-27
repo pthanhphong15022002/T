@@ -17,15 +17,11 @@ export class CodxCmService {
     );
   }
 
-  getContacts(){
-    return this.api.exec<any>(
-      'CM',
-      'ContactsBusiness',
-      'GetAsync',
-    );
+  getContacts() {
+    return this.api.exec<any>('CM', 'ContactsBusiness', 'GetAsync');
   }
 
-  searchContacts(key: string){
+  searchContacts(key: string) {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
@@ -34,16 +30,21 @@ export class CodxCmService {
     );
   }
 
-  getOneCustomer(recID, funcID){
-    return this.api.exec<any>(
-      'CM',
-      'CustomersBusiness',
-      'GetOneAsync',
-      [recID, funcID]
-    );
+  getOneCustomer(recID, funcID) {
+    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
+      recID,
+      funcID,
+    ]);
   }
 
-  setIsBlackList(recID, isBlacklist){
+  getNameCbx(recID, objectID) {
+    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetNameCbxAsync', [
+      recID,
+      objectID,
+    ]);
+  }
+
+  setIsBlackList(recID, isBlacklist) {
     return this.api.exec<any>(
       'CM',
       'CustomersBusiness',
@@ -52,16 +53,13 @@ export class CodxCmService {
     );
   }
 
-  getContactByObjectID(objectID){
-    return this.api.exec<any>(
-      'CM',
-      'ContactsBusiness',
-      'GetOneAsync',
-      [objectID]
-    );
+  getContactByObjectID(objectID) {
+    return this.api.exec<any>('CM', 'ContactsBusiness', 'GetOneAsync', [
+      objectID,
+    ]);
   }
 
-  getListContactByObjectID(objectID){
+  getListContactByObjectID(objectID) {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
@@ -70,16 +68,16 @@ export class CodxCmService {
     );
   }
 
-  updateContactCrm(recID){
+  updateContactCrm(recID) {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
       'DeleteContactInCMAsync',
       [recID]
     );
-  };
+  }
 
-  updateContactByPopupListCt(contact){
+  updateContactByPopupListCt(contact) {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
@@ -87,7 +85,7 @@ export class CodxCmService {
       [contact]
     );
   }
-  getStepInstance(data){
+  getStepInstance(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -96,18 +94,16 @@ export class CodxCmService {
     );
   }
 
-  getListAddress(entityName, recID){
-    return this.api.exec<any>(
-      'BS',
-      'AddressBookBusiness',
-      'LoadDataAsync',
-      [entityName, recID]
-    );
+  getListAddress(entityName, recID) {
+    return this.api.exec<any>('BS', 'AddressBookBusiness', 'LoadDataAsync', [
+      entityName,
+      recID,
+    ]);
   }
 
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = {}
+    let formModel = {};
     formModel['formName'] = f?.formName;
     formModel['gridViewName'] = f?.gridViewName;
     formModel['entityName'] = f?.entityName;
@@ -116,13 +112,8 @@ export class CodxCmService {
   }
 
   //#region API For Deal
-  getListCustomer(){
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetListCustomersAsync'
-    );
+  getListCustomer() {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetListCustomersAsync');
   }
   //#endregion
-
 }

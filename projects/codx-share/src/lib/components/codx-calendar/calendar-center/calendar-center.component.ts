@@ -122,9 +122,12 @@ export class CalendarCenterComponent
   }
 
   getResourceID(data) {
-    const resources = data.resources;
-    const resourceIDs = resources ? resources.map((r) => r.resourceID) : [];
-    return resourceIDs.join(';');
+    const permissions = data.permissions;
+    const permisstionIDs = permissions
+      ? permissions.map((r) => r.objectID)
+      : [];
+    const res = permisstionIDs.join(';');
+    return res;
   }
   //endRegion CO
 }

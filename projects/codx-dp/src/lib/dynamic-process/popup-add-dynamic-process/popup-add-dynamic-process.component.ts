@@ -141,6 +141,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   noteSuccess: string = '';
   noteFail: string = '';
   noteResult: string = '';
+  isUpdatePermiss = false;
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -530,6 +531,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepDelete || [],
         listStepDrop || [],
         this.lstTmp,
+        this.isUpdatePermiss
       ];
     }
     op.data = data;
@@ -625,7 +627,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   valueChange(e) {
     if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
-    this.process[e.field] = e.data;
+    let value = e.data;
+    if(typeof value == 'string'){
+      value = value.trim();
+    }
+    this.process[e.field] = value;
     if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
         this.loadCbxProccess();
@@ -985,6 +991,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   applyShare(e, type) {
     if (e.length > 0) {
       if (!this.isChange) this.isChange = true;
+      if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       console.log(e);
       switch (type) {
         //Người giám sát
@@ -1157,6 +1164,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     roles.roleType = 'S';
     tmpRole = this.checkRolesStep(this.step.roles, roles);
     if (!this.isChange) this.isChange = true;
+    if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
     this.step.roles = tmpRole;
   }
 
@@ -1334,6 +1342,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
         if (!this.isChange) this.isChange = true;
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1359,6 +1369,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (i <= 1) {
               if (indexPerm != -1) {
                 this.process.permissions.splice(indexPerm, 1);
+                if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
               }
             }
           }

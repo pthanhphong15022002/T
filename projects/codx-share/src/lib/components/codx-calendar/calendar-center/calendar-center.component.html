@@ -250,7 +250,7 @@
         >
         </codx-label>
       </span>
-      <span class="ms-2 fw-bold">
+      <span class="text-gray-800 text-break">
         <span class="text-gray-700 size-content-schedule cursor-pointer">
           <span
             [innerHTML]="data?.data?.memo"
@@ -283,10 +283,11 @@
       <div class="d-flex text-dark me-6">
         <codx-label
           name="lblResources"
-          default="Người tham gia : "
+          default="Người tham gia"
           class="fw-bold text-nowrap"
         >
         </codx-label>
+        <span class="me-2 fw-bold">:</span>
         <div class="d-flex justify-content-end">
           <codx-imgs
             [objectId]="getResourceID(data?.data)"

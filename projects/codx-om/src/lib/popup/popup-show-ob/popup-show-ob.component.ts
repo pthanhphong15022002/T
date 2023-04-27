@@ -49,23 +49,48 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   headerText: string;
   formModelCheckin = new FormModel();
   dtStatus: any;
-  dataOKR:any;
+  dataOKR: any;
   openAccordionAlign = [];
   openAccordionAssign = [];
   dataOB: any;
   progressHistory = [];
   krCheckIn = [];
-  obType=OMCONST.VLL.OKRType.Obj;
-  krType=OMCONST.VLL.OKRType.KResult;
-  skrType=OMCONST.VLL.OKRType.SKResult;
-  
-  activeTab='Overview' ;
+  obType = OMCONST.VLL.OKRType.Obj;
+  krType = OMCONST.VLL.OKRType.KResult;
+  skrType = OMCONST.VLL.OKRType.SKResult;
+
+  activeTab = 'Overview';
   tabControl = [
-    { name: 'Overview', textDefault: 'Tổng quan', isActive: true, icon:'icon-i-bullseye' },
-    { name: 'Links', textDefault: 'Liên kết', isActive: false, icon:'icon-account_tree'  },
-    { name: 'Tasks', textDefault: 'Công việc', isActive: false, icon:'icon-format_list_numbered'  },
-    { name: 'Comments', textDefault: 'Ghi chú', isActive: false, icon:'icon-i-chat'  },
-    { name: 'History', textDefault: 'Cập nhật', isActive: false, icon:'icon-history'  },
+    {
+      name: 'Overview',
+      textDefault: 'Tổng quan',
+      isActive: true,
+      icon: 'icon-i-bullseye',
+    },
+    {
+      name: 'Links',
+      textDefault: 'Liên kết',
+      isActive: false,
+      icon: 'icon-account_tree',
+    },
+    {
+      name: 'Tasks',
+      textDefault: 'Công việc',
+      isActive: false,
+      icon: 'icon-format_list_numbered',
+    },
+    {
+      name: 'Comments',
+      textDefault: 'Ghi chú',
+      isActive: false,
+      icon: 'icon-i-chat',
+    },
+    {
+      name: 'History',
+      textDefault: 'Cập nhật',
+      isActive: false,
+      icon: 'icon-history',
+    },
   ];
   chartSettings: ChartSettings = {
     primaryXAxis: {
@@ -132,15 +157,15 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     },
     offset: 0,
   };
-  okrChild= [];
-  listAlign=[];
-  listAssign=[];
-  isCollapsed=true;
+  okrChild = [];
+  listAlign = [];
+  listAssign = [];
+  isCollapsed = true;
   okrFM: any;
   oldOB: any;
-  popupTitle='';
+  popupTitle = '';
   okrVll: any;
-  isHiddenChart=true;
+  isHiddenChart = true;
   okrGrv: any;
   offset: string;
   active: any;
@@ -168,94 +193,104 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    this.oldOB=dialogData.data[0];
+    this.oldOB = dialogData.data[0];
     this.popupTitle = dialogData?.data[1];
     this.okrFM = dialogData?.data[2];
     this.okrVll = dialogData?.data[3];
     this.okrGrv = dialogData?.data[4];
-    this.formModel=dialogRef.formModel;
-  
-  }
-  //-----------------------Base Func-------------------------//
-  ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     id: '1',
-    //     type: ViewType.content,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       panelRightRef: this.alignKR,
-    //       contextMenu: '',
-    //     },
-    //   },
-    // ];
+    this.formModel = dialogRef.formModel;
   }
 
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+  ngAfterViewInit(): void {}
+
   onInit(): void {
-    this.getObjectData();    
+    this.getObjectData();
     this.getListAlign();
     this.getListAssign();
     this.loadTabView();
-    
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
+
+  // }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+  loadTabView() {
+    this.activeTab = 'Overview';
+    if (this.activeTab == 'Tasks') this.offset = '65px';
+    else this.offset = '0px';
+    this.detectorRef.detectChanges();
   }
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Base Event------------------------//
+  getObjectData() {
+    this.codxOmService
+      .getObjectAndKRChild(this.oldOB?.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.dataOKR = res;
+          this.okrChild = res.items;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  getListAlign() {
+    this.codxOmService.getListAlign(this.oldOB?.recID).subscribe((res: any) => {
+      if (res) {
+        this.listAlign = res;
+      }
+    });
+  }
+  getListAssign() {
+    this.codxOmService
+      .getListAssign(this.oldOB?.recID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.listAssign = res;
+        }
+      });
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
   click(event: any) {
     switch (event) {
     }
   }
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  loadTabView() {    
-    this.activeTab='Overview';
-    if (
-      this.activeTab == 'Tasks'
-    )
-      this.offset = '65px';
+  clickMenu(item) {
+    this.activeTab = item.name;
+    for (let i = 0; i < this.tabControl.length; i++) {
+      if (this.tabControl[i].isActive == true) {
+        this.tabControl[i].isActive = false;
+      }
+    }
+    if (this.activeTab == 'Tasks') this.offset = '65px';
     else this.offset = '0px';
+    item.isActive = true;
     this.detectorRef.detectChanges();
   }
-  
-  getObjectData(){
-    this.codxOmService
-        .getObjectAndKRChild(this.oldOB?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataOKR = res;
-            this.okrChild = res.items;            
-            this.detectorRef.detectChanges();
-          }
-        });
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
+  hiddenChartClick(evt: any) {
+    this.isHiddenChart = evt;
+    this.detectorRef.detectChanges();
   }
-  getListAlign(){
-    this.codxOmService
-        .getListAlign(this.oldOB?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.listAlign = res;           
-          }
-        });
-  }
-  getListAssign(){
-    this.codxOmService
-        .getListAssign(this.oldOB?.recID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.listAssign = res;           
-          }
-        });
+  closeDialog() {
+    this.dialogRef && this.dialogRef.close();
   }
   collapeKR(collapsed: boolean) {
-    this.collapedData(this.listAlign,collapsed);
-    this.collapedData(this.listAssign,collapsed);    
+    this.collapedData(this.listAlign, collapsed);
+    this.collapedData(this.listAssign, collapsed);
     this.isCollapsed = collapsed;
   }
-  collapedData(data:any,collapsed:any){
+  collapedData(data: any, collapsed: any) {
     data.forEach((ob) => {
       ob.isCollapse = collapsed;
     });
@@ -269,159 +304,19 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     });
     this.detectorRef.detectChanges();
   }
-  //#region Chart
-  // getChartData() {
-  //   let krDetail = this.dataKR;
-  //   switch (krDetail.interval) {
-  //     case 'Y':
-  //       this.getCheckInsByYear(krDetail);
-  //       break;
-  //     case 'Q':
-  //       this.getCheckInsByQuarter(krDetail);
-  //       break;
-  //     case 'M':
-  //       this.getCheckInsByMonth(krDetail);
-  //       break;
-  //   }
-  // }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  // getCheckInsByYear(data: any) {
-  //   const checkIns = data.checkIns;
-  //   const targets = data.targets;
-  //   const progressHistory = this.progressHistory;
-  //   const progressHistoryReverse = [...progressHistory].reverse();
-  //   let tempTarget = 0;
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //   if (!targets) {
-  //     return;
-  //   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //   if (checkIns && checkIns.length > 0) {
-  //     targets.map((target, index) => {
-  //       let tmpCheckIn: any = {};
-  //       tmpCheckIn.percent = progressHistoryReverse[index];
-  //       tmpCheckIn.period = `Q${index + 1}`;
-  //       tempTarget = tempTarget + (target.target / data.target) * 100;
-  //       tmpCheckIn.target = tempTarget;
-  //       this.chartData.data.push(tmpCheckIn);
-  //     });
-  //   }
-  // }
-
-  // getCheckInsByQuarter(data: any) {
-  //   const checkIns = data.checkIns;
-  //   const targets = data.targets;
-  //   const progressHistory = this.progressHistory;
-  //   const progressHistoryReverse = [...progressHistory].reverse();
-  //   let tempTarget = 0;
-
-  //   if (!targets) {
-  //     return;
-  //   }
-
-  //   if (checkIns && checkIns.length > 0) {
-  //     targets.map((target, index) => {
-  //       let tmpCheckIn: any = {};
-  //       tmpCheckIn.percent = progressHistoryReverse[index];
-  //       tmpCheckIn.period = `M${index + 1}`;
-  //       tempTarget = tempTarget + (target.target / data.target) * 100;
-  //       tmpCheckIn.target = tempTarget;
-  //       this.chartData.data.push(tmpCheckIn);
-  //     });
-  //   }
-  // }
-
-  // getCheckInsByMonth(data: any) {
-  //   const checkIns = data.checkIns;
-  //   const targets = data.targets;
-  //   const progressHistory = this.progressHistory;
-  //   const progressHistoryReverse = [...progressHistory].reverse();
-  //   let tempTarget = 0;
-
-  //   if (!targets) {
-  //     return;
-  //   }
-
-  //   if (checkIns && checkIns.length > 0) {
-  //     targets.map((target, index) => {
-  //       let tmpCheckIn: any = {};
-  //       tmpCheckIn.percent = progressHistoryReverse[index];
-  //       tmpCheckIn.period = `W${index + 1}`;
-  //       tempTarget = tempTarget + (target.target / data.target) * 100;
-  //       tmpCheckIn.target = tempTarget;
-  //       this.chartData.data.push(tmpCheckIn);
-  //     });
-  //   }
-  // }
-  //#endregion Chart
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
-  //Sửa trọng số KR  
-  editWeight() {
-    let popupTitle='Thay đổi trọng số cho KQ chính';
-    let subTitle =this.dataOB?.okrName;
-    let dModel = new DialogModel();
-    dModel.IsFull = true;
-    let dialogEditWeightKR = this.callfunc.openForm(
-      PopupOKRWeightComponent,
-      '',
-      null,
-      null,
-      null,
-      [this.dataOB, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle,this.okrVll],
-      '',
-      dModel
-    );
-  }
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-  hiddenChartClick(evt: any) {
-    this.isHiddenChart = evt;
-    this.detectorRef.detectChanges();
-  }
-  closeDialog(){
-    this.dialogRef && this.dialogRef.close();
-  }
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Event-----------------------//
-  selectionChange(parent) {
-    if (parent.isItem) {
-      parent.data.items= parent?.data?.items;
-    }
-  }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Popup-----------------------------//
-  clickMenu(item) {
-    this.activeTab = item.name;
-    for(let i=0;i<this.tabControl.length;i++){
-      if (this.tabControl[i].isActive == true) {
-        this.tabControl[i].isActive = false;        
-      }
-
-    }  
-    if (
-      this.activeTab == 'Tasks'
-    )
-      this.offset = '65px';
-    else this.offset = '0px'; 
-    item.isActive = true;
-    this.detectorRef.detectChanges();
-  }
-
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 }

@@ -173,18 +173,34 @@
       <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
       <span>{{ data.address }}</span>
     </div>
+    <div *ngIf="funcID == 'CM0101'">
+      <div class="mb-1">
+        <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
+        <span
+          [innerHTML]="
+            dataSelected?.custGroupID
+              | formatvalue : view.formModel : 'CustGroupID'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
     <div
       class="mt-1"
       *ngIf="(funcID == 'CM0103' || funcID == 'CM0104') && data.industries"
     >
       <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
-      <span
-        [innerHTML]="
-          dataSelected?.industries
-            | formatvalue : view.formModel : 'Industries'
-            | async
-        "
-      ></span>
+      <div *ngFor="let item of data?.industries.split(';'); index as i" class="d-inline">
+        <span
+          [innerHTML]="item | formatvalue : view.formModel : 'Industries' | async"
+        ></span
+        ><span
+          class="me-1"
+          *ngIf="i < data?.industries.split(';').length - 1"
+          >,</span
+        >
+        <!-- {{ dataSelected?.segmentID }} -->
+      </div>
     </div>
   </div>
 </ng-template>

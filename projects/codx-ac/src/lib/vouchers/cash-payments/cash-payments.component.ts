@@ -335,7 +335,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
-    if (event?.data.data) {
+    if (event?.data.data || event?.data.error) {
       return;
     } else {
       if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
