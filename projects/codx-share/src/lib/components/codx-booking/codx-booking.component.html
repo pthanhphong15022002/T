@@ -5,7 +5,8 @@
   [viewActiveType]="viewType.schedule">
 </codx-views>
 
-<!-- Schedule view -->
+
+<!----------------------------------Schedule---------------------------------->
 <ng-template #cardTemplate let-data>
   <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
     <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
@@ -37,7 +38,7 @@
   </div>
 </ng-template>
 
-<!-- List Viewdetail -->
+<!----------------------------------List---------------------------------->
 <ng-template #subTitleTmp let-data>
   <div class="">
     <div class="">
@@ -82,13 +83,14 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel" [resourceType]="resourceType"
-    (reschedule)="reschedule($event)" (cancel)="cancel($event)" (invite)="invite($event)" (edit)="edit($event)"
-    (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"
+  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
+    [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
+    (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
 </ng-template>
 
-<!-- GridView Template -->
+<!----------------------------------Grid---------------------------------->
 <ng-template #gridMF let-data>
   <codx-mfunc [type]="'hover'" [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
     (changeDataMF)="changeDataMF($event, data)">
@@ -96,7 +98,7 @@
 </ng-template>
 <ng-template #gridResourceName let-data>
   <div>
-    <span [innerHTML]="data?.resourceName "></span>
+    <span [innerHTML]="data?.resourceName  | formatvalue : formModel : 'ResourceID' | async"></span>
   </div>
 </ng-template>
 <ng-template #gridHost let-data>
@@ -122,7 +124,16 @@
     <span [innerHTML]="data?.note | formatvalue : formModel : 'Note' | async"></span>
   </div>
 </ng-template>
-
+<ng-template #gridPhone let-data>
+  <div>
+    <span [innerHTML]="data?.phone | formatvalue : formModel : 'Phone' | async"></span>
+  </div>
+</ng-template>
+<ng-template #gridAddress let-data>
+  <div>
+    <span [innerHTML]="data?.address | formatvalue : formModel : 'Address' | async"></span>
+  </div>
+</ng-template>
 <!-- Other -->
 <ng-template #mfButton let-data>
   <div class="mt-1 me-1">

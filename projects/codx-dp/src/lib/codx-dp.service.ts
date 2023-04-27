@@ -646,6 +646,15 @@ export class CodxDpService {
     return arr3;
   }
 
+  updateOwnerStepAsync(step){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateOwnerStepAsync',
+      step
+    );
+  }
+
   //check trinfh ki
   checkApprovalStep(recID) {
     return this.api.exec<any>(

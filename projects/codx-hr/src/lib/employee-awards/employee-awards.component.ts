@@ -159,6 +159,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   }
 
   clickMF(event, data) {
+    this.itemDetail = data;
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -185,9 +186,7 @@ export class EmployeeAwardsComponent extends UIComponent {
         break;
       //Delete
       case 'SYS02':
-        if (data) {
-          this.view.dataService.dataSelected = data;
-        }
+        if (data) {this.view.dataService.dataSelected = data;}
         this.view.dataService
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
@@ -196,11 +195,10 @@ export class EmployeeAwardsComponent extends UIComponent {
         break;
       //Edit
       case 'SYS03':
-        this.eAwardObj = data;
         this.handlerEAwards(
           event.text + ' ' + this.view.function.description,
           'edit',
-          this.eAwardObj
+          this.itemDetail
         );
         this.df.detectChanges();
         break;
@@ -306,14 +304,16 @@ export class EmployeeAwardsComponent extends UIComponent {
         if (res) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.hrService.addBGTrackLog(
-            res[0].recID,
-            this.cmtStatus,
-            this.view.formModel.entityName,
-            'C1',
-            null,
-            'EAwardBusiness'
-          ).subscribe(res =>{});
+          this.hrService
+            .addBGTrackLog(
+              res[0].recID,
+              this.cmtStatus,
+              this.view.formModel.entityName,
+              'C1',
+              null,
+              'EAwardBusiness'
+            )
+            .subscribe((res) => {});
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -359,8 +359,11 @@ export class EmployeeAwardsComponent extends UIComponent {
               this.dataCategory.processID,
               this.view.formModel.entityName,
               this.view.formModel.funcID,
-              '<div> ' + this.view.function.description +' - ' 
-                + this.itemDetail.decisionNo + '</div>'
+              '<div> ' +
+                this.view.function.description +
+                ' - ' +
+                this.itemDetail.decisionNo +
+                '</div>'
             )
             .subscribe((result) => {
               // console.log('ok', result);
