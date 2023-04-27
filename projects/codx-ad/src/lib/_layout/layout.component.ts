@@ -8,19 +8,13 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  module = 'AD';
+  
   dialog: DialogRef;
-
-  override aside = true;
-  override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = true;
-
   constructor(inject: Injector,
     private callfc: CallFuncService,
     ) { 
     super(inject);
+    this.module = 'AD';
   }
 
   onInit(): void {

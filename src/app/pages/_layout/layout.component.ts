@@ -8,15 +8,15 @@ import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'WP';
-  override asideFixed = false;
-  override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
   dialog!: DialogRef;
 
   constructor(inject: Injector,
     private callfc: CallFuncService) {
     super(inject);
+    this.module = 'WP';
+    this.layoutModel.asideFixed = false;
+    this.layoutModel.asideTheme='transparent';
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit() { }

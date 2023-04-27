@@ -9,8 +9,6 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  module = "BP";
   dialog!: DialogRef;
 
   constructor(
@@ -18,6 +16,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     private callfc: CallFuncService,
   ) {
     super(inject);
+    this.module = 'BP';
   }
   onInit(): void {
 

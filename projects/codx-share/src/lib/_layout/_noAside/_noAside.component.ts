@@ -14,18 +14,16 @@ import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawe
   styleUrls: ['./_noAside.component.css'],
 })
 export class LayoutNoAsideComponent extends LayoutBaseComponent {
-  module = '';
-  override aside = false;
-  override toolbarFixed = false;
-  //override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  //override toolbar = false;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarFixed = false;
+
   }
 
   onInit(): void {
