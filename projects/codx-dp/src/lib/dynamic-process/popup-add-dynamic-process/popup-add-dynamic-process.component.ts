@@ -3132,6 +3132,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       if (!checkPermissions) {
         this.process['permissions'].push(rolePermission);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
 
       if (roleOld) {
@@ -3174,8 +3175,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.lstTmp.push(tmp);
         }
         this.process['permissions']?.splice(index, 1);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
     }
+
   }
   //test user exists in step
   checkExistUserInStep(step:any, role: any, type: string): boolean {
