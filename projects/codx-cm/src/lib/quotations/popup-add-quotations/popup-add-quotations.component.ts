@@ -29,15 +29,10 @@ export class PopupAddQuotationsComponent implements OnInit {
   action = 'add';
   dialog: DialogRef;
   headerText = 'Thêm form test';
-  // fmProcductsLines: FormModel = {
-  //   formName: 'CMProducts',
-  //   gridViewName: 'grvCMProducts',
-  //   entityName: 'CM_Products',
-  // };
-  //test
+
   fmQuotationLines: FormModel = {
-    formName: 'CMQuotations',
-    gridViewName: 'grvCMQuotations',
+    formName: 'CMQuotationsLines',
+    gridViewName: 'grvCMQuotationsLines',
     entityName: 'CM_QuotationsLines',
   };
   gridHeight: number = 300;
@@ -48,7 +43,6 @@ export class PopupAddQuotationsComponent implements OnInit {
     mode: 'Normal',
   };
 
- // productsLine: Array<CM_Products> = []; //mang san pham
   quotationLines: Array<CM_QuotationsLines> = [];
   lockFields = [];
   dataParent : any
@@ -90,12 +84,12 @@ export class PopupAddQuotationsComponent implements OnInit {
   addRow() {
     let idx = this.gridQuationsLines.dataSource?.length;
     let data = this.gridQuationsLines.formGroup.value; //ddooi tuong
-    //data.recID = Util.uid();
+    data.recID = Util.uid();
     data.write = true;
     data.delete = true;
     data.read = true;
-    // data.rowNo = idx + 1;
-    // data.transID = this.quotations?.recID;
+    data.rowNo = idx + 1;
+    data.transID = this.quotations?.recID;
     this.gridQuationsLines.addRow(data, idx);
   }
 

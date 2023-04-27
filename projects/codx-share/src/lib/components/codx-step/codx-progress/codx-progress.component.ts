@@ -300,9 +300,9 @@ export class progressOutput {
 		groupTaskID: string = null;                                    
 		taskID: string = null;
 		type: string;
-		progressStep: number = null;
-		progressGroupTask: number = null;
-		progressTask: number = null;
+		progressStep: number = 0;
+		progressGroupTask: number = 0;
+		progressTask: number = 0;
 		note: string = '';
 		actualEnd: Date = null;
 		isUpdate: boolean = false;

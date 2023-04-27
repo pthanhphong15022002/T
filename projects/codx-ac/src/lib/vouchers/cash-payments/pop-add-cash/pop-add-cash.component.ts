@@ -140,7 +140,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Event
   close() {
-    if (this.hasSaved || this.formType == 'edit') {
+    if (this.hasSaved) {
       this.dialog.close({
         update: true,
         data: this.cashpayment,
@@ -470,6 +470,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           break;
         case 'edit':
+          this.dialog.dataService.updateDatas.set(
+            this.cashpayment['_uuid'],
+            this.cashpayment
+          );
           this.dialog.dataService
             .save(null, 0, '', '', false)
             .subscribe((res) => {
@@ -520,6 +524,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .execAction<any>('AC_CashPaymentsLines', [data], 'DeleteAsync')
               .subscribe((res) => {
                 if (res) {
+                  this.hasSaved = true;
                   this.api.exec('AC', 'CashPaymentsLinesBusiness', 'UpdateAfterDelete', [
                     this.cashpaymentline,
                   ]).subscribe((res) => {})
@@ -1017,7 +1022,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
         break;
       case 'edit':
-        if (this.cashpayment?.subType == '1') {
+        if (this.cashpayment?.subType == '1' || this.cashpayment?.subType == '3') {
           //#region  load cashpaymentline
           this.acService
             .loadData(

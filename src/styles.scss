@@ -60,9 +60,7 @@ erm-quick-links-inner .dropdown-menu {
 // ::-webkit-scrollbar-thumb {
 //   background-color: #183395 !important;
 // }
-.fs-6 {
-  font-size: var(--fs-6) !important;
-}
+
 .border-gray-200 {
   border-color: var(--gray-200) !important;
 }
@@ -83,7 +81,19 @@ codx-view-list-detail {
     border-radius: 0;
   }
 }
-
+.fs-4 {
+  font-size: 1.3rem !important;
+}
+.fs-5 {
+  font-size: 1.275rem !important;
+}
+.fs-5-sm {
+  font-size: 1.175rem !important;
+}
+.fs-6 {
+  //font-size: var(--fs-6) !important;
+  font-size: 1.035rem !important;
+}
 /** custom bootstrap  **/
 .rounded-4 {
   border-radius: 1rem !important;
@@ -113,6 +123,21 @@ codx-view-list-detail {
 
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
+}
+.w-20{
+  width: 20%;
+}
+.w-30{
+  width: 30%;
+}
+.w-40{
+  width: 40%;
+}
+.w-60{
+  width: 60%;
+}
+.w-10{
+  width: 10%;
 }
 
 input.e-input,
@@ -530,8 +555,8 @@ a:link {
 .aqua {
   border: 1px aqua solid;
 }
-.border-test {
-  border: 1px yellowgreen solid;
+.yellow {
+  border: 1px yellow solid;
 }
 .color-test {
   color: yellowgreen;
@@ -567,7 +592,7 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
-  padding: 0 5px !important;
+  padding: 0 2px !important;
 }
 .e-tab .e-tab-header .e-toolbar-item.e-active,
 .e-tab .e-tab-header .e-toolbar-item.e-active * {
@@ -1839,7 +1864,14 @@ a.nav-link {
   font-weight: bold;
   font-size: var(--fs-6);
 }
-
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  color: var(--gray-800);
+  font-weight: bold;
+  font-size: var(--fs-6);
+}
+.e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+  margin-right: 15px;
+}
 .codx-nav {
   border-bottom: 1px var(--gray-150) solid;
   .nav-link {
@@ -2541,6 +2573,22 @@ codx-input .e-icons.e-check:before {
     left: 0;
   }
 }
+.e-grid .e-table {
+  table-layout: auto;
+}
+
+.e-richtexteditor .e-toolbar-wrapper {
+  position: relative;
+}
+.e-richtexteditor .e-rte-toolbar.e-rte-tb-float, 
+.e-richtexteditor .e-rte-toolbar.e-toolbar.e-extended-toolbar.e-rte-tb-float {
+  position: relative;
+  top: 0!important;
+}
+.okr-treeview li.menu-item{
+  margin-bottom: 10px!important;
+}
+
 
 // .form-control {
 //   border-color: var(--gray-150);

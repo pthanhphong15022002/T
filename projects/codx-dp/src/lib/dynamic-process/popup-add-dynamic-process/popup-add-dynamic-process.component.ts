@@ -625,7 +625,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   valueChange(e) {
     if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
-    this.process[e.field] = e.data;
+    let value = e.data;
+    if(typeof value == 'string'){
+      value = value.trim();
+    }
+    this.process[e.field] = value;
     if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
         this.loadCbxProccess();
@@ -3284,9 +3288,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  changeIcon(event, field, data) {
+  changeIcon(event, data) {
     if (event) {
-      data[field] = event;
+      data[event.field] = event.data;
     }
   }
   getRole(task, type) {
@@ -3777,26 +3781,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.stepList.push(step);
           }
         });
-
-        // let checkRoleProccess =  this.listValueCopy.includes('2');
-        // let checkRoleStep =  this.listValueCopy.includes('4');
-        // if(checkRoleProccess && checkRoleStep)
-        // {
-        //   this.listPermissions = this.listPermissions;
-        // }
-
-       // this.listPermissions =  && this.listValueCopy.includes('4') ? this.listPermissions : [];
-        // this.listPermissions =
-        //   this.listValueCopy.includes('2') || this.listValueCopy.includes('4')
-        //     ? this.listPermissions
-        //     : [];
-        // if (!this.listValueCopy.includes('4')) {
-        //   this.listPermissions = this.listPermissions.filter((element) =>
-        //   (element.roleType === 'P'
-        //   && !listObjectId.includes(element.objectID))
-        //    ||element.roleType !== 'P'
-        //   );
-        // }
         if(!this.listValueCopy.includes('2') && !this.listValueCopy.includes('4') ) {
           this.listPermissions = [];
         }
