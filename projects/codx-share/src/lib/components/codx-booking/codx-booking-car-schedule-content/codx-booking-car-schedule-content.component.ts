@@ -1,4 +1,3 @@
-declare var window: any;
 import {
   AfterViewInit,
   Component,
@@ -10,25 +9,24 @@ import {
   CallFuncService,
   UIComponent,
 } from 'codx-core';
-import { CodxShareService } from '../../codx-share.service';
+import { CodxShareService } from '../../../codx-share.service';
+import moment from 'moment';
 @Component({
-  selector: 'codx-booking-room-schedule-content',
-  templateUrl: 'codx-booking-room-schedule-content.component.html',
-  styleUrls: ['codx-booking-room-schedule-content.component.scss'],
+  selector: 'codx-booking-car-schedule-content',
+  templateUrl: 'codx-booking-car-schedule-content.component.html',
+  styleUrls: ['codx-booking-car-schedule-content.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxBookingRoomScheduleContentComponent
+export class CodxBookingCarScheduleContentComponent
   extends UIComponent
   implements AfterViewInit
 {
   @Input() recID: any;
-  @Input() formModel: any;
-  @Input() gridViewSetup: any;
   data:any;
   constructor(
     private injector: Injector,
     private codxShareService: CodxShareService,
-    private callFuncService: CallFuncService
+    private callFuncService: CallFuncService,
   ) {
     super(injector);
   }
@@ -41,7 +39,9 @@ export class CodxBookingRoomScheduleContentComponent
     });
   }
   ngAfterViewInit(): void {}
-
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
+  }
   showHour(date: any) {
     let temp = new Date(date);
     let time =
@@ -49,11 +49,5 @@ export class CodxBookingRoomScheduleContentComponent
       ':' +
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
-  }
-  meetingNow(url:string){
-    if(url !=null){
-
-      window.open(url, '_blank');
-    }
   }
 }

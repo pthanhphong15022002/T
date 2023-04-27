@@ -85,12 +85,11 @@ export class EmployeeDetailComponent extends UIComponent {
 
   active = [
     'HRTEM0101',
-    'HRTEM0201',
     'HRTEM0301',
     'HRTEM0401',
     'HRTEM0501',
     'HRTEM0601',
-    'HRTEM0701',
+    'HRTEM0804',
     'HRTEM0801',
   ];
 
@@ -150,6 +149,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   infoPersonal: any;
+  infoPersonalContract: any;
 
   crrEContract: any;
   lstContractType: any; //phân loại HĐ không xác định
@@ -500,7 +500,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eInfoFuncID = 'HRTEM0101';
   ePartyFuncID = 'HRTEM0102';
   eFamiliesFuncID = 'HRTEM0103';
-  eAssurFunc = 'HRTEM0201';
+  eAssurFuncID = 'HRTEM0201';
   ePassportFuncID = 'HRTEM0202';
   eDegreeFuncID = 'HRTEM0601';
   eVisaFuncID = 'HRTEM0203';
@@ -1020,6 +1020,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   initHRProcess() {
+    debugger
     if (!this.eContractFormModel) {
       this.hrService.getFormModel(this.eContractFuncID).then((res) => {
         this.eContractFormModel = res;
@@ -1283,7 +1284,6 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   onInit(): void {
-    debugger
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
       if (res && res[1] > 0) {
@@ -1298,8 +1298,8 @@ export class EmployeeDetailComponent extends UIComponent {
         this.lstFuncCurriculumVitae = res[0].filter(
           (p) => p.parentID == this.curriculumVitaeFuncID
         );
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
-        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        this.lstBtnAdd = this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        && p.entityName != this.view.formModel.entityName);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
@@ -1425,6 +1425,7 @@ export class EmployeeDetailComponent extends UIComponent {
       }
     });
 
+    
     //#region filter
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';
@@ -2182,6 +2183,9 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         });
     }
+
+    this.initHRProcess();
+    console.log('hdhd ht', this.crrEContract);
   }
 
   add(functionID) {
@@ -3026,10 +3030,18 @@ export class EmployeeDetailComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
+    console.log('lst funcID', this.lstFuncID);
+    console.log('view neee', this.view.formModel.entityName);
+    
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
-        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // console.log('loc kq 1', this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        //  && p.entityName != this.view.formModel.entityName));
+         
+        // this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
+        this.lstBtnAdd = this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        && p.entityName != this.view.formModel.entityName);
+        
         // this.lstBtnAdd.splice(0, 2);
         break;
       case this.jobInfoFuncID:
@@ -3086,8 +3098,8 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEAssurTaxBankComponent,
       {
         headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.eAssurFunc),
-        functionID: this.eAssurFunc,
+          actionHeaderText + ' ' + this.getFormHeader(this.eAssurFuncID),
+        functionID: this.eAssurFuncID,
         dataObj: this.infoPersonal,
       },
       option

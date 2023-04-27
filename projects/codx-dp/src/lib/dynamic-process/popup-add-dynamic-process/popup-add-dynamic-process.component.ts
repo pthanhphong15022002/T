@@ -297,7 +297,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   lstTmp: DP_Processes_Permission[] = [];
   listStepApproverView = []; //view thôi ko có quyền gì cả
   listStepApprover: any;
-  listStepApproveDelete = [];
+  listStepApproverDelete = [];
   viewApproverStep: any;
 
   constructor(
@@ -561,7 +561,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.dialog.close(res.save);
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
-            this.listStepApproveDelete
+            this.listStepApproverDelete
           );
           // } else {
           //   this.dialog.close();
@@ -580,9 +580,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          debugger
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
-            this.listStepApproveDelete
+            this.listStepApproverDelete
           );
 
           (this.dialog.dataService as CRUDService)
@@ -1654,7 +1655,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event) {
         if (!this.isChange) this.isChange = true;
         this.listStepApprover = res?.event?.listStepApprover;
-        this.listStepApproveDelete = res?.event?.listStepApproveDelete;
+        this.listStepApproverDelete = res?.event?.listStepApproverDelete;
         this.listStepApproverView = this.listStepApprover;
         this.getUserByApproverStep(res?.event?.listStepApprover);
         this.recIDCategory = transID;
@@ -3132,6 +3133,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       if (!checkPermissions) {
         this.process['permissions'].push(rolePermission);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
 
       if (roleOld) {
@@ -3174,8 +3176,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.lstTmp.push(tmp);
         }
         this.process['permissions']?.splice(index, 1);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
     }
+
   }
   //test user exists in step
   checkExistUserInStep(step:any, role: any, type: string): boolean {

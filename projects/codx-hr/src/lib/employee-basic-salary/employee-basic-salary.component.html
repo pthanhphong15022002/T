@@ -8,10 +8,10 @@
     <div class="w-50 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-20 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblEBasicSalaries" [default]="'Mức lương | Hiệu lực'"></codx-label>
     </div>
-    <div class="w-25 text-dark p-3 fw-bold fw-500">
+    <div class="w-30 text-dark p-3 fw-bold fw-500">
       <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
     </div>
     <!-- <div class="w-25 text-dark p-3 fw-bold fw-500">
@@ -24,7 +24,7 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
     <!-- emp info -->
-    <div class="w-50 p-3">
+    <div class="w-50 px-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column flex-center me-2 w-50px">
           <codx-img [width]="35" [objectId]="data?.emp?.employeeID" [referType]="'avt'"
@@ -52,7 +52,7 @@
     <!-- end emp info -->
 
     <!-- salary -->
-    <div class="w-25 p-3">
+    <div class="w-20 px-3">
       <div class="d-flex flex-column" [class]="data.isCurrent ? 'text-highlight' : 'text-gray-700'">
         <div class="d-flex flex-row mb-1">
           <span class="icon-attach_money icon-16 me-1"></span>
@@ -91,7 +91,7 @@
     <!-- end salary -->
 
     <!-- Decision -->
-    <div class="w-25 p-3">
+    <div class="w-30 px-3">
       <div class="d-flex flex-column">
         <div class="text-gray-700 d-flex flex-row mb-1">
           <span class="icon-event_notes icon-16 me-1"></span>
@@ -155,7 +155,7 @@
   <div class="border-bottom position-relative avatar-vllbadge">
     <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)" [imageId]="data?.emp?.employeeID"
       [imageObjType]="'HR_Employees'" [imageWidth]="40" [formModel]="view.formModel" [titleTmp]="titleTmp"
-      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'">
+      [dataItem]="data" [imgOn]="data?.modifiedOn" [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
     </codx-temp-full>
     <div class="d-flex flex-center vll-badge">
       <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
