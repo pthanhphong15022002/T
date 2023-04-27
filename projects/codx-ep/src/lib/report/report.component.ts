@@ -25,6 +25,7 @@ export class EPReportComponent extends UIComponent {
         active: true,
         reportView: true,
         reportType: 'R',
+        
       },
     ];
     this.detectorRef.detectChanges();
