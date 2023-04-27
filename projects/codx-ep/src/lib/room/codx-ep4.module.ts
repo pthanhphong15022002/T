@@ -14,7 +14,6 @@ import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { MeetingComponent } from './meeting/meeting.component';
 import { RoomDashboardComponent } from './booking/dashboard/dashboard.component';
 import { Layout4Component } from './_layout4/layout4.component';
 import { BookingRoomComponent } from './booking/booking-room.component';
@@ -23,7 +22,6 @@ import { ApprovalRoomsComponent } from './approval/approval-room.component';
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { PopupAddAttendeesComponent } from './booking/popup-add-attendees/popup-add-attendees.component';
-import { BookingRoomViewDetailComponent } from './view-detail/booking-room-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -71,11 +69,10 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   PopupRescheduleBookingComponent,
   PopupAddAttendeesComponent,
-  BookingRoomViewDetailComponent,
 ];
 
 @NgModule({
-  declarations: [Components, MeetingComponent],
+  declarations: [Components],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

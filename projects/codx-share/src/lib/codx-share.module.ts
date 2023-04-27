@@ -171,6 +171,7 @@ import { CodxBookingComponent } from './components/codx-booking/codx-booking.com
 import { CodxBookingCarScheduleContentComponent } from './components/codx-booking/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
 import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 import { CodxBookingViewDetailComponent } from './components/codx-booking/codx-booking-view-detail/codx-booking-view-detail.component';
+import { CodxMeetingOnlineComponent } from './components/codx-meeting-online/codx-meeting-online.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -271,13 +272,6 @@ const T_Component: Type<any>[] = [
   CodxHistoryTempComponent,
   NotifyDrawerPopupComponent,
   NotifyBodyComponent,
-  //booking
-  CodxBookingComponent,
-  CodxBookingCarScheduleContentComponent,
-  CodxBookingRoomScheduleContentComponent,
-  CodxBookingViewDetailComponent,
-  CountChartComponent,
-  TopChartComponent,
   //meetings
   CodxTmmeetingsComponent,
   ViewListMeetComponent,
@@ -297,7 +291,16 @@ const T_Component: Type<any>[] = [
   //step
   CodxStepTaskComponent,
   UpdateProgressComponent,
-  ProgressbarComponent
+  ProgressbarComponent,
+  
+  //booking
+  CodxBookingComponent,
+  CodxBookingCarScheduleContentComponent,
+  CodxBookingRoomScheduleContentComponent,
+  CodxBookingViewDetailComponent,
+  CountChartComponent,
+  TopChartComponent,
+  CodxMeetingOnlineComponent,
 ];
 
 const T_Pipe: Type<any>[] = [

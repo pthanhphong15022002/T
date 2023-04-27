@@ -90,10 +90,10 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <booking-room-view-detail #viewdetail [type]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel"
+  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel" [resourceType]="'1'"
     (reschedule)="reschedule($event)" (cancel)="cancel($event)" (invite)="invite($event)" (edit)="edit($event)"
     (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"
-    (setPopupTitleOption)="setPopupTitleOption($event)"></booking-room-view-detail>
+    (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
 </ng-template>
 
 <!-- GridView Template -->
