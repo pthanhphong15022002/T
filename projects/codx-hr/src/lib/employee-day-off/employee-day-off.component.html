@@ -57,7 +57,7 @@
         <div class="w-25 p-3">
             <div class="d-flex flex-column text-gray-700">
                 <div class="d-flex flex-row mb-2 fs-5">
-                    <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.periodType?.headerText">
+                    <div class="align-self-center fw-bold" [ngbTooltip]="grvSetup?.PeriodType?.headerText">
                         <span class="align-self-center fw-bold fs-5"
                             [innerHTML]=" data?.periodType | formatvalue : view.formModel : 'periodType' | async">
                         </span>
@@ -85,7 +85,8 @@
                     </div>
                     <ng-template #noTotalDayOff>
                         <div>
-                            <span [innerHTML]="data?.totalDaysOff | formatvalue : view.formModel : 'totalDaysOff'| async"></span>
+                            <span
+                                [innerHTML]="data?.totalDaysOff | formatvalue : view.formModel : 'totalDaysOff'| async"></span>
                         </div>
                     </ng-template>
                 </div>
@@ -153,7 +154,7 @@
         <codx-temp-full cardCss="codx_cardcenter p-3" (clickMF)="clickMF($event, data)"
             [imageId]="data?.emp?.employeeID" [imageObjType]="'HR_Employees'" [imageWidth]="40"
             [formModel]="view.formModel" [titleTmp]="titleTmp" [dataItem]="data" [imgOn]="data?.modifiedOn"
-            [typeMF]="'hover'">
+            [typeMF]="'hover'" (changeDataMF)="changeDataMF($event, data)">
         </codx-temp-full>
         <div class="d-flex flex-center vll-badge">
             <codx-vll class="badge badge-sm me-0 badge-light" [name]="genderGrvSetup?.referedValue"
@@ -175,7 +176,52 @@
             <span [innerHTML]="data?.emp?.positionID| formatvalue : view.formModel : 'PositionID' | async"></span>
         </div>
         <!-- end emp info -->
+        <!-- knowID -->
+        <div class="justify-content-between text-gray-700">
+            <div class="align-self-center" [ngbTooltip]="grvSetup?.KowID?.headerText">
+                <span class="align-self-center text-primary"
+                    [innerHTML]=" data?.kowID | formatvalue : view.formModel : 'kowID' | async">
+                </span>
+            </div>
+        </div>
+        <!-- end knowID -->
 
+        <!-- reason -->
+        <div class="justify-content-between text-gray-700">
+            <div class="d-flex mb-2" #reasonFieldDetail>
+                <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-1 text-dark"
+                    #titleContentDetail>{{data?.reason}}</span>
+            </div>
+            <ng-template #reasonTooltip>
+                <div class="d-flex flex-column">
+                    <span [style.display]=" (titleContentDetail.offsetWidth < reasonFieldDetail.scrollWidth)? 'none':''">
+                        {{ data?.reason}}
+                    </span>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- end reason -->
+        <!-- from to -->
+        <div class="justify-content-between">
+            <div class="d-flex flex-row align-items-center"
+                *ngIf="dateCompare(data?.beginDate, data?.endDate); else justFromDate">
+                <span class="icon-event_notes icon-16 me-1"></span>
+                <span [innerHTML]="data?.beginDate | formatvalue : view.formModel : 'beginDate'| async"
+                    [ngbTooltip]="grvSetup?.BeginDate?.headerText"></span>
+                <span class="px-1"> - </span>
+                <span [innerHTML]="data?.endDate | formatvalue : view.formModel : 'endDate'| async"
+                    [ngbTooltip]="grvSetup?.BndDate?.headerText"></span>
+            </div>
+            <ng-template #justFromDate>
+                <div class="d-flex flex-row align-items-center">
+                    <span class="icon-event_notes icon-16 me-1"></span>
+                    <span [innerHTML]="data?.beginDate | formatvalue : view.formModel : 'beginDate'| async"
+                        [ngbTooltip]="grvSetup?.BeginDate?.headerText"></span>
+                </div>
+            </ng-template>
+        </div>
+        <!-- end from to -->
 
         <!-- status  -->
         <div class="d-flex justify-content-between text-dark">
@@ -191,7 +237,9 @@
 <!-- end -->
 
 <ng-template #templateItemDetailRight let-data>
-
+    <lib-view-day-off-detail #viewDetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel"
+        [view]="view" (clickMFunction)="clickEvent($event, data)">
+    </lib-view-day-off-detail>
 </ng-template>
 <!-- end list & detail -->
 
