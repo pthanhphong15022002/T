@@ -771,7 +771,7 @@ export class InstancesComponent
         e.forEach((res) => {
           switch (res.functionID) {
             case 'SYS003':
-              if (data.status != '2' || data.closed) res.disabled = true;
+              if (data.status != '2' || data.closed || !data.permissioRolesProcess) res.disabled = true;
               break;
             // case 'SYS004':
             // case 'SYS001':
@@ -786,7 +786,7 @@ export class InstancesComponent
             case 'SYS103':
             case 'SYS03':
               let isUpdate = data.write;
-              if (!isUpdate || data.status != '2' || data.closed)
+              if (!isUpdate || data.status != '2' || data.closed || !data.permissioRolesProcess)
                 res.disabled = true;
               break;
             case 'DP09':
@@ -798,24 +798,24 @@ export class InstancesComponent
             case 'SYS104':
             case 'SYS04':
               let isCopy = this.isCreate ? true : false;
-              if (!isCopy || data.closed || data.status != '2')
+              if (!isCopy || data.closed || data.status != '2' || !data.permissioRolesProcess)
                 res.disabled = true;
               break;
             //xóa
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed || data.status != '2')
+              if (!isDelete || data.closed || data.status != '2' || !data.permissioRolesProcess)
                 res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed || !data.permissionCloseInstances)
+              if (data.closed || !data.permissionCloseInstances || !data.permissioRolesProcess)
                 res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed || !data.permissionCloseInstances) {
+              if (!data.closed || !data.permissionCloseInstances || !data.permissioRolesProcess) {
                 res.disabled = true;
               }
               break;
@@ -831,7 +831,7 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approveRule) {
+              if (!this.process?.approveRule || !data.permissioRolesProcess) {
                 res.isblur = true;
               }
               break;
@@ -921,7 +921,7 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
-    if (!data.permissionMoveInstances) {
+    if (!data.permissioRolesProcess || !data.permissionMoveInstances) {
       return true;
     }
     return false;
@@ -1227,30 +1227,45 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (!this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)) {
-      return;
-    } else {
+    if(checkTransferControl == '1' && dataInstance.isAuto?.isContinueTaskAll){
       this.handleMoveStage(dataInstance);
+    }else if(checkTransferControl == '2' ){
+      if(dataInstance.isAuto.isContinueTaskEnd){
+        if(dataInstance.isAuto?.isShowFromTaskEnd){
+          this.openFormForAutoMove(dataInstance);
+        }else{
+          this.handleMoveStage(dataInstance);
+        }
+      }
     }
+
   }
+
   isCheckAutoMoveStage(checkTransferControl: any, isAuto) {
     if (
       checkTransferControl == '1' &&
-      isAuto.isShowFromTaskAll &&
+      !isAuto.isShowFromTaskAll &&
       isAuto.isContinueTaskAll
     ) {
       return true;
-    } else if (
+    }
+    else if (
       checkTransferControl == '2' &&
       isAuto.isContinueTaskEnd &&
-      isAuto.isShowFromTaskEnd
+      !isAuto.isShowFromTaskEnd
     ) {
       return true;
-    } else {
+    }
+     else {
       return false;
     }
   }
-
+  isCheckTaskEnd(checkTransferControl: any, isAuto){
+    if (checkTransferControl == '2' && isAuto.isShowFromTaskEnd) {
+      return true;
+    }
+    return false;
+  }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;
     var strStepsId = [];
@@ -1341,11 +1356,6 @@ export class InstancesComponent
   openFormForAutoMove(dataInstance) {
     var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
     if (idx != -1) {
-      this.moveStage(
-        this.moreFuncInstance[idx],
-        dataInstance.instance,
-        dataInstance.listStep
-      );
       this.moveStage(
         this.moreFuncInstance[idx],
         dataInstance.instance,

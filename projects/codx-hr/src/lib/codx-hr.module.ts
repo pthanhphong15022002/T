@@ -468,6 +468,8 @@ import { ViewDetailDisciplinesComponent } from './employee-discipline/view-detai
 import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel.component';
 import { PopupEmployeeBusinessComponent } from './employee-business-travel/popup-employee-business/popup-employee-business.component';
 import { ViewDetailEmployeeBusinessComponent } from './employee-business-travel/view-detail-employee-business/view-detail-employee-business.component';
+import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.component';
+import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
 export const routes: Routes = [
       {
         path: '',
@@ -574,6 +576,10 @@ export const routes: Routes = [
           {            
             path: 'ebusinesstravels/:funcID',
             component: EmployeeBusinessTravelComponent,
+          },
+          {
+            path: 'edayoffs/:funcID',
+            component: EmployeeDayOffComponent
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -739,6 +745,8 @@ const T_Component: Type<any>[] = [
   ApprovalHRContractComponent,
   ViewDetailDisciplinesComponent,
   EmployeeBusinessTravelComponent,
+  EmployeeDayOffComponent,
+  ViewDayOffDetailComponent
   PopupEmployeeBusinessComponent,
   ViewDetailEmployeeBusinessComponent,
 ];
