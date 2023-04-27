@@ -10,12 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./layout-portal.component.scss'],
 })
 export class LayoutPortalComponent extends LayoutBaseComponent {
-  module = 'WP';
   funcID: string = '';
-  override asideFixed = false;
-  override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  //override asideKeepActive = false;
-  override toolbar = false;
   dialog!: DialogRef;
   constructor(
     inject: Injector,
@@ -25,6 +20,11 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   ) 
   {
     super(inject);
+    this.module = 'WP';
+    this.layoutModel.asideFixed = false;
+    this.layoutModel.asideTheme = 'transparent';
+    this.layoutModel.asideMinimize = 'icon';
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit() {

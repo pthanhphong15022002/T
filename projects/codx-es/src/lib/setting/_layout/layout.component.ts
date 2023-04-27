@@ -8,11 +8,11 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = "ES";
   constructor(
     inject: Injector
   ) {
     super(inject);
+    this.module = 'ES';
   }
   
   onInit(): void {

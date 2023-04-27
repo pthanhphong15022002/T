@@ -7,13 +7,11 @@ import { LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutTenantComponent extends LayoutBaseComponent {
-  module = '';
-  override aside = false;
-  //override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
   constructor(inject: Injector) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit(): void {}

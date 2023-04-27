@@ -9,19 +9,13 @@ import { CodxMwpService } from '../codx-mwp.service';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  
-  module = 'MWP';
-  dialog!: DialogRef;
-
-  override aside = true;
-  override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = true;
+    dialog!: DialogRef;
   constructor(inject: Injector,
     private callfc: CallFuncService,
     private mwpService : CodxMwpService
     ) {
     super(inject);
+    this.module = 'MWP';
   }
 
   onInit(): void {
