@@ -746,7 +746,7 @@ const T_Component: Type<any>[] = [
   ViewDetailDisciplinesComponent,
   EmployeeBusinessTravelComponent,
   EmployeeDayOffComponent,
-  ViewDayOffDetailComponent
+  ViewDayOffDetailComponent,
   PopupEmployeeBusinessComponent,
   ViewDetailEmployeeBusinessComponent,
 ];
