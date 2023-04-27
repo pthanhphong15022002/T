@@ -20,6 +20,7 @@
             <codx-label
               fiedName="lblGeneralInfoTab"
               default="Thông tin chứng từ"
+              [formModel]="form.formModel"
               class="fw-bold fs-6"
             ></codx-label>
           </div>
@@ -219,6 +220,7 @@
             <i class="icon-receipt_long icon-18 me-2"></i>
             <codx-label
               fiedName="lblReceiptInfo"
+              [formModel]="form.formModel"
               default="Thông tin hóa đơn"
               class="fw-bold fs-6"
             ></codx-label>
@@ -358,6 +360,7 @@
             <i class="icon-low_priority icon-18 me-2"></i>
             <codx-label
               fiedName="lblRef"
+              [formModel]="form.formModel"
               default="Tham chiếu"
               class="fw-bold fs-6"
             ></codx-label>
@@ -463,6 +466,7 @@
             <i class="icon-i-files-alt icon-18 me-2"></i>
             <codx-label
               fiedName="lblOtherInfo"
+              [formModel]="form.formModel"
               default="Thông tin khác"
               class="fw-bold fs-6"
             ></codx-label>

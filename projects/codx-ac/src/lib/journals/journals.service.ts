@@ -41,7 +41,7 @@ export class JournalService {
     form: CodxFormComponent,
     isEdit: boolean,
     saveFunction
-  ) {
+  ): void {
     // if this voucherNo already exists,
     // the system will automatically suggest another voucherNo
     if (
