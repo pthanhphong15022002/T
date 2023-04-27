@@ -2,8 +2,6 @@
   [header]="header" [body]="body" [footer]="hideFooter ? null : footer" (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)">
 
-
-
   <!----------------------------------Header---------------------------------->
   <ng-template #header>
     <div class="d-flex justify-content-between mt-2">
@@ -300,8 +298,9 @@
 
     <ng-container *ngIf="resourceType == '2'">
       <ng-container *ngTemplateOutlet="templateBodyCar"></ng-container>
-
-    </ng-container><ng-container *ngIf="resourceType == '6'">
+    </ng-container>
+    
+    <ng-container *ngIf="resourceType == '6'">
       <ng-container *ngTemplateOutlet="templateBodyStationery"></ng-container>
     </ng-container>
 
@@ -371,7 +370,6 @@
   </ng-template>
 
   <ng-template #templateBodyCar>
-
   </ng-template>
 
   <ng-template #templateBodyStationery>
@@ -418,7 +416,6 @@
       <div [ngbNavOutlet]="nav" class="pt-5 scroll-y booking-content"></div>
     </div>
   </ng-template>
-
 
   <!----------------------------------Footer---------------------------------->
   <ng-template #footer>
