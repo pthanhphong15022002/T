@@ -177,8 +177,8 @@
           <span class="icon-corporate_fare text-primary icon-16 me-1"></span>
           <span
             [innerHTML]="
-              dataSelected?.objectID
-                | formatvalue : formModel : 'ObjectID'
+              dataSelected?.objectName
+                | formatvalue : formModel : 'ObjectName'
                 | async
             "
           ></span>
