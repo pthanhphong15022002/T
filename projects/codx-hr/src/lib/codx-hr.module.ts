@@ -465,7 +465,9 @@ import { ViewAwardDetailComponent } from './employee-awards/view-award-detail/vi
 import { TestComponent } from './test/test.component';
 import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
 import { ViewDetailDisciplinesComponent } from './employee-discipline/view-detail-disciplines/view-detail-disciplines.component';
-import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel/employee-business-travel.component';
+import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel.component';
+import { PopupEmployeeBusinessComponent } from './employee-business-travel/popup-employee-business/popup-employee-business.component';
+import { ViewDetailEmployeeBusinessComponent } from './employee-business-travel/view-detail-employee-business/view-detail-employee-business.component';
 export const routes: Routes = [
       {
         path: '',
@@ -737,6 +739,8 @@ const T_Component: Type<any>[] = [
   ApprovalHRContractComponent,
   ViewDetailDisciplinesComponent,
   EmployeeBusinessTravelComponent,
+  PopupEmployeeBusinessComponent,
+  ViewDetailEmployeeBusinessComponent,
 ];
 @NgModule({
   imports: [
