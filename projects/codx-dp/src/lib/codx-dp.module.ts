@@ -53,6 +53,7 @@ import { UpdateProgressComponent } from './componnent-task/update-progress/updat
 import { TestComponent } from './componnent-task/test/test.component';
 import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
+import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 
 const routes: Routes = [
@@ -144,7 +145,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxTaskComponent,
     TestComponent,
     InputNumberDurationComponent,
-    ApprovalsComponent
+    ApprovalsComponent,
+    PopupEditOwnerstepComponent
   ],
   imports: [
     RouterModule.forChild(routes),
