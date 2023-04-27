@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { LayoutService, PageTitleService, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'report-stationery',
@@ -11,7 +11,9 @@ export class EPReportComponent extends UIComponent {
   viewType = ViewType;
   funcID: string;
 
-  constructor(injector: Injector) {
+  constructor(injector: Injector,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService,) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -25,7 +27,7 @@ export class EPReportComponent extends UIComponent {
         active: true,
         reportView: true,
         reportType: 'R',
-        
+
       },
     ];
     this.detectorRef.detectChanges();
@@ -33,7 +35,12 @@ export class EPReportComponent extends UIComponent {
 
   onActions(e: any) {
     if (e.type == 'detail') {
-      this.codxService.navigate('', '/report/detail/' + e.data.reportID);
+      this.codxService.navigate('', 'ep/report/detail/' + e.data.reportID);
     }
+  }
+  viewChanged(e:any){
+    debugger
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
   }
 }
