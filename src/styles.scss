@@ -2204,9 +2204,9 @@ lib-layoutnoaside.header-fixed.header-tablet-and-mobile-fixed.toolbar-enabled {
   overflow-y: hidden;
 }
 
-codx-input .rte-placeholder {
-  padding: 10px !important;
-}
+// codx-input .rte-placeholder {
+//   padding: 10px !important;
+// }
 .btn.codx-vllicon {
   display: flex;
   align-items: center;
@@ -2588,14 +2588,18 @@ codx-input .e-icons.e-check:before {
 .okr-treeview li.menu-item{
   margin-bottom: 10px!important;
 }
+.e-schedule .e-month-view .e-date-header-wrap table td, .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
+  font-size: 13px;
+}
+
+
+
+
 
 
 // .form-control {
 //   border-color: var(--gray-150);
 // }
-
-
-
 
 ///
 

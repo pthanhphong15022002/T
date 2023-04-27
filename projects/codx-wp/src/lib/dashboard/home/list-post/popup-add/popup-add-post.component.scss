@@ -68,12 +68,6 @@ codx-vll > .symbol.symbol-12px > img {
   height: 12px;
 }
 
-.body-addpost {
-  height: 100%;
-  position: relative;
-  min-height: 436px;
-}
-
 .addpost-scroll {
   // position: absolute;
   // left: 0;
@@ -91,9 +85,5 @@ codx-vll > .symbol.symbol-12px > img {
   border-bottom: 1px var(--gray-150) solid !important;
 } // chỗ này sao gắn cái toolbar mà nó k ra cái boder.
 
-.body.body-addpost .body-function {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+
+ 
