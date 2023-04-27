@@ -82,7 +82,8 @@
         </codx-vll>
       </div>
       <div class="d-flex justify-content-end">
-        <div class="d-flex align-items-center"
+        <div
+          class="d-flex align-items-center"
           #pCr="ngbPopover"
           [ngbPopover]="popperCreatedOn"
           (mouseenter)="pCr.open()"
@@ -119,7 +120,8 @@
           class="badge badge-light badge-md fs-7">
         </codx-vll>
       </ng-container> -->
-      <span class="d-flex align-items-center"
+      <span
+        class="d-flex align-items-center"
         #pEd="ngbPopover"
         [ngbPopover]="popperEndDate"
         (mouseenter)="pEd.open()"
@@ -181,7 +183,6 @@
         (outStepInstance)="outStepInstance($event)"
         (saveDatasInstance)="saveDatasInstance($event)"
         [lstStepProcess]="listSteps"
-
       >
       </codx-instance-detail>
     </ng-template>
@@ -275,7 +276,9 @@
                 [ngStyle]="{ color: item['iconColor'] }"
                 class="me-2"
               ></span>
-              <span [ngStyle]="{ color: item['textColor'] }">{{ item.stepName }}</span>
+              <span [ngStyle]="{ color: item['textColor'] }">{{
+                item.stepName
+              }}</span>
             </div>
           </div>
         </ng-container>
@@ -345,6 +348,7 @@
     </div>
   </div>
 </ng-template>
+
 
 <!--Detail-->
 <ng-template #templateDetail>

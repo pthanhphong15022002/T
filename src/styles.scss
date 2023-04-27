@@ -1375,6 +1375,10 @@ a {
   text-decoration: none;
 }
 
+.badge.badge-square {
+  border-radius: 3px !important;
+  padding: 0.5em 0.85em;
+}
 
 .btn.btn-outline-primary:hover {
   color: white;
@@ -2349,7 +2353,7 @@ codx-calendar {
 }
 
 #gridViewV2.e-grid .e-rowcell {
-  padding: 7px 10px!important;
+  padding:8px 10px!important;
 }
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{

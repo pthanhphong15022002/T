@@ -650,6 +650,16 @@ export class PopupMoveStageComponent implements OnInit {
               }
             });
           break;
+        case 'R':
+          this.codxDpService
+            .getListUserByRoleID(lstRoles)
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
       }
     }
   }
