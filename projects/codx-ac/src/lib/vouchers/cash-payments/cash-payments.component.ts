@@ -26,6 +26,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
 import { CodxAcService } from '../../codx-ac.service';
+import { SettledInvoices } from '../../models/SettledInvoices.model';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -53,10 +54,16 @@ export class CashPaymentsComponent extends UIComponent {
   journal: IJournal;
   approval: any;
   cashpaymentline: Array<CashPaymentLine> = [];
+  settledInvoices: Array<SettledInvoices> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
+  };
+  fmSettledInvoices: FormModel = {
+    formName: 'SettledInvoices',
+    gridViewName: 'grvSettledInvoices',
+    entityName: 'AC_SettledInvoices',
   };
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
@@ -348,11 +355,26 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   loadDatadetail(data) {
-    this.api
-      .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [data.recID])
-      .subscribe((res: any) => {
-        this.cashpaymentline = res;
-      });
+    switch (data.subType) {
+      case '1':
+        this.api
+          .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.cashpaymentline = res;
+          });
+        break;
+      case '2':
+        this.api
+          .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.settledInvoices = res;
+          });
+        break;
+    }
   }
 
   release(data: any) {

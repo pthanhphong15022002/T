@@ -1,6 +1,6 @@
 <div>
    <div class=" d-flex justify-content-end" style="background-color: rgb(199, 199, 199);">
-       <button type="button" class="btn btn-primary me-5">
+       <button type="button" class="btn btn-primary me-5" (click)="addContract()">
          <span class="icon-add"></span>
       </button>
    </div>
@@ -14,24 +14,36 @@
 </div>
 
 <ng-template #contractsTemplate let-data="value">
-  <div class="row">
-   <div class="col-1  d-flex justify-content-center align-items-center">
-      1
-   </div>      
-   <div class="col-5 d-flex flex-column justify-content-center">
-      <span class="fs-6 fw-bold">Hợp đồng cho thuê</span>
-      <span class="fs-6">Ngày hiệu lực</span>
+   <div *ngFor="let i of [1,2,3,4,5]">
+      <div class="row">
+         <div class="col-1  d-flex justify-content-center align-items-center">
+            {{i}}
+         </div>      
+         <div class="col-5 d-flex flex-column justify-content-center">
+            <span class="fs-6 fw-bold">Hợp đồng cho thuê</span>
+            <span class="fs-6">Ngày hiệu lực</span>
+         </div>
+         <div class="col-2  d-flex justify-content-end align-items-center">
+            <span class="fs-6">50.000.000 VND</span>
+         </div>
+         <div class="col-2  d-flex justify-content-end align-items-center">
+            <span class="fs-6">15/1/2016</span>
+         </div>
+         <div class="col-2  d-flex justify-content-end align-items-center">
+            <button type="button" class="btn btn-outline-primary" style="border-radius: 50px;padding: 0 10px !important;">
+               <span class="fs-6">Chờ duyệt</span>
+            </button>
+         </div>
+      </div>
+      <hr>
    </div>
-   <div class="col-2  d-flex justify-content-end align-items-center">
-      <span class="fs-6">50.000.000 VND</span>
-   </div>
-   <div class="col-2  d-flex justify-content-end align-items-center">
-      <span class="fs-6">15/1/2016</span>
-   </div>
-   <div class="col-2  d-flex justify-content-end align-items-center">
-      <button type="button" class="btn btn-outline-primary" style="border-radius: 50px;">
-         <span class="fs-6">Chờ duyệt</span>
-      </button>
-   </div>
-  </div>
+</ng-template>
+
+<ng-template #popDetail let-dialog>
+   <codx-form [body]="bodyDetail" [dialog]="dialog">
+
+   </codx-form>
+</ng-template>
+<ng-template #bodyDetail let-dialog>
+   <add-contracts></add-contracts>
 </ng-template>

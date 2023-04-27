@@ -94,8 +94,27 @@ ejs-listview .e-ul>li {
 .body-function {
     position: absolute;
     bottom: 0;
-    width: 100%;
+    left: 30px;
+    right: 15px;
 }
+
+
+.body.body-addpost {
+    height: 420px;
+    position: relative;
+    overflow: auto;
+    padding-right: 5px;
+    
+  }
+
+//   .body-function {
+//     position: absolute;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     border: 1px red solid;
+//   }
+
 
 .body-post {
     bottom: 45px;
@@ -320,10 +339,6 @@ ejs-listview .e-ul>li {
     border: 1px solid var(--border-gray);
     border-radius: 4px;
     padding: 4px;
-}
-.wp-contents {
-    margin-top: 8px;
-    margin-bottom: 8px;
 }
 
 .WP_News-contents {
