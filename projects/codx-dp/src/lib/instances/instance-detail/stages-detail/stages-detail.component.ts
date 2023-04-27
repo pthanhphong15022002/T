@@ -1041,7 +1041,7 @@ export class StagesDetailComponent implements OnInit {
 
   checkContinueStep() {
     if (this.dataProgress['progress'] == 100) {
-      this.isShowFromTaskAll = this.checkSuccessTaskRequired('', '', true);
+      this.isContinueTaskAll = this.checkSuccessTaskRequired('', '', true);
       this.isShowFromTaskEnd = !this.checkSuccessTaskRequired(
         this.dataProgress?.recID
       );
@@ -1049,7 +1049,7 @@ export class StagesDetailComponent implements OnInit {
         this.dataProgress?.recID == this.idTaskEnd
           ? true
           : this.checkSuccessTaskRequired('', this.idTaskEnd, true);
-      this.isContinueTaskAll = this.isShowFromTaskAll;
+      this.isShowFromTaskAll = !this.isContinueTaskAll;
       var isAuto = {
         isShowFromTaskAll: this.isShowFromTaskAll,
         isShowFromTaskEnd: this.isShowFromTaskEnd,
