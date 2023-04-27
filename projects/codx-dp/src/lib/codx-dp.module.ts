@@ -75,10 +75,8 @@ const routes: Routes = [
       //dp/approvals/DPT0501
       {
         path: 'approvals/:funcID',
-        loadChildren: () =>
-          import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
-            (m) => m.ApprovelModule
-          ),
+        component: ApprovalsComponent,
+
         data: { noReuse: true },
       },
       {
