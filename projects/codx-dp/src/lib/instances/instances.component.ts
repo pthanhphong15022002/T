@@ -1227,17 +1227,20 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if(this.isCheckTaskEnd(checkTransferControl, dataInstance.isAuto)){
-      this.openFormForAutoMove(dataInstance);
-    }
-    else if(this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)){
+    if(checkTransferControl == '1' && dataInstance.isAuto?.isContinueTaskAll){
       this.handleMoveStage(dataInstance);
-    }
-    else {
-      return;
+    }else if(checkTransferControl == '2' ){
+      if(dataInstance.isAuto.isContinueTaskEnd){
+        if(dataInstance.isAuto?.isShowFromTaskEnd){
+          this.openFormForAutoMove(dataInstance);
+        }else{
+          this.handleMoveStage(dataInstance);
+        }
+      }
     }
 
   }
+
   isCheckAutoMoveStage(checkTransferControl: any, isAuto) {
     if (
       checkTransferControl == '1' &&
@@ -1258,11 +1261,7 @@ export class InstancesComponent
     }
   }
   isCheckTaskEnd(checkTransferControl: any, isAuto){
-    if (
-      checkTransferControl == '2' &&
-      !isAuto.isContinueTaskEnd &&
-      isAuto.isShowFromTaskEnd
-    ) {
+    if (checkTransferControl == '2' && isAuto.isShowFromTaskEnd) {
       return true;
     }
     return false;
