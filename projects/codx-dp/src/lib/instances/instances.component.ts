@@ -1228,8 +1228,9 @@ export class InstancesComponent
     ).transferControl;
 
     if (!this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)) {
-      return;
-    } else {
+      this.openFormForAutoMove(dataInstance);
+    }
+    else {
       this.handleMoveStage(dataInstance);
     }
   }
@@ -1240,13 +1241,16 @@ export class InstancesComponent
       isAuto.isContinueTaskAll
     ) {
       return true;
-    } else if (
+    }
+
+    else if (
       checkTransferControl == '2' &&
       isAuto.isContinueTaskEnd &&
       isAuto.isShowFromTaskEnd
     ) {
       return true;
-    } else {
+    }
+     else {
       return false;
     }
   }
