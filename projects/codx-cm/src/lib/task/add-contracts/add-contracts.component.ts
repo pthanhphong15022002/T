@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CM_Contacts } from '../../models/cm_model';
-import { AuthStore, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { AuthStore, CacheService, CallFuncService, NotificationsService, Util } from 'codx-core';
 
 @Component({
   selector: 'add-contracts',
@@ -10,18 +10,45 @@ import { AuthStore, CacheService, CallFuncService, NotificationsService } from '
 export class AddContractsComponent implements OnInit{
   contracts: CM_Contacts;
   isLoadDate: any;
+  action = 'add';
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
-  ) {}
+  ) {
+    this.setData('');
+  }
   ngOnInit() {
 
   }
 
+  setData(data){
+    if(this.action == 'add'){
+      this.contracts = new CM_Contacts();
+      this.contracts.recID = Util.uid();
+    }
+    if(this.action == 'edit'){
+      this.contracts = data;
+    }
+    if(this.action == 'copy'){
+      this.contracts = data;
+      this.contracts.recID = Util.uid();
+    }
+  }
+
+  save(){
+    console.log(this.contracts);
+    
+  }
+
   valueChangeText(event) {
-    this.contracts[event?.field] = event?.data;
+    try {
+      this.contracts[event?.field] = event?.data;
+    } catch (error) {
+      console.log(error);
+       
+    }
   }
 
   valueChangeCombobox(event) {

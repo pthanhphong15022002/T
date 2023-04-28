@@ -105,8 +105,31 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 20;
     this.getSetting();
+    // this.testApiReport();
   }
 
+
+  /// test report
+  testApiReport(){
+    let jsParams = {
+      fromDate :null,
+      toDate : null,
+      owner :"",
+      taskGroupID :"",
+      projectID :"",
+      orgUnitID :"",
+      departmentID :"",
+      group1 : false,
+      groupType1 :"",
+      group2 : false,
+      groupType2 :"",
+      group3 : false,
+      groupType3 :"",
+
+    }
+    this.api.execSv("TM","ERM.Business.TM","TaskReportBusiness","TaskDailyAsync",[JSON.stringify(jsParams)])
+    .subscribe((res:any) => console.log("testApiReport: ", res));
+  }
  
 
   //get thiết lập
