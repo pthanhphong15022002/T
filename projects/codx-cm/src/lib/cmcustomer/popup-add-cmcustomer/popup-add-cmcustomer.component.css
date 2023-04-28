@@ -36,14 +36,14 @@
   object-fit: cover;
 }
 
-.icon-edit{
+.icon-edit {
   height: 30px;
-  background: #d5d5d5;
+  background: #f8e9e9;
   width: 30px;
   border-radius: 50%;
   position: absolute;
-  bottom: 0;
-  left: 57px;
+  bottom: -6px;
+  left: 65px;
 }
 
 .body_detail {
