@@ -11,13 +11,8 @@
 >
 </codx-layout-add>
 <ng-template #tabDescription1>
-  <ng-container *ngIf="form?.formGroup">
-    <codx-input
-      field="employeeID"
-      (valueChange)="valueEmp($event)"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    >
+  <ng-container>
+    <codx-input field="employeeID" refValue="Users" type="Combobox" refType="4">
     </codx-input>
   </ng-container>
 </ng-template>
