@@ -108,7 +108,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   logout() {
     let ele = document.getElementsByTagName('codx-chat-container');
-    ele[0].remove();
+    if(ele.length > 0){
+      ele[0].remove();
+    }
     this.signalRSV.sendData('LogOutAsync', this.user.tenant, this.user.userID);
     this.auth.logout('');
     // document.location.reload();

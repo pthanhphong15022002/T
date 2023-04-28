@@ -7,7 +7,7 @@
       </codx-input>
     </div>
     <div class="d-flex align-items-center">
-      <button type="button" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" (click)="save()">
         <codx-label  fiedName="" default="Lưu"></codx-label>
       </button>
       <span class="icon-email icon-20 text-primary p-2 text-muted"></span>
@@ -99,7 +99,7 @@
             <codx-label fiedName="contactName" default="Tên hợp đồng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="contactName" type="text"> </codx-input>
+            <codx-input field="contactName" type="text" (valueChange)=" valueChangeText($event)" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-3">
@@ -107,7 +107,7 @@
             <codx-label fiedName="" default="Số hợp đồng"> </codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-3">
@@ -115,7 +115,7 @@
             <codx-label fiedName="contactID" default="Mã hợp đồng"> </codx-label>
           </div>
           <div class="">
-            <codx-input field="contactID" type="text"> </codx-input>
+            <codx-input field="contactID" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@
             <codx-label fiedName="" default="Cơ hội"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-4">
@@ -133,7 +133,7 @@
             <codx-label fiedName="" default="Báo giá"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-4">
@@ -141,7 +141,7 @@
             <codx-label fiedName="" default="Đơn hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -154,7 +154,7 @@
             ></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-3">
@@ -165,7 +165,7 @@
             ></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-3">
@@ -173,7 +173,7 @@
             <codx-label fiedName="" default="Hình thức giao hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-3">
@@ -181,7 +181,7 @@
             <codx-label fiedName="" default="Phí vận chuyển"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -278,7 +278,7 @@
             <codx-label fiedName="" default="Bên A"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-4">
@@ -286,7 +286,7 @@
             <codx-label fiedName="" default="Mã số thuế"> </codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -297,7 +297,7 @@
             <codx-label fiedName="" default="Địa chỉ"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -308,7 +308,7 @@
             <codx-label fiedName="" default="Điện thoại"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -316,7 +316,7 @@
             <codx-label fiedName="" default="Fax"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -327,7 +327,7 @@
             <codx-label fiedName="" default="Người đại diện"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -335,7 +335,7 @@
             <codx-label fiedName="" default="Chức vụ"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -346,7 +346,7 @@
             <codx-label fiedName="" default="Tài khoản ngân hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -354,7 +354,7 @@
             <codx-label fiedName="" default="Ngân hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -367,7 +367,7 @@
             <codx-label fiedName="" default="Bên B"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-4">
@@ -375,7 +375,7 @@
             <codx-label fiedName="" default="Mã số thuế"> </codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -386,7 +386,7 @@
             <codx-label fiedName="" default="Địa chỉ"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -397,7 +397,7 @@
             <codx-label fiedName="" default="Điện thoại"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -405,7 +405,7 @@
             <codx-label fiedName="" default="Fax"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -416,7 +416,7 @@
             <codx-label fiedName="" default="Người đại diện"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -424,7 +424,7 @@
             <codx-label fiedName="" default="Chức vụ"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>
@@ -435,7 +435,7 @@
             <codx-label fiedName="" default="Tài khoản ngân hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -443,7 +443,7 @@
             <codx-label fiedName="" default="Ngân hàng"></codx-label>
           </div>
           <div class="">
-            <codx-input field="taskName" type="text"> </codx-input>
+            <codx-input field="taskName" type="text" (valueChange)=" valueChangeText($event)"> </codx-input>
           </div>
         </div>
       </div>

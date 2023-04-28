@@ -803,8 +803,8 @@ export class InstancesComponent
                 res.disabled = true;
               break;
             case 'DP09':
-              if (this.checkMoreReason(data, null)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, null)) {
+                res.isblur = true;
               }
               break;
             //Copy
@@ -834,30 +834,29 @@ export class InstancesComponent
             //Đóng nhiệm vụ = true
             case 'DP14':
               if (data.closed || !data.permissionCloseInstances)
-                res.disabled = true;
+                res.isblur = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
               if (!data.closed || !data.permissionCloseInstances) {
-                res.disabled = true;
+                res.isblur = true;
               }
               break;
             case 'DP02':
-              if (this.checkMoreReason(data, !this.isUseFail)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, !this.isUseFail)) {
+                res.isblur = true;
               }
               break;
             case 'DP10':
-              if (this.checkMoreReason(data, !this.isUseSuccess)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, !this.isUseSuccess)) {
+                res.isblur = true;
               }
               break;
             //an khi aprover rule
             case 'DP17':
-              if (
-                !this.process?.approveRule ||
-                !data.permissionCloseInstances
-              ) {
+              if (!data.write || data.closed) {
+                res.disabled = true;
+              } else if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
@@ -1025,8 +1024,10 @@ export class InstancesComponent
         dialogModel
       );
       dialog.closed.subscribe((e) => {
-        if (e?.event) {
+        if (e && e?.event != null) {
+          this.dataSelected.ownerStepInstances = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -2092,7 +2093,7 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.processID,
+          data?.recID,
           processID,
           this.view.formModel.entityName,
           this.view.formModel.funcID,
