@@ -24,14 +24,14 @@ export class AddContractsComponent implements OnInit{
   }
 
   setData(data){
-    if(this.action = 'add'){
+    if(this.action == 'add'){
       this.contracts = new CM_Contacts();
       this.contracts.recID = Util.uid();
     }
-    if(this.action = 'edit'){
+    if(this.action == 'edit'){
       this.contracts = data;
     }
-    if(this.action = 'copy'){
+    if(this.action == 'copy'){
       this.contracts = data;
       this.contracts.recID = Util.uid();
     }
