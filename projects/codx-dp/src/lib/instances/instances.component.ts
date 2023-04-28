@@ -777,7 +777,7 @@ export class InstancesComponent
               if (
                 data.status != '2' ||
                 data.closed ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -798,7 +798,7 @@ export class InstancesComponent
                 !isUpdate ||
                 data.status != '2' ||
                 data.closed ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -815,7 +815,7 @@ export class InstancesComponent
                 !isCopy ||
                 data.closed ||
                 data.status != '2' ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -827,26 +827,18 @@ export class InstancesComponent
                 !isDelete ||
                 data.closed ||
                 data.status != '2' ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (
-                data.closed ||
-                !data.permissionCloseInstances ||
-                !data.permissioRolesProcess
-              )
+              if (data.closed || !data.permissionCloseInstances)
                 res.disabled = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (
-                !data.closed ||
-                !data.permissionCloseInstances ||
-                !data.permissioRolesProcess
-              ) {
+              if (!data.closed || !data.permissionCloseInstances) {
                 res.disabled = true;
               }
               break;
@@ -862,7 +854,10 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approveRule || !data.permissioRolesProcess) {
+              if (
+                !this.process?.approveRule ||
+                !data.permissionCloseInstances
+              ) {
                 res.isblur = true;
               }
               break;
@@ -870,6 +865,14 @@ export class InstancesComponent
             case 'SYS002':
             case 'DP21':
               res.disabled = true;
+              break;
+            case 'DP22':
+              if (
+                data.status != '2' ||
+                data.closed ||
+                !data.permissionCloseInstances
+              )
+                res.disabled = true;
               break;
           }
         });
@@ -955,9 +958,10 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
-    if (!data.permissioRolesProcess || !data.permissionMoveInstances) {
+    if (!data.permissionMoveInstances) {
       return true;
     }
+
     return false;
   }
 
@@ -1021,8 +1025,10 @@ export class InstancesComponent
         dialogModel
       );
       dialog.closed.subscribe((e) => {
-        if (e?.event) {
+        if (e && e?.event != null) {
+          this.dataSelected.ownerStepInstances = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -1291,18 +1297,17 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if(checkTransferControl == '1' && dataInstance.isAuto?.isContinueTaskAll){
+    if (checkTransferControl == '1' && dataInstance.isAuto?.isContinueTaskAll) {
       this.handleMoveStage(dataInstance);
-    }else if(checkTransferControl == '2' ){
-      if(dataInstance.isAuto.isContinueTaskEnd){
-        if(dataInstance.isAuto?.isShowFromTaskEnd){
+    } else if (checkTransferControl == '2') {
+      if (dataInstance.isAuto.isContinueTaskEnd) {
+        if (dataInstance.isAuto?.isShowFromTaskEnd) {
           this.openFormForAutoMove(dataInstance);
-        }else{
+        } else {
           this.handleMoveStage(dataInstance);
         }
       }
     }
-
   }
 
   isCheckAutoMoveStage(checkTransferControl: any, isAuto) {
@@ -1312,19 +1317,17 @@ export class InstancesComponent
       isAuto.isContinueTaskAll
     ) {
       return true;
-    }
-    else if (
+    } else if (
       checkTransferControl == '2' &&
       isAuto.isContinueTaskEnd &&
       !isAuto.isShowFromTaskEnd
     ) {
       return true;
-    }
-     else {
+    } else {
       return false;
     }
   }
-  isCheckTaskEnd(checkTransferControl: any, isAuto){
+  isCheckTaskEnd(checkTransferControl: any, isAuto) {
     if (checkTransferControl == '2' && isAuto.isShowFromTaskEnd) {
       return true;
     }
