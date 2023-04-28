@@ -146,6 +146,28 @@
         ></span>
       </span>
     </div>
+    <div class="d-flex justify-content-center">
+      <div *ngIf="data.ownerStepInstances">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.ownerStepInstances"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+      <div *ngIf="data.ownerStepInstances == null">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data?.owner"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div>
     <!-- <div class="d-flex justify-content-center">
       <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
       </codx-imgs>

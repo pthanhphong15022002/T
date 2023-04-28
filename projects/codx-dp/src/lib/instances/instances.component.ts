@@ -1025,8 +1025,10 @@ export class InstancesComponent
         dialogModel
       );
       dialog.closed.subscribe((e) => {
-        if (e?.event) {
+        if (e && e?.event != null) {
+          this.dataSelected.ownerStepInstances = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
