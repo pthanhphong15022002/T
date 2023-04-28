@@ -636,7 +636,7 @@
             [crrValue]="data?.industries"
             [type]="'combobox'"
             [refValue]="gridViewSetup?.Industries?.referedValue"
-            (valueChange)="valueChangeContact($event)"
+            (valueChange)="valueIndustries($event)"
             field="industries"
           >
           </codx-input>
@@ -844,7 +844,7 @@
 </ng-template>
 
 <ng-template #avata>
-  <div class="avatar-container">
+  <div class="avatar-container position-relative">
     <div class="avatar" (click)="addAvatar()">
       <ng-container *ngIf="linkAvatar">
         <img [src]="linkAvatar" />
@@ -852,6 +852,9 @@
       <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
         <img src="../../../assets/codx/user/avatar.jpg" alt="" />
       </ng-container>
+    </div>
+    <div class="input-avt position-absolute" style="bottom: 0; right: 0;">
+      <i class="icon-edit icon-18 text-primary" > </i>
     </div>
   </div>
   <codx-attachment
