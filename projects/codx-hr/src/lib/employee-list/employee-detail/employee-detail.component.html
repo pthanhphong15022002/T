@@ -50,7 +50,7 @@
                         <div class="card card-flush" *ngIf="eInfoFormModel">
                           <div class="card-body py-3 px-4">
                             <div class="d-flex flex-column">
-                              <div class="d-flex flex-wrap mb-2">
+                              <div class="d-flex flex-wrap mb-2 border-top">
                                 <div class="d-flex align-items-bottom me-2">
                                   <span
                                     class="icon-cake icon-16 text-gray-800 me-1"
@@ -371,7 +371,10 @@
                   <i class="icon-arrow_forward_ios icon-16"></i>
                 </span>
               </div>
-              <div class="fw-bold fs-5 mb-1">
+              <div class=" fs-5 mb-1">
+                <span class="icon-qr_code_scanner icon-14 me-1"></span>
+                  <span #id>{{ infoPersonal?.employeeID }}</span>
+                  <span class="icon-i-dot text-gray-500"></span>
                 {{ infoPersonal?.employeeName }}
               </div>
               <div
@@ -383,20 +386,29 @@
                     | async
                 "
               ></div>
+              <div class="d-flex align-items-center mb-2">
+                <span
+                  class="text-dark d-flex flex-wrap align-items-center"
+                  *ngIf="lstOrg"
+                >
+                  <ng-container *ngFor="let org of lstOrg; let i = index">
+                    <!-- <span
+                      class="icon-connection-point icon-16 me-1"
+                      *ngIf="i == 0"
+                    ></span> -->
+                    <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
+                    <span>{{ org.orgUnitName }}</span>
+                  </ng-container>
+                </span>
+              </div>
             </div>
           </div>
 
           <div
-            class="d-flex flex-column p-4 pb-1 border-top"
+            class="d-flex flex-column p-4 pb-1 "
             *ngIf="infoPersonal"
           >
-            <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center text-danger me-4">
-                <span class="icon-qr_code_scanner icon-14 me-1"></span>
-                <span class="fw-bold">
-                  <span #id>{{ infoPersonal?.employeeID }}</span>
-                </span>
-              </div>
+            <div class="d-flex flex-wrap mb-2 border-top">
               <div class="d-flex align-items-center text-gray-700 me-4">
                 <span class="icon-date_range icon-14 me-1"></span>
                 <span
@@ -410,6 +422,7 @@
                 ></span>
               </div>
               <div class="d-flex align-items-center" *ngIf="eInfoFormModel">
+                <span class="icon-i-dot text-gray-500"></span>
                 <codx-vll
                   class="badge"
                   [field]="'Status'"
@@ -419,22 +432,6 @@
                   [showBgColor]="true"
                 ></codx-vll>
               </div>
-            </div>
-
-            <div class="d-flex align-items-center mb-2">
-              <span
-                class="text-dark d-flex flex-wrap align-items-center"
-                *ngIf="lstOrg"
-              >
-                <ng-container *ngFor="let org of lstOrg; let i = index">
-                  <span
-                    class="icon-connection-point icon-16 me-1"
-                    *ngIf="i == 0"
-                  ></span>
-                  <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
-                  <span>{{ org.orgUnitName }}</span>
-                </ng-container>
-              </span>
             </div>
             <div class="d-flex align-items-center mb-2">
               <span class="icon-email icon-16 text-gray-800 me-1"></span>
@@ -478,7 +475,7 @@
               </span>
             </div>
           </div>
-          <div class="user-menu scroll-y w-100 border-top">
+          <div class="user-menu scroll-y w-100">
             <ul class="nav nav-tabs nav-pills flex-column px-2 pt-2 fs-6 w-100">
               <ng-container *ngFor="let item of lstTab; let index = index">
                 <li class="nav-item w-100 mb-1">
@@ -670,18 +667,19 @@
               </button>
             </div>
           </div>
-          <div #DangDoan class="mt-6">
+          <div #Thongtinbanthan class="mt-6">
             <div class="row mb-5">
               <div class="col">
-                <div class="text-gray-600 me-2 pb-1">
+                <div class="text-gray-600 me-2 pb-1" d-flex>
+                <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                   <codx-label
                     fiedName="EmployeeName"
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                </div>
+                </div>  
                 <div class="fw-bold text-dark fs-6">
-                  {{ infoPersonal?.employeeName }}
+                  {{infoPersonal?.employeeName }}
                 </div>
               </div>
               <!-- Bí danh -->
@@ -724,12 +722,11 @@
             <div class="row mb-5">
               <!-- Ngày sinh -->
               <div class="col">
-                <div class="text-gray-600 mb-1">
+                <div class="text-gray-600 mb-1 d-flex">
+                  <span class="icon-cake icon-16 text-gray-600 me-2"></span>
                   <codx-label fiedName="Birthday" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
-                <div class="d-flex">
-                  <span class="icon-cake icon-16 text-gray-600 me-2"></span>
                   <span
                     class="text-dark fw-bold fs-6"
                     [innerHTML]="
@@ -739,7 +736,6 @@
                     "
                   >
                   </span>
-                </div>
               </div>
               <!-- Nơi sinh -->
               <div class="col">
@@ -769,7 +765,7 @@
                   <codx-vll
                     [showText]="true"
                     [showBgColor]="true"
-                    [showIcon]="true"
+                    [showIcon]="false"
                     [formModel]="eInfoFormModel"
                     [field]="'Gender'"
                     [value]="infoPersonal?.gender"
@@ -782,15 +778,14 @@
             <!-- Quốc tịch/ Dân tộc/ Tôn giáo -->
             <div class="row mb-5">
               <div class="col">
-                <div class="text-gray-600 pb-1">
+                <div class="text-gray-600 pb-1 d-flex">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                   <codx-label
                     fiedName="Nationality"
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                 </div>
-                <div class="d-flex">
-                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                   <span
                     class="fw-bold text-dark fs-6"
                     [innerHTML]="
@@ -799,7 +794,6 @@
                         | async
                     "
                   ></span>
-                </div>
               </div>
               <div class="col">
                 <div class="text-gray-600 pb-1">
@@ -836,7 +830,9 @@
             <!-- Số CMND/ Ngày cấp/ Nơi cấp -->
             <div class="row mb-5">
               <div class="col">
-                <div class="text-gray-600 pb-1">
+                <div class="text-gray-600 pb-1 d-flex">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+
                   <codx-label fiedName="IDCardNo" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
@@ -855,7 +851,7 @@
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
-                  <span class="icon-event icon-16 text-gray-600 me-2"></span>
+                  <!-- <span class="icon-event icon-16 text-gray-600 me-2"></span> -->
                   <span
                     class="fw-bold text-dark fs-6"
                     [innerHTML]="
@@ -883,7 +879,7 @@
               </div>
             </div>
             <!-- Số hộ chiếu/ ngày cấp/ ngày hết hạn -->
-            <div class="row mb-5" *ngIf="ePassportFormModel && crrPassport">
+            <!-- <div class="row mb-5" *ngIf="ePassportFormModel && crrPassport">
               <div class="col">
                 <div class="text-gray-600 pb-1">
                   <codx-label
@@ -938,16 +934,16 @@
                   </span>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- Trình độ văn hóa/ Trình độ chuyên môn -->
             <div class="row mb-5">
               <div class="col-4">
-                <div class="text-gray-600 pb-1">
+                <div class="text-gray-600 pb-1 d-flex">
+                  <span class="icon-school icon-16 text-gray-600 me-2"></span>
                   <codx-label fiedName="Education" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
-                  <span class="icon-school icon-16 text-gray-600 me-2"></span>
                   <span class="fw-bold text-dark fs-6">
                     <codx-vll
                       [showText]="true"
@@ -984,14 +980,13 @@
               </div>
             </div>
             <!-- Thành tích -->
-
             <div class="row mb-5">
-              <div class="text-gray-600 pb-1">
+              <div class="text-gray-600 pb-1 d-flex">
+                <span class="icon-mood icon-16 text-primary me-2"></span>
                 <codx-label fiedName="Achievement" [formModel]="eInfoFormModel">
                 </codx-label>
               </div>
               <div class="d-flex align-items-center">
-                <span class="icon-mood icon-16 text-primary me-2"></span>
                 <span
                   #Achievement
                   class="fw-bold text-dark fs-6"
@@ -1006,12 +1001,12 @@
             </div>
             <!-- Sở trường -->
             <div class="row mb-5">
-              <div class="text-gray-600 pb-1">
+              <div class="text-gray-600 pb-1 d-flex">
+                <span class="icon-spa icon-16 text-success me-2"></span>
                 <codx-label fiedName="Forte" [formModel]="eInfoFormModel">
                 </codx-label>
               </div>
               <div class="d-flex align-items-center">
-                <span class="icon-spa icon-16 text-success me-2"></span>
                 <span
                   #Forte
                   class="fw-bold text-dark fs-6"
@@ -1025,14 +1020,15 @@
             </div>
             <!-- Sở thích -->
             <div class="row mb-5">
-              <div class="text-gray-600 pb-1">
+              <div class="text-gray-600 pb-1 d-flex">
+                <span
+                class="icon-favorite_border icon-16 text-danger me-2"
+              ></span>
                 <codx-label fiedName="Hobby" [formModel]="eInfoFormModel">
                 </codx-label>
               </div>
               <div class="d-flex">
-                <span
-                  class="icon-favorite_border icon-16 text-danger me-2"
-                ></span>
+
                 <span
                   #Hobby
                   class="fw-bold text-dark fs-6"
@@ -1070,12 +1066,12 @@
               <!-- Email cty cấp/ Điện thoại -->
               <div class="row mb-5">
                 <div class="col-4">
-                  <div class="text-gray-600 pb-1">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span class="icon-email icon-16 text-gray-600 me-2"></span>
                     <codx-label fiedName="Email" [formModel]="eInfoFormModel">
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="icon-email icon-16 text-gray-600 me-2"></span>
                     <span
                       class="fw-bold text-dark fs-6"
                       [innerHTML]="
@@ -1087,17 +1083,17 @@
                     </span>
                   </div>
                 </div>
-                <div class="col-8">
+                <div class="col-4">
+                  <span
+                  class="icon-local_phone icon-16 text-gray-600 me-1"
+                ></span>
                   <codx-label
-                    class="text-gray-600 me-2 pb-1"
                     fiedName="Phone"
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-local_phone icon-16 text-gray-600 me-1"
-                    ></span>
+
                     <span class="fw-bold text-dark fs-6">
                       <span
                         #phone
@@ -1114,17 +1110,18 @@
               <!-- Email cá nhân/ Điện thoại cá nhân -->
               <div class="row mb-5">
                 <div class="col-4">
-                  <div class="text-gray-600 pb-1">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span class="icon-email icon-16 text-gray-600 me-2"></span>
+
                     <codx-label
                       fiedName="PersonalEmail"
                       [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
-                    <span class="icon-email icon-16 text-gray-600 me-2"></span>
+                  <div class="align-items-center">
                     <span
-                      class="fw-bold text-dark fs-6"
+                      class="fw-bold text-dark"
                       [innerHTML]="
                         infoPersonal?.personalEmail
                           | formatvalue : eInfoFormModel : 'personalEmail'
@@ -1133,15 +1130,16 @@
                     ></span>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="text-gray-600 pb-1">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                    class="icon-phone_android icon-16 text-gray-600 me-2"
+                  ></span>
                     <codx-label fiedName="Mobile" [formModel]="eInfoFormModel">
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-phone_android icon-16 text-gray-600 me-2"
-                    ></span>
+
                     <span
                       class="fw-bold text-dark fs-6"
                       [innerHTML]="
@@ -1213,7 +1211,7 @@
                     <button type="button" class="btn btn-icon btn-white">
                       <span
                         class="icon-edit icon-18"
-                        (click)="editEmployeePartyInfo(editHeaderText)"
+                        (click)="editAssuranceTaxBankAccountInfo(editHeaderText)"
                       ></span>
                     </button>
                   </div>
@@ -1234,7 +1232,8 @@
                     <!-- Số BHXH/ Ngày cấp -->
                     <div class="row mb-5">
                       <div class="col-4">
-                        <div class="text-gray-600 pb-1">
+                        <div class="text-gray-600 pb-1 d-flex">
+                          <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                           <codx-label
                             fiedName="SIRegisterNo"
                             [formModel]="eInfoFormModel"
@@ -1259,7 +1258,6 @@
                           </codx-label>
                         </div>
                         <div class="d-flex align-items-center">
-                          <span class="icon-event icon-16 text-gray-600 me-2"></span>
                           <span
                             class="fw-bold text-dark fs-6"
                             [innerHTML]="
@@ -1274,7 +1272,8 @@
                     <!-- Sỗ BHYT/ Hạn thẻ BHYT -->
                     <div class="row mb-5">
                       <div class="col-4">
-                        <div class="text-gray-600 pb-1">
+                        <div class="text-gray-600 pb-1 d-flex">
+                          <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                           <codx-label
                             fiedName="HICardNo"
                             [formModel]="eInfoFormModel"
@@ -1300,7 +1299,6 @@
                           </codx-label>
                         </div>
                         <div class="d-flex align-items-center">
-                          <span class="icon-event icon-16 text-gray-600 me-2"></span>
                           <span
                             class="fw-bold text-dark fs-6"
                             [innerHTML]="
@@ -1324,7 +1322,8 @@
                     <!-- Thời điểm đủ 5 năm/ Nơi khám chữa bệnh đầu tiên -->
                     <div class="row mb-5">
                       <div class="col-4">
-                        <div class="text-gray-600 pb-1">
+                        <div class="text-gray-600 pb-1 d-flex">
+                          <span class="icon-event icon-16 text-gray-600 me-2"></span>
                           <codx-label
                             fiedName="HIDateOf5Years"
                             [formModel]="eInfoFormModel"
@@ -1332,7 +1331,6 @@
                           </codx-label>
                         </div>
                         <div class="d-flex align-items-center">
-                          <span class="icon-event icon-16 text-gray-600 me-2"></span>
                           <span
                             class="fw-bold text-dark fs-6"
                             [innerHTML]="
@@ -1383,6 +1381,7 @@
                   <div class="row mb-5">
                     <div class="col">
                       <div class="text-gray-600 pb-1">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                         <codx-label fiedName="PITNumber" [formModel]="eInfoFormModel">
                         </codx-label>
                       </div>
@@ -1406,7 +1405,6 @@
                         </codx-label>
                       </div>
                       <div class="d-flex align-items-center">
-                        <span class="icon-event icon-16 text-gray-600 me-2"></span>
                         <span
                           class="fw-bold text-dark fs-6"
                           [innerHTML]="
@@ -1452,7 +1450,8 @@
                     <!-- Số tài khoản/ Ngân hàng -->
                     <div class="row mb-5">
                       <div class="col-4">
-                        <div class="text-gray-600 pb-1">
+                        <div class="text-gray-600 pb-1 d-flex">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                           <codx-label
                             fiedName="AccountNo"
                             [formModel]="eInfoFormModel"
@@ -1493,7 +1492,8 @@
                     <!-- Tên chủ tài khoản/ Chi nhánh ngân hàng -->
                     <div class="row mb-5">
                       <div class="col-4">
-                        <div class="text-gray-600 pb-1">
+                        <div class="text-gray-600 pb-1 d-flex">
+                          <span class="icon-account_box"></span>
                           <codx-label
                             fiedName="AccountName"
                             [formModel]="eInfoFormModel"
@@ -1533,7 +1533,10 @@
                     </div>
                   </div>
                 </div>
-                <div #passport class="mb-1"  *ngIf="eInfoFormModel">
+                <!-- Hộ chiếu -->
+                
+
+                <!-- <div #passport class="mb-1"  *ngIf="eInfoFormModel">
                   <div class="d-flex align-items-center mt-6 mb-4">
                     <span class="icon-i-filter-right icon-20 me-2"></span>
                     <div class="fw-bold text-uppercase fs-5 text-gray-600">
@@ -1563,13 +1566,8 @@
                       height="auto"
                       [sort]="[passportSortModel]"
                     ></codx-gridview>
-                    <!-- [height]="
-                                passportRowCount > numPageSizeGridView
-                                  ? numPageSizeGridView * 50 - 10
-                                  : passportRowCount * 50 + 60
-                              " -->
                   </div>
-                </div>
+                </div> -->
                 <div #Visa class="mb-1"  *ngIf="eInfoFormModel">
                   <div class="d-flex align-items-center mt-6 mb-4">
                     <span class="icon-i-filter-right icon-20 me-2"></span>

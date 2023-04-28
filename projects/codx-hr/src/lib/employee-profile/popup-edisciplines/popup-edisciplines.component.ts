@@ -148,8 +148,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    this.disciplineObj.status = '1'
-    this.disciplineObj.approveStatus = '1'
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
