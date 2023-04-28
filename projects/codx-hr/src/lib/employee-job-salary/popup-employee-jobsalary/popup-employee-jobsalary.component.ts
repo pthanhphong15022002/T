@@ -96,8 +96,8 @@ export class PopupEmployeeJobsalaryComponent
                   this.currentEJobSalaries.expiredDate = null;
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
-                  this.cr.detectChanges();
                   this.isAfterRender = true;
+                  this.cr.detectChanges();
                 }
               });
           } else {
@@ -111,8 +111,8 @@ export class PopupEmployeeJobsalaryComponent
               }
               this.formGroup.patchValue(this.currentEJobSalaries);
               this.formModel.currentData = this.currentEJobSalaries;
-              this.cr.detectChanges();
               this.isAfterRender = true;
+              this.cr.detectChanges();
             }
           }
         }

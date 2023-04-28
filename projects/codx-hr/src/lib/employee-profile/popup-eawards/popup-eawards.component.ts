@@ -59,12 +59,12 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.fromListView = data?.data?.fromListView;
 
     this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
-    if (this.awardObj?.employeeID) {
+    if (this.awardObj?.employeeID && this.fromListView) {
       this.employId = this.awardObj?.employeeID;
     } else {
       this.employId = data?.data?.employeeId;
     }
-    if (this.awardObj?.emp) {
+    if (this.awardObj?.emp && this.fromListView) {
       this.empObj = this.awardObj?.emp;
     } else {
       this.empObj = data?.data?.empObj;

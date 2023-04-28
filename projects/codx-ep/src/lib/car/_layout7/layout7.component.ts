@@ -10,7 +10,6 @@ import { Observable, of } from 'rxjs';
 })
 export class Layout7Component extends LayoutBaseComponent {
 
-  module = "EP7";
   dialog!: DialogRef;
 
   constructor(
@@ -18,6 +17,7 @@ export class Layout7Component extends LayoutBaseComponent {
     private callfc: CallFuncService,
   ) {
     super(inject);
+    this.module = 'EP7';
   }
   onInit(): void {
 

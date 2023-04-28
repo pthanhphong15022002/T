@@ -135,7 +135,6 @@ export class NotifyBodyComponent implements OnInit {
     {
       this.notiFilter.type = [];
       this.type = event;
-      debugger
       if(this.type.value){
         this.notiFilter.type.push(this.type.value);
       }

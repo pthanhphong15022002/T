@@ -37,7 +37,7 @@
                             [descLine]="1">
                         </codx-temp-full>
                         <ng-container *ngIf="allowEdit">
-                            <button class="btn btn-icon btn-md" (click)="removeFiles(item)">
+                            <button class="btn btn-icon btn-md" (click)="removeFiles($event,item)">
                                 <i class="icon-close icon-18 text-danger"></i>
                             </button>
                         </ng-container>
@@ -65,7 +65,7 @@
                             [descLine]="1">
                         </codx-temp-full>
                         <ng-container *ngIf="allowEdit">
-                            <button class="btn btn-icon btn-md" (click)="removeFiles(item)">
+                            <button class="btn btn-icon btn-md" (click)="removeFiles($event,item)">
                                 <i class="icon-close icon-18 text-danger"></i>
                             </button>
                         </ng-container>
@@ -116,7 +116,7 @@
 <!-- template remove file -->
 <ng-template #removeFile let-data>
     <div class="remove-file">
-      <button class="btn btn-icon btn-md" (click)="removeFiles(data)">
+      <button class="btn btn-icon btn-md" (click)="removeFiles($event,data)">
         <i class="icon-close icon-18 text-danger"></i>
       </button>
     </div>

@@ -41,7 +41,6 @@ export class VoucherComponent implements OnInit {
   sublegendOpen: Array<any> = [];
   predicates: string;
   dataValues: string;
-  date = new Date().toISOString();
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -65,6 +64,14 @@ export class VoucherComponent implements OnInit {
   //#region Init
   ngOnInit(): void {
     this.loadData();
+  }
+  ngAfterViewInit(){
+    let hBody, hTab;
+    if (this.cardbodyRef)
+      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
+    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
+
+    this.gridHeight = hBody - (hTab + 120);
   }
 
   loadData() {
@@ -92,7 +99,7 @@ export class VoucherComponent implements OnInit {
   //#region Event
   valueChange(e: any) {
     let field = e.field;
-    if (!e.data) {
+    if (!e.data || typeof e.data.data === 'undefined') {
       this.mapPredicates.delete(field);
       this.mapDataValues.delete(field);
     }
@@ -117,19 +124,10 @@ export class VoucherComponent implements OnInit {
       this.mapDataValues.set('accountID', e.data);
     }
 
-    if (field === 'invoiceDueDate' && e.data) {
+    if (field === 'invoiceDueDate' && typeof e.data.data !== 'undefined') {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
-      this.mapDataValues.set('invoiceDueDate', new Date(e.data).toISOString());
+      this.mapDataValues.set('invoiceDueDate', new Date(e.data.toDate).toISOString());
     }
-  }
-
-  gridCreated(e) {
-    let hBody, hTab;
-    if (this.cardbodyRef)
-      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-
-    this.gridHeight = hBody - (hTab + 120);
   }
 
   submit() {
@@ -149,7 +147,11 @@ export class VoucherComponent implements OnInit {
 
   apply() {
     let data = this.grid.gridRef.getSelectedRecords();
-    this.dialog.close(data);
+      this.dialog.close(data);
+  }
+
+  close(){
+    this.dialog.close();
   }
   //#endregion
 
