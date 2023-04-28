@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CacheService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'app-dp-approvals',
@@ -11,25 +12,35 @@ import { ActivatedRoute } from '@angular/router';
 export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   // extractContent = extractContent;
   // convertHtmlAgency = convertHtmlAgency2;
-  data: any;
-  funcID: any;
-  lstDtDis: any;
-  gridViewSetup: any;
-  formModel: any;
-  view: any = {};
-  dataItem = {};
-  dvlRelType: any;
-  ms020: any;
-  ms021: any;
+   data: any;
+   funcID: any;
+  // lstDtDis: any;
+  // gridViewSetup: any;
+   formModel: any;
+  // view: any = {};
+    dataItem = {};
+  // dvlRelType: any;
+  // ms020: any;
+  // ms021: any;
   active = 1;
   referType = 'source';
+  userID: any;
+  transID=''
+  approveStatus='0'
+
   constructor(
     private cache: CacheService,
     private codxDP: CodxDpService,
-    private router: ActivatedRoute
-  ) {}
+    private router: ActivatedRoute,
+    private authStore : AuthStore,
+    private layoutDP: LayoutComponent,
+    private api : ApiHttpService
+  ) {
+    this.userID = this.authStore.get().userID;
+  }
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
+    this.layoutDP.hidenNameProcess();
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
       if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
@@ -51,5 +62,23 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  getData(id) {}
+  getData(id) {
+    //id la cua noi dung instance
+    this.api.exec<any>("DP","InstancesBusiness","GetInstancesDetailByRecIDAsync",[id]).subscribe(res=>{
+      if(res){
+        this.data = res[0];
+        this.transID = res[1];
+        this.approveStatus = this.data?.approveStatus??'0';
+      }
+    }) 
+  }
+
+  handleViewFile(e: any) {
+    // if (e == true) {
+    //   var index = this.data.listInformationRel.findIndex(
+    //     (x) => x.userID == this.userID && x.relationType != '1'
+    //   );
+    //   if (index >= 0) this.data.listInformationRel[index].view = '3';
+    // }
+  }
 }

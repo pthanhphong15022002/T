@@ -25,10 +25,8 @@ import { E } from '@angular/cdk/keycodes';
   encapsulation: ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'TM';
   dialog!: DialogRef;
   funcID: string = '';
-  // override toolbarFixed: boolean = false;
   
   constructor(
     inject: Injector,
@@ -37,6 +35,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = 'TM';
   }
 
   onInit(): void {}

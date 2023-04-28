@@ -13,7 +13,7 @@
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   [idField]="idField"
-  [autoSearch]="true"
+  [autoSearch]="false"
   (selectedChange)="selectedChange($event)"
   (viewChanged)="viewChanged($event)"
   (onLoading)="onLoading($event)"
@@ -178,7 +178,7 @@
         <span class="icon-corporate_fare text-primary icon-20 me-1"></span>
         <span
           [innerHTML]="
-            dataSelected?.custGroupID
+            data?.custGroupID
               | formatvalue : view.formModel : 'CustGroupID'
               | async
           "

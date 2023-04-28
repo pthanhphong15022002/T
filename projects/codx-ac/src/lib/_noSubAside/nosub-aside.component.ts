@@ -8,15 +8,13 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   styleUrls: ['./nosub-aside.component.css']
 })
 export class NosubAsideComponent extends LayoutBaseComponent {
-  module = 'AC';
-  override aside = true;
-  override asideFixed = true;
   // toolbar = false;
   constructor(
     inject: Injector,
     private callfc: CallFuncService
   ) { 
     super(inject);
+    this.module = 'AC';
   }
 
   onInit(): void { }

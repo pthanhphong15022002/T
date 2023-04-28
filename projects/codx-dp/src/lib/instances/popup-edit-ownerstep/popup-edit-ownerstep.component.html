@@ -1,0 +1,50 @@
+<codx-form
+  [headerText]="titleAction"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+</codx-form>
+
+<ng-template #body>
+  <div>
+    <codx-label
+      fiedName="Owner"
+      formName="DPInstancesSteps"
+      gridViewName="grvDPInstancesSteps"
+      default="Người phụ trách nhiệm vụ tại giai đoạn"
+    ></codx-label>
+  </div>
+  <codx-popup-participants
+    [lstParticipants]="lstParticipants"
+    [dialog]="dialog"
+    [isType]="'I'"
+    (eventUser)="eventUser($event)"
+    [owner]="owner"
+  ></codx-popup-participants>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="dialog.close()"
+    >
+      <codx-label
+        name="lblCancel"
+        formName="DPInstancesSteps"
+        gridViewName="grvDPInstancesSteps"
+        default="Hủy"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="onSaveOwnerStep()">
+      <codx-label
+        name=" lblSuscess"
+        formName="DPInstancesSteps"
+        gridViewName="grvDPInstancesSteps"
+        default="Đồng ý"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -39,6 +39,7 @@ export class CalendarCenterComponent
     id: 'btnAdd',
   };
   vllPriority = 'TM005';
+  calendar_center: any;
 
   constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
@@ -83,6 +84,31 @@ export class CalendarCenterComponent
       this.shareService.dateChange.next(obj);
     }
   }
+
+  updateData(dataSource: any) {
+    let myInterval = setInterval(() => {
+      this.calendar_center = (this.view.currentView as any).schedule;
+      if (this.calendar_center) {
+        clearInterval(myInterval);
+        this.calendar_center.dataSource = dataSource;
+        this.calendar_center.setEventSettings();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  // changeNewMonth(date: any) {
+  //   let myInterval = setInterval(() => {
+  //     this.calendar_center = (this.view.currentView as any).schedule;
+  //     if (this.calendar_center) {
+  //       clearInterval(myInterval);
+  //       debugger;
+  //       this.calendar_center.selectedDate = new Date(date);
+  //       this.calendar_center.isNavigateInside = true;
+  //       this.detectorRef.detectChanges();
+  //     }
+  //   });
+  // }
 
   //region EP
   showHour(date: any) {

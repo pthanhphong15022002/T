@@ -14,6 +14,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CalendarView } from '@syncfusion/ej2-angular-calendars';
+import { compareDate } from 'projects/codx-od/src/lib/function/default.function';
 
 @Component({
   selector: 'lib-popup-edayoffs',
@@ -111,8 +112,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
-    if (this.employId)
-      this.getEmployeeInfoById(this.employId, 'employeeID');
+    if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
 
     // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
@@ -214,18 +214,13 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.dayoffObj.recID;
     }
+    if (!this.dateCompare(this.dayoffObj.beginDate, this.dayoffObj.endDate)) {
+      this.hrSevice.notifyInvalidFromTo('BeginDate', 'EndDate', this.formModel);
+      return;
+    }
     this.dayoffObj.employeeID = this.employId;
     this.dayoffObj.totalSubDays = 0;
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      if (this.dayoffObj.beginDate > this.dayoffObj.endDate) {
-        this.hrSevice.notifyInvalidFromTo(
-          'BeginDate',
-          'EndDate',
-          this.formModel
-        );
-        return;
-      }
-
       this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
         if (p != null) {
           this.dayoffObj.recID = p.recID;
@@ -250,7 +245,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.successFlag = true;
             this.notify.notifyCode('SYS007');
-            p.emp = this.empObj
+            p.emp = this.empObj;
             this.dialog && this.dialog.close(p);
             // this.lstDayoffs[this.indexSelected] = p;
             // if(this.listView){
@@ -277,7 +272,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   // }
 
   HandlePregnantTypeChange(e, pregnantType) {
-
     if (e.component.checked == true) {
       if (pregnantType.value == '1') {
         this.isnormalPregnant = true;
@@ -329,8 +323,18 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.dayoffObj.periodType = '1';
         this.formGroup.patchValue({ periodType: this.dayoffObj.periodType });
       }
+
       this.HandleTotalDaysVal();
     }
+  }
+
+  dateCompare(beginDate, endDate) {
+    if (beginDate && endDate) {
+      let date1 = new Date(beginDate);
+      let date2 = new Date(endDate);
+      return date1 < date2;
+    }
+    return false;
   }
 
   HandleInputPeriodType(evt) {

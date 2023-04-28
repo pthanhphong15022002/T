@@ -9,9 +9,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = '';
-  override aside = false;
-  override toolbarFixed = false;
   dialog!: DialogRef;
   constructor(
     inject: Injector,
@@ -19,6 +16,9 @@ export class LayoutComponent extends LayoutBaseComponent {
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarFixed = false;
   }
 
   onInit(): void {

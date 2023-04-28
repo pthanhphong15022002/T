@@ -6,14 +6,12 @@ import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout-home.component.css'],
 })
 export class LayoutHomeComponent extends LayoutBaseComponent {
-  module = 'SV';
   dialog!: DialogRef;
-  override aside = false;
-  override asideFixed = false;
-  override toolbar = false;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector) {
     super(inject);
+    this.module = 'SV';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit(): void {}
