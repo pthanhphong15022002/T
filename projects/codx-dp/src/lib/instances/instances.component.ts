@@ -777,7 +777,7 @@ export class InstancesComponent
               if (
                 data.status != '2' ||
                 data.closed ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -798,7 +798,7 @@ export class InstancesComponent
                 !isUpdate ||
                 data.status != '2' ||
                 data.closed ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -815,7 +815,7 @@ export class InstancesComponent
                 !isCopy ||
                 data.closed ||
                 data.status != '2' ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -827,7 +827,7 @@ export class InstancesComponent
                 !isDelete ||
                 data.closed ||
                 data.status != '2' ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -835,8 +835,7 @@ export class InstancesComponent
             case 'DP14':
               if (
                 data.closed ||
-                !data.permissionCloseInstances ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               )
                 res.disabled = true;
               break;
@@ -844,8 +843,7 @@ export class InstancesComponent
             case 'DP15':
               if (
                 !data.closed ||
-                !data.permissionCloseInstances ||
-                !data.permissioRolesProcess
+                !data.permissionCloseInstances
               ) {
                 res.disabled = true;
               }
@@ -862,7 +860,7 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approveRule || !data.permissioRolesProcess) {
+              if (!this.process?.approveRule || !data.permissionCloseInstances) {
                 res.isblur = true;
               }
               break;
@@ -955,7 +953,7 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
-    if (!data.permissioRolesProcess || !data.permissionMoveInstances) {
+    if (!data.permissionCloseInstances || !data.permissionMoveInstances) {
       return true;
     }
     return false;
