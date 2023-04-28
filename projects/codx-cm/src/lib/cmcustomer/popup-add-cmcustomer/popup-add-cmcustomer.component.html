@@ -853,11 +853,14 @@
         <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
           <img src="../../../assets/codx/user/avatar.jpg" alt="" />
         </ng-container>
-      </div>  
+      </div>
     </div>
-
     <div class="icon">
-      <i class="icon-edit icon-18 text-primary d-flex justify-content-center align-items-center" > </i>
+      <i
+        class="icon-edit icon-18 text-primary d-flex justify-content-center align-items-center"
+        (click)="addAvatar()"
+      >
+      </i>
     </div>
   </div>
   <codx-attachment
