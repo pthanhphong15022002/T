@@ -170,8 +170,6 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
   }
 
   async handelProgress() {
-    console.log(this.progress);
-    
     if (this.dataSource?.progress == 100 && !this.dataSource?.actualEnd) {
       this.notiService.notifyCode(
         'SYS009',
@@ -208,10 +206,14 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
       this.updateProgress();
     } else if (this.type === 'G') {
       const check = await this.beforeUpdate('DP031');
-      this.updateProgress(check);
+      if(check == undefined) return;
+      let isUpdate = check == "Y" ? true : false;
+      this.updateProgress(isUpdate);
     } else {
       const check = await this.beforeUpdate('DP028');
-      this.updateProgress(check);
+      if(check == undefined) return;
+      let isUpdate = check == "Y" ? true : false;
+      this.updateProgress(isUpdate);
     }
   }
 
@@ -289,9 +291,9 @@ export class UpdateProgressComponent implements OnInit,OnChanges {
     
   }
 
-  async beforeUpdate(funcID): Promise<boolean> {
+  async beforeUpdate(funcID): Promise<any> {
     let check = await firstValueFrom(this.notiService.alertCode(funcID));
-    return check?.event?.status === 'Y' ? true : false;
+    return check?.event?.status;
   }
 
 }
