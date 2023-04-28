@@ -1209,6 +1209,7 @@ export class InstancesComponent
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
+            isDurationControl: this.checkDurationControl(data.stepID)
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -2130,7 +2131,6 @@ export class InstancesComponent
       this.stepInstanceDetailStage = e.e;
     }
   }
-
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -2143,5 +2143,11 @@ export class InstancesComponent
         }
       }
     });
+  }
+
+  checkDurationControl(stepID): boolean{
+    debugger;
+    var stepsDuration = this.process.steps.find(x=> x.recID === stepID);
+    return stepsDuration?.durationControl;
   }
 }
