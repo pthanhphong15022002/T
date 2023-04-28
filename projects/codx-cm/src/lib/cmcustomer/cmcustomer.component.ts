@@ -468,7 +468,10 @@ export class CmCustomerComponent
   }
 
   //#region Search
-  searchChanged(e) {}
+  searchChanged(e) {
+    this.view.dataService.search(e).subscribe();
+    this.detectorRef.detectChanges();
+  }
   //#endregion
 
   //#region CRUD

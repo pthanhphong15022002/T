@@ -1,8 +1,10 @@
-<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel" [body]="body" [hideMF]="true" 
+<!-- <view-details-dp-approval [data]="data" [formModel]="formModel" [transID]="transID" [approveStatus]="approveStatus"></view-details-dp-approval> -->
+<codx-detail-tmp [header]="header" [dataItem]="data" [formModel]="formModel" [body]="body" [hideMF]="true" 
    class="h-100">
   <ng-template #header>
     <div class="d-flex justify-content-between mt-4">
-    Nội dung của view
+   <h1>KHANH PRO GIRL CHO XIN CÁI NỘI DUNG VIEW</h1>
+
     </div>
     <ng-container *ngIf="data">
       <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
@@ -12,7 +14,7 @@
     </ng-container>
   </ng-template>
   <ng-template #body>
-    <div class="tab-horizone h-od-tab h-100">
+    <div class="tab-horizone h-od-tab h-100" >
       <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <!-- <li [ngbNavItem]="1">
           <a ngbNavLink>
@@ -87,9 +89,11 @@
                 <i class="icon-people_alt me-2" [ngClass]="{ 'text-primary': active === 1 }"></i><span>Quy trình duyệt</span>
               </div>
             </a>
-            <ng-template ngbNavContent>
-              <codx-view-approval-step [transID]="transID" [approveStatus]="approveStatus">
-              </codx-view-approval-step>
+            <ng-template ngbNavContent> 
+              <ng-container>
+                <codx-view-approval-step [transID]="transID" [approveStatus]="approveStatus">
+                </codx-view-approval-step>
+              </ng-container> 
             </ng-template>
           </li>
         </ng-container>
