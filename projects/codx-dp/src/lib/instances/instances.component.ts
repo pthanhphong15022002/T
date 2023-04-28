@@ -2092,7 +2092,7 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.processID,
+          data?.recID,
           processID,
           this.view.formModel.entityName,
           this.view.formModel.funcID,
