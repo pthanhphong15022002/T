@@ -114,7 +114,7 @@
 } */
 .status{
   position: relative;
-  bottom: 130px;
+  top: -120px;
 }
 /* :host ::ng-deep codx-wrapper{
   overflow: hidden !important;
