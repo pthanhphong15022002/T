@@ -68,7 +68,7 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
       if(res){
         this.data = res[0];
         this.transID = res[1];
-        this.approveStatus = this.data.approveStatus??'0';
+        this.approveStatus = this.data?.approveStatus??'0';
       }
     }) 
   }
