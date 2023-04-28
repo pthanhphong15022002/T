@@ -31,6 +31,16 @@
     </codx-input>
   </div>
   <div class="form-group">
+    <codx-label fiedName="RegionID" [formModel]="form.formModel"></codx-label>
+    <codx-input
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event)"
+      [crrValue]="data?.regionID"
+      field="regionID"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
     <codx-label fiedName="CountryID" [formModel]="form.formModel"></codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -46,6 +56,7 @@
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
       [crrValue]="data?.provinceID"
+      [model]="model"
       field="provinceID"
     >
     </codx-input>
@@ -56,20 +67,12 @@
       [formModel]="form.formModel"
       (valueChange)="valueChange($event)"
       [crrValue]="data?.districtID"
+      [model]="modelDistrictID"
       field="districtID"
     >
     </codx-input>
   </div>
-  <div class="form-group">
-    <codx-label fiedName="RegionID" [formModel]="form.formModel"></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.regionID"
-      field="regionID"
-    >
-    </codx-input>
-  </div>
+
   <div class="form-group">
     <codx-label fiedName="Street" [formModel]="form.formModel"></codx-label>
     <codx-input
