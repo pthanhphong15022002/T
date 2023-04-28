@@ -270,13 +270,13 @@
       .aside-primary {
         background-color: var(--primary-darker);
 
-        .menu-link {
-          &.active {
-            .menu-icon {
-              background-color: var(--primary);
-            }
-          }
-        }
+        // .menu-link {
+        //   &.active {
+        //     .menu-icon {
+        //       background-color: var(--primary);
+        //     }
+        //   }
+        // }
       }
     }
   }
