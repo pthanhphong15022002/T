@@ -2615,27 +2615,15 @@ codx-input .e-icons.e-check:before {
   font-size: 13px;
 }
 
-// .form-control {
-//   border-color: var(--gray-150);
-// }
 
-///
 
-// codx-view-list .e-listview .e-list-item{
-//   border-bottom: 1px var(--gray-150) solid !important;
-// }
-//
-
-// menu left
-
-// .aside.aside-extended .aside-secondary{
-
-//     left: -360px!important;
-// }
-// .aside.aside-extended .aside-primary:hover + .aside-secondary,
-// .aside.aside-extended .aside-secondary:hover{
-//   overflow: visible!important;
-//   position: absolute!important;
-//     left: 60px!important;
-//     transition: all .2s;
-// }
+/// fix menu left
+/// 
+.aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active,
+.aside-minimize-icon-title .aside-extended .aside-primary .menu-link:hover {
+  box-shadow:none;
+  background-color: #ffffff21;
+}
+.aside-minimize-icon-title .aside.aside-extended .aside-primary {
+  width: 104px;
+}
