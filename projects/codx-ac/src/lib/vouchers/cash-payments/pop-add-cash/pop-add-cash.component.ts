@@ -173,7 +173,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.acService
             .loadData(
               'ERM.Business.AC',
-              'VoucherLineRefsBusiness',
+              'SettledInvoicesBusiness',
               'LoadDataAsync',
               this.cashpayment.recID
             )
