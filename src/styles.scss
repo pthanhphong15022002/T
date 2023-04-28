@@ -1740,7 +1740,7 @@ codx-dropdown-calendar {
 
 
 /*** codx-tabs ***/
-codx-tabs{ 
+codx-tabs{
   .nav-link {
     padding: 6px 10px;
     color: #323232;
@@ -2347,9 +2347,10 @@ codx-calendar {
   color: inherit;
 }
 
-#gridViewV2.e-grid .e-rowcell {
-  padding:8px 10px!important;
-}
+//dntram edit 28/04/2023
+// #gridViewV2.e-grid .e-rowcell {
+//   padding:8px 10px!important;
+// }
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
   height: auto;
@@ -2364,7 +2365,7 @@ codx-card-center{
   .card .card-footer {
       padding-bottom: 0;
 
-  }  
+  }
 }
 
 .w-1100px {
@@ -2392,7 +2393,7 @@ padding: 0;
   color: var(--primary-inverse);
 }
 
-//Đừng xóa của Chung tội Chung 
+//Đừng xóa của Chung tội Chung
 .dm-home-mark
 {
   position: absolute;
@@ -2453,7 +2454,7 @@ codx-toolbar{
   position: relative;
   th{
     position: sticky;
-    top: 0; 
+    top: 0;
     background-color: inherit;
     z-index: 99;
   }
@@ -2493,7 +2494,7 @@ codx-toolbar{
   .ac-dialog-footer{
     position: relative;
     border-top: 1px var(--gray-150) solid;
-    
+
     .tab-action{
       position: absolute;
       top: 5px;
@@ -2505,7 +2506,7 @@ codx-toolbar{
       padding-left: 25px;
       padding-right: 15px;
     }
-    
+
   }
   .card-footer{
     padding: 5px!important;
@@ -2576,7 +2577,7 @@ codx-input .e-icons.e-check:before {
 .e-richtexteditor .e-toolbar-wrapper {
   position: relative;
 }
-.e-richtexteditor .e-rte-toolbar.e-rte-tb-float, 
+.e-richtexteditor .e-rte-toolbar.e-rte-tb-float,
 .e-richtexteditor .e-rte-toolbar.e-toolbar.e-extended-toolbar.e-rte-tb-float {
   position: relative;
   top: 0!important;
@@ -2604,7 +2605,7 @@ codx-input .e-icons.e-check:before {
 // }
 //
 
-// menu left 
+// menu left
 
 // .aside.aside-extended .aside-secondary{
 
