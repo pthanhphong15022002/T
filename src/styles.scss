@@ -458,6 +458,9 @@ hr {
 erm-quick-links-inner .w-250px.dropdown-menu {
   inset: 0px 0px auto auto !important;
 }
+erm-quick-links-inner .w-250px.dropdown-menu .w-40px{
+  height: 40px!important;
+}
 
 .codx-bghover:hover {
   background-color: var(--bghover);
@@ -2620,16 +2623,16 @@ codx-input .e-icons.e-check:before {
 /// fix menu left
 /// 
 
-.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
-  border-radius: 3px!important;
-  margin: 2px 5px!important;
-}
+//.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
+  // border-radius: 3px!important;
+  // margin: 2px 5px!important;
+//}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
   font-size: 12px!important;
   padding-top: 2px!important;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
-  box-shadow:none;
-  background-color: #ffffff15!important;
+  // box-shadow:none;
+  background-color: #ffffff25!important;
 }
