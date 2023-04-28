@@ -36,7 +36,7 @@ export class PopupEmployeeBusinessComponent
   funcID;
   // employId;
   data;
-  isNotOverseaFlag = true;
+  isNotOverseaFlag;
   employeeObj: any;
 
   idField = 'RecID';
@@ -51,6 +51,10 @@ export class PopupEmployeeBusinessComponent
   genderGrvSetup: any;
   //Employee object
   employeeId: string;
+
+  //Value check validate date
+  beginDate: any;
+  endDate: any;
 
   constructor(
     private injector: Injector,
@@ -99,6 +103,10 @@ export class PopupEmployeeBusinessComponent
             this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
+            //Attache value checked oversea
+            this.formGroup.patchValue({
+              isOversea: true,
+            });
             this.isAfterRender = true;
             this.cr.detectChanges();
           }
@@ -164,7 +172,7 @@ export class PopupEmployeeBusinessComponent
 
   changOverSeaFlag(event) {
     this.isNotOverseaFlag = !event.checked;
-    if (this.isNotOverseaFlag == true) {
+    if (this.isNotOverseaFlag === true) {
       this.data.country = null;
       this.formGroup.patchValue(this.data.country);
     }
@@ -215,6 +223,38 @@ export class PopupEmployeeBusinessComponent
       this.cr.detectChanges();
     }
   }
+  //Count days
+  HandleCountDay(value: number) {
+    return Math.ceil(value / (1000 * 3600 * 24));
+  }
+
+  //Change date and render days
+  valueChangedDate(evt: any) {
+    let days = 1;
+    if (evt.field === 'beginDate') {
+      this.data.beginDate = evt.data.fromDate;
+    }
+    if (evt.field === 'endDate') {
+      this.data.endDate = evt.data.fromDate;
+    }
+    //All day = 1 , morning = 2 , afternoon = 3
+    if (
+      this.data.beginDate !== undefined &&
+      this.data.endDate !== undefined &&
+      this.data.periodType !== null
+    ) {
+      days = this.data.endDate - this.data.beginDate;
+      if (this.data.periodType === '1') {
+        this.formGroup.patchValue({
+          days: this.HandleCountDay(days) + 1,
+        });
+      } else {
+        this.formGroup.patchValue({
+          days: this.HandleCountDay(days) + 0.5,
+        });
+      }
+    }
+  }
 
   onSaveForm(isCloseForm: boolean) {
     // if (this.formGroup.invalid) {
@@ -225,7 +265,6 @@ export class PopupEmployeeBusinessComponent
       this.notitfy.notifyCode('HR011');
       return;
     }
-
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';
@@ -240,7 +279,7 @@ export class PopupEmployeeBusinessComponent
       this.hrService.editEBusinessTravels(this.data).subscribe((res) => {
         if (res) {
           this.notitfy.notifyCode('SYS007');
-          this.dialog && this.dialog.close(this.data);
+          this.dialog && this.dialog.close(res);
         }
       });
     }

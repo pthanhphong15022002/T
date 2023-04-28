@@ -147,7 +147,7 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+              <codx-input tabindex="-1" [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -259,15 +259,16 @@
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="cashpaymentline.length > 0" style="width: 15%;"></th>
+            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
           </tr>
         </thead>
-        <tbody class="border-bottom" *ngFor="let item of cashpaymentline">
-          <tr>
-            <td class="text-center fw-bold">
+        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)" cdkDropListLockAxis="y" [cdkDropListData]="cashpaymentline"
+        class="border-bottom">
+          <tr draggable="true" *ngFor="let item of cashpaymentline" cdkDrag>
+            <td style="width: 50px;" class="text-center fw-bold">
               {{ item.rowNo }}
             </td>
-            <td>
+            <td style="width: 560px;">
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
                   <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
@@ -326,14 +327,18 @@
                 </ng-container>
               </div>
             </td>
-            <td>
-              <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dr.toLocaleString("it-IT")
-                }}</span>
-              <ng-template #popdr>
-                <span [ngbTooltip]="popdr" class="fw-bold">{{item.dr.toLocaleString("it-IT")}}</span>
-              </ng-template>
+            <td style="width: 167px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="(item.dr != null && item.dr != '')">
+                  <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dr.toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popdr>
+                    <span [ngbTooltip]="popdr" class="fw-bold">{{item.dr.toLocaleString("it-IT")}}</span>
+                  </ng-template>
+                </ng-container>
+              </div>
             </td>
-            <td>
+            <td style="width: 500px;">
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.diM2 != null && item.diM2 != '')">
                   <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="DIM2"
@@ -439,7 +444,7 @@
                 </ng-container>
               </div>
             </td>
-            <td>
+            <td style="width: 223px;">
               <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
                   <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-2">{{ item.note }}</span>
@@ -452,7 +457,7 @@
                   item.reasonID != null && item.reasonID != ''
                 " class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="ReasonID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   <span #reasonID class="text-gray-700" [innerHTML]="
                       item.reasonID
@@ -465,16 +470,14 @@
                 </div>
               </div>
             </td>
-            <td>
-              <div class="has-action-menu" style="height: 30px">
-                  <div class="d-flex align-items-center justify-content-end">
-                    <span type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(item)">
-                      <i class="icon-edit icon-16"></i>
-                    </span>
-                    <span type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(item)">
-                      <i class="icon-delete icon-16"></i>
-                    </span>
-                  </div>
+            <td style="width: 111px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <span ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(item)">
+                  <i class="icon-edit icon-16"></i>
+                </span>
+                <span ngbTooltip="Xóa" placement="top" type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(item)">
+                  <i class="icon-delete icon-16"></i>
+                </span>
               </div>
             </td>
           </tr>

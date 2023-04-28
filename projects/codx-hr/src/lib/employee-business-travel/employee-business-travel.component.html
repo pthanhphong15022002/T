@@ -134,7 +134,7 @@
                 "
               >
               </span>
-              <span> ngày </span>
+              <span *ngIf="!!data.days"> ngày </span>
             </div>
           </div>
         </div>
@@ -145,6 +145,8 @@
       <div class="d-flex flex-column">
         <div class="text-gray-700 fs-7 mb-1">
           <span
+            class="line-clamp line-clamp-1"
+            [ngbTooltip]="data?.businessPlace"
             [innerHTML]="
               data?.businessPlace
                 | formatvalue : view.formModel : 'businessPlace'
@@ -391,7 +393,7 @@
                 "
               >
               </span>
-              <span> ngày </span>
+              <span *ngIf="!!data.days"> ngày </span>
             </div>
           </div>
         </div>

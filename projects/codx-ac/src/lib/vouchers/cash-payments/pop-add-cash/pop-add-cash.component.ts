@@ -38,6 +38,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 import { SettledInvoices } from '../../../models/SettledInvoices.model';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -173,7 +174,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.acService
             .loadData(
               'ERM.Business.AC',
-              'VoucherLineRefsBusiness',
+              'SettledInvoicesBusiness',
               'LoadDataAsync',
               this.cashpayment.recID
             )
@@ -211,6 +212,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFuncid();
     this.loadReason();
   }
+  
   //#endregion
 
   //#region Event
@@ -1107,5 +1109,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     });
   }
+
+  onDrop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+       moveItemInArray(event.container.data, 
+          event.previousIndex, event.currentIndex);
+    } else {
+       transferArrayItem(event.previousContainer.data,
+       event.container.data,
+       event.previousIndex,
+       event.currentIndex);
+    }
+ }
   //#endregion
 }

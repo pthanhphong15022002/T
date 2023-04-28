@@ -213,11 +213,12 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   dateCompare(beginDate, endDate) {
     if (beginDate && endDate) {
-      let date1 = moment(beginDate).format('dd-MM-yyyy');
-      let date2 = moment(endDate).format('dd-MM-yyyy');
+      let date1 = new Date(beginDate);
+      let date2 = new Date(endDate);
 
       //return beginDate.getDate() < endDate.getDate();
-      return date1 < date2;
+      let returnvalue = date1 < date2;
+      return returnvalue;
     }
     return false;
   }

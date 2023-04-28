@@ -24,6 +24,8 @@ export class PopupAddressComponent implements OnInit {
   nameDistrict = '';
   nameRegion = '';
   action = '';
+  model: any;
+  modelDistrictID: any;
   isDisable = false;
   constructor(
     private cache: CacheService,
@@ -121,6 +123,7 @@ export class PopupAddressComponent implements OnInit {
       this.data[e.field] = e?.data;
       switch (e.field) {
         case 'countryID':
+          this.model = {CountryID: this.data?.countryID}
           this.nameCountry =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0
@@ -128,6 +131,7 @@ export class PopupAddressComponent implements OnInit {
               : null;
           break;
         case 'provinceID':
+          this.modelDistrictID = {ProvinceID: this.data?.provinceID};
           this.nameProvince =
             e?.component?.itemsSelected != null &&
             e?.component?.itemsSelected.length > 0

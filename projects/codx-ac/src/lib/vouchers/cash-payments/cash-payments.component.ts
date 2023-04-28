@@ -55,6 +55,7 @@ export class CashPaymentsComponent extends UIComponent {
   approval: any;
   cashpaymentline: Array<CashPaymentLine> = [];
   settledInvoices: Array<SettledInvoices> = [];
+  acctTrans : Array<any> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -357,6 +358,7 @@ export class CashPaymentsComponent extends UIComponent {
   loadDatadetail(data) {
     switch (data.subType) {
       case '1':
+      case '3':
         this.api
           .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataAsync', [
             data.recID,
@@ -372,6 +374,13 @@ export class CashPaymentsComponent extends UIComponent {
           ])
           .subscribe((res: any) => {
             this.settledInvoices = res;
+          });
+        this.api
+          .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [
+            data.recID,
+          ])
+          .subscribe((res: any) => {
+            this.acctTrans = res;
           });
         break;
     }
@@ -407,6 +416,11 @@ export class CashPaymentsComponent extends UIComponent {
     //         } else this.notification.notifyCode(result?.msgCodeError);
     //       });
     //   });
+  }
+
+  formatDate(date){
+    var dateFormated = date;
+    return new Date(dateFormated).toLocaleDateString();;
   }
   //#endregion
 }
