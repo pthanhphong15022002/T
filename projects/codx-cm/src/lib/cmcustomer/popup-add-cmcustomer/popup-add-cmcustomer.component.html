@@ -845,6 +845,9 @@
 
 <ng-template #avata>
   <div class="avatar-container position-relative">
+    <div class="input-avt position-absolute" style="bottom: 0; right: 0;">
+      <i class="icon-edit icon-18 text-primary" > </i>
+    </div>
     <div class="avatar" (click)="addAvatar()">
       <ng-container *ngIf="linkAvatar">
         <img [src]="linkAvatar" />
@@ -853,9 +856,7 @@
         <img src="../../../assets/codx/user/avatar.jpg" alt="" />
       </ng-container>
     </div>
-    <div class="input-avt position-absolute" style="bottom: 0; right: 0;">
-      <i class="icon-edit icon-18 text-primary" > </i>
-    </div>
+
   </div>
   <codx-attachment
     #imageAvatar
