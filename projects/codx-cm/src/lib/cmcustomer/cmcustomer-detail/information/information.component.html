@@ -171,7 +171,7 @@
         </div>
       </div>
     </div> -->
-    <div class="mb-3 col-6" *ngIf="listAddress != null && listAddress.length > 0">
+    <div class="mb-3" *ngIf="listAddress != null && listAddress.length > 0">
       <div class="mb-1">
         <codx-label
           class="text-dark text-primary fw-bold"
@@ -183,7 +183,7 @@
       <div class="d-flex flex-column">
         <ng-container *ngFor="let item of listAddress">
           <div class="row">
-            <div class="col-4">
+            <div class="col-2">
               <span
                 class="label-colon text-gray-600"
                 [innerHTML]="
@@ -193,7 +193,7 @@
                 "
               ></span>
             </div>
-            <div class="col-8 mb-1">
+            <div class="col-10 mb-1">
               <span
                 *ngIf="item?.adressName"
                 [innerHTML]="
