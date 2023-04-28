@@ -854,10 +854,9 @@ export class InstancesComponent
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!isUpdate) {
+              if (!data.write) {
                 res.disabled = true;
-              }
-              else if (!this.process?.approveRule) {
+              } else if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
