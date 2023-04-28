@@ -512,8 +512,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   dateChange(evt: any) {
     if (evt?.fromDate || evt?.toDate) {
-      this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
-      this.toDateDropdown = this.dateTimeToString(evt?.toDate);
+      this.fromDateDropdown = new Date(evt.fromDate).toISOString()
+      this.toDateDropdown = new Date(evt.toDate).toISOString()
       this.reloadAllChart();
     }
   }
