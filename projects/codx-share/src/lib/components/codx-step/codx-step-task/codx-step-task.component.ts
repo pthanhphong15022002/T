@@ -159,8 +159,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.taskList = this.currentStep['tasks'];
   }
 
-  toggleTask(e, id) {
-    let elementGroup = document.getElementById('group' + id.toString());
+  toggleTask(e, idGroup) {
+    let elementGroup = document.getElementById(idGroup.toString());
+    // let elementGroup = document.querySelector('#' + this.id + '#' + idGroup.toString() );
     let children = e.currentTarget.children[0];
     let isClose = elementGroup.classList.contains('hiddenTask');
     if (isClose) {
