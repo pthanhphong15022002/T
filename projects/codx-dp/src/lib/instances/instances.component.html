@@ -321,34 +321,29 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <ng-container *ngFor="let item of listSteps">
-        <div *ngIf="item.stepID === data.stepID">
-          <div *ngIf="checkOwnerRoleProcess(item.roles)">
-            <codx-imgs
-              [isToolTip]="true"
-              [width]="25"
-              [objectId]="checkOwnerRoleProcess(item.roles)"
-              ojectType="AD_Users"
-              [numberImages]="1"
-            >
-            </codx-imgs>
-          </div>
-          <div *ngIf="checkOwnerRoleProcess(item.roles) == null">
-            <codx-imgs
-              [isToolTip]="true"
-              [width]="25"
-              [objectId]="data?.owner"
-              ojectType="AD_Users"
-              [numberImages]="1"
-            >
-            </codx-imgs>
-          </div>
-        </div>
-      </ng-container>
+      <div *ngIf="data.ownerStepInstances">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.ownerStepInstances"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+      <div *ngIf="data.ownerStepInstances == null">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data?.owner"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
     </div>
   </div>
 </ng-template>
-
 
 <!--Detail-->
 <ng-template #templateDetail>
