@@ -87,6 +87,7 @@ export class PopupMoveStageComponent implements OnInit {
   tmpTasks: any[] = [];
   tmpGroups: any[] = [];
   isMoveNext: boolean = false;
+  isDurationControl: boolean = true;
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -106,9 +107,10 @@ export class PopupMoveStageComponent implements OnInit {
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.stepName = dt?.data.stepName;
-    this.isUseReason = dt?.data.stepReason;
-    this.headerText = dt?.data.headerTitle; //  gán sau button add
+    this.stepName = dt?.data?.stepName;
+    this.isUseReason = dt?.data?.stepReason;
+    this.headerText = dt?.data?.headerTitle; //  gán sau button add
+    this.isDurationControl = dt?.data?.isDurationControl;
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
@@ -576,13 +578,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field?.dataValue?.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue?.toLowerCase().match(validEmail) && field?.dataValue) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field?.dataValue?.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue?.toLowerCase().match(validPhone) && field?.dataValue) {
           return 'RS030';
         }
       }
