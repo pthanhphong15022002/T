@@ -636,7 +636,7 @@
             [crrValue]="data?.industries"
             [type]="'combobox'"
             [refValue]="gridViewSetup?.Industries?.referedValue"
-            (valueChange)="valueChangeContact($event)"
+            (valueChange)="valueIndustries($event)"
             field="industries"
           >
           </codx-input>
@@ -779,10 +779,13 @@
       </codx-label>
     </div>
     <div class="mb-2">
-      <span
-        class="icon-add_location_alt icon-20 text-primary me-1"
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
         (click)="openPopupAddress()"
-      ></span>
+      >
+        <i class="h4 icon-add_location_alt icon-20 text-primary me-1"></i>
+      </button>
     </div>
   </div>
   <div
@@ -844,14 +847,23 @@
 </ng-template>
 
 <ng-template #avata>
-  <div class="avatar-container">
-    <div class="avatar" (click)="addAvatar()">
-      <ng-container *ngIf="linkAvatar">
-        <img [src]="linkAvatar" />
-      </ng-container>
-      <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
-        <img src="../../../assets/codx/user/avatar.jpg" alt="" />
-      </ng-container>
+  <div class="position-relative">
+    <div class="avatar-container position-relative">
+      <div class="avatar" (click)="addAvatar()">
+        <ng-container *ngIf="linkAvatar">
+          <img [src]="linkAvatar" />
+        </ng-container>
+        <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
+          <img src="../../../assets/codx/user/avatar.jpg" alt="" />
+        </ng-container>
+      </div>
+    </div>
+    <div class="icon">
+      <i
+        class="icon-edit icon-18 text-primary d-flex justify-content-center align-items-center"
+        (click)="addAvatar()"
+      >
+      </i>
     </div>
   </div>
   <codx-attachment
