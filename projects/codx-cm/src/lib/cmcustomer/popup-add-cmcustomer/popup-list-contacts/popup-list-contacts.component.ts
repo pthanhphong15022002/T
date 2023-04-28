@@ -8,6 +8,7 @@ import {
   FormModel,
   CacheService,
   NotificationsService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from '../popup-quickadd-contact/popup-quickadd-contact.component';
 
@@ -31,6 +32,7 @@ export class PopupListContactsComponent implements OnInit {
   objectType = '';
   objectName = '';
   gridViewSetup: any;
+  lstContactCm = [];
   constructor(
     private cache: CacheService,
     private callFc: CallFuncService,
@@ -49,6 +51,7 @@ export class PopupListContactsComponent implements OnInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.objectType = dt?.data?.objectType;
     this.objectName = dt?.data?.objectName;
+    this.lstContactCm = dt?.data?.lstContactCm;
   }
 
   ngOnInit(): void {
@@ -68,13 +71,16 @@ export class PopupListContactsComponent implements OnInit {
   }
 
   onSave() {
-    if(this.type == 'formDetail'){
+    if (this.type == 'formDetail') {
       this.contact.contactType = this.contactType;
       this.contact.objectID = this.recIDCm;
       this.contact.objectType = this.objectType;
       this.contact.objectName = this.objectName;
 
-      if(this.contact.contactType == null || this.contact.contactType.trim() == ''){
+      if (
+        this.contact.contactType == null ||
+        this.contact.contactType.trim() == ''
+      ) {
         this.notiService.notifyCode(
           'SYS009',
           0,
@@ -82,18 +88,61 @@ export class PopupListContactsComponent implements OnInit {
         );
         return;
       }
-
-      this.cmSv.updateContactByPopupListCt(this.contact).subscribe(res => {
-        if(res){
-          this.dialog.close(res);
+      if (this.lstContactCm != null) {
+        if (
+          this.lstContactCm.some(
+            (x) =>
+              x.contactType.split(';').some((x) => x == '1') &&
+              x.recID != this.contact.recID
+          )
+        ) {
+          if (this.contactType.split(';').some((x) => x == '1')) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notiService.alertCode('CM001').subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.cmSv
+                  .updateContactByPopupListCt(this.contact)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.dialog.close(res);
+                    }
+                  });
+              }
+            });
+          } else {
+            this.cmSv
+              .updateContactByPopupListCt(this.contact)
+              .subscribe((res) => {
+                if (res) {
+                  this.dialog.close(res);
+                }
+              });
+          }
+        } else {
+          if (!this.contactType.split(';').some((x) => x == '1')) {
+            this.notiService.notifyCode('CM002');
+          } else {
+            this.cmSv
+              .updateContactByPopupListCt(this.contact)
+              .subscribe((res) => {
+                if (res) {
+                  this.dialog.close(res);
+                }
+              });
+          }
         }
-      })
-    }else{
+      } else {
+        this.cmSv.updateContactByPopupListCt(this.contact).subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+          }
+        });
+      }
+    } else {
       if (this.contact != null) this.dialog.close(this.contact);
       else return;
     }
-
-
   }
 
   valueChange(e) {
@@ -125,7 +174,6 @@ export class PopupListContactsComponent implements OnInit {
           type: 'formList',
           gridViewSetup: res,
           contactType: this.contactType,
-
         };
         var dialog = this.callFc.openForm(
           PopupQuickaddContactComponent,
@@ -153,12 +201,10 @@ export class PopupListContactsComponent implements OnInit {
               } else {
                 this.changeContacts(0, this.lstSearch[0]);
               }
-            }else{
+            } else {
               this.changeContacts(0, this.lstSearch[0]);
-
             }
             this.changeDet.detectChanges();
-
           }
         });
       });

@@ -21,11 +21,11 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./layout8.component.scss'],
 })
 export class Layout8Component extends LayoutBaseComponent {
-  module = 'EP8';
   dialog!: DialogRef;
 
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
+    this.module = 'EP8';
   }
   onInit(): void {}
 

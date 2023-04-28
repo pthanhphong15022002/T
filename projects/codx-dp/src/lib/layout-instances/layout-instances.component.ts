@@ -26,14 +26,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LayoutInstancesComponent extends LayoutBaseComponent {
   @ViewChild('popupGuide') popupGuide;
   vllApplyFor = 'DP002';
-  module = '';
-  override aside = false;
-  override toolbarFixed = false;
-
-  //override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  //override toolbar = false;
-  //dataProcess = new BehaviorSubject<any>(null);
   processView: any;
   stepViews = [];
   dialogGuide: DialogRef;
@@ -45,6 +37,9 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay=false;
+    this.layoutModel.toolbarFixed=false;
   }
 
   onInit(): void {

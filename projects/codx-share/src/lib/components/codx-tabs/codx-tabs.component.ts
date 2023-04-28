@@ -49,7 +49,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() transID: string;
   @Input() approveStatus: string;
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
-  
+
   //Quotations - CM
   @Input() customerID : string ;
   @Input() funcIDQuotations ='CM0202' ;
@@ -70,7 +70,7 @@ export class CodxTabsComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     // this.api
     //   .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
     //     this.objectID,

@@ -147,14 +147,14 @@
       </div>
       <div class="col-6 form-group">
         <codx-label
-          fiedName="voucherNoFormat"
+          fiedName="voucherFormat"
           [formModel]="form.formModel"
         ></codx-label>
         <div class="d-flex align-items-center">
           <div class="w-100 me-1">
             <codx-input
               disabled="true"
-              field="voucherNoFormat"
+              field="voucherFormat"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             ></codx-input>
@@ -261,7 +261,7 @@
         <codx-label
           fiedName="lblCurrencyID"
           [formModel]="form.formModel"
-          [default]="gvs.CurrencyID.description"
+          [default]="gvs.CurrencyID?.description"
           class="text-gray-500 font-italic fw-normal"
         ></codx-label>
       </div>
@@ -290,7 +290,7 @@
           <codx-label
             fiedName="lblDRAcctControl"
             [formModel]="form.formModel"
-            [default]="gvs.DRAcctControl.description"
+            [default]="gvs.DRAcctControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
           <span
@@ -364,7 +364,7 @@
           <codx-label
             fiedName="lblCRAcctControl"
             [formModel]="form.formModel"
-            [default]="gvs.CRAcctControl.description"
+            [default]="gvs.CRAcctControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
 
@@ -440,7 +440,7 @@
           <codx-label
             fiedName="lblDIM1Control"
             [formModel]="form.formModel"
-            [default]="gvs.DIM1Control.description"
+            [default]="gvs.DIM1Control?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -470,7 +470,7 @@
           <codx-label
             fiedName="lblProjectControl"
             [formModel]="form.formModel"
-            [default]="gvs.ProjectControl.description"
+            [default]="gvs.ProjectControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -498,7 +498,7 @@
           <codx-label
             fiedName="lblDIM2Control"
             [formModel]="form.formModel"
-            [default]="gvs.DIM2Control.description"
+            [default]="gvs.DIM2Control?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -526,7 +526,7 @@
           <codx-label
             fiedName="lblDIM3Control"
             [formModel]="form.formModel"
-            [default]="gvs.DIM3Control.description"
+            [default]="gvs.DIM3Control?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -554,7 +554,7 @@
           <codx-label
             fiedName="lblAssetControl"
             [formModel]="form.formModel"
-            [default]="gvs.AssetControl.description"
+            [default]="gvs.AssetControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -589,7 +589,7 @@
           <codx-label
             fiedName="lblSubControl"
             [formModel]="form.formModel"
-            [default]="gvs.SubControl.description"
+            [default]="gvs.SubControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -610,21 +610,21 @@
         <div class="col-6">
           <div class="mb-1">
             <codx-label
-              fiedName="settlementRule"
+              fiedName="settleControl"
               [formModel]="form.formModel"
             ></codx-label>
           </div>
           <codx-label
-            fiedName="lblSettlementRule"
+            fiedName="lblSettleControl"
             [formModel]="form.formModel"
-            [default]="gvs.SettlementRule.description"
+            [default]="gvs.settleControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
 
         <div class="col-6">
           <codx-input
-            field="settlementRule"
+            field="settleControl"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [placeholder]="' '"
@@ -666,7 +666,7 @@
           <codx-label
             fiedName="lblWarehouseIssue"
             [formModel]="form.formModel"
-            [default]="gvs.WarehouseIssue.description"
+            [default]="gvs.WarehouseIssue?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -693,7 +693,7 @@
           <codx-label
             fiedName="lblWarehouseReceipt"
             [formModel]="form.formModel"
-            [default]="gvs.WarehouseReceipt.description"
+            [default]="gvs.WarehouseReceipt?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -756,7 +756,7 @@
           <codx-label
             fiedName="lblCreater"
             [formModel]="form.formModel"
-            [default]="gvs.Creater.description"
+            [default]="gvs.Creater?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -790,7 +790,7 @@
           <codx-label
             fiedName="lblApprovalControl"
             [formModel]="form.formModel"
-            [default]="gvs.ApprovalControl.description"
+            [default]="gvs.ApprovalControl?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -800,6 +800,7 @@
             field="approvalControl"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            (change)="onApprovalControlChange($event)"
           ></codx-input>
         </div>
       </div>
@@ -813,7 +814,7 @@
           <codx-label
             fiedName="lblApprover"
             [formModel]="form.formModel"
-            [default]="gvs.Approver.description"
+            [default]="gvs.Approver?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -844,16 +845,9 @@
         [Group]="form.formGroup"
       ></codx-input>
       <codx-label
-        *ngIf="['1', '2'].includes(journal.approvalControl)"
         fiedName="autoPost"
         [formModel]="form.formModel"
-        [default]="gvs.PostControl.description.split(';')[0]"
-      ></codx-label>
-      <codx-label
-        *ngIf="journal.approvalControl === '0'"
-        fiedName="autoPost"
-        [formModel]="form.formModel"
-        [default]="gvs.PostControl.description.split(';')[1]"
+        [default]="autoPostLabelText"
       ></codx-label>
     </div>
 
@@ -865,7 +859,7 @@
           <codx-label
             fiedName="lblPoster"
             [formModel]="form.formModel"
-            [default]="gvs.Poster.description"
+            [default]="gvs.Poster?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -910,7 +904,7 @@
           <codx-label
             fiedName="lblUnposter"
             [formModel]="form.formModel"
-            [default]="gvs.Unposter.description"
+            [default]="gvs.Unposter?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -945,7 +939,7 @@
           <codx-label
             fiedName="lblUnPostDays"
             [formModel]="form.formModel"
-            [default]="gvs.UnPostDays.description"
+            [default]="gvs.UnPostDays?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>
@@ -968,7 +962,7 @@
           <codx-label
             fiedName="lblSharer"
             [formModel]="form.formModel"
-            [default]="gvs.Sharer.description"
+            [default]="gvs.Sharer?.description"
             class="text-gray-500 font-italic fw-normal"
           ></codx-label>
         </div>

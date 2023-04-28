@@ -152,7 +152,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          console.log('Run addd');
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {

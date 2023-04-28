@@ -25,6 +25,7 @@ import {
   DP_Instances_Steps,
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -81,10 +82,11 @@ export class PopupMoveStageComponent implements OnInit {
   actionCheck: string = '';
   isSaving: boolean = false;
   listStepProccess: any;
-  user:any;
+  user: any;
 
   tmpTasks: any[] = [];
-  tmpGroups:any[] = [];
+  tmpGroups: any[] = [];
+  isMoveNext: boolean = false;
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -142,6 +144,7 @@ export class PopupMoveStageComponent implements OnInit {
     !this.stepIdClick &&
       this.stepIdClick != this.stepIdOld &&
       this.autoClickedSteps(this.listStepsCbx, this.stepName);
+    this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
   }
 
   getNameAndPosition(id) {
@@ -287,13 +290,14 @@ export class PopupMoveStageComponent implements OnInit {
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter( (x) => x.progress < this.oneHundredNumber);
+    this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter(
+      (x) => x.progress < this.oneHundredNumber
+    );
   }
 
   onSave() {
     this.instancesStepOld.owner = this.owner;
-    var isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
-    if (isMoveNext) {
+    if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
         return;
@@ -303,6 +307,15 @@ export class PopupMoveStageComponent implements OnInit {
           'SYS009',
           0,
           '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"'
+        );
+        return;
+      }
+      if(this.compareDates(this.instancesStepOld.actualStart,this.instancesStepOld.actualEnd)) {
+        var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
+        this.notiService.notifyCode(
+          'DP032',
+          0,
+          '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"', '"' +  dateMessage + '"'
         );
         return;
       }
@@ -343,11 +356,10 @@ export class PopupMoveStageComponent implements OnInit {
         this.notiService.notifyCode(messageCheckFormat);
         return;
       }
-    }
 
-    if(this.isCheckRequiredTask(this.listTaskDone))
-    {
-      return;
+      if (this.isCheckRequiredTask(this.listTaskDone)) {
+        return;
+      }
     }
     this.beforeSave();
   }
@@ -367,17 +379,23 @@ export class PopupMoveStageComponent implements OnInit {
     }
     if (
       (!!this.listTaskGroupDone || !!this.listTaskDone) &&
-        this.stepIdClick === this.stepIdOld
+      this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
-    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
-      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone,'T');
+    if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
+      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
     }
-    if(this.listTaskDone.length > 0 && this.listTaskDone !=null) {
-      var listTmpGroup= this.convertTmpDataInTask(this.listTaskGroupDone,'G');
+    if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
+      var listTmpGroup = this.convertTmpDataInTask(this.listTaskGroupDone, 'G');
     }
-    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld,listTmpTask,listTmpGroup];
+    var data = [
+      this.instance.recID,
+      this.stepIdOld,
+      this.instancesStepOld,
+      listTmpTask,
+      listTmpGroup,
+    ];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];
@@ -455,6 +473,7 @@ export class PopupMoveStageComponent implements OnInit {
     if ($event && this.stepIdClick !== $event) {
       this.stepIdClick = $event;
       this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
+      this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -557,13 +576,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field?.dataValue.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue?.toLowerCase().match(validEmail) && field?.dataValue) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field?.dataValue.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue?.toLowerCase().match(validPhone) && field?.dataValue) {
           return 'RS030';
         }
       }
@@ -572,10 +591,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   updateProgressInstance() {
-    if (
-      this.listTaskDone?.length > 0 &&
-      this.listTaskGroupDone?.length > 0
-    ) {
+    if (this.listTaskDone?.length > 0 && this.listTaskGroupDone?.length > 0) {
       if (
         this.listTaskDone.length == this.listTaskDone.length &&
         this.listTaskGroupDone.length == this.listTaskGroupDone.length
@@ -634,6 +650,16 @@ export class PopupMoveStageComponent implements OnInit {
               }
             });
           break;
+        case 'R':
+          this.codxDpService
+            .getListUserByRoleID(lstRoles)
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
       }
     }
   }
@@ -641,83 +667,98 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     if (event) {
       if (event?.taskID) {
-       var task = this.listTaskDone.find(x=>x.recID === event?.taskID);
-       var taskNew = {
-        progress: event?.progressTask,
-        actualEnd: event?.actualEnd,
-        isUpdate: event?.isUpdate,
-        note: event?.note,
-       };
-      this.updateDataTask(task,taskNew);
+        var task = this.listTaskDone.find((x) => x.recID === event?.taskID);
+        var taskNew = {
+          progress: event?.progressTask,
+          actualEnd: event?.actualEnd,
+          isUpdate: event?.isUpdate,
+          note: event?.note,
+        };
+        this.updateDataTask(task, taskNew);
       }
-      if(event?.groupTaskID){
-        var group = this.listTaskGroupDone.find(x=>x.recID === event?.groupTaskID);
+      if (event?.groupTaskID) {
+        var group = this.listTaskGroupDone.find(
+          (x) => x.refID === event?.groupTaskID
+        );
         var groupNew = {
           progress: event?.progressGroupTask,
           isUpdate: event?.isUpdate,
           actualEnd: event?.actualEnd,
           note: event?.note,
-         };
-         this.updateDataGroup(group,groupNew);
+        };
+        this.updateDataGroup(group, groupNew);
       }
     }
   }
-  updateDataTask(taskNew:any, taskOld: any) {
+  updateDataTask(taskNew: any, taskOld: any) {
     taskNew.actualEnd = taskOld?.actualEnd;
     taskNew.isUpdate = taskOld.isUpdate;
     taskNew.note = taskOld.note;
     taskNew.progress = taskOld.progress;
     taskNew.modifiedOn = new Date();
     taskNew.modifiedBy = this.user.userID;
-    taskNew.isUpdate = taskNew.isUpdate
+    taskNew.isUpdate = taskNew.isUpdate;
   }
-  updateDataGroup(groupNew:any, groupOld: any) {
+  updateDataGroup(groupNew: any, groupOld: any) {
     groupNew.progress = groupOld?.progress;
     groupNew.modifiedOn = new Date();
     groupNew.modifiedBy = this.user.userID;
-    groupNew.isUpdate = groupOld.isUpdate
+    groupNew.isUpdate = groupOld.isUpdate;
   }
 
-  handleTmpInTask(data,type){
+  handleTmpInTask(data, type) {
     var tmpProgressUpdate = {
       stepID: data.stepID,
       recID: data.recID,
-      type:type,
-      progress:data.progress,
+      type: type,
+      progress: data.progress,
       note: data.note,
       actualEnd: data.actualEnd,
-      isUpdate: data.isUpdate
-    }
+      isUpdate: data.isUpdate,
+    };
     return tmpProgressUpdate;
   }
 
-  convertTmpDataInTask(list,type){
+  convertTmpDataInTask(list, type) {
     var listTmp = [];
-    debugger
-    for(let item of list) {
-      var obj = this.handleTmpInTask(item,type);
+    debugger;
+    for (let item of list) {
+      var obj = this.handleTmpInTask(item, type);
       listTmp.push(obj);
     }
     return listTmp;
   }
 
-  isCheckRequiredTask(listTask){
-    if(listTask.length > 0 && listTask) {
-        for(let item of listTask){
-          if(item.requireCompleted && item.progress < this.oneHundredNumber) {
-            this.notiService.notifyCode('DP022');
-            return true;
-          }
+  isCheckRequiredTask(listTask) {
+    if (listTask.length > 0 && listTask) {
+      for (let item of listTask) {
+        if (item.requireCompleted && item.progress < this.oneHundredNumber) {
+          this.notiService.notifyCode('DP022');
+          return true;
         }
+      }
     }
     return false;
   }
 
-  checkListDoneIsNull(tasks:any,groups:any){
-    if((tasks.length > 0 && tasks != null)|| (groups.length > 0 && groups != null) )
-    {
+  checkListDoneIsNull(tasks: any, groups: any) {
+    if (
+      (tasks.length > 0 && tasks != null) ||
+      (groups.length > 0 && groups != null)
+    ) {
       return true;
     }
+    return false;
+  }
+
+  compareDates(actualStart, actualEnd) {
+    const startMoment = moment(actualStart);
+    const endMoment = moment(actualEnd);
+
+    if (startMoment.isAfter(endMoment)) {
+      return true;
+    }
+
     return false;
   }
 }

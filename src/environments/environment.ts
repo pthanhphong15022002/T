@@ -17,6 +17,7 @@ export const environment = {
   themeMode: 'body', //layout,
   hideFavCount: false,
   singleExec:false,
+  asideMinimize:'icon-title',
   externalLogin: {
     amazonId: '',
     facebookId: '',

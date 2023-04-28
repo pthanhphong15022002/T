@@ -22,7 +22,7 @@
         <!--Content-->
         <div class="me-2" *ngIf="item?.listOKR !=null && item?.listOKR.length>0">
     
-          <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" >
+          <view-okr [okrVll]="okrVll" [okrFM]="okrFM" [okrGrv]="okrGrv" [dataOKR]="item?.listOKR" [isCollapsedAll]="false" [allowShowDetail]="true">
           </view-okr>
         </div>
     </div>    

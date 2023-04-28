@@ -18,12 +18,7 @@ import { CodxOdService } from '../codx-od.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'OD';
   dialog!: DialogRef;
-  // override aside = true;
-  // override asideFixed = false;
-  // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
-  // override toolbar = false;
 
   constructor(
     inject: Injector,
@@ -31,6 +26,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = 'OD';
   }
 
   onInit() {}

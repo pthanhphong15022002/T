@@ -130,8 +130,8 @@
           </ng-container>
         </ng-container>
       </div>
-      <div class="wp-contents-files">
-        <ng-container *ngIf="item.attachments">
+      <ng-container *ngIf="item.attachments > 0">
+        <div class="wp-contents-files">
           <codx-view-files 
             [objectID]="item.recID" 
             [objectType]="'WP_Comments'" 
@@ -139,8 +139,8 @@
             [medias]="item.medias" 
             (selectFile)="clickViewDetail($event)">
           </codx-view-files>
-        </ng-container>
-      </div>
+        </div>
+      </ng-container>
     </div>
     <!-- template share -->
     <ng-container *ngIf="item.category == CATEGORY.SHARE || item.category == CATEGORY.FEEDBACK">

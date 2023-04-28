@@ -52,7 +52,9 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabDetaildProduct"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="tabDetaildQuotationLines"
+            ></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -179,25 +181,27 @@
 <!--  End:thêm sản phẩm -->
 
 <!-- Start: Chi tiết sản phẩm -->
-<ng-template #tabDetaildProduct>
+<ng-template #tabDetaildQuotationLines>
   <div class="h-100">
     <codx-gridview-v2
-      #gridProductsLine
-      [formName]="fmProcductsLines.formName"
-      [gridViewName]="fmProcductsLines.gridViewName"
-      [entityName]="fmProcductsLines.entityName"
+      #gridQuationsLines
+      [formName]="fmQuotationLines.formName"
+      [gridViewName]="fmQuotationLines.gridViewName"
+      [entityName]="fmQuotationLines.entityName"
       [templateMore]="morefunction"
       [editSettings]="editSettings"
       [allowFiltering]="true"
       [allowSorting]="true"
       [dataValues]="form.data.recID"
-      [dataSource]="productsLine"
+      [dataSource]="quotationLines"
       service="CM"
       [height]="gridHeight"
       [autoLoad]="false"
       rowHeight="40"
-      (cellChanged)="productsLineChanged($event)"
-      (created)="gridCreated($event, gridProductsLine)"
+      predicates="TransID=@0"
+      [dataValues]="quotations.recID"
+      (cellChanged)="quotionsLineChanged($event)"
+      (created)="gridCreated($event, gridQuationsLines)"
     ></codx-gridview-v2>
   </div>
   <!-- predicates="TransID=@0"  cai nay truyền loc-->
@@ -223,24 +227,61 @@
       </div>
       <div
         class="col-4 fw-bolder fs-5"
-        style="padding-left: 100px; padding-right: 250px"
+        style="padding-left: 100px; padding-right: 50px"
       >
         <div class="d-flex justify-content-between">
           <div class="">
-            <codx-label default="Thành tiền"></codx-label>
+            <codx-label
+              class="label-colon"
+              fiedName="TotalAmt"
+              [formModel]="form.formModel"
+            ></codx-label>
           </div>
-          <div>23.000.000</div>
+          <div
+            [innerHTML]="
+              quotations.totalAmt
+                | formatvalue : form.formModel : 'TotalAmt'
+                | async
+            "
+          ></div>
         </div>
         <div class="d-flex justify-content-between">
-          <div><codx-label default="Tổng chiết khấu"></codx-label></div>
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName="DiscAmt"
+              [formModel]="form.formModel"
+              default="Tổng chiết khấu"
+            ></codx-label>
+          </div>
+          <div
+            [innerHTML]="
+              quotations.discAmt
+                | formatvalue : form.formModel : 'DiscAmt'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName=""
+              [formModel]="form.formModel"
+              default="Tiền thuế"
+            ></codx-label>
+          </div>
           <div>2.300.000</div>
         </div>
         <div class="d-flex justify-content-between">
-          <div><codx-label default="Tiền thuế"></codx-label></div>
-          <div>2.300.000</div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div><codx-label default="Tổng cộng"></codx-label></div>
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName=""
+              [formModel]="form.formModel"
+              default="Tổng cộng"
+            ></codx-label>
+          </div>
           <div class="text-danger">23.000.000</div>
         </div>
       </div>
