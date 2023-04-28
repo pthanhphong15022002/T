@@ -141,6 +141,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   noteSuccess: string = '';
   noteFail: string = '';
   noteResult: string = '';
+  isUpdatePermiss = false;
   // const value string
   readonly strEmpty: string = '';
   readonly viewStepCustom: string = 'custom';
@@ -296,7 +297,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   lstTmp: DP_Processes_Permission[] = [];
   listStepApproverView = []; //view thôi ko có quyền gì cả
   listStepApprover: any;
-  listStepApproveDelete = [];
+  listStepApproverDelete = [];
   viewApproverStep: any;
 
   constructor(
@@ -530,6 +531,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listStepDelete || [],
         listStepDrop || [],
         this.lstTmp,
+        this.isUpdatePermiss
       ];
     }
     op.data = data;
@@ -559,7 +561,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.dialog.close(res.save);
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
-            this.listStepApproveDelete
+            this.listStepApproverDelete
           );
           // } else {
           //   this.dialog.close();
@@ -578,9 +580,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          debugger
           this.dpService.upDataApprovalStep(
             this.listStepApprover,
-            this.listStepApproveDelete
+            this.listStepApproverDelete
           );
 
           (this.dialog.dataService as CRUDService)
@@ -989,6 +992,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   applyShare(e, type) {
     if (e.length > 0) {
       if (!this.isChange) this.isChange = true;
+      if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       console.log(e);
       switch (type) {
         //Người giám sát
@@ -1161,6 +1165,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     roles.roleType = 'S';
     tmpRole = this.checkRolesStep(this.step.roles, roles);
     if (!this.isChange) this.isChange = true;
+    if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
     this.step.roles = tmpRole;
   }
 
@@ -1338,6 +1343,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
         if (!this.isChange) this.isChange = true;
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1363,6 +1370,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (i <= 1) {
               if (indexPerm != -1) {
                 this.process.permissions.splice(indexPerm, 1);
+                if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
               }
             }
           }
@@ -1647,7 +1655,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event) {
         if (!this.isChange) this.isChange = true;
         this.listStepApprover = res?.event?.listStepApprover;
-        this.listStepApproveDelete = res?.event?.listStepApproveDelete;
+        this.listStepApproverDelete = res?.event?.listStepApproverDelete;
         this.listStepApproverView = this.listStepApprover;
         this.getUserByApproverStep(res?.event?.listStepApprover);
         this.recIDCategory = transID;
@@ -3125,6 +3133,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       if (!checkPermissions) {
         this.process['permissions'].push(rolePermission);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
 
       if (roleOld) {
@@ -3167,8 +3176,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.lstTmp.push(tmp);
         }
         this.process['permissions']?.splice(index, 1);
+        if(!this.isUpdatePermiss) this.isUpdatePermiss = true;
       }
     }
+
   }
   //test user exists in step
   checkExistUserInStep(step:any, role: any, type: string): boolean {

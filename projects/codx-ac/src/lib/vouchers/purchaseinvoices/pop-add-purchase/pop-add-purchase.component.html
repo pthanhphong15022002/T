@@ -13,7 +13,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-20 me-2"></i>
-              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -30,7 +30,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2" (click)="detaiClick(1)">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
-              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -43,7 +43,7 @@
           <ng-template #headerText>
             <div *ngIf="VATType == '2'" class="d-flex align-items-top me-2" (click)="detaiClick(2)">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
-              <span [innerHTML]="'2' | vll : 'AC072' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              <span [innerHTML]="'2' | vll : 'AC072' : 'text' | async" class="fw-bold fs-5-sm text-uppercase">
               </span>
             </div>
           </ng-template>

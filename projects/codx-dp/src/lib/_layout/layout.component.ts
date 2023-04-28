@@ -26,7 +26,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class LayoutComponent extends LayoutBaseComponent {
   @ViewChild('popupGuide') popupGuide;
   vllApplyFor = 'DP002';
-  module = 'DP';
   dialog!: DialogRef;
   processView: any;
   stepViews: any[];
@@ -42,8 +41,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // debugger
+    this.module = 'DP';
   }
 
   onInit(): void {

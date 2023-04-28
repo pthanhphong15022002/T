@@ -7,10 +7,6 @@ import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout-approval.component.scss'],
 })
 export class LayoutApprovalComponent extends LayoutBaseComponent {
-  module = 'WP';
-  override toolbar = true;
-  override aside = false;
-  override asideFixed = false;
   valueList: [];
   category:string = "approvals";
   funcID:string | null = "";
@@ -25,6 +21,8 @@ export class LayoutApprovalComponent extends LayoutBaseComponent {
     inject: Injector
   ) {
     super(inject);
+    this.module = 'WP';
+    this.layoutModel.asideDisplay = false;
   }
 
   onInit(): void {

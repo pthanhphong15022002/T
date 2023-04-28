@@ -15,19 +15,14 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   encapsulation: ViewEncapsulation.None
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  module = 'OM';
   dialog!: DialogRef
-  // override aside = true;
-  // override asideFixed = false;
-  // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
-  override toolbar = true;
-  override toolbarFixed = false;
   constructor(inject: Injector,
     //private hideToolbar: CodxOdService,
     private callfc: CallFuncService,
   ) {
     super(inject);
+    this.module = 'OM';
+    this.layoutModel.toolbarFixed = false;
   }
 
   onInit() { }
