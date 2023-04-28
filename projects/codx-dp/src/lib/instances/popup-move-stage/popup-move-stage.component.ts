@@ -87,6 +87,7 @@ export class PopupMoveStageComponent implements OnInit {
   tmpTasks: any[] = [];
   tmpGroups: any[] = [];
   isMoveNext: boolean = false;
+  isDurationControl: boolean = true;
 
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
@@ -106,9 +107,10 @@ export class PopupMoveStageComponent implements OnInit {
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.stepName = dt?.data.stepName;
-    this.isUseReason = dt?.data.stepReason;
-    this.headerText = dt?.data.headerTitle; //  gán sau button add
+    this.stepName = dt?.data?.stepName;
+    this.isUseReason = dt?.data?.stepReason;
+    this.headerText = dt?.data?.headerTitle; //  gán sau button add
+    this.isDurationControl = dt?.data?.isDurationControl;
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
