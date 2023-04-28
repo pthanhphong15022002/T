@@ -844,17 +844,23 @@
 </ng-template>
 
 <ng-template #avata>
-  <div class="avatar-container position-relative">
-    <div class="avatar" (click)="addAvatar()">
-      <ng-container *ngIf="linkAvatar">
-        <img [src]="linkAvatar" />
-      </ng-container>
-      <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
-        <img src="../../../assets/codx/user/avatar.jpg" alt="" />
-      </ng-container>
+  <div class="position-relative">
+    <div class="avatar-container position-relative">
+      <div class="avatar" (click)="addAvatar()">
+        <ng-container *ngIf="linkAvatar">
+          <img [src]="linkAvatar" />
+        </ng-container>
+        <ng-container *ngIf="linkAvatar == null || linkAvatar == ''">
+          <img src="../../../assets/codx/user/avatar.jpg" alt="" />
+        </ng-container>
+      </div>
     </div>
-    <div class="input-avt position-absolute" style="bottom: 0; right: 0;">
-      <i class="icon-edit icon-18 text-primary" > </i>
+    <div class="icon">
+      <i
+        class="icon-edit icon-18 text-primary d-flex justify-content-center align-items-center"
+        (click)="addAvatar()"
+      >
+      </i>
     </div>
   </div>
   <codx-attachment

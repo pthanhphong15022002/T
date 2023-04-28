@@ -343,8 +343,12 @@
     background-color: var(--primary-lightest);
   }
 
+  .menu-state-title-primary .menu-item .menu-link.active {
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
   .menu-state-title-primary .menu-item .menu-link.active .menu-title {
-    color: var(--menu-acitve);
+    color: var(--menu-active);
   }
 
   .btn.btn-primary {
@@ -426,9 +430,6 @@
     background-color: var(--primary-lighter);
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    color: var(--primary-light) !important;
-  }
 
   .menu-title-light .menu-item .menu-link:hover .menu-title {
     color: var(--primary-lighter) !important;
@@ -604,10 +605,6 @@
 
   ///////////////
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    transition: color 0.2s ease, background-color 0.2s ease;
-    color: var(--primary-light) !important;
-  }
 
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
