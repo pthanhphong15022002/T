@@ -147,7 +147,7 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+              <codx-input tabindex="-1" [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -262,8 +262,8 @@
             <th *ngIf="cashpaymentline.length > 0" style="width: 15%;"></th>
           </tr>
         </thead>
-        <tbody class="border-bottom" *ngFor="let item of cashpaymentline">
-          <tr>
+        <tbody class="border-bottom">
+          <tr *ngFor="let item of cashpaymentline">
             <td class="text-center fw-bold">
               {{ item.rowNo }}
             </td>
@@ -327,11 +327,15 @@
               </div>
             </td>
             <td>
-              <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dr.toLocaleString("it-IT")
-                }}</span>
-              <ng-template #popdr>
-                <span [ngbTooltip]="popdr" class="fw-bold">{{item.dr.toLocaleString("it-IT")}}</span>
-              </ng-template>
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="(item.dr != null && item.dr != '')">
+                  <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dr.toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popdr>
+                    <span [ngbTooltip]="popdr" class="fw-bold">{{item.dr.toLocaleString("it-IT")}}</span>
+                  </ng-template>
+                </ng-container>
+              </div>
             </td>
             <td>
               <div class="d-flex align-items-center justify-content-start">

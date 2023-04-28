@@ -46,7 +46,6 @@ export class LayoutComponent
   override headerLeft: string = 'menu';
   override asideDisplay: boolean = false;
   disableInput = false;
-  module = 'DM';
   dialog: DialogRef;
   percentUsed: any;
   itemHdd: any;
@@ -100,7 +99,7 @@ db.DM_FolderInfo.updateMany(
     private cache: CacheService
   ) {
     super(injector);
-    this.codxService.init('DM');
+    this.module = 'DM';
     this.fileService.getTotalHdd().subscribe((item) => {
       //  totalUsed: any;
       // totalHdd: any;

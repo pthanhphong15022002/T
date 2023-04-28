@@ -1750,7 +1750,7 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EBusinessTravelsBusiness',
       'AddEBusinessTravelsAsync',
-      [data]
+      data
     );
   }
 
@@ -1770,6 +1770,16 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EBusinessTravelsBusiness',
       'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  EditEmployeeContactMoreFunc(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelMoreFuncAsync',
       data
     );
   }

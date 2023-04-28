@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CacheService } from 'codx-core';
+import { AuthStore, CacheService } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
+import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({
   selector: 'app-dp-approvals',
@@ -23,13 +24,22 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   ms021: any;
   active = 1;
   referType = 'source';
+  userID: any;
+  transID='c6f87dcd-9a20-4661-b25f-3436bf532f42'
+  approveStatus='0'
+
   constructor(
     private cache: CacheService,
     private codxDP: CodxDpService,
-    private router: ActivatedRoute
-  ) {}
+    private router: ActivatedRoute,
+    private authStore : AuthStore,
+    private layoutDP: LayoutComponent,
+  ) {
+    this.userID = this.authStore.get().userID;
+  }
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
+    this.layoutDP.hidenNameProcess();
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
       if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
@@ -52,4 +62,13 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getData(id) {}
+
+  handleViewFile(e: any) {
+    if (e == true) {
+      var index = this.data.listInformationRel.findIndex(
+        (x) => x.userID == this.userID && x.relationType != '1'
+      );
+      if (index >= 0) this.data.listInformationRel[index].view = '3';
+    }
+  }
 }

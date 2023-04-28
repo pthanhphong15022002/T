@@ -54,6 +54,7 @@ import { TestComponent } from './componnent-task/test/test.component';
 import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
+import { PopupEditOwnerstepComponent } from './instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 
 const routes: Routes = [
@@ -143,12 +144,13 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupUserPropertiesComponent,
     PopupParticipantsComponent,
     ProgressComponent,
-    CarouselStageComponent,  
+    CarouselStageComponent,
     UpdateProgressComponent,
     CodxTaskComponent,
     TestComponent,
     InputNumberDurationComponent,
-    ApprovalsComponent
+    ApprovalsComponent,
+    PopupEditOwnerstepComponent
   ],
   imports: [
     RouterModule.forChild(routes),

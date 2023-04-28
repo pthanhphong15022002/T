@@ -576,13 +576,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field?.dataValue.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue?.toLowerCase().match(validEmail) && field?.dataValue) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field?.dataValue.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue?.toLowerCase().match(validPhone) && field?.dataValue) {
           return 'RS030';
         }
       }
@@ -643,6 +643,16 @@ export class PopupMoveStageComponent implements OnInit {
         case 'P':
           this.codxDpService
             .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'R':
+          this.codxDpService
+            .getListUserByRoleID(lstRoles)
             .subscribe((res) => {
               if (res != null && res.length > 0) {
                 lstOrg = res;

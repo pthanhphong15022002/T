@@ -12,11 +12,11 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'ES';
   dialog: DialogRef;
 
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
+    this.module = 'ES';
   }
 
   onInit(): void {}
