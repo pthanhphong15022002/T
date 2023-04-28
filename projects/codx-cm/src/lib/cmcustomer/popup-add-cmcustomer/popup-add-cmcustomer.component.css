@@ -16,6 +16,20 @@
   background-color: #ddd;
 }
 
+.input-avt {
+  align-items: center;
+  background-color: #ebf0f1;
+  border-radius: 50%;
+  color: #c2c8ca;
+  display: flex;
+  font-family: Roboto;
+  font-size: 11px;
+  justify-content: center;
+  line-height: 11px;
+  margin: 0px 0px 6.5px;
+  text-align: center;
+}
+
 .avatar img {
   width: 100%;
   height: 100%;
