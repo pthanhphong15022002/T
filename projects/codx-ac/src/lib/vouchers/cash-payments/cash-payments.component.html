@@ -84,7 +84,7 @@
         <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
         </codx-label>
         <span class="text-gray-600">
-          {{itemSelected?.voucherDate | date : 'dd/MM/yyyy'}}
+          {{itemSelected?.voucherDate | date : 'short'}}
         </span>
       </div>
     </div>
@@ -183,7 +183,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-customize icon-16 me-1 text-gray-600"></span>
         <span class="text-gray-600">
-          {{data?.voucherDate | date : 'dd/MM/yyyy'}}
+          {{data?.voucherDate | date :'short'}}
         </span>
       </div>
     </div>
@@ -196,7 +196,7 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="(itemSelected.subType == '1' || itemSelected.subType == '3' ) && cashpaymentline">
-    <div class="table-responsive mt-2 h-400px">
+    <div class="table-responsive mt-2">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
@@ -515,9 +515,10 @@
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                   <span [ngbTooltip]="popdate" class="fw-bold line-clamp line-clamp-1">{{item.invoiceDate | date :
-                    'dd/MM/yyyy'}}</span>
+                    'short'}}</span>
                   <ng-template #popdate>
-                    <span class="fw-bold">{{item.invoiceDate}}</span>
+                    <span class="fw-bold">{{item.invoiceDate | date :
+                      'short'}}</span>
                   </ng-template>
                 </ng-container>
               </div>
@@ -526,9 +527,10 @@
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.dueDate != null && item.dueDate != '')">
                   <span [ngbTooltip]="popduedate" class="fw-bold line-clamp line-clamp-1">{{item.dueDate | date :
-                    'dd/MM/yyyy'}}</span>
+                    'short'}}</span>
                   <ng-template #popduedate>
-                    <span class="fw-bold">{{item.dueDate}}</span>
+                    <span class="fw-bold">{{item.dueDate | date :
+                      'short'}}</span>
                   </ng-template>
                 </ng-container>
               </div>
