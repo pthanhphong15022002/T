@@ -24,6 +24,7 @@ import { PopupListContactsComponent } from './popup-list-contacts/popup-list-con
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { BS_AddressBook } from '../../models/cm_model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-cmcustomer',
@@ -76,19 +77,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.getListAddress(this.dialog.formModel.entityName, this.recID);
     }
     this.recID = dt?.data[2];
-    if (this.action == 'edit') {
+    if (this.action == 'edit' || this.action == 'copy') {
       if (this.data?.objectType == '1') {
         this.refValueCbx = 'CMCustomers';
       } else {
         this.refValueCbx = 'CMPartners';
       }
-      this.cmSv.getContactByObjectID(this.data?.recID).subscribe((res) => {
-        if (res) {
-          this.contactsPerson = res;
-        }
-      });
-      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
-      this.getAvatar(this.data);
     }
   }
 
@@ -124,6 +118,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
 
+  async ngAfterViewInit() {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    if (this.action == 'edit') {
+      this.contactsPerson = await firstValueFrom(this.cmSv.getContactByObjectID(this.data?.recID));
+      this.getListAddress(this.dialog.formModel.entityName, this.data.recID);
+      this.getAvatar(this.data);
+    }
+
+    this.changeDetectorRef.detectChanges();
+  }
+
   getListAddress(entityName, recID) {
     this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
       if (res && res.length > 0) {
@@ -146,7 +152,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
   valueTagChange(e) {
     this.data.tags = e.data;
   }
-
+  valueIndustries(e) {
+    if (e.data) {
+      this.data.industries = e.data;
+    }
+  }
   valueChangeContact(e) {
     if (e?.data != null && e?.data.trim() != '') {
       this.data[e.field] = e?.data;
