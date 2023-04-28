@@ -2619,11 +2619,17 @@ codx-input .e-icons.e-check:before {
 
 /// fix menu left
 /// 
-.aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active,
-.aside-minimize-icon-title .aside-extended .aside-primary .menu-link:hover {
-  box-shadow:none;
-  background-color: #ffffff21;
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
+  border-radius: 3px!important;
+  margin: 2px 5px!important;
 }
-.aside-minimize-icon-title .aside.aside-extended .aside-primary {
-  width: 104px;
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
+  font-size: 12px!important;
+  padding-top: 2px!important;
+}
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
+  box-shadow:none;
+  background-color: #ffffff15!important;
 }

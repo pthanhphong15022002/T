@@ -45,7 +45,7 @@
                 cdkDropList
                 [cdkDropListData]="groupTask?.task || []"
                 (cdkDropListDropped)="drop($event, groupTask)"
-                [id]="'group' + groupTask?.recID"
+                [id]="id + groupTask?.recID"
                 class="task"
                 [ngStyle]="groupTask?.recID? { 'margin-left': '35px' }: { 'margin-left': '0px' }"
               >
@@ -109,7 +109,7 @@
       <button
         type="button"
         class="btn btn-icon btn-light-primary"
-        (click)="toggleTask($event, groupTask?.recID)"
+        (click)="toggleTask($event, id + groupTask?.recID)"
       >
         <i class="icon-horizontal_rule icon-18"></i>
       </button>

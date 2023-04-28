@@ -61,7 +61,9 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  getData(id) {}
+  getData(id) {
+    //id la cua noi dung instance
+  }
 
   handleViewFile(e: any) {
     if (e == true) {
