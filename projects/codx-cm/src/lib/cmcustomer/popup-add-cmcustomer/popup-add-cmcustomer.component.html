@@ -75,6 +75,7 @@
             [field]="'contactType'"
             id="vllCbx"
             [crrValue]="data?.contactType"
+            [formModel]="form.formModel"
             [type]="'valuelist'"
             [refValue]="gridViewSetup?.ContactType?.referedValue"
             (valueChange)="valueChangeContact($event)"
@@ -226,6 +227,7 @@
                 default="Liên hệ chính"
               >
               </codx-label>
+              <span style="color: red; margin-right: 2px;">*</span>
             </div>
             <div class="d-flex justify-content-end">
               <div class="me-3">
@@ -779,10 +781,24 @@
       </codx-label>
     </div>
     <div class="mb-2">
-      <span
-        class="icon-add_location_alt icon-20 text-primary me-1"
+      <button
+        type="button"
         (click)="openPopupAddress()"
-      ></span>
+        class="btn btn-outline-primary"
+      >
+        <i class="icon-add_location_alt icon-16 text-primary"></i>
+
+        <codx-label
+          name="lblAddAddress"
+          [formModel]="dialog.formModel"
+          default="Thêm"
+        ></codx-label>
+      </button>
+      <!-- <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
+        (click)="openPopupAddress()"
+      ></button> -->
     </div>
   </div>
   <div

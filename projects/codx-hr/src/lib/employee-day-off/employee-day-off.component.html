@@ -8,13 +8,19 @@
 <ng-template #headerTemplate let-data>
     <div class="d-flex w-100 ps-2 pe-4">
         <div class="w-50 text-dark fw-bold p-3 fw-500">
-            <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+            <codx-label fiedName="lblEmployeeID" [formModel]="view.formModel"
+                [default]="grvSetup?.EmployeeID?.description"></codx-label>
         </div>
         <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label name="lblDayOff" [default]="'Loại nghỉ | Thời gian nghỉ'"></codx-label>
+            <codx-label fiedName="lblKowID" [formModel]="view.formModel" [default]="grvSetup?.KowID?.description">
+            </codx-label> |
+            <codx-label fiedName="lblPeriodType" [formModel]="view.formModel"
+                [default]="grvSetup?.PeriodType?.description">
+            </codx-label>
         </div>
         <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label name="lblReason" [default]="'Lý do nghỉ'"></codx-label>
+            <codx-label fiedName="lblReason" [formModel]="view.formModel" [default]="grvSetup?.Reason?.description">
+            </codx-label>
         </div>
     </div>
 </ng-template>
@@ -178,8 +184,8 @@
         <!-- end emp info -->
         <!-- knowID -->
         <div class="justify-content-between text-gray-700">
-            <div class="align-self-center" [ngbTooltip]="grvSetup?.KowID?.headerText">
-                <span class="align-self-center text-primary"
+            <div class="align-self-center">
+                <span class="align-self-center text-primary" [ngbTooltip]="grvSetup?.KowID?.headerText"
                     [innerHTML]=" data?.kowID | formatvalue : view.formModel : 'kowID' | async">
                 </span>
             </div>
@@ -189,12 +195,14 @@
         <!-- reason -->
         <div class="justify-content-between text-gray-700">
             <div class="d-flex mb-2" #reasonFieldDetail>
-                <span [ngbTooltip]="reasonTooltip" class="line-clamp line-clamp-1 text-dark"
+                <span [ngbTooltip]="reasonDetailTooltip" class="line-clamp line-clamp-1 text-dark"
                     #titleContentDetail>{{data?.reason}}</span>
             </div>
-            <ng-template #reasonTooltip>
+            <ng-template #reasonDetailTooltip>
                 <div class="d-flex flex-column">
-                    <span [style.display]=" (titleContentDetail.offsetWidth < reasonFieldDetail.scrollWidth)? 'none':''">
+                    <span>{{grvSetup?.Reason?.headerText}}</span>
+                    <span
+                        [style.display]=" (titleContentDetail.offsetWidth < reasonFieldDetail.scrollWidth)? 'none':''">
                         {{ data?.reason}}
                     </span>
                 </div>
