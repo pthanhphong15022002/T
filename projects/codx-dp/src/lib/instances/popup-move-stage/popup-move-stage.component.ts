@@ -87,8 +87,8 @@ export class PopupMoveStageComponent implements OnInit {
   tmpTasks: any[] = [];
   tmpGroups: any[] = [];
   isMoveNext: boolean = false;
-  isDurationControl: boolean = true;
-
+  isDurationControl: boolean = false;
+  durationControl: boolean = false;
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
   readonly viewTaskGroup: string = 'TaskGroup';
@@ -110,7 +110,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.stepName = dt?.data?.stepName;
     this.isUseReason = dt?.data?.stepReason;
     this.headerText = dt?.data?.headerTitle; //  gán sau button add
-    this.isDurationControl = dt?.data?.isDurationControl;
+    this.durationControl = dt?.data?.isDurationControl;
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
@@ -287,8 +287,7 @@ export class PopupMoveStageComponent implements OnInit {
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
-
-    !this.instancesStepOld.actualEnd && this.setToDay();
+    this.instancesStepOld.actualEnd =  this.checkDuration(this.durationControl,this.instancesStepOld.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
@@ -762,5 +761,19 @@ export class PopupMoveStageComponent implements OnInit {
     }
 
     return false;
+  }
+
+  checkDuration(isCheck: boolean, actualEnd: Date): Date{
+    if(isCheck) {
+      actualEnd = new Date();
+      this.isDurationControl = false;
+    }
+    else {
+      if(!actualEnd) {
+        actualEnd = new Date();
+      }
+      this.isDurationControl = true;
+    }
+    return actualEnd;
   }
 }
