@@ -2146,7 +2146,6 @@ export class InstancesComponent
   }
 
   checkDurationControl(stepID): boolean{
-    debugger;
     var stepsDuration = this.process.steps.find(x=> x.recID === stepID);
     return stepsDuration?.durationControl;
   }

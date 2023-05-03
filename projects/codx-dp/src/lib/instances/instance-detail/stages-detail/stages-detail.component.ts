@@ -139,7 +139,7 @@ export class StagesDetailComponent implements OnInit {
   dialogPopupReason: DialogRef;
   viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  titleReason: any;
+  titleReason: string = '';
   stepNameSuccess: string = '';
   stepNameFail: string = '';
   stepNameReason: string = '';
@@ -284,15 +284,15 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
-      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-          )
+      if(!this.titleReason){
+        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
+
+         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
         : changes['dataStep'].currentValue?.isFailStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameFail)
-          )
+        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
         : '';
+      }
+
     }
   }
 
