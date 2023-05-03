@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,29 +19,25 @@ import { LayoutComponent } from '../_layout/layout.component';
 export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
   // extractContent = extractContent;
   // convertHtmlAgency = convertHtmlAgency2;
-   data: any;
-   funcID: any;
+  data: any;
+  funcID: any;
   // lstDtDis: any;
   // gridViewSetup: any;
-   formModel: any;
-  // view: any = {};
-    dataItem = {};
-  // dvlRelType: any;
-  // ms020: any;
-  // ms021: any;
+  formModel: any;
   active = 1;
   referType = 'source';
   userID: any;
-  transID=''
-  approveStatus='0'
+  transID = '28666dd2-2a40-4777-837e-12fb9ef5b956';
+  approveStatus = '0';
 
   constructor(
     private cache: CacheService,
     private codxDP: CodxDpService,
     private router: ActivatedRoute,
-    private authStore : AuthStore,
+    private authStore: AuthStore,
     private layoutDP: LayoutComponent,
-    private api : ApiHttpService
+    private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService
   ) {
     this.userID = this.authStore.get().userID;
   }
@@ -44,6 +47,7 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
     this.router.params.subscribe((params) => {
       this.funcID = params['FuncID'];
       if (params['id']) this.getGridViewSetup(this.funcID, params['id']);
+      this.getData(params['id']);
     });
   }
 
@@ -57,20 +61,23 @@ export class ApprovalsComponent implements OnInit, AfterViewInit, OnChanges {
         funcID: funcID,
         gridViewName: fuc?.gridViewName,
       };
-
-      this.getData(id);
     });
   }
 
   getData(id) {
     //id la cua noi dung instance
-    this.api.exec<any>("DP","InstancesBusiness","GetInstancesDetailByRecIDAsync",[id]).subscribe(res=>{
-      if(res){
-        this.data = res[0];
-        this.transID = res[1];
-        this.approveStatus = this.data?.approveStatus??'0';
-      }
-    }) 
+    this.api
+      .exec<any>('DP', 'InstancesBusiness', 'GetInstancesDetailByRecIDAsync', [
+        id,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.data = res[0];
+          this.transID = res[1];
+          this.approveStatus = this.data?.approveStatus ?? '0';
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   handleViewFile(e: any) {
