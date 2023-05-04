@@ -116,4 +116,22 @@ export class CodxCmService {
     return this.api.exec<any>('CM', 'DealsBusiness', 'GetListCustomersAsync');
   }
   //#endregion
+
+  //contracts -- nvthuan
+  addContracts(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'AddContractsAsync',
+      data
+    );
+  }
+  editContracts(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'UpdateContractAsync',
+      data
+    );
+  }
 }

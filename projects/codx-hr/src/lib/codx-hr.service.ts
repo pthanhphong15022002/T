@@ -273,6 +273,16 @@ export class CodxHrService {
     );
   }
 
+  GetEmpCurrentPassport(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'GetEmpCrrPassportAsync',
+      [empID]
+    );
+  }
+
   //#endregion
 
   //#region EDegrees
@@ -374,6 +384,16 @@ export class CodxHrService {
       'EmpVisasBusiness',
       'GetListByEmployeeIDAsync',
       data
+    );
+  }
+
+  GetEmpCurrentVisa(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetEmpCrrVisaAsync',
+      [empID]
     );
   }
 
