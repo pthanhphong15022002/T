@@ -1484,6 +1484,7 @@ export class EmployeeDetailComponent extends UIComponent {
     this.appointionSortModel.dir = 'desc';
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      debugger
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
     });

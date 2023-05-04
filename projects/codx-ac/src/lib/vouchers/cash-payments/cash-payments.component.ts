@@ -417,5 +417,10 @@ export class CashPaymentsComponent extends UIComponent {
     //       });
     //   });
   }
+
+  formatDate(date){
+    var dateFormated = date;
+    return new Date(dateFormated).toLocaleDateString();;
+  }
   //#endregion
 }

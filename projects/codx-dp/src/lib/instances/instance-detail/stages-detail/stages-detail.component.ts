@@ -139,7 +139,7 @@ export class StagesDetailComponent implements OnInit {
   dialogPopupReason: DialogRef;
   viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  titleReason: any;
+  titleReason: string = '';
   stepNameSuccess: string = '';
   stepNameFail: string = '';
   stepNameReason: string = '';
@@ -284,15 +284,15 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
-      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-          )
+      if(!this.titleReason){
+        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
+
+         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
         : changes['dataStep'].currentValue?.isFailStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameFail)
-          )
+        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
         : '';
+      }
+
     }
   }
 
@@ -946,11 +946,15 @@ export class StagesDetailComponent implements OnInit {
   updateProgressStep() {
     let idStep = this.dataProgress['recID'];
     let progress = this.dataProgress['progress'];
+    let actualEnd = this.dataProgress['actualEnd'];
+    let note = this.dataProgress['note'];
     this.dpService
-      .updateProgressStep([idStep, Number(progress)])
+      .updateProgressStep([idStep, Number(progress), actualEnd, note])
       .subscribe((res) => {
         if (res) {
           this.step.progress = Number(progress);
+          this.step.actualEnd = actualEnd;
+          this.step.note = note;
           this.progress = progress;
           this.notiService.notifyCode('SYS006');
           this.popupUpdateProgress.close();
@@ -1625,16 +1629,10 @@ export class StagesDetailComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  fileAdded(e) {}
-
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
-  }
-
-  getfileDelete(event) {
-    event.data.length;
   }
 
   async getFormModel(functionID) {
