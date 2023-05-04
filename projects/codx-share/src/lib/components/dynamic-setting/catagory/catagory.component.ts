@@ -421,15 +421,10 @@ export class CatagoryComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  collapseItem(
-    evt: any,
-    recID: string,
-    fieldName: string,
-    changeValue: boolean = false
-  ) {
+  collapseItem(evt: any, recID: string, fieldName: string) {
     if (
       (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) &&
-      !changeValue
+      evt != null
     )
       return;
     var eleItem = document.querySelectorAll(
@@ -439,8 +434,16 @@ export class CatagoryComponent implements OnInit {
       eleItem.forEach((element) => {
         var ele = element as HTMLElement;
         var classlist = ele.classList;
-        if (classlist.contains('d-none')) classlist.remove('d-none');
-        else classlist.add('d-none');
+        if (evt != null) {
+          if (classlist.contains('d-none')) classlist.remove('d-none');
+          else classlist.add('d-none');
+        } else {
+          if (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) {
+            classlist.add('d-none');
+          } else {
+            classlist.remove('d-none');
+          }
+        }
       });
     }
     var btn = document.querySelector(
@@ -708,6 +711,9 @@ export class CatagoryComponent implements OnInit {
                 '.share-object-name[data-recid="' + data.recID + '"]'
               );
               if (ele) ele.innerHTML = name;
+            }
+            if (data.displayMode == '3') {
+              this.collapseItem(null, data.recID, data.fieldName);
             }
           }
 

@@ -10,9 +10,15 @@
       </button>
     </div>
   </div>
-  <!-- <ng-container [ngTemplateOutlet]="itemViewList"></ng-container> -->
+  <ng-container *ngFor="let item of listDatas">
+    <ng-container
+      [ngTemplateOutlet]="itemViewList"
+      [ngTemplateOutletContext]="{ $implicit: item }"
+    >
+    </ng-container>
+  </ng-container>
 </ng-container>
-<codx-views
+<!-- <codx-views
   #view
   [service]="service"
   [assemblyName]="assemblyName"
@@ -27,7 +33,7 @@
   [toolbarDisplay]="false"
   (selectedChange)="changeItemDetail($event)"
 >
-</codx-views>
+</codx-views> -->
 <ng-template #templateMore let-data>
   <codx-mfunc
     [dataItem]="data"
@@ -73,6 +79,7 @@
         </button>
       </div>
     </div>
+    
     <codx-mfunc
       [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
