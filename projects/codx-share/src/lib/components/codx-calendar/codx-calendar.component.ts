@@ -1,6 +1,7 @@
 declare var window: any;
 import { addClass } from '@syncfusion/ej2-base';
 import {
+  AfterViewInit,
   Component,
   ComponentRef,
   Injector,
@@ -28,7 +29,10 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
   styleUrls: ['./codx-calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCalendarComponent extends UIComponent {
+export class CodxCalendarComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
   @ViewChild('calendar_setting', { read: ViewContainerRef })
   calendar_setting!: ViewContainerRef;

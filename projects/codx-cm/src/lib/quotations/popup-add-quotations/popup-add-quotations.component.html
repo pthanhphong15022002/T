@@ -9,6 +9,52 @@
 >
 </codx-form>
 
+<!-- Start: Sub toolbar -->
+<ng-template #subToolbar>
+  <div class="d-flex align-items-center justify-content-between pt-2">
+    <div class="d-flex justify-content-start me-2">
+      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+        <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
+        <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
+      </div>
+      <div class="card-title">
+        <div class="d-flex flex-column">
+          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">
+            {{ headerText }}
+          </div>
+        </div>
+      </div>
+      <div class="ms-3 input-circle input-sm">
+        <div *ngIf="form?.formGroup">
+          <codx-input
+            [Group]="form.formGroup"
+            field="status"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end me-3">
+      <div class="ms-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          style="min-width: 60px"
+          (click)="onSave()"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- End: Sub toolbar -->
 <!-- Start: Body -->
 <ng-template #body>
   <div class="card-add mt-5" #cardbodyGeneral>
@@ -290,52 +336,7 @@
 </ng-template>
 <!--  End:thêm sản phẩm -->
 
-<!-- Start: Sub toolbar -->
-<ng-template #subToolbar>
-  <div class="d-flex align-items-center justify-content-between pt-2">
-    <div class="d-flex justify-content-start me-2">
-      <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
-        <i *ngIf="action == 'add'" class="icon-add_box icon-16"></i>
-        <i *ngIf="action == 'edit'" class="icon-edit_square icon-16"></i>
-      </div>
-      <div class="card-title">
-        <div class="d-flex flex-column">
-          <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">
-            {{ headerText }}
-          </div>
-        </div>
-      </div>
-      <div class="ms-3 input-circle input-sm">
-        <div *ngIf="form?.formGroup">
-          <codx-input
-            [Group]="form.formGroup"
-            field="status"
-            [formModel]="form.formModel"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end me-3">
-      <div class="ms-2">
-        <button
-          type="button"
-          class="btn btn-primary"
-          style="min-width: 60px"
-          (click)="onSave()"
-        >
-          <codx-label
-            class="fs-6 fw-normal"
-            fiedName="lblSave"
-            default="Lưu"
-          ></codx-label>
-        </button>
-      </div>
-    </div>
-  </div>
-</ng-template>
-<!-- End: Sub toolbar -->
+
 
 <!-- Start: More function -->
 <ng-template #morefunction let-data>

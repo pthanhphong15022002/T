@@ -36,6 +36,8 @@ import { CompletedComponent } from './incomming/completed/completed.component';
 import { RefuseComponent } from './incomming/refuse/refuse.component'
 import { UpdateVersionComponent } from './incomming/updateversion/updateversion.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { ReportComponent } from './incomming/report/report.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,14 @@ const routes: Routes = [
       {
         path: 'dispatches/:funcID',
         component: IncommingComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: ReportComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       /*  {
         path: 'dispatches/:funcID/detail',
@@ -106,6 +116,7 @@ const routes: Routes = [
     CompletedComponent,
     RefuseComponent,
     UpdateVersionComponent,
+    ReportComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -67,16 +67,21 @@ import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
 import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
 import { MeetingDetailComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/meeting-detail/meeting-detail.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      // {
-      //   path: 'tasks/:funcID',
-      //   component: CodxTasksComponent,
-      // },
+      {
+        path: 'report/:funcID',
+        component: ReportsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
