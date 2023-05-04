@@ -54,18 +54,19 @@ export class OkrTargetsComponent implements OnInit {
   @Input() groupModel: any;
   @Input() funcID: any;
   @Input() isHiddenChart: boolean;
-  @Input() okrFM:any;
-  @Input() okrVll:any;  
-  @Input() okrGrv:any;  
-  @Input() curOrgUnitID:any;// orgUnitID/EmployeesID của owner   
+  @Input() okrFM: any;
+  @Input() okrVll: any;
+  @Input() okrGrv: any;
+  @Input() curOrgUnitID: any; // orgUnitID/EmployeesID của owner
   @Input() isCollapsed = false;
-  @Input() listUM=[] ;  
-  @Input() currentUser ;
-  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =new EventEmitter();
+  @Input() listUM = [];
+  @Input() currentUser;
+  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> =
+    new EventEmitter();
   dtStatus = [];
   krTitle = '';
   obTitle = '';
-  selectOKR:any;
+  selectOKR: any;
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -146,17 +147,17 @@ export class OkrTargetsComponent implements OnInit {
     className: 'OKRBusiness',
     method: 'GetChartData1Async',
   };
-  svgOB='';
-  svgKR='';
-  svgSKR=''
+  svgOB = '';
+  svgKR = '';
+  svgSKR = '';
   Objs = [];
   Krs = [];
-  defaultOwner:string;
+  defaultOwner: string;
   progress: number = 0;
   obType = OMCONST.VLL.OKRType.Obj;
   krType = OMCONST.VLL.OKRType.KResult;
   skrType = OMCONST.VLL.OKRType.SKResult;
-  OM_UseSKR=false;
+  OM_UseSKR = false;
   tree: any;
   button: ButtonModel;
   isAfterRender: boolean;
@@ -172,16 +173,15 @@ export class OkrTargetsComponent implements OnInit {
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private detec: ChangeDetectorRef
-  ) {
-  }
+  ) {}
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
 
   ngOnInit(): void {
-    this.krFuncID=this.okrFM?.krFM?.funID;
-    this.skrFuncID=this.okrFM?.skrFM?.funID;
-    this.obFuncID=this.okrFM?.obFM?.funID;
+    this.krFuncID = this.okrFM?.krFM?.funID;
+    this.skrFuncID = this.okrFM?.skrFM?.funID;
+    this.obFuncID = this.okrFM?.obFM?.funID;
     this.createBase();
     this.getCacheData();
     this.getData();
@@ -210,26 +210,28 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   getCacheData() {
-    if(this.funcID== OMCONST.FUNCID.PERS){
-
-      this.codxOmService.getEmployeesByEmpID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
-        if (ownerInfo) {
-          this.defaultOwner=ownerInfo?.domainUser;
-        }
-      });
-    }
-    else{
-      this.codxOmService.getManagerByOrgUnitID(this.curOrgUnitID).subscribe((ownerInfo:any) => {
-        if (ownerInfo) {
-          this.defaultOwner=ownerInfo?.domainUser;
-        }
-      });
+    if (this.funcID == OMCONST.FUNCID.PERS) {
+      this.codxOmService
+        .getEmployeesByEmpID(this.curOrgUnitID)
+        .subscribe((ownerInfo: any) => {
+          if (ownerInfo) {
+            this.defaultOwner = ownerInfo?.domainUser;
+          }
+        });
+    } else {
+      this.codxOmService
+        .getManagerByOrgUnitID(this.curOrgUnitID)
+        .subscribe((ownerInfo: any) => {
+          if (ownerInfo) {
+            this.defaultOwner = ownerInfo?.domainUser;
+          }
+        });
     }
 
     this.cache.valueList('OM021').subscribe((item) => {
       if (item?.datas) this.vllRangeDate = item?.datas;
     });
-    
+
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -242,16 +244,15 @@ export class OkrTargetsComponent implements OnInit {
             settingVal != null &&
             (settingVal?.UseSubKR == '1' || settingVal?.UseSubKR == true)
           ) {
-            this.OM_UseSKR=true;
+            this.OM_UseSKR = true;
             this.button.items.push({
               text: 'Thêm kết quả phụ',
               id: 'btnAddSKR',
             });
           }
-          
         }
       });
-      
+
     this.cache.functionList(this.skrFuncID).subscribe((res) => {
       if (res) {
         this.skrTitle =
@@ -309,7 +310,7 @@ export class OkrTargetsComponent implements OnInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd': {
-        this.addOB(evt.text+ ' mục tiêu');
+        this.addOB(evt.text + ' mục tiêu');
         break;
       }
       case 'btnAddO':
@@ -327,7 +328,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
 
-  clickMF(e: any, ob: any) {    
+  clickMF(e: any, ob: any) {
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
@@ -363,7 +364,6 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   clickKRMF(e: any, kr: any, isSKR: boolean) {
-    
     let tempT = isSKR ? this.skrTitle : this.krTitle;
     let popupTitle = e.text + ' ' + tempT;
     var funcID = e?.functionID;
@@ -410,78 +410,153 @@ export class OkrTargetsComponent implements OnInit {
       //Giao việc
       case OMCONST.MFUNCID.SKRTask:
       case OMCONST.MFUNCID.KRTask: {
-        this.addTask(kr, e?.text,e?.data);
+        this.addTask(kr, e?.text, e?.data);
         break;
       }
     }
   }
   changeDataKRMF(evt: any, kr: any, isSKR: boolean) {
     if (evt != null && kr != null) {
-      if (isSKR) {
-
-      } else {
-
-      }
-      //Ẩn phân bổ MF
-      // evt.forEach((func) => {
-      //   if (
-      //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
-      //       func.functionID == OMCONST.MFUNCID.SKRDistribute) 
-      //   ) {
-      //     func.disabled = true;
-      //   }
-      // });
-
-      if(kr?.items==null || kr?.items.length==0){
-        
+      evt.forEach((func) => {
+        if (
+          //MF hệ thống
+          func.functionID == 'SYS003' ||
+          func.functionID == 'SYS004' ||
+          func.functionID == 'SYS007' ||
+          func.functionID == 'SYS002' || 
+          func.functionID == OMCONST.MFUNCID.KRDetail ||
+          func.functionID == OMCONST.MFUNCID.SKRDetail
+        ) {
+          func.disabled = true;
+        }
+      });
+      //Ẩn MF khi Plan chưa phát hành
+      if (this.dataOKRPlans?.status == '1') {
         evt.forEach((func) => {
           if (
-            func.functionID == OMCONST.MFUNCID.KREditSKRWeight 
+            //Check-In
+            func.functionID == OMCONST.MFUNCID.KRCheckIn ||
+            func.functionID == OMCONST.MFUNCID.SKRCheckIn
           ) {
             func.disabled = true;
           }
         });
       }
-
-      evt.forEach((func) => {
-        if (
-          (func.functionID == OMCONST.MFUNCID.KRCheckIn  ||
-            func.functionID == OMCONST.MFUNCID.SKRCheckIn) &&
-          kr.assignOKR != null &&
-          kr.assignOKR.length > 0
-        ) {
-          func.disabled = false;
-        }
-      });      
-    }
-  }
-  changeDataOBMF(evt: any, ob: any){
-    if(evt!=null && ob!=null){
-      
+      //Ẩn MF khi Plan chưa phát hành
+      else if (this.dataOKRPlans?.status == '2') {
+        evt.forEach((func) => {
+          if (
+            //MF hệ thống
+            func.functionID == OMCONST.MFUNCID.Copy ||
+            func.functionID == OMCONST.MFUNCID.Edit ||
+            func.functionID == OMCONST.MFUNCID.Delete ||
+            //Phân bổ
+            func.functionID == OMCONST.MFUNCID.KRDistribute ||
+            func.functionID == OMCONST.MFUNCID.SKRDistribute ||
+            //Phân công
+            func.functionID == OMCONST.MFUNCID.KRAssign ||
+            func.functionID == OMCONST.MFUNCID.SKRAssign ||
+            //Thay đổi trọng số
+            func.functionID == OMCONST.MFUNCID.KREditSKRWeight
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
       //Ẩn phân bổ MF
       // evt.forEach((func) => {
       //   if (
-      //     func.functionID == OMCONST.MFUNCID.OBDistribute 
+      //     (func.functionID == OMCONST.MFUNCID.KRDistribute  ||
+      //       func.functionID == OMCONST.MFUNCID.SKRDistribute)
+      //   ) {
+      //     func.disabled = true;
+      //   }
+      // });
+
+      //Ẩn sửa trọng số SKR nếu KR ko có SKR
+      if (kr?.items == null || kr?.items.length == 0) {
+        evt.forEach((func) => {
+          if (func.functionID == OMCONST.MFUNCID.KREditSKRWeight) {
+            func.disabled = true;
+          }
+        });
+      }
+
+      //Ẩn Check-In nếu KR/SKR đã phân công/phân bổ
+      evt.forEach((func) => {
+        if (
+          func.functionID == OMCONST.MFUNCID.KRCheckIn ||
+          func.functionID == OMCONST.MFUNCID.SKRCheckIn
+        ) {
+          if (
+            (kr?.items != null && kr?.items.length > 0) ||
+            kr?.hasAssign != null
+          ) {
+            func.disabled = true;
+          } else {
+            func.disabled = false;
+          }
+        }
+      });
+    }
+  }
+  changeDataOBMF(evt: any, ob: any) {
+    
+    if (evt != null && ob != null) {
+      evt.forEach((func) => {
+        if (
+          //MF hệ thống
+          func.functionID == 'SYS003' ||
+          func.functionID == 'SYS004' ||
+          func.functionID == 'SYS007' ||  
+          func.functionID == 'SYS002' ||         
+          func.functionID == OMCONST.MFUNCID.OBDetail
+        ) {
+          func.disabled = true;
+        }
+      });
+
+      //Ẩn MF khi Plan chưa phát hành
+      if (this.dataOKRPlans?.status == '1') {
+      }
+      //Ẩn MF khi Plan chưa phát hành
+      else if (this.dataOKRPlans?.status == '2') {
+        evt.forEach((func) => {
+          if (
+            //MF hệ thống
+            func.functionID == OMCONST.MFUNCID.Copy ||
+            func.functionID == OMCONST.MFUNCID.Edit ||
+            func.functionID == OMCONST.MFUNCID.Delete ||
+            //Phân bổ
+            func.functionID == OMCONST.MFUNCID.OBDistribute ||
+            //Phân công
+            func.functionID == OMCONST.MFUNCID.OBAssign ||
+            //Thay đổi trọng số
+            func.functionID == OMCONST.MFUNCID.OBEditKRWeight
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      //Ẩn phân bổ MF
+      // evt.forEach((func) => {
+      //   if (
+      //     func.functionID == OMCONST.MFUNCID.OBDistribute
       //   ) {
       //     func.disabled = true;
       //   }
       // });
 
       //Ẩn phân bổ trọng số nếu ko có kr
-      
-      if(ob?.items==null || ob?.items.length==0){
-        
+
+      if (ob?.items == null || ob?.items.length == 0) {
         evt.forEach((func) => {
-          if (
-            func.functionID == OMCONST.MFUNCID.OBEditKRWeight 
-          ) {
+          if (func.functionID == OMCONST.MFUNCID.OBEditKRWeight) {
             func.disabled = true;
           }
         });
       }
-      
     }
-    
   }
   selectionChange(parent) {
     if (parent.isItem) {
@@ -526,7 +601,7 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
-  clickTreeNode(evt:any, ){
+  clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
   }
@@ -541,65 +616,64 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   //Lấy UMName
-  getUMName(umid:string){
+  getUMName(umid: string) {
     let tmpUM = this.listUM.filter((obj) => {
       return obj.umid == umid;
     });
-    if(tmpUM!=null && tmpUM.length>0){
+    if (tmpUM != null && tmpUM.length > 0) {
       return tmpUM[0]?.umName;
-    }
-    else{
+    } else {
       return umid;
     }
   }
-  getRangeDate(rangeDate:string){ 
-    if(rangeDate!=null){
-      let listRange= rangeDate.split(';');  
-      let range='';
-      Array.from(listRange).forEach(item=>{
-        if(item!=null && item!=''){         
-          if(item=='Q1-Q4' || item=='1-12'){
-            range+= this.getPeriodName(item)+'; ';
-          }
-          else if(item.includes('-')){
-            let tmpRange= item.split('-');
-            if(tmpRange!=null && tmpRange.length==2){
-              range+= this.getPeriodName(tmpRange[0])+' - '+this.getPeriodName(tmpRange[1])+'; ';
+  getRangeDate(rangeDate: string) {
+    if (rangeDate != null) {
+      let listRange = rangeDate.split(';');
+      let range = '';
+      Array.from(listRange).forEach((item) => {
+        if (item != null && item != '') {
+          if (item == 'Q1-Q4' || item == '1-12') {
+            range += this.getPeriodName(item) + '; ';
+          } else if (item.includes('-')) {
+            let tmpRange = item.split('-');
+            if (tmpRange != null && tmpRange.length == 2) {
+              range +=
+                this.getPeriodName(tmpRange[0]) +
+                ' - ' +
+                this.getPeriodName(tmpRange[1]) +
+                '; ';
             }
+          } else {
+            range += this.getPeriodName(item) + '; ';
           }
-          else{
-            range+= this.getPeriodName(item)+'; ';
-          }
-        }        
+        }
       });
-      return range.trim().substring(0, range.length-2);
+      return range.trim().substring(0, range.length - 2);
     }
     return rangeDate;
   }
 
-  getPeriodName(period:string){
+  getPeriodName(period: string) {
     let periodName = this.vllRangeDate.filter((obj) => {
       return obj.value == period;
     });
-    if(periodName!=null && periodName.length>0){
+    if (periodName != null && periodName.length > 0) {
       return periodName[0]?.text;
-    }
-    else return period;
+    } else return period;
   }
 
   //Lọc OKR
-  filterOKR(okrType:string, listOKR:any[])
-  {
-    let listOKRFilter=[];
-    if(listOKR!=null && listOKR.length>0){
+  filterOKR(okrType: string, listOKR: any[]) {
+    let listOKRFilter = [];
+    if (listOKR != null && listOKR.length > 0) {
       let result = listOKR.filter((item) => item.okrType == okrType);
-      if(result!=null && result.length>0){
+      if (result != null && result.length > 0) {
         for (let okr of result) {
           listOKRFilter.push({
-            recID:okr?.recID,
-            okrName:okr?.okrName,
+            recID: okr?.recID,
+            okrName: okr?.okrName,
             meno: okr?.meno,
-          })
+          });
         }
         return listOKRFilter;
       }
@@ -630,7 +704,7 @@ export class OkrTargetsComponent implements OnInit {
               ob.items = [];
             }
             ob.items.push(kr);
-            ob.hasChildren= true;
+            ob.hasChildren = true;
             return;
           }
         }
@@ -640,13 +714,13 @@ export class OkrTargetsComponent implements OnInit {
             if (ob.items == null) {
               ob.items = [];
             }
-            for(let i=0;i<ob.items.length;i++){
+            for (let i = 0; i < ob.items.length; i++) {
               if (ob.items[i].recID == kr.recID) {
                 this.editRender(ob.items[i], kr);
                 return;
               }
             }
-            // đổi mục tiêu cho kr            
+            // đổi mục tiêu cho kr
           }
         }
       }
@@ -657,15 +731,15 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.target = newOKR?.target;
     oldOKR.owner = newOKR?.owner;
     oldOKR.umid = newOKR?.umid;
-    oldOKR.umName=this.getUMName(newOKR?.umid);
+    oldOKR.umName = this.getUMName(newOKR?.umid);
     oldOKR.confidence = newOKR?.confidence;
     oldOKR.category = newOKR?.category;
     oldOKR.actual = newOKR?.actual;
     oldOKR.current = newOKR?.current;
     oldOKR.rangeDate = newOKR?.rangeDate;
     oldOKR.rangeDateText = this.getRangeDate(newOKR?.rangeDate);
-    if(newOKR?.okrTasks !=null && newOKR?.okrTasks.length>0){
-      oldOKR.okrTasks= newOKR?.okrTasks;
+    if (newOKR?.okrTasks != null && newOKR?.okrTasks.length > 0) {
+      oldOKR.okrTasks = newOKR?.okrTasks;
     }
   }
   renderSKR(skr: any, isAdd: boolean) {
@@ -679,7 +753,7 @@ export class OkrTargetsComponent implements OnInit {
                   kr.items = [];
                 }
                 kr.items.push(skr);
-                kr.hasChildren= true;
+                kr.hasChildren = true;
               }
             }
           }
@@ -736,52 +810,49 @@ export class OkrTargetsComponent implements OnInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
-  addTask(kr:any,popupTitle:string,mfunc:string){
-
+  addTask(kr: any, popupTitle: string, mfunc: string) {
     var task = new TM_Tasks();
-        task.refID = kr?.recID;
-        task.sessionID=kr?.transID;
-        task.refType = 'OM_OKRs';
-        task.taskName = kr.okrName;
+    task.refID = kr?.recID;
+    task.sessionID = kr?.transID;
+    task.refType = 'OM_OKRs';
+    task.taskName = kr.okrName;
 
-        let option = new SidebarModel();
-        let assignModel: AssignTaskModel = {
-          vllRole: 'TM002',
-          title: popupTitle,//val?.data.customName,
-          vllShare: 'TM003',
-          task: task,
-          referedData: kr,
-          referedFunction: mfunc,
-        };
-        //option.DataService = this.view.dataService;
-        option.FormModel = this.okrFM?.krFM;
-        option.Width = '550px';
-        let dialog = this.callfunc.openSide(
-          AssignInfoComponent,
-          assignModel,
-          option
-        );
+    let option = new SidebarModel();
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM002',
+      title: popupTitle, //val?.data.customName,
+      vllShare: 'TM003',
+      task: task,
+      referedData: kr,
+      referedFunction: mfunc,
+    };
+    //option.DataService = this.view.dataService;
+    option.FormModel = this.okrFM?.krFM;
+    option.Width = '550px';
+    let dialog = this.callfunc.openSide(
+      AssignInfoComponent,
+      assignModel,
+      option
+    );
 
-        dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            if(kr.okrTasks==null){
-              kr.okrTasks=[];
-            }
-            kr.okrTasks.push(task);
-            
-            if(kr.okrType==this.krType){
-              this.renderKR(kr,false);
-            }
-            else if(kr.okrType==this.skrType){                  
-              this.renderSKR(kr,false);
-            }
-          }
-        });
-    
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        if (kr.okrTasks == null) {
+          kr.okrTasks = [];
+        }
+        kr.okrTasks.push(task);
+
+        if (kr.okrType == this.krType) {
+          this.renderKR(kr, false);
+        } else if (kr.okrType == this.skrType) {
+          this.renderSKR(kr, false);
+        }
+      }
+    });
   }
   editOKRWeight(ob: any, popupTitle: any) {
-    if(ob.items==null || ob.items.length==0 ){
-      this.notificationsService.notify('Mục tiêu chưa có kết quả chính','3');
+    if (ob.items == null || ob.items.length == 0) {
+      this.notificationsService.notify('Mục tiêu chưa có kết quả chính', '3');
       return;
     }
     let subTitle = ob?.okrName;
@@ -793,14 +864,14 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [ob, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle,this.okrVll],
+      [ob, OMCONST.VLL.OKRType.KResult, popupTitle, subTitle, this.okrVll],
       '',
       dModel
     );
   }
   editSKRWeight(kr: any, popupTitle: any) {
-    if(kr.items==null || kr.items.length==0 ){
-      this.notificationsService.notify('Kết quả chưa có kết quả phụ','3');
+    if (kr.items == null || kr.items.length == 0) {
+      this.notificationsService.notify('Kết quả chưa có kết quả phụ', '3');
       return;
     }
     let subTitle = kr?.okrName;
@@ -812,7 +883,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, OMCONST.VLL.OKRType.SKResult, popupTitle, subTitle,this.okrVll],
+      [kr, OMCONST.VLL.OKRType.SKResult, popupTitle, subTitle, this.okrVll],
       '',
       dModel
     );
@@ -848,14 +919,13 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       '',
-      [kr, popupTitle, { ...this.groupModel?.checkInsModel },this.okrFM]
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel }, this.okrFM]
     );
     dialogCheckIn.closed.subscribe((res) => {
-      if (res?.event && res?.event.length !=null) {      
-        this.isCollapsed==false;  
+      if (res?.event && res?.event.length != null) {
+        this.isCollapsed == false;
         this.getOKRPlanForComponent.emit(this.dataOKRPlans);
-        if(res?.event.length>0){
-
+        if (res?.event.length > 0) {
           this.caculatorPlanInBackground(res?.event);
         }
       }
@@ -866,23 +936,28 @@ export class OkrTargetsComponent implements OnInit {
       this.codxOmService
         .calculatorProgressOfPlan(listPlanRecID)
         .subscribe((listPlan: any) => {
-
-          if (listPlan != null) {            
+          if (listPlan != null) {
             this.caculatorPlanInBackground(listPlan);
           }
-
         });
     }
   }
   //OBject
   addOB(popupTitle: any) {
     let option = new SidebarModel();
-    option.FormModel = this.okrFM?.obFM;    
-    let baseModel= {...this.groupModel};
-    baseModel.obModel.owner=this.defaultOwner;
+    option.FormModel = this.okrFM?.obFM;
+    let baseModel = { ...this.groupModel };
+    baseModel.obModel.owner = this.defaultOwner;
     let dialogOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, this.dataOKRPlans,baseModel],
+      [
+        this.funcID,
+        OMCONST.MFUNCID.Add,
+        popupTitle,
+        null,
+        this.dataOKRPlans,
+        baseModel,
+      ],
       option
     );
     dialogOB.closed.subscribe((res) => {
@@ -895,7 +970,14 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogEditOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, ob, this.dataOKRPlans,this.groupModel],
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.Edit,
+        popupTitle,
+        ob,
+        this.dataOKRPlans,
+        this.groupModel,
+      ],
       option
     );
     dialogEditOB.closed.subscribe((res) => {
@@ -909,7 +991,14 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogCopyOB = this.callfunc.openSide(
       PopupAddOBComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, ob, this.dataOKRPlans,this.groupModel],
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.Copy,
+        popupTitle,
+        ob,
+        this.dataOKRPlans,
+        this.groupModel,
+      ],
       option
     );
     dialogCopyOB.closed.subscribe((res) => {
@@ -935,13 +1024,21 @@ export class OkrTargetsComponent implements OnInit {
   addKR(popupTitle: any, isSubKR = false) {
     let listParent = this.filterOKR(this.obType, this.dataOKR);
     let option = new SidebarModel();
-    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;    
-    let baseModel= {...this.groupModel};
-    baseModel.krModel.owner=this.defaultOwner;
-    baseModel.skrModel.owner=this.defaultOwner;
+    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;
+    let baseModel = { ...this.groupModel };
+    baseModel.krModel.owner = this.defaultOwner;
+    baseModel.skrModel.owner = this.defaultOwner;
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.funcID, OMCONST.MFUNCID.Add, popupTitle, null, isSubKR,baseModel,this.dataOKRPlans],
+      [
+        this.funcID,
+        OMCONST.MFUNCID.Add,
+        popupTitle,
+        null,
+        isSubKR,
+        baseModel,
+        this.dataOKRPlans,
+      ],
       option
     );
     dialogKR.closed.subscribe((res) => {
@@ -955,11 +1052,19 @@ export class OkrTargetsComponent implements OnInit {
 
   editKR(kr: any, popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-    option.FormModel = isSubKR ?this.okrFM?.skrFM : this.okrFM?.krFM;    
+    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;
 
     let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Edit, popupTitle, kr, isSubKR,this.groupModel,this.dataOKRPlans],
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.Edit,
+        popupTitle,
+        kr,
+        isSubKR,
+        this.groupModel,
+        this.dataOKRPlans,
+      ],
       option
     );
     dialogEditKR.closed.subscribe((res) => {
@@ -973,11 +1078,19 @@ export class OkrTargetsComponent implements OnInit {
 
   copyKR(kr: any, popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
-    option.FormModel = isSubKR ?this.okrFM?.skrFM : this.okrFM?.krFM;  
+    option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;
 
     let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [this.krFuncID, OMCONST.MFUNCID.Copy, popupTitle, kr, isSubKR,this.groupModel,this.dataOKRPlans],
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.Copy,
+        popupTitle,
+        kr,
+        isSubKR,
+        this.groupModel,
+        this.dataOKRPlans,
+      ],
       option
     );
     dialogCopyKR.closed.subscribe((res) => {
@@ -1017,7 +1130,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obj, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
+      [obj, popupTitle, this.okrFM, this.okrVll, this.okrGrv],
       '',
       dModel
     );
@@ -1025,7 +1138,7 @@ export class OkrTargetsComponent implements OnInit {
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
     let dModel = new DialogModel();
-    popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
+    popupTitle = popupTitle != null ? popupTitle : 'Xem chi tiết';
     dModel.IsFull = true;
     dModel.FormModel = this.okrFM?.krFM;
     let dialogShowKR = this.callfunc.openForm(
@@ -1034,7 +1147,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
+      [kr, popupTitle, this.okrFM, this.okrVll, this.okrGrv],
       '',
       dModel
     );
@@ -1048,7 +1161,14 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [okr.okrName, okr.recID, okr.okrType, this.funcID, title,this.currentUser],
+      [
+        okr.okrName,
+        okr.recID,
+        okr.okrType,
+        this.funcID,
+        title,
+        this.currentUser,
+      ],
       '',
       dModel
     );
@@ -1074,19 +1194,24 @@ export class OkrTargetsComponent implements OnInit {
     );
     dialogAssgOKR.closed.subscribe((res) => {
       if (res?.event) {
-        this.isCollapsed==false; 
+        this.isCollapsed == false;
         this.getOKRPlanForComponent.emit(res?.event);
       }
     });
   }
-  
-  showTasks(evt:any,data:any){    
+
+  showTasks(evt: any, data: any) {
     evt.stopPropagation();
     evt.preventDefault();
-    if(evt !=null && data!=null){
-      this.selectOKR=data;
-      let dialogShowTask = this.callfunc.openForm(this.showTask, '', 1280, 720, null);
+    if (evt != null && data != null) {
+      this.selectOKR = data;
+      let dialogShowTask = this.callfunc.openForm(
+        this.showTask,
+        '',
+        1280,
+        720,
+        null
+      );
     }
   }
-  
 }
