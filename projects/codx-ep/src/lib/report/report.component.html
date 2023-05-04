@@ -6,8 +6,10 @@
   [selectedFirst]="false"
   [autoLoad]="false"
   (onActions)="onActions($event)"
-  [toolbarDisplay]="false"
+  [toolbarDisplay]="true"
+  [button]="button"
   (viewChanged)="viewChanged($event)"
+  (buttonClick)="buttonClick($event)"
 >
 </codx-views>
 </div>

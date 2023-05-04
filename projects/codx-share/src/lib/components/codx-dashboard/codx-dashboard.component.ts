@@ -90,6 +90,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() panels: any = [];
   @Input() datas: any = [];
 
+  ngCmp:any = global;
   dialog: any;
   isEditMode: boolean = true;
 
@@ -252,7 +253,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
               let component = item.getElementsByTagName('codx-chart')[0];
               if (component) {
                 let newWindow = global as any;
-                let instance = newWindow.ng.getComponent(
+                let instance = this.ngCmp.ng.getComponent(
                   component
                 ) as CodxChartsComponent;
                 instance.dataSource = this.dataSource.slice();
@@ -543,7 +544,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
           let newWindow = global as any;
-          let instance = newWindow.ng.getComponent(
+          let instance = this.ngCmp.ng.getComponent(
             component
           ) as TreeMapComponent;
           instance.width = '80%';
@@ -556,7 +557,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           args.element.getElementsByTagName('ejs-circulargauge')[0];
         if (component) {
           let newWindow = global as any;
-          let instance = newWindow.ng.getComponent(
+          let instance = this.ngCmp.ng.getComponent(
             component
           ) as CircularGaugeComponent;
           instance.width = '80%';
@@ -579,7 +580,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
         let newWindow = global as any;
-        this.objDashboard = newWindow.ng.getComponent(
+        this.objDashboard = this.ngCmp.ng.getComponent(
           component
         ) as DashboardLayoutComponent;
       }
@@ -696,7 +697,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       let component = elePanel?.getElementsByTagName('layout-panel')[0];
       if (component) {
         let newWindow = global as any;
-        let instance = newWindow.ng.getComponent(
+        let instance = this.ngCmp.ng.getComponent(
           component
         ) as LayoutPanelComponent;
         instance.isChart = true;
@@ -771,7 +772,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
       let newWindow = global as any;
-      let instance = newWindow.ng.getComponent(
+      let instance = this.ngCmp.ng.getComponent(
         component
       ) as LayoutPanelComponent;
       instance.isChart = true;
@@ -1005,7 +1006,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     let component = elePanel?.getElementsByTagName('layout-panel')[0];
     if (component) {
       let newWindow = global as any;
-      let instance = newWindow.ng.getComponent(
+      let instance = this.ngCmp.ng.getComponent(
         component
       ) as LayoutPanelComponent;
       instance.isChart = true;
