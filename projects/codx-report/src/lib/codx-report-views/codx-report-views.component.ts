@@ -1,7 +1,7 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Route } from '@angular/router';
-import { AuthStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'codx-report-views',
@@ -16,6 +16,9 @@ export class CodxReportViewsComponent   extends UIComponent implements OnInit, A
   views: ViewModel[];
   viewType = ViewType;
   funcID:any;
+  button: ButtonModel = {
+    id:'btnAdd'
+  }
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
