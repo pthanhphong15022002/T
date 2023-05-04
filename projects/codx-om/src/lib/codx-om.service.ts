@@ -71,7 +71,6 @@ export class CodxOmService {
   //     .gridViewSetup(formName, gridView)
   //     .subscribe((gv: any) => {
   //       if (gv) {
-  //         debugger;
   //         var gridview = Util.camelizekeyObj(gv);
   //         var arrgv = Object.values(gridview) as any[];
 
@@ -79,7 +78,6 @@ export class CodxOmService {
   //         for (const key in gridview) {
   //           const element = gridview[key];
   //           var keytmp = Util.camelize(gridview[element].fieldName);
-  //           console.log(gridview[element].fieldName,":", keytmp);
   //           var value = null;
   //           var type = element.dataType.toLowerCase();
   //           if (type === 'bool') value = false;
@@ -556,16 +554,14 @@ export class CodxOmService {
 
   distributeOKR(
     recID: string,
-    distributeToType: string,
     listDistribute: any,
-    isAdd: boolean
   ) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'DistributeOKRAsync',
-      [recID, distributeToType, listDistribute, isAdd]
+      [recID, listDistribute]
     );
   }
   assignmentOKR( recID: string, distributeToType: string, okrAssign: any, isUpdateAll: boolean,funcID:string ) {
@@ -689,12 +685,12 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRDistributed(recID: string) {    
+  getOKRHavedLinks(recID: string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetOKRDistributedAsync',
+      'GetOKRHavedLinksAsync',
       [recID]
     );
   }

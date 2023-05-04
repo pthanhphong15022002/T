@@ -25,6 +25,9 @@
   padding: 30px 20rem 0 20rem !important;
 }
 //
+.h-100px{
+  height: 100px !important;
+}
 .w-50 {
   width: 50%;
 }
@@ -174,4 +177,7 @@
 }
 .e-tab-header {
   z-index: 1;
+}
+.hover-primary:hover{
+  color: var(--text-primary);
 }

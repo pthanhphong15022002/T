@@ -12,6 +12,7 @@ export class PopupAddDealComponent implements OnInit {
   dialog: DialogRef;
   //type any
   formModel: any;
+  addFieldsControl: any = '1';
   // type string
   titleAction: string = '';
   action: string = '';
@@ -28,7 +29,6 @@ export class PopupAddDealComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = dialog.formModel;
     this.titleAction = dt?.data?.titleAction;
-    debugger;
   }
 
   ngOnInit(): void {}

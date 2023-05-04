@@ -1,7 +1,7 @@
 :root {
   --bs-body-line-height: 1.4;
   --fs-7: 12px;
-  --fs-6: 13.425px;
+  --fs-6: 13.475px;
   --white: #ffffff;
   --black: #0f0f0f;
   --text-dark: #1d1f1f;
@@ -241,9 +241,6 @@
     color: var(--text-body);
     --title-color: var(--primary);
 
-    .fs-5 {
-      font-size: 1.1rem !important;
-    }
 
     background-color: var(--bg-body);
   }
@@ -273,13 +270,13 @@
       .aside-primary {
         background-color: var(--primary-darker);
 
-        .menu-link {
-          &.active {
-            .menu-icon {
-              background-color: var(--primary);
-            }
-          }
-        }
+        // .menu-link {
+        //   &.active {
+        //     .menu-icon {
+        //       background-color: var(--primary);
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -346,10 +343,19 @@
     background-color: var(--primary-lightest);
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active .menu-title {
-    color: var(--menu-acitve);
+  .menu-state-title-primary .menu-item .menu-link.active {
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
+  .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
+    color: var(--menu-active)!important;
+  }
+
+  .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
+    color: var(--menu-active)!important;
+    color:aqua!important;
+  }
   .btn.btn-primary {
     border-color: var(--primary-dark) !important;
     background-color: var(--primary-dark) !important;
@@ -429,9 +435,6 @@
     background-color: var(--primary-lighter);
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    color: var(--primary-light) !important;
-  }
 
   .menu-title-light .menu-item .menu-link:hover .menu-title {
     color: var(--primary-lighter) !important;
@@ -607,10 +610,6 @@
 
   ///////////////
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    transition: color 0.2s ease, background-color 0.2s ease;
-    color: var(--primary-light) !important;
-  }
 
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {

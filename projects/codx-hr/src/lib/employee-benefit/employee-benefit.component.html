@@ -16,29 +16,31 @@
 </codx-views>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-50 text-dark p-3 fw-bold fw-500">
+      <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+    </div>
+    <div class="w-25 text-dark p-3 fw-bold fw-500">
+      <codx-label
+        name="lblJobSalaries"
+        [default]="'Loại phụ cấp | Số tiền | Hiệu lực'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark p-3 fw-bold fw-500">
+      <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+    </div>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblJobSalaries"
-      [default]="'Loại phụ cấp | Số tiền | Hiệu lực'"
-    ></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
     ></codx-label>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center min-h-100px">
-    <div class="w-25">
+  <div class="d-flex align-items-center p-3 border-bottom w-100">
+    <div class="w-50 p-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -90,7 +92,7 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-25 p-3">
       <div
         class="d-flex flex-column"
         [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
@@ -144,7 +146,7 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-25 p-3">
       <div class="d-flex flex-column">
         <div class="text-gray-700 d-flex flex-row">
           <span class="icon-event_notes icon-15 me-1"></span>
@@ -187,6 +189,7 @@
             [showText]="true"
             [showIcon]="false"
             [showBgColor]="true"
+            ngClass="badge badge-sm"
           >
           </codx-vll>
         </div>
@@ -208,7 +211,7 @@
       >
       </codx-attachment> -->
     </div>
-    <div class="w-25">
+    <!-- <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -218,7 +221,7 @@
         [showBgColor]="true"
       >
       </codx-vll>
-    </div>
+    </div> -->
 
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">

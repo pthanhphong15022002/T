@@ -27,11 +27,13 @@ export class InputNumberDurationComponent
   @Input() dayMax: any;
   @Input() dayOld: any;
   @Input() textDay: any;
+  @Input() noteDay: any;
 
   // for hour
   @Input() hourMax: any;
   @Input() hourOld: any;
   @Input() textHour: any;
+  @Input() noteHour: any;
 
   @Output() eventInput = new EventEmitter<any>();
 
@@ -60,6 +62,7 @@ export class InputNumberDurationComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
+
   }
   ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,6 +80,8 @@ export class InputNumberDurationComponent
       this.hourOld = changes['hourOld'].currentValue;
       this.hourValue =  this.isTurnInput(this.typeHour,this.hourOld);
     }
+    this.noteDay =  this.formatNote(this.noteDay,this.maxDayDefault);
+    this.noteHour =  this.formatNote(this.noteHour,this.maxHourDefault);
   }
   onInit() {}
   checkInputDayValue($event: any) {
@@ -165,5 +170,9 @@ export class InputNumberDurationComponent
       this.isView = false;
     }
     return value;
+  }
+
+  formatNote(note,maxValue){
+    return (note ?? '').replace('{0}', maxValue);
   }
 }

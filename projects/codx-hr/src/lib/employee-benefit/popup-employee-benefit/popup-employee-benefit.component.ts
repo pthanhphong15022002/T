@@ -15,10 +15,12 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-popup-employee-benefit',
   templateUrl: './popup-employee-benefit.component.html',
-  styleUrls: ['./popup-employee-benefit.component.css']
+  styleUrls: ['./popup-employee-benefit.component.css'],
 })
-
-export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit {
+export class PopupEmployeeBenefitComponent
+  extends UIComponent
+  implements OnInit
+{
   console = console;
   formModel: FormModel;
   formGroup: FormGroup;
@@ -57,9 +59,7 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
     this.headerText = data?.data?.headerText;
     this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     this.actionType = data?.data?.actionType;
-    this.currentEJobSalaries = JSON.parse(
-      JSON.stringify(data?.data?.dataObj)
-    );
+    this.currentEJobSalaries = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
   ngAfterViewInit() {}
@@ -80,7 +80,10 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
               .subscribe((res: any) => {
                 if (res) {
                   this.currentEJobSalaries = res?.data;
-                  if (this.currentEJobSalaries.effectedDate == '0001-01-01T00:00:00') {
+                  if (
+                    this.currentEJobSalaries.effectedDate ==
+                    '0001-01-01T00:00:00'
+                  ) {
                     this.currentEJobSalaries.effectedDate = null;
                   }
                   this.currentEJobSalaries.employeeID = this.employeeId;
@@ -120,30 +123,34 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
     this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') this.employeeObj = emp[0][0];
-        if (fieldName === 'signerID') 
-        {
-          if (emp[0][0]?.positionID) {
-            this.hrSevice
-              .getPositionByID(emp[0][0]?.positionID)
-              .subscribe((res) => {
-                if (res) {
-                  this.currentEJobSalaries.signerPosition = res.positionName;
-                  this.formGroup.patchValue({
-                    signerPosition: this.currentEJobSalaries.signerPosition,
-                  });
-                  this.cr.detectChanges();
-                }
-              });
-          } else {
-            this.currentEJobSalaries.signerPosition = null;
-            this.formGroup.patchValue({
-              signerPosition: this.currentEJobSalaries.signerPosition,
-            });
-          }
+        if (fieldName === 'SignerID') {
+          this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+            if (emp[1] > 0) {
+              let positionID = emp[0][0].positionID;
+
+              if (positionID) {
+                this.hrSevice.getPositionByID(positionID).subscribe((res) => {
+                  if (res) {
+                    this.currentEJobSalaries.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.currentEJobSalaries.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+              } else {
+                this.currentEJobSalaries.signerPosition = null;
+                this.formGroup.patchValue({
+                  signerPosition: this.currentEJobSalaries.signerPosition,
+                });
+              }
+              this.df.detectChanges();
+            }
+          }); 
         }
-        }
-        this.cr.detectChanges();
-      })
+      }
+      this.cr.detectChanges();
+    });
   }
 
   onInit(): void {
@@ -158,40 +165,30 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
       this.initForm();
     }
 
-     //Load data field gender from database
-     this.cache
-     .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-     .subscribe((res) => {
-       this.genderGrvSetup = res?.Gender;
-     });
+    //Load data field gender from database
+    this.cache
+      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+      .subscribe((res) => {
+        this.genderGrvSetup = res?.Gender;
+      });
 
-     //Update Employee Information when CRUD then render
-     if (this.employeeId != null) this.getEmployeeInfoById(this.employeeId, 'employeeID');
+    //Update Employee Information when CRUD then render
+    if (this.employeeId != null)
+      this.getEmployeeInfoById(this.employeeId, 'employeeID');
   }
 
-  handleSelectEmp(evt){
-    if (evt.data === '') {
-      this.employeeObj = '';
-      this.genderGrvSetup = '';
-    }
-    if(evt.data != null){
-      this.employeeId = evt.data
-      let empRequest = new DataRequest();
-      empRequest.entityName = 'HR_Employees';
-      empRequest.dataValues = this.employeeId;
-      empRequest.predicates = 'EmployeeID=@0';
-      empRequest.pageLoading = false;
-      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-        if (emp[1] > 0) {
-          this.employeeObj = emp[0][0]
-          this.df.detectChanges();
-        }
-      });
-    }
+  handleSelectEmp(evt) {
+    console.log(evt);
+    if (!!evt.data) {
+      this.employeeId = evt.data;
+      this.getEmployeeInfoById(this.employeeId, evt.field);
+    } else {
+      delete this.employeeObj;
+    } 
   }
 
   //Render Signer Position follow Signer ID
-  
+
   // setExpiredDate(month) {
   //   if (this.data.effectedDate) {
   //     let date = new Date(this.data.effectedDate);
@@ -202,29 +199,20 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
   // }
 
   valueChange(event) {
+    if (!event.data) {
+      this.currentEJobSalaries.signerPosition = '';
+      this.formGroup.patchValue({
+        signerPosition: '',
+      });
+    }
+
     if (event?.field && event?.component && event?.data != '') {
-      switch (event.field) { 
+      switch (event.field) {
         case 'SignerID': {
-          let employee = event?.component?.itemsSelected[0];
+          let employee = event.data;
+
           if (employee) {
-            if (employee.PositionID) {
-              this.hrSevice
-                .getPositionByID(employee.PositionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.currentEJobSalaries.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.currentEJobSalaries.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.currentEJobSalaries.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.currentEJobSalaries.signerPosition,
-              });
-            }
+            this.getEmployeeInfoById(employee, 'SignerID');
           }
           break;
         }
@@ -250,31 +238,23 @@ export class PopupEmployeeBenefitComponent extends UIComponent implements OnInit
     this.currentEJobSalaries.employeeID = this.employeeId;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrSevice
-        .AddEBenefit(this.currentEJobSalaries)
-        .subscribe((p) => {
-          console.log(p)
-          if (p != null) { 
-            this.notify.notifyCode('SYS006'); 
-            this.dialog && this.dialog.close(p);
-            p[0].emp = this.employeeObj;
-          } else {
-            this.notify.notifyCode('SYS023');
-          }
-        });
+      this.hrSevice.AddEBenefit(this.currentEJobSalaries).subscribe((p) => {
+        console.log(p);
+        if (p != null) {
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(p);
+          p[0].emp = this.employeeObj;
+        } else {
+          this.notify.notifyCode('SYS023');
+        }
+      });
     } else {
-      this.hrSevice
-        .EditEBenefit(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007'); 
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
-        });
+      this.hrSevice.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+        if (p != null) {
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS021');
+      });
     }
   }
 }
-
-
-
-

@@ -67,11 +67,11 @@
         </codx-img>
         <codx-vll
           class="badge badge-sm"
-          [name]="'HR001'"
+          [name]="genderGrvSetup?.referedValue"
           [value]="employeeObj?.gender"
-          [showText]="false"
-          [showIcon]="true"
-          [showBgColor]="true"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="false"
         >
         </codx-vll>
       </div>
@@ -101,6 +101,7 @@
     <div class="col-6">
       <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
       <codx-input
+        [disabled]="'true'"
         field="contractNo"
         [formModel]="formModel"
         [Group]="formGroup"

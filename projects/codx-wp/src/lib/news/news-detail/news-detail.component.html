@@ -98,7 +98,7 @@
                             </ng-contianer>
                             <ng-template #news>
                                 <div class="py-3" [innerHTML]="data.subContent"></div>
-                                <div class="py-3 news-detail-content" [innerHTML]="data?.contentHtml"></div>
+                                <div class="py-3 news-detail-content" [innerHTML]="data.contents | safe:'html'"></div>
                             </ng-template>
 
                         </div>

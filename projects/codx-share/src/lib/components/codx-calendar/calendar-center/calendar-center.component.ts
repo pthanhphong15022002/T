@@ -1,14 +1,12 @@
 import {
   Component,
-  OnInit,
   Injector,
   AfterViewInit,
   ViewChild,
   TemplateRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import moment from 'moment';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
@@ -18,14 +16,11 @@ import { CodxShareService } from '../../../codx-share.service';
 })
 export class CalendarCenterComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements AfterViewInit
 {
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-  @ViewChild('view') viewOrg!: ViewsComponent;
-
+  @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
   @Input() resources!: any;
   @Input() resourceModel!: any;
 
@@ -37,7 +32,6 @@ export class CalendarCenterComponent
     endTime: { name: 'endDate' },
     status: 'transType',
   };
-  resourceID: any;
   startTime: any;
   month: any;
   day: any;
@@ -45,6 +39,7 @@ export class CalendarCenterComponent
     id: 'btnAdd',
   };
   vllPriority = 'TM005';
+  calendar_center: any;
 
   constructor(injector: Injector, private shareService: CodxShareService) {
     super(injector);
@@ -60,12 +55,11 @@ export class CalendarCenterComponent
         sameData: false,
         model: {
           eventModel: this.fields,
-          template3: this.cellTemplate,
-          template: this.cardTemplate,
           resources: this.resources,
           resourceModel: this.resourceModel,
-          template8: this.contentTmp,
+          template: this.eventTemplate,
           template6: this.headerTemp,
+          template8: this.contentTmp,
         },
       },
     ];
@@ -91,6 +85,31 @@ export class CalendarCenterComponent
     }
   }
 
+  updateData(dataSource: any) {
+    let myInterval = setInterval(() => {
+      this.calendar_center = (this.view.currentView as any).schedule;
+      if (this.calendar_center) {
+        clearInterval(myInterval);
+        this.calendar_center.dataSource = dataSource;
+        this.calendar_center.setEventSettings();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  // changeNewMonth(date: any) {
+  //   let myInterval = setInterval(() => {
+  //     this.calendar_center = (this.view.currentView as any).schedule;
+  //     if (this.calendar_center) {
+  //       clearInterval(myInterval);
+  //       debugger;
+  //       this.calendar_center.selectedDate = new Date(date);
+  //       this.calendar_center.isNavigateInside = true;
+  //       this.detectorRef.detectChanges();
+  //     }
+  //   });
+  // }
+
   //region EP
   showHour(date: any) {
     let temp = new Date(date);
@@ -101,18 +120,15 @@ export class CalendarCenterComponent
     return time;
   }
 
-  sameDayCheck(sDate: any, eDate: any) {
-    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
-  }
   //endRegion EP
 
   //region CO
   getDate(data) {
     if (data.startDate) {
-      var date = new Date(data.startDate);
+      let date = new Date(data.startDate);
       this.month = this.addZero(date.getMonth() + 1);
       this.day = this.addZero(date.getDate());
-      var endDate = new Date(data.endDate);
+      let endDate = new Date(data.endDate);
       let start =
         this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
       let end =
@@ -132,20 +148,12 @@ export class CalendarCenterComponent
   }
 
   getResourceID(data) {
-    var resources = [];
-    this.resourceID = '';
-    resources = data.resources;
-    var id = '';
-    if (resources != null) {
-      resources.forEach((e) => {
-        id += e.resourceID + ';';
-      });
-    }
-
-    if (id != '') {
-      this.resourceID = id.substring(0, id.length - 1);
-    }
-    return this.resourceID;
+    const permissions = data.permissions;
+    const permisstionIDs = permissions
+      ? permissions.map((r) => r.objectID)
+      : [];
+    const res = permisstionIDs.join(';');
+    return res;
   }
   //endRegion CO
 }

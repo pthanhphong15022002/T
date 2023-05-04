@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeJobsalaryComponent } from './popup-employee-jobsalary/popup-employee-jobsalary.component';
+import { CodxEpService } from 'projects/codx-ep/src/public-api';
 
 @Component({
   selector: 'lib-employee-job-salary',
@@ -57,7 +58,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   editStatusObj: any;
   formGroup: FormGroup;
   dialogEditStatus: any;
-  dataCategory;
+  processID;
   cmtStatus: string = '';
   genderGrvSetup: any;
 
@@ -70,61 +71,104 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro04AU5';
   actionUpdateClosed = 'HRTPro04AU9';
 
+  //Fix change when change codx-view
+  popupTitle: any;
+  columnGrids: any;
+
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    //Fix change when change codx-view
+    private codxEpService: CodxEpService,
   ) {
     super(inject);
-    // this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.popupTitle = res.defaultName.toString();
+      }
+    });
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.eBasicSalariesFormModel = res;
+      }
+    });
   }
 
   onInit(): void {
-    //Load headertext from grid view setup database
-    this.cache
-      .gridViewSetup('EJobSalaries', 'grvEJobSalaries')
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetup = Util.camelizekeyObj(res);
-        }
-      });
+    this.initForm()
+  }
 
-    //Load data field gender from database
-    this.cache
-      .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-      .subscribe((res) => {
-        this.genderGrvSetup = res?.Gender;
-      });
-
-    if (!this.funcID) {
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+  initForm() {
+  //Load headertext from grid view setup database
+  this.cache
+  .gridViewSetup('EJobSalaries', 'grvEJobSalaries')
+  .subscribe((res) => {
+    if (res) {
+      this.grvSetup = Util.camelizekeyObj(res);
     }
+  });
+
+//Load data field gender from database
+this.cache
+  .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
+  .subscribe((res) => {
+    this.genderGrvSetup = res?.Gender;
+  }); 
+  }
+
+  //Fix change when change codx-view
+  viewChanged(evt: any) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.popupTitle = res.defaultName.toString();
+      }
+    });
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.eBasicSalariesFormModel = res;
+      }
+    });
+  }
+
+  //Fix change when change codx-view
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
+      this.cache
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.views = [
+            {
+              type: ViewType.list,
+              active: true,
+              sameData: true,
+              model: {
+                template: this.templateList,
+                headerTemplate: this.headerTemplate,
+              },
+            },
+            {
+              type: ViewType.listdetail,
+              sameData: true,
+              active: true,
+              model: {
+                template: this.templateListDetail,
+                panelRightRef: this.panelRightListDetail,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
+        });
+    }
+
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.list,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.templateList,
-          headerTemplate: this.headerTemplate,
-        },
-      },
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        active: true,
-        model: {
-          template: this.templateListDetail,
-          panelRightRef: this.panelRightListDetail,
-        },
-      },
-    ];
-
     //Get Header text when view detail
     this.hrService.getHeaderText(this.view?.formModel?.funcID).then((res) => {
       this.eJobSalaryHeader = res;
@@ -152,7 +196,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          console.log('Run addd');
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'copy') {
@@ -258,66 +301,72 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     });
   }
 
-  // release() {
-  //   this.hrService
-  //     .getCategoryByEntityName(this.view.formModel.entityName)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.dataCategory = res;
-  //         this.hrService
-  //           .release(
-  //             this.itemDetail.recID,
-  //             this.dataCategory.processID,
-  //             this.view.formModel.entityName,
-  //             this.view.formModel.funcID,
-  //             '<div> Lương chức danh - ' + this.itemDetail.contractNo + '</div>'
-  //           )
-  //           .subscribe((result) => {
-  //             if (result?.msgCodeError == null && result?.rowCount) {
-  //               this.notify.notifyCode('ES007');
-  //               this.itemDetail.status = '3';
-  //               this.hrService
-  //                 .editEContract(this.itemDetail)
-  //                 .subscribe((res) => {
-  //                   if (res) {
-  //                     this.view?.dataService
-  //                       ?.update(this.itemDetail)
-  //                       .subscribe();
-  //                   }
-  //                 });
-  //             } else this.notify.notifyCode(result?.msgCodeError);
-  //           });
-  //       }
-  //     });
-  // }
+  //More function send approved
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.processID = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.processID.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> Lương chức danh - ' + this.itemDetail.decisionNo + '</div>'
+            )
+            .subscribe((result) => {
+              console.log(result)
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .EditEmployeeJobSalariesMoreFunc(this.itemDetail)
+                  .subscribe((res) => {
+                    console.log('Result after send edit' + res)
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
+        }
+      });
+  }
 
-  // beforeRelease() {
-  //   let category = '4';
-  //   let formName = 'HRParameters';
-  //   this.hrService.getSettingValue(formName, category).subscribe((res) => {
-  //     console.log(res)
-  //     if (res) {
-  //       let parsedJSON = JSON.parse(res?.dataValue);
-  //       let index = parsedJSON.findIndex(
-  //         (p) => p.Category == this.view.formModel.entityName
-  //       );
-  //       if (index > -1) {
-  //         let eJobSalaryObj = parsedJSON[index];
-  //         if (eJobSalaryObj['ApprovalRule'] == '1') {
-  //           this.release();
-  //         } else {
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eJobSalaryObj = parsedJSON[index];
+          if (eJobSalaryObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+          }
+        }
+      }
+    });
+  }
+
   //#endregion
 
   clickMF(event, data): void {
+    this.itemDetail = data;
+
     switch (event.functionID) {
-      // case this.actionSubmit:
-      //   this.beforeRelease();
-      //   break;
+      case this.actionSubmit:
+        this.beforeRelease();
+        break;
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
       case this.actionUpdateRejected:

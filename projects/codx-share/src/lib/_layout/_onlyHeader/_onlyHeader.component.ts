@@ -13,14 +13,12 @@ import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawe
   styleUrls: ['./_onlyHeader.component.css'],
 })
 export class LayoutOnlyHeaderComponent extends LayoutBaseComponent {
-  module = '';
   dialog!: DialogRef;
-  override aside = false;
-  //override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarDisplay = false;
   }
 
   onInit(): void {}

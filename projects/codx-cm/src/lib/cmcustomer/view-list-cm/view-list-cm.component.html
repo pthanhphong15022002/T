@@ -43,16 +43,16 @@
       </ng-template>
       <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
-          <div class="">
+          <div class="mb-1">
             <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
             <span class="text-gray-900">{{ dataSelected.address }}</span>
           </div>
-          <div *ngIf="funcID == 'CM0101' || funcID == 'CM0103'">
+          <div *ngIf="funcID != 'CM0102'">
             <codx-tag
               [entityName]="entityName"
               [disabled]="true"
               [isEdit]="false"
-              [value]="data?.field"
+              [value]="data?.tags"
             >
             </codx-tag>
           </div>
@@ -89,70 +89,86 @@
         >
       </div>
     </div>
-    <div
-      *ngIf="funcID != 'CM0102'"
-      class="col-4 d-flex justify-content-center align-items-center"
-    >
+    <div *ngIf="funcID != 'CM0102'" class="col-6 d-flex align-items-center row">
       <div
-        class="d-flex"
+        class="d-flex justify-content-start col-5"
         *ngIf="
-          (funcID == 'CM0101' || funcID == 'CM0103') &&
-          listContacts != null &&
-          listContacts.length > 0
+          (funcID == 'CM0101' || funcID == 'CM0103') && contactPerson != null
         "
       >
-        <ng-container *ngFor="let item of listContacts">
-          <div *ngIf="item.contactType == '1'" class="d-flex">
-            <div class="me-3">
-              <codx-img
-                [objectId]="item.recID"
-                [objectName]="item.contactName"
-                [objectType]="'CM_Contacts'"
-                [width]="35"
-              >
-              </codx-img>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-              <div class="d-flex flex-column">
-                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  {{ item?.contactName }}
+        <div class="d-flex">
+          <div class="me-3">
+            <codx-img
+              [objectId]="contactPerson.recID"
+              [objectName]="contactPerson.contactName"
+              [objectType]="'CM_Contacts'"
+              [width]="35"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex flex-column">
+              <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                {{ contactPerson?.contactName }}
+              </div>
+              <div class="d-flex align-items-start me-4 mb-1">
+                <div class="me-3" *ngIf="contactPerson?.mobile">
+                  <span
+                    [ngClass]="
+                      contactPerson?.allowCall
+                        ? 'icon-phone_android text-primary'
+                        : 'icon-phonelink_erase'
+                    "
+                    class="icon-16 me-1"
+                  ></span>
+                  <span
+                    [ngClass]="contactPerson?.allowCall ? 'text-primary' : ''"
+                    class="text-gray-900"
+                    >{{ contactPerson?.mobile }}</span
+                  >
                 </div>
-                <div class="d-flex align-items-start me-4 mb-1">
-                  <div class="me-3" *ngIf="item?.phoneNumber">
-                    <span
-                      [ngClass]="
-                        item?.allowCall
-                          ? 'icon-phone_android text-primary'
-                          : 'icon-phonelink_erase'
-                      "
-                      class="icon-16 me-1"
-                    ></span>
-                    <span
-                      [ngClass]="item?.allowCall ? 'text-primary' : ''"
-                      class="text-gray-900"
-                      >{{ item?.phoneNumber }}</span
-                    >
-                  </div>
-                  <div *ngIf="item?.email">
-                    <span
-                      [ngClass]="
-                        item?.allowEmail
-                          ? 'icon-email text-primary'
-                          : 'icon-print_disabled'
-                      "
-                      class="icon-16 me-1 text-gray-900"
-                    ></span>
-                    <span
-                      [ngClass]="item?.allowEmail ? 'text-primary' : ''"
-                      class="text-gray-900"
-                      >{{ item?.email }}</span
-                    >
-                  </div>
+                <div *ngIf="contactPerson?.personalEmail">
+                  <span
+                    [ngClass]="
+                      contactPerson?.allowEmail
+                        ? 'icon-email text-primary'
+                        : 'icon-print_disabled'
+                    "
+                    class="icon-16 me-1 text-gray-900"
+                  ></span>
+                  <span
+                    [ngClass]="contactPerson?.allowEmail ? 'text-primary' : ''"
+                    class="text-gray-900"
+                    >{{ contactPerson?.personalEmail }}</span
+                  >
                 </div>
               </div>
             </div>
           </div>
-        </ng-container>
+        </div>
+      </div>
+      <div class="col-7" *ngIf="data?.industries">
+        <div class="d-flex ms-3">
+          <span class="icon-work_outline icon-16 me-1 text-gray-500"></span>
+          <div>
+            <div
+              *ngFor="let item of data?.industries.split(';'); index as i"
+              class="d-inline"
+            >
+              <span
+                [innerHTML]="
+                  item | formatvalue : formModel : 'Industries' | async
+                "
+              ></span
+              ><span
+                class="me-1"
+                *ngIf="i < data?.industries.split(';').length - 1"
+                >,</span
+              >
+              <!-- {{ dataSelected?.segmentID }} -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div *ngIf="funcID == 'CM0102'" class="col-4 d-flex align-items-center">
@@ -161,34 +177,58 @@
           <span class="icon-corporate_fare text-primary icon-16 me-1"></span>
           <span
             [innerHTML]="
-              dataSelected?.objectID
-                | formatvalue : formModel : 'ObjectID'
+              dataSelected?.objectName
+                | formatvalue : formModel : 'ObjectName'
                 | async
             "
           ></span>
         </div>
         <div *ngIf="dataSelected?.contactType">
           <ng-container
-            *ngFor="let item of dataSelected?.contactType.split(';'); index as i"
+            *ngFor="
+              let item of dataSelected?.contactType.split(';');
+              index as i
+            "
           >
             <span
               [innerHTML]="
-                item
-                  | formatvalue : formModel : 'ContactType'
-                  | async
+                item | formatvalue : formModel : 'ContactType' | async
               "
-            ></span><span class="me-1" *ngIf="i < dataSelected?.contactType.split(';').length - 1">,</span>
+            ></span
+            ><span
+              class="me-1"
+              *ngIf="i < dataSelected?.contactType.split(';').length - 1"
+              >,</span
+            >
           </ng-container>
         </div>
       </div>
     </div>
     <div
       *ngIf="funcID != 'CM0102'"
-      class="col-4 d-flex justify-content-end align-items-center"
+      class="col-2 d-flex justify-content-end align-items-center"
     >
       <span
+        *ngIf="funcID == 'CM0103'"
+        class="icon-date_range icon-18 text-gray-700 me-1"
+      ></span>
+      <span
+        *ngIf="funcID == 'CM0103'"
+        class="me-5"
+        [innerHTML]="
+          dataSelected?.partnerFrom
+            | formatvalue : formModel : 'PartnerFrom'
+            | async
+        "
+      >
+      </span>
+      <span
         *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
-        class="icon-contact_phone icon-18 text-gray-700 me-2"
+        class="icon-contact_phone icon-18 text-gray-700 me-1"
+      ></span>
+      <span
+        *ngIf="funcID == 'CM0101' || funcID == 'CM0103'"
+        class="icon-18 text-gray-700"
         >{{ listContacts.length }}</span
       >
       <span
@@ -202,7 +242,7 @@
         >0</span
       >
       <span
-        *ngIf="funcID == 'CM0103' || funcID == 'CM0104'"
+        *ngIf="funcID == 'CM0104'"
         class="icon-shopping_cart icon-18 text-gray-700 me-2"
         >0</span
       >
@@ -211,6 +251,7 @@
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, dataSelected)"
+        (changeDataMF)="changeDataMF($event, dataSelected)"
         [isBookMark]="false"
         [dataItem]="data"
         type="hover"

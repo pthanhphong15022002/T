@@ -1,5 +1,4 @@
 import { FormGroup } from '@angular/forms';
-import { CodxHrService } from './../../codx-hr.service';
 import { ChangeDetectorRef, Injector, SimpleChanges } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
@@ -11,6 +10,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CodxHrService } from './../../codx-hr.service';
 
 @Component({
   selector: 'lib-popup-employee-jobsalary',
@@ -39,7 +39,7 @@ export class PopupEmployeeJobsalaryComponent
   employeeID: string;
   employeeName: string;
   OrgUnitID: string;
-  PositionID: string;
+  // PositionID: string;
 
   //Render Signer Position follow Singer ID
   data: any;
@@ -56,7 +56,6 @@ export class PopupEmployeeJobsalaryComponent
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
-    // console.log(data)
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
@@ -97,8 +96,8 @@ export class PopupEmployeeJobsalaryComponent
                   this.currentEJobSalaries.expiredDate = null;
                   this.formModel.currentData = this.currentEJobSalaries;
                   this.formGroup.patchValue(this.currentEJobSalaries);
-                  this.cr.detectChanges();
                   this.isAfterRender = true;
+                  this.cr.detectChanges();
                 }
               });
           } else {
@@ -112,26 +111,52 @@ export class PopupEmployeeJobsalaryComponent
               }
               this.formGroup.patchValue(this.currentEJobSalaries);
               this.formModel.currentData = this.currentEJobSalaries;
-              this.cr.detectChanges();
               this.isAfterRender = true;
+              this.cr.detectChanges();
             }
           }
         }
       });
   }
 
-  getEmployeeInfoById(empId: string) {
+  getEmployeeInfoById(empId: string, isCheck: boolean) {
     let empRequest = new DataRequest();
     empRequest.entityName = 'HR_Employees';
     empRequest.dataValues = empId;
     empRequest.predicates = 'EmployeeID=@0';
     empRequest.pageLoading = false;
-    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-      if (emp[1] > 0) {
-        this.employeeObj = emp[0][0];
-        this.df.detectChanges();
-      }
-    });
+    if (isCheck === false) {
+      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.employeeObj = emp[0][0];
+          this.df.detectChanges();
+        }
+      });
+    } else {
+      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          let positionID = emp[0][0].positionID;
+
+          if (positionID) {
+            this.hrSevice.getPositionByID(positionID).subscribe((res) => {
+              if (res) {
+                this.currentEJobSalaries.signerPosition = res.positionName;
+                this.formGroup.patchValue({
+                  signerPosition: this.currentEJobSalaries.signerPosition,
+                });
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.currentEJobSalaries.signerPosition = null;
+            this.formGroup.patchValue({
+              signerPosition: this.currentEJobSalaries.signerPosition,
+            });
+          }
+          this.df.detectChanges();
+        }
+      });
+    }
   }
 
   onInit(): void {
@@ -155,19 +180,18 @@ export class PopupEmployeeJobsalaryComponent
 
     //Update Employee Information when CRUD then render
     if (this.employeeId != null)
-      this.getEmployeeInfoById(this.employeeId);
+      this.getEmployeeInfoById(this.employeeId, false);
   }
 
   ngOnChanges(changes: SimpleChanges) {}
 
   handleSelectEmp(evt) {
-    if (evt.data === '') {
-      this.employeeObj = '';
-      this.genderGrvSetup = '';
-    }
-    if (evt.data != null) {
+    if (!!evt.data) {
       this.employeeId = evt.data;
-      this.getEmployeeInfoById(this.employeeId);
+      this.getEmployeeInfoById(this.employeeId, false);
+      // this.employeeId = null;
+    } else {
+      delete this.employeeObj;
     }
   }
 
@@ -183,6 +207,13 @@ export class PopupEmployeeJobsalaryComponent
   // }
 
   valueChange(event) {
+    if (!event.data) {
+      this.currentEJobSalaries.signerPosition = '';
+      this.formGroup.patchValue({
+        signerPosition: '',
+      });
+    }
+
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         // case 'contractTypeID': {
@@ -199,32 +230,18 @@ export class PopupEmployeeJobsalaryComponent
         //   break;
         // }
         case 'signerID': {
-          if (event.data.dataSelected.length === 0) {
-            this.currentEJobSalaries.signerPosition = '';
-            this.formGroup.patchValue({
-              signerPosition: '',
-            });
-          }
-          let employee = event.data?.dataSelected[0]?.dataSelected;
+          // if (event.data.dataSelected.length === 0) {
+          //   this.currentEJobSalaries.signerPosition = '';
+          //   this.formGroup.patchValue({
+          //     signerPosition: '',
+          //   });
+          // }
+          // let employee = event.data?.dataSelected[0]?.dataSelected;
+
+          let employee = event.data;
+
           if (employee) {
-            if (employee.PositionID) {
-              this.hrSevice
-                .getPositionByID(employee.PositionID)
-                .subscribe((res) => {
-                  if (res) {
-                    this.currentEJobSalaries.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.currentEJobSalaries.signerPosition,
-                    });
-                    this.cr.detectChanges();
-                  }
-                });
-            } else {
-              this.currentEJobSalaries.signerPosition = null;
-              this.formGroup.patchValue({
-                signerPosition: this.currentEJobSalaries.signerPosition,
-              });
-            }
+            this.getEmployeeInfoById(employee, true);
           }
           break;
         }
@@ -235,6 +252,12 @@ export class PopupEmployeeJobsalaryComponent
   }
 
   onSaveForm() {
+    //Validate use function from service
+    if (this.formGroup.invalid == true) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
     if (
       this.currentEJobSalaries.expiredDate <
       this.currentEJobSalaries.effectedDate

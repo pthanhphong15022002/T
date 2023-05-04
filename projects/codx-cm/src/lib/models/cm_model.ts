@@ -20,6 +20,11 @@ export class CM_Products {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  write: boolean = true;
+  download: boolean = true;
+  delete: boolean = true;
+  share: boolean = true;
+  read: boolean = true;
 }
 export class CM_BusinessLines {
   recID: string;
@@ -53,7 +58,7 @@ export class CM_Quotations {
   pmtTermID: string;
   pmtMethodID: string;
   currencyID: string;
-  status: string;
+  status: string = '1';
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -70,6 +75,56 @@ export class CM_Quotations {
   comments: number;
   owner: string;
   bUID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
+
+export class CM_QuotationsLines {
+  recID: string;
+  transID: string;
+  rowNo: number;
+  lineType: string;
+  lineStatus: string;
+  barcode: string;
+  itemID: string;
+  itemNote: string;
+  iDIM0: string;
+  iDIM1: string;
+  iDIM2: string;
+  iDIM3: string;
+  iDIM4: string;
+  quantity: number;
+  uMID: string;
+  conversion: number;
+  cWUM: string;
+  cWConversion: number;
+  cWQty: number;
+  cWOnhand: number;
+  onhand: number;
+  costPrice: number;
+  costAmt: number;
+  stdPrice: number;
+  salesPrice: number;
+  salesAmt: number;
+  discPct: number;
+  discAmt: number;
+  netAmt: number;
+  commissionPct: number;
+  commissionAmt: number;
+  salesTaxPct: number;
+  salesTaxAmt: number;
+  exciseTaxPct: number;
+  exciseTaxAmt: number;
+  vATID: string;
+  vATBase: number;
+  vATAmt: number;
+  refType: string;
+  refNo: string;
+  refID: string;
+  refLineID: string;
+  note: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -118,7 +173,7 @@ export class CM_Deals {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  bit;
+  boolean;
 }
 
 export class CM_Permissions {
@@ -173,7 +228,7 @@ export class CM_Customers {
   email: string;
   webPage: string;
   establishDate: Date;
-  headcounts: number;
+  headcounts: string;
   annualRevenue: number;
   workingDays: string;
   officialHour: boolean;
@@ -191,6 +246,7 @@ export class CM_Customers {
   bankAccount: string;
   bankID: string;
   memo: string;
+  tags: string;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -241,7 +297,7 @@ export class CM_Contacts {
   objectType: string;
   objectID: string;
   objectName: string;
-  cumulatedPoints: number;
+  cumulatedPonumbers: number;
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
@@ -250,6 +306,7 @@ export class CM_Contacts {
   userID: string;
   allowCall: boolean;
   allowEmail: boolean;
+  tags: string;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -286,7 +343,7 @@ export class BS_AddressBook {
   webPage: string;
   delRouteID: string;
   calendarID: string;
-  interval: string;
+  numbererval: string;
   duration: string;
   lastUpdated: Date;
   note: string;
@@ -302,4 +359,55 @@ export class BS_AddressBook {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+}
+export class CM_Contracts {
+recID:string;
+contractID:string;
+contractDate:Date;
+contractName:string;
+contractType:string;
+category:string;
+assetID:string;
+projectID:string;
+quotationID:string;
+orderID:string;
+objectType:string;
+objectID:string;
+objectName:string;
+contactID:string;
+customerID:string;
+currencyID:string;
+exchangeRate:number;
+contractAmt:number;
+VATID:string;
+paymentStatus:string;
+paidAmt:number;
+remainAmt:number;
+memo:string;
+status:string;
+periods:number;
+numbererval:string;
+effectiveFrom:Date;
+effectiveTo:Date;
+extendOn:Date;
+disposalOn:Date;
+warantyMonths:number;
+warantyExpired:Date;
+salespersonID:string;
+consultantID:string;
+pmtMethodID:string;
+delModeID:string;
+delTermID:string;
+parentID:string;
+refType:string;
+refID:string;
+refNo:string;
+attachments:number;
+note:string;
+stop:boolean;
+owner:string;
+bUID:string;
+createdOn:Date;
+createdBy:string;
+modifiedOn:Date;
 }

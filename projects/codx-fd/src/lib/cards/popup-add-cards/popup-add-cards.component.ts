@@ -397,7 +397,7 @@ export class PopupAddCardsComponent implements OnInit {
 
       if (this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share) {
         if (this.patternSelected?.patternID) {
-          card.pattern = this.patternSelected.patternID;
+          card.pattern = this.patternSelected.recID;
         }
       }
 

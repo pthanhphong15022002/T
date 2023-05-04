@@ -28,6 +28,8 @@ export class CodxQuotationsComponent  extends UIComponent {
     download: true,
     delete: true,
   };
+  grvSetup :any ;
+  vllStatus=''
 
   constructor(
     private inject: Injector,
@@ -36,6 +38,12 @@ export class CodxQuotationsComponent  extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.cache.gridViewSetup('CMQuotations','grvCMQuotations').subscribe(res=>{
+      if(res) {
+        this.grvSetup=res
+        this.vllStatus = res['Status'].referedValue
+      }
+    })
   }
 
   onInit(): void {}
@@ -73,7 +81,7 @@ export class CodxQuotationsComponent  extends UIComponent {
       //   formModel.funcID = 'CM0202';
       //   formModel.formName = f.formName;
       //   formModel.gridViewName = f.gridViewName;
-
+      res.status ="1"
       var obj = {
         data : res,
         action: 'add',
@@ -96,7 +104,7 @@ export class CodxQuotationsComponent  extends UIComponent {
     //   });
     // });
   }
-}
-{
-
+  getIndex(recID){
+    return this.view.dataService.data.findIndex(obj=>obj.recID==recID)
+  }
 }

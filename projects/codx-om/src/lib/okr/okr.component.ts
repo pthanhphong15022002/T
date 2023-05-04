@@ -330,6 +330,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   getOKRPlans(periodID: any, interval: any, year: any) {
+    this.isAfterRender=false;
     if (this.periodID != null && this.interval != null && this.year != null && this.periodID != '' && this.interval != '' && this.year != 0) {
       this.okrService
         .getOKRPlans(periodID, interval, year)
@@ -341,14 +342,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             this.dataOKRPlans = item;
             this.dataOKRPlans.periodName=this.periodName;
             this.planNull = false;
-            this.isAfterRender = true;
             this.createCOObject();
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((item1: any) => {
                 if (item1) {                  
                   this.dataOKR = null;
-                  this.dataOKR = item1;                  
+                  this.dataOKR = item1;  
+                  this.isAfterRender = true;                
                   this.getOrgTreeOKR();
                 }
               });
@@ -487,27 +488,77 @@ getOrgTreeOKR() {
   }
   changeDataMF(evt:any){
     if(evt !=null){
-      // if(this.dataOKR!=null && this.dataOKR.length>0){
-      //   evt.forEach((func) => {
-      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-      //       func.disabled = false;
-      //     }
-      //   });
-      // }
-      // else{
-      //   //nếu ko có OKR thì ẩn MF phân bổ trọng số
-      //   evt.forEach((func) => {
-      //     if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
-      //       func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
-      //       func.disabled = true;
-      //     }
-      //   });
-      // }
+        if(this.dataOKR!=null && this.dataOKR.length>0){
+          evt.forEach((func) => {
+            if (func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+              func.disabled = false;
+            }
+          });
+        }
+        else{
+          //nếu ko có OKR thì ẩn MF phân bổ trọng số
+          evt.forEach((func) => {
+            if (
+              func.functionID == OMCONST.MFUNCID.Copy ||
+              
+              func.functionID == OMCONST.MFUNCID.PlanWeightPER ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ) {
+              func.disabled = true;
+            }
+          });
+        }
+        
+      //Ẩn MF khi Plan chưa phát hành
+        if(this.dataOKRPlans?.status=='1'){
+          evt.forEach((func) => {
+            if (func.functionID == OMCONST.MFUNCID.UnReleasePlanCOMP ||
+              func.functionID == OMCONST.MFUNCID.UnReleasePlanDEPT ||
+              func.functionID == OMCONST.MFUNCID.UnReleasePlanORG ||
+              func.functionID == OMCONST.MFUNCID.UnReleasePlanPER ) {
+              func.disabled = true;
+            }
+          });
+        }
+        
+      //Ẩn MF khi Plan đã phát hành
+        else if(this.dataOKRPlans?.status=='2'){
+          evt.forEach((func) => {
+            if (
+              func.functionID == OMCONST.MFUNCID.Copy ||
+              
+              func.functionID == OMCONST.MFUNCID.ReleasePlanCOMP ||
+              func.functionID == OMCONST.MFUNCID.ReleasePlanDEPT ||
+              func.functionID == OMCONST.MFUNCID.ReleasePlanORG ||
+              func.functionID == OMCONST.MFUNCID.ReleasePlanPER ||
+              
+              func.functionID == OMCONST.MFUNCID.SharesPlanCOMP ||
+              func.functionID == OMCONST.MFUNCID.SharesPlanDEPT ||
+              func.functionID == OMCONST.MFUNCID.SharesPlanORG ||
+              func.functionID == OMCONST.MFUNCID.SharesPlanPER ||
+
+              func.functionID == OMCONST.MFUNCID.PermissionCOMP ||
+              func.functionID == OMCONST.MFUNCID.PermissionDEPT ||
+              func.functionID == OMCONST.MFUNCID.PermissionORG ||
+              func.functionID == OMCONST.MFUNCID.PermissionPER ||
+
+              func.functionID == OMCONST.MFUNCID.PlanWeightCOMP ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightDEPT ||
+              func.functionID == OMCONST.MFUNCID.PlanWeightORG ||
+              func.functionID == OMCONST.MFUNCID.PermissionPER
+              
+              
+              ) {
+              func.disabled = true;
+            }
+          });
+        }
+      
+      
     }
   }
   //Hàm click

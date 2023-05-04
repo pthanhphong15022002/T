@@ -162,9 +162,12 @@
     [funcID]="formModel.funcID"
     [dataTree]="treeTask"
     [customerID]="dataSelected.customerID"
+    (tabChange)="changeFooter($event)"
   ></codx-tabs>
 </ng-template>
 
-
+<ng-template #contract let-data>
+  <list-contracts></list-contracts>
+</ng-template>
 
 

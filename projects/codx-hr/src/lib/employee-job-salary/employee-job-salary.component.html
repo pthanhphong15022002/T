@@ -12,12 +12,14 @@
   [button]="buttonAdd"
   (buttonClick)="addJobSalaries($event)"
   (selectedChange)="changeItemDetail($event)"
+  (onLoading)="onLoading($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-25">
+    <div class="w-50 p-3">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -69,7 +71,7 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-25 p-3">
       <div
         class="d-flex flex-column"
         [class]="data.isCurrent ? 'text-primary' : 'text-gray-700'"
@@ -103,8 +105,13 @@
                   eJobSalaryHeader ? eJobSalaryHeader['EffectedDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.effectedDate?.headerText"
+                [innerHTML]="
+                  data.effectedDate
+                    | formatvalue : view.formModel : 'effectedDate'
+                    | async
+                "
               >
-                {{ data?.effectedDate | fmDT }}
+                <!-- {{ data?.effectedDate | fmDT }} -->
               </span>
               <span> - </span>
               <span
@@ -112,8 +119,12 @@
                   eJobSalaryHeader ? eJobSalaryHeader['ExpiredDate'] : ''
                 "
                 [ngbTooltip]="grvSetup?.expiredDate?.headerText"
+                [innerHTML]="
+                  data.expiredDate
+                    | formatvalue : view.formModel : 'expiredDate'
+                    | async
+                "
               >
-                {{ data?.expiredDate | fmDT }}
               </span>
             </div>
           </div>
@@ -121,11 +132,11 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <div class="w-25 p-3">
       <div class="d-flex flex-column">
-        <div class="text-gray-700 d-flex flex-row">
+        <div class="text-gray-700 d-flex flex-row mb-1">
           <span class="icon-event_notes icon-15 me-1"></span>
-          <div class="align-self-center fw-bold d-flex align-items-center">
+          <div class="align-self-center fw-bold">
             <span
               [title]="eJobSalaryHeader ? eJobSalaryHeader['DecisionNo'] : ''"
             >
@@ -149,7 +160,6 @@
             <codx-attachment-temp
               [objectID]="data?.recID"
               [formModel]="view.formModel"
-              [count]="data.attachments"
             >
             </codx-attachment-temp>
 
@@ -174,7 +184,7 @@
       </div>
     </div>
 
-    <div class="w-25">
+    <!-- <div class="w-25">
       <codx-vll
         [formModel]="view.formModel"
         [field]="'ApproveStatus'"
@@ -185,7 +195,7 @@
         ngClass="badge badge-sm"
       >
       </codx-vll>
-    </div>
+    </div> -->
 
     <div class="align-self-center">
       <div style="height: 35px" class="has-action-menu">
@@ -203,24 +213,26 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-50 text-dark p-3 fw-bold fw-500">
+      <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+    </div>
+    <div class="w-25 text-dark p-3 fw-bold fw-500">
+      <codx-label
+        name="lblJobSalaries"
+        [default]="'Lương chức danh | Hiệu lực'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark p-3 fw-bold fw-500">
+      <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
+    </div>
   </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label
-      name="lblJobSalaries"
-      [default]="'Lương chức danh | Hiệu lực'"
-    ></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
-    <codx-label name="lblSignDate" [default]="'Số QĐ | Ngày ký'"></codx-label>
-  </div>
-  <div class="w-25 text-primary p-3 fs-5 fw-500">
+  <!-- <div class="w-25 text-primary p-3 fs-5 fw-500">
     <codx-label
       name="lblApproveStatus"
       [default]="'Tình trạng duyệt'"
     ></codx-label>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #templateUpdateStatus let-dialog1>

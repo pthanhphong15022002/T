@@ -21,8 +21,6 @@ import {
   UIComponent,
 } from 'codx-core';
 
-//import { CodxEpService } from '../../../codx-ep.service';
-
 @Component({
   selector: 'popup-add-okr-plan',
   templateUrl: 'popup-add-okr-plan.component.html',

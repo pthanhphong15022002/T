@@ -668,13 +668,4 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  closeEditForm(evt?: any) {
-    if (evt) {
-      this.dialog && this.dialog.close();
-    }
-  }
-
-  onSelect(obj: any) {
-    //console.log(obj);
-  }
 }

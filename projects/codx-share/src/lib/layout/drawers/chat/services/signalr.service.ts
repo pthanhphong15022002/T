@@ -23,6 +23,8 @@ export class SignalRService {
   activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
   chat = new EventEmitter<any>();
+  undoMssg = new EventEmitter<any>();
+
   voteChat = new EventEmitter<any>();
   constructor(
     private authStore: AuthStore) {
@@ -66,7 +68,7 @@ export class SignalRService {
             this.chat.emit(data);
             break;
           case 'deletedMessage':
-            this.chat.emit(data);
+            this.undoMssg.emit(data);
             break;
           case 'voteMessage':
             this.voteChat.emit(data);

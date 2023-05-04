@@ -1,36 +1,23 @@
+declare var window: any;
 import {
   AfterViewInit,
   Component,
-  ElementRef,
-  EventEmitter,
   Injector,
   Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
   CallFuncService,
-  DataRequest,
-  DialogRef,
-  SidebarModel,
   UIComponent,
-  ViewsComponent,
 } from 'codx-core';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Permission } from '@shared/models/file.model';
-import { CodxShareService } from '../../codx-share.service';
-import moment from 'moment';
+import { CodxShareService } from '../../../codx-share.service';
 @Component({
-  selector: 'codx-booking-car-schedule-content',
-  templateUrl: 'codx-booking-car-schedule-content.component.html',
-  styleUrls: ['codx-booking-car-schedule-content.component.scss'],
+  selector: 'codx-booking-room-schedule-content',
+  templateUrl: 'codx-booking-room-schedule-content.component.html',
+  styleUrls: ['codx-booking-room-schedule-content.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxBookingCarScheduleContentComponent
+export class CodxBookingRoomScheduleContentComponent
   extends UIComponent
   implements AfterViewInit
 {
@@ -39,7 +26,7 @@ export class CodxBookingCarScheduleContentComponent
   constructor(
     private injector: Injector,
     private codxShareService: CodxShareService,
-    private callFuncService: CallFuncService,
+    private callFuncService: CallFuncService
   ) {
     super(injector);
   }
@@ -52,9 +39,7 @@ export class CodxBookingCarScheduleContentComponent
     });
   }
   ngAfterViewInit(): void {}
-  sameDayCheck(sDate: any, eDate: any) {
-    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
-  }
+
   showHour(date: any) {
     let temp = new Date(date);
     let time =
@@ -62,5 +47,11 @@ export class CodxBookingCarScheduleContentComponent
       ':' +
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
+  }
+  meetingNow(url:string){
+    if(url !=null){
+
+      window.open(url, '_blank');
+    }
   }
 }

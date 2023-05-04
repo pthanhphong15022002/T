@@ -12,13 +12,11 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
   styleUrls: ['./_noToolbar.component.scss'],
 })
 export class LayoutNoToolbarComponent extends LayoutBaseComponent {
-  module = 'TM';
   dialog!: DialogRef;
-  override aside = true;
-  override toolbar = true;
 
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
+    this.module = 'TM';
   }
 
   onInit(): void {}

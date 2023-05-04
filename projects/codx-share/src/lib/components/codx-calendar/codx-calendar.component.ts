@@ -1,8 +1,9 @@
+declare var window: any;
 import { addClass } from '@syncfusion/ej2-base';
 import {
   Component,
+  ComponentRef,
   Injector,
-  Optional,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -11,7 +12,6 @@ import {
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
   DataRequest,
-  DialogRef,
   ResourceModel,
   UIComponent,
   Util,
@@ -32,6 +32,8 @@ export class CodxCalendarComponent extends UIComponent {
   @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
   @ViewChild('calendar_setting', { read: ViewContainerRef })
   calendar_setting!: ViewContainerRef;
+  @ViewChild('calendar_setting')
+  calendar_center!: ComponentRef<CalendarCenterComponent>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
 
   dataResourceModel = [];
@@ -68,11 +70,7 @@ export class CodxCalendarComponent extends UIComponent {
   typeNavigate = 'Month';
   isCollapsed = false;
 
-  constructor(
-    injector: Injector,
-    private codxShareSV: CodxShareService,
-    @Optional() dialogRef: DialogRef
-  ) {
+  constructor(injector: Injector, private codxShareSV: CodxShareService) {
     super(injector);
   }
 
@@ -215,6 +213,18 @@ export class CodxCalendarComponent extends UIComponent {
 
   changeNewMonth(args) {
     this.FDdate = args.date;
+    // let myInterVal = setInterval(() => {
+    //   console.log('this.calendar_center', this.calendar_center);
+    //   if (this.calendar_center && this.calendar_center.instance) {
+    //     clearInterval(myInterVal);
+    //     this.calendar_center.instance.changeNewMonth(this.FDdate);
+    //   }
+    // }, 100);
+
+    // let myInterVal1 = setInterval(() => {
+    //   clearInterval(myInterVal1);
+    //   this.loadData();
+    // }, 100);
   }
 
   valueChangeSetting(e) {
@@ -227,6 +237,7 @@ export class CodxCalendarComponent extends UIComponent {
   updateSettingValue(transType, value) {
     if (value == false) value = '0';
     else value = '1';
+
     this.api
       .exec<any>(
         'ERM.Business.SYS',
@@ -240,6 +251,7 @@ export class CodxCalendarComponent extends UIComponent {
             if (transType == 'WP_Notes') {
               this.WP_Notes = [];
             }
+
             if (transType == 'TM_Tasks') {
               this.TM_Tasks = [];
             }
@@ -253,14 +265,18 @@ export class CodxCalendarComponent extends UIComponent {
               this.EP_BookingCars = [];
             }
 
-            this.dataResourceModel = this.dataResourceModel.filter(
-              (x) => x.transType != transType
-            );
+            this.dataResourceModel = this.dataResourceModel.filter((x) => {
+              if (transType == 'TM_Tasks') {
+                transType = 'TM_MyTasks';
+              }
+              return x.transType != transType;
+            });
           } else {
             if (this.checkWP_NotesParam)
               if (transType == 'WP_Notes') {
                 this.WP_Notes = this.WP_NotesTemp;
               }
+
             if (transType == 'TM_Tasks') {
               this.TM_Tasks = this.TM_TasksTemp;
             }
@@ -310,6 +326,7 @@ export class CodxCalendarComponent extends UIComponent {
                   ...this.WP_NotesTemp,
                   ...this.dataResourceModel,
                 ];
+
               if (transType == 'TM_Tasks') {
                 this.dataResourceModel = [
                   ...this.dataResourceModel,
@@ -538,7 +555,7 @@ export class CodxCalendarComponent extends UIComponent {
   }
 
   getModelShare(lstData, param, transType) {
-    this.onSwitchCountEven(transType);
+    this.onSwitchCountEvent(transType);
     if (lstData && lstData.length > 0) {
       lstData.forEach((item) => {
         let paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
@@ -610,7 +627,7 @@ export class CodxCalendarComponent extends UIComponent {
     }
   }
 
-  onSwitchCountEven(transType) {
+  onSwitchCountEvent(transType) {
     switch (transType) {
       case 'TM_Tasks':
         this.countDataOfE++;
@@ -690,6 +707,11 @@ export class CodxCalendarComponent extends UIComponent {
     let a = this.calendar_setting.createComponent(CalendarCenterComponent);
     a.instance.resources = resource;
     a.instance.resourceModel = dataResourceModel;
+    this.codxShareSV.dataResourceModel.subscribe((res) => {
+      if (res) {
+        a.instance.updateData(res);
+      }
+    });
   }
 
   onLoad(args) {

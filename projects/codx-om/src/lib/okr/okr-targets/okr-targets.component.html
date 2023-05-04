@@ -72,27 +72,27 @@
 
     <ng-template #templateTreeView let-item>
       <!--OB node-->
-      <div class="d-flex align-items-center flex-column justify-content-between " *ngIf="item?.okrType==obType">
+      <div class="d-flex align-items-center flex-column justify-content-between "  (click)="clickTreeNode($event)"  *ngIf="item?.okrType==obType">
         <div class="w-100 ob-background d-flex justify-content-between ">
 
           <div class="d-flex align-items-center  okr-treegroup col-6">
             <!-- <span class="ms-5 me-3" [inlineSVG]="okrVll?.ob?.icon"></span> -->
             <div class="progress-container"  [ngbTooltip]="'Tiến độ'">
-              <div class="progress-container-align position-relative">
+              <div class="progress-container-align position-relative" *ngIf="item!=null">
                 <span class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                   <span>
                     <span class="fs-8 fw-bold">{{item?.progress}}</span>
                     <span class="fs-10">%</span>
                   </span>
                 </span>
-                <ejs-progressbar #annotation1 [id]="'label-container'+item?.recID" [type]="'Circular'" [maximum]="100"
-                  [minimum]="0" [value]="item?.progress" [width]="'60'" [height]="'60'" [trackThickness]="5"
+                <ejs-progressbar [id]="newGuid()" [type]="'Circular'" [maximum]="100" 
+                  [minimum]="0" [value]="item?.progress !=null ? item?.progress:0" [width]="'60'" [height]="'60'" [trackThickness]="5"
                   [progressThickness]="3" [progressColor]="'#FF0000'">
                   <!-- <e-progressbar-annotations> <e-progressbar-annotation [content]="item?.progress +'%'" > </e-progressbar-annotation> </e-progressbar-annotations> [animation]="{enable: true, duration: 2000, delay: 0}" -->
                 </ejs-progressbar>
               </div>
             </div>
-            <span class="ob-kr ob-name fs-5 fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
+            <span class="ob-kr fs-5-sm fw-bold me-6" (click)="showOB(item,null)">{{ item?.okrName }}</span>
             <div class="d-flex flex-column">
               <div class="d-flex flex-stack">
                 <codx-vll *ngIf="item?.category" [showText]="true" [showBgColor]="true" [name]="'OM012'" [ngbTooltip]="okrGrv.krGrv?.category?.headerText"
@@ -108,14 +108,14 @@
 
           <div class="d-flex align-items-center justify-content-end col-6 ps-5">
             <div class=" position-relative"  ngbTooltip="Người chịu trách nhiệm">
-              <!-- <span *ngIf="item?.hasAssign!=null"
-                class="position-absolute end-0 bottom-0 d-flex flex-stack justify-content-center badge-avatar badge-circle badge-light rounded-circle w-30px h-30px me-5">
-                <span class="icon-i-building text-primary"></span>
-              </span> -->
+              
               <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-  
+              <span *ngIf="item?.hasAssign!=null"
+                class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center ">
+                <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
+              </span>
             </div>
-            <div class="d-flex ps-5 align-items-end" >
+            <div class="d-flex ps-9 align-items-end" >
               <div class="d-flex flex-column align-items-center kr-process w-150px me-7  pb-2"  >
                 
               </div>
@@ -127,7 +127,7 @@
                   item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
               </div>
               <codx-comment-temp [objectID]="item?.recID" [viewType]="3"  ngbTooltip="Bình luận"></codx-comment-temp>
-              <span class="ms-2 me-2">
+              <span class="ms-2 me-2" *ngIf="okrFM?.obFM">
                 <codx-mfunc [formModel]="okrFM?.obFM" type="view" [dataItem]="item" (clickMF)="clickMF($event,item)"
                   (changeDataMF)="changeDataOBMF($event,item)"></codx-mfunc>
               </span>
@@ -138,7 +138,7 @@
       </div>
 
       <!--KR node-->
-      <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"
+      <div class="d-flex align-items-center py-2 kr-background justify-content-between okr-treenode w-100"  (click)="clickTreeNode($event)" 
         *ngIf="item?.okrType==krType || item?.okrType==skrType">
         <div class="d-flex align-items-center col-6">
           <!-- <span class="me-3" [inlineSVG]="okrVll?.kr?.icon"></span> -->
@@ -147,8 +147,8 @@
           <span class="icon-brightness_1 fs-12px d-flex align-items-center "
             [ngClass]="item?.okrType==krType?'text-warning':'text-info'"></span>
           <span class="ps-5 d-flex flex-column">
-            <span class="ob-kr text-dark fw-bold kr-name" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
-            <div class="d-flex flex-wrap">
+            <span class="ob-kr text-dark fw-bold" (click)="showKR(item,null)"> {{ item?.okrName }} </span>
+            <div class="d-flex flex-wrap fs-7">
               <div class="d-flex align-items-center">
                 <span class=" text-gray-500 me-1">{{okrGrv?.krGrv?.target?.headerText+':'}}</span>
                 <span class="me-1" [innerHTML]="item?.target "></span>
@@ -181,10 +181,13 @@
               <span class="icon-i-building text-primary"></span>
             </span> -->
             <codx-img [width]="30" [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
-
+            <span *ngIf="item?.hasAssign!=null"
+            class="position-absolute badge-avatar badge-circle badge-light rounded-circle w-20px h-20px om-assign-badge d-flex align-items-center justify-content-center ">
+            <span class="icon-i-reply-all-fill icon-16 text-primary"></span>
+          </span>
           </div>
-          <div class="d-flex ps-5 align-items-end" >
-            <div class="d-flex flex-column align-items-center kr-process w-150px me-7  pb-2"  [ngbTooltip]="'Tiến độ'">
+          <div class="d-flex ps-9 align-items-end" >
+            <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'">
               <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
               <span class="mb-1" *ngIf="item?.progress!=0"
                 [innerHTML]="(item?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
@@ -206,12 +209,12 @@
                 item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
             </div>
             <codx-comment-temp [objectID]="item?.recID" [viewType]="3"  ngbTooltip="Bình luận"></codx-comment-temp>
-            <span class="ms-2 me-2" *ngIf="item?.okrType==krType ">
+            <span class="ms-2 me-2" *ngIf="item?.okrType==krType && okrFM?.krFM">
               <codx-mfunc [formModel]="okrFM?.krFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,false)"
                 (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>
-            <span class="ms-2 me-2" *ngIf=" item?.okrType==skrType">
+            <span class="ms-2 me-2" *ngIf=" item?.okrType==skrType && okrFM?.skrFM">
               <codx-mfunc [formModel]="okrFM?.skrFM" type="view" [dataItem]="item"
                 (clickMF)="clickKRMF($event,item,true)" (changeDataMF)="changeDataKRMF($event,item,false)"></codx-mfunc>
             </span>

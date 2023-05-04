@@ -44,10 +44,12 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   funcID: string;
   actionType: string;
   employeeId: string;
+  idField = 'RecID';
   isAfterRender = false;
   lstSubContract: any;
   headerText: string;
   openFrom: string;
+  genderGrvSetup: any
   employeeObj: any;
 
     //#region EBenefitInfo Declaration
@@ -131,6 +133,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('EmployeeInfomation','grvEmployeeInfomation').subscribe((res) => {
+      this.genderGrvSetup = res?.Gender;
+    });
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -225,9 +230,10 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
 
   initForm() {
     if (this.actionType == 'add') {
-      this.hrSevice.getEContractDefault().subscribe((res) => {
+      // this.hrSevice.getEContractDefault().subscribe((res) => {
+        this.hrSevice.getDataDefault(this.formModel.funcID, this.formModel.entityName, this.idField).subscribe((res) => {
         if (res) {
-          this.data = res;
+          this.data = res?.data;
           this.data.employeeID = this.employeeId;
           this.data.signedDate = null;
           this.data.effectedDate = null;
@@ -274,9 +280,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     console.log('data chuan bi luu', this.data);
     if(this.data.payForm == null) this.data.payForm = '';
     if(this.data.benefits == null) this.data.benefits = '';
-    this.data.status = '1'
-    this.data.approveStatus = '1'
-    
+
     // if (this.formGroup.invalid) {
     //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
     //   return;

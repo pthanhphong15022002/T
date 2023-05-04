@@ -9,14 +9,12 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 })
 export class LayoutNotoolbar extends LayoutBaseComponent {
   
-  module = 'FD';
   dialog!: DialogRef;
-  override aside = true;
-  override asideFixed = true;
   constructor(inject: Injector,
     private callfc: CallFuncService,
     ) {
     super(inject);
+    this.module = 'FD';
   }
 
   onInit(): void {

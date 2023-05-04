@@ -646,6 +646,15 @@ export class CodxDpService {
     return arr3;
   }
 
+  updateOwnerStepAsync(step){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateOwnerStepAsync',
+      step
+    );
+  }
+
   //check trinfh ki
   checkApprovalStep(recID) {
     return this.api.exec<any>(
@@ -690,7 +699,7 @@ export class CodxDpService {
       listAppoverStep
     );
   }
-  //up + add + delete es tại DP
+  //#region up + add + delete es tại DP
   upDataApprovalStep(listStep, listStepDelete) {
     if (listStep?.length > 0)
       this.api
@@ -715,6 +724,15 @@ export class CodxDpService {
         .subscribe();
     }
   }
+  updateApproverStatusInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateApproverStatusByRecIDAsync',
+      data
+    );
+  }
+  //#endregion 
 
   copyAvatarById(data) {
     return this.api.exec<any>(
@@ -732,4 +750,6 @@ export class CodxDpService {
       data
     );
   }
+
+ 
 }

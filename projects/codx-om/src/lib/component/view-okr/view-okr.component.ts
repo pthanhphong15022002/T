@@ -31,6 +31,7 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   @Input() okrFM:any;
   @Input() okrVll:any;
   @Input() okrGrv:any;
+  @Input() allowShowDetail=false;
 
   @ViewChild('showTask') showTask: any;
   dialogRef: DialogRef;
@@ -63,17 +64,11 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Base Event------------------------//
   click(event: any) {
     switch (event) {
     }
   }
 
-  //-----------------------End-------------------------------//
-  
-  //-----------------------Get Data Func---------------------//
   
   collapeKR(collapsed: boolean) {
     
@@ -119,6 +114,9 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
   //Xem chi tiết OB
   showOB(obj: any, popupTitle: any) {
+    if(!this.allowShowDetail){
+      return;
+    }
     let dModel = new DialogModel();
     dModel.IsFull = true;
     dModel.FormModel = this.okrFM?.obFM;
@@ -135,6 +133,9 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
   }
   //Xem chi tiết KR
   showKR(kr: any, popupTitle: any) {
+    if(!this.allowShowDetail){
+      return;
+    }
     let dModel = new DialogModel();
     popupTitle=popupTitle!=null ? popupTitle :"Xem chi tiết";
     dModel.IsFull = true;
@@ -148,6 +149,20 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
       [kr, popupTitle, this.okrFM,this.okrVll,this.okrGrv],
       '',
       dModel
+    );
+  }
+  clickTreeNode(evt:any, ){
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+  newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
     );
   }
 }
