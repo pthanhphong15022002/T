@@ -260,7 +260,7 @@ export class PopupEBasicSalariesComponent
     if (beginDate && endDate) {
       let date1 = new Date(beginDate);
       let date2 = new Date(endDate);
-      return date1 < date2;
+      return date1 <= date2;
     }
     return false;
   }

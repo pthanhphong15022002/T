@@ -2381,11 +2381,17 @@ codx-calendar {
   color: inherit;
 }
 
-#gridViewV2.e-grid .e-rowcell {
-  padding: 8px 10px !important;
+//dntram edit 28/04/2023
+// #gridViewV2.e-grid .e-rowcell {
+//   padding:8px 10px!important;
+// }
+ejs-numerictextbox{
+.e-input-group.e-control-wrapper{
+  height: auto;
 }
-ejs-numerictextbox {
-  .e-input-group.e-control-wrapper {
+}
+ejs-datepicker{
+  .e-input-group.e-control-wrapper{
     height: auto;
   }
 }
@@ -2621,7 +2627,7 @@ codx-input .e-icons.e-check:before {
 
 
 /// fix menu left
-/// 
+///
 
 //.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
   // border-radius: 3px!important;
