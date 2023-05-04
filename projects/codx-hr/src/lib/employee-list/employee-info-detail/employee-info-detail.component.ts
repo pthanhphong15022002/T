@@ -286,10 +286,12 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
   ViewAllEBenefitFlag = false;
   ViewAllEAssetFlag = false;
+  ViewAllVisaFlag = false;
   ViewAllEskillFlag = false;
   ViewAllEBasicSalaryFlag = false;
   ViewAllEJobSalaryFlag = false;
   ViewAllEContractFlag = false;
+  ViewAllPassportFlag = false;
   ops = ['y'];
 
   //#region filter variables of form main eAssets
@@ -435,8 +437,9 @@ export class EmployeeInfoDetailComponent extends UIComponent{
 
   //#endregion
 
-  @ViewChild('tmpTemp', { static: true })
-  tmpTemp: TemplateRef<any>;
+  @ViewChild('tmpTemp', { static: true }) tmpTemp: TemplateRef<any>;
+  @ViewChild('tmpViewAllPassport', { static: true }) tmpViewAllPassport: TemplateRef<any>;
+  @ViewChild('tmpViewAllVisa', { static: true }) tmpViewAllVisa: TemplateRef<any>;
 
   listEmp: any;
   request: DataRequest;
@@ -1159,38 +1162,38 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.visaColumnGrid = [
           {
             headerText:
-              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['VisaType'],
             template: this.visaCol1,
             width: '150',
           },
           {
             headerText:
-              visaHeaderText['IssuedDate'] +
+              'Thời hạn '+
               ' | ' +
-              visaHeaderText['ExpiredDate'],
+              visaHeaderText['NationalityID'],
             template: this.visaCol2,
             width: '150',
           },
         ];
       });
   
-      let insVisa = setInterval(() => {
-        if (this.visaGridview) {
-          clearInterval(insVisa);
-          let t = this;
-          this.visaGridview.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.visaRowCount = res['data'].length;
-                if(res['data'].length > 0){
-                  this.crrVisa = res.data[0]
-                }
-              }
-            }
-          });
-          this.visaRowCount = this.visaGridview.dataService.rowCount;
-        }
-      }, 100);
+      // let insVisa = setInterval(() => {
+      //   if (this.visaGridview) {
+      //     clearInterval(insVisa);
+      //     let t = this;
+      //     this.visaGridview.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.visaRowCount = res['data'].length;
+      //           if(res['data'].length > 0){
+      //             this.crrVisa = res.data[0]
+      //           }
+      //         }
+      //       }
+      //     });
+      //     this.visaRowCount = this.visaGridview.dataService.rowCount;
+      //   }
+      // }, 100);
     }
     //#endregion
 
@@ -1218,24 +1221,25 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         ];
       });
   
-      let insPassport = setInterval(() => {
-        if (this.passportGridview) {
-          clearInterval(insPassport);
-          let t = this;
-          this.passportGridview?.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.passportRowCount = res['data'].length;
-                if(res['data'].length > 0){
-                  this.crrPassport = res.data[0]
-                  debugger
-                }
-              }
-            }
-          });
-          this.passportRowCount = this.passportGridview?.dataService.rowCount;
-        }
-      }, 100);
+      // let insPassport = setInterval(() => {
+      //   if (this.passportGridview) {
+      //     clearInterval(insPassport);
+      //     let t = this;
+      //     this.passportGridview?.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.passportRowCount = res['data'].length;
+      //           if(res['data'].length > 0){
+      //             this.crrPassport = res.data[0]
+      //             console.log('crr passport', this.crrPassport);
+      //             debugger
+      //           }
+      //         }
+      //       }
+      //     });
+      //     this.passportRowCount = this.passportGridview?.dataService.rowCount;
+      //   }
+      // }, 100);
     }
     //#endregion
 
@@ -1671,6 +1675,14 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         });
     });
     //#endregion
+
+    this.hrService.GetEmpCurrentPassport(this.employeeID).subscribe((res) => {
+      this.crrPassport = res;
+    })
+
+    this.hrService.GetEmpCurrentVisa(this.employeeID).subscribe((res) => {
+      this.crrVisa = res;
+    })
 
     this.initLegalInfo();
 
@@ -2263,6 +2275,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   }
 
   clickMF(event: any, data: any, funcID = null) {
+    debugger
     switch (event.functionID) {
       case 'SYS03': //edit
         if (funcID == 'passport') {
@@ -2822,7 +2835,55 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           this.df.detectChanges();
         }
         break;
+    
+      case this.ePassportFuncID + 'ViewAll':        
+        this.popupViewAll(this.ePassportFuncID)
+        break;
+      case this.eVisaFuncID + 'ViewAll':
+        this.popupViewAll(this.eVisaFuncID)
+        break;
+      }
+  }
+
+  popupViewAll(funcID){
+    let ref : TemplateRef<any>
+    // let ins = setInterval(() => {
+    //   if (this.passportGridview) {
+    //     clearInterval(ins);
+    //     let t = this;
+    //     this.passportGridview?.dataService.onAction.subscribe((res) => {
+    //       if (res?.type == 'loaded') {
+    //         t.passportRowCount = res['data'].length;
+    //       }
+    //     });
+    //     debugger
+    //     this.passportRowCount = this.passportGridview.dataService.rowCount;
+    //   }
+    // }, 100);
+
+    switch (funcID){
+      case this.ePassportFuncID:
+        ref = this.tmpViewAllPassport;
+        break;
+
+      case this.eVisaFuncID:
+        ref = this.tmpViewAllVisa;
+        break;
     }
+
+    let option = new DialogModel();
+    option.zIndex = 999;
+    let dialog = this.callfunc.openForm(
+      ref,
+      '',
+      850,
+      550,
+      '',
+      null,
+      '',
+      option
+    );
+    
   }
 
   // getDataAsync(funcID: string) {
@@ -2847,6 +2908,10 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   //       });
   //   }
   // }
+
+  close2(dialog: DialogRef) {
+    dialog.close();
+  }
 
   ngAfterViewInit(): void {
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
@@ -4563,20 +4628,20 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.eContractRowCount = this.eContractGridview.dataService.rowCount;
       }
     }, 100);
-    // let option = new DialogModel();
-    // option.zIndex = 999;
-    // if(evt.data == true){
-    //   let dialog = this.callfunc.openForm(
-    //     this.tmpTemp,
-    //     '',
-    //     850,
-    //     550,
-    //     '',
-    //     null,
-    //     '',
-    //     option
-    //   );
-    // }
+    let option = new DialogModel();
+    option.zIndex = 999;
+    if(evt.data == true){
+      let dialog = this.callfunc.openForm(
+        this.tmpTemp,
+        '',
+        850,
+        550,
+        '',
+        null,
+        '',
+        option
+      );
+    }
   }
 
   copyValue(actionHeaderText, data, flag) {
