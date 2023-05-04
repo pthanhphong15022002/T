@@ -421,8 +421,17 @@ export class CatagoryComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  collapseItem(evt: any, recID: string, fieldName: string) {
-    if (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) return;
+  collapseItem(
+    evt: any,
+    recID: string,
+    fieldName: string,
+    changeValue: boolean = false
+  ) {
+    if (
+      (this.dataValue[fieldName] != '1' || !this.dataValue[fieldName]) &&
+      !changeValue
+    )
+      return;
     var eleItem = document.querySelectorAll(
       '.list-item[data-group="' + recID + '"]'
     );

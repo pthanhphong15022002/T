@@ -1,10 +1,11 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewEncapsulation } from '@angular/core';
 import { LayoutService, PageTitleService, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'report-stationery',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class EPReportComponent extends UIComponent {
   views: Array<ViewModel> = [];
