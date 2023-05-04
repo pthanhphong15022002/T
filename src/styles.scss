@@ -1418,7 +1418,7 @@ a {
 }
 
 .line-clamp.line-clamp-1 {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .tab-content > .tab-pane {
@@ -2381,10 +2381,7 @@ codx-calendar {
   color: inherit;
 }
 
-//dntram edit 28/04/2023
-// #gridViewV2.e-grid .e-rowcell {
-//   padding:8px 10px!important;
-// }
+
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
   height: auto;
@@ -2623,8 +2620,33 @@ codx-input .e-icons.e-check:before {
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
   font-size: 13px;
 }
-
-
+lib-employees{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employee-list{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employees-leave{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
 
 /// fix menu left
 ///
@@ -2636,9 +2658,16 @@ codx-input .e-icons.e-check:before {
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
   font-size: 12px!important;
   padding-top: 2px!important;
+  line-height: 16px!important;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
   // box-shadow:none;
   background-color: #ffffff25!important;
+}
+.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link, 
+.aside-minimize-icon-title .aside .aside-primary .aside-footer .menu-link {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 82px;
 }
