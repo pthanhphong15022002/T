@@ -276,7 +276,6 @@ export class InstanceDetailComponent implements OnInit {
         formModel.entityName = res?.entityName;
         formModel.funcID = 'DPT040102';
         this.frmModelInstancesTask = formModel;
-        console.log(this.frmModelInstancesTask);
       }
     });
     this.timelineSettings = this.timelineSettingsWeek;

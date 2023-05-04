@@ -45,6 +45,7 @@ export class DealDetailComponent  implements OnInit {
 
   ngOnInit(): void {
   }
+  
   ngAfterViewInit(): void {
     this.tabControl.push({ name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract});
   }
