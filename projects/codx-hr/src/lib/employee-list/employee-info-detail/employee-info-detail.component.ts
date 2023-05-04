@@ -73,6 +73,7 @@ import { PopupEProcessContractComponent } from '../../employee-contract/popup-ep
   styleUrls: ['./employee-info-detail.component.scss']
 })
 export class EmployeeInfoDetailComponent extends UIComponent{
+  console = console;
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -438,6 +439,16 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   @ViewChild('tmpTemp', { static: true })
   tmpTemp: TemplateRef<any>;
 
+  //Declare model ViewAll Salary
+  @ViewChild('templateViewSalary', { static: true })
+  templateViewSalary: TemplateRef<any>;
+  dialogViewSalary: any;
+
+  //Declare model ViewAll Benefit
+  @ViewChild('templateViewBenefit', { static: true })
+  templateViewBenefit: TemplateRef<any>;
+  dialogViewBenefit: any;
+
   listEmp: any;
   request: DataRequest;
 
@@ -668,7 +679,21 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
-            this.df.detectChanges();
+            let rqJSalary = new DataRequest();
+            rqJSalary.entityName = 'HR_EJobSalaries';
+            rqJSalary.dataValues = this.employeeID + ';true';
+            rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
+            rqJSalary.page = 1;
+            rqJSalary.pageSize = 1;
+            this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
+              if (res && res[0]) {
+                this.crrEBSalary = {
+                  ...this.crrEBSalary,
+                  jSalary: res[0][0].jSalary,
+                };
+                this.df.detectChanges();
+              }
+            });
           }
         });
       }
@@ -737,7 +762,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     }
     if (!this.basicSalaryColumnGrid) {
       //#region get columnGrid EBasicSalary - Lương cơ bản
-      this.hrService.getHeaderText(this.eBasicSalaryFuncID).then((res) => {
+      this.hrService.getHeaderText(this.eBasicSalaryFuncID).then((res) => { 
         let basicSalaryHeaderText = res;
         this.basicSalaryColumnGrid = [
           {
@@ -752,37 +777,33 @@ export class EmployeeInfoDetailComponent extends UIComponent{
           },
           {
             headerText:
-              basicSalaryHeaderText['EffectedDate'] +
-              ' | ' +
-              basicSalaryHeaderText['ExpiredDate'],
-            template: this.basicSalaryCol3,
+            "Lương chức danh",
+            template: this.basicSalaryCol4,
             width: '150',
           },
           {
             headerText:
-              basicSalaryHeaderText['DecisionNo'] +
-              ' | ' +
-              basicSalaryHeaderText['SignedDate'],
-            template: this.basicSalaryCol4,
+              basicSalaryHeaderText['EffectedDate'],
+            template: this.basicSalaryCol3,
             width: '150',
-          },
+          }, 
         ];
       });
-      let insBSalary = setInterval(() => {
-        if (this.basicSalaryGridview) {
-          clearInterval(insBSalary);
-          let t = this;
-          this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eBasicSalaryRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eBasicSalaryRowCount =
-            this.basicSalaryGridview.dataService.rowCount;
-        }
-      }, 100);
+      // let insBSalary = setInterval(() => {
+      //   if (this.basicSalaryGridview) {
+      //     clearInterval(insBSalary);
+      //     let t = this;
+      //     this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eBasicSalaryRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eBasicSalaryRowCount =
+      //       this.basicSalaryGridview.dataService.rowCount;
+      //   }
+      // }, 100);
 
       //#endregion
 
@@ -1228,7 +1249,7 @@ export class EmployeeInfoDetailComponent extends UIComponent{
                 t.passportRowCount = res['data'].length;
                 if(res['data'].length > 0){
                   this.crrPassport = res.data[0]
-                  debugger
+                  // debugger
                 }
               }
             }
@@ -4466,8 +4487,30 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     this.UpdateEBenefitPredicate();
   }
 
+  closeModelBenefit(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  popupViewBenefit() {
+    this.dialogViewBenefit = this.callfc.openForm(
+      this.templateViewBenefit,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogViewBenefit.closed.subscribe((res) => {
+      // if (res?.event) {
+      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
+      // }
+      this.df.detectChanges();
+    });
+  }
+
   valueChangeViewAllEBenefit(evt) {
-    this.ViewAllEBenefitFlag = evt.data;
+    this.ViewAllEBenefitFlag = evt.isTrusted;
+    this.popupViewBenefit();
     let ins = setInterval(() => {
       if (this.eBenefitGrid) {
         clearInterval(ins);
@@ -4518,8 +4561,33 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     }, 100);
   }
 
+
+  
+  closeModelSalary(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  popupUpdateEJobSalaryStatus() {
+    this.dialogViewSalary = this.callfc.openForm(
+      this.templateViewSalary,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogViewSalary.closed.subscribe((res) => {
+      // if (res?.event) {
+      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
+      // }
+      this.df.detectChanges();
+    });
+  }
+
   valueChangeViewAllEBasicSalary(evt) {
-    this.ViewAllEBasicSalaryFlag = evt.data;
+    this.ViewAllEBasicSalaryFlag = evt.isTrusted;
+    // this.ViewAllEBasicSalaryFlag = evt.data;
+    this.popupUpdateEJobSalaryStatus();
     let ins = setInterval(() => {
       if (this.basicSalaryGridview) {
         clearInterval(ins);
