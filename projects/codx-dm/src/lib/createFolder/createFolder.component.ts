@@ -269,7 +269,6 @@ export class CreateFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;
@@ -883,7 +882,7 @@ export class CreateFolderComponent implements OnInit {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item && item.event) this.fileEditing.location = item.event;
+      if (item && item.event) this.location = item.event;
     });
   }
 

@@ -1,15 +1,30 @@
+<ng-container>
+  <div class="d-flex justify-content-end bg-gray-200 p-3 rounded-2 mb-2">
+    <div>
+      <button
+        type="button"
+        class="btn btn-clean btn-sm btn-icon btn-icon-md"
+        (click)="add()"
+      >
+        <i class="icon-add_box icon-18 text-primary"></i>
+      </button>
+    </div>
+  </div>
+  <!-- <ng-container [ngTemplateOutlet]="itemViewList"></ng-container> -->
+</ng-container>
 <codx-views
   #view
-  idField="recID"
-  [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
   [method]="methodLoadData"
+  idField="recID"
+  [funcID]="'CM0202'"
+  predicates="CustomerID==@0"
+  [dataValues]="customerID" 
   [views]="views"
-  predicates="CustomerID=@0"
-  [dataValues]="customerID"
+  [toolbarDisplay]="false"
   (selectedChange)="changeItemDetail($event)"
 >
 </codx-views>
@@ -21,4 +36,51 @@
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
+</ng-template>
+<ng-template #itemViewList let-data>
+  <div class="w-100 has-action-menu">
+    <div class="row">
+      <div class="col-1 d-flex justify-content-center align-items-center">
+        {{ getIndex(data.recID) }}
+      </div>
+      <div class="col-3 d-flex flex-column justify-content-center">
+        <span class="fs-6 fw-bold">Báo giá test</span>
+      </div>
+      <div class="col-2 d-flex justify-content-end align-items-center">
+        <span class="fs-6">50.000.000 VND</span>
+      </div>
+      <div class="col-2 d-flex justify-content-end align-items-center">
+        <span class="fs-6">15/1/2016</span>
+      </div>
+      <div class="col-2 d-flex justify-content-end align-items-center">
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
+        </codx-vll>
+      </div>
+      <div class="col-2 d-flex justify-content-end align-items-center">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          style="border-radius: 50px; padding: 0 10px !important"
+        >
+          <span class="fs-6">Chờ duyệt</span>
+        </button>
+      </div>
+    </div>
+    <codx-mfunc
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      [isBookMark]="true"
+      [dataItem]="moreDefaut"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>

@@ -932,9 +932,11 @@ export class PopupAddSignFileComponent implements OnInit {
             //   this.attachment.fileUploadList[i].referType = 'sign';
             // }
             (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
+              (item2: any[]) => {
                 this.disableContinue = false;
-                if (item2?.status == 0) {
+                console.log('file', item2);
+
+                if (!item2.find((x) => x.status != 0)) {
                   this.fileAdded(item2);
                   this.updateNodeStatus(oldNode, newNode);
                   this.currentTab++;

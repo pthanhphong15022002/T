@@ -6,6 +6,7 @@ import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-
   selector: 'report-stationery',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
+  //encapsulation:ViewEncapsulation.None,
 })
 export class EPReportComponent extends UIComponent {
   @ViewChild('view') viewBase:ViewsComponent;
