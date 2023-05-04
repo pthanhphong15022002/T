@@ -103,7 +103,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature];
     if (this.reportID) {
      this.getReport();
-     this.getReportParams();
+     //this.getReportParams();
 
     } else this.setDefaut();
   }
@@ -121,27 +121,28 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       if (res) {
         this.data = res;
         this.recID = this.data.recID;
+        this.parameters = this.data.parameters;
       } else {
         this.setDefaut();
       }
     });
   }
 
-  getReportParams(){
-    this.api
-    .execSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'ReportParametersBusiness',
-      'GetReportParamAsync',
-      this.reportID
-    )
-    .subscribe((res: any) => {
-      if (res) {
-        this.parameters = res.parameters;
-      }
-    });
-  }
+  // getReportParams(){
+  //   this.api
+  //   .execSv(
+  //     'rptsys',
+  //     'Codx.Businiess.CM',
+  //     'LVReportHelper',
+  //     'GetReportParamAsync',
+  //     this.reportID
+  //   )
+  //   .subscribe((res: any) => {
+  //     if (res) {
+  //       this.parameters = res.parameters;
+  //     }
+  //   });
+  // }
 
   setReportParams(){
     this.notiService.alertCode("Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?").subscribe((res:any)=>{
@@ -153,7 +154,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         }
          this.api
               .execSv(
-                serviceName,
+                'rptsys',
                 'Codx.RptBusiness.CM',
                 'LVReportHelper',
                 'GetReportParamsAsync',
@@ -161,7 +162,13 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
               )
               .subscribe((res: any) => {
                 if (res) {
-                  this.getReportParams();
+                  this.parameters = res;
+                  this.data.parameters = this.parameters;
+                  this.api.execSv('rptsys',
+                  'Codx.RptBusiniess.SYS',
+                  'ReportListBusiness',
+                  'UpdateReportInfoAsync',
+                  this.data).subscribe()
                 }
               });
       }
@@ -210,7 +217,21 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       );
       dialog.closed.subscribe((res:any)=>{
         if(res.event){
-          this.getReportParams();
+         let dataReturned = res.event;
+         if(!dataReturned.recID){
+          dataReturned.recID = Util.uid();
+          dataReturned.createdBy = this.authStore.get().userID;
+          dataReturned.createdOn = new Date;
+          this.parameters.push(dataReturned);
+         }
+         else{
+          let idx = this.parameters.findIndex((x:any)=> x.controlName == dataReturned.controlName || x.recID == dataReturned.recID);
+          if(idx>-1){
+            this.parameters[idx] = dataReturned;
+          }
+         }
+         this.data.parameters = this.parameters;
+
         }
       })
     }

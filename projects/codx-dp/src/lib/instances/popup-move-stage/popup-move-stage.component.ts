@@ -25,6 +25,7 @@ import {
   DP_Instances_Steps,
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -85,7 +86,9 @@ export class PopupMoveStageComponent implements OnInit {
 
   tmpTasks: any[] = [];
   tmpGroups: any[] = [];
-
+  isMoveNext: boolean = false;
+  isDurationControl: boolean = false;
+  durationControl: boolean = false;
   readonly oneHundredNumber: number = 100;
   readonly viewTask: string = 'Task';
   readonly viewTaskGroup: string = 'TaskGroup';
@@ -104,9 +107,10 @@ export class PopupMoveStageComponent implements OnInit {
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.stepName = dt?.data.stepName;
-    this.isUseReason = dt?.data.stepReason;
-    this.headerText = dt?.data.headerTitle; //  gán sau button add
+    this.stepName = dt?.data?.stepName;
+    this.isUseReason = dt?.data?.stepReason;
+    this.headerText = dt?.data?.headerTitle; //  gán sau button add
+    this.durationControl = dt?.data?.isDurationControl;
     this.viewClick = this.viewKanban;
     this.listStepProccess = dt?.data?.listStepProccess;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
@@ -142,6 +146,7 @@ export class PopupMoveStageComponent implements OnInit {
     !this.stepIdClick &&
       this.stepIdClick != this.stepIdOld &&
       this.autoClickedSteps(this.listStepsCbx, this.stepName);
+    this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
   }
 
   getNameAndPosition(id) {
@@ -282,8 +287,7 @@ export class PopupMoveStageComponent implements OnInit {
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
-
-    !this.instancesStepOld.actualEnd && this.setToDay();
+    this.instancesStepOld.actualEnd =  this.checkDuration(this.durationControl,this.instancesStepOld.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
@@ -294,8 +298,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   onSave() {
     this.instancesStepOld.owner = this.owner;
-    var isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
-    if (isMoveNext) {
+    if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
         return;
@@ -305,6 +308,15 @@ export class PopupMoveStageComponent implements OnInit {
           'SYS009',
           0,
           '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"'
+        );
+        return;
+      }
+      if(this.compareDates(this.instancesStepOld.actualStart,this.instancesStepOld.actualEnd)) {
+        var dateMessage = new Date(this.instancesStepOld.actualStart).toLocaleDateString('en-AU');
+        this.notiService.notifyCode(
+          'DP032',
+          0,
+          '"' + this.gridViewInstanceStep['ActualEnd']?.headerText + '"', '"' +  dateMessage + '"'
         );
         return;
       }
@@ -462,6 +474,7 @@ export class PopupMoveStageComponent implements OnInit {
     if ($event && this.stepIdClick !== $event) {
       this.stepIdClick = $event;
       this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
+      this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -564,13 +577,13 @@ export class PopupMoveStageComponent implements OnInit {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
         var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field?.dataValue.toLowerCase().match(validEmail)) {
+        if (!field?.dataValue?.toLowerCase().match(validEmail) && field?.dataValue) {
           return 'SYS037';
         }
       }
       if (field.dataFormat == 'P') {
         var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field?.dataValue.toLowerCase().match(validPhone)) {
+        if (!field?.dataValue?.toLowerCase().match(validPhone) && field?.dataValue) {
           return 'RS030';
         }
       }
@@ -631,6 +644,16 @@ export class PopupMoveStageComponent implements OnInit {
         case 'P':
           this.codxDpService
             .getListUserByListOrgUnitIDAsync(lstRoles, 'P')
+            .subscribe((res) => {
+              if (res != null && res.length > 0) {
+                lstOrg = res;
+                this.owner = lstOrg[0]?.userID;
+              }
+            });
+          break;
+        case 'R':
+          this.codxDpService
+            .getListUserByRoleID(lstRoles)
             .subscribe((res) => {
               if (res != null && res.length > 0) {
                 lstOrg = res;
@@ -727,5 +750,30 @@ export class PopupMoveStageComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  compareDates(actualStart, actualEnd) {
+    const startMoment = moment(actualStart);
+    const endMoment = moment(actualEnd);
+
+    if (startMoment.isAfter(endMoment)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  checkDuration(isCheck: boolean, actualEnd: Date): Date{
+    if(isCheck) {
+      actualEnd = new Date();
+      this.isDurationControl = false;
+    }
+    else {
+      if(!actualEnd) {
+        actualEnd = new Date();
+      }
+      this.isDurationControl = true;
+    }
+    return actualEnd;
   }
 }

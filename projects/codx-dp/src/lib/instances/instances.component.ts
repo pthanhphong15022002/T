@@ -45,7 +45,8 @@ import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
-import { Observable, finalize, map, filter } from 'rxjs';
+import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
+import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
 
 @Component({
   selector: 'codx-instances',
@@ -59,6 +60,7 @@ export class InstancesComponent
   // @Input() process: any;
   @Input() isCreate: boolean = true;
   // @Input() tabInstances = [];
+  @ViewChild('popupOwnerRolesTemp') popupOwnerRolesTemp: TemplateRef<any>;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
@@ -74,7 +76,7 @@ export class InstancesComponent
 
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
-
+  dialogOwnerStep: DialogRef;
   views: Array<ViewModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
@@ -223,6 +225,7 @@ export class InstancesComponent
   listStageManagerInMove = [];
   idTemp = '';
   nameTemp = '';
+  ownerRoles = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -581,29 +584,29 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
     };
-      var dialogCustomField = this.callfc.openSide(
-        PopupAddInstanceComponent,
-        obj,
-        option
-      );
-      dialogCustomField.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          var data = e.event;
-          if (this.kanban) {
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddInstanceComponent,
+      obj,
+      option
+    );
+    dialogCustomField.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        var data = e.event;
+        if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
-            if (this.kanban?.dataSource?.length == 1) {
-              this.kanban.refresh();
-            }
+          if (this.kanban?.dataSource?.length == 1) {
+            this.kanban.refresh();
           }
-          this.dataSelected = data;
-          if (this.detailViewInstance) {
-            this.detailViewInstance.dataSelect = this.dataSelected;
-            this.detailViewInstance.listSteps = this.listStepInstances;
-          }
-
-          this.detectorRef.detectChanges();
         }
-      });
+        this.dataSelected = data;
+        if (this.detailViewInstance) {
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.listSteps = this.listStepInstances;
+        }
+
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   edit(data, titleAction) {
@@ -677,17 +680,17 @@ export class InstancesComponent
                         this.view.dataService.update(e.event).subscribe();
 
                         if (this.kanban) {
-                        // this.kanban.updateCard(data);  //core mới lỗi chô này
+                          // this.kanban.updateCard(data);  //core mới lỗi chô này
                           if (this.kanban?.dataSource?.length == 1) {
                             this.kanban.refresh();
                           }
                         }
                         this.dataSelected = e.event;
                         if (this.detailViewInstance) {
-
-
-                          this.detailViewInstance.dataSelect = this.dataSelected;
-                          this.detailViewInstance.listSteps = this.listStepInstances;
+                          this.detailViewInstance.dataSelect =
+                            this.dataSelected;
+                          this.detailViewInstance.listSteps =
+                            this.listStepInstances;
                         }
                         this.detectorRef.detectChanges();
                       }
@@ -771,7 +774,12 @@ export class InstancesComponent
         e.forEach((res) => {
           switch (res.functionID) {
             case 'SYS003':
-              if (data.status != '2' || data.closed || !data.permissioRolesProcess) res.disabled = true;
+              if (
+                data.status != '2' ||
+                data.closed ||
+                !data.permissionCloseInstances
+              )
+                res.disabled = true;
               break;
             // case 'SYS004':
             // case 'SYS001':
@@ -786,52 +794,69 @@ export class InstancesComponent
             case 'SYS103':
             case 'SYS03':
               let isUpdate = data.write;
-              if (!isUpdate || data.status != '2' || data.closed || !data.permissioRolesProcess)
+              if (
+                !isUpdate ||
+                data.status != '2' ||
+                data.closed ||
+                !data.permissionCloseInstances
+              )
                 res.disabled = true;
               break;
             case 'DP09':
-              if (this.checkMoreReason(data, null)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, null)) {
+                res.isblur = true;
               }
               break;
             //Copy
             case 'SYS104':
             case 'SYS04':
               let isCopy = this.isCreate ? true : false;
-              if (!isCopy || data.closed || data.status != '2' || !data.permissioRolesProcess)
+              if (
+                !isCopy ||
+                data.closed ||
+                data.status != '2' ||
+                !data.permissionCloseInstances
+              )
                 res.disabled = true;
               break;
             //xóa
             case 'SYS102':
             case 'SYS02':
               let isDelete = data.delete;
-              if (!isDelete || data.closed || data.status != '2' || !data.permissioRolesProcess)
+              if (
+                !isDelete ||
+                data.closed ||
+                data.status != '2' ||
+                !data.permissionCloseInstances
+              )
                 res.disabled = true;
               break;
             //Đóng nhiệm vụ = true
             case 'DP14':
-              if (data.closed || !data.permissionCloseInstances || !data.permissioRolesProcess)
-                res.disabled = true;
+              if (data.closed || !data.permissionCloseInstances)
+                res.isblur = true;
               break;
             //Mở nhiệm vụ = false
             case 'DP15':
-              if (!data.closed || !data.permissionCloseInstances || !data.permissioRolesProcess) {
-                res.disabled = true;
+              if (!data.closed || !data.permissionCloseInstances) {
+                res.isblur = true;
               }
               break;
             case 'DP02':
-              if (this.checkMoreReason(data, !this.isUseFail)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, !this.isUseFail)) {
+                res.isblur = true;
               }
               break;
             case 'DP10':
-              if (this.checkMoreReason(data, !this.isUseSuccess)) {
-                res.disabled = true;
+              if (data.closed || this.checkMoreReason(data, !this.isUseSuccess)) {
+                res.isblur = true;
               }
               break;
             //an khi aprover rule
             case 'DP17':
-              if (!this.process?.approveRule || !data.permissioRolesProcess) {
+              if (!data.write || data.closed) {
+                res.disabled = true;
+              } else if (!this.process?.approveRule) {
                 res.isblur = true;
               }
               break;
@@ -839,6 +864,14 @@ export class InstancesComponent
             case 'SYS002':
             case 'DP21':
               res.disabled = true;
+              break;
+            case 'DP22':
+              if (
+                data.status != '2' ||
+                data.closed ||
+                !data.permissionCloseInstances
+              )
+                res.disabled = true;
               break;
           }
         });
@@ -910,6 +943,9 @@ export class InstancesComponent
       case 'DP21':
         this.handelStartDay(data);
         break;
+      case 'DP22':
+        this.popupOwnerRoles(data);
+        break;
       //xuat khau du lieu
       case 'SYS002':
         this.exportFile();
@@ -921,9 +957,10 @@ export class InstancesComponent
     if (data.status != '2' || isUseReason) {
       return true;
     }
-    if (!data.permissioRolesProcess || !data.permissionMoveInstances) {
+    if (!data.permissionMoveInstances) {
       return true;
     }
+
     return false;
   }
 
@@ -963,6 +1000,38 @@ export class InstancesComponent
     } else {
       return null;
     }
+  }
+
+  popupOwnerRoles(data) {
+    this.dataSelected = data;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      var formMD = new FormModel();
+      let dialogModel = new DialogModel();
+      formMD.funcID = fun.functionID;
+      formMD.entityName = fun.entityName;
+      formMD.formName = fun.formName;
+      formMD.gridViewName = fun.gridViewName;
+      dialogModel.zIndex = 999;
+      dialogModel.FormModel = formMD;
+      var dialog = this.callfc.openForm(
+        PopupEditOwnerstepComponent,
+        '',
+        500,
+        280,
+        '',
+        [this.lstOrg, this.titleAction, data],
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (e && e?.event != null) {
+          this.dataSelected.ownerStepInstances = e.event;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    });
   }
 
   showInput(data) {}
@@ -1140,6 +1209,7 @@ export class InstancesComponent
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
+            isDurationControl: this.checkDurationControl(data.stepID)
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1227,30 +1297,42 @@ export class InstancesComponent
       (x) => x.recID === dataInstance.step.stepID
     ).transferControl;
 
-    if (!this.isCheckAutoMoveStage(checkTransferControl, dataInstance.isAuto)) {
-      return;
-    } else {
+    if (checkTransferControl == '1' && dataInstance.isAuto?.isContinueTaskAll) {
       this.handleMoveStage(dataInstance);
+    } else if (checkTransferControl == '2') {
+      if (dataInstance.isAuto.isContinueTaskEnd) {
+        if (dataInstance.isAuto?.isShowFromTaskEnd) {
+          this.openFormForAutoMove(dataInstance);
+        } else {
+          this.handleMoveStage(dataInstance);
+        }
+      }
     }
   }
+
   isCheckAutoMoveStage(checkTransferControl: any, isAuto) {
     if (
       checkTransferControl == '1' &&
-      isAuto.isShowFromTaskAll &&
+      !isAuto.isShowFromTaskAll &&
       isAuto.isContinueTaskAll
     ) {
       return true;
     } else if (
       checkTransferControl == '2' &&
       isAuto.isContinueTaskEnd &&
-      isAuto.isShowFromTaskEnd
+      !isAuto.isShowFromTaskEnd
     ) {
       return true;
     } else {
       return false;
     }
   }
-
+  isCheckTaskEnd(checkTransferControl: any, isAuto) {
+    if (checkTransferControl == '2' && isAuto.isShowFromTaskEnd) {
+      return true;
+    }
+    return false;
+  }
   handleMoveStage(dataInstance) {
     var isStopAuto = false;
     var strStepsId = [];
@@ -1262,8 +1344,7 @@ export class InstancesComponent
     isStopAuto = completedAllTask.isStopAuto;
     if (isStopAuto) {
       this.openFormForAutoMove(dataInstance);
-    }
-    else {
+    } else {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
@@ -1341,11 +1422,6 @@ export class InstancesComponent
   openFormForAutoMove(dataInstance) {
     var idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
     if (idx != -1) {
-      this.moveStage(
-        this.moreFuncInstance[idx],
-        dataInstance.instance,
-        dataInstance.listStep
-      );
       this.moveStage(
         this.moreFuncInstance[idx],
         dataInstance.instance,
@@ -2018,7 +2094,7 @@ export class InstancesComponent
         'DataBusiness',
         'ReleaseAsync',
         [
-          data?.processID,
+          data?.recID,
           processID,
           this.view.formModel.entityName,
           this.view.formModel.funcID,
@@ -2034,93 +2110,6 @@ export class InstancesComponent
       });
   }
   //end duyet
-
-  async getListUserByOrg(list = []) {
-    this.lstOrg = [];
-    if (list != null && list.length > 0) {
-      var userOrgID = list
-        .filter((x) => x.objectType == 'O')
-        .map((x) => x.objectID);
-      if (userOrgID != null && userOrgID.length > 0) {
-        this.codxDpService
-          .getListUserByListOrgUnitIDAsync(userOrgID, 'O')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-      var userDepartmentID = list
-        .filter((x) => x.objectType == 'D')
-        .map((x) => x.objectID);
-
-      if (userDepartmentID != null && userDepartmentID.length > 0) {
-        this.codxDpService
-          .getListUserByListOrgUnitIDAsync(userDepartmentID, 'D')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-      var userPositionID = list
-        .filter((x) => x.objectType == 'P')
-        .map((x) => x.objectID);
-      if (userPositionID != null && userPositionID.length > 0) {
-        this.codxDpService
-          .getListUserByListOrgUnitIDAsync(userPositionID, 'P')
-          .subscribe((res) => {
-            if (res != null && res.length > 0) {
-              if (this.lstOrg != null && this.lstOrg.length > 0) {
-                this.lstOrg = this.getUserArray(this.lstOrg, res);
-              } else {
-                this.lstOrg = res;
-              }
-            }
-          });
-      }
-
-      var userRoleID = list
-        .filter((x) => x.objectType == 'R')
-        .map((x) => x.objectID);
-      if (userRoleID != null && userRoleID.length > 0) {
-        this.codxDpService.getListUserByRoleID(userRoleID).subscribe((res) => {
-          if (res != null && res.length > 0) {
-            if (this.lstOrg != null && this.lstOrg.length > 0) {
-              this.lstOrg = this.getUserArray(this.lstOrg, res);
-            } else {
-              this.lstOrg = res;
-            }
-          }
-        });
-      }
-      var lstUser = list.filter(
-        (x) => x.objectType == 'U' || x.objectType == '1'
-      );
-      if (lstUser != null && lstUser.length > 0) {
-        var tmpList = [];
-        lstUser.forEach((element) => {
-          var tmp = {};
-          if (element != null) {
-            tmp['userID'] = element.objectID;
-            tmp['userName'] = element.objectName;
-            tmpList.push(tmp);
-          }
-        });
-        if (tmpList != null && tmpList.length > 0) {
-          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
-        }
-      }
-    }
-  }
 
   getUserArray(arr1, arr2) {
     const arr3 = arr1.concat(arr2).reduce((acc, current) => {
@@ -2142,7 +2131,6 @@ export class InstancesComponent
       this.stepInstanceDetailStage = e.e;
     }
   }
-
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -2155,5 +2143,10 @@ export class InstancesComponent
         }
       }
     });
+  }
+
+  checkDurationControl(stepID): boolean{
+    var stepsDuration = this.process.steps.find(x=> x.recID === stepID);
+    return stepsDuration?.durationControl;
   }
 }

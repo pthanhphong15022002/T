@@ -76,10 +76,10 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <booking-room-view-detail #viewdetail [type]="'2'" [itemDetail]="itemDetail" [funcID]="funcID"
+  <codx-booking-view-detail #viewdetail [viewMode]="'2'" [itemDetail]="itemDetail" [funcID]="funcID" [resourceType]="'1'"
   [formModel]="formModel" (reject)="reject($event)" (approve)="approve($event)" (undo)="undo($event)"
   >
-</booking-room-view-detail>
+</codx-booking-view-detail>
 </ng-template>
 
 <!-- Other -->

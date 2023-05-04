@@ -26,7 +26,7 @@
           [disabled]="
             !isStart ||
             isClosed ||
-            !isUpdate ||
+            !isOnlyView ||
             !isRoleAll ||
             !progressStepControl
               ? true
@@ -455,20 +455,6 @@
                                 </div>
                               </div>
                             </div>
-                            <!-- <div class="ms-5">
-                              <codx-attachment
-                                hideFolder="1"
-                                hideImageUpload="0"
-                                hideImageThumb="0"
-                                hideUploadBtn="1"
-                                hideDes="1"
-                                type="inline"
-                                allowMultiFile="1"
-                                displayThumb="full"
-                                showMessage="1"
-                              >
-                              </codx-attachment>
-                            </div> -->
                             <codx-mfunc
                               *ngIf="isStart && !isClosed"
                               [type]="'hover'"
@@ -494,7 +480,6 @@
                         </div>
                         <div style="margin-left: 70px">
                           <codx-attachment
-                          #attachment
                           [objectType]="'DP_Instances_Steps_Tasks'"
                           [objectId]="task?.recID"
                           hideFolder="1"
@@ -507,8 +492,6 @@
                           allowMultiFile="1"
                           referType="source"
                           [formModel]="formModel"
-                          (fileAdded)="fileAdded($event)"
-                          (fileCount)="getfileCount($event)"
                           displayThumb="full"
                         >
                         </codx-attachment>
@@ -577,7 +560,7 @@
       class="disabled-inline"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
       (click)="
-        checkEventProgress(data?.value, data?.group) && !isClosed && isUpdate
+        checkEventProgress(data?.value, data?.group) && !isClosed && isOnlyView
           ? openUpdateProgress(data?.value)
           : ''
       "
@@ -603,13 +586,15 @@
       <span class="me-3">
         <codx-attachment-temp
           [objectID]="data?.value.refID"
+          [hideMoreF]="0"
+          [hideDelete]="1"
         ></codx-attachment-temp>
       </span>
     </div>
     <div class="notify">
       <span class="me-3">
         <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
-      </span>
+      </span>dateProgress
     </div>
   </div>
 </ng-template>
@@ -756,27 +741,27 @@
           </div>
         </div>
       </div>
+
       <div>
         <codx-attachment
-          #attachment
-          [objectId]="dataProgress?.refID"
-          hideFolder="1"
-          hideImageUpload="0"
-          hideImageThumb="0"
-          hideUploadBtn="1"
-          hideDes="1"
-          type="inline"
-          allowMultiFile="1"
-          [functionID]="funcIDparent"
-          (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)"
-          (viewFile)="getfileDelete($event)"
-          displayThumb="full"
-          showMessage="0"
-          [fdID]="folderID"
-        >
-        </codx-attachment>
-      </div>
+        #attachment
+        [objectType]="'DP_Instances_Steps_Tasks'"
+        [objectId]="dataProgress?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
+    </div>
+
     </ng-container>
   </div>
 </ng-template>
@@ -811,7 +796,7 @@
       <div class="fw-bold fs-4 text-dark">{{ dataStep?.stepName }}</div>
       <div class="d-flex justify-content-start py-2">
         <div>
-          <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>:
+          <codx-label default="Ngày đánh dấu"></codx-label>:
         </div>
         <span class="ps-1 text-dark fw-bold">{{
           dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy"

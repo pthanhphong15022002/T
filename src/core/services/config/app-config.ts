@@ -10,6 +10,7 @@ export abstract class AppConfig {
   themeMode: string;
   hideFavCount: boolean;  
   singleExec:boolean;
+  asideMinimize:string;
   sureMeet: any;
   firebase: any;
   captchaKey: string;

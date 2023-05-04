@@ -113,6 +113,7 @@ export class EmployeeDetailComponent extends UIComponent {
     super(inject);
     this.user = this.auth.get();
     this.funcID = this.routeActive.snapshot.params['funcID'];
+    // this.infoPersonal =
   }
 
   isClick: boolean = false;
@@ -444,21 +445,17 @@ export class EmployeeDetailComponent extends UIComponent {
   lstTab: any;
 
   //#region functions list
-  lstFuncCurriculumVitae: any = [];
-  lstFuncJobInfo: any = [];
-  lstFuncSalaryBenefit: any = [];
+  lstFuncSelfInfo: any = [];
+  lstFuncLegalInfo: any = [];
+  lstFuncTaskInfo: any = [];
+  lstFuncSalary: any = [];
   lstFuncHRProcess: any = [];
   lstFuncKnowledge: any = [];
+  lstFuncAward: any = [];
   lstFuncHealth: any = [];
-  lstFuncQuitJob : any = []
   lstFuncArchiveRecords: any = [];
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
-  
-  //father funcID
-  lstFuncLegalInfo: any = [];
-  lstFuncForeignWorkerInfo: any = []
-
   //#endregion
 
   //#region RowCount
@@ -487,15 +484,14 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region var functionID
-  curriculumVitaeFuncID: string = 'HRTEM01';
+  selfInfoFuncID: string = 'HRTEM01';
   legalInfoFuncID: string = 'HRTEM02';
-  foreignWorkerFuncID: string = 'HRTEM0104';
   jobInfoFuncID: string = 'HRTEM03';
-  salaryBenefitInfoFuncID: string = 'HRTEM04';
-  workingProcessInfoFuncID: string = 'HRTEM05';
+  benefitInfoFuncID: string = 'HRTEM04';
+  processInfoFuncID: string = 'HRTEM05';
   knowledgeInfoFuncID: string = 'HRTEM06';
+  rewDisInfoFuncID: string = 'HRTEM07';
   healthInfoFuncID: string = 'HRTEM08';
-  quitJobInfoFuncID: string = 'HRTEM09';
 
   eInfoFuncID = 'HRTEM0101';
   ePartyFuncID = 'HRTEM0102';
@@ -526,7 +522,6 @@ export class EmployeeDetailComponent extends UIComponent {
   eDisciplineFuncID = 'HRTEM0702';
   eDiseasesFuncID = 'HRTEM0803';
   eAccidentsFuncID = 'HRTEM0804';
-  eNeedToSubmitProfileFuncID = 'HRTEM0304';
   //#endregion
 
   //#region Vll colors
@@ -1283,62 +1278,50 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   onInit(): void {
-    debugger
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
-        console.log('list tab', this.lstTab);
-        
         this.crrFuncTab = this.lstTab[this.crrTab].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
-        console.log('lstFuncID', this.lstFuncID);
-        
-        this.lstFuncCurriculumVitae = res[0].filter(
-          (p) => p.parentID == this.curriculumVitaeFuncID
+
+        this.lstFuncSelfInfo = res[0].filter(
+          (p) => p.parentID == this.selfInfoFuncID
         );
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
         this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        //this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
         );
-        this.lstFuncForeignWorkerInfo = res[0].filter(
-          (p) => p.parentID == this.foreignWorkerFuncID
-        )
 
-        this.lstFuncJobInfo = res[0].filter(
+        this.lstFuncTaskInfo = res[0].filter(
           (p) => p.parentID == this.jobInfoFuncID
         );
 
-        this.lstFuncSalaryBenefit = res[0].filter(
-          (p) => p.parentID == this.salaryBenefitInfoFuncID
+        this.lstFuncSalary = res[0].filter(
+          (p) => p.parentID == this.benefitInfoFuncID
         );
 
         this.lstFuncHRProcess = res[0].filter(
-          (p) => p.parentID == this.workingProcessInfoFuncID
+          (p) => p.parentID == this.processInfoFuncID
         );
 
         this.lstFuncKnowledge = res[0].filter(
           (p) => p.parentID == this.knowledgeInfoFuncID
         );
 
-        // this.lstFuncAwardDiscipline = res[0].filter((p) => p.parentID == 'HRTEM07');
+        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRTEM07');
 
-        this.lstFuncHealth = res[0].filter(
-          (p) => p.parentID == this.healthInfoFuncID
-          );
+        this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRTEM08');
 
-        this.lstFuncQuitJob = res[0].filter(
-          (p) => p.parentID == this.quitJobInfoFuncID
-        )
+        this.lstFuncArchiveRecords = res[0].filter(
+          (p) => p.parentID == 'HRT030210'
+        );
 
-        // this.lstFuncArchiveRecords = res[0].filter(
-        //   (p) => p.parentID == 'HRT030210'
-        // );
-
-        // this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
+        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
 
@@ -1383,7 +1366,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
         let index = this.listEmp?.findIndex(
           (p) => p.employeeID == params.employeeID
-          );
+        );
         console.log('lst 1', this.listEmp);
         
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
@@ -3027,27 +3010,35 @@ export class EmployeeDetailComponent extends UIComponent {
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
     switch (this.crrFuncTab) {
-      case this.curriculumVitaeFuncID:
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
+      case this.selfInfoFuncID:
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
         this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
         // this.lstBtnAdd.splice(0, 2);
         break;
+      case this.legalInfoFuncID:
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
+        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+        // this.lstBtnAdd.splice(0, 1);
+        break;
       case this.jobInfoFuncID:
-        this.lstBtnAdd = this.lstFuncJobInfo;
+        this.lstBtnAdd = this.lstFuncTaskInfo;
         this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
         // this.lstBtnAdd = null;
         break;
-      case this.salaryBenefitInfoFuncID:
-        this.lstBtnAdd = this.lstFuncSalaryBenefit;
+      case this.benefitInfoFuncID:
+        this.lstBtnAdd = this.lstFuncSalary;
         this.initSalaryInfo();
         break;
-      case this.workingProcessInfoFuncID:
+      case this.processInfoFuncID:
         this.lstBtnAdd = this.lstFuncHRProcess;
         this.initHRProcess();
         break;
       case this.knowledgeInfoFuncID:
         this.lstBtnAdd = this.lstFuncKnowledge;
         this.initKnowledgeInfo();
+        break;
+      case this.rewDisInfoFuncID:
+        this.lstBtnAdd = this.lstFuncAward;
         break;
       case this.healthInfoFuncID:
         this.lstBtnAdd = this.lstFuncHealth;

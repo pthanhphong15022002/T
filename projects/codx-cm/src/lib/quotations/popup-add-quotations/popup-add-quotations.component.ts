@@ -1,7 +1,14 @@
-import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
+  CacheService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -11,7 +18,11 @@ import {
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { CM_Products, CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
+import {
+  CM_Products,
+  CM_Quotations,
+  CM_QuotationsLines,
+} from '../../models/cm_model';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -45,19 +56,29 @@ export class PopupAddQuotationsComponent implements OnInit {
 
   quotationLines: Array<CM_QuotationsLines> = [];
   lockFields = [];
-  dataParent : any
+  dataParent: any;
+  gridViewSetupQL: any;
 
   constructor(
     public sanitizer: DomSanitizer,
-    private api : ApiHttpService,
+    private api: ApiHttpService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     // this.quotations = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.quotations = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.action = dt?.data?.action
-    this.quotationLines=[]
+    this.action = dt?.data?.action;
+    this.quotationLines = [];
+    this.cache
+      .gridViewSetup(
+        this.fmQuotationLines.formName,
+        this.fmQuotationLines.formName
+      )
+      .subscribe((res) => {
+        this.gridViewSetupQL=res
+      });
   }
 
   ngOnInit(): void {}
@@ -71,7 +92,8 @@ export class PopupAddQuotationsComponent implements OnInit {
     let hBody, hTab, hNote;
     if (this.cardbodyGeneral)
       hBody = this.cardbodyGeneral.nativeElement.parentElement.offsetHeight;
-    if (this.quotationGeneral) hTab = (this.quotationGeneral as any).element.offsetHeight;
+    if (this.quotationGeneral)
+      hTab = (this.quotationGeneral as any).element.offsetHeight;
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
@@ -94,10 +116,19 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   quotionsLineChanged(e) {
-    // const field = [
-    //   'quotationname',
-
-    // ];
+    
+    //  const field = [
+    //  'rowno',
+    //  'itemid',
+    //  'quantity',
+    //  'umid',
+    //  'salesprice',
+    //  'salesamt',
+    //  'discamt',
+    //  'vatid',
+    //  'vatamt',
+    //  'note'
+    //  ];
     // if (field.includes(e.field.toLowerCase())) {
     //   this.api
     //     .exec('CM', 'ProductsBusiness', 'ValueChangedAsync', [
@@ -111,7 +142,6 @@ export class PopupAddQuotationsComponent implements OnInit {
     //         this.setDataGrid(res.line.updateColumns, res.line);
     //     });
     // }
-
     // if (e.field.toLowerCase() == 'sublgtype' && e.value) {
     //   if (e.value === '3') {
     //     //Set lock field

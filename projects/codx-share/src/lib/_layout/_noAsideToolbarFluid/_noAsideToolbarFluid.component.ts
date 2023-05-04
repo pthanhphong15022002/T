@@ -14,19 +14,16 @@ import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawe
   styleUrls: ['./_noAsideToolbarFluid.component.css'],
 })
 export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
-  module = '';
-  override aside = false;
   dialog!: DialogRef;
-  override asideFixed = false;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = true;
-  override toolbarFixed = false;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
     super(inject);
+    this.module = '';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarFixed = false;
   }
 
   onInit(): void {

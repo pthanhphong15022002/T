@@ -11,7 +11,7 @@
           (valueChange)="changeType($event)">
         </codx-input>
         <span *ngIf="formType == 'edit' && cashpayment?.status" class="me-2">
-          <codx-vll [name]="'AC057'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.status"
+          <codx-vll [name]="'AC057'" [formModel]="form.formModel" [field]="'SubType'" [value]="cashpayment?.subType"
             [showText]="true" [showBgColor]="true" class="badge badge-pill badge-primary badge-lg lg">
           </codx-vll>
         </span>
@@ -31,7 +31,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-info icon-20 me-2"></i>
-              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              <span [innerHTML]="'0' | vll : 'AC071' : 'text' | async" class="fw-bold fs-6 text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -48,7 +48,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
-              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-5 text-uppercase">
+              <span [innerHTML]="'1' | vll : 'AC070' : 'text' | async" class="fw-bold fs-6 text-uppercase">
               </span>
             </div>
           </ng-template>
@@ -63,7 +63,7 @@
               <div class="me-2">
                 <div class="icon-format_list_numbered icon-18"></div>
               </div>
-              <div class="fw-bold fs-5 text-uppercase">
+              <div class="fw-bold fs-6 text-uppercase">
                 <codx-label fiedName="lblGeneral" [formModel]="formModel" default="Tổng hợp"></codx-label>
               </div>
             </div>
@@ -147,7 +147,7 @@
             <div class="form-group">
               <codx-label fiedName="Memo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
+              <codx-input tabindex="-1" [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -215,10 +215,7 @@
 
 <!-- Start:CashPaymentLine -->
 <ng-template #tabLine>
-  <div class="h-100" *ngIf="
-      (cashpayment.subType === '1' || cashpayment.subType === '3') &&
-      modegrid == 1
-    ">
+  <div class="h-100" *ngIf="(cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 1">
     <codx-gridview-v2 #gridCashPaymentLine [formName]="fmCashPaymentsLines.formName"
       [gridViewName]="fmCashPaymentsLines.gridViewName" [entityName]="fmCashPaymentsLines.entityName"
       [templateMore]="morefunction" [editSettings]="editSettings" predicates="TransID=@0" [allowFiltering]="true"
@@ -229,56 +226,58 @@
   <ng-container
     *ngIf="form?.formGroup && (cashpayment.subType === '1' || cashpayment.subType === '3') && modegrid == 2">
     <div class="table-responsive mt-3 h-400px">
-      <table class="table table-hover table-row-bordered">
+      <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead>
           <tr>
-            <th class="w-50px text-center">
+            <th style="width: 10%;" class="w-50px text-center">
               <codx-label class="fw-bold" fiedName="RowNo" [formModel]="fmCashPaymentsLines">
               </codx-label>
             </th>
-            <th class="w-400px">
+            <th style="width: 50%;">
               <div class="d-flex">
                 <i class="icon-account_balance icon-16 me-2"></i>
                 <span class="fw-bold line-clamp line-clamp-1 fs-6">Tài khoản</span>
               </div>
             </th>
-            <th class="w-200px">
+            <th style="width: 15%;">
               <div class="d-flex">
                 <i class="icon-i-cash icon-16 me-2 text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Dr" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th>
+            <th style="width: 45%;">
               <div class="d-flex">
                 <i class="icon-i-graph-up icon-16 me-2 text-gray-700"></i>
                 <span class="fw-bold">Thông tin phân tích</span>
               </div>
             </th>
-            <th>
+            <th style="width: 20%;">
               <div class="d-flex">
                 <i class="icon-brush icon-16 me-2 icon-add text-gray-700"></i>
                 <codx-label class="fw-bold" fiedName="Note" [formModel]="fmCashPaymentsLines">
                 </codx-label>
               </div>
             </th>
-            <th *ngIf="cashpaymentline.length > 0" style="width: 50px"></th>
+            <th *ngIf="cashpaymentline.length > 0" style="width: 10%;"></th>
           </tr>
         </thead>
-        <tbody class="border-bottom" *ngFor="let item of cashpaymentline">
-          <tr>
-            <td class="text-center fw-bold">
+        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)" cdkDropListLockAxis="y" [cdkDropListData]="cashpaymentline"
+        class="border-bottom">
+          <tr draggable="true" *ngFor="let item of cashpaymentline" cdkDrag>
+            <td style="width: 50px;" class="text-center fw-bold">
               {{ item.rowNo }}
             </td>
-            <td>
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
-                <ng-container>
-                  <codx-label class="fw-bold label-colon" fiedName="AccountID" [formModel]="fmCashPaymentsLines">
+            <td style="width: 560px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span class="text-gray-700">{{item.accountID}}</span>
                   &nbsp;&nbsp;&nbsp;&#9656;&nbsp;&nbsp;&nbsp;
-                  <span #accountID class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popaccount" #accountID class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                       item.accountID
                         | formatvalue
                           : fmCashPaymentsLines
@@ -286,16 +285,28 @@
                           : accountID
                         | async
                     "></span>
+                  <ng-template #popaccount>
+                    <span class="fw-bold" #accountID [innerHTML]="
+                      item.accountID
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'accountID'
+                          : accountID
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
               </div>
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
-                <ng-container>
-                  <codx-label class="fw-bold label-colon" fiedName="OffsetAcctID" [formModel]="fmCashPaymentsLines">
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="(item.offsetAcctID != null && item.offsetAcctID != '')">
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="OffsetAcctID"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
                   <span class="text-gray-700">{{item.offsetAcctID}}</span>
                   &nbsp;&nbsp;&nbsp;&#9656;&nbsp;&nbsp;&nbsp;
-                  <span #offsetAcctID class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popoffset" #offsetAcctID class="text-gray-700 line-clamp line-clamp-1"
+                    [innerHTML]="
                       item.offsetAcctID
                         | formatvalue
                           : fmCashPaymentsLines
@@ -303,20 +314,38 @@
                           : offsetAcctID
                         | async
                     "></span>
+                  <ng-template #popoffset>
+                    <span [ngbTooltip]="popoffset" #offsetAcctID class="fw-bold" [innerHTML]="
+                      item.offsetAcctID
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'offsetAcctID'
+                          : offsetAcctID
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
               </div>
             </td>
-            <td>
-              <span class="fw-bold text-dark fs-6">{{
-                item.dr.toLocaleString("it-IT") }}</span>
+            <td style="width: 167px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <ng-container *ngIf="(item.dr != null && item.dr != '')">
+                  <span [ngbTooltip]="popdr" class="fw-bold line-clamp line-clamp-1">{{item.dr.toLocaleString("it-IT")
+                    }}</span>
+                  <ng-template #popdr>
+                    <span [ngbTooltip]="popdr" class="fw-bold">{{item.dr.toLocaleString("it-IT")}}</span>
+                  </ng-template>
+                </ng-container>
+              </div>
             </td>
-            <td>
-              <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
+            <td style="width: 500px;">
+              <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.diM2 != null && item.diM2 != '')">
-                  <codx-label class="fw-bold label-colon" fiedName="DIM2" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="DIM2"
+                    [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-                  <span #diM2 class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popdiM2" #diM2 class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                       item.diM2
                         | formatvalue
                           : fmCashPaymentsLines
@@ -324,15 +353,25 @@
                           : diM2
                         | async
                     "></span>
+                  <ng-template #popdiM2>
+                    <span [ngbTooltip]="popdiM2" #diM2 class="fw-bold" [innerHTML]="
+                      item.diM2
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'diM2'
+                          : diM2
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
                 <ng-container *ngIf="(item.diM2 != null && item.diM2 != '') && (item.diM3 != null && item.diM3 != '')">
                   &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                 </ng-container>
                 <ng-container *ngIf="(item.diM3 != null && item.diM3 != '')">
-                  <codx-label class="fw-bold label-colon" fiedName="DIM3" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="DIM3" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-                  <span #diM3 class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popdiM3" #diM3 class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                       item.diM3
                         | formatvalue
                           : fmCashPaymentsLines
@@ -340,14 +379,24 @@
                           : diM3
                         | async
                     "></span>
+                  <ng-template #popdiM3>
+                    <span [ngbTooltip]="popdiM3" #diM3 class="fw-bold" [innerHTML]="
+                      item.diM3
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'diM3'
+                          : diM3
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
               </div>
               <div style="white-space: nowrap" class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.diM1 != null && item.diM1 != '')">
-                  <codx-label class="fw-bold label-colon" fiedName="DIM1" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="DIM1" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-                  <span #diM1 class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popdiM1" #diM1 class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                       item.diM1
                         | formatvalue
                           : fmCashPaymentsLines
@@ -355,16 +404,26 @@
                           : diM1
                         | async
                     "></span>
+                  <ng-template #popdiM1>
+                    <span [ngbTooltip]="popdiM1" #diM1 class="fw-bold" [innerHTML]="
+                      item.diM1
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'diM1'
+                          : diM1
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
                 <ng-container
                   *ngIf="(item.diM1 != null && item.diM1 != '') && (item.projectID != null && item.projectID != '')">
                   &nbsp;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&nbsp;
                 </ng-container>
                 <ng-container *ngIf="(item.projectID != null && item.projectID != '')">
-                  <codx-label class="fw-bold label-colon" fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="ProjectID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
-                  <span #projectID class="text-gray-700" [innerHTML]="
+                  <span [ngbTooltip]="popproject" #projectID class="text-gray-700 line-clamp line-clamp-1" [innerHTML]="
                       item.projectID
                         | formatvalue
                           : fmCashPaymentsLines
@@ -372,20 +431,33 @@
                           : projectID
                         | async
                     "></span>
+                  <ng-template #popproject>
+                    <span [ngbTooltip]="popproject" #projectID class="fw-bold" [innerHTML]="
+                      item.projectID
+                        | formatvalue
+                          : fmCashPaymentsLines
+                          : 'projectID'
+                          : projectID
+                        | async
+                    "></span>
+                  </ng-template>
                 </ng-container>
               </div>
             </td>
-            <td>
+            <td style="width: 223px;">
               <div *ngIf="item.note != null && item.note != ''" class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <span [ngbTooltip]="item.note" class="fw-bold line-clamp line-clamp-2">{{ item.note }}</span>
+                  <span [ngbTooltip]="popnote" class="fw-bold line-clamp line-clamp-2">{{ item.note }}</span>
                 </div>
+                <ng-template #popnote>
+                  <span [ngbTooltip]="popnote" class="fw-bold">{{ item.note }}</span>
+                </ng-template>
               </div>
               <div *ngIf="
                   item.reasonID != null && item.reasonID != ''
                 " class="d-flex flex-wrap">
                 <div class="d-flex align-items-center me-5 mb-1">
-                  <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="fmCashPaymentsLines">
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="ReasonID" [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   <span #reasonID class="text-gray-700" [innerHTML]="
                       item.reasonID
@@ -398,10 +470,14 @@
                 </div>
               </div>
             </td>
-            <td>
-              <div class="has-action-menu" style="height: 30px">
-                <codx-mfunc (changeDataMF)="loadBookmark($event)" [dataItem]="item" [formModel]="form.formModel"
-                  (clickMF)="clickMF($event, item)" isBookMark="false" type="hover"></codx-mfunc>
+            <td style="width: 111px;">
+              <div class="d-flex align-items-center justify-content-start">
+                <span ngbTooltip="Sửa" placement="top" type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(item)">
+                  <i class="icon-edit icon-16"></i>
+                </span>
+                <span ngbTooltip="Xóa" placement="top" type="button" class="btn btn-icon btn-light-danger ms-1" (click)="deleteRow(item)">
+                  <i class="icon-delete icon-16"></i>
+                </span>
               </div>
             </td>
           </tr>
@@ -449,20 +525,22 @@
 <!-- Start: VoucherLineRefs -->
 <ng-template #tabsettledInvoices>
   <div class="h-100" *ngIf="cashpayment.subType === '2'">
-    <codx-gridview-v2 #gridVoucherLineRefs formName="SettledInvoices" gridViewName="grvSettledInvoices"
+    <codx-gridview-v2 #gridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
       entityName="AC_SettledInvoices" [templateMore]="morefunction" [editSettings]="editSettings"
       [allowFiltering]="true" [allowSorting]="true" [dataValues]="form.data.recID" service="AC" [height]="gridHeight"
-      [autoLoad]="false" rowHeight="40" (cellChanged)="voucherLineRefsChanged($event)"
-      (created)="gridCreated($event, gridVoucherLineRefs)"></codx-gridview-v2>
+      [autoLoad]="false" [dataSource]="settledInvoices" rowHeight="40" (cellChanged)="voucherLineRefsChanged($event)"
+      (created)="gridCreated($event, gridSettledInvoices)"></codx-gridview-v2>
   </div>
-  <div class="form-group mt-6 mb-0 row">
-    <div class="col-12">
-      <div class="form-group mb-0 row">
-        <div class="col-2">
-          <button type="button" class="btn btn-light-primary" (click)="openVoucher()">
-            <codx-label name="btnAdd" formName="System" default="Thêm dòng"></codx-label>
-          </button>
+  <div class="container w-90 h-90">
+    <div style="background: none" class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center mt-2">
+        <div [ngbTooltip]="popContent" placement="bottom" style="width: 40px !important;height: 40px !important;"
+          class="btn btn-icon btn-bg btn-light-primary btn-circle me-4" (click)="openVoucher()">
+          <i class="icon-i-clipboard-plus icon-18"></i>
         </div>
+        <ng-template #popContent>
+          <span #popContent [ngbTooltip]="popContent" class="fs-6 fw-bold">Thêm dòng</span>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -527,7 +605,7 @@
             </div>
           </button>
         </div>
-        <div class="ms-2 me-2">
+        <div class="ms-2">
           <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px" (click)="onSave()">
             <div class="d-flex align-items-center">
               <i class="icon-save icon-18"></i>
@@ -536,7 +614,7 @@
             </div>
           </button>
         </div>
-        <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2 me-2">
+        <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
           <button type="button" class="btn btn-lg btn-danger" (click)="onDiscard()">
             <div class="d-flex align-items-center">
               <i class="icon-settings_backup_restore icon-18"></i>
@@ -558,13 +636,13 @@
 
 <!-- Start: addline -->
 <ng-template #addLine let-data>
-  <div *ngIf="cashpayment.subType === '1' && modegrid == 1" class="mt-5 mb-2">
+  <!-- <div *ngIf="cashpayment.subType === '1' && modegrid == 1" class="mt-5 mb-2">
     <button id="btn-add" type="button" class="btn btn-light-primary" (click)="addRow()">
       <div class="d-flex align-items-center">
         <i class="icon-add icon-16 me-1"></i>
         <span>Thêm dòng</span>
       </div>
     </button>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: addline -->

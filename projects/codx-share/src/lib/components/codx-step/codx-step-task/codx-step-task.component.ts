@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, FormModel, NotificationsService, Util } from 'codx-core';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isShowComment = true;
   @Input() typeProgress = 1;
   @Output() valueChangeProgress = new EventEmitter<any>();
-
+  id = ''
   currentStep: any;
   isUpdate;
   user: any;
@@ -51,6 +51,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
   ) {
     this.user = this.authStore.get();
+    this.id = Util.uid();
   }
 
   async ngOnInit(): Promise<void> {
@@ -158,8 +159,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.taskList = this.currentStep['tasks'];
   }
 
-  toggleTask(e, id) {
-    let elementGroup = document.getElementById('group' + id.toString());
+  toggleTask(e, idGroup) {
+    let elementGroup = document.getElementById(idGroup.toString());
+    // let elementGroup = document.querySelector('#' + this.id + '#' + idGroup.toString() );
     let children = e.currentTarget.children[0];
     let isClose = elementGroup.classList.contains('hiddenTask');
     if (isClose) {

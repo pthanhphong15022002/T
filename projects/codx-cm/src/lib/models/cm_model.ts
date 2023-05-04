@@ -20,11 +20,11 @@ export class CM_Products {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  write: boolean = true ;
-  download: boolean = true ;
-  delete: boolean = true ;
-  share: boolean = true ;
-  read: boolean = true ;
+  write: boolean = true;
+  download: boolean = true;
+  delete: boolean = true;
+  share: boolean = true;
+  read: boolean = true;
 }
 export class CM_BusinessLines {
   recID: string;
@@ -58,7 +58,7 @@ export class CM_Quotations {
   pmtTermID: string;
   pmtMethodID: string;
   currencyID: string;
-  status: string ="1";
+  status: string = '1';
   deadline: Date;
   memo: string;
   totalAmt: number;
@@ -129,7 +129,6 @@ export class CM_QuotationsLines {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  
 }
 
 export class CM_Deals {
@@ -174,7 +173,7 @@ export class CM_Deals {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  bit;
+  boolean;
 }
 
 export class CM_Permissions {
@@ -247,7 +246,7 @@ export class CM_Customers {
   bankAccount: string;
   bankID: string;
   memo: string;
-  tags: string ;
+  tags: string;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -298,7 +297,7 @@ export class CM_Contacts {
   objectType: string;
   objectID: string;
   objectName: string;
-  cumulatedPoints: number;
+  cumulatedPonumbers: number;
   loyaltyGroupID: string;
   vIP: boolean;
   isDefault: boolean;
@@ -307,7 +306,7 @@ export class CM_Contacts {
   userID: string;
   allowCall: boolean;
   allowEmail: boolean;
-  tags: string ;
+  tags: string;
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -344,7 +343,7 @@ export class BS_AddressBook {
   webPage: string;
   delRouteID: string;
   calendarID: string;
-  interval: string;
+  numbererval: string;
   duration: string;
   lastUpdated: Date;
   note: string;
@@ -360,4 +359,55 @@ export class BS_AddressBook {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+}
+export class CM_Contracts {
+recID:string;
+contractID:string;
+contractDate:Date;
+contractName:string;
+contractType:string;
+category:string;
+assetID:string;
+projectID:string;
+quotationID:string;
+orderID:string;
+objectType:string;
+objectID:string;
+objectName:string;
+contactID:string;
+customerID:string;
+currencyID:string;
+exchangeRate:number;
+contractAmt:number;
+VATID:string;
+paymentStatus:string;
+paidAmt:number;
+remainAmt:number;
+memo:string;
+status:string;
+periods:number;
+numbererval:string;
+effectiveFrom:Date;
+effectiveTo:Date;
+extendOn:Date;
+disposalOn:Date;
+warantyMonths:number;
+warantyExpired:Date;
+salespersonID:string;
+consultantID:string;
+pmtMethodID:string;
+delModeID:string;
+delTermID:string;
+parentID:string;
+refType:string;
+refID:string;
+refNo:string;
+attachments:number;
+note:string;
+stop:boolean;
+owner:string;
+bUID:string;
+createdOn:Date;
+createdBy:string;
+modifiedOn:Date;
 }

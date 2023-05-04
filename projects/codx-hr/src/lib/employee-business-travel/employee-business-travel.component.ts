@@ -19,7 +19,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+import { CodxHrService } from '../codx-hr.service';
+import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -32,6 +33,10 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
+   //Detail
+   @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
+   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
+   itemDetail;
 
   views: Array<ViewModel> = [];
   funcID: string;
@@ -56,13 +61,13 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   genderGrvSetup: any;
 
   //#region eJobSalaryFuncID
-  actionAddNew = 'HRTPro04A01';
-  actionSubmit = 'HRTPro04A03';
-  actionUpdateCanceled = 'HRTPro04AU0';
-  actionUpdateInProgress = 'HRTPro04AU3';
-  actionUpdateRejected = 'HRTPro04AU4';
-  actionUpdateApproved = 'HRTPro04AU5';
-  actionUpdateClosed = 'HRTPro04AU9';
+  actionAddNew = 'HRTPro10A01';
+  actionSubmit = 'HRTPro10A03';
+  actionUpdateCanceled = 'HRTPro10AU0';
+  actionUpdateInProgress = 'HRTPro10AU3';
+  actionUpdateRejected = 'HRTPro10AU4';
+  actionUpdateApproved = 'HRTPro10AU5';
+  actionUpdateClosed = 'HRTPro10AU9';
 
 
   constructor(
@@ -109,15 +114,15 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
           headerTemplate: this.headerTemplate,
         },
       },
-      // {
-      //   type: ViewType.listdetail,
-      //   sameData: true,
-      //   active: true,
-      //   model: {
-      //     template: this.templateListDetail,
-      //     panelRightRef: this.panelRightListDetail,
-      //   },
-      // },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
     ];
 
     //Get Header text when view detail
@@ -127,55 +132,54 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   }
 
   //Open, push data to modal
-  // HandleEJobSalary(actionHeaderText, actionType: string, data: any) {
-  //   let option = new SidebarModel();
-  //   option.Width = '550px';
-  //   option.FormModel = this.view.formModel;
+  HandleEJobSalary(actionHeaderText, actionType: string, data: any) {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.view.formModel;
 
-  //   let dialogAdd = this.callfc.openSide(
-  //     PopupEmployeeJobsalaryComponent,
-  //     {
-  //       funcID: this.view.funcID,
-  //       employeeId: data?.employeeID,
-  //       headerText: actionHeaderText,
-  //       empObj: actionType == 'add' ? null : this.currentEmpObj,
-  //       actionType: actionType,
-  //       dataObj: data,
-  //     },
-  //     option
-  //   );
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if (actionType == 'add') {
-  //         console.log('Run addd');
-  //         this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-  //         this.df.detectChanges();
-  //       } else if (actionType == 'copy') {
-  //         this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
-  //         this.df.detectChanges();
-  //       } else if (actionType == 'edit') {
-  //         this.view.dataService.update(res.event[0]).subscribe((res) => {});
-  //         this.df.detectChanges();
-  //       }
-  //     }
-  //     if (res?.event) this.view.dataService.clear();
-  //   });
-  // }
+    let dialogAdd = this.callfc.openSide(
+      PopupEmployeeBusinessComponent,
+      {
+        funcID: this.view.funcID,
+        employeeId: data?.employeeID,
+        headerText: actionHeaderText,
+        empObj: actionType == 'add' ? null : this.currentEmpObj,
+        actionType: actionType,
+        dataObj: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        if (actionType == 'add') {
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
+          this.df.detectChanges();
+        } else if (actionType == 'copy') {
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
+          this.df.detectChanges();
+        } else if (actionType == 'edit') {
+          this.view.dataService.update(res.event).subscribe((res) => {});
+          this.df.detectChanges();
+        }
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
 
   addJobSalaries(event): void {
-    // if (event.id == 'btnAdd') {
-    //   this.HandleEJobSalary(
-    //     event.text + ' ' + this.view.function.description,
-    //     'add',
-    //     null
-    //   );
-    // }
+    if (event.id == 'btnAdd') {
+      this.HandleEJobSalary(
+        event.text + ' ' + this.view.function.description,
+        'add',
+        null
+      );
+    }
   }
 
   //Call api delete
   beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteEmployeeJobsalaryInfoAsync';
-    opt.className = 'EJobSalariesBusiness';
+    opt.methodName = 'DeleteEBusinessTravelsAsync';
+    opt.className = 'EBusinessTravelsBusiness';
     opt.assemblyName = 'HR';
     opt.service = 'HR';
     opt.data = data;
@@ -200,7 +204,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeJobSalariesMoreFunc(this.editStatusObj)
+      .EditEmployeeContactMoreFunc(this.editStatusObj)
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
@@ -213,7 +217,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
               this.view.formModel.entityName,
               'C1',
               null,
-              'EJobSalariesBusiness'
+              'EBusinessTravelsBusiness'
             )
             .subscribe((res) => {
               console.log('kq luu track log', res);
@@ -254,70 +258,69 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   }
 
   //More function send approved
-  // release() {
-  //   this.hrService
-  //     .getCategoryByEntityName(this.view.formModel.entityName)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.processID = res;
-  //         this.hrService
-  //           .release(
-  //             this.itemDetail.recID,
-  //             this.processID.processID,
-  //             this.view.formModel.entityName,
-  //             this.view.formModel.funcID,
-  //             '<div> Lương chức danh - ' + this.itemDetail.decisionNo + '</div>'
-  //           )
-  //           .subscribe((result) => {
-  //             console.log(result)
-  //             if (result?.msgCodeError == null && result?.rowCount) {
-  //               this.notify.notifyCode('ES007');
-  //               this.itemDetail.status = '3';
-  //               this.itemDetail.approveStatus = '3';
-  //               this.hrService
-  //                 .EditEmployeeJobSalariesMoreFunc(this.itemDetail)
-  //                 .subscribe((res) => {
-  //                   console.log('Result after send edit' + res)
-  //                   if (res) {
-  //                     this.view?.dataService
-  //                       ?.update(this.itemDetail)
-  //                       .subscribe();
-  //                   }
-  //                 });
-  //             } else this.notify.notifyCode(result?.msgCodeError);
-  //           });
-  //       }
-  //     });
-  // }
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.processID = res;
+          this.hrService
+            .release(
+              this.itemDetail.recID,
+              this.processID.processID,
+              this.view.formModel.entityName,
+              this.view.formModel.funcID,
+              '<div> Công tác - ' + this.itemDetail.decisionNo + '</div>'
+            )
+            .subscribe((result) => {
+              console.log(result)
+              if (result?.msgCodeError == null && result?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .EditEmployeeContactMoreFunc(this.itemDetail)
+                  .subscribe((res) => {
+                    console.log('Result after send edit' + res)
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(result?.msgCodeError);
+            });
+        }
+      });
+  }
 
-  // beforeRelease() {
-  //   let category = '4';
-  //   let formName = 'HRParameters';
-  //   this.hrService.getSettingValue(formName, category).subscribe((res) => {
-  //     if (res) {
-  //       let parsedJSON = JSON.parse(res?.dataValue);
-  //       let index = parsedJSON.findIndex(
-  //         (p) => p.Category == this.view.formModel.entityName
-  //       );
-  //       if (index > -1) {
-  //         let eJobSalaryObj = parsedJSON[index];
-  //         if (eJobSalaryObj['ApprovalRule'] == '1') {
-  //           this.release();
-  //         } else {
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+  beforeRelease() {
+    let category = '4';
+    let formName = 'HRParameters';
+    this.hrService.getSettingValue(formName, category).subscribe((res) => {
+      if (res) {
+        let parsedJSON = JSON.parse(res?.dataValue);
+        let index = parsedJSON.findIndex(
+          (p) => p.Category == this.view.formModel.entityName
+        );
+        if (index > -1) {
+          let eJobSalaryObj = parsedJSON[index];
+          if (eJobSalaryObj['ApprovalRule'] == '1') {
+            this.release();
+          } else {
+          }
+        }
+      }
+    });
+  }
 
   //#endregion
 
   clickMF(event, data): void {
-    // this.itemDetail = data;
-
+    this.itemDetail = data;
     switch (event.functionID) {
       case this.actionSubmit:
-        // this.beforeRelease();
+        this.beforeRelease();
         break;
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
@@ -327,9 +330,9 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEJobSalaryStatus(event.functionID, oUpdate);
         break;
-      //Propose increase salaries
+      //Propose increase business
       case this.actionAddNew:
-        // this.HandleEJobSalary(event.text, 'add', data);
+        this.HandleEJobSalary(event.text, 'add', data);
         break;
       //Delete
       case 'SYS02':
@@ -338,7 +341,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
         }
         this.view.dataService
           .delete([data], true, (option: RequestOption) =>
-            this.beforeDelete(option, data.recID)
+            this.beforeDelete(option, data)
           )
           .subscribe(() => {});
         // this.df.detectChanges();
@@ -346,12 +349,12 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
       //Edit
       case 'SYS03':
         this.currentEmpObj = data;
-        // this.HandleEJobSalary(
-        //   event.text + ' ' + this.view.function.description,
-        //   'edit',
-        //   this.currentEmpObj
-        // );
-        // this.df.detectChanges();
+        this.HandleEJobSalary(
+          event.text + ' ' + this.view.function.description,
+          'edit',
+          this.currentEmpObj
+        );
+        this.df.detectChanges();
         break;
       //Copy
       case 'SYS04':
@@ -364,11 +367,11 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
 
   copyValue(actionHeaderText, data) {
     this.hrService.copy(data, this.view.formModel, 'RecID').subscribe((res) => {
-      // this.HandleEJobSalary(
-      //   actionHeaderText + ' ' + this.view.function.description,
-      //   'copy',
-      //   res
-      // );
+      this.HandleEJobSalary(
+        actionHeaderText + ' ' + this.view.function.description,
+        'copy',
+        res
+      );
     });
   }
   changeDataMF(event, data): void {
@@ -378,14 +381,14 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
   //#region Handle detail data
   getDetailESalary(event, data) {
     if (data) {
-      // this.itemDetail = data;
+      this.itemDetail = data;
 
       this.df.detectChanges();
     }
   }
 
   changeItemDetail(event) {
-    // this.itemDetail = event?.data;
+    this.itemDetail = event?.data;
   }
 
   clickEvent(event, data) {

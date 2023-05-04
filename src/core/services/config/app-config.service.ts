@@ -27,6 +27,7 @@ export class AppConfigService extends AppConfig {
         environment.themeMode = res.themeMode;
         environment.hideFavCount = res.hideFavCount;
         environment.singleExec = res.singleExec;
+        environment.asideMinimize = res.asideMinimize;
         environment.SureMeet = res.sureMeet;
         environment.firebase = res.firebase;
         environment.externalLogin = res.externalLogin;

@@ -24,9 +24,9 @@
         </div>
       </div>
       <div class="col-3">
-        <div class="form-group">
+        <div class="form-group" *ngIf="isMoveNext">
           <codx-label fiedName="ActualEnd" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Ngày hoàn thành thực tế">
+          default="Ngày kết thúc thực tế">
         </codx-label>
         <codx-input
             type="datetime"
@@ -34,6 +34,7 @@
             field="actualEnd"
             format="d"
             [crrValue]="instancesStepOld.actualEnd"
+            [disabled]="isDurationControl"
             (valueChange)="changeTime($event)"
           >
           </codx-input>

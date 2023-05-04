@@ -2733,7 +2733,7 @@
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
-              [value]="stepFail?.newProcessID"
+              [value]="moveProccessIsNull(stepFail?.newProcessID)"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-7"
@@ -3158,6 +3158,8 @@
           </div>
           <div class="col-6">
             <codx-input-number-duration [dayMax]="dayStep" [hourMax]="hourStep" [dayOld]="step?.durationDay" [hourOld]="step?.durationHour" [textDay]="strDay" [textHour]="strHour"
+          [noteDay]="noteDay" [noteHour]="noteHour"
+
             (eventInput)="valueChangeDuration($event)">
             </codx-input-number-duration>
           </div>
