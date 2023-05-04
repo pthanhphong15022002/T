@@ -362,12 +362,12 @@
 <ng-template #eventTemplate let-data>
   <ng-container *ngIf="data.transType == 'EP_BookingCars'">
     <div class="d-flex flex-column w-100">
-      <span
+      <span class="d-flex flex-start"
         >{{ showHour(data.data.startDate) }} -
         {{ showHour(data.data.endDate) }}</span
       >
-      <span
-        class="fw-bold"
+      <span 
+        class="d-flex flex-start fw-bold"
         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
         >{{ data.title }}</span
       >
@@ -375,12 +375,12 @@
   </ng-container>
   <ng-container *ngIf="data.transType == 'EP_BookingRooms'">
     <div class="d-flex flex-column w-100">
-      <span
+      <span class="d-flex flex-start"
         >{{ showHour(data.data.startDate) }} -
         {{ showHour(data.data.endDate) }}</span
       >
       <span
-        class="fw-bold"
+        class="d-flex flex-start fw-bold"
         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
         >{{ data.title }}</span
       >
@@ -390,12 +390,12 @@
     *ngIf="data.transType == 'TM_MyTasks' || data.transType == 'CO_Meetings'"
   >
     <div class="d-flex flex-column w-100">
-      <span
+      <span class="d-flex flex-start"
         >{{ showHour(data.data.startDate) }} -
         {{ showHour(data.data.endDate) }}</span
       >
       <span
-        class="fw-bold"
+        class="d-flex flex-start fw-bold"
         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
         >{{ data.title }}</span
       >
@@ -404,7 +404,7 @@
   <ng-container *ngIf="data.transType == 'WP_Notes'">
     <span
       *ngIf="data?.noteType == 'text'"
-      class="fw-bold"
+      class="d-flex flex-start fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
       >{{ data?.memo }}</span
     >

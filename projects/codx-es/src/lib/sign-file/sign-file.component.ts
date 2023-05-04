@@ -258,6 +258,8 @@ export class SignFileComponent extends UIComponent {
       );
       dialogAdd.closed.subscribe((x) => {
         if (x.event) {
+          window['PDFViewerApplication']?.unbindWindowEvents();
+
           if (x.event?.approved) {
             this.view.dataService.add(x.event.data, 0).subscribe();
           } else {

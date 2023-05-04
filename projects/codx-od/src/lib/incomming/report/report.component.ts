@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy, Injector } from '@angular/core';
-import { CodxService, LayoutService, PageTitleService, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxTMService, LayoutModel } from '../codx-tm.service';
+import { Component, Injector } from '@angular/core';
+import { LayoutService, PageTitleService, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
-  selector: 'lib-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  selector: 'lib-report',
+  templateUrl: './report.component.html',
+  styleUrls: ['./report.component.scss']
 })
-export class ReportsComponent extends UIComponent {
+export class ReportComponent extends UIComponent{
   views: Array<ViewModel> = [];
   viewType = ViewType;
   funcID: string;
@@ -36,12 +35,11 @@ export class ReportsComponent extends UIComponent {
 
   onActions(e: any) {
     if (e.type == 'detail') {
-      this.codxService.navigate('', 'tm/report/detail/' + e.data.reportID);
+      this.codxService.navigate('', 'od/report/detail/' + e.data.reportID);
     }
   }
   viewChanged(e:any){
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
   }
-
 }
