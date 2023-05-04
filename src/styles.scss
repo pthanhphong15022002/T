@@ -2381,10 +2381,7 @@ codx-calendar {
   color: inherit;
 }
 
-//dntram edit 28/04/2023
-// #gridViewV2.e-grid .e-rowcell {
-//   padding:8px 10px!important;
-// }
+
 ejs-numerictextbox{
 .e-input-group.e-control-wrapper{
   height: auto;
@@ -2623,8 +2620,33 @@ codx-input .e-icons.e-check:before {
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
   font-size: 13px;
 }
-
-
+lib-employees{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employee-list{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employees-leave{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
 
 /// fix menu left
 ///
