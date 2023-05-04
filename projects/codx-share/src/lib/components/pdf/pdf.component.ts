@@ -2000,7 +2000,6 @@ export class PdfComponent
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
-    this.curFileUrl = this.fileInfo.fileUrl;
     this.autoSignState = false;
     this.getListCA();
     this.esService
@@ -2014,7 +2013,9 @@ export class PdfComponent
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
-          this.detectorRef.detectChanges();
+          this.curFileUrl = this.fileInfo.fileUrl;
+
+          // this.detectorRef.detectChanges();
         }
       });
     this.esService
@@ -2024,7 +2025,7 @@ export class PdfComponent
       .subscribe((res) => {
         console.log('change sf url', res);
       });
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();
   }
 
   changeZoom(type: string, e?: any) {

@@ -820,18 +820,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (this.data == undefined) this.data = [];
       this.addPermissionA();
       let total = this.fileUploadList.length;
+
+      var data = JSON.parse(JSON.stringify(this.fileUploadList));
       //  var that = this;
       //await this.dmSV.getToken();
       for (var i = 0; i < total; i++) {
-        if (this.objectId) this.fileUploadList[i].objectID = this.objectId;
+        if (this.objectId) data[i].objectID = this.objectId;
         // await this.serviceAddFile(fileItem);
-        this.fileUploadList[i].avatar = null;
-        this.fileUploadList[i].data = '';
-        this.fileUploadList[i].createdOn = new Date();
+        data[i].avatar = null;
+        data[i].data = '';
+        data[i].createdOn = new Date();
       
         if (total > 1)
-          this.fileUploadList[i] = await this.addFileLargeLong(
-            this.fileUploadList[i],
+          data[i] = await this.addFileLargeLong(
+            data[i],
             false
           );
         // if (total > 1) {
@@ -845,12 +847,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (total > 1) {
         for(var i = 0 ; i< this.fileUploadList.length ; i++)
         {
-          this.fileUploadList[i].source = null;
-          this.fileUploadList[i].item = null
+          data[i].source = null;
+          data[i].item = null
         }
         return this.fileService
           .addMultiFileObservable(
-            this.fileUploadList,
+            data,
             this.actionType,
             this.formModel?.entityName,
             this.isDM,
@@ -966,22 +968,23 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
         if (this.data == undefined) this.data = [];
         let total = this.fileUploadList.length;
+        var data = JSON.parse(JSON.stringify(this.fileUploadList));
         var toltalUsed = 0; //bytes
         var remainingStorage = -1;
         if (this.infoHDD.totalHdd >= 0)
           remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
         var that = this;
         for (var i = 0; i < total; i++) {
-          this.fileUploadList[i].objectID = this.objectId;
-          this.fileUploadList[i].description = this.description[i];
-          this.fileUploadList[i].avatar = null;
-          this.fileUploadList[i].data = '';
-          if(this.isTab) this.fileUploadList[i].createdOn = this.date;
-          else this.fileUploadList[i].createdOn = new Date();
-          toltalUsed += this.fileUploadList[i].fileSize;
+          data[i].objectID = this.objectId;
+          data[i].description = this.description[i];
+          data[i].avatar = null;
+          data[i].data = '';
+          if(this.isTab) data[i].createdOn = this.date;
+          else data[i].createdOn = new Date();
+          toltalUsed += data[i].fileSize;
           if (total > 1)
-            this.fileUploadList[i] = await this.addFileLargeLong(
-              this.fileUploadList[i],
+            data[i] = await this.addFileLargeLong(
+              data[i],
               false
             );
         }
@@ -996,7 +999,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         if (total > 1) {
           var done = this.fileService
             .addMultiFile(
-              this.fileUploadList,
+              data,
               this.actionType,
               this.formModel?.entityName,
               this.isDM,
