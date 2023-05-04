@@ -66,13 +66,14 @@ import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 
+
 @Component({
-  selector: 'lib-employee-detail',
-  templateUrl: './employee-detail.component.html',
-  styleUrls: ['./employee-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'lib-employee-info-detail',
+  templateUrl: './employee-info-detail.component.html',
+  styleUrls: ['./employee-info-detail.component.scss']
 })
-export class EmployeeDetailComponent extends UIComponent {
+export class EmployeeInfoDetailComponent extends UIComponent{
+  console = console;
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -85,12 +86,11 @@ export class EmployeeDetailComponent extends UIComponent {
 
   active = [
     'HRTEM0101',
-    'HRTEM0201',
     'HRTEM0301',
     'HRTEM0401',
     'HRTEM0501',
     'HRTEM0601',
-    'HRTEM0701',
+    'HRTEM0804',
     'HRTEM0801',
   ];
 
@@ -113,7 +113,6 @@ export class EmployeeDetailComponent extends UIComponent {
     super(inject);
     this.user = this.auth.get();
     this.funcID = this.routeActive.snapshot.params['funcID'];
-    // this.infoPersonal =
   }
 
   isClick: boolean = false;
@@ -151,6 +150,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   infoPersonal: any;
+  infoPersonalContract: any;
 
   crrEContract: any;
   lstContractType: any; //phân loại HĐ không xác định
@@ -439,23 +439,37 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('tmpTemp', { static: true })
   tmpTemp: TemplateRef<any>;
 
+  //Declare model ViewAll Salary
+  @ViewChild('templateViewSalary', { static: true })
+  templateViewSalary: TemplateRef<any>;
+  dialogViewSalary: any;
+
+  //Declare model ViewAll Benefit
+  @ViewChild('templateViewBenefit', { static: true })
+  templateViewBenefit: TemplateRef<any>;
+  dialogViewBenefit: any;
+
   listEmp: any;
   request: DataRequest;
 
   lstTab: any;
 
   //#region functions list
-  lstFuncSelfInfo: any = [];
-  lstFuncLegalInfo: any = [];
-  lstFuncTaskInfo: any = [];
-  lstFuncSalary: any = [];
+  lstFuncCurriculumVitae: any = [];
+  lstFuncJobInfo: any = [];
+  lstFuncSalaryBenefit: any = [];
   lstFuncHRProcess: any = [];
   lstFuncKnowledge: any = [];
-  lstFuncAward: any = [];
   lstFuncHealth: any = [];
+  lstFuncQuitJob : any = []
   lstFuncArchiveRecords: any = [];
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
+  
+  //father funcID
+  lstFuncLegalInfo: any = [];
+  lstFuncForeignWorkerInfo: any = []
+
   //#endregion
 
   //#region RowCount
@@ -484,19 +498,20 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region var functionID
-  selfInfoFuncID: string = 'HRTEM01';
+  curriculumVitaeFuncID: string = 'HRTEM01';
   legalInfoFuncID: string = 'HRTEM02';
+  foreignWorkerFuncID: string = 'HRTEM0104';
   jobInfoFuncID: string = 'HRTEM03';
-  benefitInfoFuncID: string = 'HRTEM04';
-  processInfoFuncID: string = 'HRTEM05';
+  salaryBenefitInfoFuncID: string = 'HRTEM04';
+  workingProcessInfoFuncID: string = 'HRTEM05';
   knowledgeInfoFuncID: string = 'HRTEM06';
-  rewDisInfoFuncID: string = 'HRTEM07';
   healthInfoFuncID: string = 'HRTEM08';
+  quitJobInfoFuncID: string = 'HRTEM09';
 
   eInfoFuncID = 'HRTEM0101';
   ePartyFuncID = 'HRTEM0102';
   eFamiliesFuncID = 'HRTEM0103';
-  eAssurFunc = 'HRTEM0201';
+  eAssurFuncID = 'HRTEM0201';
   ePassportFuncID = 'HRTEM0202';
   eDegreeFuncID = 'HRTEM0601';
   eVisaFuncID = 'HRTEM0203';
@@ -522,6 +537,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eDisciplineFuncID = 'HRTEM0702';
   eDiseasesFuncID = 'HRTEM0803';
   eAccidentsFuncID = 'HRTEM0804';
+  eNeedToSubmitProfileFuncID = 'HRTEM0304';
   //#endregion
 
   //#region Vll colors
@@ -663,7 +679,21 @@ export class EmployeeDetailComponent extends UIComponent {
         this.hrService.loadData('HR', rqBSalary).subscribe((res) => {
           if (res && res[0]) {
             this.crrEBSalary = res[0][0];
-            this.df.detectChanges();
+            let rqJSalary = new DataRequest();
+            rqJSalary.entityName = 'HR_EJobSalaries';
+            rqJSalary.dataValues = this.employeeID + ';true';
+            rqJSalary.predicates = 'EmployeeID=@0 and IsCurrent=@1';
+            rqJSalary.page = 1;
+            rqJSalary.pageSize = 1;
+            this.hrService.loadData('HR', rqJSalary).subscribe((res) => {
+              if (res && res[0]) {
+                this.crrEBSalary = {
+                  ...this.crrEBSalary,
+                  jSalary: res[0][0].jSalary,
+                };
+                this.df.detectChanges();
+              }
+            });
           }
         });
       }
@@ -732,7 +762,7 @@ export class EmployeeDetailComponent extends UIComponent {
     }
     if (!this.basicSalaryColumnGrid) {
       //#region get columnGrid EBasicSalary - Lương cơ bản
-      this.hrService.getHeaderText(this.eBasicSalaryFuncID).then((res) => {
+      this.hrService.getHeaderText(this.eBasicSalaryFuncID).then((res) => { 
         let basicSalaryHeaderText = res;
         this.basicSalaryColumnGrid = [
           {
@@ -747,37 +777,33 @@ export class EmployeeDetailComponent extends UIComponent {
           },
           {
             headerText:
-              basicSalaryHeaderText['EffectedDate'] +
-              ' | ' +
-              basicSalaryHeaderText['ExpiredDate'],
-            template: this.basicSalaryCol3,
+            "Lương chức danh",
+            template: this.basicSalaryCol4,
             width: '150',
           },
           {
             headerText:
-              basicSalaryHeaderText['DecisionNo'] +
-              ' | ' +
-              basicSalaryHeaderText['SignedDate'],
-            template: this.basicSalaryCol4,
+              basicSalaryHeaderText['EffectedDate'],
+            template: this.basicSalaryCol3,
             width: '150',
-          },
+          }, 
         ];
       });
-      let insBSalary = setInterval(() => {
-        if (this.basicSalaryGridview) {
-          clearInterval(insBSalary);
-          let t = this;
-          this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
-            if (res) {
-              if (res.type == 'loaded') {
-                t.eBasicSalaryRowCount = res['data'].length;
-              }
-            }
-          });
-          this.eBasicSalaryRowCount =
-            this.basicSalaryGridview.dataService.rowCount;
-        }
-      }, 100);
+      // let insBSalary = setInterval(() => {
+      //   if (this.basicSalaryGridview) {
+      //     clearInterval(insBSalary);
+      //     let t = this;
+      //     this.basicSalaryGridview.dataService.onAction.subscribe((res) => {
+      //       if (res) {
+      //         if (res.type == 'loaded') {
+      //           t.eBasicSalaryRowCount = res['data'].length;
+      //         }
+      //       }
+      //     });
+      //     this.eBasicSalaryRowCount =
+      //       this.basicSalaryGridview.dataService.rowCount;
+      //   }
+      // }, 100);
 
       //#endregion
 
@@ -1223,6 +1249,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 t.passportRowCount = res['data'].length;
                 if(res['data'].length > 0){
                   this.crrPassport = res.data[0]
+                  // debugger
                 }
               }
             }
@@ -1282,46 +1309,57 @@ export class EmployeeDetailComponent extends UIComponent {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
+        console.log('list tab', this.lstTab);
+        
         this.crrFuncTab = this.lstTab[this.crrTab].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
-
-        this.lstFuncSelfInfo = res[0].filter(
-          (p) => p.parentID == this.selfInfoFuncID
+        console.log('lstFuncID', this.lstFuncID);
+        
+        this.lstFuncCurriculumVitae = res[0].filter(
+          (p) => p.parentID == this.curriculumVitaeFuncID
         );
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
-        //this.lstBtnAdd.splice(0, 2);
+        this.lstBtnAdd = this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        && p.entityName != this.view.formModel.entityName);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
         );
+        this.lstFuncForeignWorkerInfo = res[0].filter(
+          (p) => p.parentID == this.foreignWorkerFuncID
+        )
 
-        this.lstFuncTaskInfo = res[0].filter(
+        this.lstFuncJobInfo = res[0].filter(
           (p) => p.parentID == this.jobInfoFuncID
         );
 
-        this.lstFuncSalary = res[0].filter(
-          (p) => p.parentID == this.benefitInfoFuncID
+        this.lstFuncSalaryBenefit = res[0].filter(
+          (p) => p.parentID == this.salaryBenefitInfoFuncID
         );
 
         this.lstFuncHRProcess = res[0].filter(
-          (p) => p.parentID == this.processInfoFuncID
+          (p) => p.parentID == this.workingProcessInfoFuncID
         );
 
         this.lstFuncKnowledge = res[0].filter(
           (p) => p.parentID == this.knowledgeInfoFuncID
         );
 
-        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRTEM07');
+        // this.lstFuncAwardDiscipline = res[0].filter((p) => p.parentID == 'HRTEM07');
 
-        this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRTEM08');
+        this.lstFuncHealth = res[0].filter(
+          (p) => p.parentID == this.healthInfoFuncID
+          );
 
-        this.lstFuncArchiveRecords = res[0].filter(
-          (p) => p.parentID == 'HRT030210'
-        );
+        this.lstFuncQuitJob = res[0].filter(
+          (p) => p.parentID == this.quitJobInfoFuncID
+        )
 
-        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
+        // this.lstFuncArchiveRecords = res[0].filter(
+        //   (p) => p.parentID == 'HRT030210'
+        // );
+
+        // this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
 
@@ -1366,7 +1404,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
         let index = this.listEmp?.findIndex(
           (p) => p.employeeID == params.employeeID
-        );
+          );
         console.log('lst 1', this.listEmp);
         
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
@@ -1408,6 +1446,7 @@ export class EmployeeDetailComponent extends UIComponent {
       }
     });
 
+    
     //#region filter
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';
@@ -2165,6 +2204,9 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         });
     }
+
+    this.initHRProcess();
+    console.log('hdhd ht', this.crrEContract);
   }
 
   add(functionID) {
@@ -3009,36 +3051,36 @@ export class EmployeeDetailComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
+    console.log('lst funcID', this.lstFuncID);
+    console.log('view neee', this.view.formModel.entityName);
+    
     switch (this.crrFuncTab) {
-      case this.selfInfoFuncID:
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
-        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
+      case this.curriculumVitaeFuncID:
+        // console.log('loc kq 1', this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        //  && p.entityName != this.view.formModel.entityName));
+         
+        // this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncCurriculumVitae));
+        this.lstBtnAdd = this.lstFuncID.filter(p => (p.parentID == this.curriculumVitaeFuncID || p.parentID == this.legalInfoFuncID || p.parentID == this.foreignWorkerFuncID)
+        && p.entityName != this.view.formModel.entityName);
+        
         // this.lstBtnAdd.splice(0, 2);
         break;
-      case this.legalInfoFuncID:
-        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
-        this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
-        // this.lstBtnAdd.splice(0, 1);
-        break;
       case this.jobInfoFuncID:
-        this.lstBtnAdd = this.lstFuncTaskInfo;
+        this.lstBtnAdd = this.lstFuncJobInfo;
         this.lstBtnAdd = this.lstBtnAdd.filter(p => p.entityName != this.view.formModel.entityName);
         // this.lstBtnAdd = null;
         break;
-      case this.benefitInfoFuncID:
-        this.lstBtnAdd = this.lstFuncSalary;
+      case this.salaryBenefitInfoFuncID:
+        this.lstBtnAdd = this.lstFuncSalaryBenefit;
         this.initSalaryInfo();
         break;
-      case this.processInfoFuncID:
+      case this.workingProcessInfoFuncID:
         this.lstBtnAdd = this.lstFuncHRProcess;
         this.initHRProcess();
         break;
       case this.knowledgeInfoFuncID:
         this.lstBtnAdd = this.lstFuncKnowledge;
         this.initKnowledgeInfo();
-        break;
-      case this.rewDisInfoFuncID:
-        this.lstBtnAdd = this.lstFuncAward;
         break;
       case this.healthInfoFuncID:
         this.lstBtnAdd = this.lstFuncHealth;
@@ -3077,8 +3119,8 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEAssurTaxBankComponent,
       {
         headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.eAssurFunc),
-        functionID: this.eAssurFunc,
+          actionHeaderText + ' ' + this.getFormHeader(this.eAssurFuncID),
+        functionID: this.eAssurFuncID,
         dataObj: this.infoPersonal,
       },
       option
@@ -4445,8 +4487,30 @@ export class EmployeeDetailComponent extends UIComponent {
     this.UpdateEBenefitPredicate();
   }
 
+  closeModelBenefit(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  popupViewBenefit() {
+    this.dialogViewBenefit = this.callfc.openForm(
+      this.templateViewBenefit,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogViewBenefit.closed.subscribe((res) => {
+      // if (res?.event) {
+      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
+      // }
+      this.df.detectChanges();
+    });
+  }
+
   valueChangeViewAllEBenefit(evt) {
-    this.ViewAllEBenefitFlag = evt.data;
+    this.ViewAllEBenefitFlag = evt.isTrusted;
+    this.popupViewBenefit();
     let ins = setInterval(() => {
       if (this.eBenefitGrid) {
         clearInterval(ins);
@@ -4497,8 +4561,33 @@ export class EmployeeDetailComponent extends UIComponent {
     }, 100);
   }
 
+
+  
+  closeModelSalary(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  popupUpdateEJobSalaryStatus() {
+    this.dialogViewSalary = this.callfc.openForm(
+      this.templateViewSalary,
+      null,
+      850,
+      550,
+      null,
+      null
+    );
+    this.dialogViewSalary.closed.subscribe((res) => {
+      // if (res?.event) {
+      //   this.view.dataService.update(res.event[0]).subscribe((res) => {});
+      // }
+      this.df.detectChanges();
+    });
+  }
+
   valueChangeViewAllEBasicSalary(evt) {
-    this.ViewAllEBasicSalaryFlag = evt.data;
+    this.ViewAllEBasicSalaryFlag = evt.isTrusted;
+    // this.ViewAllEBasicSalaryFlag = evt.data;
+    this.popupUpdateEJobSalaryStatus();
     let ins = setInterval(() => {
       if (this.basicSalaryGridview) {
         clearInterval(ins);

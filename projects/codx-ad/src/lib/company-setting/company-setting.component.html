@@ -581,7 +581,11 @@
                             default="Chi tiết"
                           ></codx-label>
                         </button>
-                        <button type="button" class="btn btn-primary ms-2">
+                        <button
+                          type="button"
+                          class="btn btn-primary ms-2"
+                          (click)="installModule(module)"
+                        >
                           <codx-label
                             name="lblInstall"
                             [formModel]="view.formModel"

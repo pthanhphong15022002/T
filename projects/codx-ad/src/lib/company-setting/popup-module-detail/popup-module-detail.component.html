@@ -11,7 +11,7 @@
 </div>
 
 <div class="row body">
-  <div class="row">
+  <div class="row d-flex">
     <codx-temp-full
       cardCss="card-template border-bottom px-2 pt-4 pb-2"
       [typeMF]="'hover'"
@@ -28,39 +28,45 @@
       [dataItem]="module"
     >
     </codx-temp-full>
+    <div class="row d-flex">
+      <span>
+        <codx-label
+          formName=""
+          name="lblUsers"
+          [default]="'Nhân viên nghiệp vụ: '"
+        >
+        </codx-label>
+        {{
+          module.boughtModule.price +
+            " " +
+            currency +
+            "/" +
+            module.boughtModule.umid +
+            "/" +
+            getInterval(module.boughtModule.interval)
+        }}
+      </span>
+    </div>
+    <div class="row" *ngIf="childMD">
+      <span>
+        <codx-label
+          formName=""
+          name="lblEmpls"
+          [default]="'Nhân viên thường: '"
+        ></codx-label>
+        {{
+          childMD.boughtModule.price +
+            " " +
+            currency +
+            "/" +
+            childMD.boughtModule.umid +
+            "/" +
+            getInterval(childMD.boughtModule.interval)
+        }}
+      </span>
+    </div>
   </div>
-  <div class="row">
-    <codx-label
-      formName=""
-      name="lblUsers"
-      [default]="
-        'Nhân viên nghiệp vụ: ' +
-        module.boughtModule.price +
-        ' ' +
-        currency +
-        '/' +
-        module.boughtModule.umid +
-        '/' +
-        getInterval(module.boughtModule.interval)
-      "
-    ></codx-label>
-  </div>
-  <div class="row" *ngIf="childMD">
-    <codx-label
-      formName=""
-      name="lblEmpls"
-      [default]="
-        'Nhân viên thường: ' +
-        module.boughtModule.price +
-        ' ' +
-        currency +
-        '/' +
-        module.boughtModule.umid +
-        '/' +
-        getInterval(module.boughtModule.interval)
-      "
-    ></codx-label>
-  </div>
+
   <ng-template #tmplUserInfo let-data>
     <codx-temp-full
       [imageObjType]="'AD_Users'"
@@ -70,23 +76,44 @@
     >
     </codx-temp-full>
   </ng-template>
+
+  <ng-template #operatorHT let-data>
+    <codx-label [name]="'lblOperatorHeaderText'" [default]="'Nghiệp vụ'">
+    </codx-label>
+  </ng-template>
+  <ng-template #employeeHT let-data>
+    <codx-label [name]="'lblemployeeHeaderText'" [default]="'Nhân viên'">
+    </codx-label>
+  </ng-template>
+
+  <ng-template #operRoleEndDate let-data>
+    <div
+      [innerHTML]="
+        data.operRoleEndDate | formatvalue : grid.formModel : 'EndDate' | async
+      "
+    ></div>
+  </ng-template>
+
+  <ng-template #emplRoleEndDate let-data>
+    <div
+      [innerHTML]="
+        data.emplRoleEndDate | formatvalue : grid.formModel : 'EndDate' | async
+      "
+    ></div>
+  </ng-template>
   <codx-gridview-v2
     #grid
     [formName]="fmUserRole?.formName"
     [gridViewName]="fmUserRole?.gridViewName"
     [entityName]="fmUserRole?.entityName"
-    [columnsGrid]="clmnGrid"
     [allowFiltering]="true"
     [allowSorting]="true"
     [allowPaging]="true"
     [dataSource]="lstADUserRoles"
+    [columnsGrid]="clmnGrid"
     [predicates]="predicate"
     [dataValues]="dataValue"
     [autoLoad]="false"
     rowHeight="40"
   ></codx-gridview-v2>
-  <!-- [service]="'Tenant'"
-    [assemblyName]="'Tenant'"
-    [className]="'OrderModulesBusiness'"
-    [method]="'GetListUserRoleAsync'" -->
 </div>
