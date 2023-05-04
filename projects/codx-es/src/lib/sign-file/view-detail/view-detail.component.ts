@@ -28,7 +28,6 @@ import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/mode
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
-
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
@@ -581,6 +580,9 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
+      dialogAdd.closed.subscribe((res) => {
+        window['PDFViewerApplication']?.unbindWindowEvents();
+      });
     });
   }
 
