@@ -14,15 +14,19 @@
 </ng-container>
 <codx-views
   #view
-  idField="recID"
-  [funcID]="'CM0202'"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
   [method]="methodLoadData"
+  idField="recID"
+  [funcID]="'CM0202'"
+  predicates="CustomerID==@0"
+  [dataValues]="customerID" 
   [views]="views"
   [toolbarDisplay]="false"
+  [selectedFirst]="true"
+  [autoLoad]="false"
   (selectedChange)="changeItemDetail($event)"
 >
   <!-- predicates="CustomerID=@0"

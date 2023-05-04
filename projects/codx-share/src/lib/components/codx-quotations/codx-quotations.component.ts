@@ -1,4 +1,4 @@
-import { Component, Injector, Input, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnChanges, Optional, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
@@ -8,17 +8,18 @@ import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations
   templateUrl: './codx-quotations.component.html',
   styleUrls: ['./codx-quotations.component.css']
 })
-export class CodxQuotationsComponent  extends UIComponent {
+export class CodxQuotationsComponent  extends UIComponent implements OnChanges {
   @Input() funcID: string;
-  @Input() customerID: string = '';
+  @Input() customerID: string;
+  @Input() service = 'CM';
+  @Input() assemblyName = 'ERM.Business.CM';
+  @Input() entityName = 'CM_Quotations';
+  @Input() className = 'QuotationsBusiness';
+  @Input() methodLoadData = 'GetListQuotationsAsync';
+
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  readonly service = 'CM';
-  readonly assemblyName = 'ERM.Business.CM';
-  readonly entityName = 'CM_Quotations';
-  readonly className = 'QuotationsBusiness';
-  readonly methodLoadData = 'GetListQuotationsAsync';
   //test
   formModel : FormModel;
   moreDefaut = {
@@ -46,8 +47,13 @@ export class CodxQuotationsComponent  extends UIComponent {
     })
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+   
+  }
   onInit(): void {}
+
   ngAfterViewInit() {
+
     this.views = [
       {
         type: ViewType.list,
@@ -81,7 +87,9 @@ export class CodxQuotationsComponent  extends UIComponent {
       //   formModel.funcID = 'CM0202';
       //   formModel.formName = f.formName;
       //   formModel.gridViewName = f.gridViewName;
-      res.status ="1"
+      res.status ="1";
+      res.customerID= this.customerID;
+     
       var obj = {
         data : res,
         action: 'add',
@@ -89,6 +97,7 @@ export class CodxQuotationsComponent  extends UIComponent {
       };
       let option = new DialogModel();
       option.IsFull = true;
+      option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       var dialog = this.callfc.openForm(
         PopupAddQuotationsComponent,
