@@ -198,27 +198,27 @@
                                   </span>
                                 </div>
                                 <div
-                                class="d-flex justify-content-between mb-3"
-                              >
-                                <codx-label
-                                  class="text-gray-600"
-                                  [formModel]="eContractFormModel"
-                                  fiedName="ContractTypeID"
-                                  [default]="'Hợp đồng hiện tại'"
+                                  class="d-flex justify-content-between mb-3"
                                 >
-                                </codx-label>
-                                <span class="text-primary">
-                                  <span
-                                    [innerHTML]="
-                                    crrEContract?.contractTypeID
-                                        | formatvalue
-                                          : eContractFormModel
-                                          : 'contractTypeID'
-                                        | async
-                                    "
-                                  ></span>
-                                </span>
-                              </div>
+                                  <codx-label
+                                    class="text-gray-600"
+                                    [formModel]="eContractFormModel"
+                                    fiedName="ContractTypeID"
+                                    [default]="'Hợp đồng hiện tại'"
+                                  >
+                                  </codx-label>
+                                  <span class="text-primary">
+                                    <span
+                                      [innerHTML]="
+                                        crrEContract?.contractTypeID
+                                          | formatvalue
+                                            : eContractFormModel
+                                            : 'contractTypeID'
+                                          | async
+                                      "
+                                    ></span>
+                                  </span>
+                                </div>
                                 <div
                                   class="d-flex justify-content-between mb-3"
                                 >
@@ -371,10 +371,10 @@
                   <i class="icon-arrow_forward_ios icon-16"></i>
                 </span>
               </div>
-              <div class=" fs-5 mb-1">
+              <div class="fs-5 mb-1">
                 <span class="icon-qr_code_scanner icon-14 me-1"></span>
-                  <span #id>{{ infoPersonal?.employeeID }}</span>
-                  <span class="icon-i-dot text-gray-500"></span>
+                <span #id>{{ infoPersonal?.employeeID }}</span>
+                <span class="icon-i-dot text-gray-500"></span>
                 {{ infoPersonal?.employeeName }}
               </div>
               <div
@@ -404,10 +404,7 @@
             </div>
           </div>
 
-          <div
-            class="d-flex flex-column p-4 pb-1 "
-            *ngIf="infoPersonal"
-          >
+          <div class="d-flex flex-column p-4 pb-1" *ngIf="infoPersonal">
             <div class="d-flex flex-wrap mb-2 border-top">
               <div class="d-flex align-items-center text-gray-700 me-4">
                 <span class="icon-date_range icon-14 me-1"></span>
@@ -505,7 +502,6 @@
         </div>
         <div class="w-100 user-right">
           <div class="tab-content">
-            
             <!-- Pane 1: Sơ yếu lí lịch -->
             <div
               class="tab-pane fade show"
@@ -671,15 +667,15 @@
             <div class="row mb-5">
               <div class="col">
                 <div class="text-gray-600 me-2 pb-1" d-flex>
-                <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
                   <codx-label
                     fiedName="EmployeeName"
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                </div>  
+                </div>
                 <div class="fw-bold text-dark fs-6">
-                  {{infoPersonal?.employeeName }}
+                  {{ infoPersonal?.employeeName }}
                 </div>
               </div>
               <!-- Bí danh -->
@@ -727,15 +723,15 @@
                   <codx-label fiedName="Birthday" [formModel]="eInfoFormModel">
                   </codx-label>
                 </div>
-                  <span
-                    class="text-dark fw-bold fs-6"
-                    [innerHTML]="
-                      infoPersonal?.birthday
-                        | formatvalue : eInfoFormModel : 'birthday'
-                        | async
-                    "
-                  >
-                  </span>
+                <span
+                  class="text-dark fw-bold fs-6"
+                  [innerHTML]="
+                    infoPersonal?.birthday
+                      | formatvalue : eInfoFormModel : 'birthday'
+                      | async
+                  "
+                >
+                </span>
               </div>
               <!-- Nơi sinh -->
               <div class="col">
@@ -786,14 +782,14 @@
                   >
                   </codx-label>
                 </div>
-                  <span
-                    class="fw-bold text-dark fs-6"
-                    [innerHTML]="
-                      infoPersonal?.nationality
-                        | formatvalue : eInfoFormModel : 'nationality'
-                        | async
-                    "
-                  ></span>
+                <span
+                  class="fw-bold text-dark fs-6"
+                  [innerHTML]="
+                    infoPersonal?.nationality
+                      | formatvalue : eInfoFormModel : 'nationality'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="col">
                 <div class="text-gray-600 pb-1">
@@ -1022,13 +1018,12 @@
             <div class="row mb-5">
               <div class="text-gray-600 pb-1 d-flex">
                 <span
-                class="icon-favorite_border icon-16 text-danger me-2"
-              ></span>
+                  class="icon-favorite_border icon-16 text-danger me-2"
+                ></span>
                 <codx-label fiedName="Hobby" [formModel]="eInfoFormModel">
                 </codx-label>
               </div>
               <div class="d-flex">
-
                 <span
                   #Hobby
                   class="fw-bold text-dark fs-6"
@@ -1085,15 +1080,11 @@
                 </div>
                 <div class="col-4">
                   <span
-                  class="icon-local_phone icon-16 text-gray-600 me-1"
-                ></span>
-                  <codx-label
-                    fiedName="Phone"
-                    [formModel]="eInfoFormModel"
-                  >
+                    class="icon-local_phone icon-16 text-gray-600 me-1"
+                  ></span>
+                  <codx-label fiedName="Phone" [formModel]="eInfoFormModel">
                   </codx-label>
                   <div class="d-flex align-items-center">
-
                     <span class="fw-bold text-dark fs-6">
                       <span
                         #phone
@@ -1133,13 +1124,12 @@
                 <div class="col-4">
                   <div class="text-gray-600 pb-1 d-flex">
                     <span
-                    class="icon-phone_android icon-16 text-gray-600 me-2"
-                  ></span>
+                      class="icon-phone_android icon-16 text-gray-600 me-2"
+                    ></span>
                     <codx-label fiedName="Mobile" [formModel]="eInfoFormModel">
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-
                     <span
                       class="fw-bold text-dark fs-6"
                       [innerHTML]="
@@ -1197,519 +1187,525 @@
         </div>
       </div>
 
-            <!--Thông tin pháp lý -->
-            <div class="user-profile overview d-block" [id]="legalInfoFuncID">
-              <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="d-flex align-items-center text-primary">
-                    <span class="icon-folder_special icon-20 me-2"></span>
-                    <div class="fs-5 fw-bold text-uppercase mt-1">
-                      {{ getFormHeader(legalInfoFuncID) }}
-                    </div>
+      <!--Thông tin pháp lý -->
+      <div class="user-profile overview d-block" [id]="legalInfoFuncID">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center text-primary">
+              <span class="icon-folder_special icon-20 me-2"></span>
+              <div class="fs-5 fw-bold text-uppercase mt-1">
+                {{ getFormHeader(legalInfoFuncID) }}
+              </div>
+            </div>
+            <div class="d-flex align-items-center ms-5">
+              <button type="button" class="btn btn-icon btn-white">
+                <span
+                  class="icon-edit icon-18"
+                  (click)="editAssuranceTaxBankAccountInfo(editHeaderText)"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div #insurance class="mb-1" *ngIf="eInfoFormModel">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="eInfoFormModel"
+                  default="Bảo hiểm"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div>
+              <!-- Số BHXH/ Ngày cấp -->
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                    ></span>
+                    <codx-label
+                      fiedName="SIRegisterNo"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
                   </div>
-                  <div class="d-flex align-items-center ms-5">
-                    <button type="button" class="btn btn-icon btn-white">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editAssuranceTaxBankAccountInfo(editHeaderText)"
-                      ></span>
-                    </button>
+                  <div
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.siRegisterNo
+                        | formatvalue : eInfoFormModel : 'siRegisterNo'
+                        | async
+                    "
+                  ></div>
+                </div>
+                <div class="col-8">
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="SIRegisterOn"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.siRegisterOn
+                          | formatvalue : eInfoFormModel : 'siRegisterOn'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-                <div #insurance class="mb-1" *ngIf="eInfoFormModel">
-                  <div class="d-flex align-items-center mt-6 mb-4">
-                    <span class="icon-i-filter-right icon-20 me-2"></span>
-                    <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                      <codx-label
-                        name="lblEmployeeInfo"
-                        [formModel]="eInfoFormModel"
-                        default="Bảo hiểm"
-                      >
-                      </codx-label>
-                    </div>
+              </div>
+              <!-- Sỗ BHYT/ Hạn thẻ BHYT -->
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                    ></span>
+                    <codx-label
+                      fiedName="HICardNo"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
                   </div>
-                  <div>
-                    <!-- Số BHXH/ Ngày cấp -->
-                    <div class="row mb-5">
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1 d-flex">
-                          <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                          <codx-label
-                            fiedName="SIRegisterNo"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.siRegisterNo
-                              | formatvalue : eInfoFormModel : 'siRegisterNo'
-                              | async
-                          "
-                        ></div>
-                      </div>
-                      <div class="col-8">
-                        <div class="text-gray-600 pb-1">
-                          <codx-label
-                            fiedName="SIRegisterOn"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.siRegisterOn
-                                | formatvalue : eInfoFormModel : 'siRegisterOn'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Sỗ BHYT/ Hạn thẻ BHYT -->
-                    <div class="row mb-5">
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1 d-flex">
-                          <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                          <codx-label
-                            fiedName="HICardNo"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div
-                          #HICardNo
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.hiCardNo
-                              | formatvalue : eInfoFormModel : 'hiCardNo'
-                              | async
-                          "
-                        ></div>
-                      </div>
-                      <div class="col-8">
-                        <div class="text-gray-600 pb-1">
-                          <codx-label
-                            fiedName="HICardFrom"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.hiCardFrom
-                                | formatvalue : eInfoFormModel : 'hiCardFrom'
-                                | async
-                            "
-                          ></span>
-                          &nbsp;-&nbsp;
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.hiCardTo
-                                | formatvalue : eInfoFormModel : 'hiCardTo'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Thời điểm đủ 5 năm/ Nơi khám chữa bệnh đầu tiên -->
-                    <div class="row mb-5">
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1 d-flex">
-                          <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                          <codx-label
-                            fiedName="HIDateOf5Years"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.hiDateOf5Years
-                                | formatvalue : eInfoFormModel : 'hiDateOf5Years'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-      
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1">
-                          <codx-label
-                            fiedName="HIHospitalID"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.hiHospitalID
-                                | formatvalue : eInfoFormModel : 'hiHospitalID'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
+                  <div
+                    #HICardNo
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.hiCardNo
+                        | formatvalue : eInfoFormModel : 'hiCardNo'
+                        | async
+                    "
+                  ></div>
+                </div>
+                <div class="col-8">
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="HICardFrom"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.hiCardFrom
+                          | formatvalue : eInfoFormModel : 'hiCardFrom'
+                          | async
+                      "
+                    ></span>
+                    &nbsp;-&nbsp;
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.hiCardTo
+                          | formatvalue : eInfoFormModel : 'hiCardTo'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-                <hr />
-                <div #tax class="mb-1" *ngIf="eInfoFormModel">
-                  <div class="d-flex align-items-center mt-6 mb-4">
-                    <span class="icon-i-filter-right icon-20 me-2"></span>
-                    <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                      <codx-label
-                        name="lblEmployeeInfo"
-                        [formModel]="eInfoFormModel"
-                        default="Mã số thuế thu nhập cá nhân"
-                      >
-                      </codx-label>
-                    </div>
+              </div>
+              <!-- Thời điểm đủ 5 năm/ Nơi khám chữa bệnh đầu tiên -->
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span class="icon-event icon-16 text-gray-600 me-2"></span>
+                    <codx-label
+                      fiedName="HIDateOf5Years"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
                   </div>
-                  <!-- Mã số thuế/ Ngày cấp/ Nơi cấp -->
-                  <div class="row mb-5">
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                        <codx-label fiedName="PITNumber" [formModel]="eInfoFormModel">
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitNumber
-                              | formatvalue : eInfoFormModel : 'pitNumber'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                        <codx-label
-                          fiedName="PITIssuedOn"
-                          [formModel]="eInfoFormModel"
-                        >
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitIssuedOn
-                              | formatvalue : eInfoFormModel : 'pitIssuedOn'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                        <codx-label fiedName="PITPlace" [formModel]="eInfoFormModel">
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitPlace
-                              | formatvalue : eInfoFormModel : 'pitPlace'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.hiDateOf5Years
+                          | formatvalue : eInfoFormModel : 'hiDateOf5Years'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-                <hr />
-                <div #account class="mb-1" *ngIf="eInfoFormModel">
-                  <div class="d-flex align-items-center mt-6 mb-4">
-                    <span class="icon-i-filter-right icon-20 me-2"></span>
-                    <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                      <codx-label
-                        name="lblEmployeeInfo"
-                        [formModel]="eInfoFormModel"
-                        default="Tài khoản cá nhân"
-                      >
-                      </codx-label>
-                    </div>
-                  </div>
-                  <div>
-                    <!-- Số tài khoản/ Ngân hàng -->
-                    <div class="row mb-5">
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1 d-flex">
-                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                          <codx-label
-                            fiedName="AccountNo"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.idCardNo
-                                | formatvalue : eInfoFormModel : 'idCardNo'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                      <div class="col-8">
-                        <div class="text-gray-600 pb-1">
-                          <codx-label
-                            fiedName="AccountBankID"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.accountBankID
-                                | formatvalue : eInfoFormModel : 'accountBankID'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Tên chủ tài khoản/ Chi nhánh ngân hàng -->
-                    <div class="row mb-5">
-                      <div class="col-4">
-                        <div class="text-gray-600 pb-1 d-flex">
-                          <span class="icon-account_box"></span>
-                          <codx-label
-                            fiedName="AccountName"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.accountName
-                                | formatvalue : eInfoFormModel : 'accountName'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                      <div class="col-8">
-                        <div class="text-gray-600 pb-1">
-                          <codx-label
-                            fiedName="AccountBankBranch"
-                            [formModel]="eInfoFormModel"
-                          >
-                          </codx-label>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span
-                            class="fw-bold text-dark fs-6"
-                            [innerHTML]="
-                              infoPersonal?.accountBankBranch
-                                | formatvalue : eInfoFormModel : 'accountBankBranch'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Hộ chiếu -->
-                <div #passport class="mb-1"  *ngIf="ePassportFormModel">
-                  <div class="d-flex align-items-center mt-6 mb-4">
-                    <span class="icon-i-filter-right icon-20 me-2"></span>
-                    <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                      <codx-label
-                        name="lblEmployeePassport"
-                        [formModel]="ePassportFormModel"
-                        default="Hộ chiếu"
-                      >
-                      </codx-label>
-                    </div>
-                  </div>
-                  
-                  <div class="row mb-5">
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
-                        <codx-label fiedName="PITNumber" [formModel]="eInfoFormModel">
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitNumber
-                              | formatvalue : eInfoFormModel : 'pitNumber'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                        <codx-label
-                          fiedName="PITIssuedOn"
-                          [formModel]="eInfoFormModel"
-                        >
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitIssuedOn
-                              | formatvalue : eInfoFormModel : 'pitIssuedOn'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="text-gray-600 pb-1">
-                        <codx-label fiedName="PITPlace" [formModel]="eInfoFormModel">
-                        </codx-label>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <span
-                          class="fw-bold text-dark fs-6"
-                          [innerHTML]="
-                            infoPersonal?.pitPlace
-                              | formatvalue : eInfoFormModel : 'pitPlace'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="mt-4 profile-grid">
-                    <codx-gridview
-                      *ngIf="passportColumnGrid && ePassportFormModel"
-                      #passportGridview
-                      [formModel]="ePassportFormModel"
-                      [columnsGrid]="passportColumnGrid"
-                      [service]="'HR'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [dataValues]="employeeID"
-                      [dataService]="dataService"
-                      [pageSize]="numPageSizeGridView"
-                      [rowHeight]="40"
-                      height="auto"
-                      [sort]="[passportSortModel]"
-                    ></codx-gridview>
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="HIHospitalID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
                   </div>
-                </div> 
-                <div #Visa class="mb-1"  *ngIf="eInfoFormModel">
-                  <div class="d-flex align-items-center mt-6 mb-4">
-                    <span class="icon-i-filter-right icon-20 me-2"></span>
-                    <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                      <codx-label
-                        name="lblEmployeeInfo"
-                        [formModel]="eInfoFormModel"
-                        default="Thị thực"
-                      >
-                      </codx-label>
-                    </div>
-                  </div>
-                  <div class="mt-4 profile-grid">
-                    <codx-gridview
-                      *ngIf="visaColumnGrid && eVisaFormModel"
-                      #visaGridview
-                      [formModel]="eVisaFormModel"
-                      [columnsGrid]="visaColumnGrid"
-                      [service]="'HR'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [dataValues]="employeeID"
-                      [pageSize]="numPageSizeGridView"
-                      [rowHeight]="40"
-                      height="auto"
-                      [sort]="[visaSortModel]"
-                    ></codx-gridview>
-                    <!-- [height]="
-                                passportRowCount > numPageSizeGridView
-                                  ? numPageSizeGridView * 50 - 10
-                                  : passportRowCount * 50 + 60
-                              " -->
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.hiHospitalID
+                          | formatvalue : eInfoFormModel : 'hiHospitalID'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <hr />
+          <div #tax class="mb-1" *ngIf="eInfoFormModel">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="eInfoFormModel"
+                  default="Mã số thuế thu nhập cá nhân"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <!-- Mã số thuế/ Ngày cấp/ Nơi cấp -->
+            <div class="row mb-5">
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                  <codx-label fiedName="PITNumber" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitNumber
+                        | formatvalue : eInfoFormModel : 'pitNumber'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <codx-label
+                    fiedName="PITIssuedOn"
+                    [formModel]="eInfoFormModel"
+                  >
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitIssuedOn
+                        | formatvalue : eInfoFormModel : 'pitIssuedOn'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <codx-label fiedName="PITPlace" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitPlace
+                        | formatvalue : eInfoFormModel : 'pitPlace'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div #account class="mb-1" *ngIf="eInfoFormModel">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="eInfoFormModel"
+                  default="Tài khoản cá nhân"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div>
+              <!-- Số tài khoản/ Ngân hàng -->
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span
+                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
+                    ></span>
+                    <codx-label
+                      fiedName="AccountNo"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.idCardNo
+                          | formatvalue : eInfoFormModel : 'idCardNo'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="AccountBankID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.accountBankID
+                          | formatvalue : eInfoFormModel : 'accountBankID'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <!-- Tên chủ tài khoản/ Chi nhánh ngân hàng -->
+              <div class="row mb-5">
+                <div class="col-4">
+                  <div class="text-gray-600 pb-1 d-flex">
+                    <span class="icon-account_box"></span>
+                    <codx-label
+                      fiedName="AccountName"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.accountName
+                          | formatvalue : eInfoFormModel : 'accountName'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="AccountBankBranch"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="fw-bold text-dark fs-6"
+                      [innerHTML]="
+                        infoPersonal?.accountBankBranch
+                          | formatvalue : eInfoFormModel : 'accountBankBranch'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Hộ chiếu -->
+          <div #passport class="mb-1" *ngIf="ePassportFormModel">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeePassport"
+                  [formModel]="ePassportFormModel"
+                  default="Hộ chiếu"
+                >
+                </codx-label>
+              </div>
+            </div>
 
-                        <!-- Lao động nước ngoài -->
-                        <div class="user-profile overview d-block" [id]="foreignWorkerFuncID">
-                          <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
-                            <div class="d-flex align-items-center justify-content-between">
-                              <div class="d-flex align-items-center text-primary">
-                                <span class="icon-folder_special icon-20 me-2"></span>
-                                <div class="fs-5 fw-bold text-uppercase mt-1">
-                                  {{ getFormHeader(foreignWorkerFuncID) }}
-                                </div>
-                              </div>
-                            </div>
-                            <div #workPermit class="mb-1">
-                              <div class="d-flex align-items-center mt-6 mb-4">
-                                <span class="icon-i-filter-right icon-20 me-2"></span>
-                                <div class="fw-bold text-uppercase fs-5 text-gray-600">
-                                  <codx-label
-                                    name="lblEmployeeInfo"
-                                    [formModel]="eInfoFormModel"
-                                    default="Giấy phép lao động"
-                                  >
-                                  </codx-label>
-                                </div>
-                              </div>
-                              <div class="mt-4 profile-grid">
-                                <codx-gridview
-                                  *ngIf="workPermitColumnGrid && eWorkPermitFormModel"
-                                  #workPermitGridview
-                                  [formModel]="eWorkPermitFormModel"
-                                  [columnsGrid]="workPermitColumnGrid"
-                                  [service]="'HR'"
-                                  [assemblyName]="'Core'"
-                                  [className]="'DataBusiness'"
-                                  [method]="'LoadDataAsync'"
-                                  [predicates]="'EmployeeID=@0'"
-                                  [dataValues]="employeeID"
-                                  [pageSize]="numPageSizeGridView"
-                                  [rowHeight]="40"
-                                  height="auto"
-                                  [sort]="[workPermitSortModel]"
-                                ></codx-gridview>
-                                <!-- [height]="
+            <div class="row mb-5">
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <span class="icon-wysiwyg icon-16 text-gray-600 me-2"></span>
+                  <codx-label fiedName="PITNumber" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitNumber
+                        | formatvalue : eInfoFormModel : 'pitNumber'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <codx-label
+                    fiedName="PITIssuedOn"
+                    [formModel]="eInfoFormModel"
+                  >
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitIssuedOn
+                        | formatvalue : eInfoFormModel : 'pitIssuedOn'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-gray-600 pb-1">
+                  <codx-label fiedName="PITPlace" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="fw-bold text-dark fs-6"
+                    [innerHTML]="
+                      infoPersonal?.pitPlace
+                        | formatvalue : eInfoFormModel : 'pitPlace'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 profile-grid">
+              <codx-gridview
+                *ngIf="passportColumnGrid && ePassportFormModel"
+                #passportGridview
+                [formModel]="ePassportFormModel"
+                [columnsGrid]="passportColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [dataService]="dataService"
+                [pageSize]="numPageSizeGridView"
+                [rowHeight]="40"
+                height="auto"
+                [sort]="[passportSortModel]"
+              ></codx-gridview>
+            </div>
+          </div>
+          <div #Visa class="mb-1" *ngIf="eInfoFormModel">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="eInfoFormModel"
+                  default="Thị thực"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div class="mt-4 profile-grid">
+              <codx-gridview
+                *ngIf="visaColumnGrid && eVisaFormModel"
+                #visaGridview
+                [formModel]="eVisaFormModel"
+                [columnsGrid]="visaColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [pageSize]="numPageSizeGridView"
+                [rowHeight]="40"
+                height="auto"
+                [sort]="[visaSortModel]"
+              ></codx-gridview>
+              <!-- [height]="
+                                passportRowCount > numPageSizeGridView
+                                  ? numPageSizeGridView * 50 - 10
+                                  : passportRowCount * 50 + 60
+                              " -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lao động nước ngoài -->
+      <div class="user-profile overview d-block" [id]="foreignWorkerFuncID">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center text-primary">
+              <span class="icon-folder_special icon-20 me-2"></span>
+              <div class="fs-5 fw-bold text-uppercase mt-1">
+                {{ getFormHeader(foreignWorkerFuncID) }}
+              </div>
+            </div>
+          </div>
+          <div #workPermit class="mb-1">
+            <div class="d-flex align-items-center mt-6 mb-4">
+              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <div class="fw-bold text-uppercase fs-5 text-gray-600">
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="eInfoFormModel"
+                  default="Giấy phép lao động"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div class="mt-4 profile-grid">
+              <codx-gridview
+                *ngIf="workPermitColumnGrid && eWorkPermitFormModel"
+                #workPermitGridview
+                [formModel]="eWorkPermitFormModel"
+                [columnsGrid]="workPermitColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [pageSize]="numPageSizeGridView"
+                [rowHeight]="40"
+                height="auto"
+                [sort]="[workPermitSortModel]"
+              ></codx-gridview>
+              <!-- [height]="
                                     passportRowCount > numPageSizeGridView
                                       ? numPageSizeGridView * 50 - 10
                                       : passportRowCount * 50 + 60
                                   " -->
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Thông tin Đảng - Đoàn -->
       <div class="user-profile overview d-block" [id]="ePartyFuncID">
@@ -1811,8 +1807,6 @@
           </div>
         </div>
       </div>
-      
-            
 
       <!-- Quan hệ gia đình -->
       <div
@@ -4758,10 +4752,7 @@
     <!-- <div class="user-content flex-row-fluid"> -->
     <ng-container>
       <!-- Tai nạn lao động -->
-      <div
-        class="user-profile overview d-block user-family"
-        [id]="eAccidentsFuncID"
-      >
+      <div class="user-profile overview d-block" [id]="eAccidentsFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
@@ -4777,6 +4768,10 @@
                             </codx-label> -->
                 {{ getFormHeader(eAccidentsFuncID) }}
               </div>
+              <span class="text-gray-500 mx-2"> | </span>
+              <span class="text-dark">
+                <span>({{ eAccidentsRowCount }})</span>
+              </span>
             </div>
             <div class="d-flex align-items-center ms-5">
               <codx-dropdown-select
@@ -6279,101 +6274,6 @@
 
 <!-- #endregion -->
 
-<ng-template #tempCol1EHealthGrid let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today icon-16 text-gray-500 me-2"></i>
-    <span class="text-dark">{{ data?.healthDate | fmDT }}</span>
-    <i class="icon-i-circle-fill icon-circle-group mx-2"></i>
-    <span
-      [innerHTML]="
-        data?.healthPeriodID
-          | formatvalue : eHealthFormModel : 'healthPeriodID'
-          | async
-      "
-    >
-    </span>
-  </div>
-  <div class="d-flex align-items-center">
-    <i class="icon-add_box icon-16 text-gray-500 me-2"></i>
-    <span class="text-dark">{{ data?.healthPlace }}</span>
-  </div>
-</ng-template>
-
-<ng-template #tempCol2EHealthGrid let-data>
-  <div class="text-gray-600 mb-5px">
-    Loại
-    {{ data?.healthType }}
-  </div>
-  <div class="text-dark">
-    {{ data?.finalConclusion }}
-  </div>
-</ng-template>
-
-<ng-template #tempCol3EHealthGrid let-data>
-  <div class="has-action-menu min-h-40px">
-    {{ data?.suggestion }}
-    <codx-mfunc
-      [formModel]="eHealthFormModel"
-      (clickMF)="clickMF($event, data, 'eHealth')"
-      type="hover"
-      [dataItem]="data"
-    >
-    </codx-mfunc>
-  </div>
-</ng-template>
-
-<ng-template #tempEVaccineGridCol1 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <span
-      class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
-      [style.color]="getVaccineBackgroundColor(data)"
-    ></span>
-    <span
-      [innerHTML]="
-        data?.vaccineTypeID
-          | formatvalue : eVaccineFormModel : 'vaccineTypeID'
-          | async
-      "
-    >
-    </span>
-    <i class="icon-i-circle-fill icon-circle-group text-gray-400 mx-2"></i>
-    <span>
-      {{ data?.vaccineName }}
-    </span>
-  </div>
-  <div
-    class="text-dark"
-    [innerHTML]="
-      data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
-    "
-  ></div>
-</ng-template>
-
-<ng-template #tempEVaccineGridCol2 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
-    <span>{{ data?.injectDate | fmDT }}</span>
-  </div>
-  <div *ngIf="data?.nextInjectDate">
-    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
-    <span>{{ data?.nextInjectDate | fmDT }}</span>
-  </div>
-</ng-template>
-
-<ng-template #tempEVaccineGridCol3 let-data>
-  <div class="has-action-menu min-h-40px">
-    <i class="icon-edit text-gray-500 icon-16 me-2"></i>
-    {{ data?.note }}
-    <codx-mfunc
-      [formModel]="eVaccineFormModel"
-      (clickMF)="clickMF($event, data, 'eVaccine')"
-      type="hover"
-      [dataItem]="data"
-    >
-    </codx-mfunc>
-  </div>
-</ng-template>
-
 <!-- #region Bổ nhiệm columnGrid templates -->
 <ng-template #templateAppointionGridCol1 let-data>
   <div
@@ -6671,49 +6571,74 @@
   </div>
 </ng-template>
 
+<!-- #region Bệnh nghề nghiệp column template-->
 <ng-template #templateDiseasesGridCol1 let-data>
-  <div
-    class="mb-5px"
-    [innerHTML]="
-      data?.diseaseID | formatvalue : eDiseasesFormModel : 'diseaseID' | async
-    "
-  ></div>
+  <div class="d-flex align-items-center mb-3">
+    <span
+      class="fw-bold text-dark"
+      [innerHTML]="
+        data?.diseaseID | formatvalue : eDiseasesFormModel : 'diseaseID' | async
+      "
+    >
+    </span>
+  </div>
   <div class="d-flex align-items-center">
     <span
       class="badge badge-success fw-bold border-0 me-3"
-      *ngIf="data.isInspect"
+      *ngIf="data?.isInspect"
     >
       Có giám định Y khoa
     </span>
-    <i class="icon-calendar_today icon-16 me-2"></i>
+    <i class="icon-calendar_today text-dark icon-16 me-2"></i>
     <span class="text-dark">
       {{ data?.diseaseDate | fmDT }}
     </span>
   </div>
 </ng-template>
+
 <ng-template #templateDiseasesGridCol2 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today icon-16 me-2"></i>
-    <span class="text-dark">
-      {{ data?.fromDate | fmDT }} - {{ data?.toDate | fmDT }}
+  <div class="d-flex align-items-center mb-3 fw-bold">
+    <div class="text-dark text-dark icon-event icon-16 me-1"></div>
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.fromDate | formatvalue : eDiseasesFormModel : 'fromDate' | async
+      "
+    >
+    </span>
+    <span class="mx-1"> - </span>
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.toDate | formatvalue : eDiseasesFormModel : 'toDate' | async
+      "
+    >
     </span>
   </div>
-  <div
-    class="text-dark"
-    [innerHTML]="
-      data?.treatHopitalID
-        | formatvalue : eDiseasesFormModel : 'treatHopitalID'
-        | async
-    "
-  ></div>
+  <div class="d-flex align-items-center">
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.treatHopitalID
+          | formatvalue : eDiseasesFormModel : 'treatHopitalID'
+          | async
+      "
+    >
+    </span>
+  </div>
 </ng-template>
+
 <ng-template #templateDiseasesGridCol3 let-data>
-  <div
-    class="has-action-menu min-h-40px"
-    [innerHTML]="
-      data?.conclusion | formatvalue : eDiseasesFormModel : 'Conclusion' | async
-    "
-  >
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <div class="text-dark align-self-center">
+      <span
+        [innerHTML]="
+          data?.conclusion
+            | formatvalue : eDiseasesFormModel : 'conclusion'
+            | async
+        "
+      ></span>
+    </div>
     <codx-mfunc
       [formModel]="eDiseasesFormModel"
       (clickMF)="clickMF($event, data, 'eDiseases')"
@@ -6723,73 +6648,70 @@
     </codx-mfunc>
   </div>
 </ng-template>
+<!-- #endregion -->
 
 <!-- #region Tai nạn lao động column template  -->
-
 <ng-template #templateEAccidentCol1 let-data>
-  <div class="d-flex flex-column">
-    <div
-      class="mb-5px"
+  <div class="d-flex align-items-center mb-1">
+    <span
+      class="mb-5px d-flex fw-bold"
       [innerHTML]="
         data?.accidentID
           | formatvalue : eAccidentsFormModel : 'accidentID'
           | async
       "
+    ></span>
+  </div>
+  <div class="d-flex align-items-center">
+    <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
+    <div
+      class="text-dark"
+      [innerHTML]="
+        data?.accidentDate
+          | formatvalue : eAccidentsFormModel : 'accidentDate'
+          | async
+      "
     ></div>
-    <div class="d-flex align-items-center">
-      <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
-      <div
-        class="text-dark"
-        [innerHTML]="
-          data?.accidentDate
-            | formatvalue : eAccidentsFormModel : 'accidentDate'
-            | async
-        "
-      ></div>
-    </div>
   </div>
 </ng-template>
 
 <ng-template #templateEAccidentCol2 let-data>
-  <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-5px">
-      <span class="icon-place icon-16 text-gray-500 me-2"></span>
-      <span class="text-dark">
-        <span
-          [innerHTML]="
-            data?.accidentPlace
-              | formatvalue : eAccidentsFormModel : 'accidentPlace'
-              | async
-          "
-        ></span>
-      </span>
-    </div>
-    <div class="d-flex align-items-top">
-      <span class="icon-event icon-16 text-danger me-2"></span>
-      <span class="text-dark">
-        <span
-          [innerHTML]="
-            data?.accidentReasonID
-              | formatvalue : eAccidentsFormModel : 'accidentReasonID'
-              | async
-          "
-        ></span>
-      </span>
-    </div>
+  <div class="d-flex align-items-center mb-5px">
+    <span class="icon-place icon-16 text-gray-500 me-2"></span>
+    <span class="text-dark fw-bold">
+      <span
+        [innerHTML]="
+          data?.accidentPlace
+            | formatvalue : eAccidentsFormModel : 'accidentPlace'
+            | async
+        "
+      ></span>
+    </span>
+  </div>
+  <div class="d-flex align-items-center text-warning">
+    <span class="icon-event icon-16 me-2"></span>
+    <span
+      [innerHTML]="
+        data?.accidentReasonID
+          | formatvalue : eAccidentsFormModel : 'accidentReasonID'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
 <ng-template #templateEAccidentCol3 let-data>
-  <div class="has-action-menu min-h-40px">
-    <span class="text-dark">
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <div class="text-dark fw-bold align-self-center">
       <span
         [innerHTML]="
           data?.accidentLevel
             | formatvalue : eAccidentsFormModel : 'accidentLevel'
             | async
         "
-      ></span>
-    </span>
+      >
+      </span>
+    </div>
     <codx-mfunc
       [formModel]="eAccidentsFormModel"
       (clickMF)="clickMF($event, data, 'eAccidents')"
@@ -6799,7 +6721,166 @@
     </codx-mfunc>
   </div>
 </ng-template>
+<!-- #endregion -->
 
+<!-- #region Khám sức khỏe column template -->
+<ng-template #tempCol1EHealthGrid let-data>
+  <div class="d-flex align-items-center mb-1">
+    <i class="icon-calendar_today text-dark icon-16 text-dark me-2"></i>
+    <span
+      class="text-dark fw-bold"
+      [innerHTML]="
+        data?.healthDate | formatvalue : eHealthFormModel : 'healthDate' | async
+      "
+    >
+    </span>
+    <i class="icon-i-circle-fill icon-circle-group mx-2"></i>
+    <span
+      class="text-primary"
+      [innerHTML]="
+        data?.healthPeriodID
+          | formatvalue : eHealthFormModel : 'healthPeriodID'
+          | async
+      "
+    >
+    </span>
+  </div>
+  <div class="d-flex align-items-center">
+    <i class="bi-bag-plus icon-16 text-gray-500 me-2"></i>
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.healthPlace
+          | formatvalue : eHealthFormModel : 'healthPlace'
+          | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #tempCol2EHealthGrid let-data>
+  <div class="d-flex align-items-center text-primary fw-bold fs-6 mb-3">
+    <div class="bi-caret-right icon-16 me-1"></div>
+    <span *ngIf="data?.healthType"> Loại </span>
+    <span
+      class="text-primary ms-1"
+      [innerHTML]="
+        data?.healthType | formatvalue : eHealthFormModel : 'healthType' | async
+      "
+    >
+    </span>
+  </div>
+  <div class="text-dark">
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.finalConclusion
+          | formatvalue : eHealthFormModel : 'finalConclusion'
+          | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #tempCol3EHealthGrid let-data>
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.suggestion | formatvalue : eHealthFormModel : 'suggestion' | async
+      "
+    >
+    </span>
+    <codx-mfunc
+      [formModel]="eHealthFormModel"
+      (clickMF)="clickMF($event, data, 'eHealth')"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+<!-- #endregion -->
+
+<!-- #region Tiêm vaccine template -->
+<ng-template #tempEVaccineGridCol1 let-data>
+  <div class="d-flex align-items-center mb-5">
+    <!-- <span class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
+      [style.color]="getVaccineBackgroundColor(data)"></span> -->
+    <span
+      class="text-dark fw-bold fs-6"
+      [innerHTML]="
+        data?.vaccineTypeID
+          | formatvalue : eVaccineFormModel : 'vaccineTypeID'
+          | async
+      "
+    >
+    </span>
+    <i class="icon-i-circle-fill icon-circle-group text-gray-400 mx-2"></i>
+    <span
+      class="text-primary"
+      [innerHTML]="
+        data?.vaccineName
+          | formatvalue : eVaccineFormModel : 'vaccineName'
+          | async
+      "
+    >
+    </span>
+  </div>
+  <div
+    class="d-flex align-self-center text-dark"
+    [innerHTML]="
+      data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
+    "
+  ></div>
+</ng-template>
+
+<ng-template #tempEVaccineGridCol2 let-data>
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-calendar_today primary icon-16 me-2"></i>
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.injectDate
+          | formatvalue : eVaccineFormModel : 'injectDate'
+          | async
+      "
+    >
+    </span>
+  </div>
+  <div *ngIf="data?.nextInjectDate">
+    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
+    <span
+      class="text-dark"
+      [innerHTML]="
+        data?.nextInjectDate
+          | formatvalue : eVaccineFormModel : 'nextInjectDate'
+          | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #tempEVaccineGridCol3 let-data>
+  <div class="d-flex align-items-center has-action-menu min-h-40px">
+    <i class="icon-edit text-gray-500 icon-16 me-2"></i>
+    <span
+      [innerHTML]="
+        data?.note | formatvalue : eVaccineFormModel : 'note' | async
+      "
+    ></span>
+    <codx-mfunc
+      [formModel]="eVaccineFormModel"
+      (clickMF)="clickMF($event, data, 'eVaccine')"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
 <!-- #endregion -->
 
 <!-- #region Hợp đồng lao động column template  -->
