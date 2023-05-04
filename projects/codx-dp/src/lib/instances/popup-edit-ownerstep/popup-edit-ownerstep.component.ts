@@ -60,7 +60,9 @@ export class PopupEditOwnerstepComponent {
     this.setRoles();
     this.step.owner = this.owner;
     this.codxDpService.updateOwnerStepAsync(this.step).subscribe(res =>{
-      this.dialog.close(res);
+      if(res){
+        this.dialog.close(this.step.owner);
+      }
     })
   }
 
