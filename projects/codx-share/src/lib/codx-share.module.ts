@@ -301,6 +301,8 @@ const T_Component: Type<any>[] = [
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,
+
+  CodxQuotationsComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -327,7 +329,6 @@ const T_Pipe: Type<any>[] = [
     PopupAddApproverComponent,
     CodxClearCacheComponent,
     CalendarCenterComponent,
-    CodxQuotationsComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

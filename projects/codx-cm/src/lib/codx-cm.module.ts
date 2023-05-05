@@ -42,6 +42,8 @@ import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/
 import { ContractsComponent } from './task/contracts/contracts.component';
 import { AddContractsComponent } from './task/add-contracts/add-contracts.component';
 import { ListContractsComponent } from './task/list-contracts/list-contracts.component';
+import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
+import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 const routes: Routes = [
   {
     path: '',
@@ -96,6 +98,8 @@ const T_Component: Type<any>[] = [LayoutComponent];
     ContractsComponent,
     AddContractsComponent,
     ListContractsComponent,
+    QuotationsLinesComponent,
+    PopupAddQuotationsLinesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
