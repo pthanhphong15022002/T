@@ -37,6 +37,10 @@ import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/po
 import { SearchingComponent } from './searching/searching.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
+import { ReportsComponent } from './reports/reports.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CoreModule } from "../../../../src/core/core.module";
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 
@@ -57,7 +61,7 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID',
-        component: CashReceiptsComponent,
+        component: CashPaymentsComponent,
         data: { noReuse: true },
       },
       {
@@ -91,6 +95,16 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'reports/:funcID',
+        component: ReportsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'approvals/:funcID',
+        component: ApprovalsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionComponent,
         data: { noReuse: true },
@@ -106,6 +120,54 @@ export const routes: Routes = [
 ];
 
 @NgModule({
+    declarations: [
+        CodxAcComponent,
+        LayoutComponent,
+        CashPaymentsComponent,
+        PopAddCashComponent,
+        JournalsComponent,
+        CashTransfersComponent,
+        PopupAddCashTransferComponent,
+        CashReceiptsComponent,
+        PopAddReceiptsComponent,
+        PurchaseinvoicesComponent,
+        PopAddPurchaseComponent,
+        PopupAddJournalComponent,
+        DropdownDetailComponent,
+        PopupSetupInvoiceComponent,
+        PopAddLineComponent,
+        SingleSelectPopupComponent,
+        CustomizedMultiSelectPopupComponent,
+        VoucherComponent,
+        PopAddLinecashComponent,
+        PopAddLinereceiptsComponent,
+        DashboardComponent,
+        PeriodicComponent,
+        SalesInvoicesComponent,
+        PopupAddSalesInvoiceComponent,
+        PopupAddSalesInvoicesLineComponent,
+        SearchingComponent,
+        TableLineDetailComponent,
+        ReportsComponent,
+        ApprovalsComponent
+    ],
+    exports: [RouterModule],
+    providers: [AccumulationTooltipService],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [
+        RouterModule.forChild(routes),
+        CodxCoreModule,
+        CodxShareModule,
+        CommonModule,
+        FormsModule,
+        TabModule,
+        NgbModule,
+        CodxReportModule,
+        FormsModule,
+        NameByIdPipe,
+        DragDropModule,
+        CoreModule
+    ]
   declarations: [
     CodxAcComponent,
     LayoutComponent,

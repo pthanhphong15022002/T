@@ -33,9 +33,11 @@ import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
 import { ODApprovelComponent } from './incomming/approvel/approvel.component';
 import { CompletedComponent } from './incomming/completed/completed.component';
-import { RefuseComponent } from './incomming/refuse/refuse.component'
+import { RefuseComponent } from './incomming/refuse/refuse.component';
 import { UpdateVersionComponent } from './incomming/updateversion/updateversion.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,14 @@ const routes: Routes = [
       {
         path: 'dispatches/:funcID',
         component: IncommingComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       /*  {
         path: 'dispatches/:funcID/detail',
@@ -77,7 +87,7 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
-  }
+  },
 ];
 
 @NgModule({
@@ -117,7 +127,7 @@ const routes: Routes = [
     AccumulationChartAllModule,
     SharedModule,
     CodxShareModule,
-    UploaderModule
+    UploaderModule,
     // NgbModule
   ],
   exports: [RouterModule],

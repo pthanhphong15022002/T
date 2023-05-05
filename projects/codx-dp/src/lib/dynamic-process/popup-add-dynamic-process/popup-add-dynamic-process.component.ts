@@ -222,6 +222,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   processNameBefore = '';
   strDay = '';
   strHour = '';
+  noteDay = '';
+  noteHour = '';
   headerStep = {
     add: ['Thêm Giai Đoạn', 'headerAddStep'],
     edit: ['Sửa giai đoạn', 'headerEditStep'],
@@ -3859,6 +3861,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.strDay = ' ' + item.text + ' ';
           } else if (item.value === 'H') {
             this.strHour = ' ' + item.text + ' ';
+          }
+          else if(item.value == '1') {
+            this.noteDay = item.text;
+          }else if(item.value ==='2') {
+            this.noteHour = item.text;
           }
         }
       }

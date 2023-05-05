@@ -172,6 +172,14 @@ import { CodxBookingCarScheduleContentComponent } from './components/codx-bookin
 import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 import { CodxBookingViewDetailComponent } from './components/codx-booking/codx-booking-view-detail/codx-booking-view-detail.component';
 import { CodxMeetingOnlineComponent } from './components/codx-meeting-online/codx-meeting-online.component';
+import { CodxAddGroupTaskComponent} from './components/codx-step/codx-add-group-task/codx-add-group-task.component';
+import { CodxAddTaskComponent } from './components/codx-step/codx-add-stask/codx-add-task.component';
+import { CodxRoleComponent } from './components/codx-step/codx-role/codx-role.component';
+import { CodxTypeTaskComponent } from './components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxViewTaskComponent } from './components/codx-step/codx-view-task/codx-view-task.component';
+import { CodxAddBookingCarComponent } from './components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -258,7 +266,6 @@ const T_Component: Type<any>[] = [
   ListPostComponent,
   PostShareComponent,
 
-
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
@@ -292,15 +299,25 @@ const T_Component: Type<any>[] = [
   CodxStepTaskComponent,
   UpdateProgressComponent,
   ProgressbarComponent,
+  CodxAddGroupTaskComponent,
+  CodxAddTaskComponent,
+  CodxRoleComponent,
+  CodxTypeTaskComponent,
+  CodxViewTaskComponent,
   
   //booking
   CodxBookingComponent,
+  CodxAddBookingCarComponent,
+  CodxAddBookingRoomComponent,
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
   CodxBookingViewDetailComponent,
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,
+ //CM+DP
+  CodxQuotationsComponent,
+  CodxInputCustomFieldComponent
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -312,7 +329,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   MessageSystemPipe,
   SearchPipe,
-  FillterReferType
+  FillterReferType,
 ];
 
 @NgModule({
@@ -327,7 +344,6 @@ const T_Pipe: Type<any>[] = [
     PopupAddApproverComponent,
     CodxClearCacheComponent,
     CalendarCenterComponent,
-    CodxQuotationsComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

@@ -178,7 +178,16 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Method
   setDefault(o) {
-    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+    let classname;
+    switch(this.view.funcID){
+      case 'ACT0410':
+        classname = 'CashPaymentsBusiness'
+        break;
+      case 'ACT0401':
+        classname = 'CashReceiptsBusiness'
+        break;
+    }
+    return this.api.exec('AC', classname, 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
@@ -196,6 +205,7 @@ export class CashPaymentsComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.isFull = true;
+        option.Type = 'Push';
         this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
           obj,
@@ -416,6 +426,10 @@ export class CashPaymentsComponent extends UIComponent {
     //         } else this.notification.notifyCode(result?.msgCodeError);
     //       });
     //   });
+  }
+
+  formatDate(date){
+    return new Date(date).toLocaleDateString();;
   }
   //#endregion
 }

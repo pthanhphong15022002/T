@@ -12,6 +12,7 @@ export class PopupAddDealComponent implements OnInit {
   dialog: DialogRef;
   //type any
   formModel: any;
+  addFieldsControl: any = '1';
   // type string
   titleAction: string = '';
   action: string = '';

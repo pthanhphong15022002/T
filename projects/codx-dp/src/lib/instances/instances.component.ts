@@ -848,7 +848,10 @@ export class InstancesComponent
               }
               break;
             case 'DP10':
-              if (data.closed || this.checkMoreReason(data, !this.isUseSuccess)) {
+              if (
+                data.closed ||
+                this.checkMoreReason(data, !this.isUseSuccess)
+              ) {
                 res.isblur = true;
               }
               break;
@@ -1209,6 +1212,7 @@ export class InstancesComponent
             headerTitle: dataMore.defaultName,
             listStepProccess: this.process.steps,
             lstParticipants: this.lstOrg,
+            isDurationControl: this.checkDurationControl(data.stepID),
           };
           var dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
@@ -1942,6 +1946,7 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
+    if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
@@ -2104,6 +2109,10 @@ export class InstancesComponent
         if (res2?.msgCodeError)
           this.notificationsService.notify(res2?.msgCodeError);
         else {
+          this.dataSelected.approveStatus = '1';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.codxDpService.updateApproverStatusInstance([data?.recID,"1"]).subscribe();
           this.notificationsService.notifyCode('ES007');
         }
       });
@@ -2130,7 +2139,6 @@ export class InstancesComponent
       this.stepInstanceDetailStage = e.e;
     }
   }
-
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -2143,5 +2151,10 @@ export class InstancesComponent
         }
       }
     });
+  }
+
+  checkDurationControl(stepID): boolean {
+    var stepsDuration = this.process.steps.find((x) => x.recID === stepID);
+    return stepsDuration?.durationControl;
   }
 }

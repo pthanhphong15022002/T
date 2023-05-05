@@ -254,6 +254,15 @@ export class CodxHrService {
 
   //#region EPassportsBusiness
 
+  getEmpTotalPassportNum(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'CountEmpTotalRecordAsync'
+    );
+  }
+
   getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
@@ -269,6 +278,16 @@ export class CodxHrService {
       'HR',
       'EPassportsBusiness',
       'GetListPassportByEmpIDAsync',
+      [empID]
+    );
+  }
+
+  GetEmpCurrentPassport(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'GetEmpCrrPassportAsync',
       [empID]
     );
   }
@@ -328,6 +347,15 @@ export class CodxHrService {
   //#endregion
 
   //#region EmpVisasBusiness
+  getEmpTotalVisaNum(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'CountEmpTotalRecordAsync'
+    );
+  }
+
   getEmployeeVisaModel() {
     return this.api.execSv<any>(
       'HR',
@@ -374,6 +402,16 @@ export class CodxHrService {
       'EmpVisasBusiness',
       'GetListByEmployeeIDAsync',
       data
+    );
+  }
+
+  GetEmpCurrentVisa(empID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetEmpCrrVisaAsync',
+      [empID]
     );
   }
 
@@ -1066,6 +1104,18 @@ export class CodxHrService {
     );
   }
 
+  //#endregion
+
+  //#region ForeignWorker
+  saveEmployeeForeignWorkerInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeForeignWorkerInfoAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region #EJobSalaries

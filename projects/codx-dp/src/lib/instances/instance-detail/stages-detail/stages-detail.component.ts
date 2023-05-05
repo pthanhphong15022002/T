@@ -61,19 +61,12 @@ export class StagesDetailComponent implements OnInit {
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
-  @Input() stepID: any;
   @Input() titleDefault = '';
-  @Input() isDelete: boolean = false;
-  @Input() isEdit: boolean = false;
-  @Input() isUpdate: boolean = false;
-  @Input() isCreate: boolean = false;
-  @Input() permissionCloseInstances: boolean = false;
   @Input() listStepReason: any;
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-  @Input() isClosed = false;
   @Input() showColumnControl = 1;
   @Input() listStep: any;
   @Input() viewsCurrent = '';
@@ -85,6 +78,14 @@ export class StagesDetailComponent implements OnInit {
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
 
+  stepID: any;
+  isDelete: boolean = false;
+  isEdit: boolean = false;
+  isUpdate: boolean = false;
+  isCreate: boolean = false;
+  permissionCloseInstances: boolean = false;
+  isClosed = false;
+  
   dateActual: any;
   startDate: any;
   endDate: any;
@@ -139,7 +140,7 @@ export class StagesDetailComponent implements OnInit {
   dialogPopupReason: DialogRef;
   viewCrr = '';
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  titleReason: any;
+  titleReason: string = '';
   stepNameSuccess: string = '';
   stepNameFail: string = '';
   stepNameReason: string = '';
@@ -235,6 +236,18 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+    this.stepID= this.instance.stepID
+    this.permissionCloseInstances=this.instance?.permissionCloseInstances
+    this.isDelete=this.instance.delete
+    this.isEdit=this.instance.edit
+    this.isUpdate=
+    this.instance.write &&
+      !this.instance.closed &&
+      (this.instance.status == '1' || this.instance.status == '2') &&
+      this.dataStep.stepStatus < '2'
+    this.isCreate=this.instance.create
+    this.isClosed=this.instance.closed
+
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
         if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
@@ -284,15 +297,15 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
-      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-          )
+      if(!this.titleReason){
+        this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
+
+         ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
         : changes['dataStep'].currentValue?.isFailStep
-        ? this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameFail)
-          )
+        ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
         : '';
+      }
+
     }
   }
 
@@ -946,11 +959,15 @@ export class StagesDetailComponent implements OnInit {
   updateProgressStep() {
     let idStep = this.dataProgress['recID'];
     let progress = this.dataProgress['progress'];
+    let actualEnd = this.dataProgress['actualEnd'];
+    let note = this.dataProgress['note'];
     this.dpService
-      .updateProgressStep([idStep, Number(progress)])
+      .updateProgressStep([idStep, Number(progress), actualEnd, note])
       .subscribe((res) => {
         if (res) {
           this.step.progress = Number(progress);
+          this.step.actualEnd = actualEnd;
+          this.step.note = note;
           this.progress = progress;
           this.notiService.notifyCode('SYS006');
           this.popupUpdateProgress.close();
@@ -1625,16 +1642,10 @@ export class StagesDetailComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  fileAdded(e) {}
-
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
-  }
-
-  getfileDelete(event) {
-    event.data.length;
   }
 
   async getFormModel(functionID) {

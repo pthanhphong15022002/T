@@ -347,10 +347,14 @@
     transition: color 0.2s ease, background-color 0.2s ease;
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active .menu-title {
-    color: var(--menu-active);
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
+  .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
+    color: var(--menu-active)!important;
   }
 
+  .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
+    color: var(--menu-active)!important;
+  }
   .btn.btn-primary {
     border-color: var(--primary-dark) !important;
     background-color: var(--primary-dark) !important;
@@ -594,10 +598,11 @@
     border-color: var(--primary-light) !important;
   }
 
-  .e-radio:checked + label::before {
-    background-color: var(--primary);
-    border-color: var(--primary);
-  }
+  // .e-radio:checked + label::before {
+  //   border-color: var(--primary-dark) !important;
+  //   background-color:var(--primary)!important;
+  // }
+  
 
   .codx-search.codx-focus {
     border-color: var(--primary-light) !important;

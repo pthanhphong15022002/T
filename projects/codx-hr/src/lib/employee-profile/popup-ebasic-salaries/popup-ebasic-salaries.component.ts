@@ -225,7 +225,7 @@ export class PopupEBasicSalariesComponent
       return;
     }
 
-    if (this.EBasicSalaryObj.expiredDate < this.EBasicSalaryObj.effectedDate) {
+    if (!this.dateCompare(this.EBasicSalaryObj.effectedDate, this.EBasicSalaryObj.expiredDate)) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
         'EffectedDate',
@@ -255,6 +255,16 @@ export class PopupEBasicSalariesComponent
         });
     }
   }
+
+  dateCompare(beginDate, endDate) {
+    if (beginDate && endDate) {
+      let date1 = new Date(beginDate);
+      let date2 = new Date(endDate);
+      return date1 <= date2;
+    }
+    return false;
+  }
+
 
   // valueChange(event) {
   //   if (

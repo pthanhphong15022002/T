@@ -1,4 +1,4 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
+<codx-views #view idField="recID" [views]="views" [button]="button" [entityName]="this.view.funcID == 'ACT0410' ? 'AC_CashPayments' : 'AC_CashReceipts'"
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
   (selectedChange)="changeItemDetail($event)">
 </codx-views>
@@ -25,7 +25,7 @@
 </ng-template>
 <ng-template #titleTmp let-data>
   <div class="d-flex align-items-center">
-    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-1">
+    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
       <i class="text-white icon-16" [class]="data?.subType | vll : 'AC100' : 'text' | async"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
@@ -44,20 +44,29 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-5">
+    <div class="d-flex align-items-center ac-cashID mt-n8">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-3">
         {{ itemSelected?.voucherNo }}
       </span>
-      <span class="me-2">
+      <div class="d-flex align-items-center me-3">
+        <span class="icon-customize icon-16 me-2"></span>
+        <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
+        </codx-label>
+        <span class="text-gray-600">
+          {{formatDate(itemSelected?.voucherDate)}}
+        </span>
+      </div>
+      <span class="me-3">
         <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
           [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </span>
+      
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5 mt-3">
+    <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-2">
       <div class="d-flex align-items-center">
         <span class="me-2 icon-apartment icon-16"></span>
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectName [innerHTML]="
@@ -79,16 +88,16 @@
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
     <div class="d-flex flex-stack w-100">
-      <div class="d-flex align-items-center me-5 mb-5">
+      <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-customize icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
         </codx-label>
         <span class="text-gray-600">
-          {{itemSelected?.voucherDate | date : 'dd/MM/yyyy'}}
+          {{itemSelected?.voucherDate | date : 'short'}}
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-i-journal-album icon-16 me-2"></span>
       <!-- <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
       </codx-label> -->
@@ -97,7 +106,7 @@
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
     </div>
-    <div class="d-flex flex-wrap mb-5">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5">
         <span class="icon-i-wallet2 icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
@@ -113,7 +122,7 @@
       </div>
       <div class="d-flex align-items-center me-5">
         <span class="icon-i-person-fill icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="Payee" [formModel]="view.formModel">
+        <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
         </codx-label>
         <span #payee [innerHTML]="
             itemSelected?.payee
@@ -123,7 +132,7 @@
         <!-- <span class="text-gray-600">{{itemSelected?.payor}}</span> -->
       </div>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-brush icon-16 me-2"></span>
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
@@ -133,7 +142,7 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-5" #cardbodyRef>
+    <div class="card-add mt-2" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
@@ -183,7 +192,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-customize icon-16 me-1 text-gray-600"></span>
         <span class="text-gray-600">
-          {{data?.voucherDate | date : 'dd/MM/yyyy'}}
+          {{formatDate(data?.voucherDate)}}
         </span>
       </div>
     </div>
@@ -196,7 +205,7 @@
 </ng-template>
 <ng-template #tabBasic>
   <ng-container *ngIf="(itemSelected.subType == '1' || itemSelected.subType == '3' ) && cashpaymentline">
-    <div class="table-responsive mt-2 h-400px">
+    <div class="table-responsive mt-2">
       <table style="table-layout: fixed;" class="table table-hover table-row-bordered">
         <thead style="position: sticky; top: 0">
           <tr class="border-bottom">
@@ -235,7 +244,7 @@
             <td>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -263,7 +272,7 @@
               </div>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.offsetAcctID != null && item.offsetAcctID != '')">
-                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="OffsetAcctID"
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Có"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -515,9 +524,10 @@
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                   <span [ngbTooltip]="popdate" class="fw-bold line-clamp line-clamp-1">{{item.invoiceDate | date :
-                    'dd/MM/yyyy'}}</span>
+                    'short'}}</span>
                   <ng-template #popdate>
-                    <span class="fw-bold">{{item.invoiceDate}}</span>
+                    <span class="fw-bold">{{item.invoiceDate | date :
+                      'short'}}</span>
                   </ng-template>
                 </ng-container>
               </div>
@@ -526,9 +536,10 @@
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.dueDate != null && item.dueDate != '')">
                   <span [ngbTooltip]="popduedate" class="fw-bold line-clamp line-clamp-1">{{item.dueDate | date :
-                    'dd/MM/yyyy'}}</span>
+                    'short'}}</span>
                   <ng-template #popduedate>
-                    <span class="fw-bold">{{item.dueDate}}</span>
+                    <span class="fw-bold">{{item.dueDate | date :
+                      'short'}}</span>
                   </ng-template>
                 </ng-container>
               </div>

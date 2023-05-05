@@ -100,6 +100,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCbx(e) {}
 
   valueChange(e) {
+    if(e.field=='multiselect') {
+      this.field[e.field] = e.data;
+      return;
+    }
     if (e && e.data && e.field) this.field[e.field] = e.data;
     if (e.field == 'title' || e.field == 'fieldName')
       this.removeAccents(e.data);

@@ -38,6 +38,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TN_OrderModule } from '../models/tmpModule.model';
 import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'lib-company-setting',
@@ -432,5 +433,23 @@ export class CompanySettingComponent
 
   viewChanged(e) {
     console.log(e);
+  }
+
+  installModule(module: TN_OrderModule) {
+    console.log('install module', module);
+    //1 = trial - 2 = hire - 0 = extend
+    let mode = '1';
+    let mapMD: Map<string, number> = new Map();
+    mapMD.set(module.boughtModule.moduleID, 1);
+    let md_qty = JSON.stringify(Object.fromEntries(mapMD));
+    this.adService.buyNewModule(md_qty, mode).subscribe((endDate: string) => {
+      this.lstNotInstallModule = this.lstNotInstallModule.filter(
+        (x) => x.boughtModule.moduleID != module.boughtModule.moduleID
+      );
+      module.bought = true;
+      module.expiredOn = endDate;
+      this.lstInstalledModule.push(module);
+      this.detectorRef.detectChanges();
+    });
   }
 }

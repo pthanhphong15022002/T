@@ -28,6 +28,7 @@
   color: inherit;
 }
 
+
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
 }
@@ -457,6 +458,9 @@ hr {
 
 erm-quick-links-inner .w-250px.dropdown-menu {
   inset: 0px 0px auto auto !important;
+}
+erm-quick-links-inner .w-250px.dropdown-menu .w-40px{
+  height: 40px!important;
 }
 
 .codx-bghover:hover {
@@ -1415,7 +1419,7 @@ a {
 }
 
 .line-clamp.line-clamp-1 {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .tab-content > .tab-pane {
@@ -2378,11 +2382,14 @@ codx-calendar {
   color: inherit;
 }
 
-#gridViewV2.e-grid .e-rowcell {
-  padding: 8px 10px !important;
+
+ejs-numerictextbox{
+.e-input-group.e-control-wrapper{
+  height: auto;
 }
-ejs-numerictextbox {
-  .e-input-group.e-control-wrapper {
+}
+ejs-datepicker{
+  .e-input-group.e-control-wrapper{
     height: auto;
   }
 }
@@ -2614,22 +2621,62 @@ codx-input .e-icons.e-check:before {
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
   font-size: 13px;
 }
+lib-employees{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employee-list{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
+lib-employees-leave{
+  #gridViewV2.e-grid .e-table {
+    table-layout: auto;
+    .e-rowcell {
+      padding:8px 10px!important;
+      line-height: normal!important;
+    }
+  }
+}
 
-
+codx-vll.rounded-2{
+  font-size: 11px!important;
+  padding: 0.25em 0.65em!important;
+}
+codx-vll.badge.badge-md span::before{
+  font-size: 11px!important;
+}
 
 /// fix menu left
-/// 
+///
 
-.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
-  border-radius: 3px!important;
-  margin: 2px 5px!important;
-}
+//.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link{
+  // border-radius: 3px!important;
+  // margin: 2px 5px!important;
+//}
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link .menu-title{
   font-size: 12px!important;
   padding-top: 2px!important;
+  line-height: 16px!important;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link.active,
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
-  box-shadow:none;
-  background-color: #ffffff15!important;
+  // box-shadow:none;
+  background-color: #ffffff25!important;
+}
+.aside-minimize-icon-title .aside .aside-primary .aside-menu .menu-link, 
+.aside-minimize-icon-title .aside .aside-primary .aside-footer .menu-link {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 82px;
 }

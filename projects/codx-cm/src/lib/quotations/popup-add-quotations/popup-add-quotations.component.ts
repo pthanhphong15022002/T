@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -8,12 +9,14 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
   DialogRef,
   FormModel,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
@@ -63,6 +66,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private api: ApiHttpService,
     private cache: CacheService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -77,13 +81,62 @@ export class PopupAddQuotationsComponent implements OnInit {
         this.fmQuotationLines.formName
       )
       .subscribe((res) => {
-        this.gridViewSetupQL=res
+        this.gridViewSetupQL = res;
       });
   }
 
   ngOnInit(): void {}
 
-  onSave() {}
+  beforeSave(op: RequestOption) {
+    let data = [];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddQuotationsAsync';
+      data = [this.quotations];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'EditQuotationsAsync';
+      data = [this.quotations];
+    }
+    op.data = data;
+    return true;
+  }
+  onAdd() {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe((res) => {
+        if (res.save) {
+          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
+          this.dialog.close(res.save);
+        } else {
+          this.dialog.close();
+        }
+        this.changeDetector.detectChanges();
+      });
+  }
+
+  onUpdate() {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        if (res.update) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          this.dialog.close(res.update);
+        } else {
+          this.dialog.close();
+        }
+        this.changeDetector.detectChanges();
+      });
+  }
+  onSave() {
+    if (this.action == 'add' || this.action == 'copy') {
+      this.onAdd();
+    } else if (this.action == 'edit') {
+      this.onUpdate();
+    }
+  }
+
   valueChange(e) {}
   select(e) {}
   created(e) {}
@@ -116,7 +169,6 @@ export class PopupAddQuotationsComponent implements OnInit {
   }
 
   quotionsLineChanged(e) {
-    
     //  const field = [
     //  'rowno',
     //  'itemid',
