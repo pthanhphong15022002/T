@@ -41,7 +41,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
   empty = '';
   lstQuestionTemp: any;
   lstQuestion: any;
-  isSent:boolean = false
+  isSent:boolean = false;
+  survey:any;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -104,7 +105,8 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.recID,
       ])
       .subscribe((res: any) => {
-        if (res[0] && res[0].length > 0) {
+        if(res && res[2]) this.survey = res[2];
+        if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
           if (this.questions) {
             this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
@@ -130,6 +132,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           });
           this.getDataAnswer(this.lstQuestionTemp);
         }
+       
       });
   }
 

@@ -14,7 +14,6 @@ import {
   UIComponent,
   Util,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../codx-ep.service';
