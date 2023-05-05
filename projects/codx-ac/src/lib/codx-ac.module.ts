@@ -37,6 +37,8 @@ import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/po
 import { SearchingComponent } from './searching/searching.component';
 import { TableLineDetailComponent } from './vouchers/sales-invoices/table-line-detail/table-line-detail.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
+import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
+import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 
 export const routes: Routes = [
   {
@@ -88,6 +90,11 @@ export const routes: Routes = [
         component: SalesInvoicesComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'receipttransaction/:funcID',
+        component: ReceiptTransactionComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -127,6 +134,8 @@ export const routes: Routes = [
     PopupAddSalesInvoicesLineComponent,
     SearchingComponent,
     TableLineDetailComponent,
+    ReceiptTransactionComponent,
+    PopAddReceiptTransactionComponent
   ],
   imports: [
     RouterModule.forChild(routes),
