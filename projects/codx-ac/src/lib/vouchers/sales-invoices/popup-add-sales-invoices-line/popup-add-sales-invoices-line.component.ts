@@ -6,10 +6,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
   CodxFormComponent,
   DialogData,
   DialogRef,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
@@ -35,6 +36,8 @@ export class PopupAddSalesInvoicesLineComponent
   formTitle: string;
   action: string;
   hiddenFields: string[] = [];
+  dataService: CRUDService;
+  transID: string;
 
   constructor(
     private injector: Injector,
@@ -44,8 +47,10 @@ export class PopupAddSalesInvoicesLineComponent
   ) {
     super(injector);
 
+    this.dataService = dialogRef.dataService;
+    this.salesInvoicesLine = this.dataService.dataSelected;
+    this.transID = this.salesInvoicesLine.transID;
     this.isEdit = dialogData.data.formType === 'edit';
-    this.salesInvoicesLine = dialogData.data.salesInvoicesLine;
     this.index = dialogData.data.index;
     this.gvs = dialogData.data.gvs;
     this.action = dialogData.data.action;
@@ -104,22 +109,35 @@ export class PopupAddSalesInvoicesLineComponent
       return;
     }
 
-    this.salesInvoicesLines.push({ ...this.salesInvoicesLine }); // wtf ???
-    this.index++;
+    this.dataService.save().subscribe((res: any) => {
+      if (res.save.data || res.update.data) {
+        this.salesInvoicesLines.push({ ...this.salesInvoicesLine });
+        this.index++;
 
-    if (closeAfterSaving) {
-      this.dialogRef.close();
-    } else {
-      delete this.salesInvoicesLine.recID;
+        if (closeAfterSaving) {
+          this.dialogRef.close();
+        } else {
+          this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {
+            console.log(res);
 
-      this.api
-        .exec('SM', 'SalesInvoicesLinesBusiness', 'GetDefault')
-        .subscribe((res: ISalesInvoicesLine) => {
-          res.rowNo = this.index + 1;
+            res.rowNo = this.index + 1;
+            res.transID = this.transID;
+            this.salesInvoicesLine.recID = res.recID; // wtf ???
 
-          this.form.formGroup.patchValue(res);
-        });
-    }
+            this.form.formGroup.patchValue(res);
+
+            // after implementing addNew(), both this.dataService.dataSelected and this.dataService.addDatas
+            // no longer point to the object referenced by this.salesInvoicesLine,
+            // so I reassign it here
+            this.dataService.dataSelected = this.salesInvoicesLine;
+            this.dataService.addDatas.set(
+              this.salesInvoicesLine.recID,
+              this.salesInvoicesLine
+            );
+          });
+        }
+      }
+    });
   }
   //#endregion
 

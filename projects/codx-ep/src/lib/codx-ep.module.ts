@@ -17,7 +17,6 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { EPReportComponent } from './report/report.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { ReportComponent } from './stationery/report/report.component';
@@ -139,7 +138,6 @@ export const routes: Routes = [
   exports: [RouterModule],
   declarations: [
     LayoutComponent,
-    EPReportComponent,
     ResourcesComponent,
     PopupAddResourcesComponent,
     EPHistoryCardComponent,
