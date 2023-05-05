@@ -39,6 +39,7 @@ export class CodxCalendarComponent
   @ViewChild('calendar_setting')
   calendar_center!: ComponentRef<CalendarCenterComponent>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
 
   dataResourceModel = [];
   request?: ResourceModel;
@@ -651,6 +652,8 @@ export class CodxCalendarComponent
     }
   }
 
+  resource:any;
+
   getCalendarNotes(TM_, WP_, CO_, EP_Room_, EP_Ca_) {
     let TM_Params = [
       {
@@ -702,20 +705,27 @@ export class CodxCalendarComponent
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
         clearInterval(myInterval);
-        this.getCalendarSetting(resources, this.dataResourceModel);
+        this.resource = resources;
+        this.codxShareSV.dataResourceModel.subscribe((res) => {
+          if (res) {
+            this.calendarCenter && this.calendarCenter.updateData(res)
+          }
+        });
+
+        //this.getCalendarSetting(resources, this.dataResourceModel);
       }
     });
   }
 
   getCalendarSetting(resource, dataResourceModel) {
-    let a = this.calendar_setting.createComponent(CalendarCenterComponent);
-    a.instance.resources = resource;
-    a.instance.resourceModel = dataResourceModel;
-    this.codxShareSV.dataResourceModel.subscribe((res) => {
-      if (res) {
-        a.instance.updateData(res);
-      }
-    });
+    //let a = this.calendar_setting.createComponent(CalendarCenterComponent);
+    //a.instance.resources = resource;
+    //a.instance.resourceModel = dataResourceModel;
+    // this.codxShareSV.dataResourceModel.subscribe((res) => {
+    //   if (res) {
+    //     a.instance.updateData(res);
+    //   }
+    // });
   }
 
   onLoad(args) {
