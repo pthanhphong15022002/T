@@ -274,7 +274,6 @@ export class PopupAddResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 400);
     this.detectorRef.detectChanges();
   }
   

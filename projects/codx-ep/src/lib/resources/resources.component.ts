@@ -509,7 +509,7 @@ export class ResourcesComponent extends UIComponent {
         }
       });
     });
-    let dialog = this.callfc.openForm(template, '', 550, 400);
+    let dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 
