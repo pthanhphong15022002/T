@@ -1,10 +1,11 @@
 <div>
-  <div
-    class="d-flex justify-content-end"
-    style="background-color: #F5F8FA"
-  >
-    <button type="button" class="btn btn-primary me-5" (click)="addContract()">
+  <div class="d-flex justify-content-end" style="background-color: #f5f8fa">
+    <button type="button" class="btn btn-primary me-5 btn-sm d-flex align-items-center my-3" (click)="addContract()">
       <span class="icon-add"></span>
+      <codx-label
+        class="fs-5 font-weight-bold"
+        [default]="'Thêm'"
+      ></codx-label>
     </button>
   </div>
   <div>
@@ -17,20 +18,22 @@
 </div>
 
 <ng-template #contractsTemplate let-data="value">
-  <div *ngFor="let i of [1, 2, 3, 4, 5]">
+  <div *ngFor="let contract of listContract; let i = index" class="has-action-menu">
     <div class="row">
       <div class="col-1 d-flex justify-content-center align-items-center">
-        {{ i }}
+        {{ i + 1 }}
       </div>
       <div class="col-5 d-flex flex-column justify-content-center">
-        <span class="fs-6 fw-bold">Hợp đồng cho thuê</span>
-        <span class="fs-6">Ngày hiệu lực</span>
+        <span class="fs-6 fw-bold">{{ contract?.contractName }}</span>
+        <span class="fs-6"
+          >Ngày hiệu lực: {{ contract?.effectiveFrom | date : dateFomat }}</span
+        >
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
         <span class="fs-6">50.000.000 VND</span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="fs-6">15/1/2016</span>
+        <span class="fs-6">{{ contract?.effectiveTo | date : dateFomat }}</span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
         <button
@@ -42,30 +45,43 @@
         </button>
       </div>
     </div>
+    <codx-mfunc
+    [type]="'hover'"
+    [dataItem]="moreDefaut"
+    [formModel]="frmModelInstancesTask"
+    (changeDataMF)="changeDataMFTask($event)"
+    (clickMF)="clickMF($event, contract)"
+  >
+  </codx-mfunc>
     <hr />
   </div>
 </ng-template>
 
 <ng-template #popDetail let-dialog>
-  <codx-form [body]="bodyDetail" [dialog]="dialog" [templateExtend]="headerDetail"> </codx-form>
+  <codx-form
+    [body]="bodyDetail"
+    [dialog]="dialog"
+    [templateExtend]="headerDetail"
+  >
+  </codx-form>
 </ng-template>
 
 <ng-template #bodyDetail let-dialog>
   <add-contracts></add-contracts>
 </ng-template>
 <ng-template #headerDetail let-dialog>
-   <div class="mb-5 w-100 d-flex justify-content-between">
-      <div class="d-flex align-items-center">
-        <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
-        <codx-label fiedName="" default="Tên hợp đồng"></codx-label>
-        <codx-input field="taskName" type="valuelist" refValue="DP023">
-        </codx-input>
-      </div>
-      <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-primary">
-          <codx-label fiedName="" default="Lưu"></codx-label>
-        </button>
-        <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
-      </div>
+  <div class="mb-5 w-100 d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+      <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
+      <codx-label fiedName="" default="Tên hợp đồng"></codx-label>
+      <codx-input field="taskName" type="valuelist" refValue="DP023">
+      </codx-input>
     </div>
- </ng-template>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-primary">
+        <codx-label fiedName="" default="Lưu"></codx-label>
+      </button>
+      <span class="icon-email icon-20 text-primary py-2 text-muted"></span>
+    </div>
+  </div>
+</ng-template>

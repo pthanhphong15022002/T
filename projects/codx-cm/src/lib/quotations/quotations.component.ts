@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -19,6 +20,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-quotations.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'lib-quotations',
@@ -36,8 +38,10 @@ export class QuotationsComponent extends UIComponent {
   readonly entityName = 'CM_Quotations';
   readonly className = 'QuotationsBusiness';
   readonly methodLoadData = 'GetListQuotationsAsync';
+  requestTemp = new DataRequest();
   //test
   formModel: FormModel;
+
   moreDefaut = {
     share: true,
     write: true,
@@ -47,6 +51,7 @@ export class QuotationsComponent extends UIComponent {
   };
   grvSetup: any;
   vllStatus = '';
+  listDatas = [];
 
   constructor(
     private inject: Injector,
@@ -65,27 +70,75 @@ export class QuotationsComponent extends UIComponent {
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.list,
-        active: true,
-        sameData: false, //true, fasle để test
-        model: {
-          template: this.itemViewList,
-        },
-      },
-    ];
+    this.loadDatas();
+    // this.views = [
+    //   {
+    //     type: ViewType.list,
+    //     active: true,
+    //     sameData: true, //true, fasle để test
+    //     model: {
+    //       template: this.itemViewList,
+    //     },
+    //   },
+    // ];
   }
-  changeDataMF(e, data) {}
-  clickMF(e, data) {}
-
+  loadDatas() {
+    // this.requestTemp.idField='recID'
+    this.requestTemp.entityName = 'CM_Quotations';
+    this.requestTemp.formName = 'CMQuotations';
+    this.requestTemp.gridViewName = 'grvCMQuotations';
+    this.requestTemp.page = 0;
+    this.requestTemp.pageSize = 20;
+    this.requestTemp.funcID = 'CM0202';
+    this.requestTemp.predicate = 'CustomerID==@0';
+    this.requestTemp.dataValues = this.customerID;
+    this.fetch().subscribe((items) => {
+      this.listDatas = items;
+    });
+  }
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.requestTemp
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
   changeItemDetail(e) {}
+
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+    }
+  }
+  delete(dt) {}
+  edit(e, data) {}
+  copy(e, data) {}
 
   add() {
     this.view.dataService.addNew().subscribe((res) => {
