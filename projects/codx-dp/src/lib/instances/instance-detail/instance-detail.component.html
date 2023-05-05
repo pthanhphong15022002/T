@@ -262,9 +262,22 @@
                     [showColumnControl]="showColumnControl(tmpTeps.stepID)"
                     [formModel]="formModel"
                     [currentStep]="currentNameStep"
-                    [instance]="dataSelect"
+                    [stepID]="dataSelect.stepID"
+                    [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
+                    [isDelete]="dataSelect.delete"
+                    [isEdit]="dataSelect.edit"
+                    [isUpdate]="
+                      dataSelect.write &&
+                      !dataSelect.closed &&
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      tmpTeps.stepStatus < '2' &&
+                      isOnlyView
+                    "
+                    [isCreate]="dataSelect.create"
+                    [isClosed]="dataSelect.closed"
                     [titleDefault]="titleDefault"
-                    [listStep]="listSteps"                  
+                    [listStep]="listSteps"
+                    [instance]="dataSelect"
                     [lstIDInvo]="lstInv"
                     [listUserIdRole]="ownerInstance"
                     [listStepReason]="getReasonByStepId(dataSelect.status)"
@@ -277,18 +290,6 @@
                     [lstStepProcess]="lstStepProcess"
                     [isOnlyView]="isOnlyView"
                   ></codx-stages-detail>
-                  <!-- [stepID]="dataSelect.stepID"
-                  [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
-                  [isDelete]="dataSelect.delete"
-                  [isEdit]="dataSelect.edit"
-                  [isUpdate]="
-                    dataSelect.write &&
-                    !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') &&
-                    tmpTeps.stepStatus < '2'
-                  "
-                  [isCreate]="dataSelect.create"
-                  [isClosed]="dataSelect.closed" -->
                 </ng-container>
               </ng-container>
               <ng-container *ngIf="viewModelDetail == 'F'">
