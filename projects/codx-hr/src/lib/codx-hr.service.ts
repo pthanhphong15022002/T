@@ -849,6 +849,16 @@ export class CodxHrService {
       data
     );
   }
+
+  LoadListEAsset(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'LoadListEAssetAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EAppointionsBusiness
