@@ -44,15 +44,13 @@
                     </div>
                     <div class="col-6 form-group">
                       <codx-label
-                        fiedName="customerName"
+                        fiedName="objectName"
                         [formModel]="form.formModel"
-                        default="Tên khách"
                       ></codx-label>
                       <codx-input
-                        type="text"
-                        field="customerName"
-                        [disabled]="true"
-                        [crrValue]="customerName"
+                        field="objectName"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                       ></codx-input>
                     </div>
 
