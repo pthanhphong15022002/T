@@ -112,17 +112,6 @@ export class BookingStationeryComponent
           panelRightRef: this.panelRight,
         },
       },
-      {
-        type: ViewType.content,
-        reportView: true,
-        sameData: false,
-        active: false,
-        text: 'Báo cáo',
-        icon: 'icon-assignment',
-        model: {
-          panelLeftRef: this.report,
-        },
-      },
     ];
 
     this.detectorRef.detectChanges();

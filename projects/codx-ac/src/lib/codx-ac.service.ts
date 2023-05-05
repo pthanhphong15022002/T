@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
   DataRequest,
   FormModel,
@@ -78,11 +79,11 @@ export class CodxAcService {
     return newMemo;
   }
 
-  /** Use irregularFields (optional) in case unable to transform some data prop names to gvs prop names respectively. */
+  /** @param irregularGvsPropNames Use irregularGvsPropNames in case unable to transform some data prop names to gvs prop names respectively. */
   validateFormData(
     formGroup: FormGroup,
     gridViewSetup: any,
-    irregularFields: string[] = [],
+    irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
     console.log(formGroup);
@@ -101,7 +102,7 @@ export class CodxAcService {
         console.log('invalid', { propName });
 
         const gvsPropName =
-          irregularFields.find(
+          irregularGvsPropNames.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
           ) ?? this.toPascalCase(propName);
 
@@ -118,7 +119,7 @@ export class CodxAcService {
     return isValid;
   }
 
-  /** Use irregularDataPropNames (optional) in case unable to transform some gvs prop names to data prop names respectively. */
+  /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
   validateFormDataUsingGvs(
     gridViewSetup: any,
     data: any,
@@ -159,10 +160,12 @@ export class CodxAcService {
     return isValid;
   }
 
+  /** @example StudentId => studentId */
   toCamelCase(pascalCase: string): string {
     return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
   }
 
+  /** @example studentId => StudentId */
   toPascalCase(camelCase: string): string {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
@@ -195,6 +198,22 @@ export class CodxAcService {
         tap((r) => console.log(r))
       );
   }
+
+  createCrudService(injector: Injector, formModel: FormModel, service: string): CRUDService {
+    const requestData = new DataRequest();
+    requestData.entityName = formModel.entityName;
+    requestData.entityPermission = formModel.entityPer;
+    requestData.formName = formModel.formName;
+    requestData.gridViewName = formModel.gridViewName;
+    requestData.pageLoading = false;
+
+    const crudService = new CRUDService(injector);
+    crudService.service = service;
+    crudService.request = requestData;
+
+    return crudService;
+  }
+
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
