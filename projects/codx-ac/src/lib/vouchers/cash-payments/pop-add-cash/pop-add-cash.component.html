@@ -615,34 +615,25 @@
       </div>
       <div class="d-flex align-items-center me-3">
         <div *ngIf="formType != 'edit'" class="ms-2">
-          <button type="button" class="btn btn-lg btn-light-primary" (click)="onSaveAdd()">
-            <div class="d-flex align-items-center">
-              <i class="icon-save_alt icon-18"></i>
-              <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
+          <button type="button" class="btn btn-sm btn-light-primary" (click)="onSaveAdd()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"
                 [formName]="formModel?.formName"></codx-label>
-            </div>
           </button>
         </div>
         <div class="ms-2">
-          <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px" (click)="onSave()">
-            <div class="d-flex align-items-center">
-              <i class="icon-save icon-18"></i>
-              <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-            </div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="onSave()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
           </button>
         </div>
         <div *ngIf="cashpayment?.status == '0' && hasSaved" class="ms-2">
-          <button type="button" class="btn btn-lg btn-danger" (click)="onDiscard()">
-            <div class="d-flex align-items-center">
-              <i class="icon-settings_backup_restore icon-18"></i>
-              <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
+          <button type="button" class="btn btn-sm btn-danger" (click)="onDiscard()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" default="Hủy bỏ"
                 [formName]="formModel?.formName"></codx-label>
-            </div>
           </button>
         </div>
         <div class="ms-2">
-          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+          <div class="btn btn-icon btn-light-danger btn-circle" (click)="close()">
             <i class="icon-close icon-18"></i>
           </div>
         </div>
