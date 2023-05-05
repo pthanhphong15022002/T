@@ -770,16 +770,22 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .codx-tab .tab-content {
-  min-width: 544px !important;
+  min-width: 580px !important;
   // width: 545px !important;
 }
 
 .e-sidebar {
   .codx-tab .tab-content {
-    width: 544px !important;
+    width: 580px !important;
   }
+  
 }
+codx-layout-add{
+  .nav-pills.w-175px{
+    width: 185px!important;
+  }
 
+}
 .e-appointment {
   text-align: left !important;
   padding-left: 7px !important;
@@ -993,7 +999,7 @@ codx-layout-add .codx-tab {
 codx-layout-add .codx-tab .tab-content {
   height: 100% !important;
   position: absolute;
-  left: 207px;
+  left: 187px;
   right: 0;
   top: 0;
   bottom: 0;

@@ -40,7 +40,7 @@ import { NameByIdPipe } from './pipes/nameById.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CoreModule } from "../../../../src/core/core.module";
+import { CoreModule } from '../../../../src/core/core.module';
 import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
 import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
 
@@ -151,7 +151,7 @@ export const routes: Routes = [
     ReceiptTransactionComponent,
     PopAddReceiptTransactionComponent,
     ReportsComponent,
-    ApprovalsComponent
+    ApprovalsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -164,6 +164,7 @@ export const routes: Routes = [
     CodxReportModule,
     FormsModule,
     NameByIdPipe,
+    DragDropModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
