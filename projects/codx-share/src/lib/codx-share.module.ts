@@ -177,6 +177,8 @@ import { CodxAddTaskComponent } from './components/codx-step/codx-add-stask/codx
 import { CodxRoleComponent } from './components/codx-step/codx-role/codx-role.component';
 import { CodxTypeTaskComponent } from './components/codx-step/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from './components/codx-step/codx-view-task/codx-view-task.component';
+import { CodxAddBookingCarComponent } from './components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -305,6 +307,8 @@ const T_Component: Type<any>[] = [
   
   //booking
   CodxBookingComponent,
+  CodxAddBookingCarComponent,
+  CodxAddBookingRoomComponent,
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
   CodxBookingViewDetailComponent,

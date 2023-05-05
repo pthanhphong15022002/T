@@ -809,6 +809,15 @@ export class CodxEpService {
       resourceID
     );
   }
+  createResourceTrans(trans: any) {
+    return this.api.execSv<any>(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceTransBusiness',
+      'AddResourceTransAsync',
+      trans
+    );
+  }
   //#Setting SYS
   getSettingValue(para: any) {
     return this.api.execSv(

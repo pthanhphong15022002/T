@@ -6,13 +6,13 @@
 
   <div class="d-flex mt-2 w-100 fs-7">
     <i class="icon-person icon-16 me-1"></i>
-    <span class="text-gray-600 text-break">
+    <span class="text-break">
       {{ data?.requester }}
     </span>
   </div>
   <div class="d-flex mt-1 w-100 fs-7">
     <i class="icon-location_on icon-16 me-1"></i>
-    <span class="text-gray-600 text-break">
+    <span class="text-break">
       <span>
         {{data?.resourceName }} 
      </span>
@@ -27,17 +27,17 @@
   <div class="d-flex mt-1 w-100 position-relative">
     <div class="d-flex align-items-center me-4">
       <i class="icon-calendar_today icon-16 me-1"></i>
-      <span class="text-gray-600">
+      <span class="">
         {{ data?.bookingOn | fmDT : "dmy" }}
       </span>
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-access_time icon-16 me-1"></i>
-      <span class="text-gray-600">
+      <span class="">
         {{ showHour(data?.startDate) }}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="text-gray-600 me-1">{{ "-" }}</span>
-      <span class="text-gray-600">
+      <span *ngIf="data?.startDate && data?.endDate" class=" me-1">{{ "-" }}</span>
+      <span class="">
         {{ showHour(data?.endDate) }}
       </span>
     </div>
