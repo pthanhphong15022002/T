@@ -33,7 +33,7 @@ export class CodxCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('calendar_mini') calendar_mini!: CalendarComponent;
+  @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
   @ViewChild('calendar_setting', { read: ViewContainerRef })
   calendar_setting!: ViewContainerRef;
   @ViewChild('calendar_setting')
@@ -80,7 +80,7 @@ export class CodxCalendarComponent
 
   onInit(): void {
     let myInterVal = setInterval(() => {
-      if (this.calendar_mini) {
+      if (this.ejCalendar) {
         clearInterval(myInterVal);
         this.loadData();
         this.navigate();
@@ -120,8 +120,29 @@ export class CodxCalendarComponent
     ];
   }
 
+  onCreate() {
+    let clearBtn: HTMLElement = document.createElement('button');
+    let footerElement: HTMLElement = document.getElementsByClassName(
+      'e-icon-container'
+    )[0] as HTMLElement;
+    //creates the custom element for clear button
+    clearBtn.className = 'e-btn e-today e-flat e-primary e-css';
+    clearBtn.setAttribute('type', 'button');
+    clearBtn.textContent = 'Today';
+    footerElement.append(clearBtn);
+    this.ejCalendar.element.appendChild(footerElement);
+    let proxy = this;
+    // custom click handler to update the value property with null values.
+    document
+      .querySelector('.e-icon-container .e-today')
+      .addEventListener('click', function () {
+        proxy.ejCalendar.value = null;
+        alert('trigger');
+      });
+  }
+
   loadData() {
-    let tempCalendar = this.calendar_mini.element;
+    let tempCalendar = this.ejCalendar.element;
     let htmlE = tempCalendar as HTMLElement;
     let eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
@@ -207,8 +228,8 @@ export class CodxCalendarComponent
         }
       });
       if (this.typeNavigate == 'Week' || this.typeNavigate == 'WorkWeek') {
-        if (changeWeek && this.calendar_mini) {
-          let eleCalendar = this.calendar_mini.element as HTMLElement;
+        if (changeWeek && this.ejCalendar) {
+          let eleCalendar = this.ejCalendar.element as HTMLElement;
           this.getDayOfWeek(eleCalendar);
         }
       }
@@ -301,8 +322,8 @@ export class CodxCalendarComponent
               this.checkEP_BookingCarsParam == '0' ||
               this.checkEP_BookingRoomsParam == '0'
             ) {
-              if (this.calendar_mini) {
-                let tempCalendar = this.calendar_mini.element;
+              if (this.ejCalendar) {
+                let tempCalendar = this.ejCalendar.element;
                 let htmlE = tempCalendar as HTMLElement;
                 let eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
@@ -355,9 +376,9 @@ export class CodxCalendarComponent
             }
           }
 
-          if (this.calendar_mini) {
-            this.calendar_mini.refresh();
-            this.calendar_mini.value = this.FDdate;
+          if (this.ejCalendar) {
+            this.ejCalendar.refresh();
+            this.ejCalendar.value = this.FDdate;
           }
           this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
         }
