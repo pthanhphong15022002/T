@@ -196,6 +196,7 @@
             showMessage="0"
             [hideDelete]="'1'"
             [hideMoreF]="'0'"
+            [referType]="'source'"
           >
           </codx-attachment>
         </ng-container>
@@ -225,7 +226,7 @@
       <codx-input-custom-field
         [customField]="data"
         [objectId]="data?.recID"
-        [objectType]="'DP_Instances'"
+        [objectType]="'DP_Instances_Steps'"
         [formModel]="formModelDefault"
         [checkValid]="false"
         (valueChangeCustom)="valueChangeCustom($event)"
@@ -339,8 +340,8 @@
         <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
           <codx-attachment
             #attachment
-            objectId="{{ data.dataValue.split(';')[0] }}"
-            objectType="{{ data.dataValue.split(';')[1] }}"
+            [objectId]="data.dataValue.split(';')[0]"
+            [objectType]="data.dataValue.split(';')[1]"
             hideFolder="1"
             hideImageUpload="0"
             hideImageThumb="0"
