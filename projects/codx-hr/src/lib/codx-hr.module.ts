@@ -471,6 +471,7 @@ import { ViewDetailEmployeeBusinessComponent } from './employee-business-travel/
 import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.component';
 import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
 import { EmployeeInfoDetailComponent } from './employee-list/employee-info-detail/employee-info-detail.component';
+import { PopupForeignWorkerComponent } from './employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 export const routes: Routes = [
       {
         path: '',
@@ -751,7 +752,8 @@ const T_Component: Type<any>[] = [
   ViewDayOffDetailComponent,
   PopupEmployeeBusinessComponent,
   ViewDetailEmployeeBusinessComponent,
-  EmployeeInfoDetailComponent
+  EmployeeInfoDetailComponent,
+  PopupForeignWorkerComponent
 ];
 @NgModule({
   imports: [

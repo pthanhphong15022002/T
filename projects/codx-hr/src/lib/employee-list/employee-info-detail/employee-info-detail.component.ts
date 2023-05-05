@@ -65,6 +65,7 @@ import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-e
 import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
+import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 
 
 @Component({
@@ -243,6 +244,10 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   bSalarySortModel: SortModel;
   issuedDateSortModel: SortModel;
   TrainFromDateSortModel: SortModel;
+  injectDateSortModel: SortModel;
+  healthDateSortModel: SortModel;
+  diseasesFromDateSortModel: SortModel;
+  accidentDateSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -1371,6 +1376,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         if(history.state?.empInfo){
           this.infoPersonal = JSON.parse(history.state?.empInfo);
         }
+        console.log('thong tin nhan vien ne', this.infoPersonal);
+        
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -1502,6 +1509,27 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
     this.appointionSortModel.dir = 'desc';
+
+    // #region Sức khỏe sort model
+
+    this.injectDateSortModel = new SortModel();
+    this.injectDateSortModel.field = '(InjectDate)';
+    this.injectDateSortModel.dir = 'desc';
+
+    this.accidentDateSortModel  = new SortModel();
+    this.accidentDateSortModel.field = '(AccidentDate)';
+    this.accidentDateSortModel.dir = 'desc';
+
+    this.diseasesFromDateSortModel = new SortModel();
+    this.diseasesFromDateSortModel.field = '(FromDate)';
+    this.diseasesFromDateSortModel.dir = 'desc';
+
+    this.healthDateSortModel = new SortModel();
+    this.healthDateSortModel.field = '(HealthDate)';
+    this.healthDateSortModel.dir = 'desc';
+
+    //#endregion
+
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -3097,6 +3125,29 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         funcID: this.ePartyFuncID,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+        dataObj: this.infoPersonal,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
+    });
+  }
+
+  editEmployeeForeignWorkerInfo(actionHeaderText) {
+    let option = new SidebarModel();
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupForeignWorkerComponent,
+      {
+        funcID: this.ePartyFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.foreignWorkerFuncID),
         dataObj: this.infoPersonal,
       },
       option

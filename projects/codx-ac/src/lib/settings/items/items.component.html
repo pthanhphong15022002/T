@@ -88,7 +88,7 @@
       >:&nbsp;
       <b>{{
         inventoryModels
-          | nameById : data?.inventModelID : "InventModelID" : "InventModelName"
+          | nameById : "InventModelID" : "InventModelName" : data?.inventModelID
       }}</b>
     </td>
     <td class="fs-8">
@@ -99,7 +99,7 @@
       ></codx-label
       >:&nbsp;
       <b>{{
-        dimGroups | nameById : data?.dimGroupID : "DimGroupID" : "DimGroupName"
+        dimGroups | nameById : "DimGroupID" : "DimGroupName" : data?.dimGroupID
       }}</b>
     </td>
     <td>
