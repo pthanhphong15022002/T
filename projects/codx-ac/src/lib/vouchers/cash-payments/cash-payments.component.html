@@ -44,7 +44,7 @@
 </ng-template>
 <ng-template #header>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex align-items-center ac-cashID mt-n8 mb-5">
+    <div class="d-flex align-items-center ac-cashID mt-n8">
       <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
         <i class="text-white icon-16" [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
       </div>
@@ -57,7 +57,7 @@
         </codx-vll>
       </span>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1 mb-5 mt-3">
+    <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-2">
       <div class="d-flex align-items-center">
         <span class="me-2 icon-apartment icon-16"></span>
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase" #objectName [innerHTML]="
@@ -79,7 +79,7 @@
 <ng-template #body>
   <ng-container *ngIf="itemSelected">
     <div class="d-flex flex-stack w-100">
-      <div class="d-flex align-items-center me-5 mb-5">
+      <div class="d-flex align-items-center me-5 mb-1">
         <span class="icon-customize icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
         </codx-label>
@@ -88,7 +88,7 @@
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-i-journal-album icon-16 me-2"></span>
       <!-- <codx-label class="fw-bold label-colon" fiedName="CashBookID" [formModel]="view.formModel">
       </codx-label> -->
@@ -97,7 +97,7 @@
       <span #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
     </div>
-    <div class="d-flex flex-wrap mb-5">
+    <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center me-5">
         <span class="icon-i-wallet2 icon-16 me-2"></span>
         <codx-label class="fw-bold label-colon" fiedName="ReasonID" [formModel]="view.formModel">
@@ -123,7 +123,7 @@
         <!-- <span class="text-gray-600">{{itemSelected?.payor}}</span> -->
       </div>
     </div>
-    <div class="d-flex align-items-center me-5 mb-5">
+    <div class="d-flex align-items-center me-5 mb-1">
       <span class="icon-brush icon-16 me-2"></span>
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="view.formModel">
       </codx-label>
@@ -133,7 +133,7 @@
             | async
         "></span>
     </div>
-    <div class="card-add mt-5" #cardbodyRef>
+    <div class="card-add mt-2" #cardbodyRef>
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
