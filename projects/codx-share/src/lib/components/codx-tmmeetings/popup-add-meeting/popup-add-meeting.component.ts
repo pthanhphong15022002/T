@@ -974,13 +974,29 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
-    this.meeting.permissions.forEach((res) => {
-      if (res.objectID == idUserSelected) {
-        res.roleType = value;
-        res.objectType = "U";
-        this.setPermissions(res, value);
+    //thay doi theo mail ngay 05/05/2023 + clean 
+    if(value=="A"){
+      let idxRoleA = this.meeting.permissions.findIndex(x=>x.roleType=="A");
+      if(idxRoleA!=-1 && this.meeting.permissions[idxRoleA]!=idUserSelected){
+        this.meeting.permissions[idxRoleA].roleType="P";
+        this.meeting.permissions[idxRoleA].objectType="U";
+        this.setPermissions(this.meeting.permissions[idxRoleA], "P")
       }
-    });
+    }
+    let idxSelected = this.meeting.permissions.findIndex(x=>x.objectID==idUserSelected);
+    if(idxSelected!=-1 ){
+      this.meeting.permissions[idxSelected].roleType=value;
+      this.meeting.permissions[idxSelected].objectType="U";
+      this.setPermissions(this.meeting.permissions[idxSelected], value)
+    }
+
+    // this.meeting.permissions.forEach((res) => {
+    //   if (res.objectID == idUserSelected) {
+    //     res.roleType = value;
+    //     res.objectType = "U";
+    //     this.setPermissions(res, value);
+    //   }
+    // });
     this.changDetec.detectChanges();
 
     this.popover.close();

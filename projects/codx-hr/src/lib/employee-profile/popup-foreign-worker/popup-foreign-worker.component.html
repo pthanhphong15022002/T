@@ -1,0 +1,91 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="form-group d-flex align-items-bottom">
+      <codx-input
+        class="me-2"
+        field="isForeigner"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      >
+      </codx-input>
+      <codx-label fiedName="IsForeigner" [formModel]="formModel"> </codx-label>
+    </div>
+
+    <div class="form-group d-flex align-items-bottom">
+        <codx-input
+          class="me-2"
+          field="foNotReside"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        >
+        </codx-input>
+        <codx-label fiedName="FoNotReside" [formModel]="formModel"> </codx-label>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="FoNationalities" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            field="foNationalities"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="FoWorking" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            field="foWorking"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="FoKind" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            field="foKind"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label fiedName="FoNote" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            field="foNote"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

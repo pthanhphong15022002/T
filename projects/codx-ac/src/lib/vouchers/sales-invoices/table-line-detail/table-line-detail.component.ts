@@ -7,7 +7,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { DialogModel, FormModel, UIComponent, Util } from 'codx-core';
+import {
+  CRUDService,
+  DialogModel,
+  FormModel,
+  UIComponent,
+  Util,
+} from 'codx-core';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
 import { tap } from 'rxjs/operators';
@@ -25,9 +31,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() hasMF: boolean = false;
   @Input() gvs: any;
   @Input() hiddenFields: string[] = [];
-  @Output() delete = new EventEmitter<ISalesInvoicesLine>();
-  @Output() update = new EventEmitter<ISalesInvoicesLine>();
-  @Output() copy = new EventEmitter<ISalesInvoicesLine[]>();
+  @Input() dataService: CRUDService;
 
   totalRow: { totalQuantity: number; totalPrice: number; totalVat: number } = {
     totalQuantity: 0,
@@ -41,6 +45,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
     entityName: 'SM_SalesInvoicesLines',
     formName: 'SalesInvoicesLines',
     gridViewName: 'grvSalesInvoicesLines',
+    entityPer: 'SM_SalesInvoicesLines',
   };
   ths: { field: string; label: string }[] = [
     {
@@ -104,13 +109,13 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   onClickMF(e, data): void {
     switch (e.functionID) {
       case 'SYS02':
-        this.deleteRow(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        this.editRow(e, data);
+        this.edit(e, data);
         break;
       case 'SYS04':
-        this.copyRow(e, data);
+        this.copy(e, data);
         break;
       case 'SYS002':
         this.export(data);
@@ -120,73 +125,90 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   //#endregion
 
   //#region Method
-  editRow(e, data): void {
+  edit(e, data): void {
     console.log('editRow', data);
 
-    const dialogModel = new DialogModel();
-    dialogModel.FormModel = this.fmSalesInvoicesLines;
+    const temp: ISalesInvoicesLine = { ...data };
 
-    this.callfc
-      .openForm(
-        PopupAddSalesInvoicesLineComponent,
-        'This param is not working',
-        500,
-        700,
-        '',
-        {
-          formType: 'edit',
-          salesInvoicesLine: data,
-          gvs: this.gvs,
-          action: e.text,
-          hiddenFields: this.hiddenFields,
-        },
-        '',
-        dialogModel
-      )
-      .closed.pipe(tap((t) => console.log(t)))
-      .subscribe(({ event }) => {
-        this.update.emit(event);
-      });
+    this.dataService.dataSelected = temp;
+    this.dataService.edit(temp).subscribe(() => {
+      const dialogModel = new DialogModel();
+      dialogModel.FormModel = this.fmSalesInvoicesLines;
+      dialogModel.DataService = this.dataService;
+
+      this.callfc
+        .openForm(
+          PopupAddSalesInvoicesLineComponent,
+          'This param is not working',
+          500,
+          700,
+          '',
+          {
+            formType: 'edit',
+            gvs: this.gvs,
+            action: e.text,
+            hiddenFields: this.hiddenFields,
+          },
+          '',
+          dialogModel
+        )
+        .closed.pipe(tap((t) => console.log(t)))
+        .subscribe(({ event }) => {
+          const index = this.salesInvoicesLines.findIndex(
+            (l) => l.recID === event.recID
+          );
+          this.salesInvoicesLines[index] = event;
+        });
+    });
   }
 
-  copyRow(e, data): void {
-    const dialogModel = new DialogModel();
-    dialogModel.FormModel = this.fmSalesInvoicesLines;
+  copy(e, data): void {
+    console.log('copy', data);
 
-    this.callfc
-      .openForm(
-        PopupAddSalesInvoicesLineComponent,
-        'This param is not working',
-        500,
-        700,
-        '',
-        {
-          formType: 'add',
-          salesInvoicesLine: {
-            ...data,
-            rowNo: this.salesInvoicesLines.length + 1,
-            recID: Util.uid(),
-            transID: '00000000-0000-0000-0000-000000000000',
+    let temp: ISalesInvoicesLine = { ...data };
+
+    temp.rowNo = this.salesInvoicesLines.length + 1;
+    this.dataService.dataSelected = temp;
+    this.dataService.copy().subscribe(() => {
+      const dialogModel = new DialogModel();
+      dialogModel.FormModel = this.fmSalesInvoicesLines;
+      dialogModel.DataService = this.dataService;
+
+      this.callfc
+        .openForm(
+          PopupAddSalesInvoicesLineComponent,
+          'This param is not working',
+          500,
+          700,
+          '',
+          {
+            formType: 'add',
+            index: this.salesInvoicesLines.length,
+            gvs: this.gvs,
+            action: e.text,
+            hiddenFields: this.hiddenFields,
           },
-          index: this.salesInvoicesLines.length,
-          gvs: this.gvs,
-          action: e.text,
-        },
-        '',
-        dialogModel
-      )
-      .closed.pipe(tap((t) => console.log(t)))
-      .subscribe(({ event }) => {
-        this.copy.emit(event);
-      });
+          '',
+          dialogModel
+        )
+        .closed.pipe(tap((t) => console.log(t)))
+        .subscribe(({ event }) => {
+          this.salesInvoicesLines = [...this.salesInvoicesLines, ...event];
+        });
+    });
+  }
+
+  delete(data): void {
+    console.log('delete', data);
+
+    this.dataService.delete([data]).subscribe(() => {
+      this.salesInvoicesLines = this.salesInvoicesLines.filter(
+        (l) => l.recID !== data.recID
+      );
+    });
   }
 
   export(data): void {}
-
-  deleteRow(data): void {
-    console.log(data);
-    this.delete.emit(data);
-  }
   //#endregion
 
   //#region Function
