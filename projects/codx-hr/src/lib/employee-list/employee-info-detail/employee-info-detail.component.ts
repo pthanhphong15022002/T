@@ -5414,4 +5414,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     return '#000205';
   }
   //#endregion
+
+  close2(data){
+    return;
+  }
 }
