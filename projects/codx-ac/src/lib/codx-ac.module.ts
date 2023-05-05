@@ -149,7 +149,8 @@ export const routes: Routes = [
         SearchingComponent,
         TableLineDetailComponent,
         ReportsComponent,
-        ApprovalsComponent
+        ApprovalsComponent,
+        ReceiptTransactionComponent
     ],
     exports: [RouterModule],
     providers: [AccumulationTooltipService],
