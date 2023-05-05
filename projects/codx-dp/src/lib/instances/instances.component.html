@@ -146,8 +146,8 @@
         ></span>
       </span>
     </div>
-    <div class="d-flex justify-content-center">
-      <div *ngIf="data.ownerStepInstances">
+    <div class="d-flex justify-content-end">
+      <span *ngIf="data.ownerStepInstances && data.ownerStepInstances != data.owner">
         <codx-imgs
           [isToolTip]="true"
           [width]="25"
@@ -156,30 +156,16 @@
           [numberImages]="1"
         >
         </codx-imgs>
-      </div>
-      <div *ngIf="data.ownerStepInstances == null">
-        <codx-imgs
-          [isToolTip]="true"
-          [width]="25"
-          [objectId]="data?.owner"
-          ojectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
-      </div>
-    </div>
-    <!-- <div class="d-flex justify-content-center">
-      <codx-imgs [isToolTip]="true" [width]="25" [objectId]="data.owner" ojectType="AD_Users" [numberImages]="1">
+      </span>
+      <codx-imgs
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data.owner"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
       </codx-imgs>
-    </div> -->
-    <codx-imgs
-      [isToolTip]="true"
-      [width]="25"
-      [objectId]="data.owner"
-      ojectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
+    </div>
   </div>
 </ng-template>
 
@@ -205,6 +191,8 @@
         (outStepInstance)="outStepInstance($event)"
         (saveDatasInstance)="saveDatasInstance($event)"
         [lstStepProcess]="listSteps"
+        [colorSuccesss]="colorReasonSuccess?.color"
+        [colorFail]="colorReasonFail?.color"
       >
       </codx-instance-detail>
     </ng-template>

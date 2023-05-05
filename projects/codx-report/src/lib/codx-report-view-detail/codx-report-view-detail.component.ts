@@ -36,7 +36,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    debugger
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
   }
@@ -68,7 +67,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       //   // },
       // },
     ];
-    debugger
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
     this.changeDetectorRef.detectChanges();
@@ -82,7 +80,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
 
   onActions(e:any){
     if(e.type == 'detail'){
-      debugger
     }
   }
 

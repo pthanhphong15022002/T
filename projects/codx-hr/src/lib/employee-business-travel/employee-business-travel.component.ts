@@ -158,8 +158,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent{
           this.view.dataService.add(res.event, 0).subscribe((res) => {});
           this.df.detectChanges();
         } else if (actionType == 'edit') {
-          console.log(res)
-          this.view.dataService.update(res.event[0]).subscribe((res) => {});
+          this.view.dataService.update(res.event).subscribe((res) => {});
           this.df.detectChanges();
         }
       }

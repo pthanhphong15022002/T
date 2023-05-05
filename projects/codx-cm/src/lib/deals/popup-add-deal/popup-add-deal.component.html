@@ -1,14 +1,68 @@
+<ng-container *ngIf="addFieldsControl == '1'">
+  <!-- <codx-layout-add
+    #formlayoutadd
+    [title]="title"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    (buttonClick)="buttonClick($event)"
+    [dialog]="dialog"
+    [formModel]="formModelCrr"
+    [footer]="footer"
+    [data]="instance"
+    (setTitle)="setTitle($event)"
+  ></codx-layout-add> -->
+
+  <!-- <ng-template #tabGeneralInfo>
+    <ng-container
+      [ngTemplateOutlet]="tabGeneralInfoDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #tabLocation>
+    <ng-container
+      [ngTemplateOutlet]="tabLocationDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabOpporGeneralInfo>
+    <ng-container
+      [ngTemplateOutlet]="tabOpporGeneralInfoDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabInputInfo>
+    <ng-container [ngTemplateOutlet]="tabInputInfoDetail"></ng-container>
+  </ng-template> -->
+</ng-container>
+
+<ng-container *ngIf="addFieldsControl == '2'">
+
+
+  <!-- <ng-template #body>
+    <ng-container
+      [ngTemplateOutlet]="tabGeneralInfoDetail"
+      [ngTemplateOutletContext]="{ $implicit: form }"
+    ></ng-container>
+    <ng-container [ngTemplateOutlet]="tabInputInfoDetail"></ng-container>
+  </ng-template> -->
+</ng-container>
+
 <codx-form
-  #form
-  [headerText]="titleAction"
-  [subHeader]="subHeader"
-  [body]="body"
-  [openMore]="true"
-  [dialog]="dialog"
-  [formModel]="formModel"
-  [footer]="footer"
-  [data]="deal"
+#form
+[headerText]="titleAction"
+[subHeader]="subHeader"
+[body]="body"
+[openMore]="true"
+[dialog]="dialog"
+[formModel]="formModel"
+[footer]="footer"
+[data]="deal"
 ></codx-form>
+
 
 <ng-template #subHeader>
   <codx-tag
@@ -78,7 +132,7 @@
       </div>
     </div>
   </div>
-  <!-- <div class="row">
+  <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -148,16 +202,22 @@
         default="Tỷ lệ thành công"
       >
       </codx-label>
-      <codx-input
+      <!-- <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       fiedName="probability"
       (valueChange)="valueChange($event)"
     >
-    </codx-input>
+    </codx-input> -->
+    <codx-input
+    type="text"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+
     </div>
   </div>
-</div> -->
+</div>
 </ng-template>
 
 <ng-template #footer>

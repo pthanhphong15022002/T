@@ -161,13 +161,17 @@
     [objectID]="dataSelected.recID"
     [funcID]="formModel.funcID"
     [dataTree]="treeTask"
+    [funcIDQuotations]="'CM0202'"
     [customerID]="dataSelected.customerID"
     (tabChange)="changeFooter($event)"
   ></codx-tabs>
 </ng-template>
 
 <ng-template #contract let-data>
-  <list-contracts></list-contracts>
+  <list-contracts [projectID]="dataSelected?.recID"></list-contracts>
 </ng-template>
+<!-- <ng-template #quotations let-data>
+ <lib-quotations [funcID]="'CM0202'" [customerID]="dataSelected.customerID" ></lib-quotations>
+</ng-template> -->
 
 

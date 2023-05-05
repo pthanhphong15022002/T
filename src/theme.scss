@@ -270,13 +270,13 @@
       .aside-primary {
         background-color: var(--primary-darker);
 
-        .menu-link {
-          &.active {
-            .menu-icon {
-              background-color: var(--primary);
-            }
-          }
-        }
+        // .menu-link {
+        //   &.active {
+        //     .menu-icon {
+        //       background-color: var(--primary);
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -343,10 +343,18 @@
     background-color: var(--primary-lightest);
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active .menu-title {
-    color: var(--menu-acitve);
+  .menu-state-title-primary .menu-item .menu-link.active {
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
+  .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
+    color: var(--menu-active)!important;
+  }
+
+  .menu-state-title-primary .menu-item .menu-link .menu-title:hover {
+    color: var(--menu-active)!important;
+  }
   .btn.btn-primary {
     border-color: var(--primary-dark) !important;
     background-color: var(--primary-dark) !important;
@@ -426,9 +434,6 @@
     background-color: var(--primary-lighter);
   }
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    color: var(--primary-light) !important;
-  }
 
   .menu-title-light .menu-item .menu-link:hover .menu-title {
     color: var(--primary-lighter) !important;
@@ -604,10 +609,6 @@
 
   ///////////////
 
-  .menu-state-title-primary .menu-item .menu-link.active {
-    transition: color 0.2s ease, background-color 0.2s ease;
-    color: var(--primary-light) !important;
-  }
 
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
   .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {

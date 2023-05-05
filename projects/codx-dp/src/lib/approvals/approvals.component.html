@@ -1,13 +1,111 @@
-<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel" [body]="body" [hideMF]="true" 
-   class="h-100">
+<!-- <view-details-dp-approval [data]="data" [formModel]="formModel" [transID]="transID" [approveStatus]="approveStatus"></view-details-dp-approval> -->
+<codx-detail-tmp
+  [header]="header"
+  [dataItem]="data"
+  [formModel]="formModel"
+  [body]="body"
+  [hideMF]="true"
+  class="h-100"
+>
   <ng-template #header>
-    <div class="d-flex justify-content-between mt-4">
-    Nội dung của view
+    <div class="d-flex justify-content-between mt-4 align-items-end">
+      <div class="container_detail mt-2">
+        <div class="d-flex justify-content-between">
+          <h3 class="mb-0">
+            {{ data?.title }}
+          </h3>
+        </div>
+        <div class="d-flex flex-column">
+          <div class="d-flex mt-2">
+            <div class="d-flex me-5">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  [setRequire]="false"
+                  fiedName="CreatedBy"
+                  [formModel]="formModel"
+                  [default]="'Người tạo nhiệm vụ'"
+                >
+                </codx-label>
+              </div>
+              <div>
+                <codx-img
+                  [isToolTip]="true"
+                  [width]="25"
+                  [objectId]="data.createdBy"
+                  ojectType="AD_Users"
+                  [numberImages]="1"
+                >
+                </codx-img>
+              </div>
+            </div>
+            <div class="d-flex me-5">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  [setRequire]="false"
+                  fiedName="CreatedOn"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+              </div>
+              <div
+                class="text-dark fw-bold"
+                [innerHTML]="
+                  data.createdOn | formatvalue : formModel : 'CreatedOn' | async
+                "
+              ></div>
+            </div>
+            <div class="d-flex me-5">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  fiedName="StartDate"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+              </div>
+              <div
+                class="text-dark fw-bold"
+                [innerHTML]="
+                  data.startDate | formatvalue : formModel : 'StartDate' | async
+                "
+              ></div>
+            </div>
+            <div class="d-flex me-5">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 label-colon text-nowrap"
+                  fiedName="EndDate"
+                  [setRequire]="false"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+              </div>
+              <div
+                class="text-dark fw-bold"
+                [innerHTML]="
+                  (data.status != '1' ? data.endDate : null)
+                    | formatvalue : formModel : 'EndDate'
+                    | async
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <ng-container *ngIf="data">
+      <h5>File gửi trình ký chưa xử lý</h5>
       <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
-        (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
+      <codx-thumbnail
+        [files]="data?.files"
+        displayThumb="simple"
+        [hideDelete]="'1'"
+        [hideMoreF]="'0'"
+        (viewFile)="handleViewFile($event)"
+        [permissions]="data?.relations"
+      >
       </codx-thumbnail>
     </ng-container>
   </ng-template>
@@ -84,12 +182,23 @@
           <li [ngbNavItem]="1">
             <a ngbNavLink>
               <div class="d-flex align-item-center">
-                <i class="icon-people_alt me-2" [ngClass]="{ 'text-primary': active === 1 }"></i><span>Quy trình duyệt</span>
+                <i
+                  class="icon-people_alt me-2"
+                  [ngClass]="{ 'text-primary': active === 1 }"
+                ></i
+                ><span>
+                  <codx-label name="StepsApprover" default="Quy trình duyệt"></codx-label>
+                </span>
               </div>
             </a>
             <ng-template ngbNavContent>
-              <codx-view-approval-step [transID]="transID" [approveStatus]="approveStatus">
-              </codx-view-approval-step>
+              <ng-container>
+                <codx-view-approval-step
+                  [transID]="transID"
+                  [approveStatus]="approveStatus"
+                >
+                </codx-view-approval-step>
+              </ng-container>
             </ng-template>
           </li>
         </ng-container>
@@ -107,3 +216,4 @@
       <div [ngbNavOutlet]="nav" class="pt-5"></div>
     </div>
   </ng-template>
+</codx-detail-tmp>

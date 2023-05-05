@@ -317,6 +317,8 @@ export class CodxAdService {
     );
   }
 
+  //#region Module
+
   //get lst bought module
   getLstBoughtModule() {
     return this.api.execSv(
@@ -325,6 +327,17 @@ export class CodxAdService {
       'UsersBusiness',
       'GetListBoughtModuleAsync',
       ''
+    );
+  }
+
+  //1 = trial - 2 = hire - 0 = extend
+  buyNewModule(moduleSales: string, mode: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'BuyNewModuleAsync',
+      [moduleSales, mode]
     );
   }
 
@@ -347,6 +360,9 @@ export class CodxAdService {
       ''
     );
   }
+
+  //#endregion
+
   sendMail(userID, tenant, mailType) {
     return this.api.execSv<any>(
       'SYS',

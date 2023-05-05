@@ -99,7 +99,6 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.cache.gridViewSetup('EDayOffs', 'grvEDayOffs').subscribe((res) => {
       if (res) {
         this.grvSetup = res;
-        console.log(this.grvSetup)
       }
     });
     this.cache
@@ -213,11 +212,9 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   dateCompare(beginDate, endDate) {
     if (beginDate && endDate) {
-      let date1 = moment(beginDate).format('dd-MM-yyyy');
-      let date2 = moment(endDate).format('dd-MM-yyyy');
-
-      //return beginDate.getDate() < endDate.getDate();
-      return date1 < date2;
+      let date1 = new Date(beginDate);
+      let date2 = new Date(endDate);
+      return date1 <=date2;
     }
     return false;
   }
@@ -371,7 +368,6 @@ export class EmployeeDayOffComponent extends UIComponent {
                 + this.itemDetail.decisionNo + '</div>'
             )
             .subscribe((result) => {
-              // console.log('ok', result);
               if (result?.msgCodeError == null && result?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
@@ -379,7 +375,6 @@ export class EmployeeDayOffComponent extends UIComponent {
                 this.hrService
                   .UpdateEmployeeDayOffInfo((res) => {
                     if (res) {
-                      // console.log('after release', res);
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();
