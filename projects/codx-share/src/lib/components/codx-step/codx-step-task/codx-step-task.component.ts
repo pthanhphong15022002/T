@@ -8,6 +8,7 @@ import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component'
 import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
+import { DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'codx-step-task',
@@ -38,8 +39,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   isRoleAll = false;
-  listTypeTask = [];
-  taskList = [];
+  listTaskType = [];
+  listTask = [];
   taskGroupList = [];
   grvMoreFunction: FormModel;
 
@@ -60,7 +61,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-  
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
   ) {
@@ -72,7 +72,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.grvMoreFunction = await this.getFormModel('DPT040102');
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
-        this.listTypeTask = res?.datas;
+        this.listTaskType = res?.datas;
       }
     });
     this.frmModelInstancesGroup = {
@@ -157,7 +157,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
       this.taskGroupList.push(taskGroup);
     }
-    this.taskList = this.currentStep['tasks'];
+    this.listTask = this.currentStep['tasks'];
   }
 
   toggleTask(e, idGroup) {
@@ -188,11 +188,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTaskType?.find((x) => x.value === task.taskType);
     return color?.icon;
   }
   getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTaskType?.find((x) => x.value === task.taskType);
     return { 'background-color': color?.color };
   }
 
@@ -208,7 +208,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
     } else {
-      this.taskList?.forEach((taskItem) => {
+      this.listTask?.forEach((taskItem) => {
         if (taskItem['parentID']?.includes(task['refID'])) {
           check = 'text-orange';
         }
@@ -380,7 +380,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  clickMFTask(e: any, taskList?: any, task?: any) {
+  clickMFTask(e: any, groupTask: any, task?: any) {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteTask(task);
@@ -389,8 +389,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.editTask(task);
         break;
       case 'SYS04': //copy
-        // this.copyTask(task);
-        this.addTask();
+        this.copyTask(task);
+        // this.addTask(groupTask);
         break;
       case 'DP07': // view
         this.viewTask(task);
@@ -432,37 +432,55 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async chooseTypeTask() {
     let popupTypeTask = this.callfc.openForm(CodxTypeTaskComponent, '', 400, 400);
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
-    if (dataOutput?.event && dataOutput?.event?.value) {
-      this.taskType = dataOutput?.event;      
-    }
     return dataOutput?.event?.value ? dataOutput?.event : null;
   }
 
-  async addTask(){
+  async addTask(groupID){
     this.taskType = await this.chooseTypeTask();
+    let task = new DP_Instances_Steps_Tasks();
+    task['taskType'] = this.taskType;
+    task['stepID'] = this.currentStep?.recID;
+    task['progress'] = 0;
+    task['taskGroupID'] = groupID || null;
+    task['refID'] = Util.uid();
+    task['isTaskDefault'] = false;
+
+    let taskOutput = await this.openPopupTask('add',task);
+    console.log(taskOutput);
+    
   }
 
-  editTask(task){
-
+  async editTask(task){
+    if(task){
+      let taskEdit = JSON.parse(JSON.stringify(task));
+      this.taskType = this.listTaskType.find(type => type.value == taskEdit?.taskType)
+      let taskOutput = await this.openPopupTask('edit',taskEdit);
+    }
   }
   
-  copyTask(task){
-
+  async copyTask(task){
+    if(task){
+      let taskCopy = JSON.parse(JSON.stringify(task));
+      taskCopy.recID = Util.uid();
+      taskCopy.refID = Util.uid();
+      task['isTaskDefault'] = false;
+      this.taskType = this.listTaskType.find(type => type.value == taskCopy?.taskType)
+      let taskOutput = await this.openPopupTask('copy',taskCopy);
+    }
   }
    
   deleteTask(task){
 
   }
 
-  async openPopupTask(action, dataTask?, groupTaskID?) {
+  async openPopupTask(action, dataTask) {
     let dataInput = {
       action,
-      groupTaskID: groupTaskID || null,
       taskType: this.taskType,
       step: this.currentStep,
       listGroup: this.taskGroupList,
       dataTask: dataTask || {},
-      taskList: this.taskList,
+      listTask: this.listTask,
       isEditTimeDefault:this.currentStep?.leadtimeControl,
     };
     let frmModel: FormModel = {
