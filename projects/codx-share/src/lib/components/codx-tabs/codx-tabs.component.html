@@ -70,7 +70,7 @@
         [isTab]="true"
         [hideDelete]="isEdit ? 0 : 1"
         [hideMoreF]="isEdit ? 1 : 0"
-        [referType]="!referType ? 'attach':referType"
+        [referType]="!referType ? 'attach' : referType"
         [addPermissions]="addPermissions"
         [isReferType]="true"
       >
@@ -123,11 +123,18 @@
     </ng-container>
     <ng-container *ngSwitchCase="'approve'">
       <ng-container>
-        <codx-view-approval-step [transID]="transID" [approveStatus]="approveStatus">
+        <codx-view-approval-step
+          [transID]="transID"
+          [approveStatus]="approveStatus"
+        >
         </codx-view-approval-step>
       </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'quotations'">
+      <!-- <ng-container
+        [ngTemplateOutlet]="tab.template"
+        [ngTemplateOutletContext]="{}"
+      ></ng-container> -->
       <ng-container>
         <codx-quotations [funcID]="funcIDQuotations" [customerID]="customerID">
         </codx-quotations>

@@ -219,7 +219,8 @@
           </div>
         </ng-container>
       </div>
-      <div class="w-100"><ng-template #calendar_setting></ng-template></div>
+      <!-- <div class="w-100"><ng-template #calendar_setting></ng-template></div> -->
+      <div class="w-100"><lib-calendar-center #calendarCenter [resources]="resource" [resourceModel]="dataResourceModel"></lib-calendar-center></div>
     </div>
   </div>
 </ng-template>
