@@ -1,13 +1,11 @@
 <div (click)="countResource > 0 && openViewPopup ? openPopup() : ''">
   <div
-    class="d-flex align-items-center {{
-      countResource > 0 ? 'text-success' : 'text-gray-600'
-    }}"
+    class="d-flex align-items-center"
   >
     <div class="me-1">
-      <span
-        class="icon-person_outline icon-18"
-      ></span>
+      <i
+        class="text-hover-primary icon-i-clipboard-check icon-18 cursor-pointer text-gray-400"
+      ></i>
     </div>
     <div>{{ countResource }}</div>
   </div>
@@ -17,8 +15,8 @@
     <div class="d-flex justify-content-between">
       <div class="fw-bold mt-2">
         <codx-label
-          name="AssignmentList"
-          formName="Tasks"
+          [formModel]="formModel"
+          name="lblAssign"
           default="Danh sách phân công cho"
         ></codx-label>
         <span class="">{{ "(" + countResource + ")" }}</span>

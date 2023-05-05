@@ -146,8 +146,8 @@
         ></codx-comment-temp>
 
         <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-check_box icon-18 text-gray-600"></span>
-          <span
+          <span class="icon-i-check2-square icon-18 text-gray-400"></span>
+          <span *ngIf="data?.todo > 0"
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
             >{{ data?.todo }}</span
           >
