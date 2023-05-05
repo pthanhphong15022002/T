@@ -120,54 +120,6 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        CodxAcComponent,
-        LayoutComponent,
-        CashPaymentsComponent,
-        PopAddCashComponent,
-        JournalsComponent,
-        CashTransfersComponent,
-        PopupAddCashTransferComponent,
-        CashReceiptsComponent,
-        PopAddReceiptsComponent,
-        PurchaseinvoicesComponent,
-        PopAddPurchaseComponent,
-        PopupAddJournalComponent,
-        DropdownDetailComponent,
-        PopupSetupInvoiceComponent,
-        PopAddLineComponent,
-        SingleSelectPopupComponent,
-        CustomizedMultiSelectPopupComponent,
-        VoucherComponent,
-        PopAddLinecashComponent,
-        PopAddLinereceiptsComponent,
-        DashboardComponent,
-        PeriodicComponent,
-        SalesInvoicesComponent,
-        PopupAddSalesInvoiceComponent,
-        PopupAddSalesInvoicesLineComponent,
-        SearchingComponent,
-        TableLineDetailComponent,
-        ReportsComponent,
-        ApprovalsComponent
-    ],
-    exports: [RouterModule],
-    providers: [AccumulationTooltipService],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [
-        RouterModule.forChild(routes),
-        CodxCoreModule,
-        CodxShareModule,
-        CommonModule,
-        FormsModule,
-        TabModule,
-        NgbModule,
-        CodxReportModule,
-        FormsModule,
-        NameByIdPipe,
-        DragDropModule,
-        CoreModule
-    ]
   declarations: [
     CodxAcComponent,
     LayoutComponent,
@@ -197,7 +149,9 @@ export const routes: Routes = [
     SearchingComponent,
     TableLineDetailComponent,
     ReceiptTransactionComponent,
-    PopAddReceiptTransactionComponent
+    PopAddReceiptTransactionComponent,
+    ReportsComponent,
+    ApprovalsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
