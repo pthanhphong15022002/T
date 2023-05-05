@@ -11,9 +11,11 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   RequestOption,
@@ -26,6 +28,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
 } from '../../models/cm_model';
+import { PopupAddQuotationsLinesComponent } from '../../quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',
@@ -67,6 +70,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetector: ChangeDetectorRef,
+    private callFc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -165,7 +169,29 @@ export class PopupAddQuotationsComponent implements OnInit {
     data.read = true;
     data.rowNo = idx + 1;
     data.transID = this.quotations?.recID;
-    this.gridQuationsLines.addRow(data, idx);
+    // this.gridQuationsLines.addRow(data, idx);  //add row gridview
+    var obj = {
+      headerText: 'Thêm sản phẩm báo giá',
+      quotationsLine: data,
+    };
+    let opt = new DialogModel();
+    opt.zIndex=1000;
+    let dataModel = new FormModel();
+    opt.FormModel = dataModel;
+
+    let dialogQuotations = this.callFc.openForm(
+      PopupAddQuotationsLinesComponent,
+      '',
+      650,
+      570,
+      '',
+      obj,
+      '',
+      opt
+    );
+    dialogQuotations.closed.subscribe((res) => {
+      //lam gi day
+    });
   }
 
   quotionsLineChanged(e) {

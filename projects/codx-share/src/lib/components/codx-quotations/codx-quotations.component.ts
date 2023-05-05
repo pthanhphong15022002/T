@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   CallFuncService,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -20,6 +21,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-quotations',
@@ -34,12 +36,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   entityName = 'CM_Quotations';
   className = 'QuotationsBusiness';
   methodLoadData = 'GetListQuotationsAsync';
-
   @ViewChild('itemViewList') itemViewList?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   //test
-  formModel: FormModel;
   moreDefaut = {
     share: true,
     write: true,
@@ -49,6 +49,14 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   };
   grvSetup: any;
   vllStatus = '';
+  formModel: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    funcID: 'CM0202',
+  };
+  customerIDCrr =''
+  requestData = new DataRequest();
+  listQuotations = [] ;
 
   constructor(
     private inject: Injector,
@@ -67,7 +75,14 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['customerID']) {
+      if (changes['customerID'].currentValue === this.customerIDCrr) return;
+      this.customerIDCrr = changes['customerID'].currentValue;
+      //this.getQuotations();
+    }
+  }
+
   onInit(): void {}
 
   ngAfterViewInit() {
@@ -75,23 +90,44 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       {
         type: ViewType.list,
         active: true,
-        sameData: true, //true, fasle để test
+        sameData: true, 
         model: {
           template: this.itemViewList,
-          // template2: this.templateMore,
         },
       },
-      // {
-      //   type: ViewType.grid,
-      //   active: true,
-      //   sameData: true,
-      //   model: {
-      //     template2: this.templateMore,
-      //     frozenColumns: 1,
-      //   },
-      // },
     ];
   }
+  getQuotations(){
+    this.requestData.predicates = 'CustomerID==@0';
+    this.requestData.dataValues= this.customerIDCrr;
+    this.requestData.entityName = this.entityName;
+    this.requestData.funcID = this.funcID;
+    this.fetch().subscribe(res=>{
+      this.listQuotations = res ;
+     // this.view.dataService.data = this.listQuotations
+    })
+  }
+
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.requestData
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+ 
   changeItemDetail(e) {}
 
   changeDataMF(e, data) {}
@@ -152,7 +188,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
       var obj = {
         data: this.view.dataService.dataSelected,
         action: 'edit',
-        headerText:e.text,
+        headerText: e.text,
       };
       let option = new DialogModel();
       option.IsFull = true;
@@ -172,10 +208,10 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
   }
 
   copy(e, data) {
-    if(data){
+    if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.copy(data).subscribe(res=>{
+    this.view.dataService.copy(data).subscribe((res) => {
       var obj = {
         data: res,
         action: 'copy',
@@ -222,7 +258,7 @@ export class CodxQuotationsComponent extends UIComponent implements OnChanges {
 
   getIndex(recID) {
     return (
-      this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
+       this.view.dataService.data.findIndex((obj) => obj.recID == recID) + 1
     );
   }
 }
