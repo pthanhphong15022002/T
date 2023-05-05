@@ -158,12 +158,12 @@ export class ActiviesSliderComponent implements OnInit {
         });
     }
   }
-
-  setStyles(data) 
-  {
+  setStyles(value){
+    let vll = this.datas.find(x => x.value === value);
+    if(!vll) vll = this.datas.find(x => x.value === "");
     let styles = {
-      backgroundColor: data ? data : '#1E8449',
-      color: 'white',
+      backgroundColor: vll.color ,
+      color: vll.textColor,
     };
     return styles;
   }
