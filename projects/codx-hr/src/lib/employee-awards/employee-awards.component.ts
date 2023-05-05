@@ -1,5 +1,4 @@
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { data } from './../../../../codx-cm/src/lib/task/codx-table/data';
 import {
   ChangeDetectorRef,
   Component,

@@ -205,6 +205,7 @@ export class CashPaymentsComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.isFull = true;
+        option.Type = 'Push';
         this.dialog = this.callfunc.openSide(
           PopAddCashComponent,
           obj,

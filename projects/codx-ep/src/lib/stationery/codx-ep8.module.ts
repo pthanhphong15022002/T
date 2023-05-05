@@ -20,9 +20,6 @@ import { BookingStationeryComponent } from './booking/booking-stationery.compone
 import { PopupRequestStationeryComponent } from './booking/popup-request-stationery/popup-request-stationery.component';
 import { BookingStationeryViewDetailComponent } from './booking/view-detail/view-detail.component';
 import { StationeryCategoryComponent } from './category/category.component';
-import { PopupAddQuotaComponent } from './category/popup-add-quota/popup-add-quota.component';
-import { PopupAddStationeryComponent } from './category/popup-add-stationery/popup-add-stationery.component';
-import { PopupUpdateQuantityComponent } from './category/popup-update-quantity/popup-update-quantity.component';
 import { Layout8Component } from './_layout8/layout8.component';
 import { ReportComponent } from './report/report.component';
 
@@ -71,9 +68,9 @@ const Components: Type<any>[] = [
   BookingStationeryComponent,
   ApprovalStationeryComponent,
   StationeryCategoryComponent,
-  PopupAddStationeryComponent,
-  PopupUpdateQuantityComponent,
-  PopupAddQuotaComponent,
+  //PopupAddStationeryComponent,
+  //PopupUpdateQuantityComponent,
+  //PopupAddQuotaComponent,
   PopupRequestStationeryComponent,
   BookingStationeryViewDetailComponent,
   ApprovalStationeryViewDetailComponent,

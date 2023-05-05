@@ -5,8 +5,9 @@
     <div class="d-flex justify-content-center">
       <div class="w-250px me-5">
         <ejs-calendar
-          #calendar_mini
+          #ejCalendar
           [firstDayOfWeek]="1"
+          (created)="onCreate()"
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
@@ -218,7 +219,8 @@
           </div>
         </ng-container>
       </div>
-      <div class="w-100"><ng-template #calendar_setting></ng-template></div>
+      <!-- <div class="w-100"><ng-template #calendar_setting></ng-template></div> -->
+      <div class="w-100"><lib-calendar-center #calendarCenter [resources]="resource" [resourceModel]="dataResourceModel"></lib-calendar-center></div>
     </div>
   </div>
 </ng-template>

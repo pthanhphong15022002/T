@@ -563,10 +563,10 @@ implements OnInit, AfterViewInit {
   viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
       var resourceTaskControl = [];
-      var arrayResource = data?.resources;
+      var arrayResource = data?.permissions;
       if (arrayResource && arrayResource.length > 0) {
         arrayResource.forEach((res) => {
-          if (res.taskControl) resourceTaskControl.push(res.resourceID);
+          if (res.taskControl) resourceTaskControl.push(res.objectID);
         });
       }
       var resources =
