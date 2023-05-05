@@ -5,7 +5,7 @@
     <i class="icon-directions_car me-1"></i>
     <codx-label name="lblCar" default="Loại xe" class="fw-bold text-break"></codx-label>
     <span class="me-1 fw-bold">:</span>
-    <span class="">
+    <span class="text-gray-800">
       {{ data?.resourceName }}
     </span>
   </div>
@@ -14,7 +14,7 @@
     <codx-label name="lblDriver" default="Tài xế" class="fw-bold text-break"></codx-label>
     <span class="me-1 fw-bold">:</span>
     <span *ngIf="data?.driverName != '' && data?.driverName != null">
-      <span class="">
+      <span class="text-gray-800">
         {{ data?.driverName }}
       </span>
     </span>
@@ -24,7 +24,7 @@
     <span *ngIf="data?.driverName == null">
       <codx-label
         default="Không có tài xế"
-        class=""
+        class="text-gray-800"
         name="lblUnavailableDriver"
       ></codx-label>
     </span>
@@ -33,7 +33,7 @@
   <hr />
   <div class="d-flex flex-grow-1 mb-2">
     <i class="icon-person me-1"></i>
-    <span class="ms-1 fw-bold text-break">
+    <span class="ms-1 text-break">
       {{ data?.requester }}
     </span>
   </div>
@@ -42,21 +42,21 @@
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="ms-1 fw-bold">
+        <span class="ms-1 ">
           {{ data?.startDate | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
-        <span class="fw-bold">
+        <span class="">
           {{ showHour(data?.startDate) }}
         </span>
         <span
           *ngIf="data?.startDate && data?.endDate"
-          class="fw-bold ms-1 me-1"
+          class=" ms-1 me-1"
           >{{ "-" }}</span
         >
-        <span class="fw-bold">
+        <span class="">
           {{ showHour(data?.endDate) }}
         </span>
       </div>
@@ -66,13 +66,13 @@
     <div class="d-flex mt-1 w-100">
       <div class="d-flex align-items-center me-4">
         <i class="icon-calendar_today icon-16 me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.startDate | fmDT : "dmy" : true }}
         </span>
       </div>
       <div class="d-flex align-items-center">
         <i class="icon-calendar_today icon-16 me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.endDate | fmDT : "dmy" : true }}
         </span>
       </div>
@@ -81,31 +81,30 @@
   
   <hr />
   <div class="d-flex flex-grow-1 mb-1 me-6">
-    <codx-label name="lblReason" default="Mục tiêu sử dụng" class="text-gray-600 text-nowrap"></codx-label>
-    <span class="me-2 text-gray-600">:</span>
-    <span class="text-gray-600 text-break">
+    <codx-label name="lblReason" default="Mục tiêu sử dụng" class="fw-bold text-nowrap"></codx-label>
+    <span class="me-2 fw-bold">:</span>
+    <span class="text-gray-800 text-break">
       {{ data?.reasonID }}
     </span>
   </div>
   
   <div class="d-flex mt-1 flex-grow-1 mb-1 me-6">
-    <codx-label name="lblAgencyName" default="Tên đơn vị" class="text-gray-600 text-nowrap"></codx-label>
-    <span class="me-2 text-gray-600">:</span>
-    <span class="text-gray-600 text-break">
+    <codx-label name="lblAgencyName" default="Tên đơn vị" class="fw-bold text-nowrap"></codx-label>
+    <span class="me-2 fw-bold">:</span>
+    <span class="text-gray-800 text-break">
       {{ data?.agencyName }}
     </span>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-1 me-6">
-    <codx-label name="lblAddress" default="Địa chỉ" class="text-gray-600 text-nowrap"></codx-label>
-    <span class="me-2 text-gray-600">:</span>
-    <span class="text-gray-600 text-break">
+    <codx-label name="lblAddress" default="Địa chỉ" class="fw-bold text-nowrap"></codx-label>
+    <span class="me-2 fw-bold">:</span>
+    <span class="text-gray-800 text-break">
       {{ data?.address }}
     </span>
   </div>
 
   <div class="d-flex text-dark me-6">
-    <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
     <div class="d-flex justify-content-end">
       <codx-imgs
         [objectId]="data?.bookingAttendees"

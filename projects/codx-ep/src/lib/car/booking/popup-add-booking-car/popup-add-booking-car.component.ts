@@ -189,32 +189,32 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.optionalData == null
       ) {
         //Lấy list Thiết bị
-        this.codxEpService.getResourceEquipments(this.data?.resourceID).subscribe((eq:any)=>{
-          if(eq!=null){
-            Array.from(eq).forEach((e:any)=>{
-              let tmpDevice = new Device();
-              tmpDevice.id = e.equipmentID;
-              tmpDevice.isSelected=false;
-              this.lstDeviceCar.forEach((vlDevice) => {
-                if (tmpDevice.id == vlDevice.id) {
-                  tmpDevice.text = vlDevice.text;
-                  tmpDevice.icon = vlDevice.icon;
-                }
-              });
-              if(this.data.equipments && this.data.equipments.length>0){
-                this.data.equipments.forEach(element => {
-                  if(element.equipmentID==tmpDevice.id){
-                    tmpDevice.isSelected=true;
-                    tmpDevice.createdBy=element.createdBy;
-                    tmpDevice.createdOn=element.createdOn;
-                  }
-                });
-              }
-              this.tmplstDeviceEdit.push(tmpDevice);
-            })
-          }
+        // this.codxEpService.getResourceEquipments(this.data?.resourceID).subscribe((eq:any)=>{
+        //   if(eq!=null){
+        //     Array.from(eq).forEach((e:any)=>{
+        //       let tmpDevice = new Device();
+        //       tmpDevice.id = e.equipmentID;
+        //       tmpDevice.isSelected=false;
+        //       this.lstDeviceCar.forEach((vlDevice) => {
+        //         if (tmpDevice.id == vlDevice.id) {
+        //           tmpDevice.text = vlDevice.text;
+        //           tmpDevice.icon = vlDevice.icon;
+        //         }
+        //       });
+        //       if(this.data.equipments && this.data.equipments.length>0){
+        //         this.data.equipments.forEach(element => {
+        //           if(element.equipmentID==tmpDevice.id){
+        //             tmpDevice.isSelected=true;
+        //             tmpDevice.createdBy=element.createdBy;
+        //             tmpDevice.createdOn=element.createdOn;
+        //           }
+        //         });
+        //       }
+        //       this.tmplstDeviceEdit.push(tmpDevice);
+        //     })
+        //   }
           
-        })
+        // })
       }
       if (this.isCopy) {
         if (this.data.equipments) {

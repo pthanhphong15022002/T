@@ -8,9 +8,6 @@ import {
   FormModel,
   SidebarModel,
 } from 'codx-core';
-import { PopupTypeTaskComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
-import { PopupAddQuotationsComponent } from '../quotations/popup-add-quotations/popup-add-quotations.component';
-import { PopupTaskComponent } from '../task/popup-task/popup-task.component';
 import { QuotationsComponent } from '../quotations/quotations.component';
 
 @Component({
