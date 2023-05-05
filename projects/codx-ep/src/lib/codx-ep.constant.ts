@@ -108,8 +108,13 @@ export const EPCONST = {
   },
 
   VLL: {
-    OKRType: {
-      
+    ResourceType: {
+      Room:'1',
+      Car:'2',
+      Driver:'3',
+      EpCard:'4',
+      Stationery:'6',
+
     },
 
     

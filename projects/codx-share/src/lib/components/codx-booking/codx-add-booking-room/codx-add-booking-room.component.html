@@ -18,7 +18,7 @@
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
             (valueChange)="valueStartTimeChange($event)" [disabled]="false">
-          </codx-input> 
+          </codx-input>
         </div>
 
         <div class="col-3 form-group" *ngIf="grView?.endDate?.allowPopup">
@@ -134,7 +134,7 @@
           <div class="d-flex flex-row text-end align-items-end">
 
             <div class="mx-2">
-              <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources"
+              <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"
                 [dataShared]="[]" [multiple]="true" [showInput]="false">
               </codx-input>
             </div>
@@ -210,7 +210,7 @@
         <div class="d-flex flex-row text-end align-items-end">
 
           <div class="mx-2">
-            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources"
+            <codx-input type="Share" refValue="TM003" (valueChange)="shareInputChange($event)" field="resources"
               [dataShared]="[]" [multiple]="true" [showInput]="false">
             </codx-input>
           </div>
@@ -262,7 +262,8 @@
           *ngIf="item?.roleType!='1' && item?.userID!=curUser?.userID">
           <span class="icon-close" role="button" (click)="deleteAttender(item?.userID)"></span>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item?.roleType=='1' || item?.userID==curUser?.userID">
+        <div class="d-flex flex-column justify-content-center align-items-center me-5"
+          *ngIf="item?.roleType=='1' || item?.userID==curUser?.userID">
           <span class="icon-close" style="visibility:hidden"></span>
         </div>
 
@@ -412,23 +413,20 @@
             <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng">
             </codx-label>
           </div>
-
         </div>
         <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close" (click)="dialog.close()">
           <span class="icon-close icon-18"></span>
         </button>
       </div>
     </div>
-    <div class="modal-body p-5 pt-0" *ngIf="tmplstDevice != null">
-      <div class="mb-1" *ngFor="let item of tmplstDevice">
+    <div class="modal-body pt-0 overflow-auto h-300px" *ngIf="tmplstDevice != null">
+      <div class="mb-1 px-5" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack py-3 rounded-2 bg-hover">
           <div class="d-flex">
             <span class="me-1 ps-2" [className]="item?.icon"
               [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted']"></span>
             <div class="d-flex flex-column justify-content-center">
-              <span href="#" class="ms-2 text-dark fw-bolder">{{
-                item?.text
-                }}</span>
+              <span class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end align-items-center">

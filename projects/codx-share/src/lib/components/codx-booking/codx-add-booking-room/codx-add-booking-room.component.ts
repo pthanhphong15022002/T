@@ -103,7 +103,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   roomCapacity = 0;
   calendarID: any;
   dueDateControl: any;
-  vllDevices: any;
+  vllDevices=[];
   lstDeviceRoom = [];
   tmplstDeviceEdit = [];
   tmplstDevice = [];
@@ -179,7 +179,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     this.getCacheData();
     this.getCalendateTime();
     this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
+      this.vllDevices = Array.from(res.datas);
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
@@ -359,7 +359,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           }
         });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
-        if (this.funcType == _addMF) {
+        if (this.funcType == _addMF ||this.funcType == _copyMF ) {
           let people = this.authService.userValue;
           let tmpResource = new BookingAttendees();
           tmpResource.userID = people?.userID;
@@ -580,15 +580,15 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  eventApply(e) {
-    var assignTo = '';
-    var listUserIDByOrg = '';
-    var listDepartmentID = '';
-    var listUserID = '';
-    var listPositionID = '';
-    var listEmployeeID = '';
-    var listGroupMembersID = '';
-    var type = 'U';
+  shareInputChange(e) {
+    let assignTo = '';
+    let listUserIDByOrg = '';
+    let listDepartmentID = '';
+    let listUserID = '';
+    let listPositionID = '';
+    let listEmployeeID = '';
+    let listGroupMembersID = '';
+    let type = 'U';
     if (e == null) return;
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -670,7 +670,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         });
     }
   }
-
   valueUser(resourceID) {
     if (resourceID != '') {
       if (this.resources != null) {
@@ -688,7 +687,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             if (!id.split(';').includes(element)) arrayNew.push(element);
           });
         }
-        if (arrayNew.length >= 0) {
+        if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
           this.getListUser(resourceID);
@@ -723,9 +722,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               tmpResource.userName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = '1';
-              tmpResource.quantity = 1;
               tmpResource.optional = false;
-
               this.listRoles.forEach((element) => {
                 if (element.value == tmpResource.roleType) {
                   tmpResource.icon = element.icon;
@@ -754,9 +751,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             }
           });
           this.resources = this.filterArray(this.resources);
-          this.attendeesNumber =
-            this.resources.length + this.guestNumber;
-          this.changeDetectorRef.detectChanges();
+          this.data.attendees = this.resources.length + 1;
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -984,7 +980,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.data.owner = item?.userID;
         }
       });
-      this.tmpAttendeesList.push(this.curUser);
 
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
@@ -1437,7 +1432,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   openPopupDevice(template: any) {
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 400);
+    this.detectorRef.detectChanges();
   }
 
   openPopupLink() {

@@ -308,6 +308,7 @@ export class RoleDetailComponent
         roleID,
         pers,
         this.dataFuncRole,
+        this.dataReport,
       ])
       .subscribe((res) => {
         t.dataFuncRole = {};
