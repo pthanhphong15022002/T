@@ -98,4 +98,5 @@ export interface ISalesInvoice {
   postedBy: string;
   modifiedOn: string | null;
   modifiedBy: string;
+  objectName: string;
 }

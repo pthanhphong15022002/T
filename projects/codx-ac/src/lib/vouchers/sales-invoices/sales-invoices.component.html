@@ -40,12 +40,8 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div
-    class="fs-6 fw-bold mt-1"
-    [innerHTML]="
-      data?.objectID | formatvalue : view.formModel : 'objectID' | async
-    "
-  >
+  <div class="fs-6 fw-bold mt-1">
+    {{ data.objectName }}
   </div>
 </ng-template>
 
@@ -55,9 +51,7 @@
 
 <ng-template #titleTmp let-data>
   <span class="fw-bold">{{ data.voucherNo }}</span>
-  <span class="fw-bold">{{
-    data.totalAmt | currency : "VND" : "code"
-  }}</span>
+  <span class="fw-bold">{{ data.totalAmt | currency : "VND" : "code" }}</span>
 </ng-template>
 
 <ng-template #siderFooter let-data>
@@ -110,14 +104,15 @@
 
 <ng-template #header>
   <div class="d-flex align-items-center ac-cashID mt-n8">
-    <div class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3">
+    <div
+      class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-3"
+    >
       <i class="icon-i-file-earmark-text text-white icon-16"></i>
     </div>
     <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase">
       {{ selectedData?.voucherNo }}
     </span>
   </div>
-
 
   <div class="d-flex align-items-center justify-content-between mt-3 mb-2">
     <span
@@ -151,8 +146,7 @@
           fiedName="voucherDate"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
-        ></codx-label
-        >
+        ></codx-label>
         <span
           class="text-gray-600"
           [innerHTML]="
@@ -168,8 +162,7 @@
           fiedName="pmtMethodID"
           [formModel]="view.formModel"
           class="fw-bold label-colon"
-        ></codx-label
-        >
+        ></codx-label>
         <span
           [innerHTML]="
             selectedData.pmtMethodID
@@ -195,8 +188,7 @@
         fiedName="pmtTermID"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
-      ></codx-label
-      >
+      ></codx-label>
       <span
         class="text-gray-600"
         [innerHTML]="
@@ -212,8 +204,7 @@
         fiedName="invoiceDueDate"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
-      ></codx-label
-      >
+      ></codx-label>
       <span
         [innerHTML]="
           selectedData.invoiceDueDate
@@ -232,8 +223,7 @@
         fiedName="contractNo"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
-      ></codx-label
-      >
+      ></codx-label>
       <span
         class="text-gray-600"
         [innerHTML]="
@@ -250,8 +240,7 @@
         fiedName="salespersonID"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
-      ></codx-label
-      >
+      ></codx-label>
       <span
         [innerHTML]="
           selectedData?.salespersonID
@@ -268,8 +257,7 @@
         fiedName="warehouse"
         [formModel]="view.formModel"
         class="fw-bold label-colon"
-      ></codx-label
-      >
+      ></codx-label>
       <span
         [innerHTML]="
           selectedData.warehouse
@@ -287,8 +275,7 @@
       fiedName="memo"
       [formModel]="view.formModel"
       class="fw-bold label-colon"
-    ></codx-label
-    >
+    ></codx-label>
     <span
       [innerHTML]="
         selectedData?.memo | formatvalue : view.formModel : 'memo' | async

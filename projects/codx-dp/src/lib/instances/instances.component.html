@@ -26,7 +26,7 @@
     cardCss="border h-100"
     [hideMF]="hideMoreFC"
     (clickMF)="clickMF($event, data)"
-    cardCss="card-template border-bottom pt-3"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
     [titleTmp]="cardTitleTmp"
     [formModel]="view.formModel"
@@ -49,10 +49,11 @@
       <span
         [ngClass]="getPropertiesHeader(data, 'icon')"
         [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
-        class="icon-16"
+        style="font-size: 18px"
+        class="me-3"
       >
       </span>
-      <span class="fs-6" [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
+      <span [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }">
         {{ data.headerText }}
       </span>
     </div>
@@ -278,12 +279,12 @@
                     ? colorReasonFail?.color
                     : item['backgroundColor']
               }"
-              class="me-2 badge badge-md d-flex align-items-center"
+              class="me-2 badge badge-primary"
             >
               <span
                 [ngClass]="item['icon']"
                 [ngStyle]="{ color: item['iconColor'] }"
-                class="me-1 icon-14"
+                class="me-2"
               ></span>
               <span [ngStyle]="{ color: item['textColor'] }">{{
                 item.stepName
