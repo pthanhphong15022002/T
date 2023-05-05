@@ -125,6 +125,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   idUserSelected: any;
   popover: any;
   listUserID = [];  
+  guestControl: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -335,6 +336,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         if (res) {
           let roomSetting_1 = JSON.parse(res);
           this.dueDateControl = roomSetting_1?.DueDateControl;
+          this.guestControl = roomSetting_1?.GuestControl;
         }
       });
     this.codxBookingService
