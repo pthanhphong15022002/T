@@ -32,6 +32,7 @@ const _addMF = 'SYS01';
 const _editMF = 'SYS03';
 const _EPParameters = 'EPParameters';
 const _EPRoomParameters = 'EPRoomParameters';
+
 export class Device {
   id;
   text = '';
@@ -60,10 +61,16 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   formModel: FormModel;
   funcID: string;
   user: any;
-  attendeesNumber=0;
+  attendeesNumber = 0;
   startTime: string;
   endTime: string;
   listUM = [];
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  ];
   grView: any;
   cbbResource = [];
   fields: Object = { text: 'resourceName', value: 'resourceID' };
@@ -99,11 +106,11 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   listRoles = [];
   curUser: any;
   resources = [];
-  guestNumber=0;
+  guestNumber = 0;
   roomCapacity = 0;
   calendarID: any;
   dueDateControl: any;
-  vllDevices=[];
+  vllDevices = [];
   lstDeviceRoom = [];
   tmplstDeviceEdit = [];
   tmplstDevice = [];
@@ -124,7 +131,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   isPopupStationeryCbb: boolean;
   idUserSelected: any;
   popover: any;
-  listUserID = [];  
+  listUserID = [];
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -359,7 +366,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           }
         });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
-        if (this.funcType == _addMF ||this.funcType == _copyMF ) {
+        if (this.funcType == _addMF || this.funcType == _copyMF) {
           let people = this.authService.userValue;
           let tmpResource = new BookingAttendees();
           tmpResource.userID = people?.userID;
@@ -374,7 +381,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               tmpResource.roleName = element?.text;
             }
           });
-          this.curUser=tmpResource;
+          this.curUser = tmpResource;
           this.resources.push(tmpResource);
           this.changeDetectorRef.detectChanges();
         } else {
@@ -444,7 +451,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               });
           }
         }
-      });    
+      });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
