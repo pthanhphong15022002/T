@@ -1,5 +1,5 @@
 import { Component, Injector, ViewChild } from '@angular/core';
-import { ButtonModel, DialogModel, LayoutService, PageTitleService, UIComponent, ViewModel, ViewReportDesignerComponent, ViewsComponent, ViewType } from 'codx-core';
+import { ButtonModel, CacheService, DialogModel, LayoutService, PageTitleService, UIComponent, ViewModel, ViewReportDesignerComponent, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 @Component({
@@ -17,9 +17,11 @@ export class EPReportComponent extends UIComponent {
     id:'btnAdd',
 
   }
+  module:any='';
   constructor(injector: Injector,
     private layout: LayoutService,
-    private pageTitle: PageTitleService,) {
+    private pageTitle: PageTitleService,
+    private cacheSv:CacheService) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -27,6 +29,11 @@ export class EPReportComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit(): void {
+    this.cacheSv.functionList(this.funcID).subscribe((res:any)=>{
+      if(res){
+        this.module = res.module ? res.module.toLowerCase() : '';
+      }
+    })
     this.views = [
       {
         type: ViewType.report,
@@ -42,7 +49,7 @@ export class EPReportComponent extends UIComponent {
 
   onActions(e: any) {
     if (e.type == 'detail') {
-      this.codxService.navigate('', 'ep/report/detail/' + e.data.reportID);
+      this.codxService.navigate('', this.module+'/report/detail/' + e.data.reportID);
     }
   }
   viewChanged(e:any){

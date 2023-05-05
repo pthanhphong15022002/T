@@ -31,6 +31,7 @@ import { PopupUpdateQuantityComponent } from './resources/popup-update-quantity/
 import { PopupAddQuotaComponent } from './resources/popup-add-quota/popup-add-quota.component';
 import { EPBookingComponent } from './booking/ep-booking.component';
 import { EPApprovalComponent } from './approval/ep-approval.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 export const routes: Routes = [
   {
@@ -39,7 +40,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'report/:funcID',
-        component: EPReportComponent,
+        component: CodxReportViewsComponent,
       },
       {
         path: 'report/detail/:funcID',
