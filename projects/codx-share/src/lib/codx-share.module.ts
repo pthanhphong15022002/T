@@ -182,6 +182,7 @@ import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-
 import { CodxAddBookingStationeryComponent } from './components/codx-booking/codx-add-booking-stationery/codx-add-booking-stationery.component';
 import { CodxInviteRoomAttendeesComponent } from './components/codx-booking/codx-invite-room-attendees/codx-invite-room-attendees.component';
 import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/codx-reschedule-booking-room/codx-reschedule-booking-room.component';
+import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -320,8 +321,9 @@ const T_Component: Type<any>[] = [
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,
-
+ //CM+DP
   CodxQuotationsComponent,
+  CodxInputCustomFieldComponent
 ];
 
 const T_Pipe: Type<any>[] = [
