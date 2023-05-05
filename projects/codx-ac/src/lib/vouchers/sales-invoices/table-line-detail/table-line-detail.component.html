@@ -46,7 +46,7 @@
         <td>{{ line.costPrice }}</td>
         <td>{{ line.costAmt }}</td>
         <td>
-          {{ vats | nameById : line.vatid : "VATID" : "TaxRate" }}
+          {{ vats | nameById : "VATID" : "TaxRate" : line.vatid }}
         </td>
         <td>{{ line.vatAmt }}</td>
         <td rowspan="2" *ngIf="hasMF">

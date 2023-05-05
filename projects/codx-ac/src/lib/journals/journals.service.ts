@@ -33,6 +33,9 @@ export class JournalService {
     );
   }
 
+  /** 
+   * If this model.voucherNo already exists, the system will automatically suggest another voucherNo 
+   * @param isEdit A boolean value that indicates whether you are in edit mode*/
   handleVoucherNoAndSave(
     journal: IJournal,
     model: any,
@@ -42,8 +45,6 @@ export class JournalService {
     isEdit: boolean,
     saveFunction
   ): void {
-    // if this voucherNo already exists,
-    // the system will automatically suggest another voucherNo
     if (
       journal.voucherNoRule !== '0' &&
       journal.duplicateVoucherNo === '0' &&
