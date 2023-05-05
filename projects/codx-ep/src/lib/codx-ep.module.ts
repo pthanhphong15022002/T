@@ -5,6 +5,7 @@ import {
   NgModule,
   CUSTOM_ELEMENTS_SCHEMA,
   ModuleWithProviders,
+  Type,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
@@ -19,21 +20,18 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { EPReportComponent } from './report/report.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
-import { BookingStationeryComponent } from './stationery/booking/booking-stationery.component';
-import { ApprovalStationeryComponent } from './stationery/approval/approval-stationery.component';
 import { ReportComponent } from './stationery/report/report.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
-import { StationeryCategoryComponent } from './stationery/category/category.component';
-import { RoomsComponent } from './room/settings/rooms/rooms.component';
-import { BookingRoomComponent } from './room/booking/booking-room.component';
-import { ApprovalRoomsComponent } from './room/approval/approval-room.component';
-import { CarsComponent } from './car/settings/cars/cars.component';
-import { DriversComponent } from './car/settings/drivers/drivers.component';
-import { EpCardsComponent } from './car/settings/epCards/epCards.component';
-import { HistoryCardsComponent } from './car/settings/historyCards/historyCards.component';
-import { BookingCarComponent } from './car/booking/booking-car.component';
-import { ApprovalCarsComponent } from './car/approval/approval-car.component';
 import { CardTransComponent } from './car/cardTran/cardTrans.component';
+import { ResourcesComponent } from './resources/resources.component';
+import { PopupAddResourcesComponent } from './resources/popup-add-resources/popup-add-resources.component';
+import { EPHistoryCardComponent } from './resources/ep-history-card/ep-history-card.component';
+import { PopupAddStationeryComponent } from './resources/popup-add-stationery/popup-add-stationery.component';
+import { PopupUpdateQuantityComponent } from './resources/popup-update-quantity/popup-update-quantity.component';
+import { PopupAddQuotaComponent } from './resources/popup-add-quota/popup-add-quota.component';
+import { EPBookingComponent } from './booking/ep-booking.component';
+import { EPApprovalComponent } from './approval/ep-approval.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 export const routes: Routes = [
   {
@@ -42,7 +40,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'report/:funcID',
-        component: EPReportComponent,
+        component: CodxReportViewsComponent,
       },
       {
         path: 'report/detail/:funcID',
@@ -55,11 +53,11 @@ export const routes: Routes = [
 
       {
         path: 'bookingstationery/:funcID',
-        component: BookingStationeryComponent,
+        component: EPBookingComponent,
       },
       {
         path: 'approvestationery/:funcID',
-        component: ApprovalStationeryComponent,
+        component: EPApprovalComponent,
       },
       {
         path: 'report/:funcID',
@@ -68,26 +66,25 @@ export const routes: Routes = [
 
       {
         path: 'bookingrooms/:funcID',
-        component: BookingRoomComponent,
+        component: EPBookingComponent,
       },
       {
         path: 'approverooms/:funcID',
-        component: ApprovalRoomsComponent,
+        component: EPApprovalComponent,
       },
 
       {
         path: 'bookingcars/:funcID',
-        component: BookingCarComponent,
+        component: EPBookingComponent,
       },
       {
         path: 'approvecars/:funcID',
-        component: ApprovalCarsComponent,
+        component: EPApprovalComponent,
       },
       {
         path: 'cardtrans/:funcID',
         component: CardTransComponent,
       },
-      
     ],
   },
   {
@@ -96,27 +93,27 @@ export const routes: Routes = [
     children: [
       {
         path: 'stationery/:funcID',
-        component: StationeryCategoryComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'rooms/:funcID',
-        component: RoomsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'cars/:funcID',
-        component: CarsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'drivers/:funcID',
-        component: DriversComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'epcards/:funcID',
-        component: EpCardsComponent,
+        component: ResourcesComponent,
       },
       {
         path: 'historycards/:funcID/:id',
-        component: HistoryCardsComponent,
+        component: EPHistoryCardComponent,
       },
     ],
   },
@@ -140,7 +137,18 @@ export const routes: Routes = [
     CodxReportModule,
   ],
   exports: [RouterModule],
-  declarations: [LayoutComponent, EPReportComponent],
+  declarations: [
+    LayoutComponent,
+    EPReportComponent,
+    ResourcesComponent,
+    PopupAddResourcesComponent,
+    EPHistoryCardComponent,
+    PopupAddStationeryComponent,
+    PopupUpdateQuantityComponent,
+    PopupAddQuotaComponent,
+    EPBookingComponent,
+    EPApprovalComponent,
+  ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

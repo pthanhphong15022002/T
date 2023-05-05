@@ -6,7 +6,7 @@ import {
   TemplateRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { UIComponent, ViewModel, ViewType,ViewsComponent } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class CalendarCenterComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
+  @ViewChild('view') viewBase: ViewsComponent;
   @Input() resources!: any;
   @Input() resourceModel!: any;
 
@@ -87,7 +88,7 @@ export class CalendarCenterComponent
 
   updateData(dataSource: any) {
     let myInterval = setInterval(() => {
-      this.calendar_center = (this.view.currentView as any).schedule;
+      this.calendar_center = (this.viewBase?.currentView as any)?.schedule;
       if (this.calendar_center) {
         clearInterval(myInterval);
         this.calendar_center.dataSource = dataSource;
