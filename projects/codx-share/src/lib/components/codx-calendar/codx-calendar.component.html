@@ -5,8 +5,9 @@
     <div class="d-flex justify-content-center">
       <div class="w-250px me-5">
         <ejs-calendar
-          #calendar_mini
+          #ejCalendar
           [firstDayOfWeek]="1"
+          (created)="onCreate()"
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
