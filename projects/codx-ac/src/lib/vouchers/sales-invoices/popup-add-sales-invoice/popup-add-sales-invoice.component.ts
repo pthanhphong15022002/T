@@ -287,25 +287,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
       this.salesInvoicesLines.length
     );
   }
-
-  // dialog mode
-  onDeleteRow(e): void {
-    console.log(e);
-
-    this.salesInvoicesLines = this.salesInvoicesLines.filter(
-      (l) => l.recID !== e.recID
-    );
-  }
-
-  // dialog mode
-  onUpdateRow(e): void {
-    const index = this.salesInvoicesLines.findIndex((l) => l.recID === e.recID);
-    this.salesInvoicesLines[index] = e;
-  }
-
-  onCopyRow(e): void {
-    this.salesInvoicesLines = [...this.salesInvoicesLines, ...e];
-  }
   //#endregion
 
   //#region Method

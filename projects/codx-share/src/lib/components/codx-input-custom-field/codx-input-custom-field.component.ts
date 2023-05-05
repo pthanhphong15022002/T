@@ -1,22 +1,13 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AttachmentComponent } from '../attachment/attachment.component';
 import { CacheService } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { DP_Steps_Fields } from '../../../models/models';
 
 @Component({
-  selector: 'lib-input-custom-field',
-  templateUrl: './input-custom-field.component.html',
-  styleUrls: ['./input-custom-field.component.css'],
+  selector: 'codx-input-custom-field',
+  templateUrl: './codx-input-custom-field.component.html',
+  styleUrls: ['./codx-input-custom-field.component.css']
 })
-export class InputCustomFieldComponent implements OnInit {
+export class CodxInputCustomFieldComponent implements OnInit{
   @Input() customField: any = null;
   @Output() valueChangeCustom = new EventEmitter<any>();
   //file - đặc thù cần hỏi lại sau

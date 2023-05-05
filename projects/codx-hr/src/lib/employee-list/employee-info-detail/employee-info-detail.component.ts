@@ -65,6 +65,7 @@ import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-e
 import { Sort } from '@syncfusion/ej2-angular-grids';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupEProcessContractComponent } from '../../employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
+import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 
 
 @Component({
@@ -1380,6 +1381,8 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         if(history.state?.empInfo){
           this.infoPersonal = JSON.parse(history.state?.empInfo);
         }
+        console.log('thong tin nhan vien ne', this.infoPersonal);
+        
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -3188,6 +3191,29 @@ export class EmployeeInfoDetailComponent extends UIComponent{
         funcID: this.ePartyFuncID,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+        dataObj: this.infoPersonal,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res?.event) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
+    });
+  }
+
+  editEmployeeForeignWorkerInfo(actionHeaderText) {
+    let option = new SidebarModel();
+    option.FormModel = this.eInfoFormModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupForeignWorkerComponent,
+      {
+        funcID: this.ePartyFuncID,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.foreignWorkerFuncID),
         dataObj: this.infoPersonal,
       },
       option
