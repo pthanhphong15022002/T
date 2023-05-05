@@ -34,6 +34,7 @@ import { HistoryCardsComponent } from './car/settings/historyCards/historyCards.
 import { BookingCarComponent } from './car/booking/booking-car.component';
 import { ApprovalCarsComponent } from './car/approval/approval-car.component';
 import { CardTransComponent } from './car/cardTran/cardTrans.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 
 export const routes: Routes = [
   {
@@ -42,7 +43,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'report/:funcID',
-        component: EPReportComponent,
+        component: CodxReportViewsComponent,
       },
       {
         path: 'report/detail/:funcID',
@@ -87,7 +88,7 @@ export const routes: Routes = [
         path: 'cardtrans/:funcID',
         component: CardTransComponent,
       },
-      
+
     ],
   },
   {

@@ -58,7 +58,7 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID',
-        component: CashReceiptsComponent,
+        component: CashPaymentsComponent,
         data: { noReuse: true },
       },
       {

@@ -1,4 +1,4 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" entityName="AC_CashPayments"
+<codx-views #view idField="recID" [views]="views" [button]="button" [entityName]="this.view.funcID == 'ACT0410' ? 'AC_CashPayments' : 'AC_CashReceipts'"
   (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo"
   (selectedChange)="changeItemDetail($event)">
 </codx-views>
@@ -51,11 +51,20 @@
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-4 text-uppercase me-3">
         {{ itemSelected?.voucherNo }}
       </span>
-      <span class="me-2">
+      <div class="d-flex align-items-center me-3">
+        <span class="icon-customize icon-16 me-2"></span>
+        <codx-label class="fw-bold label-colon" fiedName="VoucherDate" [formModel]="view.formModel">
+        </codx-label>
+        <span class="text-gray-600">
+          {{formatDate(itemSelected?.voucherDate)}}
+        </span>
+      </div>
+      <span class="me-3">
         <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status"
           [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </span>
+      
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-3 mt-2">
       <div class="d-flex align-items-center">
@@ -113,7 +122,7 @@
       </div>
       <div class="d-flex align-items-center me-5">
         <span class="icon-i-person-fill icon-16 me-2"></span>
-        <codx-label class="fw-bold label-colon" fiedName="Payee" [formModel]="view.formModel">
+        <codx-label class="fw-bold label-colon" default="Người nhận tiền" [formModel]="view.formModel">
         </codx-label>
         <span #payee [innerHTML]="
             itemSelected?.payee
@@ -183,7 +192,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-customize icon-16 me-1 text-gray-600"></span>
         <span class="text-gray-600">
-          {{data?.voucherDate | date :'short'}}
+          {{formatDate(data?.voucherDate)}}
         </span>
       </div>
     </div>
@@ -235,7 +244,7 @@
             <td>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
-                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" fiedName="AccountID"
+                  <codx-label style="white-space: nowrap;" class="fw-bold label-colon" default="Nợ"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
@@ -263,7 +272,7 @@
               </div>
               <div class="d-flex align-items-center justify-content-start">
                 <ng-container *ngIf="(item.offsetAcctID != null && item.offsetAcctID != '')">
-                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" fiedName="OffsetAcctID"
+                  <codx-label style="white-space: nowrap" class="fw-bold label-colon" default="Có"
                     [formModel]="fmCashPaymentsLines">
                   </codx-label>
                   &nbsp;
