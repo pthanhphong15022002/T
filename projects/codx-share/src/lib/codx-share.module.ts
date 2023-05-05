@@ -265,7 +265,6 @@ const T_Component: Type<any>[] = [
   ListPostComponent,
   PostShareComponent,
 
-
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
@@ -326,7 +325,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   MessageSystemPipe,
   SearchPipe,
-  FillterReferType
+  FillterReferType,
 ];
 
 @NgModule({
