@@ -6,7 +6,7 @@
   >
     <div class="me-1">
       <i
-        class="text-hover-primary icon-person_outline icon-16 text-dark cursor-pointer"
+        class="text-hover-primary icon-i-clipboard-check icon-16 text-dark cursor-pointer"
       ></i>
     </div>
     <div>{{ countResource }}</div>
@@ -17,8 +17,7 @@
     <div class="d-flex justify-content-between">
       <div class="fw-bold mt-2">
         <codx-label
-          name="AssignmentList"
-          formName="Tasks"
+          [formModel]="formModel"
           default="Danh sách phân công cho"
         ></codx-label>
         <span class="">{{ "(" + countResource + ")" }}</span>
