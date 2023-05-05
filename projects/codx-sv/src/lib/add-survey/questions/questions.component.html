@@ -305,7 +305,7 @@
           </div>
           <div
             class="icon-MF d-flex justify-content-center"
-            (click)="clickMF('LTN03')"icon-image
+            (click)="clickMF('LTN03')"
           >
             <span
               class="icon-format_size icon-22 text-hover-primary"
@@ -845,7 +845,7 @@
           ? 'position-relative w-100 d-flex justify-content-end'
           : 'position-relative w-100 d-flex px-5 mt-5'
       " -->
-          <img [src]="en.urlUpload + '/' +item?.pathDisk" class="w-100" />
+          <img [src]="getSrcImage(item)" class="w-100" />
           <div class="d-flex align-items-center icon-MF-image-outside justify-content-center">
             <div ngbDropdown class="dropdown" container="body">
               <a
