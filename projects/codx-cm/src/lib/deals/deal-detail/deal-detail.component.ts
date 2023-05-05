@@ -30,7 +30,7 @@ export class DealDetailComponent  implements OnInit {
     { name: 'References', textDefault: 'Liên kết', isActive: false, template: null },
     { name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: null },
     { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-
+    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: null},
   ];
 
   treeTask = [];
@@ -50,7 +50,11 @@ export class DealDetailComponent  implements OnInit {
   ngAfterViewInit(): void {
    // this.tabControl.push({ name: 'Quotations', textDefault: 'Báo giá', isActive: false, template: this.quotations});
     //this.tabControl.push({ name: 'References', textDefault: 'Liên kết', isActive: false, template: null});
-    this.tabControl.push({ name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract});
+    let index = this.tabControl.findIndex(item => item.name == 'Contract');
+    if(index >= 0){
+      let contract = { name: 'Contract', textDefault: 'Hợp đồng', isActive: false, template: this.contract};
+      this.tabControl.splice(index,1,contract)
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

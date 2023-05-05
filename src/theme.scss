@@ -599,9 +599,16 @@
   }
 
   // .e-radio:checked + label::before {
+<<<<<<< HEAD
   //   background-color: var(--primary);
   //   border-color: var(--primary);
   // }
+=======
+  //   border-color: var(--primary-dark) !important;
+  //   background-color:var(--primary)!important;
+  // }
+  
+>>>>>>> 8f9cdec9dce8c1ce1ae0080f1e738b30a78921f2
 
   .codx-search.codx-focus {
     border-color: var(--primary-light) !important;

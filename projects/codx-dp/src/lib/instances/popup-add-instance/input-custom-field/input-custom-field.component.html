@@ -195,15 +195,16 @@
       [allowMultiFile]="allowMultiFile"
       referType="source"
       [functionID]="funID"
-      [formModel]="formModel"
       [isSaveSelected]="1"
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
       (fileSave)="fileSave($event)"
       displayThumb="full"
       showMessage="0"
+      [referType]="'source'"
     >
     </codx-attachment>
+       <!-- [formModel]="formModel" -->
   </ng-container>
 
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">

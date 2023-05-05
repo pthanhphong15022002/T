@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -51,6 +52,7 @@ export class FieldDetailComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
     private dpService: CodxDpService
   ) {
     this.formModel = new FormModel();
@@ -62,7 +64,12 @@ export class FieldDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
+  ngOnChanges(){
+    this.changeDetectorRef.detectChanges();
+  }
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -174,7 +181,7 @@ export class FieldDetailComponent implements OnInit {
   formatNumber(dt) {
     if (!dt.dataValue) return '';
     if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-    return Number.parseFloat(dt.dataValue).toFixed(2);
+    return Number.parseFloat(dt.dataValue).toFixed(2) + (dt.dataFormat=='P'?'%':'');
   }
 
   clickInput(eleID, dataStep = null, isClick = false) {
