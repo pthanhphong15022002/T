@@ -598,10 +598,10 @@
     border-color: var(--primary-light) !important;
   }
 
-  .e-radio:checked + label::before {
-    background-color: var(--primary);
-    border-color: var(--primary);
-  }
+  // .e-radio:checked + label::before {
+  //   background-color: var(--primary);
+  //   border-color: var(--primary);
+  // }
 
   .codx-search.codx-focus {
     border-color: var(--primary-light) !important;
