@@ -58,3 +58,14 @@ export class Equipments {
     umName: string;
     objectID: string;
   }
+  export class GridModels {
+    pageSize?: number;
+    entityName?: string;
+    entityPermission?: string;
+    formName?: string;
+    gridViewName?: string;
+    funcID?: string;
+    dataValues?: string;
+    predicates?: string;
+    comboboxName?: string;
+  }

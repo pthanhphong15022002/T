@@ -162,7 +162,7 @@
             <div class="d-flex align-items-top w-100">
               <div class="d-flex flex-column">
                 <div
-                  class="badge badge-md d-flex align-items-center"
+                  class="badge"
                   [ngStyle]="{
                     'background-color':
                       dataSelect.status == '3' || dataSelect.status == '4'
@@ -172,11 +172,11 @@
                         : stepValue['backgroundColor']
                   }"
                 >
-                  <i
+                  <span
                     [ngClass]="stepValue['icon']"
                     [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-2 icon-14"
-                  ></i>
+                    class="me-2"
+                  ></span>
                   <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                     stepName
                   }}</span>
@@ -237,83 +237,87 @@
         id="viewModeDetail"
         class="pt-3 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
       >
-      <div>
-        <ng-container
-          *ngIf="viewModelDetail == 'G'"
-          [ngTemplateOutlet]="
-            dataSelect.status == 1 ? emptyTemplate : tempGanchart
-          "
-        >
-        </ng-container>
-        <ng-container *ngIf="viewModelDetail == 'S'">
-          <codx-carousel-stage
-            [dataSource]="listSteps"
-            [fieldName]="'stepName'"
-            [maxSize]="maxSize"
-            [status]="instanceStatus"
-            (eventClicked)="clickStage($event)"
-          >
-          </codx-carousel-stage>
-          <ng-container *ngIf="tmpTeps">
-            <codx-stages-detail
-              [dataStep]="tmpTeps"
-              [showColumnControl]="showColumnControl(tmpTeps.stepID)"
-              [formModel]="formModel"
-              [currentStep]="currentNameStep"
-              [stepID]="dataSelect.stepID"
-              [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
-              [isDelete]="dataSelect.delete"
-              [isEdit]="dataSelect.edit"
-              [isUpdate]="
-                dataSelect.write &&
-                !dataSelect.closed &&
-                (dataSelect.status == '1' || dataSelect.status == '2') &&
-                tmpTeps.stepStatus < '2' &&
-                isOnlyView
-              "
-              [isCreate]="dataSelect.create"
-              [isClosed]="dataSelect.closed"
-              [titleDefault]="titleDefault"
-              [listStep]="listSteps"
-              [instance]="dataSelect"
-              [lstIDInvo]="lstInv"
-              [listUserIdRole]="ownerInstance"
-              [listStepReason]="getReasonByStepId(dataSelect.status)"
-              [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
-              [proccesNameMove]="proccesNameMove"
-              (saveAssign)="saveAssign($event)"
-              (outDataStep)="saveDataStep($event)"
-              [viewsCurrent]="viewsCurrent"
-              [frmModelInstancesTask]="frmModelInstancesTask"
-              [lstStepProcess]="lstStepProcess"
-              [isOnlyView]="isOnlyView"
-            ></codx-stages-detail>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="viewModelDetail == 'F'">
-          <ng-container *ngFor="let item of listSteps">
-            <codx-field-detail
-              *ngIf="item?.fields?.length > 0"
-              [dataStep]="item"
-              [showColumnControl]="showColumnControl(item.stepID)"
-              [isUpdate]="
-                dataSelect.write &&
-                !dataSelect.closed &&
-                (dataSelect.status == '1' || dataSelect.status == '2') &&
-                item.stepStatus < '2'
-              "
-              [currentElmID]="currentElmID"
-              (inputElmIDCF)="inputElmIDCustomField($event)"
-              [isSaving]="isSaving"
-              (actionSaveCF)="actionSaveCustomField($event)"
-              [titleHeaderFormCF]="titleDefault"
-              [viewsCurrent]="viewsCurrent"
-              (saveDataStep)="saveDataStep($event)"
-            >
-            </codx-field-detail>
-          </ng-container>
-        </ng-container>
-      </div>
+        <div class="">
+          <div class="border">
+            <div>
+              <ng-container
+                *ngIf="viewModelDetail == 'G'"
+                [ngTemplateOutlet]="
+                  dataSelect.status == 1 ? emptyTemplate : tempGanchart
+                "
+              >
+              </ng-container>
+              <ng-container *ngIf="viewModelDetail == 'S'">
+                <codx-carousel-stage
+                  [dataSource]="listSteps"
+                  [fieldName]="'stepName'"
+                  [maxSize]="maxSize"
+                  [status]="instanceStatus"
+                  (eventClicked)="clickStage($event)"
+                >
+                </codx-carousel-stage>
+                <ng-container *ngIf="tmpTeps">
+                  <codx-stages-detail
+                    [dataStep]="tmpTeps"
+                    [showColumnControl]="showColumnControl(tmpTeps.stepID)"
+                    [formModel]="formModel"
+                    [currentStep]="currentNameStep"
+                    [stepID]="dataSelect.stepID"
+                    [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
+                    [isDelete]="dataSelect.delete"
+                    [isEdit]="dataSelect.edit"
+                    [isUpdate]="
+                      dataSelect.write &&
+                      !dataSelect.closed &&
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      tmpTeps.stepStatus < '2' &&
+                      isOnlyView
+                    "
+                    [isCreate]="dataSelect.create"
+                    [isClosed]="dataSelect.closed"
+                    [titleDefault]="titleDefault"
+                    [listStep]="listSteps"
+                    [instance]="dataSelect"
+                    [lstIDInvo]="lstInv"
+                    [listUserIdRole]="ownerInstance"
+                    [listStepReason]="getReasonByStepId(dataSelect.status)"
+                    [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
+                    [proccesNameMove]="proccesNameMove"
+                    (saveAssign)="saveAssign($event)"
+                    (outDataStep)="saveDataStep($event)"
+                    [viewsCurrent]="viewsCurrent"
+                    [frmModelInstancesTask]="frmModelInstancesTask"
+                    [lstStepProcess]="lstStepProcess"
+                    [isOnlyView]="isOnlyView"
+                  ></codx-stages-detail>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="viewModelDetail == 'F'">
+                <ng-container *ngFor="let item of listSteps">
+                  <codx-field-detail
+                    *ngIf="item?.fields?.length > 0"
+                    [dataStep]="item"
+                    [showColumnControl]="showColumnControl(item.stepID)"
+                    [isUpdate]="
+                      dataSelect.write &&
+                      !dataSelect.closed &&
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      item.stepStatus < '2'
+                    "
+                    [currentElmID]="currentElmID"
+                    (inputElmIDCF)="inputElmIDCustomField($event)"
+                    [isSaving]="isSaving"
+                    (actionSaveCF)="actionSaveCustomField($event)"
+                    [titleHeaderFormCF]="titleDefault"
+                    [viewsCurrent]="viewsCurrent"
+                    (saveDataStep)="saveDataStep($event)"
+                  >
+                  </codx-field-detail>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
       </div>
     </ng-template>
 

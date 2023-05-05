@@ -41,6 +41,9 @@ import { ReportsComponent } from './reports/reports.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoreModule } from "../../../../src/core/core.module";
+import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
+import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -101,6 +104,11 @@ export const routes: Routes = [
         component: ApprovalsComponent,
         data: { noReuse: true },
       },
+      {
+        path: 'receipttransaction/:funcID',
+        component: ReceiptTransactionComponent,
+        data: { noReuse: true },
+      },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
@@ -159,6 +167,6 @@ export const routes: Routes = [
         NameByIdPipe,
         DragDropModule,
         CoreModule
-    ]
+    ],
 })
 export class AcModule {}

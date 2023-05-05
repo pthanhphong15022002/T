@@ -415,6 +415,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       event.previousIndex,
       event.currentIndex
     );
+    this.questions[seqNoSession].children.forEach((x,index)=> (x.seqNo = index));
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(this.questions[seqNoSession].children, false);
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
@@ -423,6 +426,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[0].children[idParent].answers = this.dataAnswer;
+    this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(this.questions[0].children, false);
   }
 
@@ -432,6 +436,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     seqNoQuestion,
     answerType
   ) {
+    
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -452,12 +457,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     var dataMerge = [...dataAnswerR, ...dataAnswerC];
     if (dataMerge.length > 0) {
       this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
-      console.log(
-        'check dropAnswerRC',
-        this.questions[seqNoSession].children[seqNoQuestion].answers
-      );
     }
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
+    this.setTimeoutSaveData(this.questions[seqNoSession].children, false);
   }
 
   public focusIn(target: HTMLElement): void {
@@ -1039,6 +1041,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         if (inline) {
           let myInterval = setInterval(() => {
             if (this.questions && this.questions.length > 0) {
@@ -1663,7 +1666,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   getSrcImage(data) {
-    debugger
+    if(data?.avatar) return data?.avatar
     return environment.urlUpload + "/" +data?.pathDisk;
   }
 

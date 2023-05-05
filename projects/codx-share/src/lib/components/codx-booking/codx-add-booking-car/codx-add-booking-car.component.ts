@@ -164,7 +164,7 @@ export class CodxAddBookingCarComponent
       });
 
     this.cache.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
+      this.vllDevices = Array.from(res.datas);
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
@@ -341,7 +341,7 @@ export class CodxAddBookingCarComponent
         tmpArr.forEach((item) => {
           this.listRoles.push(item);
         });
-        if (this.funcType == _addMF) {
+        if (this.funcType == _addMF ||this.funcType == _copyMF ) {
           let people = this.authService.userValue;
           let tmpResource = new BookingAttendees();
           tmpResource.userID = people?.userID;
@@ -1080,7 +1080,7 @@ export class CodxAddBookingCarComponent
   //---------------------------------------------------------------------------------//
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 560);
+    var dialog = this.callfc.openForm(template, '', 550, 400);
     this.detectorRef.detectChanges();
   }
 }
