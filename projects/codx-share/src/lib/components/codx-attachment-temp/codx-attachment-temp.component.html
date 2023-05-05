@@ -17,7 +17,7 @@
   *ngIf="viewType == '1' && (count > 0 || countData > 0)"
   (click)="openViewPopup ? openPopup() : ''"
 >
-  <span class="icon-attach_file icon-18"> </span>
+  <span class="icon-attach_file icon-18 text-gray-600"> </span>
   <span
     class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
   >
@@ -26,7 +26,7 @@
 </div>
 
 <div *ngIf="viewType == '2'" (click)="openViewPopup ? openPopup() : ''">
-  <span class="icon-attach_file icon-18"> </span>
+  <span class="icon-attach_file icon-18 text-gray-600"> </span>
   <span
     class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
   >
@@ -39,7 +39,7 @@
   (click)="openViewPopup ? openPopup() : ''"
   class="d-flex align-items-center position-relative me-4"
 >
-  <span class="icon-attach_file icon-20 text-gray-400"></span>
+  <span class="icon-attach_file icon-18 text-gray-600"></span>
   <span
     class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
     >{{ countData }}</span
