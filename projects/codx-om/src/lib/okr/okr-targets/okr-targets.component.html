@@ -120,7 +120,7 @@
               </div>
               <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
                 (click)="showTasks($event,item)">
-                <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
+                <span class="icon-i-clipboard-check text-hover-primary icon-20 text-gray-400"></span>
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6" *ngIf="item?.okrTasks!=null && item?.okrTasks.length>0"
                   [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
                   item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
@@ -202,7 +202,7 @@
             </div>
             <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
               (click)="showTasks($event,item)">
-              <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
+              <span class="icon-i-clipboard-check text-hover-primary icon-20 text-gray-400"></span>
               <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"  *ngIf="item?.okrTasks!=null && item?.okrTasks.length>0"
                 [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
                 item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
