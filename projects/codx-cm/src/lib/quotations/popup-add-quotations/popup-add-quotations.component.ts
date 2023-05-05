@@ -122,6 +122,7 @@ export class PopupAddQuotationsComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
+          this.dialog.close(res.update);
         } else {
           this.dialog.close();
         }
