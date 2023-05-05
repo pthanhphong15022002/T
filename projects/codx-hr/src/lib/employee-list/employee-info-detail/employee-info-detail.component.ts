@@ -243,6 +243,10 @@ export class EmployeeInfoDetailComponent extends UIComponent{
   bSalarySortModel: SortModel;
   issuedDateSortModel: SortModel;
   TrainFromDateSortModel: SortModel;
+  injectDateSortModel: SortModel;
+  healthDateSortModel: SortModel;
+  diseasesFromDateSortModel: SortModel;
+  accidentDateSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -1507,6 +1511,27 @@ export class EmployeeInfoDetailComponent extends UIComponent{
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
     this.appointionSortModel.dir = 'desc';
+
+    // #region Sức khỏe sort model
+
+    this.injectDateSortModel = new SortModel();
+    this.injectDateSortModel.field = '(InjectDate)';
+    this.injectDateSortModel.dir = 'desc';
+
+    this.accidentDateSortModel  = new SortModel();
+    this.accidentDateSortModel.field = '(AccidentDate)';
+    this.accidentDateSortModel.dir = 'desc';
+
+    this.diseasesFromDateSortModel = new SortModel();
+    this.diseasesFromDateSortModel.field = '(FromDate)';
+    this.diseasesFromDateSortModel.dir = 'desc';
+
+    this.healthDateSortModel = new SortModel();
+    this.healthDateSortModel.field = '(HealthDate)';
+    this.healthDateSortModel.dir = 'desc';
+
+    //#endregion
+
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
