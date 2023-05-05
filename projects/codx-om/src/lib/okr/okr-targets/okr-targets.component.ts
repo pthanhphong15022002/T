@@ -48,6 +48,7 @@ export class OkrTargetsComponent implements OnInit {
   @ViewChild('treeView') treeView: any;
   @ViewChild('showTask') showTask: any;
   @ViewChild('showCommnent') showCommnent: any;
+  @ViewChild('checkInHistory') checkInHistory: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -1203,13 +1204,29 @@ export class OkrTargetsComponent implements OnInit {
   showTasks(evt: any, data: any) {
     evt.stopPropagation();
     evt.preventDefault();
-    if (evt != null && data != null) {
+    if (data != null) {
       this.selectOKR = data;
       let dialogShowTask = this.callfunc.openForm(
         this.showTask,
         '',
         1280,
         720,
+        null
+      );
+    }
+  }
+  showHistoryCheckIn(evt: any, data: any) {
+    evt.stopPropagation();    
+    evt.preventDefault();
+    
+    if (data?.checkIns != null && data?.checkIns.length>0 != null) {
+      this.selectOKR = data;
+      this.selectOKR.checkIns= Array.from(this.selectOKR.checkIns).reverse();
+      let dialogShowCheckInHistory = this.callfunc.openForm(
+        this.checkInHistory,
+        '',
+        1000,
+        600,
         null
       );
     }

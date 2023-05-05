@@ -1,0 +1,337 @@
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [dialog]="dialogRef" [formModel]="formModel" [data]="data">
+
+  <ng-template #roomTemplate>
+    <div class="form-group" *ngIf="grView?.resourceName?.allowPopup">
+      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4" *ngIf="grView?.ranking?.allowPopup">
+        <codx-label fiedName="Ranking" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+      <div class="form-group col-4" *ngIf="grView?.capacity?.allowPopup">
+        <codx-label fiedName="Capacity" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+      <div class="form-group col-4" *ngIf="grView?.sorting?.allowPopup">
+        <codx-label fiedName="Sorting" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4" *ngIf="grView?.area?.allowPopup">
+        <codx-label fiedName="Area" [formModel]="form.formModel"></codx-label>
+        <codx-input [min]="0" ControlName="area" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+      <div class="form-group col-8" *ngIf="grView?.validateControl?.allowPopup">
+        <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 form-group" *ngIf="grView?.companyID?.allowPopup">
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="companyID" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+      <div class="form-group col-6" *ngIf="grView?.location?.allowPopup">
+        <codx-label fiedName="Location" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="location" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="grView?.preparator?.allowPopup">
+      <codx-label fiedName="Preparator" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="preparator" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+  </ng-template>
+  <ng-template #carTemplate>
+    <div class="row">
+      <div class="form-group col-9" *ngIf="grView?.resourceName?.allowPopup">
+        <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+      <div class="form-group col-3 d-flex align-items-end justify-content-start" *ngIf="grView?.useCard?.allowPopup">
+        <div class="d-flex justify-content-start align-items-center">
+          <codx-input class="ps-2" #checkbox class="test-switch" type="switch" [checked]="useCardCheck"
+            (valueChange)="valueUseCardChange($event)">
+          </codx-input>
+
+          <codx-label class="ps-2" fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4 form-group" *ngIf="grView?.code?.allowPopup">
+        <codx-label fiedName="Code" [formModel]="form.formModel"> </codx-label>
+        <codx-input ControlName="code" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+      <div class="col-4 form-group" *ngIf="grView?.capacity?.allowPopup">
+        <codx-label fiedName="Capacity" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+      <div class="form-group col-4" *ngIf="grView?.sorting?.allowPopup">
+        <codx-label fiedName="Sorting" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+      <div class="col-4 form-group" *ngIf="grView?.ranking?.allowPopup">
+        <codx-label fiedName="Ranking" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+      <div class="form-group col-4" *ngIf="grView?.validateControl?.allowPopup">
+        <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-4 form-group" *ngIf="grView?.category?.allowPopup">
+        <codx-label fiedName="Category" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="changeCategory($event)">
+        </codx-input>
+      </div>
+      <div class="col-8 form-group" *ngIf="grView?.companyID?.allowPopup">
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [disabled]="data?.category == '2'" ControlName="companyID" [formModel]="form.formModel"
+          [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="grView?.linkID?.allowPopup">
+      <div class="form-group">
+        <codx-label fiedName="LinkID" [formModel]="form.formModel">
+        </codx-label>
+
+        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #driverTemplate>
+    <div class="form-group">
+      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label default="Email" name="lblEmail"></codx-label>
+      <codx-input type="text" field="email" placeholder="Email" (valueChange)="emailChange($event)"
+        [crrValue]="data.email">
+      </codx-input>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [disabled]="data.category == 1 ? false : true" [Group]="form.formGroup" ControlName="companyID"
+          [formModel]="form.formModel">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-9 form-group">
+        <codx-label fiedName="LinkID" [formModel]="form.formModel"></codx-label>
+        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup" 
+          >
+        </codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label fiedName="Code" [formModel]="form.formModel"> </codx-label>
+        <codx-input type="text" field="code" placeholder="Biển số" [crrValue]="data.code" [disabled]="true"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #cardTemplate>
+    <div class="row mt-5">
+      <div class="col-6 form-group">
+        <codx-label fiedName="ResourceID" [formModel]="form.formModel" default="Mã số thẻ">
+        </codx-label>
+        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+          [disabled]="autoNumDisable">
+        </codx-input>
+      </div>
+
+      <div class="col-6 form-group">
+        <codx-label fiedName="Status" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 form-group">
+        <codx-label fiedName="ResourceName" [formModel]="form.formModel" default="Tên thẻ xe">
+        </codx-label>
+        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #body>
+
+    <ng-container *ngIf="funcID== r_FuncID">
+      <ng-container *ngTemplateOutlet="roomTemplate">
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="funcID == c_FuncID">
+      <ng-container *ngTemplateOutlet="carTemplate"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="funcID == dr_FuncID">
+      <ng-container *ngTemplateOutlet="driverTemplate"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="funcID == ca_FuncID">
+      <ng-container *ngTemplateOutlet="cardTemplate"></ng-container>
+    </ng-container>
+
+    <div class="form-group" *ngIf="grView?.owner?.allowPopup">
+      <codx-label fiedName="Owner" [formModel]="form.formModel"> </codx-label>
+      <codx-input ControlName="owner" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+    <div class="row" *ngIf="grView?.note?.allowPopup">
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <ng-container *ngIf="funcID == r_FuncID||funcID == c_FuncID">
+      <ng-container *ngTemplateOutlet="equipmentTemplate"></ng-container>
+    </ng-container>
+
+    <div class="form-group upload-img">
+      <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'EP_Resources'" aria-disabled="false"
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data.resourceName">
+      </codx-img>
+    </div>
+  </ng-template>
+
+  <ng-template #equipmentTemplate>
+    <div class="form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
+      <codx-label name="lblEquipments" default="Thiết bị" [formModel]="form.formModel"></codx-label>
+      <span class="text-end align-items-end">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupDevice(popupDevice)">
+          <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+        </button>
+      </span>
+    </div>
+    <div class="form-group">
+      <div class="col-12 form-group d-flex flex-wrap" *ngIf="tmplstDevice != null && tmplstDevice?.length > 0">
+        <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
+          <div *ngIf="item.isSelected">
+            <span class="d-flex align-items-center me-2 mb-2"
+              [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'">
+              <span class="me-1" [className]="item.icon" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
+              </span>
+              <span class="me-2">{{ item?.text }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #popupDevice let-dialog>
+    <div class="modal-header py-5 px-6">
+      <div class="d-flex justify-content-between align-items-center flex-grow-1">
+        <div class="d-flex flex-column">
+          <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
+            <codx-label name="lblEquipment" default="Thiết bị" [formModel]="form.formModel"></codx-label>
+          </div>
+          <div class="text-gray-500">
+            <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+              [formModel]="form.formModel"></codx-label>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close" (click)="dialog.close()">
+          <span class="icon-close icon-18"></span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body h-100 scroll-y p-5 pt-0">
+      <div class="border-top border-gray-100" *ngFor="let item of tmplstDevice">
+        <div class="d-flex flex-stack rounded-2 bg-hover py-1">
+          <div class="d-flex ms-2">
+            <span class="text-dark me-2" [className]="item.icon"
+              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
+            </span>
+            <div class="d-flex flex-column justify-content-center">
+              <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end align-items-center ms-5">
+            <div class="form-check form-check-solid form-switch mt-3 w-35px">
+              <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+                [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
+              <label class="form-check-label" for="googleswitch"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

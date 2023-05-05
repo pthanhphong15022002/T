@@ -5,10 +5,7 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  CallFuncService,
-  UIComponent,
-} from 'codx-core';
+import { CallFuncService, UIComponent } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 import moment from 'moment';
 @Component({
@@ -22,11 +19,11 @@ export class CodxBookingCarScheduleContentComponent
   implements AfterViewInit
 {
   @Input() recID: any;
-  data:any;
+  data: any;
   constructor(
     private injector: Injector,
     private codxShareService: CodxShareService,
-    private callFuncService: CallFuncService,
+    private callFuncService: CallFuncService
   ) {
     super(injector);
   }
