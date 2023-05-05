@@ -42,7 +42,6 @@ export class AddSurveyComponent extends UIComponent {
   titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
-
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -130,6 +129,7 @@ export class AddSurveyComponent extends UIComponent {
   //Click morefunc
   clickMF(e:any)
   {
+    debugger
     switch(e?.functionID)
     {
       //Copy link
@@ -138,6 +138,19 @@ export class AddSurveyComponent extends UIComponent {
           var url = location.host + "/" + this.user.tenant +  "/forms?funcID=" + this.funcID +"&recID=" + this.recID;
           navigator.clipboard.writeText(url);
           this.notifySvr.notifyCode("SYS041");
+          break;
+        }
+      //Đóng khảo sát 
+      case "SVT0104":
+        {
+          var obj = 
+          {
+            title: this.title,
+            stop: true,
+          }
+          this.SvService.updateSV(this.recID,obj).subscribe(item=>{
+
+          })
           break;
         }
     }
@@ -256,6 +269,7 @@ export class AddSurveyComponent extends UIComponent {
     {
       title : e?.data
     }
+    this.title = e?.data;
     this.SvService.updateSV(this.recID,obj).subscribe();
   }
 
