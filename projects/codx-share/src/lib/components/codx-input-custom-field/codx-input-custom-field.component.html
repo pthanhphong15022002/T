@@ -194,13 +194,13 @@
         [allowMultiFile]="allowMultiFile"
         referType="source"
         [functionID]="funID"
-        [formModel]="formModel"
         [isSaveSelected]="1"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
         (fileSave)="fileSave($event)"
         displayThumb="full"
         showMessage="0"
+        [referType]="'source'"
       >
       </codx-attachment>
     </ng-container>

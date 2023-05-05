@@ -40,7 +40,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
   isEdit: boolean = false;
   voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
-  customerName: string;
   gvsSalesInvoices: any;
   gvsSalesInvoicesLines: any;
   hiddenFields: string[] = [];
@@ -106,12 +105,6 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
     //     tap((t) => console.log(t))
     //   )
     //   .subscribe((res) => (this.columns = res));
-
-    this.acService.loadComboboxData('ObjectsAC', 'AC').subscribe((objects) => {
-      this.customerName = objects?.find(
-        (o) => o.ObjectID === this.salesInvoice.objectID
-      )?.ObjectName;
-    });
 
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
@@ -230,7 +223,9 @@ export class PopupAddSalesInvoiceComponent extends UIComponent {
 
   onInputChange(e): void {
     if (e.field.toLowerCase() === 'objectid') {
-      this.customerName = e.component.itemsSelected[0].ObjectName;
+      this.form.formGroup.patchValue({
+        objectName: e.component.itemsSelected[0].ObjectName,
+      });
     }
   }
 

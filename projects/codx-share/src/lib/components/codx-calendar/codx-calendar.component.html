@@ -7,11 +7,9 @@
         <ejs-calendar
           #ejCalendar
           [firstDayOfWeek]="1"
-          (created)="onCreate()"
           (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
-          title="Lịch cá nhân"
           (navigated)="changeNewMonth($event)"
           (renderDayCell)="onLoad($event)"
           [value]="dateChange"
@@ -220,7 +218,13 @@
         </ng-container>
       </div>
       <!-- <div class="w-100"><ng-template #calendar_setting></ng-template></div> -->
-      <div class="w-100"><lib-calendar-center #calendarCenter [resources]="resource" [resourceModel]="dataResourceModel"></lib-calendar-center></div>
+      <div class="w-100">
+        <lib-calendar-center
+          #calendarCenter
+          [resources]="resource"
+          [resourceModel]="dataResourceModel"
+        ></lib-calendar-center>
+      </div>
     </div>
   </div>
 </ng-template>
