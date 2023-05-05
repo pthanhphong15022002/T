@@ -4,18 +4,18 @@
 
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
-        <div class="d-flex align-items-center kr-process w-100px min-w-100px ps-5">
-          <div class="h-15px w-100 bg-gray-200 rounded-4">
-            <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="dataOKRPlans?.progress + '%'"
-              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+        <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'">
+          <span class="mb-1" *ngIf="dataOKRPlans?.progress==0" [innerHTML]="(dataOKRPlans?.progress)+'%'"></span>
+          <span class="mb-1" *ngIf="dataOKRPlans?.progress!=0"
+            [innerHTML]="(dataOKRPlans?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
+          <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
+            <div class="rounded-4 h-5px " [ngClass]="'bg-success'"
+              role="progressbar" [style.width]="dataOKRPlans?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+              aria-valuemax="100">
             </div>
-          </div>
-          <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
-
-            <span *ngIf="dataOKRPlans?.progress==0" [innerHTML]="(dataOKRPlans?.progress)+'%'"></span>
-            <span *ngIf="dataOKRPlans?.progress!=0"
-              [innerHTML]="(dataOKRPlans?.progress | formatvalue : formModel : 'progress' | async )+'%'"></span>
-
+            <span class="progress-node border-2px position-absolute rounded-circle border me-1"
+              [ngClass]="'border-success'"
+              [style.left]="(dataOKRPlans?.progress-2) + '%'"></span>
           </div>
         </div>
       </div>
@@ -40,7 +40,6 @@
     <!-- Title OKR -->
     <div class="d-flex align-items-center justify-content-between" #titleOKR>
       <div class="d-flex align-items-center">
-        <!-- <i class="fa-solid fa-bullseye me-4 ms-1 text-danger"></i> -->
         <codx-label default="Mục tiêu" fiedName="lblTaget" class="fs-3 fw-bold"></codx-label>
       </div>
       <div class="d-flex align-items-center justify-content-end">
@@ -122,7 +121,7 @@
               <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
                 (click)="showTasks($event,item)">
                 <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+                <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6" *ngIf="item?.okrTasks!=null && item?.okrTasks.length>0"
                   [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
                   item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
               </div>
@@ -187,7 +186,7 @@
           </span>
           </div>
           <div class="d-flex ps-9 align-items-end" >
-            <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'">
+            <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'" (click)="showHistoryCheckIn($event,item)">
               <span class="mb-1" *ngIf="item?.progress==0" [innerHTML]="(item?.progress)+'%'"></span>
               <span class="mb-1" *ngIf="item?.progress!=0"
                 [innerHTML]="(item?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
@@ -204,7 +203,7 @@
             <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
               (click)="showTasks($event,item)">
               <span class="icon-content_paste text-hover-primary icon-20 text-gray-400"></span>
-              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+              <span class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"  *ngIf="item?.okrTasks!=null && item?.okrTasks.length>0"
                 [ngClass]="item?.okrTasks  && item?.okrTasks.length>0 ? '': ''">{{
                 item?.okrTasks ? item?.okrTasks?.length : 0 }}</span>
             </div>
@@ -234,6 +233,92 @@
     <div class="overflow-auto px-5 pb-5" style="height:680px">
       <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="selectOKR.recID"
         [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
+    </div>
+  </div>
+</ng-template>
+<ng-template #checkInHistory let-dialog>
+  <div class="px-5 py-5 d-flex justify-content-between">
+    <codx-label class="fs-3 fw-bold" default="Lịch sử cập nhật" name="lblCheckInHistory"></codx-label>
+    <span class="icon-close cusor-pointer" (click)="dialog.close()"></span>
+  </div>
+  <div class="px-10" *ngIf="selectOKR?.checkIns && selectOKR?.checkIns.length>0">
+    <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
+      let item of selectOKR?.checkIns;
+      let index = index;
+      let count = count
+    ">
+      <div class="d-flex flex-row w-100">
+        <div class="d-flex flex-column align-items-center justify-content-between">
+          <div class="fs-5 step-number border-success">
+            W{{ count - index }}
+          </div>
+          <span *ngIf="count - index != 1" style="width: 1px"
+            class="me-15px h-100 border border-secondary"></span>
+        </div>
+        <div class="d-flex flex-column me-5 w-100px">
+          <span>{{ item?.checkIn | fmDT : "dmy" }}</span>
+          <div *ngIf="index == 0" class="d-flex w-100px">
+            <span class="d-flex text-primary">{{
+              item?.status | vll : "OM016" : "text" | async
+              }}</span>
+          </div>
+          <div *ngIf="index != 0" class="d-flex w-100px">
+            <span class="d-flex text-primary">{{
+              item?.status | vll : "OM016" : "text" | async
+              }}</span>
+          </div>
+        </div>
+        <div class="w-100">
+          <div class="ms-5 d-flex flex-row flex-grow-1 justify-content-between">
+            <div class="d-flex align-items-center">
+              <codx-img [objectId]="item?.createdBy" objectType="AD_Users" [width]="40"
+                imageType="circle">
+              </codx-img>
+              <div class="ms-2">
+                <span
+                  [innerHTML]="item?.createdBy | formatvalue : okrFM?.krFM : 'owner' | async "></span>
+                <div class="text-black-50">
+                  {{ item?.positionName }}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+              <div class="d-flex flex-column align-items-center kr-process w-150px me-7 pb-2"  [ngbTooltip]="'Tiến độ'" >
+                <span class="mb-1" *ngIf="item?.cummulated==0" [innerHTML]="(item?.cummulated)+'%'"></span>
+                <span class="mb-1" *ngIf="item?.cummulated!=0"
+                  [innerHTML]="(item?.cummulated | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
+                <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
+                  <div class="rounded-4 h-5px " [ngClass]="'bg-success'"
+                    role="progressbar" [style.width]="item?.cummulated + '%'" aria-valuenow="50" aria-valuemin="0"
+                    aria-valuemax="100">
+                  </div>
+                  <span class="progress-node border-2px position-absolute rounded-circle border me-1"
+                    [ngClass]="['border-success']"
+                    [style.left]="(item?.cummulated-2) + '%'"></span>
+                </div>
+              </div>
+              <span class="fs-6 fw-bold me-5 w-50px">
+                {{ item?.cummulated }}
+              </span>
+              <span class="position-relative text-primary icon-attach_file me-2">
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
+                  selectOKR?.attachment ? 1 : 0 }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-between flex-grow-1">
+            <span class="ms-5 flex-grow-1 pt-2 pb-5">{{
+              item?.comment
+              }}</span>
+            <div class="d-flex">
+              <span class="fs-6 w-150px text-end text-primary">{{
+                item?.createdOn | fmDT : "dmy" : true
+                }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

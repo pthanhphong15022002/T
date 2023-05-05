@@ -1,33 +1,22 @@
 <codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [formModel]="formModel" [formGroup]="fCheckinKR"
   [data]="checkIns"  [showHeader]="false" *ngIf="fCheckinKR && isAfterRender">
-  <ng-template #subHeader>
-    <div class="d-flex justify-content-center">
-      <!-- <codx-label default="Check-in" name="lblCheckin"></codx-label> -->
-      
-    </div>
-  </ng-template>
   <ng-template #body>
     <div class="p-5 h-100">
       <!--Header-->
       <div class="d-flex flex-column justify-content-center align-items-center w-100">
         <span class="fs-2 fw-bold mt-2"> {{headerText}}</span>
-        <codx-label [default]="'KR: '+ dataKR?.okrName" class="text-gray-500 mt-2 mb-5 text-center px-20"></codx-label>
-        <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3 mb-5">
-          <div class="h-15px w-100 bg-gray-200 rounded-4">
-            <div class="bg-primary rounded-4 h-15px position-relative" role="progressbar" [style.width]="(dataKR?.progress + '%')"
-              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-              <div class="position-absolute top-0 fs-8 text-light" style="left:50%; margin-left: -8px;">{{dataKR?.progress}}%</div>
+        <codx-label [default]="'KR: '+ dataKR?.okrName" class="text-gray-500 mt-2 mb-2 text-center px-20"></codx-label>
+        <div class="d-flex flex-column align-items-center kr-process w-150px "  [ngbTooltip]="'Tiến độ'">
+          <span class="mb-1"  [innerHTML]="(dataKR?.progress | formatvalue : okrFM?.krFM : 'progress' | async )+'%'"></span>
+          <div class="h-5px w-100 position-relative bg-gray-200 rounded-4">
+            <div class="rounded-4 h-5px " [ngClass]="dataKR?.actual>=dataKR?.current? 'bg-success' :'bg-danger'"
+              role="progressbar" [style.width]="dataKR?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+              aria-valuemax="100">
             </div>
+            <span class="progress-node border-2px position-absolute rounded-circle border me-1"
+              [ngClass]="[dataKR?.actual>=dataKR?.current ?'border-success' :'border-danger']"
+              [style.left]="(dataKR?.progress-2) + '%'"></span>
           </div>
-          
-          <!-- <div class="pic-local" style="left:77%;">
-          <span class="icon-language text-primary icon-20"></span>
-        </div>
-        <div *ngIf="dataKR?.confidence" class="pic-face" style="left:90%;">
-          <img class="w-18px h-18px"
-            [src]="'assets/themes/wp/default/img/'+(dataKR?.confidence == '2'?'L1480_4':'L1480_3')+'.svg'">
-        </div> -->
-
         </div>
         <!--Body-->
         <div class="d-flex flex-column mt-5 w-100">
