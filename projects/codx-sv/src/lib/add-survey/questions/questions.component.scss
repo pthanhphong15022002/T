@@ -605,12 +605,21 @@
 }
 //css drop
 .cdk-drop-list-dragging {
-  background-color: white !important;
-  position: absolute !important;
+  //background-color: white !important;
+  //position: absolute !important;
   z-index: 9999;
   width: 760px;
+  //margin-top: 10px;
 }
 
+.card-survey , .cdk-drop-list.answer
+{
+  background-color: white;
+}
+.cdk-drag
+{
+  //margin-top: 20px;
+}
 .cdk-drag-preview {
   padding: 5px;
   box-sizing: border-box;

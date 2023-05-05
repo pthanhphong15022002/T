@@ -1,4 +1,3 @@
-declare var window: any;
 import { addClass } from '@syncfusion/ej2-base';
 import {
   AfterViewInit,
@@ -122,23 +121,29 @@ export class CodxCalendarComponent
   }
 
   onCreate() {
-    let clearBtn: HTMLElement = document.createElement('button');
     let footerElement: HTMLElement = document.getElementsByClassName(
       'e-icon-container'
     )[0] as HTMLElement;
-    //creates the custom element for clear button
-    clearBtn.className = 'e-btn e-today e-flat e-primary e-css';
-    clearBtn.setAttribute('type', 'button');
-    clearBtn.textContent = 'Today';
-    footerElement.append(clearBtn);
-    this.ejCalendar.element.appendChild(footerElement);
+    let btn: HTMLElement = document.createElement('button');
     let proxy = this;
+
+    //remove footer of ejs-calendar
+    document
+      .querySelector('ejs-calendar')
+      .removeChild(document.querySelector('.e-footer-container'));
+
+    //creates the custom element for setToday button
+    btn.className = 'e-btn e-today e-flat e-css';
+    btn.setAttribute('type', 'button');
+    btn.textContent = 'Today';
+    footerElement.appendChild(btn);
+    footerElement.insertBefore(btn, footerElement.children[1]);
+
     // custom click handler to update the value property with null values.
     document
       .querySelector('.e-icon-container .e-today')
       .addEventListener('click', function () {
-        proxy.ejCalendar.value = null;
-        alert('trigger');
+        proxy.ejCalendar.value = new Date();
       });
   }
 
@@ -239,18 +244,6 @@ export class CodxCalendarComponent
 
   changeNewMonth(args) {
     this.FDdate = args.date;
-    // let myInterVal = setInterval(() => {
-    //   console.log('this.calendar_center', this.calendar_center);
-    //   if (this.calendar_center && this.calendar_center.instance) {
-    //     clearInterval(myInterVal);
-    //     this.calendar_center.instance.changeNewMonth(this.FDdate);
-    //   }
-    // }, 100);
-
-    // let myInterVal1 = setInterval(() => {
-    //   clearInterval(myInterVal1);
-    //   this.loadData();
-    // }, 100);
   }
 
   valueChangeSetting(e) {
@@ -673,7 +666,7 @@ export class CodxCalendarComponent
     }
   }
 
-  resource:any;
+  resource: any;
 
   getCalendarNotes(TM_, WP_, CO_, EP_Room_, EP_Ca_) {
     let TM_Params = [
@@ -726,19 +719,20 @@ export class CodxCalendarComponent
     let myInterval = setInterval(() => {
       if (this.dataResourceModel.length > 0) {
         clearInterval(myInterval);
-        this.resource = resources;
+        this.calendarCenter.resources = resources;
+        this.calendarCenter.resourceModel = this.dataResourceModel;
         this.codxShareSV.dataResourceModel.subscribe((res) => {
           if (res) {
-            this.calendarCenter && this.calendarCenter.updateData(res)
+            this.calendarCenter && this.calendarCenter.updateData(res);
           }
         });
-
+        
         //this.getCalendarSetting(resources, this.dataResourceModel);
       }
     });
   }
 
-  getCalendarSetting(resource, dataResourceModel) {
+  getCalendarSetting() {
     //let a = this.calendar_setting.createComponent(CalendarCenterComponent);
     //a.instance.resources = resource;
     //a.instance.resourceModel = dataResourceModel;
