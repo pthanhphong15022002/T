@@ -32,9 +32,6 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   @Input() gvs: any;
   @Input() hiddenFields: string[] = [];
   @Input() dataService: CRUDService;
-  @Output() delete = new EventEmitter<ISalesInvoicesLine>();
-  @Output() update = new EventEmitter<ISalesInvoicesLine>();
-  @Output() copy = new EventEmitter<ISalesInvoicesLine[]>();
 
   totalRow: { totalQuantity: number; totalPrice: number; totalVat: number } = {
     totalQuantity: 0,
@@ -112,13 +109,13 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   onClickMF(e, data): void {
     switch (e.functionID) {
       case 'SYS02':
-        this.deleteRow(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        this.editRow(e, data);
+        this.edit(e, data);
         break;
       case 'SYS04':
-        this.copyRow(e, data);
+        this.copy(e, data);
         break;
       case 'SYS002':
         this.export(data);
@@ -128,11 +125,13 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   //#endregion
 
   //#region Method
-  editRow(e, data): void {
+  edit(e, data): void {
     console.log('editRow', data);
 
-    this.dataService.dataSelected = data;
-    this.dataService.edit(data).subscribe(() => {
+    const temp: ISalesInvoicesLine = { ...data };
+
+    this.dataService.dataSelected = temp;
+    this.dataService.edit(temp).subscribe(() => {
       const dialogModel = new DialogModel();
       dialogModel.FormModel = this.fmSalesInvoicesLines;
       dialogModel.DataService = this.dataService;
@@ -155,15 +154,19 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         )
         .closed.pipe(tap((t) => console.log(t)))
         .subscribe(({ event }) => {
-          this.update.emit(event);
+          const index = this.salesInvoicesLines.findIndex(
+            (l) => l.recID === event.recID
+          );
+          this.salesInvoicesLines[index] = event;
         });
     });
   }
 
-  copyRow(e, data): void {
-    console.log('copyRow', data);
+  copy(e, data): void {
+    console.log('copy', data);
 
     let temp: ISalesInvoicesLine = { ...data };
+
     temp.rowNo = this.salesInvoicesLines.length + 1;
     this.dataService.dataSelected = temp;
     this.dataService.copy().subscribe(() => {
@@ -190,17 +193,22 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
         )
         .closed.pipe(tap((t) => console.log(t)))
         .subscribe(({ event }) => {
-          this.copy.emit(event);
+          this.salesInvoicesLines = [...this.salesInvoicesLines, ...event];
         });
     });
   }
 
-  export(data): void {}
+  delete(data): void {
+    console.log('delete', data);
 
-  deleteRow(data): void {
-    console.log(data);
-    this.dataService.delete([data]).subscribe(() => this.delete.emit(data));
+    this.dataService.delete([data]).subscribe(() => {
+      this.salesInvoicesLines = this.salesInvoicesLines.filter(
+        (l) => l.recID !== data.recID
+      );
+    });
   }
+
+  export(data): void {}
   //#endregion
 
   //#region Function
