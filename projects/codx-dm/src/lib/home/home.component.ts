@@ -501,6 +501,7 @@ export class HomeComponent extends UIComponent {
   }
 
   addFile($event) {
+    if(this.button.disabled) return;
     var data = new DialogAttachmentType();
     data.type = 'popup';
     // data.objectType = 'WP_Notes';
